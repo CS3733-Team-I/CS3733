@@ -14,14 +14,14 @@ abstract class MapWindowController extends SplitPane {
     private MapController mapController;
 
     public MapWindowController() throws IOException {
-        FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/UIFramework/KioskApplication.view/MapWindowView.fxml"));
+        FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/MapWindowView.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         loader.load();
 
         mapController = new MapController();
 
-        FXMLLoader mapPaneLoader = new FXMLLoader(MapWindowController.class.getResource("/UIFramework/KioskApplication.view/MapView.fxml"));
+        FXMLLoader mapPaneLoader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();

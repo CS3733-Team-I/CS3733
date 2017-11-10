@@ -11,7 +11,7 @@ public class AdminWindowController extends MapWindowController {
     public AdminWindowController() throws IOException {
         super();
 
-        FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/UIFramework/KioskApplication.view/AdminSidebarView.fxml"));
+        FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/AdminSidebarView.fxml"));
         loader.setRoot(getSidebarPane());
         loader.setController(new AdminSidebarController());
         loader.load();

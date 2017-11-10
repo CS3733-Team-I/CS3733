@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/UIFramework/KioskApplication.view/MainWindowView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/KioskApplication/view/MainWindowView.fxml"));
         primaryStage.setTitle("UI Framework");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
