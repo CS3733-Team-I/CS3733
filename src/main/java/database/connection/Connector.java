@@ -12,11 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static database.template.SQLStrings.*;
+
 public class Connector {
 
 
     public static void insertEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "insert into T_EDGES values(?, ?, ?)";
+        String sql = EDGE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edge.getEdgeID());
         pstmt.setString(2, edge.getNode1().getNodeID());
@@ -25,7 +27,7 @@ public class Connector {
     }
 
     public static void updateEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "update T_EDGES set startNode=?, endNode=? where edgeID=?";
+        String sql = EDGE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edge.getNode1().getNodeID());
         pstmt.setString(2, edge.getNode2().getNodeID());
@@ -35,7 +37,7 @@ public class Connector {
 
     public static Edge selectEdge(Connection conn, String edgeID) throws SQLException {
         Edge edge = null;
-        String sql = "SELECT ? FROM T_EDGES"; //change T_EDGES
+        String sql = EDGE_SELECT; //change T_EDGES
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edgeID);
         ResultSet rs = pstmt.executeQuery();
@@ -50,7 +52,7 @@ public class Connector {
     }
 
     public void deleteEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "DELETE FROM T_EDGES where edgeID = ?";
+        String sql = EDGE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edge.getEdgeID());
         pstmt.execute();
@@ -58,7 +60,7 @@ public class Connector {
     }
 
     public static void insertNode(Connection conn, Node node)throws SQLException{
-        String sql = "insert into T_NODES values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = NODE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, node.getNodeID());
         pstmt.setInt(2, node.getXcoord());
@@ -73,7 +75,7 @@ public class Connector {
     }
 
     public void updateNode(Connection conn, Node node)throws SQLException{
-        String sql = "update T_EDGES set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
+        String sql = NODE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, node.getXcoord());
         pstmt.setInt(2, node.getYcoord());
@@ -88,7 +90,7 @@ public class Connector {
 
     public Node selectNodes(Connection conn, String nodeID) throws SQLException {
         Node node = null;
-        String sql = "SELECT ? FROM T_NODES";
+        String sql = NODE_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         ResultSet rs = pstmt.executeQuery();
@@ -109,7 +111,7 @@ public class Connector {
     }
 
     public void deleteNode(Connection conn, Node node) throws SQLException {
-        String sql = "DELETE FROM T_NODES WHERE nodesID = ?";
+        String sql = NODE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, node.getNodeID());
         pstmt.execute();

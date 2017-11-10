@@ -13,7 +13,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static database.template.CSVFormat.*;
+import static database.template.SQLStrings.*;
+
 public class CSVFileUtil {
+
+
+    /*
+    Order of events for init :
+    readNodeCSV();
+     : will initialize nodeCollection
+
+     writeNodeCSV() :
+     : Pulls from database and writes to CSV
+
+
+
+
+     */
 
     public static void readNodesCSV(String path) {
         File file = new File(path);
@@ -32,6 +49,7 @@ public class CSVFileUtil {
                 Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()), elements[3].trim(),
                         elements[4].trim(), elements[5].trim(), elements[6].trim(), elements[7].trim(), elements[8].trim());
                 Connector.insertNode(conn, node);
+                nodeCollection.addNode(node);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +76,7 @@ public class CSVFileUtil {
 
         Connection conn = null;
         try {
-            bWriter.write("nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned");
+            bWriter.write(NODE_CSV_HEAD);
             bWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,7 +84,7 @@ public class CSVFileUtil {
 
         try {
             conn = DBUtil.getCon(); //might need to be in a seperate try/catch
-            String sql = "SELECT * FROM T_NODES";
+            String sql = NODE_SELECT_ALL;
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
@@ -149,7 +167,7 @@ public class CSVFileUtil {
         BufferedWriter bWriter = new BufferedWriter(write);
         Connection con = null;
         try {
-            bWriter.write("nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned");
+            bWriter.write(EDGE_CSV_HEAD);
             bWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,7 +175,7 @@ public class CSVFileUtil {
 
         try {
             con = DBUtil.getCon();
-            String sql = "select * from T_EDGES";
+            String sql = EDGE_SELECT_ALL;
             PreparedStatement pstmt = con.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
