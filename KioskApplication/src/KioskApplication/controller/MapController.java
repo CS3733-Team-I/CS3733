@@ -18,4 +18,19 @@ public class MapController {
     void onMapClicked(MouseEvent event) {
         if (!parent.equals(null)) parent.mapLocationClicked(event.getX(), event.getY());
     }
+
+    @FXML
+    public void zoomInPressed() {
+        System.out.println("Zoom in pressed.");
+    }
+
+    @FXML
+    public void zoomOutPressed() {
+        System.out.println("Zoom out pressed.");
+    }
+
+    @FXML
+    public void recenterPressed() {
+        System.out.println("Recenter pressed");
+    }
 }

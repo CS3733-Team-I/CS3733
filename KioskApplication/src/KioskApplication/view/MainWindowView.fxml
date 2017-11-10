@@ -7,9 +7,6 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="KioskApplication.controller.MainWindowController">
    <children>
       <Pane fx:id="contentWindow" prefHeight="600.0" prefWidth="800.0" />
-      <Button fx:id="btZoomout" layoutX="763.0" layoutY="454.0" mnemonicParsing="false" onAction="#zoomout" prefHeight="27.0" prefWidth="27.0" text="-" />
       <Button fx:id="switchButton" mnemonicParsing="false" onAction="#switchButtonClicked" text="Pathfinding" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <Button fx:id="btZoomin" layoutX="763.0" layoutY="427.0" mnemonicParsing="false" onAction="#zoomin" text="+" />
-      <Button fx:id="btRecenter" layoutX="709.0" layoutY="551.0" mnemonicParsing="false" onAction="#recenter" text="Recenter" />
    </children>
 </AnchorPane>

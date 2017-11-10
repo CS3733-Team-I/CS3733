@@ -9,7 +9,7 @@ import java.io.IOException;
 
 abstract class MapWindowController extends SplitPane {
     @FXML private AnchorPane sidebarPane;
-    @FXML private ImageView mapView;
+    @FXML private AnchorPane mapView;
 
     private MapController mapController;
 
