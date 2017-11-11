@@ -1,4 +1,4 @@
-package database.objects;
+package KioskApplication.database.objects;
 
 import java.util.HashMap;
 import java.util.LinkedList;
