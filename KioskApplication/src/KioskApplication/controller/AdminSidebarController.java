@@ -1,8 +1,16 @@
 package KioskApplication.controller;
 
+import KioskApplication.model.AdminModel;
 import javafx.fxml.FXML;
 
 public class AdminSidebarController {
+    /* admin model */
+    private AdminModel model;
+
+    public AdminSidebarController() {
+        this.model = new AdminModel();
+    }
+
     @FXML
     void onAddPressed() {
         System.out.println("Add Pressed\n");

@@ -15,7 +15,7 @@ public class PathfindingWindowController extends MapWindowController {
 
         FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/PathfindingSidebarView.fxml"));
         loader.setRoot(getSidebarPane());
-        loader.setController(new PathfindingSidebarController());
+        loader.setController(new PathfindingSidebarController()); //model in sidebar controller
         loader.load();
     }
 

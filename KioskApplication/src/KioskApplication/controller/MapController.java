@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.model.MapModel;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -7,8 +8,12 @@ import javafx.scene.input.MouseEvent;
 public class MapController {
     @FXML private ImageView mapImage;
     @FXML private ImageView pinIcon;
-
+    private MapModel model;
     private MapWindowController parent = null;
+
+    public MapController() {
+        this.model = new MapModel();
+    }
 
     public void setParent(MapWindowController controller) {
         parent = controller;
