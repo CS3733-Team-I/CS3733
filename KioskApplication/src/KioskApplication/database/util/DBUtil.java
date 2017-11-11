@@ -1,4 +1,4 @@
-package database.util;
+package KioskApplication.database.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

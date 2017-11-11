@@ -1,4 +1,4 @@
-package database.objects;
+package KioskApplication.database.objects;
 
 public class Edge {
     private String edgeID; //ID of the edge
