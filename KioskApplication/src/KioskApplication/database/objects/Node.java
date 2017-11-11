@@ -23,6 +23,10 @@ public class Node {
         this.teamAssigned = teamAssigned;
     }
 
+    public Node(String nodeID) {
+        this.nodeID = nodeID;
+    }
+
     public int getXcoord() {
         return xcoord;
     }
