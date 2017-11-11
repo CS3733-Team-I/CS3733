@@ -13,7 +13,7 @@ public class AdminWindowController extends MapWindowController {
 
         FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/AdminSidebarView.fxml"));
         loader.setRoot(getSidebarPane());
-        loader.setController(new AdminSidebarController());
+        loader.setController(new AdminSidebarController()); //model in sidebar controller
         loader.load();
 
         getMapController().setParent(this);
