@@ -25,6 +25,7 @@ public class AdminWindowController extends MapWindowController {
 
     void mapLocationClicked(double x, double y) {
         System.out.println(String.format("Admin Map Clicked: %f %f\n", x, y));
+
     }
 
     public void switchTo(SidebarType sidebar) throws IOException {
