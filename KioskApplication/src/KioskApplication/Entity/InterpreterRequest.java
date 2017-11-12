@@ -2,6 +2,7 @@ package KioskApplication.Entity;
 
 import KioskApplication.database.objects.Node;
 
+//Adds the field language
 public class InterpreterRequest extends Request{
     String language;
 

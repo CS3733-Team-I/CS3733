@@ -29,11 +29,13 @@ public class AdminSidebarController {
         System.out.println("Edit Pressed\n");
     }
 
+    //Use the request menu dropdown to select interpreter
     @FXML
     void selectService(){
         interpreterSelect.setOnAction(e -> interpreterViewer(e));
     }
 
+    //will eventually: switch sidebar to interpreter request window
     @FXML
     void interpreterViewer(javafx.event.ActionEvent e){
         System.out.println("Switch view to interpreter request");
