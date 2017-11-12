@@ -41,7 +41,8 @@ public class AdminWindowController extends MapWindowController {
                 break;
             case SIDEBAR_ADD:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addNode.fxml"));
-                loader.setController(new AdminAddNodeController(this));
+                addNodeController = new AdminAddNodeController(this);
+                loader.setController(addNodeController);
                 break;
 
             case SIDEBAR_EDIT:

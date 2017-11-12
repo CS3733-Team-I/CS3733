@@ -1,5 +1,5 @@
 package KioskApplication.controller;
-
+import javafx.scene.control.TextField;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
@@ -9,16 +9,34 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.SIDE
 
 public class AdminAddNodeController {
     AdminWindowController parent;
-    double x;
-    double y;
 
     AdminAddNodeController(AdminWindowController parent) {
         this.parent = parent;
     }
 
+
+    @FXML private TextField xcoord;
+
+    @FXML private TextField ycoord;
+
+    @FXML private TextField nodeID;
+
+    @FXML private TextField floor;
+
+    @FXML private TextField building;
+
+    @FXML private TextField nodetype;
+
+    @FXML private TextField lname;
+
+    @FXML private TextField sname;
+
+    @FXML private TextField team;
+
     public void setCoords(double x, double y){
-        this.x = x;
-        this.y = y;
+        System.out.println("setCoords");
+        xcoord.setText(String.valueOf(x));
+        ycoord.setText(String.valueOf(y));
     }
 
     @FXML
