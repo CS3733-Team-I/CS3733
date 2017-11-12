@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 public class MapController {
     @FXML private ImageView mapView;
@@ -14,13 +15,18 @@ public class MapController {
     private Rectangle2D defaultViewport = new Rectangle2D(2250, 875, 600, 500);
     private Point2D lastMousePosition;
 
+    private static int MIN_PIXELS = 600;
+
     public void setParent(MapWindowController controller) {
         parent = controller;
     }
 
     @FXML
     void onMapClicked(MouseEvent event) {
-        if (!parent.equals(null)) parent.mapLocationClicked(event.getX(), event.getY());
+        if (!parent.equals(null)) {
+            Point2D imageCoordinates = viewCoordinatesToImageCoordinates(event.getX(), event.getY());
+            parent.mapLocationClicked(imageCoordinates.getX(), imageCoordinates.getY());
+        }
     }
 
     @FXML
@@ -66,6 +72,45 @@ public class MapController {
         mapView.setViewport(new Rectangle2D(minX, minY, viewport.getWidth(), viewport.getHeight()));
 
         lastMousePosition = new Point2D(e.getX(), e.getY());
+    }
+
+    @FXML
+    public void onMouseScroll(ScrollEvent e) {
+        double delta = e.getDeltaY();
+        Rectangle2D viewport = mapView.getViewport();
+
+        double scale = MathUtility.clamp(Math.pow(1.01, delta),
+
+                // don't scale so we're zoomed in to fewer than MIN_PIXELS in any direction:
+                Math.min(MIN_PIXELS / viewport.getWidth(), MIN_PIXELS / viewport.getHeight()),
+
+                // don't scale so that we're bigger than image dimensions:
+                mapView.getImage().getHeight() / viewport.getHeight()
+
+        );
+
+        Point2D mouse = viewCoordinatesToImageCoordinates(e.getX(), e.getY());
+
+        double newWidth = viewport.getWidth() * scale;
+        double newHeight = viewport.getHeight() * scale;
+
+        // To keep the visual point under the mouse from moving, we need
+        // (x - newViewportMinX) / (x - currentViewportMinX) = scale
+        // where x is the mouse X coordinate in the image
+
+        // solving this for newViewportMinX gives
+
+        // newViewportMinX = x - (x - currentViewportMinX) * scale
+
+        // we then clamp this value so the image never scrolls out
+        // of the imageview:
+
+        double newMinX = MathUtility.clamp(mouse.getX() - (mouse.getX() - viewport.getMinX()) * scale,
+                0, mapView.getImage().getWidth() - newWidth);
+        double newMinY = MathUtility.clamp(mouse.getY() - (mouse.getY() - viewport.getMinY()) * scale,
+                0, mapView.getImage().getHeight() - newHeight);
+
+        mapView.setViewport(new Rectangle2D(newMinX, newMinY, newWidth, newHeight));
     }
 
     private Point2D viewCoordinatesToImageCoordinates(double x, double y) {
