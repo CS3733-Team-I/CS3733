@@ -1,5 +1,7 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Node;
+import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -22,6 +24,11 @@ public class MainWindowController {
     MainWindowScene currentView = MainWindowScene.PATHFINDING;
 
     public MainWindowController() {
+        // TODO: Move MapEntity population to somewhere that makes sense, this is for testing
+        MapEntity mapEntity = MapEntity.getInstance();
+        mapEntity.addNode(new Node("a", 2648, 1072, "3", "", "", "", "", "I"));
+        mapEntity.addNode(new Node("b", 2769, 1076, "3", "", "", "", "", "I"));
+        mapEntity.addNode(new Node("c", 2769, 1282, "3", "", "", "", "", "I"));
     }
 
     void switchTo(MainWindowScene scene) throws IOException{

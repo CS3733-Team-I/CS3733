@@ -1,18 +1,26 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.MathUtility;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.StackPane;
+
+import java.util.ArrayList;
 
 public class MapController {
+    // TODO Enable loading different maps via a function
+
     @FXML private ImageView mapView;
+    @FXML private StackPane stackPane;
     @FXML private ScrollPane scrollPane;
 
     private MapWindowController parent = null;
@@ -27,6 +35,20 @@ public class MapController {
     @FXML
     public void initialize() {
         MapEntity mapEntity = MapEntity.getInstance();
+        ArrayList<Node> nodes = mapEntity.getAllNodes();
+
+        stackPane.getChildren().clear();
+        stackPane.getChildren().add(mapView);
+
+        for (Node n : nodes) {
+            Button nodeButton = new Button();
+            nodeButton.setText(n.getNodeID());
+            nodeButton.setTranslateX(n.getXcoord());
+            nodeButton.setTranslateY(n.getYcoord());
+            stackPane.getChildren().add(nodeButton);
+        }
+
+        System.out.println("MapController");
     }
 
     @FXML
