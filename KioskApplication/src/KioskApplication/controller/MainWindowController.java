@@ -49,14 +49,14 @@ public class MainWindowController {
         this.switchTo(MainWindowScene.PATHFINDING);
     }
 
-    @FXML
+    /*@FXML
     private void Login() throws IOException{
         FXMLLoader loader;
         loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/AdminLoginWindow.fxml"));
         loader.setController(new LoginController(this));
         LoginPopup.getChildren().clear();
         LoginPopup.getChildren().add(loader.load());
-    }
+    }*/
 
     @FXML
     public void switchButtonClicked() throws IOException {
@@ -65,7 +65,8 @@ public class MainWindowController {
                 this.switchTo(MainWindowScene.PATHFINDING);
                 break;
             case PATHFINDING:
-                this.Login();
+                this.switchTo(MainWindowScene.ADMIN);
+                //this.Login();
                 break;
         }
     }
