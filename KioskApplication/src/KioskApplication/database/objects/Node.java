@@ -27,6 +27,11 @@ public class Node {
         this.nodeID = nodeID;
     }
 
+    public Node(String nodeID, String floor) {
+        this.nodeID = nodeID;
+        this.floor = floor;
+    }
+
     public int getXcoord() {
         return xcoord;
     }

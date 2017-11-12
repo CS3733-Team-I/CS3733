@@ -32,11 +32,11 @@ public class MapEntity implements IMapEntity {
         ArrayList<Edge> returnList = new ArrayList<>();
 
         for(String key : edges.keySet()) {
-            if(edges.get(key).getNode1().getNodeID().equals(n.getNodeID())) {
+            if(edges.get(key).getNode1().getNodeID().equals(n.getNodeID()) ||
+               edges.get(key).getNode2().getNodeID().equals(n.getNodeID())) {
                 returnList.add(edges.get(key));
             }
         }
-
         return returnList;
     }
 
