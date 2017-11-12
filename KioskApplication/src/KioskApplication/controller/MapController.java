@@ -56,7 +56,7 @@ public class MapController {
 
         // Convert mouse (x,y) to image (x,y) and then compute the amount dragged
         Point2D draggedPoint = viewCoordinatesToImageCoordinates(e.getX(), e.getY());
-        Point2D dragDelta = draggedPoint.subtract(lastMousePosition);
+        Point2D dragDelta = lastMousePosition.subtract(e.getX(), e.getY());
 
         // Clamp viewport to valid locations within the image
         double width = mapView.getImage().getWidth();
@@ -65,8 +65,8 @@ public class MapController {
         double maxX = width - viewport.getWidth();
         double maxY = height - viewport.getHeight();
 
-        double minX = MathUtility.clamp(dragDelta.getX(), 0, maxX);
-        double minY = MathUtility.clamp(dragDelta.getY(), 0, maxY);
+        double minX = MathUtility.clamp(viewport.getMinX() + dragDelta.getX(), 0, maxX);
+        double minY = MathUtility.clamp(viewport.getMinY() + dragDelta.getY(), 0, maxY);
 
         // Update viewport and lastMousePosition
         mapView.setViewport(new Rectangle2D(minX, minY, viewport.getWidth(), viewport.getHeight()));
@@ -76,18 +76,16 @@ public class MapController {
 
     @FXML
     public void onMouseScroll(ScrollEvent e) {
-        double delta = e.getDeltaY();
+        // Adapted from https://stackoverflow.com/questions/37709800/zooming-and-panning-javafx-change-scroll
+
+        double delta = -e.getDeltaY();
         Rectangle2D viewport = mapView.getViewport();
 
-        double scale = MathUtility.clamp(Math.pow(1.01, delta),
-
-                // don't scale so we're zoomed in to fewer than MIN_PIXELS in any direction:
-                Math.min(MIN_PIXELS / viewport.getWidth(), MIN_PIXELS / viewport.getHeight()),
-
-                // don't scale so that we're bigger than image dimensions:
-                mapView.getImage().getHeight() / viewport.getHeight()
-
-        );
+        // limit scale to MIN_PIXELS in either direction (whichever is smallest)
+        double minScale = Math.min(MIN_PIXELS / viewport.getWidth(), MIN_PIXELS / viewport.getHeight());
+        // limit scale to the maximum height of the image
+        double maxScale = mapView.getImage().getHeight() / viewport.getHeight();
+        double scale = MathUtility.clamp(Math.pow(1.01, delta), minScale, maxScale);
 
         Point2D mouse = viewCoordinatesToImageCoordinates(e.getX(), e.getY());
 
