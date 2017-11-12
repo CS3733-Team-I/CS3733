@@ -9,9 +9,16 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.SIDE
 
 public class AdminAddNodeController {
     AdminWindowController parent;
+    double x;
+    double y;
 
     AdminAddNodeController(AdminWindowController parent) {
         this.parent = parent;
+    }
+
+    public void setCoords(double x, double y){
+        this.x = x;
+        this.y = y;
     }
 
     @FXML

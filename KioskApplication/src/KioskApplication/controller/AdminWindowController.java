@@ -15,6 +15,8 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_MENU
     }
 
+    AdminAddNodeController addNodeController = null;
+
     public AdminWindowController() throws IOException {
         super();
 
@@ -26,6 +28,7 @@ public class AdminWindowController extends MapWindowController {
     void mapLocationClicked(double x, double y) {
         System.out.println(String.format("Admin Map Clicked: %f %f\n", x, y));
 
+        if (addNodeController != null) addNodeController.setCoords(x, y);
     }
 
     public void switchTo(SidebarType sidebar) throws IOException {
