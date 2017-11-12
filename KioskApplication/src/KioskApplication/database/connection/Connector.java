@@ -1,11 +1,11 @@
-package database.connection;
+package KioskApplication.database.connection;
 
 
 
-import database.objects.Edge;
-import database.objects.EdgeCollection;
-import database.objects.Node;
-import database.objects.NodeCollection;
+import KioskApplication.database.objects.Edge;
+import KioskApplication.database.objects.EdgeCollection;
+import KioskApplication.database.objects.Node;
+import KioskApplication.database.objects.NodeCollection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
