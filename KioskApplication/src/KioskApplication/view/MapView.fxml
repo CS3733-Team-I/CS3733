@@ -11,7 +11,7 @@
       <Button layoutX="510.0" layoutY="331.0" mnemonicParsing="false" onAction="#zoomOutPressed" prefHeight="25.0" prefWidth="25.0" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="510.0" layoutY="299.0" mnemonicParsing="false" onAction="#zoomInPressed" text="+" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="71.0" layoutY="530.0" mnemonicParsing="false" onAction="#recenterPressed" text="Recenter" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-      <ImageView fx:id="mapView" fitWidth="600.0" onMouseDragged="#onMapDragged" onMousePressed="#onMapDragBegin" onScroll="#onMouseScroll" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ImageView fx:id="mapView" fitWidth="600.0" onMouseClicked="#onMapClicked" onMouseDragged="#onMapDragged" onMousePressed="#onMapDragBegin" onScroll="#onMouseScroll" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
             <Image url="@../resources/images/03_thethirdfloor.png" />
          </image>
