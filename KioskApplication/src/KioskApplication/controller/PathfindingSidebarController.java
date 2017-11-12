@@ -27,7 +27,7 @@ public class PathfindingSidebarController {
     @FXML
     void btGeneratePathPressed() {
         //System.out.printf("Generate Path button pressed.\n");
-        
+
         pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
     }
 }
