@@ -1,18 +1,18 @@
 package KioskApplication.controller;
-import com.sun.org.apache.xpath.internal.SourceTree;
+
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.fxml.FXML;
 
 import java.io.IOException;
 
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 
-public class AdminAddNodeController {
+public class AdminEditNodeController {
     AdminWindowController parent;
 
-    AdminAddNodeController(AdminWindowController parent) {
+    AdminEditNodeController(AdminWindowController parent) {
         this.parent = parent;
     }
 
@@ -38,9 +38,9 @@ public class AdminAddNodeController {
     @FXML private Label errorMsg;
 
     public void setCoords(double x, double y){
-        System.out.println("setCoords");
-        xcoord.setText(String.valueOf(x));
-        ycoord.setText(String.valueOf(y));
+        // Find closest node and display information
+        //xcoord.setText(String.valueOf(x));
+        //ycoord.setText(String.valueOf(y));
     }
 
     @FXML
@@ -56,7 +56,6 @@ public class AdminAddNodeController {
 
         this.parent.switchTo(SIDEBAR_MENU);
     }
-
     @FXML
     void onSubmitClicked() throws IOException{
 
@@ -80,6 +79,7 @@ public class AdminAddNodeController {
         else if(team.getText().equals(null) || team.getText().equals(""))
             errorMsg.setText("You must input the team assigned!");
         else {
+            // Tell Database to edit the node
 
         }
     }

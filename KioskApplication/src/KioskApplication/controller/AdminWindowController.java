@@ -15,6 +15,9 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_MENU
     }
 
+    AdminAddNodeController addNodeController = null;
+    AdminEditNodeController editNodeController = null;
+
     public AdminWindowController() throws IOException {
         super();
 
@@ -26,6 +29,7 @@ public class AdminWindowController extends MapWindowController {
     void mapLocationClicked(double x, double y) {
         System.out.println(String.format("Admin Map Clicked: %f %f\n", x, y));
 
+        if (addNodeController != null) addNodeController.setCoords(x, y);
     }
 
     public void switchTo(SidebarType sidebar) throws IOException {
@@ -38,10 +42,14 @@ public class AdminWindowController extends MapWindowController {
                 break;
             case SIDEBAR_ADD:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addNode.fxml"));
-                loader.setController(new AdminAddNodeController(this));
+                addNodeController = new AdminAddNodeController(this);
+                loader.setController(addNodeController);
                 break;
 
             case SIDEBAR_EDIT:
+                loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/editNode.fxml"));
+                editNodeController = new AdminEditNodeController(this);
+                loader.setController(editNodeController);
                 break;
         }
 

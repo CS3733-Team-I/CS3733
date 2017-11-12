@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_EDIT;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 
 public class AdminSidebarController {
@@ -32,8 +33,10 @@ public class AdminSidebarController {
     }
 
     @FXML
-    void onEditPressed() {
+    void onEditPressed() throws IOException {
         System.out.println("Edit Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_EDIT);
     }
 
     @FXML
