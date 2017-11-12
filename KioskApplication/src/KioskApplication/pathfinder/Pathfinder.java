@@ -1,11 +1,17 @@
-package KioskApplication.Astar;
+package KioskApplication.pathfinder;
 
-import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.entity.MapEntity;
 
 import java.util.LinkedList;
 
-public class Astar {
+public class Pathfinder {
+    private MapEntity map;
+
+    public Pathfinder(){
+        map = new MapEntity();
+    }
+
     // generate path function
     public static LinkedList<Node> GeneratePath(Node startnode, Node endnode){
 
