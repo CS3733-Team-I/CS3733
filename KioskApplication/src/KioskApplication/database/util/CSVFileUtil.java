@@ -3,9 +3,7 @@ package KioskApplication.database.util;
 
 import KioskApplication.database.connection.Connector;
 import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.EdgeCollection;
 import KioskApplication.database.objects.Node;
-import KioskApplication.database.objects.NodeCollection;
 
 import java.io.*;
 import java.sql.Connection;
@@ -41,7 +39,7 @@ public class CSVFileUtil {
             e.printStackTrace();
         }
         String line;
-        NodeCollection nodeCollection = NodeCollection.getInstance();
+    //    NodeCollection nodeCollection = NodeCollection.getInstance();
         Connection conn = null;
         try {
             while((line = br.readLine()) != null) {
@@ -49,7 +47,7 @@ public class CSVFileUtil {
                 Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()), elements[3].trim(),
                         elements[4].trim(), elements[5].trim(), elements[6].trim(), elements[7].trim(), elements[8].trim());
                 Connector.insertNode(conn, node);
-                nodeCollection.addNode(node);
+          //      nodeCollection.addNode(node);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,7 +132,7 @@ public class CSVFileUtil {
         }
         String line;
 
-        EdgeCollection edgeCollection = EdgeCollection.getInstance();
+    //    EdgeCollection edgeCollection = EdgeCollection.getInstance();
         Connection conn = null;
 
         try {

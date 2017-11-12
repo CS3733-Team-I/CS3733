@@ -3,9 +3,7 @@ package KioskApplication.database.connection;
 
 
 import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.EdgeCollection;
 import KioskApplication.database.objects.Node;
-import KioskApplication.database.objects.NodeCollection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,16 +19,16 @@ public class Connector {
         String sql = EDGE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edge.getEdgeID());
-        pstmt.setString(2, edge.getNode1().getNodeID());
-        pstmt.setString(3, edge.getNode2().getNodeID());
+        pstmt.setString(2, edge.getNode1ID());
+        pstmt.setString(3, edge.getNode2ID());
         pstmt.execute();
     }
 
     public static void updateEdge(Connection conn, Edge edge) throws SQLException {
         String sql = EDGE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getNode1().getNodeID());
-        pstmt.setString(2, edge.getNode2().getNodeID());
+        pstmt.setString(1, edge.getNode1ID());
+        pstmt.setString(2, edge.getNode2ID());
         pstmt.setString(3, edge.getEdgeID());
         pstmt.executeUpdate();
     }
@@ -42,11 +40,10 @@ public class Connector {
         pstmt.setString(1, edgeID);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            edge = EdgeCollection.getInstance().getEdge(rs.getString("edgeID"));
-            edge.setNode1(rs.getString("startNode"));
-            edge.setNode2(rs.getString("endNode"));
+   //         edge = EdgeCollection.getInstance().getEdge(rs.getString("edgeID"));
+            edge = new Edge(edgeID, rs.getString("startNode"), rs.getString("endNode"));
         } else {
-
+           //will throw exception
         }
         return edge;
     }
@@ -56,7 +53,6 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edge.getEdgeID());
         pstmt.execute();
-        EdgeCollection.getInstance().deleteEdge(edge.getEdgeID());
     }
 
     public static void insertNode(Connection conn, Node node)throws SQLException{
@@ -95,17 +91,12 @@ public class Connector {
         pstmt.setString(1, nodeID);
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
-            node = NodeCollection.getInstance().getNode(nodeID);
-            node.setXcoord(rs.getInt("xcoord"));
-            node.setYcoord(rs.getInt("ycoord"));
-            node.setFloor(rs.getString("floor"));
-            node.setBuilding(rs.getString("building"));
-            node.setNodeType(rs.getString("nodeType"));
-            node.setLongName(rs.getString("longName"));
-            node.setShortName(rs.getString("shortName"));
-            node.setTeamAssigned(rs.getString("teamAssigned"));
+            node = new Node(nodeID, rs.getInt("xcoord"), rs.getInt("ycoord"),
+                    rs.getString("floor"), rs.getString("building"),
+                    rs.getString("nodeType"), rs.getString("longName"),
+                    rs.getString("shortName"), rs.getString("teamAssigned"));
         } else {
-
+            //throws exception
         }
         return node;
     }
@@ -115,6 +106,5 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, node.getNodeID());
         pstmt.execute();
-        NodeCollection.getInstance().deleteNode(node.getNodeID());
     }
 }
