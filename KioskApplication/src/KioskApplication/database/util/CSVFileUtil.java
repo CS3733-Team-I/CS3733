@@ -1,11 +1,11 @@
-package database.util;
+package KioskApplication.database.util;
 
 
-import database.connection.Connector;
-import database.objects.Edge;
-import database.objects.EdgeCollection;
-import database.objects.Node;
-import database.objects.NodeCollection;
+import KioskApplication.database.connection.Connector;
+import KioskApplication.database.objects.Edge;
+import KioskApplication.database.objects.EdgeCollection;
+import KioskApplication.database.objects.Node;
+import KioskApplication.database.objects.NodeCollection;
 
 import java.io.*;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package database.objects;
+package KioskApplication.database.objects;
 
 public class Node {
     private String nodeID;
