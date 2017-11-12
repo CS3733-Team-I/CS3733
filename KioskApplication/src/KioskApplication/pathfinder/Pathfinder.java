@@ -11,7 +11,7 @@ public class Pathfinder {
     private MapEntity map;
 
     public Pathfinder(){
-        map = new MapEntity();
+        map = MapEntity.getInstance();
     }
 
     // generate path function

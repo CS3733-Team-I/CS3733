@@ -13,7 +13,7 @@ public class MapEntity implements IMapEntity {
 
     private static MapEntity instance = null;
 
-    public MapEntity() {
+    protected MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
     }

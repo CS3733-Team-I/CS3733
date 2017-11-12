@@ -20,7 +20,7 @@ public class TestMapEntity {
 
     @Before
     public void setup() {
-        m = new MapEntity();
+        m = MapEntity.getInstance();
         n1 = new Node("NODE1", "1");
         n2 = new Node("NODE2", "1");
         n3 = new Node("NODE3", "2");
