@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 
-@DefaultProperty(value = "adminWindow")
 public class AdminWindowController extends MapWindowController {
 
     public enum SidebarType {

@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
 
-@DefaultProperty(value = "pathfindingWindow")
 public class PathfindingWindowController extends MapWindowController {
 
     public PathfindingWindowController() throws IOException {
