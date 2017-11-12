@@ -5,10 +5,11 @@ import KioskApplication.database.objects.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class MapEntity implements IMapEntity {
 
-    private HashMap<String,MapFloorEntity> floors;
+    private HashMap<String, MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
 
     private static MapEntity instance = null;
@@ -68,6 +69,12 @@ public class MapEntity implements IMapEntity {
         for (String floor : floors.keySet()) {
             floors.get(floor).removeNode(s);
         }
+    }
+
+    @Override
+    public LinkedList<Node> getAllNodes() {
+        //TODO: return all nodes in all floors in map
+        return null;
     }
 
     private boolean floorExists(String floor) {

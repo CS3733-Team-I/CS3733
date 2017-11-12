@@ -5,6 +5,7 @@ import KioskApplication.database.objects.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class MapFloorEntity implements IMapEntity{
 
@@ -28,5 +29,11 @@ public class MapFloorEntity implements IMapEntity{
     @Override
     public void removeNode(String s) {
         nodes.remove(s);
+    }
+
+    @Override
+    public LinkedList<Node> getAllNodes() {
+        //TODO: return all nodes on this floor
+        return null;
     }
 }
