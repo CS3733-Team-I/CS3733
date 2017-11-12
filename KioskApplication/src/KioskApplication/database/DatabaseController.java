@@ -1,0 +1,100 @@
+package KioskApplication.database;
+
+import KioskApplication.database.connection.Connector;
+import KioskApplication.database.objects.Edge;
+import KioskApplication.database.objects.Node;
+import KioskApplication.database.util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class DatabaseController {
+
+    private static DatabaseController instance = null;
+    private static Connection instanceConnection = null;
+
+    protected DatabaseController() {
+
+    }
+
+    //returns null if node does not exist
+    public static Node getNode(String id) {
+        try {
+            return Connector.selectNode(instanceConnection, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean removeNode(String id) {
+        try {
+            Connector.deleteNode(instanceConnection, id);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    //will probably want to change this to have less parameters
+    public static Node addNode(String nodeID, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+            , String assigned) {
+        try {
+            return Connector.insertNode(instanceConnection, xc, yc, fl, bu, nt, ln, sn, assigned, nodeID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static Edge getEdge(String edgeID) {
+        try {
+            return Connector.selectEdge(instanceConnection, edgeID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean removeEdge(String edgeID) {
+        try {
+            Connector.deleteEdge(instanceConnection, edgeID);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static Edge addEdge(String edgeID, String node1, String node2) {
+        try {
+            return Connector.insertEdge(instanceConnection, node1, node2, edgeID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+    public static DatabaseController getInstance() {
+        if(instance == null) {
+            instance = new DatabaseController();
+            try {
+                instanceConnection = DBUtil.getCon();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return instance;
+    }
+}

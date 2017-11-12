@@ -15,22 +15,27 @@ import static KioskApplication.database.template.SQLStrings.*;
 public class Connector {
 
 
-    public static void insertEdge(Connection conn, Edge edge) throws SQLException {
+    public static Edge insertEdge(Connection conn, String node1, String node2, String edgeID) throws SQLException {
         String sql = EDGE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getEdgeID());
-        pstmt.setString(2, edge.getNode1ID());
-        pstmt.setString(3, edge.getNode2ID());
+        pstmt.setString(2, node1);
+        pstmt.setString(3, node2);
+        pstmt.setString(1, edgeID);
         pstmt.execute();
+
+        return new Edge(edgeID, node1, node2);
+
     }
 
-    public static void updateEdge(Connection conn, Edge edge) throws SQLException {
+    public static Edge updateEdge(Connection conn, String node1, String node2, String edgeID) throws SQLException {
         String sql = EDGE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getNode1ID());
-        pstmt.setString(2, edge.getNode2ID());
-        pstmt.setString(3, edge.getEdgeID());
+        pstmt.setString(2, node1);
+        pstmt.setString(3, node2);
+        pstmt.setString(1, edgeID);
         pstmt.executeUpdate();
+
+        return new Edge(edgeID, node1, node2);
     }
 
     public static Edge selectEdge(Connection conn, String edgeID) throws SQLException {
@@ -48,43 +53,50 @@ public class Connector {
         return edge;
     }
 
-    public void deleteEdge(Connection conn, Edge edge) throws SQLException {
+    public static void deleteEdge(Connection conn, String edge) throws SQLException {
         String sql = EDGE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getEdgeID());
+        pstmt.setString(1, edge);
         pstmt.execute();
     }
 
-    public static void insertNode(Connection conn, Node node)throws SQLException{
+    public static Node insertNode(Connection conn, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+            , String assigned, String nodeID)throws SQLException{
         String sql = NODE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, node.getNodeID());
-        pstmt.setInt(2, node.getXcoord());
-        pstmt.setInt(3, node.getYcoord());
-        pstmt.setString(4, node.getFloor());
-        pstmt.setString(5, node.getBuilding());
-        pstmt.setString(6, node.getNodeType());
-        pstmt.setString(7, node.getLongName());
-        pstmt.setString(8, node.getShortName());
-        pstmt.setString(9, node.getTeamAssigned());
-        pstmt.execute();
+        pstmt.setString(1, nodeID);
+        pstmt.setInt(2, xc);
+        pstmt.setInt(3, yc);
+        pstmt.setString(4, fl);
+        pstmt.setString(5, bu);
+        pstmt.setString(6, nt);
+        pstmt.setString(7, ln);
+        pstmt.setString(8, sn);
+        pstmt.setString(9, assigned);
+        pstmt.executeUpdate();
+
+        return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
     }
 
-    public void updateNode(Connection conn, Node node)throws SQLException{
+    public static Node updateNode(Connection conn, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+            , String assigned, String nodeID)throws SQLException{
         String sql = NODE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, node.getXcoord());
-        pstmt.setInt(2, node.getYcoord());
-        pstmt.setString(3, node.getFloor());
-        pstmt.setString(4, node.getBuilding());
-        pstmt.setString(5, node.getNodeType());
-        pstmt.setString(6, node.getLongName());
-        pstmt.setString(7, node.getShortName());
-        pstmt.setString(8, node.getTeamAssigned());
+        pstmt.setString(1, nodeID);
+        pstmt.setInt(2, xc);
+        pstmt.setInt(3, yc);
+        pstmt.setString(4, fl);
+        pstmt.setString(5, bu);
+        pstmt.setString(6, nt);
+        pstmt.setString(7, ln);
+        pstmt.setString(8, sn);
+        pstmt.setString(9, assigned);
         pstmt.executeUpdate();
+
+        return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
     }
 
-    public Node selectNodes(Connection conn, String nodeID) throws SQLException {
+    public static Node selectNode(Connection conn, String nodeID) throws SQLException {
         Node node = null;
         String sql = NODE_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -101,10 +113,10 @@ public class Connector {
         return node;
     }
 
-    public void deleteNode(Connection conn, Node node) throws SQLException {
+    public static void deleteNode(Connection conn, String node) throws SQLException {
         String sql = NODE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, node.getNodeID());
+        pstmt.setString(1,node);
         pstmt.execute();
     }
 }
