@@ -1,4 +1,6 @@
 package KioskApplication.controller;
+import com.sun.org.apache.xpath.internal.SourceTree;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXML;
 
@@ -33,6 +35,8 @@ public class AdminAddNodeController {
 
     @FXML private TextField team;
 
+    @FXML private Label errorMsg;
+
     public void setCoords(double x, double y){
         System.out.println("setCoords");
         xcoord.setText(String.valueOf(x));
@@ -51,5 +55,33 @@ public class AdminAddNodeController {
         System.out.println("Back Pressed\n");
 
         this.parent.switchTo(SIDEBAR_MENU);
+    }
+
+    @FXML
+    void onSubmitClicked() throws IOException{
+
+        errorMsg.setText("");
+        if(nodeID.getText().equals(null) || nodeID.getText().equals("")){
+            errorMsg.setText("You should input the node ID!");
+        }
+        else if(xcoord.getText().equals(null) || xcoord.getText().equals(""))
+            errorMsg.setText("You should input the X coordinate!");
+        else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
+            errorMsg.setText("You should input the Y coordinate!");
+        else if(floor.getText().equals(null) || floor.getText().equals(""))
+            errorMsg.setText("You should input the floor!");
+        else if(building.getText().equals(null) || building.getText().equals(""))
+            errorMsg.setText("You should input the building!");
+        else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
+            errorMsg.setText("You should input the node type!");
+        else if(lname.getText().equals(null) || lname.getText().equals(""))
+            errorMsg.setText("You should input the long name!");
+        else if(sname.getText().equals(null) || sname.getText().equals(""))
+            errorMsg.setText("You should input the short name!");
+        else if(team.getText().equals(null) || team.getText().equals(""))
+            errorMsg.setText("You should input the team assigned!");
+        else {
+
+        }
     }
 }
