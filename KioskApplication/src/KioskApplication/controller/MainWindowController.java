@@ -65,7 +65,6 @@ public class MainWindowController {
                 this.switchTo(MainWindowScene.PATHFINDING);
                 break;
             case PATHFINDING:
-                this.switchTo(MainWindowScene.ADMIN);
                 this.Login();
                 break;
         }
