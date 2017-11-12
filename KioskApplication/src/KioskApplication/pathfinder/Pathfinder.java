@@ -34,7 +34,7 @@ public class Pathfinder {
         PathfindingNode lowestcost = null;
         // while loop for generating path of connecting nodes
         while(true){
-            //TODO add handeler for Default StartNode
+            //TODO add handler for Default StartNode
 
             // if list of frontier becomes empty break out of while loop
             if (ListofFrontier.isEmpty())
