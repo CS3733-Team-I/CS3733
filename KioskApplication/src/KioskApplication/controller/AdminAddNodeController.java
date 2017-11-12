@@ -61,25 +61,24 @@ public class AdminAddNodeController {
     void onSubmitClicked() throws IOException{
 
         errorMsg.setText("");
-        if(nodeID.getText().equals(null) || nodeID.getText().equals("")){
-            errorMsg.setText("You should input the node ID!");
-        }
+        if(nodeID.getText().equals(null) || nodeID.getText().equals(""))
+            errorMsg.setText("You must input the node ID!");
         else if(xcoord.getText().equals(null) || xcoord.getText().equals(""))
-            errorMsg.setText("You should input the X coordinate!");
+            errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
-            errorMsg.setText("You should input the Y coordinate!");
+            errorMsg.setText("You must input the Y coordinate!");
         else if(floor.getText().equals(null) || floor.getText().equals(""))
-            errorMsg.setText("You should input the floor!");
+            errorMsg.setText("You must input a floor!");
         else if(building.getText().equals(null) || building.getText().equals(""))
-            errorMsg.setText("You should input the building!");
+            errorMsg.setText("You must input a building!");
         else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
-            errorMsg.setText("You should input the node type!");
+            errorMsg.setText("You must input the node type!");
         else if(lname.getText().equals(null) || lname.getText().equals(""))
-            errorMsg.setText("You should input the long name!");
+            errorMsg.setText("You must input a long name!");
         else if(sname.getText().equals(null) || sname.getText().equals(""))
-            errorMsg.setText("You should input the short name!");
+            errorMsg.setText("You must input a short name!");
         else if(team.getText().equals(null) || team.getText().equals(""))
-            errorMsg.setText("You should input the team assigned!");
+            errorMsg.setText("You must input the team assigned!");
         else {
 
         }
