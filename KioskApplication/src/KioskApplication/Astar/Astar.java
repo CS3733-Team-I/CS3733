@@ -53,7 +53,18 @@ public class Astar {
                 ListofUnexplored.remove(ListofFrontier);
 
         }
-        // TODO replace this with generated list of nodes
-        return null;
+
+        Node x = endnode;
+        //TODO build path class in node
+        LinkedList<Node> Path = new LinkedList<Node>();// x.buildpath();
+
+        // return generated path of nodes
+        return Path;
     }
+
+    // estimates remaining cost to endnode
+    //TODO write this function
+   public int heuristic(){
+        return 0;
+   }
 }
