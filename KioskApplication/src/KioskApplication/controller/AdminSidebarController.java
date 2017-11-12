@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 
 public class AdminSidebarController {
 
