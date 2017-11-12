@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.MathUtility;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -24,8 +25,14 @@ public class MapController {
     }
 
     @FXML
+    public void initialize() {
+        MapEntity mapEntity = MapEntity.getInstance();
+    }
+
+    @FXML
     void onMapClicked(MouseEvent event) {
-        if (!parent.equals(null)) {parent.mapLocationClicked(event.getX(), event.getY());
+        if (!parent.equals(null)) {
+            parent.mapLocationClicked(event.getX(), event.getY());
         }
     }
 
