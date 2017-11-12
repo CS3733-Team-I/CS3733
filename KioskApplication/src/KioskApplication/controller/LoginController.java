@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -8,9 +9,9 @@ import java.io.IOException;
 public class LoginController {
 
     @FXML
-    TextField tfEmail1;
+    TextField tfEmail;
     @FXML
-    TextField tfPassword;
+    PasswordField pfPassword;
 
     MainWindowController parent;
 
