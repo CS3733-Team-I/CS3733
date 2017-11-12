@@ -21,7 +21,7 @@ public class Pathfinder {
         LinkedList<PathfindingNode> ListExplored = new LinkedList<>();
         LinkedList<PathfindingNode> ListofFrontier = new LinkedList<>();
 
-        // list of unexplored nodes initalized as all nodes
+        // list of unexplored nodes initialized as all nodes
         //TODO create function that generates list of all nodes - DATABASE PEOPLE
         LinkedList<PathfindingNode> ListofUnexplored = new LinkedList<>();//getListofallNodes();
 
@@ -30,7 +30,7 @@ public class Pathfinder {
 
         // add to frontier list the start node with parent node
         startnode.addToFrontier(ListofFrontier);
-        // initalize lowest cost node
+        // initialize lowest cost node
         PathfindingNode lowestcost = null;
         // while loop for generating path of connecting nodes
         while(true){
@@ -40,12 +40,12 @@ public class Pathfinder {
             if (ListofFrontier.isEmpty())
                 break;
 
-            // initalize lowest cost node
+            // initialize lowest cost node
             lowestcost = ListofFrontier.get(0);
 
             // TODO ADD Handling for if no path is found
             // go through all nodes in list and find the one with the lowest total cost and replace that as
-            // the lowestcost node
+            // the lowest cost node
             for (PathfindingNode f: ListofFrontier) {
 
                 if(f.getTotalCost() < lowestcost.getTotalCost())
