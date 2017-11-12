@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static database.template.SQLStrings.*;
+import static KioskApplication.database.template.SQLStrings.*;
 
 public class Connector {
 

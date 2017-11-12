@@ -13,8 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static database.template.CSVFormat.*;
-import static database.template.SQLStrings.*;
+import static KioskApplication.database.template.SQLStrings.*;
+import static KioskApplication.database.template.CSVFormat.*;
 
 public class CSVFileUtil {
 

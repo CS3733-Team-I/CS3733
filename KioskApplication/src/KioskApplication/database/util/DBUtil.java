@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static database.template.ConnectionDetails.*;
-import static database.template.SQLStrings.*;
+import static KioskApplication.database.template.ConnectionDetails.*;
+import static KioskApplication.database.template.SQLStrings.*;
 
 public class DBUtil {
 
