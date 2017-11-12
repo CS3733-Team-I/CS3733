@@ -2,8 +2,13 @@ package KioskApplication.tests.pathfinderTests;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.pathfinder.Pathfinder;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.LinkedList;
+
+import static org.junit.Assert.assertTrue;
 
 public class pathfindingTest {
 
@@ -25,13 +30,13 @@ public class pathfindingTest {
         n1.setYcoord(10);
         n2 = new Node("NODE2", "3");
         n2.setXcoord(20);
-        n3.setYcoord(10);
+        n2.setYcoord(10);
         n3 = new Node("NODE3", "3");
         n3.setXcoord(30);
         n3.setYcoord(10);
         n4 = new Node("NODE4", "3");
         n4.setXcoord(30);
-        n5.setYcoord(20);
+        n4.setYcoord(20);
         n5 = new Node("NODE5", "3");
         n5.setXcoord(40);
         n5.setYcoord(10);
@@ -51,8 +56,9 @@ public class pathfindingTest {
     }
 
     @Test
-    public void testforPath(){
-        // assert true if we found a path
+    public void testPath(){
+        LinkedList<Edge> path1 = Pathfinder.GeneratePath(n1,n6);
+        //System.out.println(path1.size());
     }
 
 

@@ -14,6 +14,10 @@ public class Pathfinder {
         map = MapEntity.getInstance();
     }
 
+    public static LinkedList<Edge> GeneratePath(Node startnode, Node endnode) {
+        return GeneratePath(new StartNode(startnode), new PathfindingNode(endnode));
+    }
+
     // generate path function
     public static LinkedList<Edge> GeneratePath(StartNode startnode, PathfindingNode endnode){
 
