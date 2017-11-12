@@ -20,7 +20,7 @@ public class PathfindingWindowController extends MapWindowController {
     }
 
     void mapLocationClicked(double x, double y) {
-        System.out.println(String.format("Pathfinding Map Clicked: %f %f\n", x, y));
+        System.out.println(String.format("pathfinder Map Clicked: %f %f\n", x, y));
     }
 
     void mapNodeClicked() {}
