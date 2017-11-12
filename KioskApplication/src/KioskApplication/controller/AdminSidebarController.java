@@ -1,10 +1,12 @@
 package KioskApplication.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
 
 public class AdminSidebarController {
 
