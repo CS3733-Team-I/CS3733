@@ -1,13 +1,13 @@
-package KioskApplication.tests.entityTests;
+package KioskApplication.tests.entity;
 
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
-import KioskApplication.entity.MapFloorEntity;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,6 +25,7 @@ public class TestMapEntity {
         n2 = new Node("NODE2", "1");
         n3 = new Node("NODE3", "2");
         n4 = new Node("NODE4", "3");
+
         e1 = new Edge("EDGE1", n1, n2);
         e2 = new Edge("EDGE2", n3, n4);
         e3 = new Edge("EDGE3", n1, n4);
@@ -43,11 +44,36 @@ public class TestMapEntity {
     }
 
     @Test
+    public void testGetAllNodes() {
+        // Add nodes to MapEntity
+        m.addNode(n1);
+        m.addNode(n2);
+        m.addNode(n3);
+        m.addNode(n4);
+
+        // Get nodes
+        ArrayList<Node> nodes = m.getAllNodes();
+
+        assertEquals(nodes.size(), 4);
+
+        assertTrue(nodes.contains(n1));
+        assertTrue(nodes.contains(n2));
+        assertTrue(nodes.contains(n3));
+        assertTrue(nodes.contains(n4));
+
+        // Clean up, remove nodes
+        m.removeNode(n1.getNodeID());
+        m.removeNode(n2.getNodeID());
+        m.removeNode(n3.getNodeID());
+        m.removeNode(n4.getNodeID());
+    }
+
+    @Test
     public void testAddRemoveEdge() {
         //Add edge to map
         m.addEdge(e1);
         //Test that the edge exists in the map
-        assertEquals(m.getEdge(e1.getEdgeID()),e1);
+        assertEquals(m.getEdge(e1.getEdgeID()), e1);
         //Remove the edge
         m.removeEdge(e1.getEdgeID());
         //Test that the edge is not in the map

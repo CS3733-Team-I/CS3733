@@ -26,6 +26,17 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
+    public ArrayList<Node> getAllNodes() {
+        ArrayList<Node> allNodes = new ArrayList<>();
+
+        for (String name : nodes.keySet()) {
+            allNodes.add(nodes.get(name));
+        }
+
+        return allNodes;
+    }
+
+    @Override
     public void removeNode(String s) {
         nodes.remove(s);
     }
