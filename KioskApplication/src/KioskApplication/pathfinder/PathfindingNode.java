@@ -18,7 +18,7 @@ public class PathfindingNode {
     }
 
     //TODO: Calculate cost attributes and then add the node to the frontier.
-    public void addToFrontier(){
+    public void addToFrontier( LinkedList<PathfindingNode> ListofFrontier){
 
     }
 
@@ -35,5 +35,30 @@ public class PathfindingNode {
     //TODO: calculate the cost to reach this node based on cost to reach parent and cost from parent to here.
     public int calculatePreviousCost(){
         return 0;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public int getPreviousCost() {
+        return previousCost;
+    }
+
+    public int getRemainingCost() {
+        return remainingCost;
+    }
+
+    public int getTotalCost() {
+        return totalCost;
+    }
+
+    public Node getParentNode() {
+        return parentNode;
+    }
+
+    //TODO generate list of connected nodes
+    public LinkedList<PathfindingNode> generateListofConnectedNodes(){
+        return new LinkedList<>();
     }
 }
