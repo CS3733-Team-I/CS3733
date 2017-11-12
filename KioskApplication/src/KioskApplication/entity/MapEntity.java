@@ -11,9 +11,16 @@ public class MapEntity implements IMapEntity {
     private HashMap<String,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
 
-    public MapEntity() {
+    private static MapEntity instance = null;
+
+    protected MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
+    }
+
+    public static MapEntity getInstance() {
+        if (instance == null) instance = new MapEntity();
+        return instance;
     }
 
     public void addEdge(Edge e) {
