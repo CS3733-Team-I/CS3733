@@ -22,7 +22,7 @@ public class Pathfinder {
         LinkedList<PathfindingNode> ListofFrontier = new LinkedList<>();
 
         // list of unexplored nodes initalized as all nodes
-        //TODO create function that generates list of all nodes
+        //TODO create function that generates list of all nodes - DATABASE PEOPLE
         LinkedList<PathfindingNode> ListofUnexplored = new LinkedList<>();//getListofallNodes();
 
         // remove start node from unexplored list
@@ -34,7 +34,7 @@ public class Pathfinder {
         PathfindingNode lowestcost = null;
         // while loop for generating path of connecting nodes
         while(true){
-            //TODO add handeler for someone passing in a null start node
+            //TODO add handeler for Default StartNode
 
             // if list of frontier becomes empty break out of while loop
             if (ListofFrontier.isEmpty())
