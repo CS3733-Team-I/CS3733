@@ -8,6 +8,9 @@ import KioskApplication.database.util.DBUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
+
+//Node and Edge objects should only be made here
 public class DatabaseController {
 
     private static DatabaseController instance = null;
@@ -40,7 +43,7 @@ public class DatabaseController {
     }
 
 
-    //will probably want to change this to have less parameters
+    //will probably want to change this to have less parameter
     public static Node addNode(String nodeID, int xc, int yc, String fl, String bu, String nt, String ln, String sn
             , String assigned) {
         try {
@@ -49,6 +52,17 @@ public class DatabaseController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean updateNode(Node node) {
+        try {
+            Connector.updateNode(instanceConnection, node);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -80,6 +94,18 @@ public class DatabaseController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean updateEdge(Edge edge) {
+        try{
+            Connector.updateEdge(instanceConnection, edge);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 

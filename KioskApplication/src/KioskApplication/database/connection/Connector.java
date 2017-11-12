@@ -38,6 +38,10 @@ public class Connector {
         return new Edge(edgeID, node1, node2);
     }
 
+    public static void updateEdge(Connection conn, Edge edge) throws SQLException {
+        updateEdge(conn, edge.getNode1ID(), edge.getNode2ID(), edge.getEdgeID());
+    }
+
     public static Edge selectEdge(Connection conn, String edgeID) throws SQLException {
         Edge edge = null;
         String sql = EDGE_SELECT; //change T_EDGES
@@ -94,6 +98,11 @@ public class Connector {
         pstmt.executeUpdate();
 
         return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
+    }
+
+    public static void updateNode(Connection conn, Node node) throws SQLException {
+        updateNode(conn, node.getXcoord(), node.getYcoord(), node.getFloor(), node.getBuilding(), node.getNodeType(),
+                node.getLongName(), node.getShortName(), node.getTeamAssigned(), node.getNodeID());
     }
 
     public static Node selectNode(Connection conn, String nodeID) throws SQLException {
