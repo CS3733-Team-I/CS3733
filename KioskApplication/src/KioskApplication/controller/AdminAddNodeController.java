@@ -1,4 +1,5 @@
 package KioskApplication.controller;
+import KioskApplication.database.DatabaseController;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
@@ -75,7 +76,6 @@ public class AdminAddNodeController {
             errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
             errorMsg.setText("You must input the Y coordinate!");
-
         else if(building.getText().equals(null) || building.getText().equals(""))
             errorMsg.setText("You must input a building!");
         else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
@@ -87,7 +87,7 @@ public class AdminAddNodeController {
         else if(team.getText().equals(null) || team.getText().equals(""))
             errorMsg.setText("You must input the team assigned!");
         else {
-
+            //DatabaseController.addNode();
         }
     }
 }

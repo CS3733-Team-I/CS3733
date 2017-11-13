@@ -135,6 +135,7 @@ public class DatabaseController {
         if(instanceConnection == null) {
             try {
                 instanceConnection = DBUtil.getCon();
+                DBUtil.createTables(instanceConnection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
