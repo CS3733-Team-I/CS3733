@@ -3,6 +3,7 @@ package KioskApplication.controller;
 import KioskApplication.entity.Administrator;
 import KioskApplication.entity.AdministratorList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -14,6 +15,8 @@ public class LoginController {
     TextField tfEmail;
     @FXML
     PasswordField pfPassword;
+    @FXML
+    Label errorMsg;
 
     MainWindowController parent;
 
@@ -24,16 +27,18 @@ public class LoginController {
     @FXML
     public void OnLoginClicked() throws IOException {
         /*up to change*/
-        /*AdministratorList AdminList = new AdministratorList();
-        AdminList.add_adminstrator(new Administrator("boss@hospital.com", "imtheboss"));
-        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {*/
+        AdministratorList AdminList = new AdministratorList();
+
+        AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
+
+        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
             parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
-        /*}
+        }
         else {
-
-        }*/
+            errorMsg.setText("Invalid Login. ");
+        }
     }
 
     @FXML
