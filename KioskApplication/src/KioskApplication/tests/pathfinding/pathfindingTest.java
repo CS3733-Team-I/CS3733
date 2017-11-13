@@ -1,4 +1,5 @@
 package KioskApplication.tests.pathfinding;
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.pathfinder.Pathfinder;

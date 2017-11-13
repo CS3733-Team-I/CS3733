@@ -27,8 +27,8 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
-    public ArrayList<Node> getAllNodes() {
-        ArrayList<Node> allNodes = new ArrayList<>();
+    public LinkedList<Node> getAllNodes() {
+        LinkedList<Node> allNodes = new LinkedList<>();
 
         for (String name : nodes.keySet()) {
             allNodes.add(nodes.get(name));
@@ -40,11 +40,5 @@ public class MapFloorEntity implements IMapEntity{
     @Override
     public void removeNode(String s) {
         nodes.remove(s);
-    }
-
-    @Override
-    public LinkedList<Node> getAllNodes() {
-        //TODO: return all nodes on this floor
-        return null;
     }
 }
