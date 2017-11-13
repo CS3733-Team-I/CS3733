@@ -19,7 +19,7 @@ public class Pathfinder {
         MapEntity map = MapEntity.getInstance();
 
 
-        // TODO: this node needs a location?
+        // TODO: this node needs a location UPDATE with actual coordinates
         // if start node is not declared, then default to start position on floor 3 Node1.
         if (startingNode == null || startingNode.getNodeID() == null){
             startingNode = new Node("Node1", NodeFloor.THIRD);
