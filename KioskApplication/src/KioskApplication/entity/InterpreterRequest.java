@@ -1,4 +1,4 @@
-package KioskApplication.Entity;
+package KioskApplication.entity;
 
 import KioskApplication.database.objects.Node;
 
