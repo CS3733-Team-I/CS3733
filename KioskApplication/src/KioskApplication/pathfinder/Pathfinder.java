@@ -6,6 +6,7 @@ import KioskApplication.entity.MapEntity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Pathfinder {
 
@@ -48,6 +49,7 @@ public class Pathfinder {
         // initialize lowest cost node
         PathfindingNode lowestCost = null;
         // while loop for generating path of connecting nodes
+        //TODO: add actual loop logic
         while(true){
             //TODO add handler for Default StartNode
 
@@ -61,10 +63,9 @@ public class Pathfinder {
             // TODO ADD Handling for if no path is found
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node
-            for (PathfindingNode f: frontierNodes) {
-
-                if(f.getTotalCost() < lowestCost.getTotalCost())
-                   lowestCost = f;
+            for(Map.Entry<String, PathfindingNode> entry : frontierNodes.entrySet()){
+                if(entry.getValue().getTotalCost() < lowestCost.getTotalCost())
+                    lowestCost = entry.getValue();
             }
 
             exploredNodes.put(lowestCost.getNode().getNodeID(), lowestCost);
@@ -84,9 +85,9 @@ public class Pathfinder {
             }
         }
 
-        PathfindingNode x = lowestCost;
+        PathfindingNode lastNode = lowestCost;
 
-        LinkedList<Edge> Path = x.buildPath();
+        LinkedList<Edge> Path = lastNode.buildPath();
 
         // return generated path of nodes
         return Path;
