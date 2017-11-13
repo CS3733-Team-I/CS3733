@@ -9,9 +9,22 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+
+import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
+
 import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 
 public class AdminSidebarController {
+
+    @FXML
+    private MenuButton requestMenu;
+
+    @FXML
+    private MenuItem interpreterSelect;
+
 
     AdminWindowController parent;
 
@@ -39,8 +52,10 @@ public class AdminSidebarController {
     }
 
     @FXML
-    void onRequestPressed() {
-        System.out.println("Request Pressed\n");
+    void onInterpreterPressed() throws IOException{
+        System.out.println("Interpreter Request Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_INTERPRETER);
     }
 
     @FXML
@@ -56,4 +71,5 @@ public class AdminSidebarController {
         CSVFileUtil.writeNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").getFile());
         CSVFileUtil.writeEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
     }
+
 }
