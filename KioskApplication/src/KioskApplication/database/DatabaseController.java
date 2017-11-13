@@ -46,7 +46,7 @@ public class DatabaseController {
 
 
     //will probably want to change this to have less parameter
-    public static Node addNode(String nodeID, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+    public static Node addNode(String nodeID, int xc, int yc, int fl, int bu, int nt, String ln, String sn
             , String assigned) {
         try {
             return Connector.insertNode(instanceConnection, xc, yc, fl, bu, nt, ln, sn, assigned, nodeID);

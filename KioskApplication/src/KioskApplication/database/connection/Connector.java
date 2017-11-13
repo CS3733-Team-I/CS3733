@@ -64,16 +64,16 @@ public class Connector {
         pstmt.execute();
     }
 
-    public static Node insertNode(Connection conn, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+    public static Node insertNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
             , String assigned, String nodeID)throws SQLException{
         String sql = NODE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         pstmt.setInt(2, xc);
         pstmt.setInt(3, yc);
-        pstmt.setString(4, fl);
-        pstmt.setString(5, bu);
-        pstmt.setString(6, nt);
+        pstmt.setInt(4, fl);
+        pstmt.setInt(5, bu);
+        pstmt.setInt(6, nt);
         pstmt.setString(7, ln);
         pstmt.setString(8, sn);
         pstmt.setString(9, assigned);
@@ -82,16 +82,16 @@ public class Connector {
         return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
     }
 
-    public static Node updateNode(Connection conn, int xc, int yc, String fl, String bu, String nt, String ln, String sn
+    public static Node updateNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
             , String assigned, String nodeID)throws SQLException{
         String sql = NODE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         pstmt.setInt(2, xc);
         pstmt.setInt(3, yc);
-        pstmt.setString(4, fl);
-        pstmt.setString(5, bu);
-        pstmt.setString(6, nt);
+        pstmt.setInt(4, fl);
+        pstmt.setInt(5, bu);
+        pstmt.setInt(6, nt);
         pstmt.setString(7, ln);
         pstmt.setString(8, sn);
         pstmt.setString(9, assigned);
@@ -113,8 +113,8 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             node = new Node(nodeID, rs.getInt("xcoord"), rs.getInt("ycoord"),
-                    rs.getString("floor"), rs.getString("building"),
-                    rs.getString("nodeType"), rs.getString("longName"),
+                    rs.getInt("floor"), rs.getInt("building"),
+                    rs.getInt("nodeType"), rs.getString("longName"),
                     rs.getString("shortName"), rs.getString("teamAssigned"));
         } else {
             //throws exception
