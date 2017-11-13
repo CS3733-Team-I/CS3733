@@ -3,7 +3,7 @@ package KioskApplication.database.template;
 public class SQLStrings {
 
     public static final String CREATE_NODE_TABLE = "create table t_nodes(" +
-            "  NodeID VARCHAR(10)PRIMARY KEY NOT NULL ," +
+            "  NodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_pk PRIMARY KEY," +
             "  xcoord int NOT NULL," +
             "  ycoord int NOT NULL," +
             "  floor int NOT NULL," +
@@ -15,37 +15,41 @@ public class SQLStrings {
             ")";
 
     public static final String CREATE_EDGE_TABLE = "create table t_edges(" +
-            "  edgeID VARCHAR(21) NOT NULL PRIMARY KEY," +
-            "  startNode VARCHAR(10) NOT NULL FOREIGN KEY REFERENCES t_nodes(NodeID) ON DELETE CASCADE ON UPDATE CASCADE," +
-            "  endNode VARCHAR(10) NOT NULL FOREIGN KEY REFERENCES t_nodes(NodeID) ON DELETE CASCADE ON UPDADE CASCADE" +
+            " edgeID VARCHAR(21) NOT NULL CONSTRAINT t_edges_pk PRIMARY KEY," +
+            " startNode VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk" +
+            " REFERENCES t_nodes ON DELETE CASCADE," +
+            " endNode VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk1" +
+            " REFERENCES t_nodes ON DELETE CASCADE" +
             ")";
 
     public static final String CREATE_INTERPRETERS_TABLE = "CREATE TABLE t_interpreters(" +
-            " interpreterID int PRIMARY KEY NOT NULL," +
+            " interpreterID int NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
             " language VARCHAR(20) NOT NULL," +
-            " requestID int NOT NULL FOREIGN KEY REFERENCES t_requests(requestID) ON DELETE CASCADE ON UPDATE CASCADE" +
+            " requestID int NOT NULL CONSTRAINT t_requests_fk" +
+            " REFERENCES t_requests ON DELETE CASCADE" +
             ")";
 
 
     public static final String CREATE_REQUESTS_TABLE = "CREATE TABLE t_requests(" +
-            " requestID int PRIMARY KEY NOT NULL AUTO-INCREMENT," +
-            " locationNode VARCHAR(10) FOREIGN KEY REFERENCES t_nodes(NodeID)" +
+            " requestID int NOT NULL CONSTRAINT t_requests_pk PRIMARY KEY," +
+            " locationNode VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk" +
+            " REFERENCES t_nodes ON DELETE CASCADE," +
             " employee VARCHAR(20) NOT NULL" +
             ")";
 
 
 
-    public static final String EDGE_INSERT = "insert into T_EDGES values(?, ?, ?)";
-    public static final String EDGE_UPDATE = "update T_EDGES set startNode=?, endNode=? where edgeID=?";
-    public static final String EDGE_SELECT = "SELECT ? FROM T_EDGES";
-    public static final String EDGE_DELETE = "DELETE FROM T_EDGES where edgeID = ?";
-    public static final String EDGE_SELECT_ALL = "select * from T_EDGES";
+    public static final String EDGE_INSERT = "insert into t_edges values(?, ?, ?)";
+    public static final String EDGE_UPDATE = "update t_edges set startNode=?, endNode=? where edgeID=?";
+    public static final String EDGE_SELECT = "SELECT ? FROM t_edges";
+    public static final String EDGE_DELETE = "DELETE FROM t_edges where edgeID = ?";
+    public static final String EDGE_SELECT_ALL = "select * from t_edges";
 
-    public static final String NODE_INSERT = "insert into T_NODES values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String NODE_UPDATE = "update T_EDGES set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
-    public static final String NODE_SELECT = "SELECT ? FROM T_NODES";
-    public static final String NODE_DELETE = "DELETE FROM T_NODES WHERE nodesID = ?";
-    public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
+    public static final String NODE_INSERT = "insert into t_nodes values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
+    public static final String NODE_SELECT = "SELECT ? FROM t_nodes";
+    public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodesID = ?";
+    public static final String NODE_SELECT_ALL = "SELECT * FROM t_nodes";
 
 
     public static final String REQUEST_INSERT = "insert into t_requests values(?, ?, ?)";
