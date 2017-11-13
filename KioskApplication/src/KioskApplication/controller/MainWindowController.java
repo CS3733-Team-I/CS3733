@@ -15,8 +15,6 @@ public class MainWindowController {
     @FXML Pane contentWindow;
     @FXML AnchorPane LoginPopup;
 
-    String curr_admin_email;
-
     enum MainWindowScene {
         PATHFINDING,
         ADMIN
@@ -51,7 +49,6 @@ public class MainWindowController {
     protected void initialize() throws IOException
     {
         // Initialize admin window and pathfinding window
-        adminWindow = new AdminWindowController();
         pathfindingWindow = new PathfindingWindowController();
 
         this.switchTo(MainWindowScene.PATHFINDING);
@@ -73,6 +70,7 @@ public class MainWindowController {
         switch (currentView) {
             case ADMIN:
                 this.switchTo(MainWindowScene.PATHFINDING);
+                this.adminWindow.reset();
                 break;
             case PATHFINDING:
                 this.Login();

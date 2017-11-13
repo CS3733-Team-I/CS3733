@@ -9,6 +9,8 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.SIDE
 
 public class AdminWindowController extends MapWindowController {
 
+    String curr_admin_email;
+
     public enum SidebarType {
         SIDEBAR_ADD,
         SIDEBAR_EDIT,
@@ -25,7 +27,12 @@ public class AdminWindowController extends MapWindowController {
 
         switchTo(SIDEBAR_MENU);
 
+        curr_admin_email = "";
         getMapController().setParent(this);
+    }
+
+    public void reset() {
+        this.curr_admin_email = "";
     }
 
     void mapLocationClicked(double x, double y) {
