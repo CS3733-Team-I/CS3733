@@ -2,13 +2,14 @@ package KioskApplication.entity;
 
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.utility.NodeFloor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapEntity implements IMapEntity {
 
-    private HashMap<String,MapFloorEntity> floors;
+    private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
 
     private static MapEntity instance = null;
@@ -25,7 +26,7 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void addNode(Node n) {
-        String f = n.getFloor();
+        NodeFloor f = n.getFloor();
         if(!floorExists(f)) addFloor(f);
 
         floors.get(f).addNode(n);
@@ -33,7 +34,7 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public Node getNode(String s) {
-        for (String floor : floors.keySet()) {
+        for (NodeFloor floor : floors.keySet()) {
             if (floors.get(floor).getNode(s) != null) return floors.get(floor).getNode(s);
         }
         return null;
@@ -43,7 +44,7 @@ public class MapEntity implements IMapEntity {
     public ArrayList<Node> getAllNodes() {
         ArrayList<Node> allNodes = new ArrayList<>();
 
-        for (String floor : floors.keySet()) {
+        for (NodeFloor floor : floors.keySet()) {
             allNodes.addAll(floors.get(floor).getAllNodes());
         }
 
@@ -52,7 +53,7 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void removeNode(String s) {
-        for (String floor : floors.keySet()) {
+        for (NodeFloor floor : floors.keySet()) {
             floors.get(floor).removeNode(s);
         }
     }
@@ -73,19 +74,19 @@ public class MapEntity implements IMapEntity {
         ArrayList<Edge> returnList = new ArrayList<>();
 
         for(String key : edges.keySet()) {
-            if(edges.get(key).getNode1().getNodeID().equals(n.getNodeID()) ||
-                    edges.get(key).getNode2().getNodeID().equals(n.getNodeID())) {
+            if(edges.get(key).getNode1ID().equals(n.getNodeID()) ||
+                    edges.get(key).getNode2ID().equals(n.getNodeID())) {
                 returnList.add(edges.get(key));
             }
         }
         return returnList;
     }
 
-    private boolean floorExists(String floor) {
+    private boolean floorExists(NodeFloor floor) {
         return floors.keySet().contains(floor);
     }
 
-    private void addFloor(String floor) {
+    private void addFloor(NodeFloor floor) {
         floors.put(floor, new MapFloorEntity());
     }
 }
