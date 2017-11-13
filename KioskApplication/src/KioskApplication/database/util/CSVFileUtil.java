@@ -4,6 +4,9 @@ package KioskApplication.database.util;
 import KioskApplication.database.connection.Connector;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 
 import java.io.*;
 import java.sql.Connection;
@@ -49,57 +52,43 @@ public class CSVFileUtil {
                 String floor = elements[3].trim();
                 String building = elements[4].trim();
                 String nodeType = elements[5].trim();
-                int fl = -1;
-                int bu = -1;
-                int nt = -1;
+                NodeFloor fl = NodeFloor.LOWERLEVEL_2;
+                NodeBuilding bu = NodeBuilding.FRANCIS45;
+                NodeType nt = NodeType.HALL;
 
-                if(floor.equals("L2")) {
-                    fl = LOWERLEVEL2;
-                }
-                else if(floor.equals("L1")) {
-                    fl = LOWERLEVEL1;
-                }
-                else if(floor.equals("0")) { //CHECK THIS
-                    fl = GROUNDFLOOR;
-                }
-                else if (floor.equals("1")) {
-                    fl = FIRSTFLOOR;
-                }
-                else if (floor.equals("2")) {
-                    fl = SECONDFLOOR;
-                }
-                else if (floor.equals("3")) {
-                    fl = THIRDFLOOR;
+                switch (floor) {
+                    case "L2": fl = NodeFloor.LOWERLEVEL_2; break;
+                    case "L1": fl = NodeFloor.LOWERLEVEL_1; break;
+                    case "0": fl = NodeFloor.GROUND; break;
+                    case "1": fl = NodeFloor.FIRST; break;
+                    case "2": fl = NodeFloor.SECOND; break;
+                    case "3": fl = NodeFloor.THIRD; break;
+
                 }
 
-                if(building.equals("45 Francis")) {
-                    bu = FRANCIS45;
-                }
-                else if(building.equals("Tower")) {
-                    bu = TOWER;
-                }
-                else if(building.equals("Shapiro")) {
-                    bu = SHAPIRO;
-                }
-                else if(building.equals("BTM")) {
-                    bu = BTM;
+                switch (building) {
+                    case "45 Francis": bu = NodeBuilding.FRANCIS45; break;
+                    case "15 Francis": bu = NodeBuilding.FRANCIS15; break;
+                    case "Tower": bu = NodeBuilding.TOWER; break;
+                    case "Sharpiro": bu = NodeBuilding.SHAPIRO; break;
+                    case "BTM": bu = NodeBuilding.BTM; break;
                 }
 
+                switch (nodeType) {
+                    case "HALL": nt = NodeType.HALL; break;
+                    case "ELEV": nt = NodeType.ELEV; break;
+                    case "REST": nt = NodeType.REST; break;
+                    case "STAI": nt = NodeType.STAI; break;
+                    case "DEPT": nt = NodeType.DEPT; break;
+                    case "LABS": nt = NodeType.LABS; break;
+                    case "INFO": nt = NodeType.INFO; break;
+                    case "CONF": nt = NodeType.CONF; break;
+                    case "EXIT": nt = NodeType.EXIT; break;
+                    case "RETL": nt = NodeType.RETL; break;
+                    case "SERV": nt = NodeType.SERV; break;
+                }
 
-                if(nodeType.equals("ELEV")) {
-                    nt = ELEVATOR;
-                }
-                else if(nodeType.equals("HALL")) {
-                    nt= HALL;
-                }
-                else if(nodeType.equals("DEPT")) {
-                    nt = DEPT;
-                }
-                else if(nodeType.equals("STAI")) {
-                    nt = STAI;
-                }
-
-                Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()), fl,
+                Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()),fl,
                         bu, nt, elements[6].trim(), elements[7].trim(), elements[8].trim());
                 Connector.insertNode(conn, Integer.parseInt(elements[1].trim()),Integer.parseInt(elements[2].trim()),
                         fl, bu, nt, elements[6].trim(), elements[7].trim(), elements[8].trim(), elements[0].trim());

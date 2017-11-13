@@ -4,6 +4,9 @@ import KioskApplication.database.connection.Connector;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.database.util.DBUtil;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -55,8 +58,8 @@ public class DatabaseController {
 
 
     //will probably want to change this to have less parameter
-    public static Node addNode(String nodeID, int xc, int yc, int fl, int bu, int nt, String ln, String sn
-            , String assigned) {
+    public static Node addNode(String nodeID, int xc, int yc, NodeFloor fl, NodeBuilding bu, NodeType nt,
+                               String ln, String sn, String assigned) {
         try {
             return Connector.insertNode(instanceConnection, xc, yc, fl, bu, nt, ln, sn, assigned, nodeID);
         } catch (SQLException e) {
