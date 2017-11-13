@@ -37,8 +37,8 @@
                 </Label>
                 <MenuButton fx:id="langSelect" minWidth="150.0" mnemonicParsing="false" text="Language Select" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <items>
-                        <MenuItem fx:id="spanish" mnemonicParsing="false" onAction="#langSelector" text="Spanish" />
-                        <MenuItem fx:id="chinese" mnemonicParsing="false" onAction="#langSelector" text="Chinese" />
+                        <MenuItem fx:id="spanish" mnemonicParsing="false" text="Spanish" />
+                        <MenuItem fx:id="chinese" mnemonicParsing="false" text="Chinese" />
                     </items>
                     <GridPane.margin>
                         <Insets />
