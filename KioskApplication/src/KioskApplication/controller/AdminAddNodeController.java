@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 import KioskApplication.database.DatabaseController;
 import KioskApplication.utility.*;
+import KioskApplication.database.objects.*;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
@@ -142,8 +143,10 @@ public class AdminAddNodeController {
             // Ensure there is no existing node with that ID
             if(DatabaseController.getNode(nodeID.getText()) != null) {
                 System.out.println("Adding node " + nodeID.getText());
+                // Creates node
+                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
                 // Add Node
-                //DatabaseController.addNode(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
+                DatabaseController.addNode(node1);
             }
         }
     }
