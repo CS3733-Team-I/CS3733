@@ -132,7 +132,7 @@ public class pathfindingTest {
     public void testAnotherPath(){
         Path path2 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-            path2 = Pathfinder.GeneratePath(n1, n6);
+            path2 = Pathfinder.GeneratePath(n1, n4);
         }
         catch(PathfindingException e) {}
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
@@ -141,7 +141,7 @@ public class pathfindingTest {
 
         LinkedList<Node> testPath2Waypoints = new LinkedList<>();
         testPath2Waypoints.add(n1);
-        testPath2Waypoints.add(n6);
+        testPath2Waypoints.add(n4);
 
         Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
 
