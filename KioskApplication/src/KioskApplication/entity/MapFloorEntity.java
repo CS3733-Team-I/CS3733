@@ -47,4 +47,10 @@ public class MapFloorEntity implements IMapEntity{
     public Edge getConnectingEdge(Node node1, Node node2){
         return null;
     }
+
+    @Override
+    //TODO: given a node, return a list of all adjacent nodes.
+    public LinkedList<Node> getConnectedNodes(Node node){
+        return null;
+    }
 }

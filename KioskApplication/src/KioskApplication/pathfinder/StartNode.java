@@ -7,6 +7,10 @@ import java.util.LinkedList;
 
 public class StartNode extends PathfindingNode {
 
+    private Node node;
+    private int previousCost;
+    private int totalCost;
+
     public StartNode(Node node) {
         super(node);
     }
@@ -21,8 +25,9 @@ public class StartNode extends PathfindingNode {
     }
 
     @Override
-    //Cost to reach this node; this is the start, so cost is zero.
-    public int calculatePreviousCost(){
-        return 0;
+    //Calculate estimated cost to end.
+    public void calculateCost(PathfindingNode endNode){
+        this.previousCost = 0;  //first node, so no previous cost.
+        this.totalCost = this.heuristic(endNode);
     }
 }

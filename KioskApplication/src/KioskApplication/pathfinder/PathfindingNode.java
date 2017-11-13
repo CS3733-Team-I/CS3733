@@ -10,7 +10,6 @@ public class PathfindingNode {
 
     private Node node;
     private int previousCost;
-    private int remainingCost;
     private int totalCost;
     private PathfindingNode parentNode;
 
@@ -18,9 +17,10 @@ public class PathfindingNode {
         this.node = node;
     }
 
-    //TODO: Calculate cost attributes and then add the node to the frontier.
-    public void addToFrontier( LinkedList<PathfindingNode> ListofFrontier){
-
+    //Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
+    public void prepForFrontier(PathfindingNode parent, PathfindingNode endNode){
+        this.parentNode = parent;
+        this.calculateCost(endNode);
     }
 
     //Recursive method to build a path from this node, its parent, etc. back to the start.
@@ -41,8 +41,8 @@ public class PathfindingNode {
         return straightLine;
     }
 
-    //Calculates the cost to reach this node.
-    public int calculatePreviousCost(){
+    //Calculates the cost to reach this node and the estimated total cost from here to the end.
+    public void calculateCost(PathfindingNode endNode){
         //Assuming all edges are straight lines, the cost of the edge from the parent node should be the straight-line
         //distance between the two.
         int xDistance = Math.abs(this.node.getXcoord() - this.parentNode.getNode().getXcoord());
@@ -51,8 +51,8 @@ public class PathfindingNode {
         int straightLineDistance = (int) Math.pow((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)), -2);
         //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
         //node to here.
-        this.previousCost = straightLineDistance + this.parentNode.getTotalCost();
-        return this.previousCost;
+        this.previousCost = straightLineDistance + this.parentNode.getPreviousCost();
+        this.totalCost = this.previousCost + this.heuristic(endNode);
     }
 
     public Node getNode() {
@@ -63,9 +63,6 @@ public class PathfindingNode {
         return previousCost;
     }
 
-    public int getRemainingCost() {
-        return remainingCost;
-    }
 
     public int getTotalCost() {
         return totalCost;
@@ -73,10 +70,5 @@ public class PathfindingNode {
 
     public PathfindingNode getParentNode() {
         return parentNode;
-    }
-
-    //TODO generate list of connected nodes
-    public LinkedList<PathfindingNode> generateListofConnectedNodes(){
-        return new LinkedList<>();
     }
 }
