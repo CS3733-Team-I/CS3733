@@ -91,14 +91,19 @@
                </FXCollections>
            </items>
        </ChoiceBox>
-       <ChoiceBox fx:id="nodeTypeChoiceBox" layoutX="87.0" layoutY="272.0" prefHeight="28.0" prefWidth="99.0">
+       <ChoiceBox fx:id="nodeTypeChoiceBox" value="-select-" layoutX="87.0" layoutY="272.0" prefHeight="28.0" prefWidth="99.0">
            <items>
                <FXCollections fx:factory="observableArrayList">
-                   <String fx:value="ELEVATOR" />
+                   <String fx:value="ELEV" />
                    <String fx:value="HALL" />
                    <String fx:value="REST" />
                    <String fx:value="DEPT" />
                    <String fx:value="STAI" />
+                   <String fx:value="CONF" />
+                   <String fx:value="EXIT" />
+                   <String fx:value="INFO" />
+                   <String fx:value="LABS" />
+                   <String fx:value="SERV" />
                </FXCollections>
            </items>
        </ChoiceBox>
