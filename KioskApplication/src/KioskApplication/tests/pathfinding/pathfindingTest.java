@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.LinkedList;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class pathfindingTest {
@@ -66,7 +67,35 @@ public class pathfindingTest {
         pathtest.add(e6);
 
         assertEquals(path1, pathtest);
-        //System.out.println(path1.size());
+        System.out.println(path1.toString());
+        System.out.println(pathtest.toString());
+    }
+
+
+    @Test
+    public void testWrongPath(){
+        LinkedList<Edge> path1 = Pathfinder.GeneratePath(n1,n6);
+        LinkedList<Edge> pathtest = new LinkedList<Edge>();
+        pathtest.add(e2);
+        pathtest.add(e2);
+        pathtest.add(e5);
+        pathtest.add(e6);
+
+        assertNotEquals(path1, pathtest);
+        System.out.println(path1.toString());
+        System.out.println(pathtest.toString());
+    }
+
+    @Test
+    public void testAnotherPath(){
+        LinkedList<Edge> path2 = Pathfinder.GeneratePath(n1,n4);
+        LinkedList<Edge> pathtest2 = new LinkedList<Edge>();
+        pathtest2.add(e1);
+        pathtest2.add(e3);
+
+        assertEquals(path2, pathtest2);
+        System.out.println(path2.toString());
+        System.out.println(pathtest2.toString());
     }
 
 
