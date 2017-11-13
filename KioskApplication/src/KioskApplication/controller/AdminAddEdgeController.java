@@ -37,8 +37,8 @@ public class AdminAddEdgeController {
 
     @FXML
     void updateEdgeID() throws IOException{
-        System.out.println("Node1: " + (node1ID.getText() == "") + " Node2: " + node2ID.getText()); // ?
-        if(node1ID.getText()!="" && node1ID.getText()!=null && node2ID.getText()!="" && node2ID.getText()!=null) // ?
+        System.out.println("Node1: " + (node1ID.getText().toString().isEmpty()) + " Node2: " + node2ID.getText()); // ?
+        if(!node1ID.getText().toString().isEmpty() && !node2ID.getText().toString().isEmpty()) // ?
             edgeID.setText(node1ID.getText() + "_" + node2ID.getText());
         else
             edgeID.setText("Enter Nodes");
