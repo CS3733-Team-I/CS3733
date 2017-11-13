@@ -5,13 +5,17 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #f0f8ff;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="requestMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #f0f8ff;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button layoutX="41.0" layoutY="28.0" mnemonicParsing="false" onAction="#onAddPressed" prefHeight="27.0" prefWidth="118.0" text="Add Node" AnchorPane.topAnchor="50.0" />
       <Button layoutX="41.0" layoutY="84.0" mnemonicParsing="false" onAction="#onEditPressed" prefHeight="27.0" prefWidth="118.0" text="Edit Node" AnchorPane.topAnchor="100.0" />
-      <Button layoutX="41.0" layoutY="200.0" mnemonicParsing="false" onAction="#onRequestPressed" prefHeight="27.0" prefWidth="118.0" text="Request Service" AnchorPane.topAnchor="200.0" />
       <Button mnemonicParsing="false" onAction="#onReadClicked" text="Read CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
       <Button mnemonicParsing="false" onAction="#onSaveClicked" text="Save CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onAddEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Add Edge" />
+      <MenuButton fx:id="requestMenu" layoutX="28.0" layoutY="202.0" mnemonicParsing="false" text="Request Service">
+        <items>
+          <MenuItem fx:id="interpreterSelect" mnemonicParsing="false" onAction="#onInterpreterPressed" text="Interpreter" />
+        </items>
+      </MenuButton>
    </children>
 </AnchorPane>
