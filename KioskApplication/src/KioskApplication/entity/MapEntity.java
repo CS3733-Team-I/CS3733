@@ -95,7 +95,7 @@ public class MapEntity implements IMapEntity {
     public Edge getConnectingEdge(Node node1, Node node2){
         ArrayList<Edge> node1Edges = getEdges(node1);
         for(Edge edge: node1Edges){
-            if(edge.getNode1().equals(node2) || edge.getNode2().equals(node2))
+            if(edge.getNode1ID().equals(node2.getNodeID()) || edge.getNode2ID().equals(node2.getNodeID()))
                 return edge;
         }
         return null;
@@ -106,10 +106,10 @@ public class MapEntity implements IMapEntity {
         ArrayList<Edge> edges = this.getEdges(node);
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
-            if(edge.getNode1().equals(node))
-                connectedNodes.add(edge.getNode2());
-            else if(edge.getNode2().equals(node))
-                connectedNodes.add(edge.getNode1());
+            if(edge.getNode1ID().equals(node.getNodeID()))
+                connectedNodes.add(getNode(edge.getNode1ID()));
+            else if(edge.getNode2ID().equals(node.getNodeID()))
+                connectedNodes.add(getNode(edge.getNode2ID()));
         }
         return connectedNodes;
     }

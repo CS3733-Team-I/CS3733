@@ -3,6 +3,7 @@ import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.pathfinder.Pathfinder;
+import KioskApplication.pathfinder.PathfindingException;
 import KioskApplication.utility.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,18 +51,23 @@ public class pathfindingTest {
         n7.setXcoord(20);
         n7.setYcoord(20);
 
-        e1 = new Edge("EDGE1", n1, n2);
-        e2 = new Edge("EDGE2", n2, n3);
-        e3 = new Edge("EDGE2", n2, n4);
-        e4 = new Edge("EDGE2", n2, n7);
-        e5 = new Edge("EDGE2", n5, n3);
-        e6 = new Edge("EDGE2", n5, n6);
+        e1 = new Edge("EDGE1", n1.getNodeID(), n2.getNodeID());
+        e2 = new Edge("EDGE2", n2.getNodeID(), n3.getNodeID());
+        e3 = new Edge("EDGE2", n2.getNodeID(), n4.getNodeID());
+        e4 = new Edge("EDGE2", n2.getNodeID(), n7.getNodeID());
+        e5 = new Edge("EDGE2", n5.getNodeID(), n3.getNodeID());
+        e6 = new Edge("EDGE2", n5.getNodeID(), n6.getNodeID());
     }
 
+    //TODO: handle the exception
     @Test
     public void testPath(){
-        LinkedList<Edge> path1 = Pathfinder.GeneratePath(n1,n6);
-        LinkedList<Edge> pathtest = new LinkedList<Edge>();
+        LinkedList<Edge> path1 = null;
+        try {
+            path1 = Pathfinder.GeneratePath(n1, n6);
+        }
+        catch(PathfindingException e) {}
+        LinkedList<Edge> pathtest = new LinkedList<>();
         pathtest.add(e1);
         pathtest.add(e2);
         pathtest.add(e5);
@@ -72,11 +78,15 @@ public class pathfindingTest {
         System.out.println(pathtest.toString());
     }
 
-
+    //TODO: handle the exception
     @Test
     public void testWrongPath(){
-        LinkedList<Edge> path1 = Pathfinder.GeneratePath(n1,n6);
-        LinkedList<Edge> pathtest = new LinkedList<Edge>();
+        LinkedList<Edge> path1 = null;
+        try {
+            path1 = Pathfinder.GeneratePath(n1,n6);
+        }
+        catch(PathfindingException e) {}
+        LinkedList<Edge> pathtest = new LinkedList<>();
         pathtest.add(e2);
         pathtest.add(e2);
         pathtest.add(e5);
@@ -87,10 +97,15 @@ public class pathfindingTest {
         System.out.println(pathtest.toString());
     }
 
+    //TODO: handle the exception
     @Test
     public void testAnotherPath(){
-        LinkedList<Edge> path2 = Pathfinder.GeneratePath(n1,n4);
-        LinkedList<Edge> pathtest2 = new LinkedList<Edge>();
+        LinkedList<Edge> path2 = null;
+        try {
+             path2 = Pathfinder.GeneratePath(n1,n4);
+        }
+        catch(PathfindingException e) {}
+        LinkedList<Edge> pathtest2 = new LinkedList<>();
         pathtest2.add(e1);
         pathtest2.add(e3);
 
@@ -98,6 +113,4 @@ public class pathfindingTest {
         System.out.println(path2.toString());
         System.out.println(pathtest2.toString());
     }
-
-
 }

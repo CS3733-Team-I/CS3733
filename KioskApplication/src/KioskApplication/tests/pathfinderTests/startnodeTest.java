@@ -5,6 +5,7 @@ import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.pathfinder.PathfindingNode;
 import KioskApplication.pathfinder.StartNode;
+import KioskApplication.utility.NodeFloor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class startnodeTest {
     @Before
     public void setup(){
         MapEntity map = MapEntity.getInstance();
-        startNode = new StartNode(new Node("Node1", "3"));
+        startNode = new StartNode(new Node("Node1", NodeFloor.THIRD));
         startNode.getNode().setXcoord(1);
         startNode.getNode().setYcoord(9);
     }

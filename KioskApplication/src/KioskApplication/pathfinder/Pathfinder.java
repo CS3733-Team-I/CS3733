@@ -3,6 +3,7 @@ package KioskApplication.pathfinder;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeFloor;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,9 +18,11 @@ public class Pathfinder {
     public static LinkedList<Edge> GeneratePath(Node startingNode, Node endingNode) throws PathfindingException{
         MapEntity map = MapEntity.getInstance();
 
+
+        // TODO: this node needs a location?
         // if start node is not declared, then default to start position on floor 3 Node1.
         if (startingNode == null || startingNode.getNodeID() == null){
-            startingNode = new Node("Node1", "3");
+            startingNode = new Node("Node1", NodeFloor.THIRD);
         }
         // if end node is not defined then throw exception for not valid
         if (endingNode == null || endingNode.getNodeID() == null){
