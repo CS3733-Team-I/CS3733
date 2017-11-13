@@ -18,7 +18,6 @@ public class InterpreterRequestController {
         this.parent = parent;
     }
 
-    String language = "None";
     @FXML
     private Button btnSubmit;
 
@@ -40,26 +39,15 @@ public class InterpreterRequestController {
     }
 
     @FXML
-    public void langSelector(){
-        spanish.setOnAction(e -> saveLang(e));
-        chinese.setOnAction(e -> saveLang(e));
-    }
-
-    @FXML
-    public String saveLang(ActionEvent e){
-
-        if(e.getSource()==spanish){
-            language = "Spanish";
-        }else if(e.getSource()==chinese){
-            language = "Chinese";
-        }
-        return language;
-    }
-
-    @FXML
     public InterpreterRequest sendRequest(ActionEvent e){
         String location = txtLocation.getText();
         //find the node with the same location name
+        String language = "None";
+        if(langSelect.getItems()==spanish){
+            language = "Spanish";
+        }else if(langSelect.getItems()==chinese) {
+            language = "Chinese";
+        }
         Node nodeLocation; //store location here
         //gets language from the
         String employee; //get from login information
@@ -68,6 +56,7 @@ public class InterpreterRequestController {
         InterpreterRequest newRequest = new InterpreterRequest(nodeLocation,employee, language);
         return newRequest;
         */
+        System.out.println("location: " + location + "language: " + language);
         return null;
     }
 }
