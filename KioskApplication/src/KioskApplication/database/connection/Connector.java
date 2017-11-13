@@ -131,4 +131,35 @@ public class Connector {
         }
         return nodes;
     }
+
+
+    public static void insertRequest(Connection conn, int requestID, String locationNode) throws SQLException{
+        String sql = REQUEST_INSERT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, requestID);
+        pstmt.setString(2, locationNode);
+        pstmt.executeUpdate();
+    }
+
+    public static void updateRequest(Connection conn, int requestID, String locationNode) throws SQLException {
+        String sql = REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, locationNode);
+        pstmt.setInt(2, requestID);
+        pstmt.executeUpdate();
+    }
+
+    public static void selectRequest(Connection conn, int requestID) throws SQLException {
+        String sql = REQUEST_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, requestID);
+        pstmt.executeUpdate();
+    }
+
+    public static void deleteRequest(Connection conn, int requestID) throws SQLException {
+        String sql = REQUEST_DELETE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        //pstmt.s
+    }
+
 }
