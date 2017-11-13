@@ -4,6 +4,7 @@ import KioskApplication.database.DatabaseController;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
+import KioskApplication.database.objects.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -75,8 +76,17 @@ public class AdminEditNodeController {
         else{
             System.out.println("Delete node: " + nodeID.getText());
             // Check to ensure node with that ID is in database
+            if(DatabaseController.getNode(nodeID.getText()) != null) {
                 // Delete node
-            // If not, notify user
+                boolean isSuccess = DatabaseController.removeNode(nodeID.getText());
+                if (isSuccess) // If successfully deleted
+                    System.out.println("Node " + nodeID.getText() + " Deleted");
+                else  // If DB failed to delete
+                    System.out.println("Failed to remove node: " + nodeID.getText());
+            }
+            else { // If not, notify user
+                System.out.println("Node " + nodeID.getText() + " is not in the database");
+            }
         }
     }
     @FXML
@@ -154,8 +164,11 @@ public class AdminEditNodeController {
             // Find the existing node with that ID
             if(DatabaseController.getNode(nodeID.getText()) != null) {
                 System.out.println("Adding node " + nodeID.getText());
+                // Create Node
+                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
                 // Update Node
-                //DatabaseController. ???? (nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
+                int success = DatabaseController.updateNode(node1);
+                System.out.println("Updated " + success + " row(s) with nodeID: " + nodeID.getText());
             }
         }
     }
