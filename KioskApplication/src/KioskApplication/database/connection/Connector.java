@@ -3,116 +3,157 @@ package KioskApplication.database.connection;
 
 
 import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.EdgeCollection;
 import KioskApplication.database.objects.Node;
-import KioskApplication.database.objects.NodeCollection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static KioskApplication.database.template.SQLStrings.*;
 
 public class Connector {
 
 
-    public static void insertEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "insert into T_EDGES values(?, ?, ?)";
+    public static Edge insertEdge(Connection conn, String node1, String node2, String edgeID) throws SQLException {
+        String sql = EDGE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getEdgeID());
-        pstmt.setString(2, edge.getNode1().getNodeID());
-        pstmt.setString(3, edge.getNode2().getNodeID());
+        pstmt.setString(2, node1);
+        pstmt.setString(3, node2);
+        pstmt.setString(1, edgeID);
         pstmt.execute();
+
+        return new Edge(edgeID, node1, node2);
+
+    }
+
+    public static Edge updateEdge(Connection conn, String node1, String node2, String edgeID) throws SQLException {
+        String sql = EDGE_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(2, node1);
+        pstmt.setString(3, node2);
+        pstmt.setString(1, edgeID);
+        pstmt.executeUpdate();
+
+        return new Edge(edgeID, node1, node2);
     }
 
     public static void updateEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "update T_EDGES set startNode=?, endNode=? where edgeID=?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getNode1().getNodeID());
-        pstmt.setString(2, edge.getNode2().getNodeID());
-        pstmt.setString(3, edge.getEdgeID());
-        pstmt.executeUpdate();
+        updateEdge(conn, edge.getNode1ID(), edge.getNode2ID(), edge.getEdgeID());
     }
 
     public static Edge selectEdge(Connection conn, String edgeID) throws SQLException {
         Edge edge = null;
-        String sql = "SELECT ? FROM T_EDGES"; //change T_EDGES
+        String sql = EDGE_SELECT; //change T_EDGES
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, edgeID);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            edge = EdgeCollection.getInstance().getEdge(rs.getString("edgeID"));
-            edge.setNode1(rs.getString("startNode"));
-            edge.setNode2(rs.getString("endNode"));
+   //         edge = EdgeCollection.getInstance().getEdge(rs.getString("edgeID"));
+            edge = new Edge(edgeID, rs.getString("startNode"), rs.getString("endNode"));
         } else {
-
+           //will throw exception
         }
         return edge;
     }
 
-    public void deleteEdge(Connection conn, Edge edge) throws SQLException {
-        String sql = "DELETE FROM T_EDGES where edgeID = ?";
+    public static ArrayList<Edge> selectAllEdges(Connection conn) throws SQLException{
+        ArrayList<Edge> edges = new ArrayList<>();
+        String sql = EDGE_SELECT_ALL;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, edge.getEdgeID());
-        pstmt.execute();
-        EdgeCollection.getInstance().deleteEdge(edge.getEdgeID());
+
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            edges.add(new Edge(rs.getString("edgeID"), rs.getString("startNode"), rs.getString("endNode")));
+        }
+        return edges;
     }
 
-    public static void insertNode(Connection conn, Node node)throws SQLException{
-        String sql = "insert into T_NODES values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static void deleteEdge(Connection conn, String edge) throws SQLException {
+        String sql = EDGE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, node.getNodeID());
-        pstmt.setInt(2, node.getXcoord());
-        pstmt.setInt(3, node.getYcoord());
-        pstmt.setString(4, node.getFloor());
-        pstmt.setString(5, node.getBuilding());
-        pstmt.setString(6, node.getNodeType());
-        pstmt.setString(7, node.getLongName());
-        pstmt.setString(8, node.getShortName());
-        pstmt.setString(9, node.getTeamAssigned());
+        pstmt.setString(1, edge);
         pstmt.execute();
     }
 
-    public void updateNode(Connection conn, Node node)throws SQLException{
-        String sql = "update T_EDGES set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
+    public static Node insertNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
+            , String assigned, String nodeID)throws SQLException{
+        String sql = NODE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, node.getXcoord());
-        pstmt.setInt(2, node.getYcoord());
-        pstmt.setString(3, node.getFloor());
-        pstmt.setString(4, node.getBuilding());
-        pstmt.setString(5, node.getNodeType());
-        pstmt.setString(6, node.getLongName());
-        pstmt.setString(7, node.getShortName());
-        pstmt.setString(8, node.getTeamAssigned());
+        pstmt.setString(1, nodeID);
+        pstmt.setInt(2, xc);
+        pstmt.setInt(3, yc);
+        pstmt.setInt(4, fl);
+        pstmt.setInt(5, bu);
+        pstmt.setInt(6, nt);
+        pstmt.setString(7, ln);
+        pstmt.setString(8, sn);
+        pstmt.setString(9, assigned);
         pstmt.executeUpdate();
+
+        return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
     }
 
-    public Node selectNodes(Connection conn, String nodeID) throws SQLException {
+    public static Node updateNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
+            , String assigned, String nodeID)throws SQLException{
+        String sql = NODE_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, nodeID);
+        pstmt.setInt(2, xc);
+        pstmt.setInt(3, yc);
+        pstmt.setInt(4, fl);
+        pstmt.setInt(5, bu);
+        pstmt.setInt(6, nt);
+        pstmt.setString(7, ln);
+        pstmt.setString(8, sn);
+        pstmt.setString(9, assigned);
+        pstmt.executeUpdate();
+
+        return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
+    }
+
+    public static void updateNode(Connection conn, Node node) throws SQLException {
+        updateNode(conn, node.getXcoord(), node.getYcoord(), node.getFloor(), node.getBuilding(), node.getNodeType(),
+                node.getLongName(), node.getShortName(), node.getTeamAssigned(), node.getNodeID());
+    }
+
+    public static Node selectNode(Connection conn, String nodeID) throws SQLException {
         Node node = null;
-        String sql = "SELECT ? FROM T_NODES";
+        String sql = NODE_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
-            node = NodeCollection.getInstance().getNode(nodeID);
-            node.setXcoord(rs.getInt("xcoord"));
-            node.setYcoord(rs.getInt("ycoord"));
-            node.setFloor(rs.getString("floor"));
-            node.setBuilding(rs.getString("building"));
-            node.setNodeType(rs.getString("nodeType"));
-            node.setLongName(rs.getString("longName"));
-            node.setShortName(rs.getString("shortName"));
-            node.setTeamAssigned(rs.getString("teamAssigned"));
+            node = new Node(nodeID, rs.getInt("xcoord"), rs.getInt("ycoord"),
+                    rs.getInt("floor"), rs.getInt("building"),
+                    rs.getInt("nodeType"), rs.getString("longName"),
+                    rs.getString("shortName"), rs.getString("teamAssigned"));
         } else {
-
+            //throws exception
         }
         return node;
     }
 
-    public void deleteNode(Connection conn, Node node) throws SQLException {
-        String sql = "DELETE FROM T_NODES WHERE nodesID = ?";
+    public static void deleteNode(Connection conn, String node) throws SQLException {
+        String sql = NODE_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, node.getNodeID());
+        pstmt.setString(1,node);
         pstmt.execute();
-        NodeCollection.getInstance().deleteNode(node.getNodeID());
+    }
+
+    public static ArrayList<Node> selectAllNodes(Connection conn) throws SQLException{
+        ArrayList<Node> nodes = new ArrayList<>();
+        String sql = NODE_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            nodes.add(new Node(rs.getString("nodeID"), rs.getInt("xcoord"),
+                    rs.getInt("ycoord"), rs.getInt("floor"), rs.getInt("building"),
+                    rs.getInt("nodeType"), rs.getString("longName"), rs.getString("shortName"),
+                    rs.getString("teamAssigned")));
+        }
+        return nodes;
     }
 }
