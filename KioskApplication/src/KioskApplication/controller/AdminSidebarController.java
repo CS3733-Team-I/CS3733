@@ -1,6 +1,16 @@
 package KioskApplication.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_EDIT;
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -16,9 +26,18 @@ public class AdminSidebarController {
     @FXML
     private MenuItem interpreterSelect;
 
+
+    AdminWindowController parent;
+
+    AdminSidebarController(AdminWindowController parent) {
+        this.parent = parent;
+    }
+
     @FXML
-    void onAddPressed() {
+    void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_ADD);
     }
 
     @FXML
@@ -27,8 +46,10 @@ public class AdminSidebarController {
     }
 
     @FXML
-    void onEditPressed() {
+    void onEditPressed() throws IOException {
         System.out.println("Edit Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_EDIT);
     }
 
     //Use the request menu dropdown to select interpreter

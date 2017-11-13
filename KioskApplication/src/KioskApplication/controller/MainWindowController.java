@@ -1,7 +1,9 @@
 package KioskApplication.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -10,9 +12,7 @@ public class MainWindowController {
 
     @FXML Button switchButton;
     @FXML Pane contentWindow;
-
-    PathfindingWindowController pathfindingController;
-    AdminWindowController adminController;
+    @FXML AnchorPane LoginPopup;
 
     enum MainWindowScene {
         PATHFINDING,
@@ -21,23 +21,21 @@ public class MainWindowController {
 
     MainWindowScene currentView = MainWindowScene.PATHFINDING;
 
-    public MainWindowController() throws IOException {
-        pathfindingController = new PathfindingWindowController();
-        adminController = new AdminWindowController();
+    public MainWindowController() {
     }
 
-    private void switchTo(MainWindowScene scene) {
+    void switchTo(MainWindowScene scene) throws IOException{
         switch (scene) {
             case ADMIN:
                 currentView = MainWindowScene.ADMIN;
-                contentWindow.getChildren().setAll(adminController);
+                contentWindow.getChildren().setAll(new AdminWindowController());
                 switchButton.setText("Logoff");
                 switchButton.requestFocus();
                 break;
 
             case PATHFINDING:
                 currentView = MainWindowScene.PATHFINDING;
-                contentWindow.getChildren().setAll(pathfindingController);
+                contentWindow.getChildren().setAll(new PathfindingWindowController());
                 switchButton.setText("Admin Login");
                 switchButton.requestFocus();
                 break;
@@ -45,10 +43,19 @@ public class MainWindowController {
     }
 
     @FXML
-    protected void initialize()
+    protected void initialize() throws IOException
     {
         switchButton.requestFocus(); //redirect cursor on switchButton
         this.switchTo(MainWindowScene.PATHFINDING);
+    }
+
+    @FXML
+    private void Login() throws IOException{
+        FXMLLoader loader;
+        loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/AdminLoginWindow.fxml"));
+        loader.setController(new LoginController(this));
+        LoginPopup.getChildren().clear();
+        LoginPopup.getChildren().add(loader.load());
     }
 
     @FXML
@@ -58,7 +65,7 @@ public class MainWindowController {
                 this.switchTo(MainWindowScene.PATHFINDING);
                 break;
             case PATHFINDING:
-                this.switchTo(MainWindowScene.ADMIN);
+                this.Login();
                 break;
         }
     }
