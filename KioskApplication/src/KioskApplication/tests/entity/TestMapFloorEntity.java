@@ -1,7 +1,7 @@
 package KioskApplication.tests.entity;
 
 import KioskApplication.database.objects.Node;
-import KioskApplication.entity.MapFloorEntity;
+import KioskApplication.Entity.MapFloorEntity;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -8,14 +8,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_EDIT;
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
+
+import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 
 public class AdminSidebarController {
 
@@ -53,13 +52,10 @@ public class AdminSidebarController {
 
     //Use the request menu dropdown to select interpreter
     @FXML
-    void selectService(){
-        interpreterSelect.setOnAction(e -> interpreterViewer(e));
+    void onInterpreterPressed() throws IOException{
+        System.out.println("Interpreter Request Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_INTERPRETER);
     }
 
-    //will eventually: switch sidebar to interpreter request window
-    @FXML
-    void interpreterViewer(javafx.event.ActionEvent e){
-        System.out.println("Switch view to interpreter request");
-    }
 }

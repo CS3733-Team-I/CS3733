@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane prefHeight="580.0" prefWidth="178.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -44,12 +44,12 @@
                         <Insets />
                     </GridPane.margin>
                 </MenuButton>
-                <Button fx:id="btnSubmit" mnemonicParsing="false" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#addRequest" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                 <Label fx:id="lbLocation" text="Location:" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="5.0" />
                     </GridPane.margin></Label>
-                <TextField fx:id="txtField1" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <TextField fx:id="txtLocation" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets right="5.0" />
                     </GridPane.margin></TextField>
