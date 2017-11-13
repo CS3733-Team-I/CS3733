@@ -38,13 +38,7 @@ public class MapController {
         stackPane.getChildren().clear();
         stackPane.getChildren().add(mapView);
 
-        for (Node n : path.getWaypoints()) {
-            javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
-            nodeObject.setTranslateX(n.getXcoord() - 14);
-            nodeObject.setTranslateY(n.getYcoord() - 14);
-            stackPane.getChildren().add(nodeObject);
-        }
-
+        // Draw edges
         AnchorPane edgesPane = new AnchorPane();
         for (Edge e : path.getEdges()) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
@@ -57,6 +51,14 @@ public class MapController {
             edgesPane.getChildren().add(edgeView);
         }
         stackPane.getChildren().add(edgesPane);
+
+        // Draw nodes
+        for (Node n : path.getWaypoints()) {
+            javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
+            nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
+            nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
+            stackPane.getChildren().add(nodeObject);
+        }
     }
 
     @FXML

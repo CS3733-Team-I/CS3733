@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeBuilding;
@@ -29,12 +30,23 @@ public class MainWindowController {
     public MainWindowController() {
         // TODO: Move MapEntity population to somewhere that makes sense, this is for testing
         MapEntity mapEntity = MapEntity.getInstance();
-        mapEntity.addNode(new Node("Test1", 1234, 1234, NodeFloor.THIRD,
-                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
-        mapEntity.addNode(new Node("Test2", 1234, 1334, NodeFloor.THIRD,
-                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
-        mapEntity.addNode(new Node("Test3", 1234, 1434, NodeFloor.THIRD,
-                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
+        // TODO remove this, for testing purposes
+        Node node1 = new Node("Node1", 1234, 1234, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "");
+        Node node2 = new Node("Node2", 1234, 1334, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "");
+        Node node3 = new Node("Node3", 1334, 1334, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "");
+        Node node4 = new Node("Node4", 1334, 1234, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "");
+        Node node5 = new Node("Node5", 1434, 1134, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "");
+
+        MapEntity.getInstance().addNode(node1);
+        MapEntity.getInstance().addNode(node2);
+        MapEntity.getInstance().addNode(node3);
+        MapEntity.getInstance().addNode(node4);
+        MapEntity.getInstance().addNode(node5);
+
+        MapEntity.getInstance().addEdge(new Edge("E1_2", node1.getNodeID(), node2.getNodeID()));
+        MapEntity.getInstance().addEdge(new Edge("E2_3", node2.getNodeID(), node3.getNodeID()));
+        MapEntity.getInstance().addEdge(new Edge("E3_4", node3.getNodeID(), node4.getNodeID()));
+        MapEntity.getInstance().addEdge(new Edge("E4_5", node4.getNodeID(), node5.getNodeID()));
     }
 
     void switchTo(MainWindowScene scene) throws IOException{
