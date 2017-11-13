@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
@@ -12,15 +13,20 @@
       <Button layoutX="510.0" layoutY="331.0" mnemonicParsing="false" onAction="#zoomOutPressed" prefHeight="25.0" prefWidth="25.0" text="-" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="510.0" layoutY="299.0" mnemonicParsing="false" onAction="#zoomInPressed" text="+" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="71.0" layoutY="530.0" mnemonicParsing="false" onAction="#recenterPressed" text="Recenter" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.51" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.34" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.52" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.3" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
+            <StackPane fx:id="stackPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="mapView" fitHeight="3400.0" fitWidth="5000.0" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../resources/images/03_thethirdfloor.png" />
                      </image>
                   </ImageView>
+                  <Button mnemonicParsing="false" text="Button">
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </Button>
                </children>
             </StackPane>
          </content>
