@@ -1,4 +1,5 @@
 package KioskApplication.controller;
+import KioskApplication.database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,6 +43,30 @@ public class AdminAddEdgeController {
             edgeID.setText(node1ID.getText() + "_" + node2ID.getText());
         else
             edgeID.setText("Enter Nodes");
+    }
+
+    int lastChanged = 1;
+    public void onMapNodePressed(Node node){
+        if(node1ID.getText() != node.getNodeID() && node2ID.getText() != node.getNodeID()){ // If node is not already one of the ones selected
+            if(node1ID.getText().toString().isEmpty()){
+                node1ID.setText(node.getNodeID());
+            }
+            else if(node2ID.getText().toString().isEmpty()){
+                node2ID.setText(node.getNodeID());
+            }
+            else { // If both already have a node ID filled in
+                // Select last filled one
+                if(lastChanged == 1){ // If 2 was filled more recently
+                    node1ID.setText(node.getNodeID());
+                    lastChanged = 2;
+                }
+                else if(lastChanged == 2){ // If 1 was filled more recently
+                    node2ID.setText(node.getNodeID());
+                    lastChanged = 1;
+                }
+            }
+        }
+
     }
 
     @FXML
