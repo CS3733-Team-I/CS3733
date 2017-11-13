@@ -57,6 +57,17 @@ public class AdminEditNodeController {
         this.parent.switchTo(SIDEBAR_MENU);
     }
     @FXML
+    void deleteNode() throws IOException{
+        if(nodeID.getText().equals("") || nodeID.getText() == null){ // If no node selected
+            System.out.println("No Node Selected");
+
+        }
+        else{
+            System.out.println("Delete node: " + nodeID.getText());
+
+        }
+    }
+    @FXML
     void onSubmitClicked() throws IOException{
 
         errorMsg.setText("");
