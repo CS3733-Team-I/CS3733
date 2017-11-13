@@ -3,11 +3,11 @@ package KioskApplication.tests.entity;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,14 +21,14 @@ public class TestMapEntity {
     @Before
     public void setup() {
         m = MapEntity.getInstance();
-        n1 = new Node("NODE1", "1");
-        n2 = new Node("NODE2", "1");
-        n3 = new Node("NODE3", "2");
-        n4 = new Node("NODE4", "3");
+        n1 = new Node("NODE1", NodeFloor.GROUND);
+        n2 = new Node("NODE2", NodeFloor.LOWERLEVEL_1);
+        n3 = new Node("NODE3", NodeFloor.LOWERLEVEL_2);
+        n4 = new Node("NODE4", NodeFloor.FIRST);
 
-        e1 = new Edge("EDGE1", n1, n2);
-        e2 = new Edge("EDGE2", n3, n4);
-        e3 = new Edge("EDGE3", n1, n4);
+        e1 = new Edge("EDGE1", "NODE1", "NODE2");
+        e2 = new Edge("EDGE2", "NODE3", "NODE4");
+        e3 = new Edge("EDGE3", "NODE1", "NODE4");
     }
 
     @Test

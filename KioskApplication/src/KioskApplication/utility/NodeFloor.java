@@ -1,9 +1,9 @@
-package KioskApplication.database.util;
+package KioskApplication.utility;
 
 public enum NodeFloor {
-    GROUND,
-    LOWERLEVEL1,
     LOWERLEVEL_2,
+    LOWERLEVEL_1,
+    GROUND,
     FIRST,
     SECOND,
     THIRD
