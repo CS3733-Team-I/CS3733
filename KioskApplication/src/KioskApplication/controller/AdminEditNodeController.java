@@ -40,7 +40,7 @@ public class AdminEditNodeController {
 
     @FXML private TextField sname;
 
-    @FXML private TextField team;
+    @FXML private ChoiceBox<?> teamAssignedChoiceBox;
 
     @FXML private Label errorMsg;
 
@@ -103,17 +103,17 @@ public class AdminEditNodeController {
             errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
             errorMsg.setText("You must input the Y coordinate!");
-        else if(floorChoiceBox.getValue().equals(null) || floorChoiceBox.getValue().equals("-select-"))
+        else if(floorChoiceBox.getValue().equals(null) || floorChoiceBox.getValue().equals("--select--"))
             errorMsg.setText("You must input a building!");
-        else if(buildingChoiceBox.getValue().equals(null) || buildingChoiceBox.getValue().equals("-select-"))
+        else if(buildingChoiceBox.getValue().equals(null) || buildingChoiceBox.getValue().equals("--select--"))
             errorMsg.setText("You must input a building!");
-        else if(nodeTypeChoiceBox.getValue().equals(null) || nodeTypeChoiceBox.getValue().equals("-select-"))
+        else if(nodeTypeChoiceBox.getValue().equals(null) || nodeTypeChoiceBox.getValue().equals("--select--"))
             errorMsg.setText("You must input the node type!");
         else if(lname.getText().equals(null) || lname.getText().equals(""))
             errorMsg.setText("You must input a long name!");
         else if(sname.getText().equals(null) || sname.getText().equals(""))
             errorMsg.setText("You must input a short name!");
-        else if(team.getText().equals(null) || team.getText().equals(""))
+        else if(teamAssignedChoiceBox.getValue().equals(null) || teamAssignedChoiceBox.getValue().equals(""))
             errorMsg.setText("You must input the team assigned!");
         else {
             // Determine floor
@@ -170,7 +170,7 @@ public class AdminEditNodeController {
             if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
                 System.out.println("Adding node " + nodeID.getText());
                 // Create Node
-                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
+                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
                 // Update Node
                 MapEntity.getInstance().addNode(node1);
                 System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
