@@ -1,12 +1,10 @@
 package KioskApplication.entity;
 
 public class Administrator {
-    public String Name;
     private String Email;
     private String Password;
 
-    public Administrator(String name, String email, String password) {
-        Name = name;
+    public Administrator(String email, String password) {
         Email = email;
         Password = password;
     }

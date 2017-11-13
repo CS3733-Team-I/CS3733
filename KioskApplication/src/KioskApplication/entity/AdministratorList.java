@@ -9,6 +9,9 @@ public class AdministratorList {
         Administrators.add(A);
     }
 
+    public AdministratorList() {
+    }
+
     public boolean validLogin(Administrator A) {
         boolean ret_val = false;
         int i;
