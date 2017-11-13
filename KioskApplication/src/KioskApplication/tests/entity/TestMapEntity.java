@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -55,7 +56,7 @@ public class TestMapEntity {
         m.addNode(n4);
 
         // Get nodes
-        ArrayList<Node> nodes = m.getAllNodes();
+        LinkedList<Node> nodes = m.getAllNodes();
 
         assertEquals(nodes.size(), 4);
 
@@ -90,6 +91,7 @@ public class TestMapEntity {
         m.addNode(n2);
         m.addNode(n3);
         m.addNode(n4);
+
         m.addEdge(e1);
         m.addEdge(e2);
         m.addEdge(e3);
@@ -110,12 +112,13 @@ public class TestMapEntity {
         ArrayList<Edge> edgesOfNode4 = m.getEdges(n4);
         assertTrue(edgesOfNode4.contains(e2) && edgesOfNode4.contains(e3));
 
+        m.removeEdge(e1.getEdgeID());
+        m.removeEdge(e2.getEdgeID());
+        m.removeEdge(e3.getEdgeID());
+
         m.removeNode(n1.getNodeID());
         m.removeNode(n2.getNodeID());
         m.removeNode(n3.getNodeID());
         m.removeNode(n4.getNodeID());
-        m.removeEdge(e1.getEdgeID());
-        m.removeEdge(e2.getEdgeID());
-        m.removeEdge(e3.getEdgeID());m
     }
 }

@@ -6,6 +6,7 @@ import KioskApplication.database.objects.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class MapFloorEntity implements IMapEntity{
 
@@ -38,11 +39,11 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
-    public ArrayList<Node> getAllNodes() {
-        ArrayList<Node> allNodes = new ArrayList<>();
+    public LinkedList<Node> getAllNodes() {
+        LinkedList<Node> allNodes = new LinkedList<>();
 
-        for (Node node : DatabaseController.getAllNodes()) {
-            allNodes.add(getNode(node.getNodeID()));
+        for (Node node : nodes.values()) {
+            allNodes.add(node);
         }
 
         return allNodes;

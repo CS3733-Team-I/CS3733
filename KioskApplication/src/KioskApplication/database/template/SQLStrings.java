@@ -34,6 +34,6 @@ public class SQLStrings {
     public static final String NODE_INSERT = "insert into T_NODES values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String NODE_UPDATE = "update T_EDGES set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
     public static final String NODE_SELECT = "SELECT ? FROM T_NODES";
-    public static final String NODE_DELETE = "DELETE FROM T_NODES WHERE nodesID = ?";
+    public static final String NODE_DELETE = "DELETE FROM T_NODES WHERE NODEID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
 }
