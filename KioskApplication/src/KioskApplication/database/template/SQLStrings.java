@@ -38,6 +38,8 @@ public class SQLStrings {
             ")";
 
 
+    public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
+
 
     public static final String EDGE_INSERT = "insert into t_edges values(?, ?, ?)";
     public static final String EDGE_UPDATE = "update t_edges set startNode=?, endNode=? where edgeID=?";
