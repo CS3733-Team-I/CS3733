@@ -9,12 +9,11 @@ public class PathfindingWindowController extends MapWindowController {
 
     public PathfindingWindowController() throws IOException {
         super();
-
         getMapController().setParent(this);
 
         FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/PathfindingSidebarView.fxml"));
         loader.setRoot(getSidebarPane());
-        loader.setController(new PathfindingSidebarController()); //model in sidebar controller
+        loader.setController(new PathfindingSidebarController());
         loader.load();
     }
 

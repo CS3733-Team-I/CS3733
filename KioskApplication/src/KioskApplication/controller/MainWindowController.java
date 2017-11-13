@@ -2,6 +2,9 @@ package KioskApplication.controller;
 
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -26,9 +29,12 @@ public class MainWindowController {
     public MainWindowController() {
         // TODO: Move MapEntity population to somewhere that makes sense, this is for testing
         MapEntity mapEntity = MapEntity.getInstance();
-//        mapEntity.addNode(new Node("a", 2648, 1072, "3", "", "", "", "", "I"));
-//        mapEntity.addNode(new Node("b", 2769, 1076, "3", "", "", "", "", "I"));
-//        mapEntity.addNode(new Node("c", 2769, 1282, "3", "", "", "", "", "I"));
+        mapEntity.addNode(new Node("Test1", 1234, 1234, NodeFloor.THIRD,
+                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
+        mapEntity.addNode(new Node("Test2", 1234, 1334, NodeFloor.THIRD,
+                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
+        mapEntity.addNode(new Node("Test3", 1234, 1434, NodeFloor.THIRD,
+                NodeBuilding.FRANCIS45, NodeType.HALL, "", "", "I"));
     }
 
     void switchTo(MainWindowScene scene) throws IOException{
