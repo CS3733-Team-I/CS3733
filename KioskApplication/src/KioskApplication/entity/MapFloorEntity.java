@@ -1,5 +1,6 @@
 package KioskApplication.entity;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 
@@ -18,19 +19,30 @@ public class MapFloorEntity implements IMapEntity{
     @Override
     public void addNode(Node n) {
         nodes.put(n.getNodeID(), n);
+        DatabaseController.addNode(n);
     }
 
     @Override
     public Node getNode(String s) {
-        return nodes.get(s);
+        // Load node from local data
+        Node node = nodes.get(s);
+
+        // If edge doesn't exist, attempt to load it from the database
+        if (node == null) {
+            node = DatabaseController.getNode(s);
+            // Add edge to local data if found
+            if (node != null) nodes.put(s, node);
+        }
+
+        return node;
     }
 
     @Override
     public ArrayList<Node> getAllNodes() {
         ArrayList<Node> allNodes = new ArrayList<>();
 
-        for (String name : nodes.keySet()) {
-            allNodes.add(nodes.get(name));
+        for (Node node : DatabaseController.getAllNodes()) {
+            allNodes.add(getNode(node.getNodeID()));
         }
 
         return allNodes;
@@ -39,5 +51,6 @@ public class MapFloorEntity implements IMapEntity{
     @Override
     public void removeNode(String s) {
         nodes.remove(s);
+        DatabaseController.removeNode(new Node(s));
     }
 }
