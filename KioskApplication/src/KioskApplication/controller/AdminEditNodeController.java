@@ -76,9 +76,11 @@ public class AdminEditNodeController {
         else{
             System.out.println("Delete node: " + nodeID.getText());
             // Check to ensure node with that ID is in database
-            if(DatabaseController.getNode(nodeID.getText()) != null) {
+            Node delN = null;
+            delN = DatabaseController.getNode(nodeID.getText());
+            if(delN != null) {
                 // Delete node
-                boolean isSuccess = DatabaseController.removeNode(nodeID.getText());
+                boolean isSuccess = DatabaseController.removeNode(delN);
                 if (isSuccess) // If successfully deleted
                     System.out.println("Node " + nodeID.getText() + " Deleted");
                 else  // If DB failed to delete
