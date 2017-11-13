@@ -4,14 +4,14 @@ public class Node {
     private String nodeID;
     private int xcoord;
     private int ycoord;
-    private String floor;
-    private String building;
-    private String nodeType;
+    private int floor;
+    private int building;
+    private int nodeType;
     private String longName;
     private String shortName;
     private String teamAssigned;
 
-    public Node(String nodeID, int xcoord, int ycoord, String floor, String building, String nodeType, String longName, String shortName, String teamAssigned) {
+    public Node(String nodeID, int xcoord, int ycoord, int floor, int building, int nodeType, String longName, String shortName, String teamAssigned) {
         this.nodeID = nodeID;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
@@ -29,7 +29,7 @@ public class Node {
 
     public Node(String nodeID, String floor) {
         this.nodeID = nodeID;
-        this.floor = floor;
+        //this.floor = floor;
     }
 
     public int getXcoord() {
@@ -48,27 +48,27 @@ public class Node {
         this.ycoord = ycoord;
     }
 
-    public String getFloor() {
+    public int getFloor() {
         return floor;
     }
 
-    public void setFloor(String floor) {
+    public void setFloor(int floor) {
         this.floor = floor;
     }
 
-    public String getBuilding() {
+    public int getBuilding() {
         return building;
     }
 
-    public void setBuilding(String building) {
+    public void setBuilding(int building) {
         this.building = building;
     }
 
-    public String getNodeType() {
+    public int getNodeType() {
         return nodeType;
     }
 
-    public void setNodeType(String nodeType) {
+    public void setNodeType(int nodeType) {
         this.nodeType = nodeType;
     }
 

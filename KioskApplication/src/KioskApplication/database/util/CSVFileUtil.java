@@ -3,9 +3,7 @@ package KioskApplication.database.util;
 
 import KioskApplication.database.connection.Connector;
 import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.EdgeCollection;
 import KioskApplication.database.objects.Node;
-import KioskApplication.database.objects.NodeCollection;
 
 import java.io.*;
 import java.sql.Connection;
@@ -13,7 +11,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static KioskApplication.database.template.SQLStrings.*;
+import static KioskApplication.database.template.CSVFormat.*;
+import static KioskApplication.database.template.EnumConverter.*;
+
 public class CSVFileUtil {
+
+
+    /*
+    Order of events for init :
+    readNodeCSV();
+     : will initialize nodeCollection
+
+     writeNodeCSV() :
+     : Pulls from database and writes to CSV
+
+
+
+
+     */
 
     public static void readNodesCSV(String path) {
         File file = new File(path);
@@ -24,14 +40,70 @@ public class CSVFileUtil {
             e.printStackTrace();
         }
         String line;
-        NodeCollection nodeCollection = NodeCollection.getInstance();
+    //    NodeCollection nodeCollection = NodeCollection.getInstance();
         Connection conn = null;
         try {
             while((line = br.readLine()) != null) {
                 String[] elements = line.split(",");
-                Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()), elements[3].trim(),
-                        elements[4].trim(), elements[5].trim(), elements[6].trim(), elements[7].trim(), elements[8].trim());
-                Connector.insertNode(conn, node);
+
+                String floor = elements[3].trim();
+                String building = elements[4].trim();
+                String nodeType = elements[5].trim();
+                int fl = -1;
+                int bu = -1;
+                int nt = -1;
+
+                if(floor.equals("L2")) {
+                    fl = LOWERLEVEL2;
+                }
+                else if(floor.equals("L1")) {
+                    fl = LOWERLEVEL1;
+                }
+                else if(floor.equals("0")) { //CHECK THIS
+                    fl = GROUNDFLOOR;
+                }
+                else if (floor.equals("1")) {
+                    fl = FIRSTFLOOR;
+                }
+                else if (floor.equals("2")) {
+                    fl = SECONDFLOOR;
+                }
+                else if (floor.equals("3")) {
+                    fl = THIRDFLOOR;
+                }
+
+                if(building.equals("45 Francis")) {
+                    bu = FRANCIS45;
+                }
+                else if(building.equals("Tower")) {
+                    bu = TOWER;
+                }
+                else if(building.equals("Shapiro")) {
+                    bu = SHAPIRO;
+                }
+                else if(building.equals("BTM")) {
+                    bu = BTM;
+                }
+
+
+                if(nodeType.equals("ELEV")) {
+                    nt = ELEVATOR;
+                }
+                else if(nodeType.equals("HALL")) {
+                    nt= HALL;
+                }
+                else if(nodeType.equals("DEPT")) {
+                    nt = DEPT;
+                }
+                else if(nodeType.equals("STAI")) {
+                    nt = STAI;
+                }
+
+                Node node = new Node(elements[0].trim(), Integer.parseInt(elements[1].trim()), Integer.parseInt(elements[2].trim()), fl,
+                        bu, nt, elements[6].trim(), elements[7].trim(), elements[8].trim());
+                Connector.insertNode(conn, Integer.parseInt(elements[1].trim()),Integer.parseInt(elements[2].trim()),
+                        fl, bu, nt, elements[6].trim(), elements[7].trim(), elements[8].trim(), elements[0].trim());
+          //      nodeCollection.addNode(node);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +130,7 @@ public class CSVFileUtil {
 
         Connection conn = null;
         try {
-            bWriter.write("nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned");
+            bWriter.write(NODE_CSV_HEAD);
             bWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,17 +138,79 @@ public class CSVFileUtil {
 
         try {
             conn = DBUtil.getCon(); //might need to be in a seperate try/catch
-            String sql = "SELECT * FROM T_NODES";
+            String sql = NODE_SELECT_ALL;
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
+
+                int fl = rs.getInt("floor");
+                String floor = "";
+                int bu = rs.getInt("building");
+                String building = "";
+                int nt = rs.getInt("nodeType");
+                String nodeType = "";
+
+                switch(fl) {
+                    case LOWERLEVEL2:
+                        floor = "L2";
+                        break;
+                    case LOWERLEVEL1:
+                        floor = "L1";
+                        break;
+                    case GROUNDFLOOR:
+                        floor = "0";
+                        break;
+                    case FIRSTFLOOR:
+                        floor = "1";
+                        break;
+                    case SECONDFLOOR:
+                        floor = "2";
+                        break;
+                    case THIRDFLOOR:
+                        floor = "3";
+                        break;
+                }
+
+                switch(bu) {
+                    case FRANCIS45:
+                        building = "45 Francis";
+                        break;
+                    case TOWER:
+                        building = "Tower";
+                        break;
+                    case SHAPIRO:
+                        building = "Shapiro";
+                        break;
+                    case BTM:
+                        building = "BTM";
+                }
+
+                switch(nt) {
+                    case ELEVATOR:
+                        nodeType = "ELEV";
+                        break;
+                    case HALL:
+                        nodeType = "HALL";
+                        break;
+                    case REST:
+                        nodeType = "REST";
+                        break;
+                    case DEPT:
+                        nodeType = "DEPT";
+                        break;
+                    case STAI:
+                        nodeType = "STAI";
+                        break;
+                }
+
+
                 bWriter.write(rs.getString("NodeID") + ",");
                 bWriter.write(rs.getInt("xcoord") + ",");
                 bWriter.write(rs.getInt("ycoord") + ",");
-                bWriter.write(rs.getString("floor") + ",");
-                bWriter.write(rs.getString("building") + ",");
-                bWriter.write(rs.getString("nodeType") + ",");
+                bWriter.write(floor + ",");
+                bWriter.write(building + ",");
+                bWriter.write(nodeType + ",");
                 bWriter.write(rs.getString("longName") + ",");
                 bWriter.write(rs.getString("shortName") + ",");
                 bWriter.write(rs.getString("teamAssigned"));
@@ -116,7 +250,7 @@ public class CSVFileUtil {
         }
         String line;
 
-        EdgeCollection edgeCollection = EdgeCollection.getInstance();
+    //    EdgeCollection edgeCollection = EdgeCollection.getInstance();
         Connection conn = null;
 
         try {
@@ -124,7 +258,7 @@ public class CSVFileUtil {
             while ((line = bReader.readLine()) != null) {
                 String[] elements = line.split(",");
                 Edge edges = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
-                Connector.insertEdge(conn, edges);
+                Connector.insertEdge(conn, elements[1].trim(), elements[2].trim(), elements[0].trim());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -149,7 +283,7 @@ public class CSVFileUtil {
         BufferedWriter bWriter = new BufferedWriter(write);
         Connection con = null;
         try {
-            bWriter.write("nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned");
+            bWriter.write(EDGE_CSV_HEAD);
             bWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,7 +291,7 @@ public class CSVFileUtil {
 
         try {
             con = DBUtil.getCon();
-            String sql = "select * from T_EDGES";
+            String sql = EDGE_SELECT_ALL;
             PreparedStatement pstmt = con.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {

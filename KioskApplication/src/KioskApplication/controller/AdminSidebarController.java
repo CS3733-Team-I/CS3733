@@ -39,11 +39,6 @@ public class AdminSidebarController {
     }
 
     @FXML
-    void onRemovePressed()  {
-        System.out.println("Remove Pressed\n");
-    }
-
-    @FXML
     void onEditPressed() throws IOException {
         System.out.println("Edit Pressed\n");
 

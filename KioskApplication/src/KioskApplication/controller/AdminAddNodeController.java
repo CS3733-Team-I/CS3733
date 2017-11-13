@@ -1,5 +1,8 @@
 package KioskApplication.controller;
+import KioskApplication.database.DatabaseController;
 import com.sun.org.apache.xpath.internal.SourceTree;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXML;
@@ -23,7 +26,7 @@ public class AdminAddNodeController {
 
     @FXML private TextField nodeID;
 
-    @FXML private TextField floor;
+    @FXML private ChoiceBox floorChoiceBox;
 
     @FXML private TextField building;
 
@@ -42,6 +45,12 @@ public class AdminAddNodeController {
         xcoord.setText(String.valueOf(x));
         ycoord.setText(String.valueOf(y));
     }
+
+    /*@FXML
+    void onfloorClicked() throws IOException{
+        floorChoiceBox.setItems(FXCollections.observableArrayList("L2", "L1", "G", "1", "2", "3"));
+        floorChoiceBox.
+    }*/
 
     @FXML
     void onAddPressed() throws IOException {
@@ -67,8 +76,6 @@ public class AdminAddNodeController {
             errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
             errorMsg.setText("You must input the Y coordinate!");
-        else if(floor.getText().equals(null) || floor.getText().equals(""))
-            errorMsg.setText("You must input a floor!");
         else if(building.getText().equals(null) || building.getText().equals(""))
             errorMsg.setText("You must input a building!");
         else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
@@ -80,7 +87,7 @@ public class AdminAddNodeController {
         else if(team.getText().equals(null) || team.getText().equals(""))
             errorMsg.setText("You must input the team assigned!");
         else {
-
+            //DatabaseController.addNode();
         }
     }
 }
