@@ -19,17 +19,16 @@ public class LoginController {
     Label errorMsg;
 
     MainWindowController parent;
+    AdministratorList AdminList;
 
     public LoginController(MainWindowController parent) {
         this.parent = parent;
+        this.AdminList = new AdministratorList();
+        AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
     }
 
     @FXML
     public void OnLoginClicked() throws IOException {
-        /*up to change*/
-        AdministratorList AdminList = new AdministratorList();
-
-        AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
 
         if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
             parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
