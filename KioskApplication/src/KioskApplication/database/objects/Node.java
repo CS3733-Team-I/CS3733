@@ -34,7 +34,7 @@ public class Node {
 
     public Node(String nodeID, NodeFloor floor) {
         this.nodeID = nodeID;
-        //this.floor = floor;
+        this.floor = floor;
     }
 
     public int getXcoord() {

@@ -24,6 +24,7 @@ public class SQLStrings {
     public static final String CREATE_REQUEST_TABLE = "CREATE TABLE T_Requests(" +
             " RequestID VARCHAR(16) PRIMARY KEY NOT NULL," +
             " RequestType int NOT NULL";
+
     public static final String EDGE_INSERT = "insert into T_EDGES values(?, ?, ?)";
     public static final String EDGE_UPDATE = "update T_EDGES set startNode=?, endNode=? where edgeID=?";
     public static final String EDGE_SELECT = "SELECT ? FROM T_EDGES";
