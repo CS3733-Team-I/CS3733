@@ -9,14 +9,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DBUtil {
-    public static Connection getConnection() throws SQLException {
+    private static Connection getConnection(String database) throws SQLException {
         try {
             Class.forName(ConnectionDetails.DERBYEMBEDDED);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Connection con = DriverManager.getConnection(ConnectionDetails.DBURL, ConnectionDetails.DBUSERNAME, ConnectionDetails.getPassword());
+        Connection con = DriverManager.getConnection(database, ConnectionDetails.DBUSERNAME, ConnectionDetails.getPassword());
         return con;
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return getConnection(ConnectionDetails.DBURL);
+    }
+
+    public static Connection getTestConnection() throws SQLException {
+        return getConnection(ConnectionDetails.DBTESTURL);
     }
 
     public static void closeConnection(Connection con) throws SQLException {

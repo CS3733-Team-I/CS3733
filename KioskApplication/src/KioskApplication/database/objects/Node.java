@@ -30,11 +30,26 @@ public class Node {
 
     public Node(String nodeID) {
         this.nodeID = nodeID;
+        this.xcoord = 0;
+        this.ycoord = 0;
+        this.floor = NodeFloor.THIRD;
+        this.building = NodeBuilding.FRANCIS45;
+        this.nodeType = NodeType.HALL;
+        this.longName = "";
+        this.shortName = "";
+        this.teamAssigned = "";
     }
 
     public Node(String nodeID, NodeFloor floor) {
         this.nodeID = nodeID;
+        this.xcoord = 0;
+        this.ycoord = 0;
         this.floor = floor;
+        this.building = NodeBuilding.FRANCIS45;
+        this.nodeType = NodeType.HALL;
+        this.longName = "";
+        this.shortName = "";
+        this.teamAssigned = "";
     }
 
     public int getXcoord() {

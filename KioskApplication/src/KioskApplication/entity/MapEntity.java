@@ -56,7 +56,9 @@ public class MapEntity implements IMapEntity {
     @Override
     public void removeNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
-            floors.get(floor).removeNode(s);
+            MapFloorEntity floorEntity = floors.get(floor);
+            if (floorEntity.getNode(s) != null)
+                floorEntity.removeNode(s);
         }
     }
 

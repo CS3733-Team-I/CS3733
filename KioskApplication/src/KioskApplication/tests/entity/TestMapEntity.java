@@ -1,5 +1,6 @@
 package KioskApplication.tests.entity;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
@@ -20,7 +21,9 @@ public class TestMapEntity {
 
     @Before
     public void setup() {
+        DatabaseController.initTests();
         m = MapEntity.getInstance();
+
         n1 = new Node("NODE1", NodeFloor.GROUND);
         n2 = new Node("NODE2", NodeFloor.LOWERLEVEL_1);
         n3 = new Node("NODE3", NodeFloor.LOWERLEVEL_2);
@@ -36,11 +39,11 @@ public class TestMapEntity {
         //Add node to map
         m.addNode(n1);
         //Test that the node exists in the map
-        //assertEquals(m.getNode(n1.getNodeID()), n1);
+        assertEquals(m.getNode(n1.getNodeID()), n1);
         //Remove the node
         m.removeNode(n1.getNodeID());
         //Test that the node is not in the map
-        //assertEquals(m.getNode(n1.getNodeID()), null);
+        assertEquals(m.getNode(n1.getNodeID()), null);
     }
 
     @Test
@@ -73,16 +76,20 @@ public class TestMapEntity {
         //Add edge to map
         m.addEdge(e1);
         //Test that the edge exists in the map
-        //assertEquals(m.getEdge(e1.getEdgeID()), e1);
+        assertEquals(m.getEdge(e1.getEdgeID()), e1);
         //Remove the edge
         m.removeEdge(e1.getEdgeID());
         //Test that the edge is not in the map
-        //assertEquals(m.getEdge(e1.getEdgeID()), null);
+        assertEquals(m.getEdge(e1.getEdgeID()), null);
     }
 
     @Test
     public void testGetEdges() {
-        //Add edges to map
+        // Add nodes and edges to map
+        m.addNode(n1);
+        m.addNode(n2);
+        m.addNode(n3);
+        m.addNode(n4);
         m.addEdge(e1);
         m.addEdge(e2);
         m.addEdge(e3);
@@ -102,5 +109,13 @@ public class TestMapEntity {
         //Test to see which edges are connected to node 4
         ArrayList<Edge> edgesOfNode4 = m.getEdges(n4);
         assertTrue(edgesOfNode4.contains(e2) && edgesOfNode4.contains(e3));
+
+        m.removeNode(n1.getNodeID());
+        m.removeNode(n2.getNodeID());
+        m.removeNode(n3.getNodeID());
+        m.removeNode(n4.getNodeID());
+        m.removeEdge(e1.getEdgeID());
+        m.removeEdge(e2.getEdgeID());
+        m.removeEdge(e3.getEdgeID());m
     }
 }
