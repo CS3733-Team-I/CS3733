@@ -119,9 +119,6 @@ public class DatabaseController {
         return null;
     }
 
-
-
-
     public static void init() {
         if(instanceConnection == null) {
             try {

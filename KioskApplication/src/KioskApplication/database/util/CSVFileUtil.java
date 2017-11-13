@@ -28,6 +28,8 @@ public class CSVFileUtil {
         String line;
         Connection conn = null;
         try {
+            conn = DBUtil.getConnection();
+
             while((line = reader.readLine()) != null) {
                 String[] elements = line.split(",");
 
@@ -78,6 +80,7 @@ public class CSVFileUtil {
                                      elements[6].trim(),
                                      elements[7].trim(),
                                      elements[8].trim());
+
                 Connector.insertNode(conn, node);
             }
         } catch (IOException e) {
@@ -112,7 +115,7 @@ public class CSVFileUtil {
         }
 
         try {
-            conn = DBUtil.getConnection(); //might need to be in a seperate try/catch
+            conn = DBUtil.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_SELECT_ALL);
             ResultSet rs = pstmt.executeQuery();
 

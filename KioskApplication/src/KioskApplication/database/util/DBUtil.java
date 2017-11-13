@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DBUtil {
-    public static Connection getConnection() throws SQLException{
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName(ConnectionDetails.DERBYEMBEDDED);
         } catch (ClassNotFoundException e) {
