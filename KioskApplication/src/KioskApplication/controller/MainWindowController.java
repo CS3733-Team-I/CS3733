@@ -57,11 +57,13 @@ public class MainWindowController {
 
     @FXML
     private void Login() throws IOException{
+        LoginController LC = new LoginController(this);
         FXMLLoader loader;
         loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/AdminLoginWindow.fxml"));
-        loader.setController(new LoginController(this));
+        loader.setController(LC);
         LoginPopup.getChildren().clear();
         LoginPopup.getChildren().add(loader.load());
+        LC.tfEmail.requestFocus();
     }
 
     @FXML
