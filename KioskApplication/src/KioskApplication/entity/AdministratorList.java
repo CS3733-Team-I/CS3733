@@ -5,11 +5,12 @@ import java.util.ArrayList;
 public class AdministratorList {
     private ArrayList<Administrator> Administrators;
 
-    public void add_adminstrator(Administrator A) {
+    public void add_administrator(Administrator A) {
         Administrators.add(A);
     }
 
     public AdministratorList() {
+        Administrators = new ArrayList<Administrator>();
     }
 
     public boolean validLogin(Administrator A) {
