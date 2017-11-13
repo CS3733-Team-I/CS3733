@@ -14,8 +14,17 @@ public class Pathfinder {
     }
 
     // generate path function
-    public static LinkedList<Edge> GeneratePath(Node startingNode, Node endingNode){
+    public static LinkedList<Edge> GeneratePath(Node startingNode, Node endingNode) throws PathfindingException{
         MapEntity map = MapEntity.getInstance();
+
+        // if start node is not declared, then default to start position on floor 3 Node1.
+        if (startingNode == null || startingNode.getNodeID() == null){
+            startingNode = new Node("Node1", "3");
+        }
+        // if end node is not defined then throw exception for not valid
+        if (endingNode == null || endingNode.getNodeID() == null){
+            throw new PathfindingException("No defined end node, please define valid end location");
+        }
         StartNode startNode = new StartNode(startingNode);
         PathfindingNode endNode = new PathfindingNode(endingNode);
 
@@ -32,14 +41,14 @@ public class Pathfinder {
                 unexploredNodes.put(node.getNodeID(), new PathfindingNode(node));
         }
 
-        //TODO: add proper handling for start and end nodes on different floors; for now, just returns null.
+        //TODO: add proper handling for start and end nodes on different floors; for now, just returns exception
         if(!startNode.getNode().getFloor().equals(endNode.getNode().getFloor()))
-            return null;
+            throw new PathfindingException("Multiple floors not supported");
 
-        //TODO: add handling for if either node is not in the map.
+        // if either node is not located on map throw exception
         if(!(unexploredNodes.containsKey(startNode.getNode().getNodeID()) &&
              unexploredNodes.containsKey(endNode.getNode().getNodeID())))
-            return null;
+            throw new PathfindingException("Nodes are not on map");
         // remove start node from unexplored list
         unexploredNodes.remove(startNode.getNode().getNodeID());
 
@@ -50,8 +59,8 @@ public class Pathfinder {
         PathfindingNode lowestCost = null;
         // while loop for generating path of connecting nodes
         //TODO: add actual loop logic
+
         while(true){
-            //TODO add handler for Default StartNode
 
             // if list of frontier becomes empty break out of while loop
             if (frontierNodes.isEmpty())
@@ -60,7 +69,6 @@ public class Pathfinder {
             // initialize lowest cost node
             lowestCost = frontierNodes.get(0);
 
-            // TODO ADD Handling for if no path is found
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node
             for(Map.Entry<String, PathfindingNode> entry : frontierNodes.entrySet()){
@@ -89,6 +97,8 @@ public class Pathfinder {
 
         LinkedList<Edge> Path = lastNode.buildPath();
 
+        // handeler for no path found
+        if(Path == null)throw new PathfindingException("No Path was found, Please choose another path");
         // return generated path of nodes
         return Path;
     }
