@@ -13,6 +13,7 @@ public class Pathfinder {
     public Pathfinder(){
     }
 
+    //TODO: add support for multiple waypoints
     // generate path function
     public static LinkedList<Edge> GeneratePath(Node startingNode, Node endingNode){
         MapEntity map = MapEntity.getInstance();
@@ -60,7 +61,7 @@ public class Pathfinder {
             // initialize lowest cost node
             lowestCost = frontierNodes.get(0);
 
-            // TODO ADD Handling for if no path is found
+            // TODO: Add Handling for if no path is found
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node
             for(Map.Entry<String, PathfindingNode> entry : frontierNodes.entrySet()){
