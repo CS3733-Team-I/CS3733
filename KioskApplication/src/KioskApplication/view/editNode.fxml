@@ -74,10 +74,10 @@
             <FXCollections fx:factory="observableArrayList">
                <String fx:value="L1" />
                <String fx:value="L2" />
-               <String fx:value="G" />
-               <String fx:value="1" />
-               <String fx:value="2" />
-               <String fx:value="3" />
+               <String fx:value="0G" />
+               <String fx:value="01" />
+               <String fx:value="02" />
+               <String fx:value="03" />
             </FXCollections>
          </items>
       </ChoiceBox>
