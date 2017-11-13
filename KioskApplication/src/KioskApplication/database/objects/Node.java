@@ -1,17 +1,22 @@
 package KioskApplication.database.objects;
 
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
+
 public class Node {
     private String nodeID;
     private int xcoord;
     private int ycoord;
-    private String floor;
-    private String building;
-    private String nodeType;
+    private NodeFloor floor;
+    private NodeBuilding building;
+    private NodeType nodeType;
     private String longName;
     private String shortName;
     private String teamAssigned;
 
-    public Node(String nodeID, int xcoord, int ycoord, String floor, String building, String nodeType, String longName, String shortName, String teamAssigned) {
+    public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
+                String longName, String shortName, String teamAssigned) {
         this.nodeID = nodeID;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
@@ -27,7 +32,7 @@ public class Node {
         this.nodeID = nodeID;
     }
 
-    public Node(String nodeID, String floor) {
+    public Node(String nodeID, NodeFloor floor) {
         this.nodeID = nodeID;
         this.floor = floor;
     }
@@ -48,27 +53,27 @@ public class Node {
         this.ycoord = ycoord;
     }
 
-    public String getFloor() {
+    public NodeFloor getFloor() {
         return floor;
     }
 
-    public void setFloor(String floor) {
+    public void setFloor(NodeFloor floor) {
         this.floor = floor;
     }
 
-    public String getBuilding() {
+    public NodeBuilding getBuilding() {
         return building;
     }
 
-    public void setBuilding(String building) {
+    public void setBuilding(NodeBuilding building) {
         this.building = building;
     }
 
-    public String getNodeType() {
+    public NodeType getNodeType() {
         return nodeType;
     }
 
-    public void setNodeType(String nodeType) {
+    public void setNodeType(NodeType nodeType) {
         this.nodeType = nodeType;
     }
 
