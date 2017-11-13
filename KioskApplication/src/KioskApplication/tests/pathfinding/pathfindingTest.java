@@ -3,6 +3,7 @@ import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.pathfinder.Pathfinder;
+import KioskApplication.utility.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,25 +28,25 @@ public class pathfindingTest {
               n7 - n4
          */
 
-        n1 = new Node("NODE1", "3");
+        n1 = new Node("NODE1", NodeFloor.THIRD);
         n1.setXcoord(10);
         n1.setYcoord(10);
-        n2 = new Node("NODE2", "3");
+        n2 = new Node("NODE2", NodeFloor.THIRD);
         n2.setXcoord(20);
         n2.setYcoord(10);
-        n3 = new Node("NODE3", "3");
+        n3 = new Node("NODE3", NodeFloor.THIRD);
         n3.setXcoord(30);
         n3.setYcoord(10);
-        n4 = new Node("NODE4", "3");
+        n4 = new Node("NODE4", NodeFloor.THIRD);
         n4.setXcoord(30);
         n4.setYcoord(20);
-        n5 = new Node("NODE5", "3");
+        n5 = new Node("NODE5", NodeFloor.THIRD);
         n5.setXcoord(40);
         n5.setYcoord(10);
-        n6 = new Node("NODE6", "3");
+        n6 = new Node("NODE6", NodeFloor.THIRD);
         n6.setXcoord(50);
         n6.setYcoord(10);
-        n7 = new Node("NODE7", "3");
+        n7 = new Node("NODE7", NodeFloor.THIRD);
         n7.setXcoord(20);
         n7.setYcoord(20);
 

@@ -1,23 +1,34 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Edge;
+import KioskApplication.database.objects.Node;
+import KioskApplication.entity.MapEntity;
+import KioskApplication.entity.Path;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import javax.xml.soap.Text;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PathfindingSidebarController {
-    //Search box text field
-    @FXML TextField tb1;
 
-    //temporary text fields for NodeIDs for pathfinding
+    @FXML TextField tb1;
     @FXML TextField inputStartID;
-    //@FXML TextField inputMiddleID;
     @FXML TextField inputEndID;
 
-    //temporary textArea for output message
     @FXML Label pathfindingOutputText;
+
+    PathfindingWindowController parent = null;
+
+    PathfindingSidebarController(PathfindingWindowController parent) {
+        this.parent = parent;
+    }
 
     @FXML
     void GoPressed() {
@@ -25,9 +36,7 @@ public class PathfindingSidebarController {
     }
 
     @FXML
-    void btGeneratePathPressed() {
-        //System.out.printf("Generate Path button pressed.\n");
-
+    void btGeneratePathPressed() throws IOException {
         pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
     }
 }
