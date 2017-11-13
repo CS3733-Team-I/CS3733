@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.util.CSVFileUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,5 +38,17 @@ public class AdminSidebarController {
     @FXML
     void onRequestPressed() {
         System.out.println("Request Pressed\n");
+    }
+
+    @FXML
+    void onReadClicked() {
+        CSVFileUtil.readNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").getFile());
+        CSVFileUtil.readEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
+    }
+
+    @FXML
+    void onSaveClicked() {
+        CSVFileUtil.writeNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").getFile());
+        CSVFileUtil.writeEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
     }
 }
