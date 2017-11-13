@@ -89,4 +89,10 @@ public class MapEntity implements IMapEntity {
     private void addFloor(String floor) {
         floors.put(floor, new MapFloorEntity());
     }
+
+    @Override
+    //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
+    public Edge getConnectingEdge(Node node1, Node node2){
+        return null;
+    }
 }

@@ -41,4 +41,10 @@ public class MapFloorEntity implements IMapEntity{
     public void removeNode(String s) {
         nodes.remove(s);
     }
+
+    @Override
+    //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
+    public Edge getConnectingEdge(Node node1, Node node2){
+        return null;
+    }
 }
