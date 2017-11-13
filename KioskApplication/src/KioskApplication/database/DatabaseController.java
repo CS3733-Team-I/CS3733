@@ -7,7 +7,7 @@ import KioskApplication.database.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 
 
 //Node and Edge objects should only be made here
@@ -29,6 +29,15 @@ public class DatabaseController {
         }
 
 
+        return null;
+    }
+
+    public static ArrayList<Node> getAllNodes() {
+        try{
+            return Connector.selectAllNodes(instanceConnection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -110,19 +119,25 @@ public class DatabaseController {
         return false;
     }
 
+    public static ArrayList<Edge> getAllEdges() {
+        try{
+            return Connector.selectAllEdges(instanceConnection);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 
-    public static DatabaseController getInstance() {
-        if(instance == null) {
-            instance = new DatabaseController();
+
+    public static void init() {
+        if(instanceConnection == null) {
             try {
                 instanceConnection = DBUtil.getCon();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
         }
-        return instance;
     }
 }

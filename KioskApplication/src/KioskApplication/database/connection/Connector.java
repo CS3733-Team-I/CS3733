@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static KioskApplication.database.template.SQLStrings.*;
 
@@ -55,6 +56,18 @@ public class Connector {
            //will throw exception
         }
         return edge;
+    }
+
+    public static ArrayList<Edge> selectAllEdges(Connection conn) throws SQLException{
+        ArrayList<Edge> edges = new ArrayList<>();
+        String sql = EDGE_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            edges.add(new Edge(rs.getString("edgeID"), rs.getString("startNode"), rs.getString("endNode")));
+        }
+        return edges;
     }
 
     public static void deleteEdge(Connection conn, String edge) throws SQLException {
@@ -127,5 +140,20 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1,node);
         pstmt.execute();
+    }
+
+    public static ArrayList<Node> selectAllNodes(Connection conn) throws SQLException{
+        ArrayList<Node> nodes = new ArrayList<>();
+        String sql = NODE_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            nodes.add(new Node(rs.getString("nodeID"), rs.getInt("xcoord"),
+                    rs.getInt("ycoord"), rs.getInt("floor"), rs.getInt("building"),
+                    rs.getInt("nodeType"), rs.getString("longName"), rs.getString("shortName"),
+                    rs.getString("teamAssigned")));
+        }
+        return nodes;
     }
 }
