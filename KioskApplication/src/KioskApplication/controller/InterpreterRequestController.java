@@ -67,16 +67,17 @@ public class InterpreterRequestController {
         String location = txtLocation.getText();
         //default should be "Current Location"
 
-        Node nodeLocation; //store location here
-
-        //ArrayList<Node> nodes = MapEntity.getAllNodes();
-//        for(int i=0; i<nodes.size(); i++){
+        //Following code is to send a node instead of a string
+//        Node nodeLocation; //store location here
+//
+//        ArrayList<Node> nodes = MapEntity.getAllNodes();
+//        for(int i=0; i<MapEntity.getAllNodes().size(); i++){
 //            if(nodes.longName.equals(location) || nodes.shortName.equls(location)){
-//                return nodes.get(i); //this line or next line?
 //                nodeLocation = nodes.get(i);
 //            }
 //        }
-        //find the node with the same location name
+
+
         String language = "None";
         if(langSelect.getItems()==spanish){
             language = "Spanish";
@@ -84,7 +85,9 @@ public class InterpreterRequestController {
             language = "Chinese";
         }
 
-        String employee; //get from login information
+        //get from login information
+        LoginController LC = new LoginController();
+        String adminEmail = LoginController.getEmail();
 
         /*creates the request object
         InterpreterRequest newRequest = new InterpreterRequest(nodeLocation,employee, language);

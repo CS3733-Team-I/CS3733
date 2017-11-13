@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 
 import KioskApplication.database.objects.Node;
+import KioskApplication.entity.Administrator;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
@@ -18,6 +19,7 @@ public class MainWindowController {
     @FXML Button switchButton;
     @FXML Pane contentWindow;
     @FXML AnchorPane LoginPopup;
+    Administrator curr_admin;
 
     enum MainWindowScene {
         PATHFINDING,
