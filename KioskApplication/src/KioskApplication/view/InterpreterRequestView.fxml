@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane prefHeight="580.0" prefWidth="178.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -32,20 +32,23 @@
                         <Insets top="20.0" />
                     </padding>
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="16.0" />
                     </font>
                 </Label>
                 <MenuButton fx:id="langSelect" minWidth="150.0" mnemonicParsing="false" text="Language Select" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <items>
-                        <MenuItem fx:id="spanish" mnemonicParsing="false" text="Spanish" />
-                        <MenuItem fx:id="chinese" mnemonicParsing="false" text="Chinese" />
+                        <MenuItem fx:id="spanish" mnemonicParsing="false" onAction="#langSelector" text="Spanish" />
+                        <MenuItem fx:id="chinese" mnemonicParsing="false" onAction="#langSelector" text="Chinese" />
                     </items>
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
                 </MenuButton>
-                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#addRequest" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                <Label fx:id="lbLocation" text="Location:" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="btnSubmit" mnemonicParsing="false" onAction="#addRequest" text="Submit" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin></Button>
+                <Label fx:id="lbLocation" text="Room:" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="5.0" />
                     </GridPane.margin></Label>
@@ -53,6 +56,11 @@
                     <GridPane.margin>
                         <Insets right="5.0" />
                     </GridPane.margin></TextField>
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#onCancelPressed" text="Cancel" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
+            </Button>
             </children>
         </GridPane>
     </children>
