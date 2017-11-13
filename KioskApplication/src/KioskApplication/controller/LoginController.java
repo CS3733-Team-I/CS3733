@@ -24,16 +24,16 @@ public class LoginController {
     @FXML
     public void OnLoginClicked() throws IOException {
         /*up to change*/
-        AdministratorList AdminList = new AdministratorList();
+        /*AdministratorList AdminList = new AdministratorList();
         AdminList.add_adminstrator(new Administrator("boss@hospital.com", "imtheboss"));
-        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
+        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {*/
             parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
-        }
+        /*}
         else {
 
-        }
+        }*/
     }
 
     @FXML

@@ -45,10 +45,11 @@ public class AdminAddNodeController {
         ycoord.setText(String.valueOf(y));
     }
 
-    @FXML
+    /*@FXML
     void onfloorClicked() throws IOException{
         floorChoiceBox.setItems(FXCollections.observableArrayList("L2", "L1", "G", "1", "2", "3"));
-    }
+        floorChoiceBox.
+    }*/
 
     @FXML
     void onAddPressed() throws IOException {
