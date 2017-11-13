@@ -9,14 +9,22 @@ import static KioskApplication.database.template.ConnectionDetails.*;
 import static KioskApplication.database.template.SQLStrings.*;
 
 public class DBUtil {
-    public static Connection getConnection() throws SQLException {
+    private static Connection getConnection(String database) throws SQLException {
         try {
             Class.forName(DERBYEMBEDDED);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        Connection con = DriverManager.getConnection(DBURL, DBUSERNAME, getPassword());
+        Connection con = DriverManager.getConnection(database, ConnectionDetails.DBUSERNAME, ConnectionDetails.getPassword());
         return con;
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return getConnection(ConnectionDetails.DBURL);
+    }
+
+    public static Connection getTestConnection() throws SQLException {
+        return getConnection(ConnectionDetails.DBTESTURL);
     }
 
     public static void closeConnection(Connection con) throws SQLException {

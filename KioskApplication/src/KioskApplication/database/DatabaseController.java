@@ -3,6 +3,7 @@ package KioskApplication.database;
 import KioskApplication.database.connection.Connector;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.database.template.ConnectionDetails;
 import KioskApplication.database.util.DBUtil;
 import KioskApplication.entity.InterpreterRequest;
 import KioskApplication.entity.Request;
@@ -133,6 +134,17 @@ public class DatabaseController {
         }
     }
 
+    public static void initTests() {
+        if(instanceConnection == null) {
+            try {
+                instanceConnection = DBUtil.getTestConnection();
+                DBUtil.createTables(instanceConnection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+  
     public static Request addRequest(int requestID, String nodeID, String employee) {
         try {
             return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
@@ -224,6 +236,4 @@ public class DatabaseController {
         }
         return new ArrayList<InterpreterRequest>();
     }
-
-
 }

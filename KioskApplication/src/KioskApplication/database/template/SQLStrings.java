@@ -49,7 +49,7 @@ public class SQLStrings {
     public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
     public static final String NODE_SELECT = "SELECT ? FROM t_nodes";
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodesID = ?";
-    public static final String NODE_SELECT_ALL = "SELECT * FROM t_nodes";
+    public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
 
 
     public static final String REQUEST_INSERT = "insert into t_requests values(?, ?, ?)";
