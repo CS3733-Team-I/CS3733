@@ -31,57 +31,104 @@ public class CSVFileUtil {
             conn = DBUtil.getConnection();
 
             while((line = reader.readLine()) != null) {
-                String[] elements = line.split(",");
+                // Ensure the first line isnt the header
+                if (!line.equals(CSVFormat.NODE_CSV_HEAD)) {
+                    String[] elements = line.split(",");
 
-                String floor = elements[3].trim();
-                String building = elements[4].trim();
-                String type = elements[5].trim();
-                NodeFloor nodeFloor = NodeFloor.LOWERLEVEL_2;
-                NodeBuilding nodeBuilding = NodeBuilding.FRANCIS45;
-                NodeType nodeType = NodeType.HALL;
+                    String floor = elements[3].trim();
+                    String building = elements[4].trim();
+                    String type = elements[5].trim();
+                    NodeFloor nodeFloor = NodeFloor.LOWERLEVEL_2;
+                    NodeBuilding nodeBuilding = NodeBuilding.FRANCIS45;
+                    NodeType nodeType = NodeType.HALL;
 
-                switch (floor) {
-                    case "L2": nodeFloor = NodeFloor.LOWERLEVEL_2; break;
-                    case "L1": nodeFloor = NodeFloor.LOWERLEVEL_1; break;
-                    case "0": nodeFloor = NodeFloor.GROUND; break;
-                    case "1": nodeFloor = NodeFloor.FIRST; break;
-                    case "2": nodeFloor = NodeFloor.SECOND; break;
-                    case "3": nodeFloor = NodeFloor.THIRD; break;
+                    switch (floor) {
+                        case "L2":
+                            nodeFloor = NodeFloor.LOWERLEVEL_2;
+                            break;
+                        case "L1":
+                            nodeFloor = NodeFloor.LOWERLEVEL_1;
+                            break;
+                        case "0":
+                            nodeFloor = NodeFloor.GROUND;
+                            break;
+                        case "1":
+                            nodeFloor = NodeFloor.FIRST;
+                            break;
+                        case "2":
+                            nodeFloor = NodeFloor.SECOND;
+                            break;
+                        case "3":
+                            nodeFloor = NodeFloor.THIRD;
+                            break;
+                    }
+
+                    switch (building) {
+                        case "45 Francis":
+                            nodeBuilding = NodeBuilding.FRANCIS45;
+                            break;
+                        case "15 Francis":
+                            nodeBuilding = NodeBuilding.FRANCIS15;
+                            break;
+                        case "Tower":
+                            nodeBuilding = NodeBuilding.TOWER;
+                            break;
+                        case "Sharpiro":
+                            nodeBuilding = NodeBuilding.SHAPIRO;
+                            break;
+                        case "BTM":
+                            nodeBuilding = NodeBuilding.BTM;
+                            break;
+                    }
+
+                    switch (type) {
+                        case "HALL":
+                            nodeType = NodeType.HALL;
+                            break;
+                        case "ELEV":
+                            nodeType = NodeType.ELEV;
+                            break;
+                        case "REST":
+                            nodeType = NodeType.REST;
+                            break;
+                        case "STAI":
+                            nodeType = NodeType.STAI;
+                            break;
+                        case "DEPT":
+                            nodeType = NodeType.DEPT;
+                            break;
+                        case "LABS":
+                            nodeType = NodeType.LABS;
+                            break;
+                        case "INFO":
+                            nodeType = NodeType.INFO;
+                            break;
+                        case "CONF":
+                            nodeType = NodeType.CONF;
+                            break;
+                        case "EXIT":
+                            nodeType = NodeType.EXIT;
+                            break;
+                        case "RETL":
+                            nodeType = NodeType.RETL;
+                            break;
+                        case "SERV":
+                            nodeType = NodeType.SERV;
+                            break;
+                    }
+
+                    Node node = new Node(elements[0].trim(),
+                            Integer.parseInt(elements[1].trim()),
+                            Integer.parseInt(elements[2].trim()),
+                            nodeFloor,
+                            nodeBuilding,
+                            nodeType,
+                            elements[6].trim(),
+                            elements[7].trim(),
+                            elements[8].trim());
+
+                    Connector.insertNode(conn, node);
                 }
-
-                switch (building) {
-                    case "45 Francis": nodeBuilding = NodeBuilding.FRANCIS45; break;
-                    case "15 Francis": nodeBuilding = NodeBuilding.FRANCIS15; break;
-                    case "Tower": nodeBuilding = NodeBuilding.TOWER; break;
-                    case "Sharpiro": nodeBuilding = NodeBuilding.SHAPIRO; break;
-                    case "BTM": nodeBuilding = NodeBuilding.BTM; break;
-                }
-
-                switch (type) {
-                    case "HALL": nodeType = NodeType.HALL; break;
-                    case "ELEV": nodeType = NodeType.ELEV; break;
-                    case "REST": nodeType = NodeType.REST; break;
-                    case "STAI": nodeType = NodeType.STAI; break;
-                    case "DEPT": nodeType = NodeType.DEPT; break;
-                    case "LABS": nodeType = NodeType.LABS; break;
-                    case "INFO": nodeType = NodeType.INFO; break;
-                    case "CONF": nodeType = NodeType.CONF; break;
-                    case "EXIT": nodeType = NodeType.EXIT; break;
-                    case "RETL": nodeType = NodeType.RETL; break;
-                    case "SERV": nodeType = NodeType.SERV; break;
-                }
-
-                Node node = new Node(elements[0].trim(),
-                                     Integer.parseInt(elements[1].trim()),
-                                     Integer.parseInt(elements[2].trim()),
-                                     nodeFloor,
-                                     nodeBuilding,
-                                     nodeType,
-                                     elements[6].trim(),
-                                     elements[7].trim(),
-                                     elements[8].trim());
-
-                Connector.insertNode(conn, node);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,7 +143,7 @@ public class CSVFileUtil {
         }
     }
 
-    public void writeNodesCSV(String path) throws SQLException {
+    public static void writeNodesCSV(String path) {
         File csvFile = new File(path);
         FileWriter write = null;
         try {
@@ -120,7 +167,6 @@ public class CSVFileUtil {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-
                 NodeFloor fl = NodeFloor.values()[rs.getInt("floor")];
                 String floor = "";
                 NodeBuilding bu = NodeBuilding.values()[rs.getInt("building")];
@@ -191,7 +237,7 @@ public class CSVFileUtil {
         }
     }
 
-    public void readEdgesCSV(String path) throws SQLException {
+    public static void readEdgesCSV(String path) {
         File file = new File(path);
 
         BufferedReader bReader = null;
@@ -209,11 +255,16 @@ public class CSVFileUtil {
         try {
             conn = DBUtil.getConnection();
             while ((line = bReader.readLine()) != null) {
-                String[] elements = line.split(",");
-                Edge edge = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
-                Connector.insertEdge(conn, edge);
+                // Ensure first line isnt CSV header
+                if (!line.equals(CSVFormat.EDGE_CSV_HEAD)) {
+                    String[] elements = line.split(",");
+                    Edge edge = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
+                    Connector.insertEdge(conn, edge);
+                }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -224,7 +275,7 @@ public class CSVFileUtil {
         }
     }
 
-    public void writeEdgesCSV(String path) throws SQLException {
+    public static void writeEdgesCSV(String path) {
         File csvFile = new File(path);
         FileWriter write = null;
         try {
@@ -254,6 +305,8 @@ public class CSVFileUtil {
                 bWriter.newLine();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
