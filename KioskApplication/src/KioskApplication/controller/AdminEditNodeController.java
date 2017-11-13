@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 
 import KioskApplication.database.DatabaseController;
+import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
@@ -77,10 +78,12 @@ public class AdminEditNodeController {
             System.out.println("Delete node: " + nodeID.getText());
             // Check to ensure node with that ID is in database
             Node delN = null;
-            delN = DatabaseController.getNode(nodeID.getText());
+            delN = MapEntity.getInstance().getNode(nodeID.getText());
             if(delN != null) {
                 // Delete node
-                boolean isSuccess = DatabaseController.removeNode(delN);
+                boolean isSuccess = true;
+                MapEntity.getInstance().removeNode(delN.getNodeID());
+
                 if (isSuccess) // If successfully deleted
                     System.out.println("Node " + nodeID.getText() + " Deleted");
                 else  // If DB failed to delete
@@ -164,13 +167,13 @@ public class AdminEditNodeController {
 
             System.out.println("Adding node?");
             // Find the existing node with that ID
-            if(DatabaseController.getNode(nodeID.getText()) != null) {
+            if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
                 System.out.println("Adding node " + nodeID.getText());
                 // Create Node
                 Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
                 // Update Node
-                int success = DatabaseController.updateNode(node1);
-                System.out.println("Updated " + success + " row(s) with nodeID: " + nodeID.getText());
+                MapEntity.getInstance().addNode(node1);
+                System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
             }
         }
     }

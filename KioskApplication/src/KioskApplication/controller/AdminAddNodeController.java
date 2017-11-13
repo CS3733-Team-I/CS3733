@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 import KioskApplication.database.DatabaseController;
+import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.*;
 import KioskApplication.database.objects.*;
 import com.sun.org.apache.xpath.internal.SourceTree;
@@ -141,12 +142,12 @@ public class AdminAddNodeController {
 
             System.out.println("Adding node?");
             // Ensure there is no existing node with that ID
-            if(DatabaseController.getNode(nodeID.getText()) != null) {
+            if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
                 System.out.println("Adding node " + nodeID.getText());
                 // Creates node
                 Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
                 // Add Node
-                DatabaseController.addNode(node1);
+                MapEntity.getInstance().addNode(node1);
             }
         }
     }
