@@ -32,6 +32,7 @@ public class LoginController {
 
         if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
             parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
+            parent.curr_admin_email = tfEmail.getText();
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
         }
