@@ -22,4 +22,8 @@ public class Path {
     public LinkedList<Edge> getEdges() {
         return edges;
     }
+
+    public boolean equals(Path comparePath){
+        return(this.edges.equals(comparePath.getEdges()) && this.waypoints.equals(comparePath.getWaypoints()));
+    }
 }

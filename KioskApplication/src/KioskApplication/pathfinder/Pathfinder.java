@@ -5,6 +5,7 @@ import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.utility.NodeFloor;
+import com.sun.org.apache.bcel.internal.generic.LLOAD;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class Pathfinder {
     }
 
     // generate path function
-    public static LinkedList<Edge> GeneratePath(Node startingNode, Node endingNode) throws PathfindingException{
+    public static Path GeneratePath(Node startingNode, Node endingNode) throws PathfindingException{
         MapEntity map = MapEntity.getInstance();
 
 
@@ -104,11 +105,15 @@ public class Pathfinder {
 
         PathfindingNode lastNode = lowestCost;
 
-        LinkedList<Edge> Path = lastNode.buildPath();
+        LinkedList<Edge> pathEdges = lastNode.buildPath();
+        LinkedList<Node> waypoints = new LinkedList<>();
+        waypoints.add(startingNode);
+        waypoints.add(endingNode);
+        Path path = new Path(waypoints, pathEdges);
 
-        // handeler for no path found
-        if(Path == null)throw new PathfindingException("No Path was found, Please choose another path");
+        // handler for no path found
+        if(path == null)throw new PathfindingException("No Path was found, Please choose another path");
         // return generated path of nodes
-        return Path;
+        return path;
     }
 }

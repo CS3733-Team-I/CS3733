@@ -2,6 +2,7 @@ package KioskApplication.tests.pathfinding;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
 import KioskApplication.pathfinder.PathfindingException;
 import KioskApplication.utility.NodeFloor;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import java.util.LinkedList;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -78,55 +80,73 @@ public class pathfindingTest {
     //TODO: handle the exception
     @Test
     public void testPath(){
-        LinkedList<Edge> path1 = null;
+        Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
             path1 = Pathfinder.GeneratePath(n1, n6);
         }
         catch(PathfindingException e) {}
-        LinkedList<Edge> pathtest = new LinkedList<>();
-        pathtest.add(e1);
-        pathtest.add(e2);
-        pathtest.add(e5);
-        pathtest.add(e6);
+        LinkedList<Edge> testPathEdges = new LinkedList<>();
+        testPathEdges.add(e1);
+        testPathEdges.add(e2);
+        testPathEdges.add(e5);
+        testPathEdges.add(e6);
 
-        assertEquals(path1, pathtest);
-        System.out.println(path1.toString());
-        System.out.println(pathtest.toString());
+        LinkedList<Node> testPathWaypoints = new LinkedList<>();
+        testPathWaypoints.add(n1);
+        testPathWaypoints.add(n6);
+
+        Path testPath = new Path(testPathWaypoints, testPathEdges);
+
+        assertTrue(path1.equals(testPath));
+        System.out.println(path1.getEdges().toString());
+        System.out.println(testPath.getEdges().toString());
     }
 
     //TODO: handle the exception
     @Test
     public void testWrongPath(){
-        LinkedList<Edge> path1 = null;
+        Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-            path1 = Pathfinder.GeneratePath(n1,n6);
+            path1 = Pathfinder.GeneratePath(n1, n6);
         }
         catch(PathfindingException e) {}
-        LinkedList<Edge> pathtest = new LinkedList<>();
-        pathtest.add(e2);
-        pathtest.add(e2);
-        pathtest.add(e5);
-        pathtest.add(e6);
+        LinkedList<Edge> testPathEdges = new LinkedList<>();
+        testPathEdges.add(e2);
+        testPathEdges.add(e2);
+        testPathEdges.add(e5);
+        testPathEdges.add(e6);
 
-        assertNotEquals(path1, pathtest);
-        System.out.println(path1.toString());
-        System.out.println(pathtest.toString());
+        LinkedList<Node> testPathWaypoints = new LinkedList<>();
+        testPathWaypoints.add(n1);
+        testPathWaypoints.add(n6);
+
+        Path testPath = new Path(testPathWaypoints, testPathEdges);
+
+        assertFalse(path1.equals(testPath));
+        System.out.println(path1.getEdges().toString());
+        System.out.println(testPath.getEdges().toString());
     }
 
     //TODO: handle the exception
     @Test
     public void testAnotherPath(){
-        LinkedList<Edge> path2 = null;
+        Path path2 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-             path2 = Pathfinder.GeneratePath(n1,n4);
+            path2 = Pathfinder.GeneratePath(n1, n6);
         }
         catch(PathfindingException e) {}
-        LinkedList<Edge> pathtest2 = new LinkedList<>();
-        pathtest2.add(e1);
-        pathtest2.add(e3);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(e1);
+        testPath2Edges.add(e3);
 
-        assertEquals(path2, pathtest2);
-        System.out.println(path2.toString());
-        System.out.println(pathtest2.toString());
+        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        testPath2Waypoints.add(n1);
+        testPath2Waypoints.add(n6);
+
+        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+        assertTrue(path2.equals(testPath2));
+        System.out.println(path2.getEdges().toString());
+        System.out.println(testPath2.getEdges().toString());
     }
 }
