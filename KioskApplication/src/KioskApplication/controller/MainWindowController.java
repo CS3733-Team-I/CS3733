@@ -1,5 +1,11 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Node;
+import KioskApplication.entity.Administrator;
+import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -13,6 +19,7 @@ public class MainWindowController {
     @FXML Button switchButton;
     @FXML Pane contentWindow;
     @FXML AnchorPane LoginPopup;
+    Administrator curr_admin;
 
     enum MainWindowScene {
         PATHFINDING,
