@@ -3,6 +3,7 @@ package KioskApplication.tests.pathfinderTests;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.pathfinder.PathfindingNode;
 import KioskApplication.pathfinder.StartNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,8 +33,9 @@ public class startnodeTest {
     }
 
     @Test
-    public void testPreviousCost(){
-       assertEquals(0, startNode.calculatePreviousCost());
+    public void testCalculateCost(){
+        startNode.calculateCost(startNode) ;
+        assertEquals(0, startNode.getTotalCost());
     }
 
     // maybe make a test that checks if connection to Pathfinding Node is working

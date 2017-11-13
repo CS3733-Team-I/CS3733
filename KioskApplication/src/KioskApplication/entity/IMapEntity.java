@@ -11,6 +11,4 @@ public interface IMapEntity {
     public Node getNode(String s);
     public LinkedList<Node> getAllNodes();
     public void removeNode(String s);
-    public Edge getConnectingEdge(Node node1, Node node2);
-    public LinkedList<Node> getConnectedNodes(Node node);
 }

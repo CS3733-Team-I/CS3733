@@ -90,15 +90,26 @@ public class MapEntity implements IMapEntity {
         floors.put(floor, new MapFloorEntity());
     }
 
-    @Override
     //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
     public Edge getConnectingEdge(Node node1, Node node2){
+        ArrayList<Edge> node1Edges = getEdges(node1);
+        for(Edge edge: node1Edges){
+            if(edge.getNode1().equals(node2) || edge.getNode2().equals(node2))
+                return edge;
+        }
         return null;
     }
 
-    @Override
-    //TODO: given a node, return a list of all adjacent nodes.
+    //Given a node, return a list of all adjacent nodes.
     public LinkedList<Node> getConnectedNodes(Node node){
-        return null;
+        ArrayList<Edge> edges = this.getEdges(node);
+        LinkedList<Node> connectedNodes = new LinkedList<>();
+        for(Edge edge: edges){
+            if(edge.getNode1().equals(node))
+                connectedNodes.add(edge.getNode2());
+            else if(edge.getNode2().equals(node))
+                connectedNodes.add(edge.getNode1());
+        }
+        return connectedNodes;
     }
 }
