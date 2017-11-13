@@ -1,11 +1,5 @@
 package KioskApplication.controller;
 
-import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.Node;
-import KioskApplication.entity.MapEntity;
-import KioskApplication.utility.NodeBuilding;
-import KioskApplication.utility.NodeFloor;
-import KioskApplication.utility.NodeType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -27,21 +21,23 @@ public class MainWindowController {
 
     MainWindowScene currentView = MainWindowScene.PATHFINDING;
 
-    public MainWindowController() {
-    }
+    AdminWindowController adminWindow;
+    PathfindingWindowController pathfindingWindow;
+
+    public MainWindowController() {}
 
     void switchTo(MainWindowScene scene) throws IOException{
         switch (scene) {
             case ADMIN:
                 currentView = MainWindowScene.ADMIN;
-                contentWindow.getChildren().setAll(new AdminWindowController());
+                contentWindow.getChildren().setAll(adminWindow);
                 switchButton.setText("Logoff");
                 switchButton.requestFocus();
                 break;
 
             case PATHFINDING:
                 currentView = MainWindowScene.PATHFINDING;
-                contentWindow.getChildren().setAll(new PathfindingWindowController());
+                contentWindow.getChildren().setAll(pathfindingWindow);
                 switchButton.setText("Admin Login");
                 switchButton.requestFocus();
                 break;
@@ -51,7 +47,10 @@ public class MainWindowController {
     @FXML
     protected void initialize() throws IOException
     {
-        switchButton.requestFocus(); //redirect cursor on switchButton
+        // Initialize admin window and pathfinding window
+        adminWindow = new AdminWindowController();
+        pathfindingWindow = new PathfindingWindowController();
+
         this.switchTo(MainWindowScene.PATHFINDING);
     }
 
