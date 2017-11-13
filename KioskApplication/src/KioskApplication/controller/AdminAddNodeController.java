@@ -64,6 +64,16 @@ public class AdminAddNodeController {
     }
 
     @FXML
+    void updateNodeID() throws IOException {
+        System.out.println("updateNodeID");
+        if(!floorChoiceBox.getValue().equals(null) && !floorChoiceBox.getValue().equals("--select--")
+                && !nodeTypeChoiceBox.getValue().equals(null) && !nodeTypeChoiceBox.getValue().equals("--select--")
+                && !teamAssignedChoiceBox.getValue().equals(null) && !teamAssignedChoiceBox.getValue().equals("--select--")){
+            nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + "000" + floorChoiceBox.getValue().toString());
+        }
+    }
+
+    @FXML
     void onBackPressed() throws IOException{
         System.out.println("Back Pressed\n");
 
@@ -152,4 +162,5 @@ public class AdminAddNodeController {
             }
         }
     }
+
 }

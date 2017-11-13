@@ -67,6 +67,17 @@ public class AdminEditNodeController {
 
         this.parent.switchTo(SIDEBAR_MENU);
     }
+
+    @FXML
+    void updateNodeID() throws IOException {
+        System.out.println("updateNodeID");
+        if(!floorChoiceBox.getValue().equals(null) && !floorChoiceBox.getValue().equals("--select--")
+                && !nodeTypeChoiceBox.getValue().equals(null) && !nodeTypeChoiceBox.getValue().equals("--select--")
+                && !teamAssignedChoiceBox.getValue().equals(null) && !teamAssignedChoiceBox.getValue().equals("--select--")){
+            nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + "000" + floorChoiceBox.getValue().toString());
+        }
+    }
+
     @FXML
     void deleteNode() throws IOException{
         if(nodeID.getText().equals("") || nodeID.getText() == null){ // If no node selected

@@ -32,7 +32,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="nodeID" layoutX="87.0" layoutY="86.0" prefHeight="23.0" prefWidth="99.0" />
+      <TextField fx:id="nodeID" editable="false" layoutX="87.0" layoutY="86.0" prefHeight="23.0" prefWidth="99.0" />
       <Label layoutX="27.0" layoutY="198.0" text="Floor:">
          <font>
             <Font size="14.0" />
@@ -67,15 +67,15 @@
       </Label>
       <Button fx:id="submitButton" layoutX="30.0" layoutY="479.0" mnemonicParsing="false" onMouseClicked="#onSubmitClicked" text="Submit" />
       <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="21.0" layoutY="417.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
-       <ChoiceBox fx:id="floorChoiceBox" layoutX="87.0" layoutY="196.0" prefHeight="23.0" prefWidth="99.0" value="3">
+       <ChoiceBox fx:id="floorChoiceBox" layoutX="87.0" layoutY="196.0" onAction="#updateNodeID" prefHeight="23.0" prefWidth="99.0" value="03">
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <String fx:value="L1" />
                    <String fx:value="L2" />
-                   <String fx:value="G" />
-                   <String fx:value="1" />
-                   <String fx:value="2" />
-                   <String fx:value="3" />
+                   <String fx:value="0G" />
+                   <String fx:value="01" />
+                   <String fx:value="02" />
+                   <String fx:value="03" />
                </FXCollections>
            </items>
        </ChoiceBox>
@@ -91,7 +91,7 @@
                </FXCollections>
            </items>
        </ChoiceBox>
-       <ChoiceBox fx:id="nodeTypeChoiceBox" layoutX="87.0" layoutY="272.0" prefHeight="28.0" prefWidth="99.0" value="--select--">
+       <ChoiceBox fx:id="nodeTypeChoiceBox" layoutX="87.0" layoutY="272.0" onAction="#updateNodeID" prefHeight="28.0" prefWidth="99.0" value="--select--">
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <String fx:value="--select--" />
@@ -108,7 +108,7 @@
                </FXCollections>
            </items>
        </ChoiceBox>
-       <ChoiceBox fx:id="teamAssignedChoiceBox" value="I" layoutX="122.0" layoutY="385.0" prefHeight="23.0" prefWidth="51.0">
+       <ChoiceBox fx:id="teamAssignedChoiceBox" layoutX="122.0" layoutY="385.0" onAction="#updateNodeID" onMouseDragExited="#updateNodeID" prefHeight="23.0" prefWidth="51.0" value="I">
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <String fx:value="A" />
