@@ -3,8 +3,10 @@ package KioskApplication.pathfinder;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.entity.Path;
 import KioskApplication.utility.NodeFloor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -70,7 +72,11 @@ public class Pathfinder {
                 break;
 
             // initialize lowest cost node
-            lowestCost = frontierNodes.get(0);//TODO: <-- this is wrong
+            // TODO hack
+            for (PathfindingNode node : frontierNodes.values()) {
+                lowestCost = node;
+                break;
+            }
 
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node
@@ -88,7 +94,7 @@ public class Pathfinder {
             LinkedList<Node> adjacentNodes = map.getConnectedNodes(lowestCost.getNode());
             //for each node, check if it's already been explored/is in the frontier; if not, move it in.
             for(Node node : adjacentNodes){
-                if(!(exploredNodes.containsKey(node.getNodeID()) && frontierNodes.containsKey(node.getNodeID()))){
+                if(!(exploredNodes.containsKey(node.getNodeID()) || frontierNodes.containsKey(node.getNodeID()))){
                     unexploredNodes.get(node.getNodeID()).prepForFrontier(lowestCost, endNode);
                     frontierNodes.put(node.getNodeID(), unexploredNodes.get(node.getNodeID()));
                     unexploredNodes.remove(node.getNodeID());
