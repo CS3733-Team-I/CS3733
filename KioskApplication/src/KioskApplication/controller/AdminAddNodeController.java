@@ -43,6 +43,7 @@ public class AdminAddNodeController {
 
     @FXML private Label errorMsg;
 
+
     public void setCoords(double x, double y){
         System.out.println("setCoords");
         xcoord.setText(String.valueOf(x));
