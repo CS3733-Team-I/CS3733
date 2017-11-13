@@ -38,17 +38,5 @@ public class PathfindingSidebarController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
-
-        MapEntity mapEntity = MapEntity.getInstance();
-        LinkedList<Edge> edges = new LinkedList<>();
-        edges.addAll(mapEntity.getEdges(mapEntity.getNode("Node1")));
-        edges.addAll(mapEntity.getEdges(mapEntity.getNode("Node2")));
-        edges.addAll(mapEntity.getEdges(mapEntity.getNode("Node3")));
-        edges.addAll(mapEntity.getEdges(mapEntity.getNode("Node4")));
-
-        List<Node> nodes = Arrays.asList(mapEntity.getNode("Node1"),
-                                         mapEntity.getNode("Node5"));
-        Path generatedPath = new Path(nodes, edges);
-        this.parent.displayPathOnMap(generatedPath);
     }
 }
