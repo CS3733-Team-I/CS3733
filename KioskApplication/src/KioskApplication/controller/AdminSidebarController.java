@@ -11,7 +11,6 @@ import java.io.IOException;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_EDIT;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
-import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 
