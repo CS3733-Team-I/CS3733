@@ -70,7 +70,7 @@ public class Pathfinder {
                 break;
 
             // initialize lowest cost node
-            lowestCost = frontierNodes.get(0);
+            lowestCost = frontierNodes.get(0);//TODO: <-- this is wrong
 
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node

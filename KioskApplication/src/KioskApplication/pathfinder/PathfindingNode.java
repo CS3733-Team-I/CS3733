@@ -8,10 +8,10 @@ import java.util.LinkedList;
 
 public class PathfindingNode {
 
-    private Node node;
-    private int previousCost;
-    private int totalCost;
-    private PathfindingNode parentNode;
+    protected Node node;
+    protected int previousCost;
+    protected int totalCost;
+    protected PathfindingNode parentNode;
 
     public PathfindingNode(Node node) {
         this.node = node;

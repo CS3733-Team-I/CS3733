@@ -7,9 +7,6 @@ import java.util.LinkedList;
 
 public class StartNode extends PathfindingNode {
 
-    private Node node;
-    private int previousCost;
-    private int totalCost;
 
     public StartNode(Node node) {
         super(node);
