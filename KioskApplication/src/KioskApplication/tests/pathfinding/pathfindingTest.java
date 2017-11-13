@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class pathfindingTest {
@@ -58,6 +59,13 @@ public class pathfindingTest {
     @Test
     public void testPath(){
         LinkedList<Edge> path1 = Pathfinder.GeneratePath(n1,n6);
+        LinkedList<Edge> pathtest = new LinkedList<Edge>();
+        pathtest.add(e1);
+        pathtest.add(e2);
+        pathtest.add(e5);
+        pathtest.add(e6);
+
+        assertEquals(path1, pathtest);
         //System.out.println(path1.size());
     }
 
