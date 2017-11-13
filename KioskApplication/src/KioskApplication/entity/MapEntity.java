@@ -107,9 +107,9 @@ public class MapEntity implements IMapEntity {
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
             if(edge.getNode1ID().equals(node.getNodeID()))
-                connectedNodes.add(getNode(edge.getNode1ID()));
-            else if(edge.getNode2ID().equals(node.getNodeID()))
                 connectedNodes.add(getNode(edge.getNode2ID()));
+            else if(edge.getNode2ID().equals(node.getNodeID()))
+                connectedNodes.add(getNode(edge.getNode1ID()));
         }
         return connectedNodes;
     }
