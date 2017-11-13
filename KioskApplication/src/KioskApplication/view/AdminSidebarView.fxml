@@ -5,21 +5,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #f0f8ff;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="580.0" prefWidth="176.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onAddPressed" prefHeight="27.0" prefWidth="118.0" text="Add Node">
+            <Button mnemonicParsing="false" onAction="#onAddPressed" prefHeight="27.0" prefWidth="118.0" style="-fx-background-color: #6495ed;" text="Add Node">
                <VBox.margin>
                   <Insets bottom="40.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onEditPressed" prefHeight="27.0" prefWidth="118.0" text="Edit Node">
+            <Button mnemonicParsing="false" onAction="#onEditPressed" prefHeight="27.0" prefWidth="118.0" style="-fx-background-color: #6496ed;" text="Edit Node">
                <VBox.margin>
                   <Insets bottom="80.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onRequestPressed" text="Request Service">
+            <Button mnemonicParsing="false" onAction="#onRequestPressed" style="-fx-background-color: #6495ed;" text="Request Service">
                <VBox.margin>
                   <Insets bottom="40.0" />
                </VBox.margin>
