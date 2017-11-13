@@ -87,10 +87,10 @@ public class InterpreterRequestController {
 
         //get from login information
         LoginController LC = new LoginController();
-        String adminEmail = LoginController.getEmail();
+        String adminEmail = LoginController
 
         /*creates the request object
-        InterpreterRequest newRequest = new InterpreterRequest(nodeLocation,employee, language);
+        InterpreterRequest newRequest = new InterpreterRequest(location, adminEmail, language);
         return newRequest;
         */
         System.out.println("location: " + location + "language: " + language);
