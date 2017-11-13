@@ -3,8 +3,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <AnchorPane prefHeight="600" prefWidth="200" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -35,19 +39,16 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="floor" layoutX="87.0" layoutY="196.0" prefHeight="23.0" prefWidth="99.0" />
       <Label layoutX="17.0" layoutY="236.0" text="Building:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="building" layoutX="87.0" layoutY="234.0" prefHeight="23.0" prefWidth="99.0" />
       <Label layoutX="7.0" layoutY="276.0" text="Node Type:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="nodetype" layoutX="87.0" layoutY="274.0" prefHeight="23.0" prefWidth="99.0" />
       <Label layoutX="5.0" layoutY="313.0" text="Long Name:">
          <font>
             <Font size="14.0" />
@@ -69,5 +70,44 @@
       <Button fx:id="submitButton" layoutX="30.0" layoutY="479.0" mnemonicParsing="false" onMouseClicked="#onSubmitClicked" text="Submit" />
       <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="21.0" layoutY="417.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
       <Button layoutX="30.0" layoutY="528.0" mnemonicParsing="false" onMouseClicked="#deleteNode" text="Delete Node" />
+      <ChoiceBox fx:id="floorChoiceBox" value="3" layoutX="87.0" layoutY="196.0" prefHeight="23.0" prefWidth="99.0" >
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="L1" />
+               <String fx:value="L2" />
+               <String fx:value="G" />
+               <String fx:value="1" />
+               <String fx:value="2" />
+               <String fx:value="3" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+
+      <ChoiceBox fx:id="buildingChoiceBox" value="-select-" layoutX="87.0" layoutY="232.0" prefHeight="28.0" prefWidth="99.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="FRANCIS45" />
+               <String fx:value="TOWER" />
+               <String fx:value="SHAPIRO" />
+               <String fx:value="BTM" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <ChoiceBox fx:id="nodeTypeChoiceBox" value="-select-" layoutX="87.0" layoutY="272.0" prefHeight="28.0" prefWidth="99.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="ELEV" />
+               <String fx:value="HALL" />
+               <String fx:value="REST" />
+               <String fx:value="DEPT" />
+               <String fx:value="STAI" />
+               <String fx:value="CONF" />
+               <String fx:value="EXIT" />
+               <String fx:value="INFO" />
+               <String fx:value="LABS" />
+               <String fx:value="SERV" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
    </children>
 </AnchorPane>

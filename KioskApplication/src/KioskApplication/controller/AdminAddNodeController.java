@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 import KioskApplication.database.DatabaseController;
+import KioskApplication.utility.*;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
@@ -26,11 +27,11 @@ public class AdminAddNodeController {
 
     @FXML private TextField nodeID;
 
-    @FXML private ChoiceBox floorChoiceBox;
+    @FXML private ChoiceBox<?> floorChoiceBox;
 
-    @FXML private TextField building;
+    @FXML private ChoiceBox<?> buildingChoiceBox;
 
-    @FXML private TextField nodetype;
+    @FXML private ChoiceBox<?> nodeTypeChoiceBox;
 
     @FXML private TextField lname;
 
@@ -68,7 +69,6 @@ public class AdminAddNodeController {
 
     @FXML
     void onSubmitClicked() throws IOException{
-
         errorMsg.setText("");
         if(nodeID.getText().equals(null) || nodeID.getText().equals(""))
             errorMsg.setText("You must input the node ID!");
@@ -76,9 +76,11 @@ public class AdminAddNodeController {
             errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
             errorMsg.setText("You must input the Y coordinate!");
-        else if(building.getText().equals(null) || building.getText().equals(""))
+        else if(floorChoiceBox.getValue().equals(null) || floorChoiceBox.getValue().equals("-select-"))
             errorMsg.setText("You must input a building!");
-        else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
+        else if(buildingChoiceBox.getValue().equals(null) || buildingChoiceBox.getValue().equals("-select-"))
+            errorMsg.setText("You must input a building!");
+        else if(nodeTypeChoiceBox.getValue().equals(null) || nodeTypeChoiceBox.getValue().equals("-select-"))
             errorMsg.setText("You must input the node type!");
         else if(lname.getText().equals(null) || lname.getText().equals(""))
             errorMsg.setText("You must input a long name!");
@@ -87,7 +89,62 @@ public class AdminAddNodeController {
         else if(team.getText().equals(null) || team.getText().equals(""))
             errorMsg.setText("You must input the team assigned!");
         else {
-            //DatabaseController.addNode();
+            // Determine floor
+            NodeFloor floor = NodeFloor.THIRD; // Default
+            if(floorChoiceBox.getValue().equals("L2"))
+                floor = NodeFloor.LOWERLEVEL_2;
+            if(floorChoiceBox.getValue().equals("L1"))
+                floor = NodeFloor.LOWERLEVEL_1;
+            if(floorChoiceBox.getValue().equals("G"))
+                floor = NodeFloor.GROUND;
+            if(floorChoiceBox.getValue().equals("1"))
+                floor = NodeFloor.FIRST;
+            if(floorChoiceBox.getValue().equals("2"))
+                floor = NodeFloor.SECOND;
+            if(floorChoiceBox.getValue().equals("3"))
+                floor = NodeFloor.THIRD;
+
+            // Determine building
+            NodeBuilding building = NodeBuilding.FRANCIS45; // Default
+            if(buildingChoiceBox.getValue().equals("FRANCIS45"))
+                building = NodeBuilding.FRANCIS45;
+            if(buildingChoiceBox.getValue().equals("BTM"))
+                building = NodeBuilding.BTM;
+            if(buildingChoiceBox.getValue().equals("SHAPIRO"))
+                building = NodeBuilding.SHAPIRO;
+            if(buildingChoiceBox.getValue().equals("TOWER"))
+                building = NodeBuilding.TOWER;
+
+            // Determine type
+            NodeType type = NodeType.HALL; // Default
+            if(nodeTypeChoiceBox.getValue().equals("ELEV"))
+                type = NodeType.ELEV;
+            if(nodeTypeChoiceBox.getValue().equals("HALL"))
+                type = NodeType.HALL;
+            if(nodeTypeChoiceBox.getValue().equals("REST"))
+                type = NodeType.REST;
+            if(nodeTypeChoiceBox.getValue().equals("DEPT"))
+                type = NodeType.DEPT;
+            if(nodeTypeChoiceBox.getValue().equals("STAI"))
+                type = NodeType.STAI;
+            if(nodeTypeChoiceBox.getValue().equals("CONF"))
+                type = NodeType.CONF;
+            if(nodeTypeChoiceBox.getValue().equals("EXIT"))
+                type = NodeType.EXIT;
+            if(nodeTypeChoiceBox.getValue().equals("INFO"))
+                type = NodeType.INFO;
+            if(nodeTypeChoiceBox.getValue().equals("LABS"))
+                type = NodeType.LABS;
+            if(nodeTypeChoiceBox.getValue().equals("SERV"))
+                type = NodeType.SERV;
+
+            System.out.println("Adding node?");
+            // Ensure there is no existing node with that ID
+            if(DatabaseController.getNode(nodeID.getText()) != null) {
+                System.out.println("Adding node " + nodeID.getText());
+                // Add Node
+                //DatabaseController.addNode(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), team.getText());
+            }
         }
     }
 }
