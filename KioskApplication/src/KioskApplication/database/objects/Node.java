@@ -1,17 +1,22 @@
 package KioskApplication.database.objects;
 
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
+
 public class Node {
     private String nodeID;
     private int xcoord;
     private int ycoord;
-    private int floor;
-    private int building;
-    private int nodeType;
+    private NodeFloor floor;
+    private NodeBuilding building;
+    private NodeType nodeType;
     private String longName;
     private String shortName;
     private String teamAssigned;
 
-    public Node(String nodeID, int xcoord, int ycoord, int floor, int building, int nodeType, String longName, String shortName, String teamAssigned) {
+    public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
+                String longName, String shortName, String teamAssigned) {
         this.nodeID = nodeID;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
@@ -21,6 +26,15 @@ public class Node {
         this.longName = longName;
         this.shortName = shortName;
         this.teamAssigned = teamAssigned;
+    }
+
+    public Node(String nodeID) {
+        this.nodeID = nodeID;
+    }
+
+    public Node(String nodeID, NodeFloor floor) {
+        this.nodeID = nodeID;
+        this.floor = floor;
     }
 
     public int getXcoord() {
@@ -39,27 +53,27 @@ public class Node {
         this.ycoord = ycoord;
     }
 
-    public int getFloor() {
+    public NodeFloor getFloor() {
         return floor;
     }
 
-    public void setFloor(int floor) {
+    public void setFloor(NodeFloor floor) {
         this.floor = floor;
     }
 
-    public int getBuilding() {
+    public NodeBuilding getBuilding() {
         return building;
     }
 
-    public void setBuilding(int building) {
+    public void setBuilding(NodeBuilding building) {
         this.building = building;
     }
 
-    public int getNodeType() {
+    public NodeType getNodeType() {
         return nodeType;
     }
 
-    public void setNodeType(int nodeType) {
+    public void setNodeType(NodeType nodeType) {
         this.nodeType = nodeType;
     }
 

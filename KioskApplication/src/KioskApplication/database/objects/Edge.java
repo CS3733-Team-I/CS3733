@@ -9,12 +9,11 @@ public class Edge {
 
     //initialize the edge with an id, and two nodes
     //checks to see if each node exists
-    public Edge(String edgeID, String node1, String node2) throws SQLException {
+    public Edge(String edgeID, String node1, String node2) {
         this.edgeID = edgeID;
         this.node1ID = node1;
         this.node2ID = node2;
     }
-
 
     public String getEdgeID() {
         return edgeID;

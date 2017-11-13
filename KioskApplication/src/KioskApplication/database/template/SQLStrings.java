@@ -59,19 +59,3 @@ public class SQLStrings {
     public static final String INTERPRETER_DELETE = "delete from t_interpreters where interpreterID=?";
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
 }
-
-
-/*
-        String sql = NODE_INSERT;
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, nodeID);
-        pstmt.setInt(2, xc);
-        pstmt.setInt(3, yc);
-        pstmt.setInt(4, fl);
-        pstmt.setInt(5, bu);
-        pstmt.setInt(6, nt);
-        pstmt.setString(7, ln);
-        pstmt.setString(8, sn);
-        pstmt.setString(9, assigned);
-        pstmt.executeUpdate();
- */

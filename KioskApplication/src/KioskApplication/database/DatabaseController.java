@@ -28,7 +28,6 @@ public class DatabaseController {
             e.printStackTrace();
         }
 
-
         return null;
     }
 
@@ -41,9 +40,9 @@ public class DatabaseController {
         return null;
     }
 
-    public static boolean removeNode(String id) {
+    public static boolean removeNode(Node node) {
         try {
-            Connector.deleteNode(instanceConnection, id);
+            Connector.deleteNode(instanceConnection, node);
 
             return true;
         } catch (SQLException e) {
@@ -53,29 +52,23 @@ public class DatabaseController {
         return false;
     }
 
-
-    //will probably want to change this to have less parameter
-    public static Node addNode(String nodeID, int xc, int yc, int fl, int bu, int nt, String ln, String sn
-            , String assigned) {
+    public static int addNode(Node node) {
         try {
-            return Connector.insertNode(instanceConnection, xc, yc, fl, bu, nt, ln, sn, assigned, nodeID);
+            return Connector.insertNode(instanceConnection, node);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return 0;
     }
 
-    public static boolean updateNode(Node node) {
+    public static int updateNode(Node node) {
         try {
-            Connector.updateNode(instanceConnection, node);
-
-            return true;
+            return Connector.updateNode(instanceConnection, node);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return 0;
     }
-
 
     public static Edge getEdge(String edgeID) {
         try {
@@ -86,9 +79,9 @@ public class DatabaseController {
         return null;
     }
 
-    public static boolean removeEdge(String edgeID) {
+    public static boolean removeEdge(Edge edge) {
         try {
-            Connector.deleteEdge(instanceConnection, edgeID);
+            Connector.deleteEdge(instanceConnection, edge);
 
             return true;
         } catch (SQLException e) {
@@ -98,25 +91,23 @@ public class DatabaseController {
         return false;
     }
 
-    public static Edge addEdge(String edgeID, String node1, String node2) {
+    public static int addEdge(Edge edge) {
         try {
-            return Connector.insertEdge(instanceConnection, node1, node2, edgeID);
+            return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return 0;
     }
 
-    public static boolean updateEdge(Edge edge) {
+    public static int updateEdge(Edge edge) {
         try{
-            Connector.updateEdge(instanceConnection, edge);
-
-            return true;
+            return Connector.updateEdge(instanceConnection, edge);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return 0;
     }
 
     public static ArrayList<Edge> getAllEdges() {
@@ -128,13 +119,11 @@ public class DatabaseController {
         return null;
     }
 
-
-
-
     public static void init() {
         if(instanceConnection == null) {
             try {
-                instanceConnection = DBUtil.getCon();
+                instanceConnection = DBUtil.getConnection();
+                DBUtil.createTables(instanceConnection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

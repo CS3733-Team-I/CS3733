@@ -9,9 +9,7 @@ import static KioskApplication.database.template.ConnectionDetails.*;
 import static KioskApplication.database.template.SQLStrings.*;
 
 public class DBUtil {
-
-
-    public static Connection getCon()throws SQLException{
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName(DERBYEMBEDDED);
         } catch (ClassNotFoundException e) {
@@ -21,7 +19,7 @@ public class DBUtil {
         return con;
     }
 
-    public static void closeCon(Connection con) throws SQLException{
+    public static void closeConnection(Connection con) throws SQLException {
         if(con != null){
             con.close();
         }
