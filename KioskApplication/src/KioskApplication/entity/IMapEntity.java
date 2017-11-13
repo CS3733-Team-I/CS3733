@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public interface IMapEntity {
-
-    void addNode(Node n);
-    Node getNode(String s);
-    void removeNode(String s);
-    LinkedList<Node> getAllNodes();
+    public void addNode(Node n);
+    public Node getNode(String s);
+    public ArrayList<Node> getAllNodes();
+    public void removeNode(String s);
 }

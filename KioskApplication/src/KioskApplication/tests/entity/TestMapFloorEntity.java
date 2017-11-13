@@ -1,6 +1,5 @@
-package KioskApplication.tests.entityTests;
+package KioskApplication.tests.entity;
 
-import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapFloorEntity;
 import org.junit.Before;
