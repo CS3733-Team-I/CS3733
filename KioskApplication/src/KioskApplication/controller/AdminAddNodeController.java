@@ -1,5 +1,7 @@
 package KioskApplication.controller;
 import com.sun.org.apache.xpath.internal.SourceTree;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXML;
@@ -23,7 +25,7 @@ public class AdminAddNodeController {
 
     @FXML private TextField nodeID;
 
-    @FXML private TextField floor;
+    @FXML private ChoiceBox floorChoiceBox;
 
     @FXML private TextField building;
 
@@ -41,6 +43,11 @@ public class AdminAddNodeController {
         System.out.println("setCoords");
         xcoord.setText(String.valueOf(x));
         ycoord.setText(String.valueOf(y));
+    }
+
+    @FXML
+    void onfloorClicked() throws IOException{
+        floorChoiceBox.setItems(FXCollections.observableArrayList("L2", "L1", "G", "1", "2", "3"));
     }
 
     @FXML
@@ -67,8 +74,7 @@ public class AdminAddNodeController {
             errorMsg.setText("You must input the X coordinate!");
         else if(ycoord.getText().equals(null) || ycoord.getText().equals(""))
             errorMsg.setText("You must input the Y coordinate!");
-        else if(floor.getText().equals(null) || floor.getText().equals(""))
-            errorMsg.setText("You must input a floor!");
+
         else if(building.getText().equals(null) || building.getText().equals(""))
             errorMsg.setText("You must input a building!");
         else if(nodetype.getText().equals(null) || nodetype.getText().equals(""))
