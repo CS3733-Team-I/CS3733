@@ -49,6 +49,7 @@ public class MainWindowController {
     protected void initialize() throws IOException
     {
         // Initialize admin window and pathfinding window
+        adminWindow = new AdminWindowController();
         pathfindingWindow = new PathfindingWindowController();
 
         this.switchTo(MainWindowScene.PATHFINDING);
