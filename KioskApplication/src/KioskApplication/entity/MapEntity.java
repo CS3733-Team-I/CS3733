@@ -7,7 +7,6 @@ import KioskApplication.utility.NodeFloor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class MapEntity implements IMapEntity {
 
@@ -44,8 +43,8 @@ public class MapEntity implements IMapEntity {
     }
 
     @Override
-    public LinkedList<Node> getAllNodes() {
-        LinkedList<Node> allNodes = new LinkedList<>();
+    public ArrayList<Node> getAllNodes() {
+        ArrayList<Node> allNodes = new ArrayList<>();
 
         for (NodeFloor floor : floors.keySet()) {
             allNodes.addAll(floors.get(floor).getAllNodes());
