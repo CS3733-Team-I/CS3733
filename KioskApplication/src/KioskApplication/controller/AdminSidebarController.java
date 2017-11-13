@@ -9,9 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_EDIT;
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
+import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 
 public class AdminSidebarController {
 
@@ -36,6 +34,11 @@ public class AdminSidebarController {
     }
 
     @FXML
+    void onAddEdgePressed() throws IOException{
+        this.parent.switchTo(SIDEBAR_ADD_EDGE);
+    }
+
+    @FXML
     void onRequestPressed() {
         System.out.println("Request Pressed\n");
     }
@@ -45,6 +48,8 @@ public class AdminSidebarController {
         CSVFileUtil.readNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").getFile());
         CSVFileUtil.readEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
     }
+
+
 
     @FXML
     void onSaveClicked() {
