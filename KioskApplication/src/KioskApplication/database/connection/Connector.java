@@ -4,6 +4,9 @@ package KioskApplication.database.connection;
 
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.utility.NodeBuilding;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -77,16 +80,16 @@ public class Connector {
         pstmt.execute();
     }
 
-    public static Node insertNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
+    public static Node insertNode(Connection conn, int xc, int yc, NodeFloor fl, NodeBuilding bu, NodeType nt, String ln, String sn
             , String assigned, String nodeID)throws SQLException{
         String sql = NODE_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         pstmt.setInt(2, xc);
         pstmt.setInt(3, yc);
-        pstmt.setInt(4, fl);
-        pstmt.setInt(5, bu);
-        pstmt.setInt(6, nt);
+        pstmt.setInt(4, fl.ordinal());
+        pstmt.setInt(5, bu.ordinal());
+        pstmt.setInt(6, nt.ordinal());
         pstmt.setString(7, ln);
         pstmt.setString(8, sn);
         pstmt.setString(9, assigned);
@@ -95,16 +98,16 @@ public class Connector {
         return new Node(nodeID, xc, yc, fl, bu, nt, ln, sn, assigned);
     }
 
-    public static Node updateNode(Connection conn, int xc, int yc, int fl, int bu, int nt, String ln, String sn
+    public static Node updateNode(Connection conn, int xc, int yc, NodeFloor fl, NodeBuilding bu, NodeType nt, String ln, String sn
             , String assigned, String nodeID)throws SQLException{
         String sql = NODE_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, nodeID);
         pstmt.setInt(2, xc);
         pstmt.setInt(3, yc);
-        pstmt.setInt(4, fl);
-        pstmt.setInt(5, bu);
-        pstmt.setInt(6, nt);
+        pstmt.setInt(4, fl.ordinal());
+        pstmt.setInt(5, bu.ordinal());
+        pstmt.setInt(6, nt.ordinal());
         pstmt.setString(7, ln);
         pstmt.setString(8, sn);
         pstmt.setString(9, assigned);
@@ -125,10 +128,14 @@ public class Connector {
         pstmt.setString(1, nodeID);
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
-            node = new Node(nodeID, rs.getInt("xcoord"), rs.getInt("ycoord"),
-                    rs.getInt("floor"), rs.getInt("building"),
-                    rs.getInt("nodeType"), rs.getString("longName"),
-                    rs.getString("shortName"), rs.getString("teamAssigned"));
+            node = new Node(nodeID, rs.getInt("xcoord"),
+                            rs.getInt("ycoord"),
+                            NodeFloor.values()[rs.getInt("floor")],
+                            NodeBuilding.values()[rs.getInt("building")],
+                            NodeType.values()[rs.getInt("nodeType")],
+                            rs.getString("longName"),
+                            rs.getString("shortName"),
+                            rs.getString("teamAssigned"));
         } else {
             //throws exception
         }
@@ -149,10 +156,15 @@ public class Connector {
 
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
-            nodes.add(new Node(rs.getString("nodeID"), rs.getInt("xcoord"),
-                    rs.getInt("ycoord"), rs.getInt("floor"), rs.getInt("building"),
-                    rs.getInt("nodeType"), rs.getString("longName"), rs.getString("shortName"),
-                    rs.getString("teamAssigned")));
+            nodes.add(new Node(rs.getString("nodeID"),
+                               rs.getInt("xcoord"),
+                               rs.getInt("ycoord"),
+                               NodeFloor.values()[rs.getInt("floor")],
+                               NodeBuilding.values()[rs.getInt("building")],
+                               NodeType.values()[rs.getInt("nodeType")],
+                               rs.getString("longName"),
+                               rs.getString("shortName"),
+                               rs.getString("teamAssigned")));
         }
         return nodes;
     }
