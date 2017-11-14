@@ -108,13 +108,13 @@ public class AdminAddNodeController {
                 floor = NodeFloor.LOWERLEVEL_2;
             if(floorChoiceBox.getValue().equals("L1"))
                 floor = NodeFloor.LOWERLEVEL_1;
-            if(floorChoiceBox.getValue().equals("G"))
+            if(floorChoiceBox.getValue().equals("0G"))
                 floor = NodeFloor.GROUND;
-            if(floorChoiceBox.getValue().equals("1"))
+            if(floorChoiceBox.getValue().equals("01"))
                 floor = NodeFloor.FIRST;
-            if(floorChoiceBox.getValue().equals("2"))
+            if(floorChoiceBox.getValue().equals("02"))
                 floor = NodeFloor.SECOND;
-            if(floorChoiceBox.getValue().equals("3"))
+            if(floorChoiceBox.getValue().equals("03"))
                 floor = NodeFloor.THIRD;
 
             // Determine building
@@ -154,11 +154,12 @@ public class AdminAddNodeController {
             System.out.println("Adding node?");
             // Ensure there is no existing node with that ID
             if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
-                System.out.println("Adding node " + nodeID.getText());
+
                 // Creates node
                 Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
                 // Add Node
                 MapEntity.getInstance().addNode(node1);
+                System.out.println("Adding node " + nodeID.getText());
             }
         }
     }
