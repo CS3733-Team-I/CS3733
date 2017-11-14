@@ -50,11 +50,6 @@ public class InterpreterRequestController {
         this.parent.switchTo(SIDEBAR_MENU);
     }
 
-//    @FXML
-//    public void addRequest(){
-//        btnSubmit.setOnAction(e -> sendRequest(e));
-//    }
-
     @FXML
     public void addRequest(){
         int interpID;
@@ -67,7 +62,7 @@ public class InterpreterRequestController {
         //searches for node name
         ArrayList<Node> nodes = DatabaseController.getAllNodes();
         for(int i=0; i<nodes.size(); i++){
-            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location)){
+            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location) || nodes.get(i).getNodeID().equals(location)){
                 nodeLocation = nodes.get(i);
             }
         }
@@ -91,7 +86,7 @@ public class InterpreterRequestController {
         }
 
 
-        System.out.println("location: " + location + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
         //Adds the Interpreter request to the database.... but doesn't work
         //Also can't understand how to get the nodes
 
