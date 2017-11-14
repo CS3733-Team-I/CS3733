@@ -50,13 +50,8 @@ public class InterpreterRequestController {
         this.parent.switchTo(SIDEBAR_MENU);
     }
 
-//    @FXML
-//    public void addRequest(){
-//        btnSubmit.setOnAction(e -> sendRequest(e));
-//    }
-
     @FXML
-    public InterpreterRequest addRequest(){
+    public void addRequest(){
         int interpID;
         String location = txtLocation.getText();
         //default is "My Location"
@@ -67,7 +62,7 @@ public class InterpreterRequestController {
         //searches for node name
         ArrayList<Node> nodes = DatabaseController.getAllNodes();
         for(int i=0; i<nodes.size(); i++){
-            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location)){
+            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location) || nodes.get(i).getNodeID().equals(location)){
                 nodeLocation = nodes.get(i);
             }
         }
@@ -79,6 +74,7 @@ public class InterpreterRequestController {
             language = "Chinese";
         }
 
+        //Finds current admin that is logged in
         String adminEmail = parent.curr_admin_email;
 
         //Recommend isolating to InterpreterRequest Class
@@ -90,16 +86,17 @@ public class InterpreterRequestController {
         }
 
 
-        System.out.println("location: " + location + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
         //Adds the Interpreter request to the database.... but doesn't work
         //Also can't understand how to get the nodes
-//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+
+        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+        System.out.println(DatabaseController.getAllInterpreterRequests());
 
 
-//        InterpreterRequest newRequest = new InterpreterRequest(adminEmail, language, interpID, interpID);
-//        return newRequest;
-
-        return null;
+        //I want to automatically switch the screen back to the admin sidebar menu so there are not two requests created
+//        this.parent.switchTo(SIDEBAR_MENU);
 
     }
 }
