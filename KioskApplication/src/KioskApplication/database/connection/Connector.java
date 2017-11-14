@@ -136,6 +136,22 @@ public class Connector {
     }
 
 
+    public static int selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, String teamAssigned) throws SQLException{
+        int result = 0;
+        PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
+        pstmt.setInt(1, nodeType.ordinal());
+        pstmt.setInt(2, floor.ordinal());
+        pstmt.setString(3, teamAssigned);
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()){
+            result = rs.getInt("countNode");
+        }
+        return result;
+    }
+
+
+
+
     public static Request insertRequest(Connection conn, int requestID,
                                      String locationNode, String employee) throws SQLException{
         String sql = REQUEST_INSERT;

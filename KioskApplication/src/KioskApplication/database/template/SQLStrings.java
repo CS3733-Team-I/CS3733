@@ -49,6 +49,7 @@ public class SQLStrings {
     public static final String NODE_SELECT = "SELECT * FROM t_nodes where nodeID=?";
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
+    public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
 
     public static final String REQUEST_INSERT = "insert into t_requests values(?, ?, ?)";
     public static final String REQUEST_UPDATE = "update t_requests set locationNode=?, set employee=? where requestID=?";

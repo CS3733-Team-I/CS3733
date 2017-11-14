@@ -57,13 +57,55 @@ public class AdminEditNodeController {
         nodeID.setText(node.getNodeID());
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
-        floorChoiceBox.setValue(node.getFloor().toString());
+        floorChoiceBox.setValue(convertFloor(node.getFloor().toString()));
         buildingChoiceBox.setValue(node.getBuilding().toString());
         nodeTypeChoiceBox.setValue(node.getNodeType().toString());
         lname.setText(node.getLongName());
         sname.setText(node.getShortName());
-        teamAssignedChoiceBox.setValue(node.getTeamAssigned().toString());
+        teamAssignedChoiceBox.setValue(convertTeam(node.getTeamAssigned().toString()));
     }
+
+    public String convertFloor(String eString){
+        switch (eString){
+            case "THIRD":
+                return "03";
+            case "SECOND":
+                return "02";
+            case "FIRST":
+                return "01";
+            case "LOWERLEVEL_2":
+                return "L1";
+            case "LOWERLEVEL_1":
+                return "L2";
+        }
+
+        return "";
+    }
+
+    public String convertTeam(String eString){
+        switch (eString){
+            case "Team A":
+                return "A";
+            case "Team B":
+                return "B";
+            case "Team C":
+                return "C";
+            case "Team D":
+                return "D";
+            case "Team E":
+                return "E";
+            case "Team F":
+                return "F";
+            case "Team G":
+                return "G";
+            case "Team H":
+                return "H";
+            case "Team I":
+                return "I";
+        }
+        return "";
+    }
+
 
     @FXML
     void onAddPressed() throws IOException {

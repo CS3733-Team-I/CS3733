@@ -4,6 +4,7 @@ import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +71,11 @@ public class MapEntity implements IMapEntity {
         else
             return new ArrayList<>();
     }
+
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
+        return DatabaseController.getNodeTypeCount(nodeType, floor, teamAssigned);
+    }
+
 
     @Override
     public void removeNode(String s) {
