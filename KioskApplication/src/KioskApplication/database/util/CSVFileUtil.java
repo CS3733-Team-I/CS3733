@@ -140,7 +140,7 @@ public class CSVFileUtil {
                             break;
                         }
                     }
-            //        System.out.println(line);
+                    //        System.out.println(line);
                 }
             }
         } catch (IOException e2) {
@@ -155,145 +155,145 @@ public class CSVFileUtil {
         }
     }
 
-public static void writeNodesCSV(String path) {
-    File csvFile = new File(path);
-    FileWriter write = null;
-    try {
-        write = new FileWriter(csvFile, true);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    BufferedWriter bWriter = new BufferedWriter(write);
-
-    Connection conn = null;
-    try {
-        bWriter.write(CSVFormat.NODE_CSV_HEAD);
-        bWriter.newLine();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-
-    try {
-        conn = DBUtil.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_SELECT_ALL);
-        ResultSet rs = pstmt.executeQuery();
-
-        while (rs.next()) {
-            NodeFloor fl = NodeFloor.values()[rs.getInt("floor")];
-            String floor = "";
-            NodeBuilding bu = NodeBuilding.values()[rs.getInt("building")];
-            String building = "";
-            NodeType nt = NodeType.values()[rs.getInt("nodeType")];
-            String nodeType = "";
-
-            switch(fl) {
-                case LOWERLEVEL_2: floor = "L2"; break;
-                case LOWERLEVEL_1: floor = "L1"; break;
-                case GROUND: floor = "0"; break;
-                case FIRST: floor = "1"; break;
-                case SECOND: floor = "2"; break;
-                case THIRD: floor = "3"; break;
-            }
-
-            switch(bu) {
-                case FRANCIS45: building = "45 Francis"; break;
-                case FRANCIS15: building = "15 Francis"; break;
-                case TOWER: building = "Tower"; break;
-                case SHAPIRO: building = "Shapiro"; break;
-                case BTM: building = "BTM"; break;
-            }
-
-            switch(nt) {
-                case ELEV: nodeType = "ELEV"; break;
-                case HALL: nodeType = "HALL"; break;
-                case REST: nodeType = "REST"; break;
-                case DEPT: nodeType = "DEPT"; break;
-                case STAI: nodeType = "STAI"; break;
-                case LABS: nodeType = "LABS"; break;
-                case INFO: nodeType = "INFO"; break;
-                case CONF: nodeType = "CONF"; break;
-                case EXIT: nodeType = "EXIT"; break;
-                case RETL: nodeType = "RETL"; break;
-                case SERV: nodeType = "SERV"; break;
-            }
-
-            bWriter.write(rs.getString("NodeID") + ",");
-            bWriter.write(rs.getInt("xcoord") + ",");
-            bWriter.write(rs.getInt("ycoord") + ",");
-            bWriter.write(floor + ",");
-            bWriter.write(building + ",");
-            bWriter.write(nodeType + ",");
-            bWriter.write(rs.getString("longName") + ",");
-            bWriter.write(rs.getString("shortName") + ",");
-            bWriter.write(rs.getString("teamAssigned"));
-            bWriter.newLine();
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
+    public static void writeNodesCSV(String path) {
+        File csvFile = new File(path);
+        FileWriter write = null;
         try {
-            bWriter.flush();
-            write.close();
-            bWriter.close();
+            write = new FileWriter(csvFile, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedWriter bWriter = new BufferedWriter(write);
+
+        Connection conn = null;
+        try {
+            bWriter.write(CSVFormat.NODE_CSV_HEAD);
+            bWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            DBUtil.closeConnection(conn);
+            conn = DBUtil.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_SELECT_ALL);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                NodeFloor fl = NodeFloor.values()[rs.getInt("floor")];
+                String floor = "";
+                NodeBuilding bu = NodeBuilding.values()[rs.getInt("building")];
+                String building = "";
+                NodeType nt = NodeType.values()[rs.getInt("nodeType")];
+                String nodeType = "";
+
+                switch(fl) {
+                    case LOWERLEVEL_2: floor = "L2"; break;
+                    case LOWERLEVEL_1: floor = "L1"; break;
+                    case GROUND: floor = "0"; break;
+                    case FIRST: floor = "1"; break;
+                    case SECOND: floor = "2"; break;
+                    case THIRD: floor = "3"; break;
+                }
+
+                switch(bu) {
+                    case FRANCIS45: building = "45 Francis"; break;
+                    case FRANCIS15: building = "15 Francis"; break;
+                    case TOWER: building = "Tower"; break;
+                    case SHAPIRO: building = "Shapiro"; break;
+                    case BTM: building = "BTM"; break;
+                }
+
+                switch(nt) {
+                    case ELEV: nodeType = "ELEV"; break;
+                    case HALL: nodeType = "HALL"; break;
+                    case REST: nodeType = "REST"; break;
+                    case DEPT: nodeType = "DEPT"; break;
+                    case STAI: nodeType = "STAI"; break;
+                    case LABS: nodeType = "LABS"; break;
+                    case INFO: nodeType = "INFO"; break;
+                    case CONF: nodeType = "CONF"; break;
+                    case EXIT: nodeType = "EXIT"; break;
+                    case RETL: nodeType = "RETL"; break;
+                    case SERV: nodeType = "SERV"; break;
+                }
+
+                bWriter.write(rs.getString("NodeID") + ",");
+                bWriter.write(rs.getInt("xcoord") + ",");
+                bWriter.write(rs.getInt("ycoord") + ",");
+                bWriter.write(floor + ",");
+                bWriter.write(building + ",");
+                bWriter.write(nodeType + ",");
+                bWriter.write(rs.getString("longName") + ",");
+                bWriter.write(rs.getString("shortName") + ",");
+                bWriter.write(rs.getString("teamAssigned"));
+                bWriter.newLine();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bWriter.flush();
+                write.close();
+                bWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                DBUtil.closeConnection(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
 
-public static void readEdgesCSV(String path) {
-    File file = new File(path);
+    public static void readEdgesCSV(String path) {
+        File file = new File(path);
 
-    BufferedReader bReader = null;
-    try {
-        bReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        bReader.readLine();
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+        BufferedReader bReader = null;
+        try {
+            bReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            bReader.readLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    String line;
-    Connection conn = null;
-    try {
-        conn = DBUtil.getConnection();
-    } catch(SQLException e) {
-        e.printStackTrace();
-    }
-    try {
+        String line;
+        Connection conn = null;
+        try {
+            conn = DBUtil.getConnection();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        try {
 
-        while ((line = bReader.readLine()) != null) {
-            // Ensure first line isnt CSV header
-            if (!line.equals(CSVFormat.EDGE_CSV_HEAD)) {
-                String[] elements = line.split(",");
-                Edge edge = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
-                try {
-                    Connector.insertEdge(conn, edge);
-                } catch(SQLException e) {
-                    if(e.getSQLState() != "23505") {
-                        e.printStackTrace();
+            while ((line = bReader.readLine()) != null) {
+                // Ensure first line isnt CSV header
+                if (!line.equals(CSVFormat.EDGE_CSV_HEAD)) {
+                    String[] elements = line.split(",");
+                    Edge edge = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
+                    try {
+                        Connector.insertEdge(conn, edge);
+                    } catch(SQLException e) {
+                        if(e.getSQLState() != "23505") {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
-        try {
-            DBUtil.closeConnection(conn);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                DBUtil.closeConnection(conn);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
     }
 
     public static void writeEdgesCSV(String path) {
@@ -346,4 +346,3 @@ public static void readEdgesCSV(String path) {
         }
     }
 }
-
