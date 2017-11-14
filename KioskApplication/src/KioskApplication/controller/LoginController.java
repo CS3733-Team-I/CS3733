@@ -36,6 +36,7 @@ public class LoginController {
             parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
+            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
             errorMsg.setText("Invalid Login. ");

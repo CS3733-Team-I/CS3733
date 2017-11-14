@@ -16,7 +16,7 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_EDIT,
         SIDEBAR_ADD_EDGE,
         SIDEBAR_MENU,
-        SIDEBAR_ADD_EDGE, SIDEBAR_INTERPRETER
+        SIDEBAR_INTERPRETER
     }
 
     AdminAddNodeController addNodeController = null;
