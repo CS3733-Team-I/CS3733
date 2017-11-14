@@ -38,6 +38,8 @@ public class SQLStrings {
             ")";
 
 
+    public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
+
 
     public static final String EDGE_INSERT = "insert into t_edges values(?, ?, ?)";
     public static final String EDGE_UPDATE = "update t_edges set startNode=?, endNode=? where edgeID=?";
@@ -48,7 +50,7 @@ public class SQLStrings {
     public static final String NODE_INSERT = "insert into t_nodes values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
     public static final String NODE_SELECT = "SELECT ? FROM t_nodes";
-    public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodesID = ?";
+    public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
 
 

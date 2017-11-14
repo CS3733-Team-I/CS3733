@@ -14,6 +14,7 @@ public class AdminWindowController extends MapWindowController {
     public enum SidebarType {
         SIDEBAR_ADD,
         SIDEBAR_EDIT,
+        SIDEBAR_ADD_EDGE,
         SIDEBAR_MENU,
         SIDEBAR_ADD_EDGE, SIDEBAR_INTERPRETER
     }
@@ -54,6 +55,11 @@ public class AdminWindowController extends MapWindowController {
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addNode.fxml"));
                 addNodeController = new AdminAddNodeController(this);
                 loader.setController(addNodeController);
+                break;
+            case SIDEBAR_ADD_EDGE:
+                loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addEdge.fxml"));
+                addEdgeController = new AdminAddEdgeController(this);
+                loader.setController(addEdgeController);
                 break;
 
             case SIDEBAR_EDIT:
