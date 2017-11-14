@@ -82,7 +82,7 @@ public class pathfindingTest {
     public void testPath(){
         Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-            path1 = Pathfinder.GeneratePath(n1, n6);
+            path1 = Pathfinder.A_star(n1, n6);
         }
         catch(PathfindingException e) {}
         LinkedList<Edge> testPathEdges = new LinkedList<>();
@@ -107,7 +107,7 @@ public class pathfindingTest {
     public void testWrongPath(){
         Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-            path1 = Pathfinder.GeneratePath(n1, n6);
+            path1 = Pathfinder.A_star(n1, n6);
         }
         catch(PathfindingException e) {}
         LinkedList<Edge> testPathEdges = new LinkedList<>();
@@ -132,7 +132,7 @@ public class pathfindingTest {
     public void testAnotherPath(){
         Path path2 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
         try {
-            path2 = Pathfinder.GeneratePath(n1, n4);
+            path2 = Pathfinder.A_star(n1, n4);
         }
         catch(PathfindingException e) {}
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
