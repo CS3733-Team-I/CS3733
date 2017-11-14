@@ -29,17 +29,17 @@ public class AdminAddNodeController {
 
     @FXML private TextField nodeID;
 
-    @FXML private ChoiceBox<?> floorChoiceBox;
+    @FXML private ChoiceBox floorChoiceBox;
 
-    @FXML private ChoiceBox<?> buildingChoiceBox;
+    @FXML private ChoiceBox buildingChoiceBox;
 
-    @FXML private ChoiceBox<?> nodeTypeChoiceBox;
+    @FXML private ChoiceBox nodeTypeChoiceBox;
 
     @FXML private TextField lname;
 
     @FXML private TextField sname;
 
-    @FXML private ChoiceBox<?> teamAssignedChoiceBox;
+    @FXML private ChoiceBox teamAssignedChoiceBox;
 
     @FXML private Label errorMsg;
 

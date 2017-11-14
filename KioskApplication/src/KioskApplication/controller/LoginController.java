@@ -28,13 +28,16 @@ public class LoginController {
         AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
     }
 
+
     @FXML
     public void OnLoginClicked() throws IOException {
 
         if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
             parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
+            parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
+            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
             errorMsg.setText("Invalid Login. ");

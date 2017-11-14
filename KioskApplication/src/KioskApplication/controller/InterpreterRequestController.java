@@ -64,7 +64,7 @@ public class InterpreterRequestController {
 //
 //        ArrayList<Node> nodes = MapEntity.getAllNodes();
 //        for(int i=0; i<MapEntity.getAllNodes().size(); i++){
-//            if(nodes.longName.equals(location) || nodes.shortName.equls(location)){
+//            if(nodes.longName.equals(location) || nodes.shortName.equals(location)){
 //                nodeLocation = nodes.get(i);
 //            }
 //        }
@@ -75,6 +75,8 @@ public class InterpreterRequestController {
         }else if(langMenu.getValue().toString().equals("Chinese")) {
             language = "Chinese";
         }
+
+        String adminEmail = parent.curr_admin_email;
 
         //The code currently isn't working I don't understand how to create the request object
         //and where to send the object
@@ -87,7 +89,7 @@ public class InterpreterRequestController {
         return newRequest;
         */
 
-        System.out.println("location: " + location + ". language: " + language);
+        System.out.println("location: " + location + ". language: " + language + ". Admin Email: " + adminEmail);
         return null;
 
     }

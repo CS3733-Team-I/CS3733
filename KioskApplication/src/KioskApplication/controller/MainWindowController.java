@@ -6,9 +6,11 @@ import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
+import KioskApplication.entity.Administrator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
@@ -19,6 +21,7 @@ public class MainWindowController {
     @FXML Button switchButton;
     @FXML Pane contentWindow;
     @FXML AnchorPane LoginPopup;
+    @FXML Label lbAdminInfo;
     Administrator curr_admin;
 
     enum MainWindowScene {
@@ -77,6 +80,8 @@ public class MainWindowController {
         switch (currentView) {
             case ADMIN:
                 this.switchTo(MainWindowScene.PATHFINDING);
+                this.adminWindow.reset();
+                this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
                 this.Login();
