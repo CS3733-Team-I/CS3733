@@ -21,6 +21,7 @@ public class LoginController {
     MainWindowController parent;
     AdministratorList AdminList;
 
+    //To get login info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
         this.parent = parent;
         this.AdminList = new AdministratorList();
