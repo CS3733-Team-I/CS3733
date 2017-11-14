@@ -32,7 +32,7 @@ public class SQLStrings {
 
     public static final String CREATE_REQUESTS_TABLE = "CREATE TABLE t_requests(" +
             " requestID int NOT NULL CONSTRAINT t_requests_pk PRIMARY KEY," +
-            " locationNode VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk" +
+            " locationNode VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
             " REFERENCES t_nodes ON DELETE CASCADE," +
             " employee VARCHAR(20) NOT NULL" +
             ")";
