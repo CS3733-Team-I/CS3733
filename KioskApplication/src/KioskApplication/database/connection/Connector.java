@@ -136,7 +136,8 @@ public class Connector {
         return nodes;
     }
 
-
+    //Commented out Generic Requests for now
+    /*
     public static Request insertRequest(Connection conn, int requestID,
                                      String locationNode, String employee) throws SQLException{
         String sql = REQUEST_INSERT;
@@ -194,31 +195,36 @@ public class Connector {
         }
         return requests;
     }
+    */
 
-    public static InterpreterRequest insetInterpreter(Connection conn, int interpreterID, String language,
-                                        int requestID) throws SQLException {
+    //adds an InterpreterRequest without calling the constructor
+    public static void insertInterpreter(Connection conn, int interpreterID, String nodeID, String language,
+                                        String employee) throws SQLException {
         String sql = INTERPRETER_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
+        //table setup is interpreterID, nodeID, language, employee
         pstmt.setInt(1, interpreterID);
-        pstmt.setString(2, language);
-        pstmt.setInt(3, requestID);
+        pstmt.setString(2, nodeID);
+        pstmt.setString(3, language);
+        pstmt.setString(4, employee);
 
         pstmt.executeUpdate();
-
-        return new InterpreterRequest(language, interpreterID, requestID);
     }
 
-    public static int updateIntepreter(Connection conn, int interpreterID,
-                                        String language, int requestID) throws SQLException {
+    //currently redundant, needs logic to check if interpreterID exists to justify existence
+    public static int updateInterpreter(Connection conn, int interpreterID, String nodeID, String language,
+                                        String employee) throws SQLException {
         String sql = INTERPRETER_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, language);
-        pstmt.setInt(2, requestID);
-        pstmt.setInt(3, interpreterID);
+        pstmt.setInt(1, interpreterID);
+        pstmt.setString(2, nodeID);
+        pstmt.setString(3, language);
+        pstmt.setString(4, employee);
 
         return pstmt.executeUpdate();
     }
 
+    //Gets the interpreterRequest from the database by finding the interpreterID
     public static InterpreterRequest selectInterpreter(Connection conn, int interpreterID) throws SQLException {
         String sql = INTERPRETER_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -226,13 +232,15 @@ public class Connector {
         InterpreterRequest interpreterRequest = null;
 
         ResultSet rs = pstmt.executeQuery();
+        //uses the retrieval InterpreterRequest constructor
         if(rs.next()) {
-            interpreterRequest = new InterpreterRequest(rs.getString(2), rs.getInt(1),
-            rs.getInt(3));
+            interpreterRequest = new InterpreterRequest(rs.getInt(1), rs.getString(2),
+            rs.getString(3), rs.getString(4));
         }
         return interpreterRequest;
     }
 
+    //removes the request from the database
     public static void deleteInterpreter(Connection conn, int interpreterID) throws SQLException {
         String sql = INTERPRETER_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -240,15 +248,18 @@ public class Connector {
         pstmt.executeUpdate();
     }
 
-    public static ArrayList<InterpreterRequest> selectAllInterpeters(Connection conn) throws SQLException {
+    //returns all interpreterRequests
+    public static ArrayList<InterpreterRequest> selectAllInterpreters(Connection conn) throws SQLException {
         String sql = INTERPRETER_SELECT_ALL;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
 
         ArrayList<InterpreterRequest> interpreterRequests = new ArrayList<>();
+        //gets every IR from the database in a list for output
         while(rs.next()) {
-            interpreterRequests.add(new InterpreterRequest(rs.getString(2),
-                    rs.getInt(1), rs.getInt(3)));
+            //uses the retrieval InterpreterRequest constructor
+            interpreterRequests.add(new InterpreterRequest(rs.getInt(1), rs.getString(2),
+                    rs.getString(3), rs.getString(4)));
         }
         return interpreterRequests;
     }

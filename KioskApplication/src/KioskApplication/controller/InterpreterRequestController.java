@@ -81,7 +81,7 @@ public class InterpreterRequestController {
 
         String adminEmail = parent.curr_admin_email;
 
-
+        //Recommend isolating to InterpreterRequest Class
         if(DatabaseController.getAllInterpreterRequests().isEmpty()){
             interpID = 0;
         }else{

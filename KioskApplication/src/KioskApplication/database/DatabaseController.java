@@ -144,7 +144,8 @@ public class DatabaseController {
             }
         }
     }
-  
+    //Commented out generic request methods for now
+    /*
     public static Request addRequest(int requestID, String nodeID, String employee) {
         try {
             return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
@@ -190,24 +191,28 @@ public class DatabaseController {
         }
         return new ArrayList<Request>();
     }
+    */
 
-    public static InterpreterRequest addIntepreterRequest(String language, int interpreterID, int requestID) {
+    //Changed this method to void, don't know if we need it to return an interpreterRequest
+    public static void addInterpreterRequest(int interpreterID, String nodeID, String language, String employee) {
         try {
-            return Connector.insetInterpreter(instanceConnection, interpreterID, language, requestID);
+            Connector.insertInterpreter(instanceConnection, interpreterID, nodeID, language, employee);
         } catch(SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
+    //Lazy commenting out: method caused errors
+    /*
     public static int updateInterpreterRequest(String language, int interpreterID, int requestID) {
         try {
-            return Connector.updateIntepreter(instanceConnection, interpreterID, language, requestID);
+            return Connector.updateInterpreter(instanceConnection, interpreterID, language, requestID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
+    */
 
     public static InterpreterRequest getInterpreterRequest(int interpreterID) {
         try {
@@ -230,7 +235,7 @@ public class DatabaseController {
 
     public static ArrayList<InterpreterRequest> getAllInterpreterRequests() {
         try {
-            return Connector.selectAllInterpeters(instanceConnection);
+            return Connector.selectAllInterpreters(instanceConnection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
