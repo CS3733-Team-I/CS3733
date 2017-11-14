@@ -32,6 +32,11 @@ public class InterpreterRequest{
         this.interpreterID = interpreterID;
     }
 
+    //Completes Request and clears it from the database
+    public void completeInterpreterRequest(){
+        DatabaseController.deleteRequest(this.request.requestID);
+    }
+
     //Getters for testing
     public String getLanguage(){
         return this.language;
