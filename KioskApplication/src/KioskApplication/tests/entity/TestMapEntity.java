@@ -58,7 +58,7 @@ public class TestMapEntity {
         m.addNode(n4);
 
         // Get nodes
-        LinkedList<Node> nodes = m.getAllNodes();
+        ArrayList<Node> nodes = m.getAllNodes();
 
         assertEquals(nodes.size(), 4);
 

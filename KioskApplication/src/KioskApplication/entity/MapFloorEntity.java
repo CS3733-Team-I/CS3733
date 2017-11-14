@@ -40,8 +40,8 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
-    public LinkedList<Node> getAllNodes() {
-        LinkedList<Node> allNodes = new LinkedList<>();
+    public ArrayList<Node> getAllNodes() {
+        ArrayList<Node> allNodes = new ArrayList<>();
 
         for (Node node : nodes.values()) {
             allNodes.add(node);

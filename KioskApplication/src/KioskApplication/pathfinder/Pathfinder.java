@@ -7,10 +7,7 @@ import KioskApplication.entity.Path;
 import KioskApplication.utility.NodeFloor;
 import com.sun.org.apache.bcel.internal.generic.LLOAD;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class Pathfinder {
 
@@ -40,7 +37,7 @@ public class Pathfinder {
 
         //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
         // list of unexplored nodes initialized as all nodes
-        LinkedList<Node> allNodes = map.getAllNodes();
+        ArrayList<Node> allNodes = map.getAllNodes();
         HashMap<String, PathfindingNode> unexploredNodes = new HashMap<>();
         for(Node node : allNodes) {
             if(!unexploredNodes.containsKey(node.getNodeID()))
