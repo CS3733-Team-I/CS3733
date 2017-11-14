@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 
 import KioskApplication.database.DatabaseController;
+import KioskApplication.database.objects.Node;
 import KioskApplication.entity.InterpreterRequest;
 import KioskApplication.database.connection.Connector;
 import javafx.fxml.FXML;
@@ -58,17 +59,18 @@ public class InterpreterRequestController {
     public InterpreterRequest addRequest(){
         int interpID;
         String location = txtLocation.getText();
-        //default should be "Current Location"
+        //default is "My Location"
 
-        //Following code is to send a node instead of a string
-//        Node nodeLocation; //store location here
-//
-//        ArrayList<Node> nodes = MapEntity.getAllNodes();
-//        for(int i=0; i<MapEntity.getAllNodes().size(); i++){
-//            if(nodes.longName.equals(location) || nodes.shortName.equals(location)){
-//                nodeLocation = nodes.get(i);
-//            }
-//        }
+        //sets nodeLocation to default my location
+        Node nodeLocation = DatabaseController.getNode("IDEPT00303");
+
+        //searches for node name
+        ArrayList<Node> nodes = DatabaseController.getAllNodes();
+        for(int i=0; i<nodes.size(); i++){
+            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location)){
+                nodeLocation = nodes.get(i);
+            }
+        }
 
         String language = "None";
         if(langMenu.getValue().toString().equals("Spanish")){
