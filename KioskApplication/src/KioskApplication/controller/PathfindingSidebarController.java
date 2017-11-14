@@ -42,15 +42,11 @@ public class PathfindingSidebarController {
     void btGeneratePathPressed() throws IOException {
         MapEntity map = MapEntity.getInstance();
         try {
-            //These print statements are just for debugging, comment/remove them later.
-            System.out.println("IREST00103 connected edges:");
-            System.out.println(map.getEdges(map.getNode("IREST00103")));
-            System.out.println("IREST00103 connected nodes:");
-            System.out.println(map.getConnectedNodes(map.getNode("IREST00103")));
             Path path = Pathfinder.GeneratePath(map.getNode(inputStartID.getText()), map.getNode(inputEndID.getText()));
             if(path.getEdges().isEmpty())
                 System.out.println("Path is empty.");
             pathfindingOutputText.setText(path.toString());
+            parent.displayPathOnMap(path);
         } catch (PathfindingException e) {
             e.printStackTrace();
         }
