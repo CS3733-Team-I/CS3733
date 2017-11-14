@@ -1,6 +1,6 @@
 package KioskApplication.tests.pathfinderTests;
 
-public class pathfindingnodeTest {
+public class pathfindingNodeTest {
 
 
 

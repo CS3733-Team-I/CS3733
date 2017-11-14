@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class startnodeTest {
+public class startNodeTest {
 
     private StartNode startNode;
 

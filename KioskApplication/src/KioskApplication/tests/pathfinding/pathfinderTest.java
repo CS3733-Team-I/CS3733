@@ -17,7 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-public class pathfindingTest {
+public class pathfinderTest {
 
     private Node n1, n2, n3, n4, n5, n6, n7;
     private Edge e1, e2, e3, e4, e5, e6;
@@ -29,8 +29,9 @@ public class pathfindingTest {
 
         /* Map Structure
          n1 - n2 - n3 - n5 - n6
-                 |
-              n7 - n4
+               |
+              / \
+            n7   n4
          */
 
         DatabaseController.initTests();
@@ -65,11 +66,11 @@ public class pathfindingTest {
         map.addNode(n7);
 
         e1 = new Edge("EDGE1", n1.getNodeID(), n2.getNodeID());
-        e2 = new Edge("EDGE3", n2.getNodeID(), n3.getNodeID());
-        e3 = new Edge("EDGE4", n2.getNodeID(), n4.getNodeID());
-        e4 = new Edge("EDGE5", n2.getNodeID(), n7.getNodeID());
-        e5 = new Edge("EDGE6", n5.getNodeID(), n3.getNodeID());
-        e6 = new Edge("EDGE7", n5.getNodeID(), n6.getNodeID());
+        e2 = new Edge("EDGE2", n2.getNodeID(), n3.getNodeID());
+        e3 = new Edge("EDGE3", n2.getNodeID(), n4.getNodeID());
+        e4 = new Edge("EDGE4", n2.getNodeID(), n7.getNodeID());
+        e5 = new Edge("EDGE5", n5.getNodeID(), n3.getNodeID());
+        e6 = new Edge("EDGE6", n5.getNodeID(), n6.getNodeID());
 
         map.addEdge(e1);
         map.addEdge(e2);
