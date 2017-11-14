@@ -40,11 +40,13 @@ public class TestMapEntity {
         //Add node to map
         m.addNode(n1);
         //Test that the node exists in the map
-        assertEquals(m.getNode(n1.getNodeID()), n1);
+        Node n1_actual = m.getNode(n1.getNodeID());
+        assertEquals(n1_actual.getNodeID(), n1.getNodeID());
         //Remove the node
         m.removeNode(n1.getNodeID());
         //Test that the node is not in the map
-        assertEquals(m.getNode(n1.getNodeID()), null);
+        n1_actual = m.getNode(n1.getNodeID());
+        assertEquals(n1_actual, null);
     }
 
     @Test
