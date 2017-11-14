@@ -18,7 +18,7 @@ public class AdminAddNodeController {
     AdminAddNodeController(AdminWindowController parent) {
         this.parent = parent;
     }
-    
+
     @FXML private TextField xcoord;
 
     @FXML private TextField ycoord;
