@@ -55,8 +55,8 @@ public class MapEntity implements IMapEntity {
     }
 
     @Override
-    public ArrayList<Node> getAllNodes() {
-        ArrayList<Node> allNodes = new ArrayList<>();
+    public LinkedList<Node> getAllNodes() {
+        LinkedList<Node> allNodes = new LinkedList<>();
 
         for (NodeFloor floor : floors.keySet()) {
             allNodes.addAll(floors.get(floor).getAllNodes());
@@ -65,7 +65,7 @@ public class MapEntity implements IMapEntity {
         return allNodes;
     }
 
-    public ArrayList<Node> getNodesOnFloor(NodeFloor floor) {
+    public LinkedList<Node> getNodesOnFloor(NodeFloor floor) {
         return floors.get(floor).getAllNodes();
     }
 

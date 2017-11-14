@@ -95,7 +95,7 @@ public class Pathfinder {
 
         //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
         // list of unexplored nodes initialized as all nodes
-        ArrayList<Node> allNodes = map.getAllNodes();
+        LinkedList<Node> allNodes = map.getAllNodes();
         HashMap<String, PathfindingNode> unexploredNodes = new HashMap<>();
         for(Node node : allNodes) {
             if(!unexploredNodes.containsKey(node.getNodeID()))
