@@ -47,12 +47,12 @@ public class DBUtil {
         String sql4 = CREATE_INTERPRETERS_TABLE;
 
        PreparedStatement pstmt0 = conn.prepareStatement(schema);
-        pstmt0.execute();
+        //pstmt0.execute();
 
         PreparedStatement pstmt1 = conn.prepareStatement(sql1);
-        pstmt1.execute();
+       // pstmt1.execute();
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-        pstmt2.execute();
+        //pstmt2.execute();
         PreparedStatement pstmt3 = conn.prepareStatement(sql3);
         pstmt3.execute();
         PreparedStatement pstmt4 = conn.prepareStatement(sql4);

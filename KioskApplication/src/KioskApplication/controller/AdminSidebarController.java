@@ -46,6 +46,7 @@ public class AdminSidebarController {
     @FXML
     void onReadClicked() {
         CSVFileUtil.readNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").getFile());
+        CSVFileUtil.readNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").getFile());
         CSVFileUtil.readEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
     }
 
