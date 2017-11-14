@@ -76,15 +76,19 @@ public class InterpreterRequestController {
             language = "Chinese";
         }
 
-        //get from login information
-        //LoginController LC = new LoginController();
-        //String adminEmail = LoginController
+        //The code currently isn't working I don't understand how to create the request object
+        //and where to send the object
+        /*
+        int interpreterID = 1;
+        int requestID = 1;
 
-        /*creates the request object
-        InterpreterRequest newRequest = new InterpreterRequest(location, adminEmail, language);
+        //creates the request object
+        InterpreterRequest newRequest = new InterpreterRequest(language, interpreterID, requestID);
         return newRequest;
         */
+
         System.out.println("location: " + location + ". language: " + language);
         return null;
+
     }
 }
