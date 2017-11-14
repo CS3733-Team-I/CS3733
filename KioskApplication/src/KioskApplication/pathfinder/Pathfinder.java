@@ -23,13 +23,13 @@ public class Pathfinder {
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
     public static Path generatePath(LinkedList<Node> waypoints){
+
         //Starting with the second node, run the pathfinding algorithm using each node as the end node and the previous
         //node as the start node.  assemble the lists of edges from each into a single path.
         LinkedList<Edge> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
         boolean isFirst = true;
         for(Node endNode: waypoints){
-            //Skip the first element, as it doesn't have a previous node to use as the start.
             if(isFirst){
                 isFirst = false;
                 continue;
@@ -76,7 +76,8 @@ public class Pathfinder {
         MapEntity map = MapEntity.getInstance();
 
 
-        // TODO: this node needs a location UPDATE with actual coordinates
+        //TODO: this check for a null node should be moved out of A_star up into the main generatePath method.
+        //TODO: this node needs a location UPDATE with actual coordinates
         // if start node is not declared, then default to start position on floor 3 Node1.
         if (startingNode == null || startingNode.getNodeID() == null){
             startingNode = new Node("Node1", NodeFloor.THIRD);
