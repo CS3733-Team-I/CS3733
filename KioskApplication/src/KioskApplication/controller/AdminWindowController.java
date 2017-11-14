@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Node;
 import javafx.beans.DefaultProperty;
 import javafx.fxml.FXMLLoader;
 
@@ -67,5 +68,7 @@ public class AdminWindowController extends MapWindowController {
         }
     }
 
-    void mapNodeClicked() {}
+    void mapNodeClicked(Node node) {
+
+    }
 }

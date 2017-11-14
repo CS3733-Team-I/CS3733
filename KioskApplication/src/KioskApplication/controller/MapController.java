@@ -8,6 +8,7 @@ import KioskApplication.utility.NodeFloor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -19,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapController {
@@ -45,6 +47,9 @@ public class MapController {
 
     public void drawPath(Path path) throws IOException {
         MapEntity mapEntity = MapEntity.getInstance();
+
+        // Change to floor of the starting node
+        loadFloor(path.getWaypoints().get(0).getFloor());
 
         stackPane.getChildren().clear();
         stackPane.getChildren().add(mapView);
@@ -132,6 +137,20 @@ public class MapController {
     @FXML
     void onMapClicked(MouseEvent event) {
         if (!parent.equals(null)) {
+            // Check if clicked location is a node
+            ArrayList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
+            for (Node node : floorNodes) {
+                Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
+                                                      30, 30); // TODO magic numbers
+                Point2D clickPosition = new Point2D(event.getX(), event.getY());
+
+                if (nodeArea.contains(clickPosition)) {
+                    parent.mapNodeClicked(node);
+                    return;
+                }
+            }
+
+            // Otherwise return the x,y coordinates
             parent.mapLocationClicked(event.getX(), event.getY());
         }
     }

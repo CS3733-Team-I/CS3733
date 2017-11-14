@@ -65,6 +65,10 @@ public class MapEntity implements IMapEntity {
         return allNodes;
     }
 
+    public ArrayList<Node> getNodesOnFloor(NodeFloor floor) {
+        return floors.get(floor).getAllNodes();
+    }
+
     @Override
     public void removeNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
