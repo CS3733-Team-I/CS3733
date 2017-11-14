@@ -80,11 +80,7 @@ public class pathfindingTest {
     //TODO: handle the exception
     @Test
     public void testPath(){
-        Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
-        try {
-            path1 = Pathfinder.A_star(n1, n6);
-        }
-        catch(PathfindingException e) {}
+        Path path1 = Pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e1);
         testPathEdges.add(e2);
@@ -105,11 +101,7 @@ public class pathfindingTest {
     //TODO: handle the exception
     @Test
     public void testWrongPath(){
-        Path path1 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
-        try {
-            path1 = Pathfinder.A_star(n1, n6);
-        }
-        catch(PathfindingException e) {}
+        Path path1 = Pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e2);
         testPathEdges.add(e2);
@@ -130,11 +122,7 @@ public class pathfindingTest {
     //TODO: handle the exception
     @Test
     public void testAnotherPath(){
-        Path path2 = new Path(new LinkedList<Node>(), new LinkedList<Edge>());
-        try {
-            path2 = Pathfinder.A_star(n1, n4);
-        }
-        catch(PathfindingException e) {}
+        Path path2 = Pathfinder.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
         testPath2Edges.add(e3);
