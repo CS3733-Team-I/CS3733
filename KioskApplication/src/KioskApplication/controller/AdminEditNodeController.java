@@ -54,7 +54,6 @@ public class AdminEditNodeController {
     }
 
     public void onMapNodePressed(Node node){
-        nodeID.setText(node.getNodeID());
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
         floorChoiceBox.setValue(convertFloor(node.getFloor().toString()));
@@ -63,6 +62,7 @@ public class AdminEditNodeController {
         lname.setText(node.getLongName());
         sname.setText(node.getShortName());
         teamAssignedChoiceBox.setValue(convertTeam(node.getTeamAssigned().toString()));
+        nodeID.setText(node.getNodeID());
     }
 
     public String convertFloor(String eString){
