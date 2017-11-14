@@ -1,0 +1,53 @@
+package KioskApplication.tests.requests;
+
+
+import KioskApplication.database.DatabaseController;
+import KioskApplication.database.objects.Edge;
+import KioskApplication.database.objects.Node;
+import KioskApplication.entity.InterpreterRequest;
+import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeFloor;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class InterpreterRequestTest {
+
+    //setup code duplicated from TestMapEntity.java
+    private MapEntity m;
+    private Node n1,n2,n3,n4;
+    private Edge e1,e2,e3;
+
+    @Before
+    public void setup() {
+        DatabaseController.initTests();
+        m = MapEntity.getInstance();
+
+        n1 = new Node("NODE1", NodeFloor.GROUND);
+        n2 = new Node("NODE2", NodeFloor.LOWERLEVEL_1);
+        n3 = new Node("NODE3", NodeFloor.LOWERLEVEL_2);
+        n4 = new Node("NODE4", NodeFloor.FIRST);
+
+        e1 = new Edge("EDGE1", "NODE1", "NODE2");
+        e2 = new Edge("EDGE2", "NODE3", "NODE4");
+        e3 = new Edge("EDGE3", "NODE1", "NODE4");
+
+        m.addNode(n1);
+    }
+
+    //I want to verify that any information I put into for an interpreter request, I can also get out
+    @Test
+    public void testInterpreterRequest(){
+        InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
+        InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
+        //InterpreterID test
+        assertEquals(IR1.getInterpreterID(),IR2.getInterpreterID());
+        //Language test. The retrieval method, if you can call it that, confuses me (note, this might not be a retrieval method)
+        assertEquals(IR1.getLanguage(),IR2.getLanguage());
+        //Employee test
+        assertEquals(IR1.getRequest().getEmployee(),IR2.getRequest().getEmployee());
+        //RequestID test
+        assertEquals(IR1.getRequest().getRequestID(),IR2.getRequest().getRequestID());
+
+    }
+}
