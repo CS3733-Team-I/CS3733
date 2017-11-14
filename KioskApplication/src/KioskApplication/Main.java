@@ -17,16 +17,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/KioskApplication/view/MainWindowView.fxml"));
-        primaryStage.setTitle("UI Framework");
-
         DatabaseController.init();
         MapEntity.getInstance().readAllFromDatabase();
 
+        Parent root = FXMLLoader.load(getClass().getResource("/KioskApplication/view/MainWindowView.fxml"));
+        primaryStage.setTitle("UI Framework");
+
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
-
-        DatabaseController.addRequest(0, "ISTAI00603", "test");
     }
 
     public static void main(String[] args) {

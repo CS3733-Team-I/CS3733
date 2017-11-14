@@ -65,7 +65,10 @@ public class MapEntity implements IMapEntity {
     }
 
     public ArrayList<Node> getNodesOnFloor(NodeFloor floor) {
-        return floors.get(floor).getAllNodes();
+        if (floors.containsKey(floor))
+            return floors.get(floor).getAllNodes();
+        else
+            return new ArrayList<>();
     }
 
     @Override

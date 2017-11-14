@@ -3,11 +3,6 @@ package KioskApplication.controller;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,14 +22,14 @@ public class AdminSidebarController {
     void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_ADD);
+        this.parent.switchTo(SIDEBAR_ADD_NODE);
     }
 
     @FXML
     void onEditPressed() throws IOException {
         System.out.println("Edit Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_EDIT);
+        this.parent.switchTo(SIDEBAR_EDIT_NODE);
     }
 
     @FXML
@@ -64,7 +59,6 @@ public class AdminSidebarController {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     void onSaveClicked() {

@@ -1,10 +1,7 @@
 package KioskApplication.controller;
-import KioskApplication.database.DatabaseController;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.*;
 import KioskApplication.database.objects.*;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,7 +9,7 @@ import javafx.fxml.FXML;
 
 import java.io.IOException;
 
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD;
+import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD_NODE;
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
 
 public class AdminAddNodeController {
@@ -21,8 +18,7 @@ public class AdminAddNodeController {
     AdminAddNodeController(AdminWindowController parent) {
         this.parent = parent;
     }
-
-
+    
     @FXML private TextField xcoord;
 
     @FXML private TextField ycoord;
@@ -60,7 +56,7 @@ public class AdminAddNodeController {
     void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_ADD);
+        this.parent.switchTo(SIDEBAR_ADD_NODE);
     }
 
     @FXML
