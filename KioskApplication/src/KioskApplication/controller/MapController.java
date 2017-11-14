@@ -52,7 +52,7 @@ public class MapController {
         stackPane.getChildren().add(mapView);
 
         // Draw edges
-        AnchorPane edgesPane = new AnchorPane();
+        /*AnchorPane edgesPane = new AnchorPane();
         for (Edge e : path.getEdges()) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
@@ -63,15 +63,17 @@ public class MapController {
             edgeView.setStrokeWidth(10);
             edgesPane.getChildren().add(edgeView);
         }
-        stackPane.getChildren().add(edgesPane);
+        stackPane.getChildren().add(edgesPane);*/
 
         // Draw nodes
-        for (Node n : path.getWaypoints()) {
+        for (Node n : mapEntity.getAllNodes()) {
             javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
             nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
             nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
             stackPane.getChildren().add(nodeObject);
         }
+
+        System.out.println("Path!");
     }
 
     private void loadFloor(NodeFloor floor) {

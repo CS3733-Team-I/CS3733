@@ -21,14 +21,7 @@ public class Main extends Application {
         primaryStage.setTitle("UI Framework");
 
         DatabaseController.init();
-
-        // TODO do this somewhere else, and be more smart about our database access
-        ArrayList<Node> nodes = DatabaseController.getAllNodes();
-        for (Node node : nodes) MapEntity.getInstance().addNode(node);
-
-        ArrayList<Edge> edges = DatabaseController.getAllEdges();
-        for (Edge edge : edges) MapEntity.getInstance().addEdge(edge);
-
+        MapEntity.getInstance().readAllFromDatabase();
 
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
