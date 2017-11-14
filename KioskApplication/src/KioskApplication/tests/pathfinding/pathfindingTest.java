@@ -1,4 +1,5 @@
 package KioskApplication.tests.pathfinding;
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
@@ -32,6 +33,7 @@ public class pathfindingTest {
               n7 - n4
          */
 
+        DatabaseController.initTests();
         n1 = new Node("NODE1", NodeFloor.THIRD);
         n1.setXcoord(10);
         n1.setYcoord(10);
