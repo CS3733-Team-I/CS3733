@@ -38,7 +38,5 @@ public class PathfindingSidebarController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
-
-        parent.displayPathOnMap(null);
     }
 }
