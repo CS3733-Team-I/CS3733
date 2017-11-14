@@ -32,6 +32,8 @@ public class Main extends Application {
 
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
+
+        DatabaseController.addRequest(0, "ISTAI00603", "test");
     }
 
     public static void main(String[] args) {
