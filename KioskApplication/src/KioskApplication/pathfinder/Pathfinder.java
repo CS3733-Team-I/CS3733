@@ -10,10 +10,6 @@ import java.util.*;
 
 public class Pathfinder {
 
-    public Pathfinder(){
-    }
-
-
     /**
      * Given a list of multiple waypoints, finds a path between them.  Returns a Path object containing the list of
      *  the waypoints and a list of edges defining a path from the first to the last waypoint that passes through all
@@ -24,7 +20,7 @@ public class Pathfinder {
      */
     public static Path generatePath(LinkedList<Node> waypoints){
 
-        //Starting with the second node, run the pathfinding algorithm using each node as the end node and the previous
+        //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
         //node as the start node.  assemble the lists of edges from each into a single path.
         LinkedList<Edge> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
@@ -37,8 +33,8 @@ public class Pathfinder {
             //First, find the path from the previous waypoint to this one.
             try{
                 pathEdges.addAll(A_star(startNode, endNode));   //Add this section to the rest of the path.
-            }catch(PathfindingException e){
-                System.out.println("Error: pathfinding exception"); //TODO: make this error message more detailed.
+            }catch(PathfinderException e){
+                System.out.println("Error: pathfinder exception" + e.getMessage());
                 e.printStackTrace();
             }
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
@@ -70,9 +66,9 @@ public class Pathfinder {
      * @param startingNode
      * @param endingNode
      * @return
-     * @throws PathfindingException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
+     * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
-    public static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfindingException{
+    public static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
 
@@ -84,7 +80,7 @@ public class Pathfinder {
         }
         // if end node is not defined then throw exception for not valid
         if (endingNode == null || endingNode.getNodeID() == null){
-            throw new PathfindingException("No defined end node, please define valid end location");
+            throw new PathfinderException("No defined end node, please define valid end location");
         }
         StartNode startNode = new StartNode(startingNode);
         PathfindingNode endNode = new PathfindingNode(endingNode);
@@ -104,12 +100,12 @@ public class Pathfinder {
 
         //TODO: add proper handling for start and end nodes on different floors; for now, just returns exception
         if(!startNode.getNode().getFloor().equals(endNode.getNode().getFloor()))
-            throw new PathfindingException("Multiple floors not supported");
+            throw new PathfinderException("Multiple floors not supported");
 
         // if either node is not located on map throw exception
         if(!(unexploredNodes.containsKey(startNode.getNode().getNodeID()) &&
              unexploredNodes.containsKey(endNode.getNode().getNodeID())))
-            throw new PathfindingException("Nodes are not on map");
+            throw new PathfinderException("Nodes are not on map");
         // remove start node from unexplored list
         unexploredNodes.remove(startNode.getNode().getNodeID());
 
@@ -163,7 +159,7 @@ public class Pathfinder {
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 
         // handler for no path found
-        if(pathEdges == null)throw new PathfindingException("No Path was found, Please choose another path");
+        if(pathEdges == null)throw new PathfinderException("No Path was found, Please choose another path");
         // return generated path of nodes
         return pathEdges;
     }

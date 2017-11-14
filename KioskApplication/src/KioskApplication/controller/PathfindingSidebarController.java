@@ -3,7 +3,6 @@ package KioskApplication.controller;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
-import KioskApplication.pathfinder.PathfindingException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;

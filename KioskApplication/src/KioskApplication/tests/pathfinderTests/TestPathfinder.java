@@ -1,11 +1,10 @@
-package KioskApplication.tests.pathfinding;
+package KioskApplication.tests.pathfinderTests;
 import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
-import KioskApplication.pathfinder.PathfindingException;
 import KioskApplication.utility.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-public class pathfindingTest {
+public class TestPathfinder {
 
     private Node n1, n2, n3, n4, n5, n6, n7;
     private Edge e1, e2, e3, e4, e5, e6;
