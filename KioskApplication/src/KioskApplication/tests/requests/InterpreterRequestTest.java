@@ -37,17 +37,31 @@ public class InterpreterRequestTest {
 
     //I want to verify that any information I put into for an interpreter request, I can also get out
     @Test
-    public void testInterpreterRequest(){
+    public void testIRInterpeterID(){
         InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
         InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
         //InterpreterID test
         assertEquals(IR1.getInterpreterID(),IR2.getInterpreterID());
-        //Language test. The retrieval method, if you can call it that, confuses me (note, this might not be a retrieval method)
-        assertEquals(IR1.getLanguage(),IR2.getLanguage());
-        //Employee test
-        assertEquals(IR1.getRequest().getEmployee(),IR2.getRequest().getEmployee());
-        //RequestID test
-        assertEquals(IR1.getRequest().getRequestID(),IR2.getRequest().getRequestID());
+    }
 
+    @Test
+    public void testIRLanguage(){
+        InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
+        InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
+        assertEquals(IR1.getLanguage(),IR2.getLanguage());
+    }
+
+    @Test
+    public void testIREmployee(){
+        InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
+        InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
+        assertEquals(IR1.getRequest().getEmployee(),IR2.getRequest().getEmployee());
+    }
+
+    @Test
+    public void testIRRequestID(){
+        InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
+        InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
+        assertEquals(IR1.getRequest().getRequestID(),IR2.getRequest().getRequestID());
     }
 }
