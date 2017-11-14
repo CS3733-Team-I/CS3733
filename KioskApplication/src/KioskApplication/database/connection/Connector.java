@@ -5,9 +5,12 @@ package KioskApplication.database.connection;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.database.template.SQLStrings;
+import KioskApplication.entity.InterpreterRequest;
+import KioskApplication.entity.Request;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -131,4 +134,122 @@ public class Connector {
         }
         return nodes;
     }
+
+
+    public static Request insertRequest(Connection conn, int requestID,
+                                     String locationNode, String employee) throws SQLException{
+        String sql = REQUEST_INSERT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, requestID);
+        pstmt.setString(2, locationNode);
+        pstmt.setString(3, employee);
+        pstmt.executeUpdate();
+        return new Request(locationNode, employee, requestID);
+    }
+
+    public static int updateRequest(Connection conn, int requestID,
+                                     String locationNode, String employee) throws SQLException {
+        String sql = REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, locationNode);
+        pstmt.setInt(2, requestID);
+        pstmt.setString(3, employee);
+        return pstmt.executeUpdate();
+    }
+
+    public static Request selectRequest(Connection conn, int requestID) throws SQLException {
+        String sql = REQUEST_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, requestID);
+        ResultSet rs = pstmt.executeQuery();
+        Request request = null;
+        if(rs.next()) {
+            request = new Request(rs.getString("locationNode"),
+                    rs.getString("employee"),
+                    rs.getInt("requestID"));
+        }
+        return request;
+    }
+
+    public static void deleteRequest(Connection conn, int requestID) throws SQLException {
+        String sql = REQUEST_DELETE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, requestID);
+        pstmt.executeUpdate();
+    }
+
+    public static ArrayList<Request> selectAllRequests(Connection conn)  throws SQLException {
+        String sql = REQUEST_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        ArrayList<Request> requests = new ArrayList<>();
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while(rs.next()) {
+            requests.add(new Request(rs.getString("locationNode"),
+                    rs.getString("employee"),
+                    rs.getInt("requestID")));
+        }
+        return requests;
+    }
+
+    public static InterpreterRequest insetInterpreter(Connection conn, int interpreterID, String language,
+                                        int requestID) throws SQLException {
+        String sql = INTERPRETER_INSERT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, interpreterID);
+        pstmt.setString(2, language);
+        pstmt.setInt(3, requestID);
+
+        pstmt.executeUpdate();
+
+        return new InterpreterRequest(language, interpreterID, requestID);
+    }
+
+    public static int updateIntepreter(Connection conn, int interpreterID,
+                                        String language, int requestID) throws SQLException {
+        String sql = INTERPRETER_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, language);
+        pstmt.setInt(2, requestID);
+        pstmt.setInt(3, interpreterID);
+
+        return pstmt.executeUpdate();
+    }
+
+    public static InterpreterRequest selectInterpreter(Connection conn, int interpreterID) throws SQLException {
+        String sql = INTERPRETER_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, interpreterID);
+        InterpreterRequest interpreterRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            interpreterRequest = new InterpreterRequest(rs.getString(2), rs.getInt(1),
+            rs.getInt(3));
+        }
+        return interpreterRequest;
+    }
+
+    public static void deleteInterpreter(Connection conn, int interpreterID) throws SQLException {
+        String sql = INTERPRETER_DELETE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, interpreterID);
+        pstmt.executeUpdate();
+    }
+
+    public static ArrayList<InterpreterRequest> selectAllInterpeters(Connection conn) throws SQLException {
+        String sql = INTERPRETER_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        ArrayList<InterpreterRequest> interpreterRequests = new ArrayList<>();
+        while(rs.next()) {
+            interpreterRequests.add(new InterpreterRequest(rs.getString(2),
+                    rs.getInt(1), rs.getInt(3)));
+        }
+        return interpreterRequests;
+    }
+
 }
