@@ -4,10 +4,7 @@ import KioskApplication.entity.InterpreterRequest;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javafx.event.ActionEvent;
 
@@ -35,13 +32,8 @@ public class InterpreterRequestController {
     private TextField txtLocation;
 
     @FXML
-    private MenuButton langSelect;
+    private ChoiceBox langMenu;
 
-    @FXML
-    private MenuItem spanish;
-
-    @FXML
-    private MenuItem chinese;
 
     @FXML
     void onInterpreterPressed() throws IOException {
@@ -57,13 +49,13 @@ public class InterpreterRequestController {
         this.parent.switchTo(SIDEBAR_MENU);
     }
 
-    @FXML
-    public void addRequest(){
-        btnSubmit.setOnAction(e -> sendRequest(e));
-    }
+//    @FXML
+//    public void addRequest(){
+//        btnSubmit.setOnAction(e -> sendRequest(e));
+//    }
 
     @FXML
-    public InterpreterRequest sendRequest(ActionEvent e){
+    public InterpreterRequest addRequest(){
         String location = txtLocation.getText();
         //default should be "Current Location"
 
@@ -77,11 +69,10 @@ public class InterpreterRequestController {
 //            }
 //        }
 
-
         String language = "None";
-        if(langSelect.getItems()==spanish){
+        if(langMenu.getValue().toString().equals("Spanish")){
             language = "Spanish";
-        }else if(langSelect.getItems()==chinese) {
+        }else if(langMenu.getValue().toString().equals("Chinese")) {
             language = "Chinese";
         }
 
@@ -93,7 +84,7 @@ public class InterpreterRequestController {
         InterpreterRequest newRequest = new InterpreterRequest(location, adminEmail, language);
         return newRequest;
         */
-        System.out.println("location: " + location + "language: " + language);
+        System.out.println("location: " + location + ". language: " + language);
         return null;
     }
 }
