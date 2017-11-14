@@ -4,6 +4,8 @@ import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
+import KioskApplication.pathfinder.Pathfinder;
+import KioskApplication.pathfinder.PathfindingException;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
@@ -11,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -37,6 +40,20 @@ public class PathfindingSidebarController {
 
     @FXML
     void btGeneratePathPressed() throws IOException {
-        pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
+        MapEntity map = MapEntity.getInstance();
+        try {
+            //These print statements are just for debugging, comment/remove them later.
+            System.out.println("IREST00103 connected edges:");
+            System.out.println(map.getEdges(map.getNode("IREST00103")));
+            System.out.println("IREST00103 connected nodes:");
+            System.out.println(map.getConnectedNodes(map.getNode("IREST00103")));
+            Path path = Pathfinder.GeneratePath(map.getNode(inputStartID.getText()), map.getNode(inputEndID.getText()));
+            if(path.getEdges().isEmpty())
+                System.out.println("Path is empty.");
+            pathfindingOutputText.setText(path.toString());
+        } catch (PathfindingException e) {
+            e.printStackTrace();
+        }
     }
 }
+//Two node IDs for testing: IDEPT00503 and IREST00103
