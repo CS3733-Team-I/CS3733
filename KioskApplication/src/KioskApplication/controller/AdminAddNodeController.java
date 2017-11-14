@@ -100,59 +100,58 @@ public class AdminAddNodeController {
         else {
             // Determine floor
             NodeFloor floor = NodeFloor.THIRD; // Default
-            if(floorChoiceBox.getValue().equals("L2"))
+            if(floorChoiceBox.getValue().toString().equals("L2"))
                 floor = NodeFloor.LOWERLEVEL_2;
-            if(floorChoiceBox.getValue().equals("L1"))
+            if(floorChoiceBox.getValue().toString().equals("L1"))
                 floor = NodeFloor.LOWERLEVEL_1;
-            if(floorChoiceBox.getValue().equals("0G"))
+            if(floorChoiceBox.getValue().toString().equals("0G"))
                 floor = NodeFloor.GROUND;
-            if(floorChoiceBox.getValue().equals("01"))
+            if(floorChoiceBox.getValue().toString().equals("01"))
                 floor = NodeFloor.FIRST;
-            if(floorChoiceBox.getValue().equals("02"))
+            if(floorChoiceBox.getValue().toString().equals("02"))
                 floor = NodeFloor.SECOND;
-            if(floorChoiceBox.getValue().equals("03"))
+            if(floorChoiceBox.getValue().toString().equals("03"))
                 floor = NodeFloor.THIRD;
 
             // Determine building
             NodeBuilding building = NodeBuilding.FRANCIS45; // Default
-            if(buildingChoiceBox.getValue().equals("FRANCIS45"))
+            if(buildingChoiceBox.getValue().toString().equals("FRANCIS45"))
                 building = NodeBuilding.FRANCIS45;
-            if(buildingChoiceBox.getValue().equals("BTM"))
+            if(buildingChoiceBox.getValue().toString().equals("BTM"))
                 building = NodeBuilding.BTM;
-            if(buildingChoiceBox.getValue().equals("SHAPIRO"))
+            if(buildingChoiceBox.getValue().toString().equals("SHAPIRO"))
                 building = NodeBuilding.SHAPIRO;
-            if(buildingChoiceBox.getValue().equals("TOWER"))
+            if(buildingChoiceBox.getValue().toString().equals("TOWER"))
                 building = NodeBuilding.TOWER;
 
             // Determine type
             NodeType type = NodeType.HALL; // Default
-            if(nodeTypeChoiceBox.getValue().equals("ELEV"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
                 type = NodeType.ELEV;
-            if(nodeTypeChoiceBox.getValue().equals("HALL"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("HALL"))
                 type = NodeType.HALL;
-            if(nodeTypeChoiceBox.getValue().equals("REST"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("REST"))
                 type = NodeType.REST;
-            if(nodeTypeChoiceBox.getValue().equals("DEPT"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
                 type = NodeType.DEPT;
-            if(nodeTypeChoiceBox.getValue().equals("STAI"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("STAI"))
                 type = NodeType.STAI;
-            if(nodeTypeChoiceBox.getValue().equals("CONF"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("CONF"))
                 type = NodeType.CONF;
-            if(nodeTypeChoiceBox.getValue().equals("EXIT"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
                 type = NodeType.EXIT;
-            if(nodeTypeChoiceBox.getValue().equals("INFO"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("INFO"))
                 type = NodeType.INFO;
-            if(nodeTypeChoiceBox.getValue().equals("LABS"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("LABS"))
                 type = NodeType.LABS;
-            if(nodeTypeChoiceBox.getValue().equals("SERV"))
+            if(nodeTypeChoiceBox.getValue().toString().equals("SERV"))
                 type = NodeType.SERV;
 
             System.out.println("Adding node?");
             // Ensure there is no existing node with that ID
-            if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
-
-                // Creates node
-                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
+            if(MapEntity.getInstance().getNode(nodeID.getText()) == null) {
+                //create new node
+                Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
                 // Add Node
                 MapEntity.getInstance().addNode(node1);
                 System.out.println("Adding node " + nodeID.getText());

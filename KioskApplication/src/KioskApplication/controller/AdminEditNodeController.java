@@ -187,12 +187,12 @@ public class AdminEditNodeController {
             if(nodeTypeChoiceBox.getValue().equals("SERV"))
                 type = NodeType.SERV;
 
-            System.out.println("Adding node?");
+            System.out.println("Editing node?");
             // Find the existing node with that ID
             if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
-                System.out.println("Adding node " + nodeID.getText());
+                System.out.println("Editing node " + nodeID.getText());
                 // Create Node
-                Node node1 = new Node(nodeID.getText(), Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
+                Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
                 // Update Node
                 MapEntity.getInstance().addNode(node1);
                 System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
