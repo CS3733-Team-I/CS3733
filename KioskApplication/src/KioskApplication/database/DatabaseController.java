@@ -29,7 +29,9 @@ public class DatabaseController {
         try {
             return Connector.selectNode(instanceConnection, id);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -39,7 +41,9 @@ public class DatabaseController {
         try{
             return Connector.selectAllNodes(instanceConnection);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -50,7 +54,9 @@ public class DatabaseController {
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -60,7 +66,9 @@ public class DatabaseController {
         try {
             return Connector.insertNode(instanceConnection, node);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return 0;
     }
@@ -69,7 +77,9 @@ public class DatabaseController {
         try {
             return Connector.updateNode(instanceConnection, node);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return 0;
     }
@@ -78,7 +88,9 @@ public class DatabaseController {
         try {
             return Connector.selectEdge(instanceConnection, edgeID);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -89,7 +101,9 @@ public class DatabaseController {
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -99,7 +113,9 @@ public class DatabaseController {
         try {
             return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return 0;
     }
@@ -108,7 +124,9 @@ public class DatabaseController {
         try{
             return Connector.updateEdge(instanceConnection, edge);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
 
         return 0;
@@ -118,7 +136,9 @@ public class DatabaseController {
         try{
             return Connector.selectAllEdges(instanceConnection);
         } catch(SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -129,7 +149,9 @@ public class DatabaseController {
                 instanceConnection = DBUtil.getConnection();
                 DBUtil.createTables(instanceConnection);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if(e.getSQLState() != "23505") {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -140,7 +162,9 @@ public class DatabaseController {
                 instanceConnection = DBUtil.getTestConnection();
                 DBUtil.createTables(instanceConnection);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if(e.getSQLState() != "23505") {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -149,7 +173,9 @@ public class DatabaseController {
         try {
             return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
         } catch(SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -158,7 +184,9 @@ public class DatabaseController {
         try {
             return Connector.updateRequest(instanceConnection, requestID, nodeID, employee);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return 0;
     }
@@ -167,7 +195,9 @@ public class DatabaseController {
         try {
             return Connector.selectRequest(instanceConnection, requestID);
         } catch(SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -177,7 +207,9 @@ public class DatabaseController {
             Connector.deleteRequest(instanceConnection, requestID);
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -186,7 +218,9 @@ public class DatabaseController {
         try {
             return Connector.selectAllRequests(instanceConnection);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return new ArrayList<Request>();
     }
@@ -195,7 +229,9 @@ public class DatabaseController {
         try {
             return Connector.insetInterpreter(instanceConnection, interpreterID, language, requestID);
         } catch(SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -204,7 +240,9 @@ public class DatabaseController {
         try {
             return Connector.updateIntepreter(instanceConnection, interpreterID, language, requestID);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return 0;
     }
@@ -213,7 +251,9 @@ public class DatabaseController {
         try {
             return Connector.selectInterpreter(instanceConnection, interpreterID);
         } catch(SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -223,7 +263,9 @@ public class DatabaseController {
             Connector.deleteInterpreter(instanceConnection, interpreterID);
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -232,7 +274,9 @@ public class DatabaseController {
         try {
             return Connector.selectAllInterpeters(instanceConnection);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
         return new ArrayList<InterpreterRequest>();
     }
