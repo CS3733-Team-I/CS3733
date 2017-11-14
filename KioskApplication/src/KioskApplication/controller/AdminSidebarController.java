@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,7 +50,6 @@ public class AdminSidebarController {
         CSVFileUtil.readNodesCSV(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").getFile());
         CSVFileUtil.readEdgesCSV(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").getFile());
     }
-
 
 
     @FXML

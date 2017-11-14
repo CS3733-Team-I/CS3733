@@ -15,7 +15,6 @@ public class MainWindowController {
     @FXML Button switchButton;
     @FXML Pane contentWindow;
     @FXML AnchorPane LoginPopup;
-    @FXML Label lbAdminInfo;
 
     enum MainWindowScene {
         PATHFINDING,
@@ -74,7 +73,6 @@ public class MainWindowController {
             case ADMIN:
                 this.switchTo(MainWindowScene.PATHFINDING);
                 this.adminWindow.reset();
-                this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
                 this.Login();

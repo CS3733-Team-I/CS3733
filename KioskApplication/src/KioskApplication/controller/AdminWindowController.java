@@ -1,7 +1,9 @@
 package KioskApplication.controller;
 
 import javafx.beans.DefaultProperty;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 
@@ -26,9 +28,7 @@ public class AdminWindowController extends MapWindowController {
 
     public AdminWindowController() throws IOException {
         super();
-
         switchTo(SIDEBAR_MENU);
-
         curr_admin_email = "";
         getMapController().setParent(this);
     }
