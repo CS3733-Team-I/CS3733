@@ -25,6 +25,17 @@ public class MapEntity implements IMapEntity {
         return instance;
     }
 
+    // TODO do this somewhere else, and be more smart about our database access
+    public void readAllFromDatabase() {
+        ArrayList<Node> nodes = DatabaseController.getAllNodes();
+        for (Node node : nodes)
+            addNode(node);
+
+        ArrayList<Edge> edges = DatabaseController.getAllEdges();
+        for (Edge edge : edges)
+            addEdge(edge);
+    }
+
     @Override
     public void addNode(Node n) {
         NodeFloor f = n.getFloor();

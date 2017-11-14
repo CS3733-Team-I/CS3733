@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class MapController {
-    // TODO Enable loading different maps via a function
-
     @FXML private ImageView mapView;
     @FXML private StackPane stackPane;
     @FXML private ScrollPane scrollPane;
@@ -72,6 +70,8 @@ public class MapController {
             nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
             stackPane.getChildren().add(nodeObject);
         }
+
+        System.out.println("Path!");
     }
 
     private void loadFloor(NodeFloor floor) {
