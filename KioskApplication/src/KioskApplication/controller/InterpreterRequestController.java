@@ -56,7 +56,7 @@ public class InterpreterRequestController {
 //    }
 
     @FXML
-    public InterpreterRequest addRequest(){
+    public void addRequest(){
         int interpID;
         String location = txtLocation.getText();
         //default is "My Location"
@@ -79,6 +79,7 @@ public class InterpreterRequestController {
             language = "Chinese";
         }
 
+        //Finds current admin that is logged in
         String adminEmail = parent.curr_admin_email;
 
 
@@ -94,15 +95,13 @@ public class InterpreterRequestController {
         //Adds the Interpreter request to the database.... but doesn't work
         //Also can't understand how to get the nodes
 
-//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+        System.out.println(DatabaseController.getAllInterpreterRequests());
 
 
-
-//        InterpreterRequest newRequest = new InterpreterRequest(adminEmail, language, interpID, interpID);
-//        return newRequest;
-
-        return null;
+        //I want to automatically switch the screen back to the admin sidebar menu so there are not two requests created
+//        this.parent.switchTo(SIDEBAR_MENU);
 
     }
 }
