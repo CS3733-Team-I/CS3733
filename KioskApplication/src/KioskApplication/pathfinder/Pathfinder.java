@@ -5,7 +5,6 @@ import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.utility.NodeFloor;
-import com.sun.org.apache.bcel.internal.generic.LLOAD;
 
 import java.util.*;
 
@@ -14,8 +13,66 @@ public class Pathfinder {
     public Pathfinder(){
     }
 
-    // generate path function
-    public static Path GeneratePath(Node startingNode, Node endingNode) throws PathfindingException{
+
+    /**
+     * Given a list of multiple waypoints, finds a path between them.  Returns a Path object containing the list of
+     *  the waypoints and a list of edges defining a path from the first to the last waypoint that passes through all
+     *  the waypoints in between, in order.
+     *
+     * @param waypoints A list of nodes through which the path should pass
+     * @return A Path object containing the waypoints and a list of edges marking a path between them.
+     */
+    public static Path generatePath(LinkedList<Node> waypoints){
+        //Starting with the second node, run the pathfinding algorithm using each node as the end node and the previous
+        //node as the start node.  assemble the lists of edges from each into a single path.
+        LinkedList<Edge> pathEdges = new LinkedList<>();
+        Node startNode = waypoints.getFirst();
+        boolean isFirst = true;
+        for(Node endNode: waypoints){
+            //Skip the first element, as it doesn't have a previous node to use as the start.
+            if(isFirst){
+                isFirst = false;
+                continue;
+            }
+            //First, find the path from the previous waypoint to this one.
+            try{
+                pathEdges.addAll(A_star(startNode, endNode));   //Add this section to the rest of the path.
+            }catch(PathfindingException e){
+                System.out.println("Error: pathfinding exception"); //TODO: make this error message more detailed.
+                e.printStackTrace();
+            }
+            startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
+        }
+        //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
+        //through all waypoints in between.
+
+        //Combine the list of waypoints and the path of edges into a Path object and return.
+        return(new Path(waypoints, pathEdges));
+    }
+
+    /**
+     * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
+     * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
+     * a list first.
+     * @param startNode
+     * @param endNode
+     * @return A Path object containing the waypoints and a list of edges marking a path between them.
+     */
+    public static Path generatePath(Node startNode, Node endNode){
+        LinkedList<Node> waypoints = new LinkedList<>();
+        waypoints.add(startNode);
+        waypoints.add(endNode);
+        return(generatePath(waypoints));
+    }
+
+    /**
+     * Given two nodes, uses the A* search algorithm to find a path between them.
+     * @param startingNode
+     * @param endingNode
+     * @return
+     * @throws PathfindingException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
+     */
+    public static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfindingException{
         MapEntity map = MapEntity.getInstance();
 
 
@@ -103,14 +160,10 @@ public class Pathfinder {
         PathfindingNode lastNode = lowestCost;
 
         LinkedList<Edge> pathEdges = lastNode.buildPath();
-        LinkedList<Node> waypoints = new LinkedList<>();
-        waypoints.add(startingNode);
-        waypoints.add(endingNode);
-        Path path = new Path(waypoints, pathEdges);
 
         // handler for no path found
-        if(path == null)throw new PathfindingException("No Path was found, Please choose another path");
+        if(pathEdges == null)throw new PathfindingException("No Path was found, Please choose another path");
         // return generated path of nodes
-        return path;
+        return pathEdges;
     }
 }
