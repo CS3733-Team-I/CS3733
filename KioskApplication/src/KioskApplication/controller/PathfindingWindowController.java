@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Node;
 import KioskApplication.entity.Path;
 import javafx.beans.DefaultProperty;
 import javafx.fxml.FXMLLoader;
@@ -8,13 +9,17 @@ import java.io.IOException;
 
 public class PathfindingWindowController extends MapWindowController {
 
+    PathfindingSidebarController sidebarController;
+
     public PathfindingWindowController() throws IOException {
         super();
         getMapController().setParent(this);
 
+        sidebarController = new PathfindingSidebarController(this);
+
         FXMLLoader loader = new FXMLLoader(MapWindowController.class.getResource("/KioskApplication/view/PathfindingSidebarView.fxml"));
         loader.setRoot(getSidebarPane());
-        loader.setController(new PathfindingSidebarController(this));
+        loader.setController(sidebarController);
         loader.load();
     }
 
@@ -26,5 +31,6 @@ public class PathfindingWindowController extends MapWindowController {
         getMapController().drawPath(path);
     }
 
-    void mapNodeClicked() {}
+    void mapNodeClicked(Node node) {
+    }
 }

@@ -29,8 +29,14 @@ public class CSVFileUtil {
         Connection conn = null;
         try {
             conn = DBUtil.getConnection();
-
-            while((line = reader.readLine()) != null) {
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Connection complete");
+        try {
+            while ((line = reader.readLine()) != null) {
                 // Ensure the first line isnt the header
                 if (!line.equals(CSVFormat.NODE_CSV_HEAD)) {
                     String[] elements = line.split(",");
@@ -127,14 +133,20 @@ public class CSVFileUtil {
                             elements[7].trim(),
                             elements[8].trim());
 
-                    Connector.insertNode(conn, node);
+                    try {
+                        Connector.insertNode(conn, node);
+                    } catch (SQLException e1) {
+                        if (e1.getSQLState() != "23505") {
+                            break;
+                        }
+                    }
+                    //        System.out.println(line);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally{
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        }
+        finally{
             try {
                 DBUtil.closeConnection(conn);
             } catch (Exception e) {
@@ -254,17 +266,26 @@ public class CSVFileUtil {
         Connection conn = null;
         try {
             conn = DBUtil.getConnection();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+
             while ((line = bReader.readLine()) != null) {
                 // Ensure first line isnt CSV header
                 if (!line.equals(CSVFormat.EDGE_CSV_HEAD)) {
                     String[] elements = line.split(",");
                     Edge edge = new Edge(elements[0].trim(), elements[1].trim(), elements[2].trim());
-                    Connector.insertEdge(conn, edge);
+                    try {
+                        Connector.insertEdge(conn, edge);
+                    } catch(SQLException e) {
+                        if(e.getSQLState() != "23505") {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -325,4 +346,3 @@ public class CSVFileUtil {
         }
     }
 }
-
