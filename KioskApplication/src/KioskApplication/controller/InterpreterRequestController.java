@@ -1,8 +1,8 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.entity.InterpreterRequest;
-import KioskApplication.database.objects.Node;
-import KioskApplication.entity.MapEntity;
+import KioskApplication.database.connection.Connector;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -56,6 +56,7 @@ public class InterpreterRequestController {
 
     @FXML
     public InterpreterRequest addRequest(){
+        int interpID;
         String location = txtLocation.getText();
         //default should be "Current Location"
 
@@ -78,18 +79,24 @@ public class InterpreterRequestController {
 
         String adminEmail = parent.curr_admin_email;
 
-        //The code currently isn't working I don't understand how to create the request object
-        //and where to send the object
-        /*
-        int interpreterID = 1;
-        int requestID = 1;
 
-        //creates the request object
-        InterpreterRequest newRequest = new InterpreterRequest(language, interpreterID, requestID);
-        return newRequest;
-        */
+        if(DatabaseController.getAllInterpreterRequests().isEmpty()){
+            interpID = 0;
+        }else{
+            interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
 
-        System.out.println("location: " + location + ". language: " + language + ". Admin Email: " + adminEmail);
+        }
+
+
+        System.out.println("location: " + location + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+        //Adds the Interpreter request to the database.... but doesn't work
+        //Also can't understand how to get the nodes
+//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+
+
+//        InterpreterRequest newRequest = new InterpreterRequest(adminEmail, language, interpID, interpID);
+//        return newRequest;
+
         return null;
 
     }
