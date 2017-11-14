@@ -1,5 +1,6 @@
 package KioskApplication.entity;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.utility.NodeFloor;
@@ -35,7 +36,8 @@ public class MapEntity implements IMapEntity {
     @Override
     public Node getNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
-            if (floors.get(floor).getNode(s) != null) return floors.get(floor).getNode(s);
+            Node thisNode = floors.get(floor).getNode(s);
+            if (thisNode != null) return thisNode;
         }
         return null;
     }
@@ -54,20 +56,35 @@ public class MapEntity implements IMapEntity {
     @Override
     public void removeNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
-            floors.get(floor).removeNode(s);
+            MapFloorEntity floorEntity = floors.get(floor);
+            if (floorEntity.getNode(s) != null)
+                floorEntity.removeNode(s);
         }
     }
 
     public void addEdge(Edge e) {
         edges.put(e.getEdgeID(),e);
+        DatabaseController.addEdge(e);
     }
 
     public Edge getEdge(String s) {
-        return edges.get(s);
+        // Load edge from local data
+        Edge edge = edges.get(s);
+
+        // If edge doesn't exist, attempt to load it from the database
+        if (edge == null) {
+            edge = DatabaseController.getEdge(s);
+            // Add edge to local data if found
+            if (edge != null) edges.put(s, edge);
+        }
+
+        return edge;
     }
 
+    // TODO pass edge as param instead of string
     public void removeEdge(String s) {
         edges.remove(s);
+        DatabaseController.removeEdge(new Edge(s, "", ""));
     }
 
     public ArrayList<Edge> getEdges(Node n) {

@@ -1,5 +1,6 @@
 package KioskApplication.tests.entity;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapFloorEntity;
 import KioskApplication.utility.NodeFloor;
@@ -15,6 +16,7 @@ public class TestMapFloorEntity {
 
     @Before
     public void setup() {
+        DatabaseController.initTests();
         m = new MapFloorEntity();
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
     }
