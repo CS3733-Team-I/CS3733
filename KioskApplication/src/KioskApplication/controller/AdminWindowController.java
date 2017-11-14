@@ -14,9 +14,9 @@ public class AdminWindowController extends MapWindowController {
     public enum SidebarType {
         SIDEBAR_ADD,
         SIDEBAR_EDIT,
+        SIDEBAR_ADD_EDGE,
         SIDEBAR_MENU,
-        SIDEBAR_INTERPRETER,
-        SIDEBAR_ADD_EDGE
+        SIDEBAR_INTERPRETER
     }
 
     AdminAddNodeController addNodeController = null;
