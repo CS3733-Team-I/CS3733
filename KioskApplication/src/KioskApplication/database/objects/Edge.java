@@ -15,6 +15,18 @@ public class Edge {
         this.node2ID = node2;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() == this.getClass()) {
+            Edge other = (Edge)obj;
+            return (edgeID.equals(other.getEdgeID()) &&
+                    node1ID.equals(other.getNode1ID()) &&
+                    node2ID.equals(other.getNode2ID()));
+        } else {
+            return false;
+        }
+    }
+
     public String getEdgeID() {
         return edgeID;
     }

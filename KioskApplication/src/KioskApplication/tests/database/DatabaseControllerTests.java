@@ -7,20 +7,18 @@ import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
+import org.apache.derby.iapi.db.Database;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 public class DatabaseControllerTests {
 
-    MapEntity mapEntity;
-
     public DatabaseControllerTests() {
-        DatabaseController.init();
-
-        mapEntity = mapEntity.getInstance();
+        DatabaseController.initTests();
     }
 
     @After
@@ -39,7 +37,7 @@ public class DatabaseControllerTests {
                              "Test Node", "TN1", "I");
         DatabaseController.addNode(node);
         Node receivedNode  = DatabaseController.getNode(node.getNodeID());
-        Assert.assertEquals(node, receivedNode );
+        Assert.assertEquals(receivedNode, node);
     }
 
     @Test
@@ -62,7 +60,7 @@ public class DatabaseControllerTests {
         DatabaseController.updateNode(node);
 
         Node receivedNode = DatabaseController.getNode(node.getNodeID());
-        Assert.assertEquals(node, receivedNode);
+        Assert.assertEquals(receivedNode, node);
     }
 
     @Test
@@ -78,19 +76,63 @@ public class DatabaseControllerTests {
         Assert.assertTrue(receivedNode == null);
     }
 
+    @Test
     public void TestDatabaseAddEdge() {
+        Node node1 = new Node("NODE1", 243, 633,
+                NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
+                "Test Node 1", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node 2", "TN2", "I");
 
+        DatabaseController.addNode(node1);
+        DatabaseController.addNode(node2);
+
+        Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
+
+        DatabaseController.addEdge(edge1);
+
+        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Assert.assertEquals(edge1, receivedEdge);
     }
 
-    public void TestDatabaseGetEdge() {
-
-    }
-
-    public void TestDatabaseEditEdge() {
-
-    }
-
+    @Test
     public void TestDatabaseRemoveEdge() {
+        Node node1 = new Node("NODE1", 243, 633,
+                NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
+                "Test Node 1", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node 2", "TN2", "I");
 
+        DatabaseController.addNode(node1);
+        DatabaseController.addNode(node2);
+
+        Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
+
+        DatabaseController.removeEdge(edge1);
+
+        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Assert.assertTrue(receivedEdge == null);
+    }
+
+    @Test
+    public void TestDatabaseRemoveEdgeParent() {
+        Node node1 = new Node("NODE1", 243, 633,
+                NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
+                "Test Node 1", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node 2", "TN2", "I");
+
+        DatabaseController.addNode(node1);
+        DatabaseController.addNode(node2);
+
+        Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
+
+        DatabaseController.removeNode(node1);
+
+        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Assert.assertTrue(receivedEdge == null);
     }
 }

@@ -46,7 +46,6 @@ public class DBUtil {
 
         PreparedStatement pstmt0 = conn.prepareStatement(schema);
         pstmt0.execute();
-
         PreparedStatement pstmt1 = conn.prepareStatement(sql1);
         pstmt1.execute();
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);
