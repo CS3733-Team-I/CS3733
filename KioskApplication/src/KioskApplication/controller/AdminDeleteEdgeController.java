@@ -56,7 +56,6 @@ public class AdminDeleteEdgeController {
     int lastChanged = 1;
     public void onMapNodePressed(Node node){ }
 
-
     public void onMapEdgeClicked(Edge edge) {
         node1ID.setText(edge.getNode1ID());
         node2ID.setText(edge.getNode2ID());
@@ -70,17 +69,19 @@ public class AdminDeleteEdgeController {
 
     @FXML
     void onSubmitClicked() throws IOException{
-        // Create Edge
         Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
-        // Check to see if the edge Exists (!!bidirectional!!)
-        if (MapEntity.getInstance().getEdge(node1ID.getText() + "_" + node2ID.getText()) == null && MapEntity.getInstance().getEdge(node2ID.getText() + "_" + node1ID.getText()) == null) {
-            // If not then add edge
-            MapEntity.getInstance().addEdge(edge);
-            System.out.println("Added Edge: " + edge.getEdgeID());
+        Edge edge2 = new Edge(node2ID.getText()+"_"+node1ID.getText(), node2ID.getText(), node1ID.getText());
+
+        if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
+            MapEntity.getInstance().removeEdge(edge.getEdgeID());
+            System.out.println("Removed Edge: " + edge.getEdgeID());
             this.parent.switchTo(SIDEBAR_MENU);
-        }
-        else{
-            System.out.println("Edge already in the database: " + edge.getEdgeID());
+        } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
+            MapEntity.getInstance().removeEdge(edge2.getEdgeID());
+            System.out.println("Removed Edge: " + edge2.getEdgeID());
+            this.parent.switchTo(SIDEBAR_MENU);
+        } else {
+            System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());
         }
     }
 }

@@ -90,7 +90,7 @@ public class MapController {
     public void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
         AnchorPane edgesPane = new AnchorPane();
-        edgesPane.setMouseTransparent(true);
+        edgesPane.setPickOnBounds(false);
         for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
@@ -100,7 +100,7 @@ public class MapController {
             edgeView.setStroke(Color.PURPLE);
             edgeView.setStrokeWidth(10);
             edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
-            edgeView.setMouseTransparent(false);
+            edgeView.setPickOnBounds(false);
             edgesPane.getChildren().add(edgeView);
         }
         stackPane.getChildren().add(edgesPane);
