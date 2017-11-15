@@ -10,10 +10,6 @@ import java.util.*;
 
 public class Pathfinder {
 
-    public Pathfinder(){
-    }
-
-
     /**
      * Given a list of multiple waypoints, finds a path between them.  Returns a Path object containing the list of
      *  the waypoints and a list of edges defining a path from the first to the last waypoint that passes through all
@@ -51,22 +47,22 @@ public class Pathfinder {
             try{
                 // if end node is not defined then throw exception for not valid
                 if (endNode == null || endNode.getNodeID() == null)
-                    throw new PathfindingException("No defined end node, please define valid end location");
-            }catch(PathfindingException e){
+                    throw new PathfinderException("No defined end node, please define valid end location");
+            }catch(PathfinderException e){
             }
 
             //Check to make sure the nodes are all on the same floor; if not, throw exception.
             try{
                 if(!endNode.getFloor().equals(floor))
-                    throw new PathfindingException("Pathfinding across multiple floors not supported.");
-            }catch(PathfindingException e){
+                    throw new PathfinderException("Pathfinding across multiple floors not supported.");
+            }catch(PathfinderException e){
             }
 
             //Now, find the path from the previous waypoint to this one.
             try{
                 pathEdges.addAll(A_star(startNode, endNode));   //Add this section to the rest of the path.
-            }catch(PathfindingException e){
-                System.out.println("Error: pathfinding exception"); //TODO: make this error message more detailed.
+            }catch(PathfinderException e){
+                System.out.println("Error: pathfinder exception" + e.getMessage());
                 e.printStackTrace();
             }
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
@@ -98,9 +94,9 @@ public class Pathfinder {
      * @param startingNode
      * @param endingNode
      * @return
-     * @throws PathfindingException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
+     * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
-    private static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfindingException{
+    private static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
         StartNode startNode = new StartNode(startingNode);
@@ -122,7 +118,7 @@ public class Pathfinder {
         // if either node is not located on map throw exception
         if(!(unexploredNodes.containsKey(startNode.getNode().getNodeID()) &&
              unexploredNodes.containsKey(endNode.getNode().getNodeID())))
-            throw new PathfindingException("Nodes are not on map");
+            throw new PathfinderException("Nodes are not on map");
 
         //move startNode to Frontier
         unexploredNodes.remove(startNode.getNode().getNodeID());
@@ -175,7 +171,7 @@ public class Pathfinder {
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 
         // handler for no path found
-        if(pathEdges == null)throw new PathfindingException("No Path was found, Please choose another path");
+        if(pathEdges == null)throw new PathfinderException("No Path was found, Please choose another path");
         // return generated path of nodes
         return pathEdges;
     }
