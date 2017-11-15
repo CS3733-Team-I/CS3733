@@ -53,7 +53,7 @@ public class AdminEditNodeController {
         //ycoord.setText(String.valueOf(y));
     }
 
-    public void onMapNodePressed(Node node){
+    public void onMapNodeClicked(Node node){
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
         floorChoiceBox.setValue(convertFloor(node.getFloor().toString()));

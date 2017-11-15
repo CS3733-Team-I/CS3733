@@ -55,7 +55,7 @@ public class AdminAddEdgeController {
     }
 
     int lastChanged = 1;
-    public void onMapNodePressed(Node node){
+    public void onMapNodeClicked(Node node){
         if(node1ID.getText() != node.getNodeID() && node2ID.getText() != node.getNodeID()){ // If node is not already one of the ones selected
             if(node1ID.getText().toString().isEmpty()){
                 node1ID.setText(node.getNodeID());
