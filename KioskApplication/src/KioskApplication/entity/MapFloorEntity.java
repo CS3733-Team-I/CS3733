@@ -25,6 +25,12 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
+    public void editNode(Node n) {
+        nodes.put(n.getNodeID(), n);
+        DatabaseController.updateNode(n);
+    }
+
+    @Override
     public Node getNode(String s) {
         // Load node from local data
         Node node = nodes.get(s);
@@ -40,8 +46,8 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
-    public ArrayList<Node> getAllNodes() {
-        ArrayList<Node> allNodes = new ArrayList<>();
+    public LinkedList<Node> getAllNodes() {
+        LinkedList<Node> allNodes = new LinkedList<>();
 
         for (Node node : nodes.values()) {
             allNodes.add(node);

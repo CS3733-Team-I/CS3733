@@ -4,10 +4,9 @@ import KioskApplication.database.DatabaseController;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,28 +30,70 @@ public class AdminSidebarController {
 
 
     AdminWindowController parent;
+    private boolean isDisplay;
+    @FXML
+    Label AdminInfo;
+    @FXML
+    Button infoButton;
+
+    @FXML private CheckBox showNodes;
+
+    @FXML private CheckBox showEdges;
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
+        this.isDisplay = false;
+    }
+    @FXML
+    void displayAdminInfo() {
+        infoButton.setText("Display My Information");
+        if(!isDisplay) {
+            this.AdminInfo.setText(parent.curr_admin_email);
+            infoButton.setText("Hide My Information");
+            isDisplay = true;
+        }
+        else {
+            this.AdminInfo.setText("");
+            infoButton.setText("Display My Information");
+            isDisplay = false;
+        }
+    }
+
+    @FXML
+    void showNodes(){
+        boolean isS = showNodes.isSelected();
+        System.out.println(isS);
+        this.parent.showNodes(isS);
+    }
+
+    @FXML
+    void showEdges(){
+        boolean isS = showEdges.isSelected();
+        this.parent.showEdges(isS);
     }
 
     @FXML
     void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_ADD);
+        this.parent.switchTo(SIDEBAR_ADD_NODE);
     }
 
     @FXML
     void onEditPressed() throws IOException {
         System.out.println("Edit Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_EDIT);
+        this.parent.switchTo(SIDEBAR_EDIT_NODE);
     }
 
     @FXML
     void onAddEdgePressed() throws IOException{
         this.parent.switchTo(SIDEBAR_ADD_EDGE);
+    }
+
+    @FXML
+    void onDeleteEdgePressed() throws IOException{
+        this.parent.switchTo(SIDEBAR_DEL_EDGE);
     }
 
     @FXML
@@ -89,8 +130,6 @@ public class AdminSidebarController {
         }
     }
 
-
-
     @FXML
     void onSaveClicked() {
         try {
@@ -103,5 +142,4 @@ public class AdminSidebarController {
             e.printStackTrace();
         }
     }
-
 }

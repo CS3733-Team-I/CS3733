@@ -22,6 +22,8 @@ import javafx.scene.shape.Line;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MapController {
     @FXML private ImageView mapView;
@@ -45,18 +47,15 @@ public class MapController {
         parent = controller;
     }
 
-    public void drawPath(Path path) throws IOException {
-        MapEntity mapEntity = MapEntity.getInstance();
-
-        // Change to floor of the starting node
-        loadFloor(path.getWaypoints().get(0).getFloor());
-
+    public void clearMap() {
         stackPane.getChildren().clear();
         stackPane.getChildren().add(mapView);
+    }
 
-        // Draw edges
+    public void drawEdgesOnMap(List<Edge> edges) {
+        MapEntity mapEntity = MapEntity.getInstance();
         AnchorPane edgesPane = new AnchorPane();
-        for (Edge e : path.getEdges()) {
+        for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
 
@@ -67,16 +66,30 @@ public class MapController {
             edgesPane.getChildren().add(edgeView);
         }
         stackPane.getChildren().add(edgesPane);
+    }
 
-        // Draw nodes
-        for (Node n : path.getWaypoints()) {
-            javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
-            nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
-            nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
-            stackPane.getChildren().add(nodeObject);
+    public void drawNodesOnMap(List<Node> nodes) {
+        for (Node n : nodes) {
+            try {
+                javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
+                nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
+                nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
+                stackPane.getChildren().add(nodeObject);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
 
-        System.out.println("Path!");
+    public void drawPath(Path path) {
+        MapEntity mapEntity = MapEntity.getInstance();
+
+        // Change to floor of the starting node
+        loadFloor(path.getWaypoints().get(0).getFloor());
+
+        clearMap();
+        drawEdgesOnMap(path.getEdges());
+        drawNodesOnMap(path.getWaypoints());
     }
 
     private void loadFloor(NodeFloor floor) {
@@ -128,17 +141,17 @@ public class MapController {
     }
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         floorSelector.getItems().addAll(NodeFloor.values());
 
         loadFloor(currentFloor);
     }
 
     @FXML
-    void onMapClicked(MouseEvent event) {
+    protected void onMapClicked(MouseEvent event) {
         if (!parent.equals(null)) {
             // Check if clicked location is a node
-            ArrayList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
+            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
             for (Node node : floorNodes) {
                 Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
                                                       30, 30); // TODO magic numbers
@@ -156,24 +169,26 @@ public class MapController {
     }
 
     @FXML
-    public void zoomInPressed() {
+    protected void zoomInPressed() {
         System.out.println("Zoom in pressed.");
     }
 
     @FXML
-    public void zoomOutPressed() {
+    protected void zoomOutPressed() {
         System.out.println("Zoom out pressed.");
     }
 
     @FXML
-    public void recenterPressed() {
+    protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }
 
     @FXML
-    public void floorSelected() {
+    protected void floorSelected() {
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
+
+        parent.mapFloorChanged(selectedFloor);
     }
 }

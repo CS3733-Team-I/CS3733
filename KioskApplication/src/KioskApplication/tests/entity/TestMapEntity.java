@@ -58,7 +58,7 @@ public class TestMapEntity {
         m.addNode(n4);
 
         // Get nodes
-        ArrayList<Node> nodes = m.getAllNodes();
+        LinkedList<Node> nodes = m.getAllNodes();
 
         assertEquals(nodes.size(), 4);
 
@@ -122,5 +122,13 @@ public class TestMapEntity {
         m.removeNode(n2.getNodeID());
         m.removeNode(n3.getNodeID());
         m.removeNode(n4.getNodeID());
+    }
+
+    @Test
+    public void testGetConnectingEdge() {
+        m.addNode(n1);
+        m.addNode(n2);
+        m.addEdge(e1);
+        assertEquals(m.getConnectingEdge(n1,n2),e1);
     }
 }

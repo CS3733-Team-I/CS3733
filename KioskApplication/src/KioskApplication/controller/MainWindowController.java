@@ -7,6 +7,7 @@ import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
 import KioskApplication.entity.Administrator;
+import KioskApplication.entity.Administrator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;

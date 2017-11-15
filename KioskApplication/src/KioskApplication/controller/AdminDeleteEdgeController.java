@@ -1,25 +1,23 @@
 package KioskApplication.controller;
-import KioskApplication.database.objects.*;
-import KioskApplication.entity.MapEntity;
+
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
+import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-
 import java.io.IOException;
 
 import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
-import static KioskApplication.controller.AdminWindowController.SidebarType.SIDEBAR_ADD_EDGE;
 
 
-
-public class AdminAddEdgeController {
+public class AdminDeleteEdgeController {
 
     AdminWindowController parent;
 
-    AdminAddEdgeController(AdminWindowController parent) {
+    AdminDeleteEdgeController(AdminWindowController parent) {
         this.parent = parent;
     }
 
@@ -57,6 +55,7 @@ public class AdminAddEdgeController {
 
     int lastChanged = 1;
     public void onMapNodePressed(Node node){
+        /*
         if(node1ID.getText() != node.getNodeID() && node2ID.getText() != node.getNodeID()){ // If node is not already one of the ones selected
             if(node1ID.getText().toString().isEmpty()){
                 node1ID.setText(node.getNodeID());
@@ -77,6 +76,14 @@ public class AdminAddEdgeController {
             }
         }
         updateEdgeIDonP();
+        */
+    }
+
+
+    public void onMapEdgePressed(Edge edge) {
+        node1ID.setText(edge.getNode1ID());
+        node2ID.setText(edge.getNode2ID());
+        edgeID.setText(edge.getEdgeID());
     }
 
     @FXML
@@ -97,7 +104,6 @@ public class AdminAddEdgeController {
         }
         else{
             System.out.println("Edge already in the database: " + edge.getEdgeID());
-
         }
     }
 }
