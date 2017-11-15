@@ -140,14 +140,14 @@ public class MapController {
     }
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         floorSelector.getItems().addAll(NodeFloor.values());
 
         loadFloor(currentFloor);
     }
 
     @FXML
-    void onMapClicked(MouseEvent event) {
+    protected void onMapClicked(MouseEvent event) {
         if (!parent.equals(null)) {
             // Check if clicked location is a node
             ArrayList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
@@ -168,23 +168,23 @@ public class MapController {
     }
 
     @FXML
-    public void zoomInPressed() {
+    protected void zoomInPressed() {
         System.out.println("Zoom in pressed.");
     }
 
     @FXML
-    public void zoomOutPressed() {
+    protected void zoomOutPressed() {
         System.out.println("Zoom out pressed.");
     }
 
     @FXML
-    public void recenterPressed() {
+    protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }
 
     @FXML
-    public void floorSelected() {
+    protected void floorSelected() {
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
 
