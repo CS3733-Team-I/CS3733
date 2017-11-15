@@ -7,21 +7,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutY="524.0" mnemonicParsing="false" onAction="#btGeneratePathPressed" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #6495ed;" text="Generate Path" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Button layoutY="556.0" mnemonicParsing="false" onAction="#btGeneratePathPressed" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #6495ed;" text="Generate Path" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="89.0" />
       <Button layoutX="21.0" layoutY="92.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #95ed64;" text="Search" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
       <TextField layoutX="10.0" layoutY="14.0" promptText="Search for waypoints..." AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <ScrollPane hbarPolicy="NEVER" layoutX="1.0" layoutY="356.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="350.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <VBox fx:id="waypointListVbox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <VBox fx:id="waypointListVbox" layoutY="-52.0" prefHeight="145.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Label layoutY="333.0" text="Current Waypoints:" AnchorPane.bottomAnchor="265.0" AnchorPane.leftAnchor="10.0" />
-      <Button layoutX="12.0" layoutY="278.0" mnemonicParsing="false" onAction="#onResetPressed" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #ed6495;" text="Reset" AnchorPane.bottomAnchor="260.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="321.0" prefHeight="30.0" prefWidth="125.0" style="-fx-background-color: #00bfff;" text="Current Waypoints:" textFill="RED" AnchorPane.bottomAnchor="262.0" AnchorPane.leftAnchor="10.0" />
+      <Button layoutX="10.0" layoutY="270.0" mnemonicParsing="false" onAction="#onResetPressed" prefHeight="30.0" prefWidth="125.0" style="-fx-background-color: #ed6495;" text="Clear Waypoints" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="65.0" />
+      <Button layoutX="111.0" layoutY="556.0" mnemonicParsing="false" onAction="#btClearPathPressed" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #ff7f50#ff7f50;" text="Clear Path" />
    </children>
 </fx:root>

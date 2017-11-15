@@ -129,6 +129,10 @@ public class MapController {
         drawNodesOnMap(path.getWaypoints());
     }
 
+    public void clearPath() {
+        clearMap();
+    }
+
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {

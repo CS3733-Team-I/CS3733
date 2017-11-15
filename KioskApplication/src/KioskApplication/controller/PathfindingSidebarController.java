@@ -53,5 +53,10 @@ public class PathfindingSidebarController {
             currentNodes.clear();
         }
     }
+
+    @FXML
+    void btClearPathPressed() throws IOException {
+        parent.ClearPathOnMap();
+    }
 }
 //Two node IDs for testing: IDEPT00503 and IREST00103
