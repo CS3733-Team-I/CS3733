@@ -1,5 +1,6 @@
 package KioskApplication.controller;
-import KioskApplication.database.objects.Node;
+import KioskApplication.database.objects.*;
+import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -84,6 +85,17 @@ public class AdminAddEdgeController {
 
     @FXML
     void onSubmitClicked() throws IOException{
+        // Create Edge
+        Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
+        // Check to see if the edge Exists (!!bidirectional!!)
+        if (MapEntity.getInstance().getEdge(node1ID.getText() + "_" + node2ID.getText()) == null && MapEntity.getInstance().getEdge(node2ID.getText() + "_" + node1ID.getText()) == null) {
+            // If not then add edge
+            MapEntity.getInstance().addEdge(edge);
+            System.out.println("Added Edge: " + edge.getEdgeID());
+        }
+        else{
+            System.out.println("Edge already in the database: " + edge.getEdgeID());
 
+        }
     }
 }
