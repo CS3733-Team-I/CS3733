@@ -112,23 +112,14 @@ public class AdminSidebarController {
 
     @FXML
     void onReadClicked() {
-        try {
-            URI mapINodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").toString());
-            CSVFileUtil.readNodesCSV(mapINodes.getPath());
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/KioskApplication/resources/csv/MapInodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/KioskApplication/resources/csv/MapWnodes.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/KioskApplication/resources/csv/MapIedges.csv"));
 
-            URI mapWNodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").toString());
-            CSVFileUtil.readNodesCSV(mapWNodes.getPath());
+        MapEntity.getInstance().readAllFromDatabase();
 
-            URI mapIEdges = new URI(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").toString());
-            CSVFileUtil.readEdgesCSV(mapIEdges.getPath());
-
-            MapEntity.getInstance().readAllFromDatabase();
-            
-            parent.setShowNodes(showNodes.isSelected());
-            parent.setShowEdges(showEdges.isSelected());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        parent.setShowNodes(showNodes.isSelected());
+        parent.setShowEdges(showEdges.isSelected());
     }
 
     @FXML
@@ -139,7 +130,6 @@ public class AdminSidebarController {
 
             URI mapWNodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").toString());
             CSVFileUtil.writeNodesCSV(mapWNodes.getPath(), true);
-
 
             URI mapIEdges = new URI(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").toString());
             CSVFileUtil.writeEdgesCSV(mapIEdges.getPath(), false);
