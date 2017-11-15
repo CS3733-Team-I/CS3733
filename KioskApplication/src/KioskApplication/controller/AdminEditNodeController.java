@@ -236,7 +236,7 @@ public class AdminEditNodeController {
                 // Create Node
                 Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), teamAssignedChoiceBox.getValue().toString());
                 // Update Node
-                MapEntity.getInstance().addNode(node1);
+                MapEntity.getInstance().editNode(node1);
                 System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
             }
         }
