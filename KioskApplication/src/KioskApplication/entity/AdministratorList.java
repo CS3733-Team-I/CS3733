@@ -21,4 +21,8 @@ public class AdministratorList {
         }
         return ret_val;
     }
+
+    public ArrayList<Administrator> getAdministrators() {
+        return Administrators;
+    }
 }

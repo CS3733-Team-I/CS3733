@@ -21,4 +21,12 @@ public class Request {
         this.employee = employee;
         this.requestID = requestID;
     }
+
+    //Getters for testing
+    public String getEmployee(){
+        return this.employee;
+    }
+    public int getRequestID(){
+        return this.requestID;
+    }
 }

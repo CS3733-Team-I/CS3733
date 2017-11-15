@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeFloor;
@@ -12,9 +13,22 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+
+import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
+
 import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 
 public class AdminSidebarController {
+
+    @FXML
+    private MenuButton requestMenu;
+
+    @FXML
+    private MenuItem interpreterSelect;
+
 
     AdminWindowController parent;
 
@@ -89,8 +103,19 @@ public class AdminSidebarController {
     }
 
     @FXML
-    void onRequestPressed() {
-        System.out.println("Request Pressed\n");
+    void onInterpreterPressed() throws IOException{
+        System.out.println("Interpreter Request Pressed\n");
+
+        this.parent.switchTo(SIDEBAR_INTERPRETER);
+    }
+
+    @FXML
+    void viewRequests() throws IOException {
+        System.out.println("Request Manager Pressed\n");
+
+        this.parent.switchTo(AdminWindowController.SidebarType.SIDEBAR_VIEWREQUEST);
+//        activeRequests.getItems().clear();
+//        activeRequests.getItems().addAll( DatabaseController.getAllRequests());
     }
 
     @FXML
@@ -115,10 +140,14 @@ public class AdminSidebarController {
     void onSaveClicked() {
         try {
             URI mapINodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").toString());
-            CSVFileUtil.writeNodesCSV(mapINodes.getPath());
+            CSVFileUtil.writeNodesCSV(mapINodes.getPath(), false);
+
+            URI mapWNodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").toString());
+            CSVFileUtil.writeNodesCSV(mapWNodes.getPath(), true);
+
 
             URI mapIEdges = new URI(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").toString());
-            CSVFileUtil.writeEdgesCSV(mapINodes.getPath());
+            CSVFileUtil.writeEdgesCSV(mapIEdges.getPath(), false);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
