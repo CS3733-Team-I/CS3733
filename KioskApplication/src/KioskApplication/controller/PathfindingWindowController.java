@@ -35,6 +35,7 @@ public class PathfindingWindowController extends MapWindowController {
 
     @Override
     void mapNodeClicked(Node node) {
+        sidebarController.addNode(node);
     }
 
     @Override
