@@ -78,6 +78,11 @@ public class AdminSidebarController {
     }
 
     @FXML
+    void onDeleteEdgePressed() throws IOException{
+        this.parent.switchTo(SIDEBAR_DEL_EDGE);
+    }
+
+    @FXML
     void onRequestPressed() {
         System.out.println("Request Pressed\n");
     }
