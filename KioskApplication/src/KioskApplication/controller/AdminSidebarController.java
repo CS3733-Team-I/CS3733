@@ -2,6 +2,7 @@ package KioskApplication.controller;
 
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeFloor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
