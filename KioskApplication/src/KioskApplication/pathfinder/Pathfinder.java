@@ -20,17 +20,45 @@ public class Pathfinder {
      */
     public static Path generatePath(LinkedList<Node> waypoints){
 
-        //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
-        //node as the start node.  assemble the lists of edges from each into a single path.
         LinkedList<Edge> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
+
+        //Check to see if the start node is valid; if not, use a default starting position.
+        //TODO: the default should be set to a real node at an actual location on the map.
+        if (startNode == null || startNode.getNodeID() == null){
+            startNode = new Node("Node1", NodeFloor.THIRD);
+            waypoints.removeFirst();
+            waypoints.addFirst(startNode);
+            System.out.println("Invalid or no start node; using default starting position.");
+        }
+
+        NodeFloor floor = startNode.getFloor();
+
+        //Starting with the second node, run the pathfinding algorithm using each node as the end node and the previous
+        //node as the start node.  Assemble the lists of edges from each into a single path.
         boolean isFirst = true;
         for(Node endNode: waypoints){
-            if(isFirst){
+            if(isFirst){    //Skip the first node, since it doesn't have a previous node to start from.
                 isFirst = false;
                 continue;
             }
-            //First, find the path from the previous waypoint to this one.
+
+            //check if the node is valid.  If not, throw an exception.
+            try{
+                // if end node is not defined then throw exception for not valid
+                if (endNode == null || endNode.getNodeID() == null)
+                    throw new PathfinderException("No defined end node, please define valid end location");
+            }catch(PathfinderException e){
+            }
+
+            //Check to make sure the nodes are all on the same floor; if not, throw exception.
+            try{
+                if(!endNode.getFloor().equals(floor))
+                    throw new PathfinderException("Pathfinding across multiple floors not supported.");
+            }catch(PathfinderException e){
+            }
+
+            //Now, find the path from the previous waypoint to this one.
             try{
                 pathEdges.addAll(A_star(startNode, endNode));   //Add this section to the rest of the path.
             }catch(PathfinderException e){
@@ -68,20 +96,9 @@ public class Pathfinder {
      * @return
      * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
-    public static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfinderException {
+    private static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
-
-        //TODO: this check for a null node should be moved out of A_star up into the main generatePath method.
-        //TODO: this node needs a location UPDATE with actual coordinates
-        // if start node is not declared, then default to start position on floor 3 Node1.
-        if (startingNode == null || startingNode.getNodeID() == null){
-            startingNode = new Node("Node1", NodeFloor.THIRD);
-        }
-        // if end node is not defined then throw exception for not valid
-        if (endingNode == null || endingNode.getNodeID() == null){
-            throw new PathfinderException("No defined end node, please define valid end location");
-        }
         StartNode startNode = new StartNode(startingNode);
         PathfinderNode endNode = new PathfinderNode(endingNode);
 
@@ -98,25 +115,20 @@ public class Pathfinder {
                 unexploredNodes.put(node.getNodeID(), new PathfinderNode(node));
         }
 
-        //TODO: add proper handling for start and end nodes on different floors; for now, just returns exception
-        if(!startNode.getNode().getFloor().equals(endNode.getNode().getFloor()))
-            throw new PathfinderException("Multiple floors not supported");
-
         // if either node is not located on map throw exception
         if(!(unexploredNodes.containsKey(startNode.getNode().getNodeID()) &&
              unexploredNodes.containsKey(endNode.getNode().getNodeID())))
             throw new PathfinderException("Nodes are not on map");
-        // remove start node from unexplored list
-        unexploredNodes.remove(startNode.getNode().getNodeID());
 
-        // add to frontier list the start node with parent node
+        //move startNode to Frontier
+        unexploredNodes.remove(startNode.getNode().getNodeID());
         startNode.prepForFrontier(null, endNode);
         frontierNodes.put(startNode.getNode().getNodeID(), startNode);
+
         // initialize lowest cost node
         PathfinderNode lowestCost = null;
         // while loop for generating path of connecting nodes
         //TODO: add actual loop logic
-
         while(true){
 
             // if list of frontier becomes empty break out of while loop
