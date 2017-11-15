@@ -2,6 +2,7 @@ package KioskApplication.controller;
 
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.Path;
+import KioskApplication.utility.NodeFloor;
 import javafx.beans.DefaultProperty;
 import javafx.fxml.FXMLLoader;
 
@@ -23,14 +24,21 @@ public class PathfindingWindowController extends MapWindowController {
         loader.load();
     }
 
-    void mapLocationClicked(double x, double y) {
-        System.out.println(String.format("pathfinder Map Clicked: %f %f\n", x, y));
-    }
-
     void displayPathOnMap(Path path) throws IOException {
         getMapController().drawPath(path);
     }
 
+    @Override
+    void mapLocationClicked(double x, double y) {
+        System.out.println(String.format("pathfinder Map Clicked: %f %f\n", x, y));
+    }
+
+    @Override
     void mapNodeClicked(Node node) {
+    }
+
+    @Override
+    void mapFloorChanged(NodeFloor floor) {
+        getMapController().clearMap();
     }
 }

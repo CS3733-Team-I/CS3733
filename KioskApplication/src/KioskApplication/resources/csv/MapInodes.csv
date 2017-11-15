@@ -1,8 +1,4 @@
 nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
-WELEV00H03,2715,1075,3,45 Francis,ELEV,Elevator H Floor 3,Elevator H3,Team I
-WELEV00J03,2365,800,3,45 Francis,ELEV,Elevator J Floor 3,Elevator J3,Team I
-WELEV00K03,2220,985,3,45 Francis,ELEV,Elevator K Floor 3,Elevator K3,Team I
-WHALL00203,2080,1290,3,45 Francis,HALL,Hallway Connector 2 Floor 3,Hallway W0203,Team I
 IHALL00103,2255,1290,3,45 Francis,HALL,Hallway Node 1,H1,Team I
 IHALL00203,2323,1290,3,45 Francis,HALL,Hallway Node 2,H2,Team I
 IHALL00303,2448,1290,3,45 Francis,HALL,Hallway Node 3,H3,Team I

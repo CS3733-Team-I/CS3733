@@ -52,6 +52,26 @@ public class Node {
         this.teamAssigned = "";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+
+        if (obj.getClass() == this.getClass()) {
+            Node other = (Node)obj;
+            return (nodeID.equals(((Node) obj).getNodeID()) &&
+                    xcoord == other.getXcoord() &&
+                    ycoord == other.getYcoord() &&
+                    floor == other.getFloor() &&
+                    building == other.getBuilding() &&
+                    nodeType.equals(other.getNodeType()) &&
+                    longName.equals(other.getLongName()) &&
+                    shortName.equals(other.getShortName()) &&
+                    teamAssigned.equals(other.getTeamAssigned()));
+        } else {
+            return false;
+        }
+    }
+
     public int getXcoord() {
         return xcoord;
     }

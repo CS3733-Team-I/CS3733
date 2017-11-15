@@ -27,8 +27,8 @@ public class TestPathfinderNode {
         DatabaseController.initTests();
 
         n1  = new Node("NODE1",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n2  = new Node("NODE1",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n3  = new Node("NODE1",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n2  = new Node("NODE2",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n3  = new Node("NODE3",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
 
         pn1 = new StartNode(n1);
         pn2 = new PathfinderNode(n2);
@@ -64,8 +64,8 @@ public class TestPathfinderNode {
         pn3.prepForFrontier(pn2,pn3);
 
         LinkedList<Edge> path = pn3.buildPath();
-        assertTrue(path.get(0).equals(e1));
-        assertTrue(path.get(1).equals(e2));
+        assertEquals(path.get(0), e1);
+        assertEquals(path.get(1), e2);
     }
 
     @Test

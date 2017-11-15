@@ -80,6 +80,7 @@ public class TestPathfinder {
     @Test
     public void testPath() {
         Path path1 = Pathfinder.generatePath(n1, n6);
+
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e1);
         testPathEdges.add(e2);
@@ -92,9 +93,12 @@ public class TestPathfinder {
 
         Path testPath = new Path(testPathWaypoints, testPathEdges);
 
-        assertTrue(path1.equals(testPath));
         System.out.println(path1.getEdges().toString());
+        System.out.println(path1.getEdges().size());
         System.out.println(testPath.getEdges().toString());
+
+        assertTrue(path1.equals(testPath));
+
     }
 
     @Test

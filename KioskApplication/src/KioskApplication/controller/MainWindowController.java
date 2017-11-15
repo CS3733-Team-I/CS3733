@@ -1,8 +1,10 @@
 package KioskApplication.controller;
 
+import KioskApplication.entity.Administrator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
@@ -56,11 +58,13 @@ public class MainWindowController {
 
     @FXML
     private void Login() throws IOException{
+        LoginController LC = new LoginController(this);
         FXMLLoader loader;
         loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/AdminLoginWindow.fxml"));
-        loader.setController(new LoginController(this));
+        loader.setController(LC);
         LoginPopup.getChildren().clear();
         LoginPopup.getChildren().add(loader.load());
+        LC.tfEmail.requestFocus();
     }
 
     @FXML
@@ -68,6 +72,7 @@ public class MainWindowController {
         switch (currentView) {
             case ADMIN:
                 this.switchTo(MainWindowScene.PATHFINDING);
+                this.adminWindow.reset();
                 break;
             case PATHFINDING:
                 this.Login();

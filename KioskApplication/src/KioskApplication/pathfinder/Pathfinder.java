@@ -25,7 +25,7 @@ public class Pathfinder {
 
         //Check to see if the start node is valid; if not, use a default starting position.
         //TODO: the default should be set to a real node at an actual location on the map.
-        if (startNode == null || startNode.getNodeID() == null){
+        if (startNode.equals(null) || startNode.getNodeID().equals(null)){
             startNode = new Node("Node1", NodeFloor.THIRD);
             waypoints.removeFirst();
             waypoints.addFirst(startNode);
@@ -46,7 +46,7 @@ public class Pathfinder {
             //check if the node is valid.  If not, throw an exception.
             try{
                 // if end node is not defined then throw exception for not valid
-                if (endNode == null || endNode.getNodeID() == null)
+                if (endNode.equals(null) || endNode.getNodeID().equals(null))
                     throw new PathfinderException("No defined end node, please define valid end location");
             }catch(PathfinderException e){
             }
@@ -79,8 +79,8 @@ public class Pathfinder {
      * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
      * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
      * a list first.
-     * @param startNode
-     * @param endNode
+     * @param startNode Node that the algorithm should start at
+     * @param endNode Node that the algorithm should end at
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
     public static Path generatePath(Node startNode, Node endNode){
@@ -92,9 +92,9 @@ public class Pathfinder {
 
     /**
      * Given two nodes, uses the A* search algorithm to find a path between them.
-     * @param startingNode
-     * @param endingNode
-     * @return
+     * @param startingNode Node that the algorithm should start at
+     * @param endingNode Node that the algorithm should end at
+     * @return LinkedList<Edge>
      * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
     private static LinkedList<Edge> A_star(Node startingNode, Node endingNode) throws PathfinderException {
@@ -153,7 +153,7 @@ public class Pathfinder {
             exploredNodes.put(lowestCost.getNode().getNodeID(), lowestCost);
             frontierNodes.remove(lowestCost.getNode().getNodeID());
             // if lowest cost node = end node break out of while loop
-            if(lowestCost == endNode)
+            if(lowestCost.getNode().getNodeID().equals(endNode.getNode().getNodeID()))
                 break;
 
             LinkedList<Node> adjacentNodes = map.getConnectedNodes(lowestCost.getNode());
@@ -172,7 +172,7 @@ public class Pathfinder {
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 
         // handler for no path found
-        if(pathEdges == null)throw new PathfinderException("No Path was found, Please choose another path");
+        if(pathEdges.equals(null))throw new PathfinderException("No Path was found, Please choose another path");
         // return generated path of nodes
         return pathEdges;
     }

@@ -1,7 +1,5 @@
 package KioskApplication.database.util;
 
-import KioskApplication.database.connection.Connector;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -48,7 +46,6 @@ public class DBUtil {
 
         PreparedStatement pstmt0 = conn.prepareStatement(schema);
         pstmt0.execute();
-
         PreparedStatement pstmt1 = conn.prepareStatement(sql1);
         pstmt1.execute();
         PreparedStatement pstmt2 = conn.prepareStatement(sql2);

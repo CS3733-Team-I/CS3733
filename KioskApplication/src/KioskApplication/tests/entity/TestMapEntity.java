@@ -123,4 +123,12 @@ public class TestMapEntity {
         m.removeNode(n3.getNodeID());
         m.removeNode(n4.getNodeID());
     }
+
+    @Test
+    public void testGetConnectingEdge() {
+        m.addNode(n1);
+        m.addNode(n2);
+        m.addEdge(e1);
+        assertEquals(m.getConnectingEdge(n1,n2),e1);
+    }
 }

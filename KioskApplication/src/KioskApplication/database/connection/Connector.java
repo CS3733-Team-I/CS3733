@@ -21,21 +21,20 @@ import java.util.ArrayList;
 import static KioskApplication.database.template.SQLStrings.*;
 
 public class Connector {
-    private static int executeEdgeStatement(PreparedStatement pstmt, Edge edge) throws SQLException {
+    public static int insertEdge(Connection conn, Edge edge) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(EDGE_INSERT);
         pstmt.setString(1, edge.getEdgeID());
         pstmt.setString(2, edge.getNode1ID());
         pstmt.setString(3, edge.getNode2ID());
         return pstmt.executeUpdate();
     }
 
-    public static int insertEdge(Connection conn, Edge edge) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(EDGE_INSERT);
-        return executeEdgeStatement(pstmt, edge);
-    }
-
     public static int updateEdge(Connection conn, Edge edge) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(EDGE_UPDATE);
-        return executeEdgeStatement(pstmt, edge);
+        pstmt.setString(1, edge.getNode1ID());
+        pstmt.setString(2, edge.getNode2ID());
+        pstmt.setString(3, edge.getEdgeID());
+        return pstmt.executeUpdate();
     }
 
     public static Edge selectEdge(Connection conn, String edgeID) throws SQLException {
@@ -67,7 +66,8 @@ public class Connector {
         return pstmt.execute();
     }
 
-    private static int executeNodeStatement(PreparedStatement pstmt, Node node) throws SQLException {
+    public static int insertNode(Connection conn, Node node) throws SQLException{
+        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT);
         pstmt.setString(1, node.getNodeID());
         pstmt.setInt(2, node.getXcoord());
         pstmt.setInt(3, node.getYcoord());
@@ -77,18 +77,23 @@ public class Connector {
         pstmt.setString(7, node.getLongName());
         pstmt.setString(8, node.getShortName());
         pstmt.setString(9, node.getTeamAssigned());
-
         return pstmt.executeUpdate();
-    }
-
-    public static int insertNode(Connection conn, Node node) throws SQLException{
-        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT);
-        return executeNodeStatement(pstmt, node);
     }
 
     public static int updateNode(Connection conn, Node node) throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(NODE_UPDATE);
-        return executeNodeStatement(pstmt, node);
+
+        pstmt.setInt(1, node.getXcoord());
+        pstmt.setInt(2, node.getYcoord());
+        pstmt.setInt(3, node.getFloor().ordinal());
+        pstmt.setInt(4, node.getBuilding().ordinal());
+        pstmt.setInt(5, node.getNodeType().ordinal());
+        pstmt.setString(6, node.getLongName());
+        pstmt.setString(7, node.getShortName());
+        pstmt.setString(8, node.getTeamAssigned());
+        pstmt.setString(9, node.getNodeID());
+
+        return pstmt.executeUpdate();
     }
 
     public static Node selectNode(Connection conn, String nodeID) throws SQLException {
@@ -134,6 +139,22 @@ public class Connector {
         }
         return nodes;
     }
+
+
+    public static int selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, String teamAssigned) throws SQLException{
+        int result = 0;
+        PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
+        pstmt.setInt(1, nodeType.ordinal());
+        pstmt.setInt(2, floor.ordinal());
+        pstmt.setString(3, teamAssigned);
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()){
+            result = rs.getInt("countNode");
+        }
+        return result;
+    }
+
+
 
 
     public static Request insertRequest(Connection conn, int requestID,
