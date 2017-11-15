@@ -155,7 +155,7 @@ public class CSVFileUtil {
         }
     }
 
-    public static void writeNodesCSV(String path) {
+    public static void writeNodesCSV(String path, boolean global) {
         File csvFile = new File(path);
         FileWriter write = null;
         try {
@@ -185,6 +185,16 @@ public class CSVFileUtil {
                 String building = "";
                 NodeType nt = NodeType.values()[rs.getInt("nodeType")];
                 String nodeType = "";
+
+                if(global) {
+                    if(!(rs.getString("NodeID").startsWith("W"))) {
+                        continue;
+                    }
+                } else {
+                    if(rs.getString("NodeID").startsWith("W")) {
+                        continue;
+                    }
+                }
 
                 switch(fl) {
                     case LOWERLEVEL_2: floor = "L2"; break;
@@ -296,7 +306,7 @@ public class CSVFileUtil {
         }
     }
 
-    public static void writeEdgesCSV(String path) {
+    public static void writeEdgesCSV(String path, boolean global) {
         File csvFile = new File(path);
         FileWriter write = null;
         try {
@@ -319,6 +329,17 @@ public class CSVFileUtil {
             PreparedStatement pstmt = con.prepareStatement(SQLStrings.EDGE_SELECT_ALL);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
+
+                if(global) {
+                    if(!((rs.getString("startNode").startsWith("W")) && (rs.getString("endNode").startsWith("W")))) {
+                        continue;
+                    }
+                } else {
+                    if((rs.getString("startNode").startsWith("W")) && (rs.getString("endNode").startsWith("W"))) {
+                        continue;
+                    }
+                }
+
                 bWriter.write(rs.getString("edgeID") + ",");
                 bWriter.write(rs.getString("startNode") + ",");
                 bWriter.write(rs.getString("endNode") + ",");
