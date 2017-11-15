@@ -46,6 +46,14 @@ public class MapEntity implements IMapEntity {
     }
 
     @Override
+    public void editNode(Node n) {
+        NodeFloor f = n.getFloor();
+        if(floorExists(f)) {
+            floors.get(f).editNode(n);
+        }
+    }
+
+    @Override
     public Node getNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
             Node thisNode = floors.get(floor).getNode(s);
@@ -91,6 +99,11 @@ public class MapEntity implements IMapEntity {
     public void addEdge(Edge e) {
         edges.put(e.getEdgeID(),e);
         DatabaseController.addEdge(e);
+    }
+
+    public void editEdge(Edge e) {
+        edges.put(e.getEdgeID(), e);
+        DatabaseController.updateEdge(e);
     }
 
     public Edge getEdge(String s) {

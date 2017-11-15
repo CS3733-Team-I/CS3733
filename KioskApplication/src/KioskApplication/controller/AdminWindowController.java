@@ -48,8 +48,9 @@ public class AdminWindowController extends MapWindowController {
 
         switch (sidebar) {
             case SIDEBAR_MENU:
+                AdminSidebarController ASC = new AdminSidebarController(this);
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/AdminSidebarView.fxml"));
-                loader.setController(new AdminSidebarController(this));
+                loader.setController(ASC);
                 break;
 
             case SIDEBAR_ADD_NODE:

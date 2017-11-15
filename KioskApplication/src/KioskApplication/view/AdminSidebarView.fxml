@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #f0f8ff;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
@@ -11,5 +12,7 @@
       <Button mnemonicParsing="false" onAction="#onReadClicked" text="Read CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
       <Button mnemonicParsing="false" onAction="#onSaveClicked" text="Save CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onAddEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Add Edge" />
+      <Label fx:id="AdminInfo" layoutY="508.0" prefHeight="27.0" prefWidth="200.0" />
+      <Button layoutX="21.0" layoutY="481.0" mnemonicParsing="false" onAction="#displayAdminInfo" text="Display My Information" />
    </children>
 </AnchorPane>
