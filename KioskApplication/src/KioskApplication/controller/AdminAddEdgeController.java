@@ -1,6 +1,7 @@
 package KioskApplication.controller;
 import KioskApplication.database.objects.*;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

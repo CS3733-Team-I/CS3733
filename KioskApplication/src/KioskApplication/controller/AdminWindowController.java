@@ -20,7 +20,8 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_ADD_EDGE,
         SIDEBAR_DEL_EDGE,
         SIDEBAR_MENU,
-        SIDEBAR_INTERPRETER
+        SIDEBAR_INTERPRETER,
+        SIDEBAR_VIEWREQUEST
     }
 
     AdminAddNodeController addNodeController = null;
@@ -28,6 +29,7 @@ public class AdminWindowController extends MapWindowController {
     AdminAddEdgeController addEdgeController = null;
     AdminDeleteEdgeController deleteEdgeController = null;
     InterpreterRequestController interpreterRequestController = null;
+    RequestManagerController requestManagerController = null;
 
     SidebarType currentSidebar;
 
@@ -39,7 +41,7 @@ public class AdminWindowController extends MapWindowController {
         mapFloorChanged(getMapController().getCurrentFloor());
     }
 
-    public void reset() {
+    public void reset(){
         this.curr_admin_email = "";
     }
 
@@ -65,7 +67,7 @@ public class AdminWindowController extends MapWindowController {
 
             case SIDEBAR_ADD_NODE:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addNode.fxml"));
-                addNodeController = new AdminAddNodeController(this);
+                addNodeController = new AdminAddNodeController(this, this.getMapController().getCurrentFloor());
                 loader.setController(addNodeController);
                 break;
 
@@ -83,7 +85,7 @@ public class AdminWindowController extends MapWindowController {
 
             case SIDEBAR_EDIT_NODE:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/editNode.fxml"));
-                editNodeController = new AdminEditNodeController(this);
+                editNodeController = new AdminEditNodeController(this, this.getMapController().getCurrentFloor());
                 loader.setController(editNodeController);
                 break;
 
@@ -91,6 +93,12 @@ public class AdminWindowController extends MapWindowController {
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/InterpreterRequestView.fxml"));
                 interpreterRequestController = new InterpreterRequestController(this);
                 loader.setController(interpreterRequestController);
+                break;
+
+            case SIDEBAR_VIEWREQUEST:
+                loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/RequestManagerView.fxml"));
+                requestManagerController = new RequestManagerController(this);
+                loader.setController(requestManagerController);
                 break;
         }
 
@@ -112,7 +120,8 @@ public class AdminWindowController extends MapWindowController {
     @Override
     void mapNodeClicked(Node node) {
         switch (currentSidebar) {
-            case SIDEBAR_ADD_NODE:
+            case SIDEBAR_INTERPRETER:
+                if (interpreterRequestController != null) interpreterRequestController.onMapNodeClicked(node);
                 break;
             case SIDEBAR_ADD_EDGE:
                 if (addEdgeController != null) addEdgeController.onMapNodeClicked(node);

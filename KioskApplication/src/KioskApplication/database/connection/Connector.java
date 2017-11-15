@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import static KioskApplication.database.template.SQLStrings.*;
 
+//TODO: For the love of god, please put in some comments so things make sense
 public class Connector {
     public static int insertEdge(Connection conn, Edge edge) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(EDGE_INSERT);
