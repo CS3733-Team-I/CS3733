@@ -1,7 +1,6 @@
 package KioskApplication.controller;
 
 import KioskApplication.database.objects.Node;
-import javafx.beans.DefaultProperty;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeFloor;
 import javafx.fxml.FXMLLoader;
@@ -121,7 +120,8 @@ public class AdminWindowController extends MapWindowController {
     @Override
     void mapNodeClicked(Node node) {
         switch (currentSidebar) {
-            case SIDEBAR_ADD_NODE:
+            case SIDEBAR_INTERPRETER:
+                if (interpreterRequestController != null) interpreterRequestController.onMapNodeClicked(node);
                 break;
             case SIDEBAR_ADD_EDGE:
                 if (addEdgeController != null) addEdgeController.onMapNodePressed(node);

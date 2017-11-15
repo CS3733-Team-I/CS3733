@@ -51,21 +51,12 @@ public class InterpreterRequestController {
     }
 
     @FXML
-    public void addRequest(){
+    public void addRequest() throws IOException {
         int interpID;
         String location = txtLocation.getText();
-        //default is "My Location"
 
         //sets nodeLocation to default my location
-        Node nodeLocation = DatabaseController.getNode("IDEPT00303");
-
-        //searches for node name
-        ArrayList<Node> nodes = DatabaseController.getAllNodes();
-        for(int i=0; i<nodes.size(); i++){
-            if(nodes.get(i).getLongName().equals(location) || nodes.get(i).getLongName().equals(location) || nodes.get(i).getNodeID().equals(location)){
-                nodeLocation = nodes.get(i);
-            }
-        }
+        Node nodeLocation = DatabaseController.getNode(location);
 
         String language = "None";
         if(langMenu.getValue().toString().equals("Spanish")){
@@ -76,7 +67,6 @@ public class InterpreterRequestController {
 
         //Finds current admin that is logged in
         String adminEmail = parent.curr_admin_email;
-
 
         if(DatabaseController.getAllInterpreterRequests().isEmpty()){
             interpID = 0;
@@ -92,9 +82,10 @@ public class InterpreterRequestController {
         DatabaseController.addIntepreterRequest(language, interpID, interpID);
         System.out.println(DatabaseController.getAllInterpreterRequests());
 
+        this.parent.switchTo(SIDEBAR_MENU);
+    }
 
-        //I want to automatically switch the screen back to the admin sidebar menu so there are not two requests created
-//        this.parent.switchTo(SIDEBAR_MENU);
-
+    public void onMapNodeClicked(Node n) {
+        txtLocation.setText(n.getNodeID());
     }
 }
