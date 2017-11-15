@@ -15,6 +15,7 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 public class AdminSidebarController {
 
     AdminWindowController parent;
+    private boolean isDisplay;
     @FXML
     Label AdminInfo;
     @FXML
@@ -22,12 +23,11 @@ public class AdminSidebarController {
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
+        this.isDisplay = false;
     }
     @FXML
     void displayAdminInfo() {
-        boolean isDisplay = false;
         infoButton.setText("Display My Information");
-
         if(!isDisplay) {
             this.AdminInfo.setText(parent.curr_admin_email);
             infoButton.setText("Hide My Information");
