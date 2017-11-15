@@ -199,8 +199,10 @@ public class AdminEditNodeController {
                 boolean isSuccess = true;
                 MapEntity.getInstance().removeNode(delN.getNodeID());
 
-                if (isSuccess) // If successfully deleted
+                if (isSuccess) { // If successfully deleted
                     System.out.println("Node " + nodeID.getText() + " Deleted");
+                    this.parent.switchTo(SIDEBAR_MENU);
+                }
                 else  // If DB failed to delete
                     System.out.println("Failed to remove node: " + nodeID.getText());
             }
@@ -290,6 +292,7 @@ public class AdminEditNodeController {
                 // Update Node
                 MapEntity.getInstance().editNode(node1);
                 System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
+                this.parent.switchTo(SIDEBAR_MENU);
             }
         }
     }

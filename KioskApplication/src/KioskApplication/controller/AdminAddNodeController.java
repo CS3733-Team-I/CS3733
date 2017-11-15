@@ -213,6 +213,7 @@ public class AdminAddNodeController {
                 System.out.println("ssssss");
                 MapEntity.getInstance().addNode(node1);
                 System.out.println("Adding node " + nodeID.getText());
+                this.parent.switchTo(SIDEBAR_MENU);
             }
         }
     }
