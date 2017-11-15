@@ -87,8 +87,7 @@ public class InterpreterRequestController {
 
 
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
-        //Adds the Interpreter request to the database.... but doesn't work
-        //Also can't understand how to get the nodes
+        //Adds the Interpreter request to the database
 
         DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
         DatabaseController.addIntepreterRequest(language, interpID, interpID);
