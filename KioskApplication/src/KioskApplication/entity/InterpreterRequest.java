@@ -45,6 +45,7 @@ public class InterpreterRequest{
     }
     */
 
+    //Sends InterpreterRequest to database
     public void place() {
         int numRequests = DatabaseController.getAllInterpreterRequests().size();
         if(numRequests==0){
