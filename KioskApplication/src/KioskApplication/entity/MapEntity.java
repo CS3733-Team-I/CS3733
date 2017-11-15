@@ -8,6 +8,7 @@ import KioskApplication.utility.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class MapEntity implements IMapEntity {
 
@@ -65,8 +66,8 @@ public class MapEntity implements IMapEntity {
 
 
     @Override
-    public ArrayList<Node> getAllNodes() {
-        ArrayList<Node> allNodes = new ArrayList<>();
+    public LinkedList<Node> getAllNodes() {
+        LinkedList<Node> allNodes = new LinkedList<>();
 
         for (NodeFloor floor : floors.keySet()) {
             allNodes.addAll(floors.get(floor).getAllNodes());
@@ -75,11 +76,11 @@ public class MapEntity implements IMapEntity {
         return allNodes;
     }
 
-    public ArrayList<Node> getNodesOnFloor(NodeFloor floor) {
+    public LinkedList<Node> getNodesOnFloor(NodeFloor floor) {
         if (floors.containsKey(floor))
             return floors.get(floor).getAllNodes();
         else
-            return new ArrayList<>();
+            return new LinkedList<>();
     }
 
     public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
@@ -144,5 +145,29 @@ public class MapEntity implements IMapEntity {
 
     private void addFloor(NodeFloor floor) {
         floors.put(floor, new MapFloorEntity());
+    }
+
+    //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
+    public Edge getConnectingEdge(Node node1, Node node2){
+        ArrayList<Edge> node1Edges = getEdges(node1);
+        for(Edge edge: node1Edges){
+            if((edge.getNode1ID().equals(node1.getNodeID()) && (edge.getNode2ID().equals(node2.getNodeID()))) ||
+               (edge.getNode1ID().equals(node2.getNodeID()) && (edge.getNode2ID().equals(node1.getNodeID())))    )
+                return edge;
+        }
+        return null;
+    }
+
+    //Given a node, return a list of all adjacent nodes.
+    public LinkedList<Node> getConnectedNodes(Node node){
+        ArrayList<Edge> edges = this.getEdges(node);
+        LinkedList<Node> connectedNodes = new LinkedList<>();
+        for(Edge edge: edges){
+            if(edge.getNode1ID().equals(node.getNodeID()))
+                connectedNodes.add(getNode(edge.getNode2ID()));
+            else if(edge.getNode2ID().equals(node.getNodeID()))
+                connectedNodes.add(getNode(edge.getNode1ID()));
+        }
+        return connectedNodes;
     }
 }
