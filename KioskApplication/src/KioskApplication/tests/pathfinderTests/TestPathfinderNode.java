@@ -11,7 +11,6 @@ import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
 import org.junit.Before;
 import org.junit.Test;
-import sun.awt.image.ImageWatched;
 
 import java.util.LinkedList;
 
@@ -27,9 +26,9 @@ public class TestPathfinderNode {
     public void setup() {
         DatabaseController.initTests();
 
-        n1  = new Node("NODE1",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LONGNAME","NODE1_SN","I");
-        n2  = new Node("NODE1",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LONGNAME","NODE1_SN","I");
-        n3  = new Node("NODE1",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LONGNAME","NODE1_SN","I");
+        n1  = new Node("NODE1",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n2  = new Node("NODE1",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n3  = new Node("NODE1",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
 
         pn1 = new StartNode(n1);
         pn2 = new PathfinderNode(n2);
@@ -79,6 +78,3 @@ public class TestPathfinderNode {
         //Tested in testPrepForFrontier
     }
 }
-
-
-

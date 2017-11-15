@@ -34,7 +34,7 @@ public class Pathfinder {
 
         NodeFloor floor = startNode.getFloor();
 
-        //Starting with the second node, run the pathfinding algorithm using each node as the end node and the previous
+        //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
         //node as the start node.  Assemble the lists of edges from each into a single path.
         boolean isFirst = true;
         for(Node endNode: waypoints){
@@ -54,8 +54,9 @@ public class Pathfinder {
             //Check to make sure the nodes are all on the same floor; if not, throw exception.
             try{
                 if(!endNode.getFloor().equals(floor))
-                    throw new PathfinderException("Pathfinding across multiple floors not supported.");
-            }catch(PathfinderException e){
+                    throw new PathfinderException("Pathfinder across multiple floors not currently supported.");
+            }
+            catch(PathfinderException e){
             }
 
             //Now, find the path from the previous waypoint to this one.

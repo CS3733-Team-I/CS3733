@@ -11,16 +11,14 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestPathfinder {
 
     private Node n1, n2, n3, n4, n5, n6, n7;
     private Edge e1, e2, e3, e4, e5, e6;
-    MapEntity map = MapEntity.getInstance();
+    private MapEntity map = MapEntity.getInstance();
 
     @Before
     public void setup() {
@@ -79,9 +77,8 @@ public class TestPathfinder {
         map.addEdge(e6);
     }
 
-    //TODO: handle the exception
     @Test
-    public void testPath(){
+    public void testPath() {
         Path path1 = Pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e1);
@@ -100,9 +97,8 @@ public class TestPathfinder {
         System.out.println(testPath.getEdges().toString());
     }
 
-    //TODO: handle the exception
     @Test
-    public void testWrongPath(){
+    public void testWrongPath() {
         Path path1 = Pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e2);
@@ -121,9 +117,8 @@ public class TestPathfinder {
         System.out.println(testPath.getEdges().toString());
     }
 
-    //TODO: handle the exception
     @Test
-    public void testAnotherPath(){
+    public void testAnotherPath() {
         Path path2 = Pathfinder.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
@@ -138,5 +133,16 @@ public class TestPathfinder {
         assertTrue(path2.equals(testPath2));
         System.out.println(path2.getEdges().toString());
         System.out.println(testPath2.getEdges().toString());
+    }
+
+    @Test
+    public void testMultipleWaypointTest() {
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n1);
+        nodes.add(n7);
+        nodes.add(n6);
+
+        Path multiPath = Pathfinder.generatePath(nodes);
+
     }
 }
