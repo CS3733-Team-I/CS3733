@@ -36,6 +36,11 @@ public class SQLStrings {
             " employee VARCHAR(20) NOT NULL" +
             ")";
 
+    public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
+    public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
+    public static final String DROP_REQUEST_TABLE = "DROP TABLE t_requests";
+    public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
+
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
     public static final String EDGE_INSERT = "insert into t_edges values(?, ?, ?)";

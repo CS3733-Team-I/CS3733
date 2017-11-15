@@ -1,7 +1,5 @@
 package KioskApplication.database.util;
 
-import KioskApplication.database.template.ConnectionDetails;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -57,5 +55,44 @@ public class DBUtil {
         pstmt3.execute();
         PreparedStatement pstmt4 = conn.prepareStatement(sql4);
         pstmt4.execute();
+    }
+
+    public static void dropAllTables(Connection conn) {
+        String drop1 = DROP_EDGE_TABLE;
+        String drop2 = DROP_INTERPRETER_TABLE;
+        String drop3 = DROP_REQUEST_TABLE;
+        String drop4 = DROP_NODE_TABLE;
+
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = conn.prepareStatement(drop1);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        PreparedStatement preparedStatement1 = null;
+        try {
+            preparedStatement1 = conn.prepareStatement(drop2);
+            preparedStatement1.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        PreparedStatement preparedStatement2 = null;
+        try {
+            preparedStatement2 = conn.prepareStatement(drop3);
+            preparedStatement2.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        PreparedStatement preparedStatement3  = null;
+        try {
+            preparedStatement3 = conn.prepareStatement(drop4);
+            preparedStatement3.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -292,4 +292,8 @@ public class DatabaseController {
         }
         return new ArrayList<InterpreterRequest>();
     }
+
+    public static void deleteTestTables() {
+        DBUtil.dropAllTables(instanceConnection);
+    }
 }
