@@ -41,6 +41,14 @@ public class AdminWindowController extends MapWindowController {
         this.curr_admin_email = "";
     }
 
+    public void showNodes(boolean toggle){
+        // toggle the nodes (true means show, false means hide)
+    }
+
+    public void showEdges(boolean toggle){
+        // toggle the edges (true means show, false means hide)
+    }
+
     public void switchTo(SidebarType sidebar) throws IOException {
         FXMLLoader loader = null;
 
