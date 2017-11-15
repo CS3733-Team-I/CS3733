@@ -6,9 +6,7 @@ import KioskApplication.database.objects.Node;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class MapEntity implements IMapEntity {
 
@@ -87,9 +85,32 @@ public class MapEntity implements IMapEntity {
         return DatabaseController.getNodeTypeCount(nodeType, floor, teamAssigned);
     }
 
+    // TODO this is an expensive function, should probably rewrite
+    public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
+        ArrayList<Edge> edgesOnFloor = new ArrayList<>();
+
+        Collection<Edge> allEdges = edges.values();
+        for (Edge edge : allEdges) {
+            Node node1 = getNode(edge.getNode1ID());
+            Node node2 = getNode(edge.getNode2ID());
+
+            if ((floor == node1.getFloor()) && (floor == node2.getFloor())) {
+                edgesOnFloor.add(edge);
+            }
+        }
+
+        return edgesOnFloor;
+    }
+
 
     @Override
     public void removeNode(String s) {
+        Node n = getNode(s);
+        List<Edge> edges = getEdges(n);
+        for (Edge edge : edges) {
+            removeEdge(edge.getEdgeID());
+        }
+
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
             if (floorEntity.getNode(s) != null)

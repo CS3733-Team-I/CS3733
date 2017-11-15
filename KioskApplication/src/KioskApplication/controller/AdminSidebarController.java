@@ -28,6 +28,13 @@ public class AdminSidebarController {
         this.parent = parent;
         this.isDisplay = false;
     }
+
+    @FXML
+    protected void initialize() {
+        parent.setShowNodes(showNodes.isSelected());
+        parent.setShowEdges(showEdges.isSelected());
+    }
+
     @FXML
     void displayAdminInfo() {
         infoButton.setText("Display My Information");
@@ -47,13 +54,13 @@ public class AdminSidebarController {
     void showNodes(){
         boolean isS = showNodes.isSelected();
         System.out.println(isS);
-        this.parent.showNodes(isS);
+        this.parent.setShowNodes(isS);
     }
 
     @FXML
     void showEdges(){
         boolean isS = showEdges.isSelected();
-        this.parent.showEdges(isS);
+        this.parent.setShowEdges(isS);
     }
 
     @FXML
