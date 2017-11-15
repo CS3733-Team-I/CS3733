@@ -1,0 +1,55 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+IHALL00103,2255,1290,3,45 Francis,HALL,Hallway Node 1,H1,Team I
+IHALL00203,2323,1290,3,45 Francis,HALL,Hallway Node 2,H2,Team I
+IHALL00303,2448,1290,3,45 Francis,HALL,Hallway Node 3,H3,Team I
+IHALL00403,2570,1290,3,45 Francis,HALL,Hallway Node 4,H4,Team I
+IHALL00503,2730,1290,3,45 Francis,HALL,Hallway Node 5,H5,Team I
+IHALL00603,2772,1290,3,45 Francis,HALL,Hallway Node 6,H6,Team I
+IHALL00703,2772,1227,3,45 Francis,HALL,Hallway Node 7,H7,Team I
+IHALL00803,2772,1147,3,45 Francis,HALL,Hallway Node 8,H8,Team I
+IHALL00903,2649,1075,3,45 Francis,HALL,Hallway Node 9,H9,Team I
+IHALL01003,2772,1075,3,45 Francis,HALL,Hallway Node 10,H10,Team I
+IHALL01103,2922,1075,3,45 Francis,HALL,Hallway Node 11,H11,Team I
+IHALL01203,2220,1034,3,45 Francis,HALL,Hallway Node 12,H12,Team I
+IHALL01303,2323,1034,3,45 Francis,HALL,Hallway Node 13,H13,Team I
+IHALL01403,2323,993,3,45 Francis,HALL,Hallway Node 14,H14,Team I
+IHALL01503,2220,944,3,45 Francis,HALL,Hallway Node 15,H15,Team I
+IHALL01603,2252,851,3,45 Francis,HALL,Hallway Node 16,H16,Team I
+IHALL01703,2323,851,3,45 Francis,HALL,Hallway Node 17,H17,Team I
+IHALL01803,2362,851,3,45 Francis,HALL,Hallway Node 18,H18,Team I
+IHALL01903,2492,851,3,45 Francis,HALL,Hallway Node 19,H19,Team I
+IHALL02003,2597,851,3,45 Francis,HALL,Hallway Node 20,H20,Team I
+IHALL02103,2362,804,3,45 Francis,HALL,Hallway Node 21,H21,Team I
+IHALL02203,2362,764,3,45 Francis,HALL,Hallway Node 22,H22,Team I
+IREST00103,2255,1255,3,45 Francis,REST,Restroom 1 - Family,R1,Team I
+IREST00203,2570,1257,3,45 Francis,REST,Restroom 2,R2,Team I
+IREST00303,2745,1147,3,45 Francis,REST,Restroom 3,R3,Team I
+IREST00403,2300,1018,3,45 Francis,REST,Restroom 4 - M wheelchair,R4,Team I
+IREST00503,2277,995,3,45 Francis,REST,Restroom 5 - F wheelchair,R5,Team I
+IDEPT00103,2323,1328,3,45 Francis,DEPT,Center for Infertility and Reproductive Surgery,D1,Team I
+IDEPT00203,2448,1328,3,45 Francis,DEPT,Gynecology Oncology MIGS,D2,Team I
+IDEPT00303,2730,1315,3,45 Francis,DEPT,General Surgical Specialties Suite A,D3,Team I
+IDEPT00403,2738,1227,3,45 Francis,DEPT,General Surgical Specialties Suite B,D4,Team I
+IDEPT00503,2868,1075,3,45 Francis,DEPT,Urology,D5,Team I
+IDEPT00603,2333,764,3,45 Francis,DEPT,Maternal Fetal Practice,D6,Team I
+IDEPT00703,2400,764,3,45 Francis,DEPT,Obstetrics,D7,Team I
+IDEPT00803,2492,887,3,45 Francis,DEPT,Fetal Med & Genetics,D8,Team I
+IDEPT00903,2631,851,3,45 Francis,DEPT,Gynecology,D9,Team I
+ISTAI00103,2718,1104,3,45 Francis,STAI,Stair 1,S1,Team I
+ISTAI00203,2192,986,3,45 Francis,STAI,Stair 2,S2,Team I
+ISTAI00303,2327,804,3,45 Francis,STAI,Stair 3,S3,Team I
+ISTAI00403,2402,804,3,45 Francis,STAI,Stair 4,S4,Team I
+ISATI00503,2906,894,3,45 Francis,STAI,Stair 5,S5,Team I
+ISTAI00603,3219,873,3,45 Francis,STAI,Stair 6,S6,Team I
+IINFO00102,1629,1829,2,Shapiro,INFO,Sharpiro 2nd Floor Info,SHP2FINFO,Team I
+IELEV00102,1686,1874,2,Shapiro,ELEV,2nd floor Esc 1,SHP2FESC1,Team I
+ICONF00102,1346,1783,2,Shapiro,CONF,Family Center,FC,Team I
+IREST00102,1608,2031,2,Shapiro,REST,Shapiro 2nd Floor Bathroom 1,SHP2FB1,Team I
+IHALL00102,1579,1932,2,45 Francis,HALL,SH1,SH1,Team I
+IHALL00202,1583,2032,2,Shapiro,HALL,SH2,SH2,Team I
+IHALL00302,1580,2094,2,Shapiro,HALL,SH3,SH3,Team I
+IHALL00402,1582,2210,2,Shapiro,HALL,SH4,SH4,Team I
+IHALL00502,1688,2210,2,Shapiro,HALL,SH3,SH3,Team I
+IHALL00602,1684,2096,2,Shapiro,HALL,SH6,SH6,Team I
+IHALL00702,1683,1929,2,Shapiro,HALL,SH7,SH7,Team I
+IHALL00802,1565,1817,2,Shapiro,HALL,SH8,SH8,Team I
