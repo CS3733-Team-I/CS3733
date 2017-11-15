@@ -17,13 +17,15 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_EDIT,
         SIDEBAR_ADD_EDGE,
         SIDEBAR_MENU,
-        SIDEBAR_INTERPRETER
+        SIDEBAR_INTERPRETER,
+        SIDEBAR_VIEWREQUEST
     }
 
     AdminAddNodeController addNodeController = null;
     AdminEditNodeController editNodeController = null;
     AdminAddEdgeController addEdgeController = null;
     InterpreterRequestController interpreterRequestController = null;
+    RequestManagerController requestManagerController = null;
 
     public AdminWindowController() throws IOException {
         super();
@@ -73,6 +75,12 @@ public class AdminWindowController extends MapWindowController {
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/InterpreterRequestView.fxml"));
                 interpreterRequestController = new InterpreterRequestController(this);
                 loader.setController(interpreterRequestController);
+                break;
+
+            case SIDEBAR_VIEWREQUEST:
+                loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/RequestManagerView.fxml"));
+                requestManagerController = new RequestManagerController(this);
+                loader.setController(requestManagerController);
                 break;
         }
 

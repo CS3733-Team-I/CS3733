@@ -82,13 +82,12 @@ public class InterpreterRequestController {
             interpID = 0;
         }else{
             interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
-
         }
 
 
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
-        //Adds the Interpreter request to the database
 
+        //Adds the Interpreter request to the database
         DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
         DatabaseController.addIntepreterRequest(language, interpID, interpID);
         System.out.println(DatabaseController.getAllInterpreterRequests());

@@ -17,5 +17,6 @@
           <MenuItem fx:id="interpreterSelect" mnemonicParsing="false" onAction="#onInterpreterPressed" text="Interpreter" />
         </items>
       </MenuButton>
+      <Button fx:id="btnManager" layoutX="29.0" layoutY="255.0" mnemonicParsing="false" onAction="#viewRequests" text="Requests Manager" />
    </children>
 </AnchorPane>
