@@ -17,9 +17,11 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.SIDE
 
 public class AdminEditNodeController {
     AdminWindowController parent;
+    NodeFloor floor;
 
-    AdminEditNodeController(AdminWindowController parent) {
+    AdminEditNodeController(AdminWindowController parent, NodeFloor floor) {
         this.parent = parent;
+        this.floor = floor;
     }
 
 
@@ -43,6 +45,31 @@ public class AdminEditNodeController {
 
     @FXML private Label errorMsg;
 
+    @FXML
+    protected void initialize() throws IOException{
+        floorChoiceBox.setValue(getFloorTxt());
+        nodeID.setText("");
+    }
+
+    public String getFloorTxt(){
+        switch(floor.ordinal()){
+            case 0:
+                return ("L2");
+            case 1:
+                return ("L1");
+            case 2:
+                return ("0G");
+            case 3:
+                return ("01");
+            case 4:
+                return ("02");
+            case 5:
+                return ("03");
+            default:
+                return ("00");
+        }
+    }
+
     public void setCoords(double x, double y){
         // Find closest node and display information ******
 
@@ -53,7 +80,7 @@ public class AdminEditNodeController {
         //ycoord.setText(String.valueOf(y));
     }
 
-    public void onMapNodePressed(Node node){
+    public void onMapNodeClicked(Node node){
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
         floorChoiceBox.setValue(convertFloor(node.getFloor().toString()));
@@ -123,48 +150,51 @@ public class AdminEditNodeController {
 
     @FXML
     void updateNodeID() throws IOException {
-        NodeType nodeType = NodeType.HALL;
-        if(nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
-            nodeType = NodeType.ELEV;
-        if(nodeTypeChoiceBox.getValue().toString().equals("HALL"))
-            nodeType = NodeType.HALL;
-        if(nodeTypeChoiceBox.getValue().toString().equals("REST"))
-            nodeType = NodeType.REST;
-        if(nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
-            nodeType = NodeType.DEPT;
-        if(nodeTypeChoiceBox.getValue().toString().equals("STAI"))
-            nodeType = NodeType.STAI;
-        if(nodeTypeChoiceBox.getValue().toString().equals("CONF"))
-            nodeType = NodeType.CONF;
-        if(nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
-            nodeType = NodeType.EXIT;
-        if(nodeTypeChoiceBox.getValue().toString().equals("INFO"))
-            nodeType = NodeType.INFO;
-        if(nodeTypeChoiceBox.getValue().toString().equals("LABS"))
-            nodeType = NodeType.LABS;
-        if(nodeTypeChoiceBox.getValue().toString().equals("SERV"))
-            nodeType = NodeType.SERV;
+        if(nodeTypeChoiceBox.getValue() != "--select--") {
+
+            NodeType nodeType = NodeType.HALL;
+            if (nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
+                nodeType = NodeType.ELEV;
+            if (nodeTypeChoiceBox.getValue().toString().equals("HALL"))
+                nodeType = NodeType.HALL;
+            if (nodeTypeChoiceBox.getValue().toString().equals("REST"))
+                nodeType = NodeType.REST;
+            if (nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
+                nodeType = NodeType.DEPT;
+            if (nodeTypeChoiceBox.getValue().toString().equals("STAI"))
+                nodeType = NodeType.STAI;
+            if (nodeTypeChoiceBox.getValue().toString().equals("CONF"))
+                nodeType = NodeType.CONF;
+            if (nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
+                nodeType = NodeType.EXIT;
+            if (nodeTypeChoiceBox.getValue().toString().equals("INFO"))
+                nodeType = NodeType.INFO;
+            if (nodeTypeChoiceBox.getValue().toString().equals("LABS"))
+                nodeType = NodeType.LABS;
+            if (nodeTypeChoiceBox.getValue().toString().equals("SERV"))
+                nodeType = NodeType.SERV;
 
 
-        NodeFloor floor = NodeFloor.THIRD; // Default
-        if(floorChoiceBox.getValue().toString().equals("L2"))
-            floor = NodeFloor.LOWERLEVEL_2;
-        if(floorChoiceBox.getValue().toString().equals("L1"))
-            floor = NodeFloor.LOWERLEVEL_1;
-        if(floorChoiceBox.getValue().toString().equals("0G"))
-            floor = NodeFloor.GROUND;
-        if(floorChoiceBox.getValue().toString().equals("01"))
-            floor = NodeFloor.FIRST;
-        if(floorChoiceBox.getValue().toString().equals("02"))
-            floor = NodeFloor.SECOND;
-        if(floorChoiceBox.getValue().toString().equals("03"))
-            floor = NodeFloor.THIRD;
+            NodeFloor floor = NodeFloor.THIRD; // Default
+            if (floorChoiceBox.getValue().toString().equals("L2"))
+                floor = NodeFloor.LOWERLEVEL_2;
+            if (floorChoiceBox.getValue().toString().equals("L1"))
+                floor = NodeFloor.LOWERLEVEL_1;
+            if (floorChoiceBox.getValue().toString().equals("0G"))
+                floor = NodeFloor.GROUND;
+            if (floorChoiceBox.getValue().toString().equals("01"))
+                floor = NodeFloor.FIRST;
+            if (floorChoiceBox.getValue().toString().equals("02"))
+                floor = NodeFloor.SECOND;
+            if (floorChoiceBox.getValue().toString().equals("03"))
+                floor = NodeFloor.THIRD;
 
 
-        int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
+            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
 
 
-        nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+            nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+        }
     }
 
     private String formatInt(int nodeTypeCount) {

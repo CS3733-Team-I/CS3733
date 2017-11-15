@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.Path;
 import KioskApplication.utility.NodeFloor;
@@ -35,10 +36,12 @@ public class PathfindingWindowController extends MapWindowController {
 
     @Override
     void mapNodeClicked(Node node) {
+        sidebarController.addNode(node);
     }
 
     @Override
-    void mapFloorChanged(NodeFloor floor) {
-        getMapController().clearMap();
-    }
+    void mapFloorChanged(NodeFloor floor) { }
+
+    @Override
+    void mapEdgeClicked(Edge edge) { }
 }

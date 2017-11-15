@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.utility.NodeFloor;
@@ -44,13 +45,12 @@ public class AdminWindowController extends MapWindowController {
         this.curr_admin_email = "";
     }
 
-
-    public void showNodes(boolean toggle){
-        // toggle the nodes (true means show, false means hide)
+    public void setShowNodes(boolean toggle) {
+        getMapController().setShowNodes(toggle);
     }
 
-    public void showEdges(boolean toggle){
-        // toggle the edges (true means show, false means hide)
+    public void setShowEdges(boolean toggle) {
+        getMapController().setShowEdges(toggle);
     }
 
     public void switchTo(SidebarType sidebar) throws IOException {
@@ -67,7 +67,7 @@ public class AdminWindowController extends MapWindowController {
 
             case SIDEBAR_ADD_NODE:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addNode.fxml"));
-                addNodeController = new AdminAddNodeController(this);
+                addNodeController = new AdminAddNodeController(this, this.getMapController().getCurrentFloor());
                 loader.setController(addNodeController);
                 break;
 
@@ -85,7 +85,7 @@ public class AdminWindowController extends MapWindowController {
 
             case SIDEBAR_EDIT_NODE:
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/editNode.fxml"));
-                editNodeController = new AdminEditNodeController(this);
+                editNodeController = new AdminEditNodeController(this, this.getMapController().getCurrentFloor());
                 loader.setController(editNodeController);
                 break;
 
@@ -124,17 +124,23 @@ public class AdminWindowController extends MapWindowController {
                 if (interpreterRequestController != null) interpreterRequestController.onMapNodeClicked(node);
                 break;
             case SIDEBAR_ADD_EDGE:
-                if (addEdgeController != null) addEdgeController.onMapNodePressed(node);
+                if (addEdgeController != null) addEdgeController.onMapNodeClicked(node);
                 break;
             case SIDEBAR_EDIT_NODE:
-                if (editNodeController != null) editNodeController.onMapNodePressed(node);
+                if (editNodeController != null) editNodeController.onMapNodeClicked(node);
                 break;
         }
     }
 
     @Override
-    void mapFloorChanged(NodeFloor floor) {
-        getMapController().clearMap();
-        getMapController().drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(floor));
+    void mapEdgeClicked(Edge edge) {
+        switch (currentSidebar) {
+            case SIDEBAR_DEL_EDGE:
+                if (deleteEdgeController != null) deleteEdgeController.onMapEdgeClicked(edge);
+                break;
+        }
     }
+
+    @Override
+    void mapFloorChanged(NodeFloor floor) { }
 }

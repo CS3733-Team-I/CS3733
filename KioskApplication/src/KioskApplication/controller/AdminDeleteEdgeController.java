@@ -54,33 +54,9 @@ public class AdminDeleteEdgeController {
     }
 
     int lastChanged = 1;
-    public void onMapNodePressed(Node node){
-        /*
-        if(node1ID.getText() != node.getNodeID() && node2ID.getText() != node.getNodeID()){ // If node is not already one of the ones selected
-            if(node1ID.getText().toString().isEmpty()){
-                node1ID.setText(node.getNodeID());
-            }
-            else if(node2ID.getText().toString().isEmpty()){
-                node2ID.setText(node.getNodeID());
-            }
-            else { // If both already have a node ID filled in
-                // Select last filled one
-                if(lastChanged == 1){ // If 2 was filled more recently
-                    node1ID.setText(node.getNodeID());
-                    lastChanged = 2;
-                }
-                else if(lastChanged == 2){ // If 1 was filled more recently
-                    node2ID.setText(node.getNodeID());
-                    lastChanged = 1;
-                }
-            }
-        }
-        updateEdgeIDonP();
-        */
-    }
+    public void onMapNodePressed(Node node){ }
 
-
-    public void onMapEdgePressed(Edge edge) {
+    public void onMapEdgeClicked(Edge edge) {
         node1ID.setText(edge.getNode1ID());
         node2ID.setText(edge.getNode2ID());
         edgeID.setText(edge.getEdgeID());
@@ -93,17 +69,19 @@ public class AdminDeleteEdgeController {
 
     @FXML
     void onSubmitClicked() throws IOException{
-        // Create Edge
         Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
-        // Check to see if the edge Exists (!!bidirectional!!)
-        if (MapEntity.getInstance().getEdge(node1ID.getText() + "_" + node2ID.getText()) == null && MapEntity.getInstance().getEdge(node2ID.getText() + "_" + node1ID.getText()) == null) {
-            // If not then add edge
-            MapEntity.getInstance().addEdge(edge);
-            System.out.println("Added Edge: " + edge.getEdgeID());
+        Edge edge2 = new Edge(node2ID.getText()+"_"+node1ID.getText(), node2ID.getText(), node1ID.getText());
+
+        if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
+            MapEntity.getInstance().removeEdge(edge.getEdgeID());
+            System.out.println("Removed Edge: " + edge.getEdgeID());
             this.parent.switchTo(SIDEBAR_MENU);
-        }
-        else{
-            System.out.println("Edge already in the database: " + edge.getEdgeID());
+        } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
+            MapEntity.getInstance().removeEdge(edge2.getEdgeID());
+            System.out.println("Removed Edge: " + edge2.getEdgeID());
+            this.parent.switchTo(SIDEBAR_MENU);
+        } else {
+            System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());
         }
     }
 }
