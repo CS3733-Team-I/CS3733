@@ -1,21 +1,19 @@
 package KioskApplication.controller;
 
-import KioskApplication.database.objects.Edge;
-import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
+<<<<<<< HEAD
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
+=======
+>>>>>>> ec03038e7d5e09e76f531e46b9d13fbaea5bb639
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class PathfindingSidebarController {
 
@@ -34,6 +32,10 @@ public class PathfindingSidebarController {
 
     @FXML
     void btGeneratePathPressed() throws IOException {
-        Pathfinder.GeneratePath()
+        MapEntity map = MapEntity.getInstance();
+        Path path = Pathfinder.generatePath(map.getNode(inputStartID.getText()), map.getNode(inputEndID.getText()));
+        pathfindingOutputText.setText(path.toString());
+        parent.displayPathOnMap(path);
     }
 }
+//Two node IDs for testing: IDEPT00503 and IREST00103
