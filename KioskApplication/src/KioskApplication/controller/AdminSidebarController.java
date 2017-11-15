@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
@@ -59,6 +60,15 @@ public class AdminSidebarController {
         System.out.println("Interpreter Request Pressed\n");
 
         this.parent.switchTo(SIDEBAR_INTERPRETER);
+    }
+
+    @FXML
+    void viewRequests() throws IOException {
+        System.out.println("Request Manager Pressed\n");
+
+        this.parent.switchTo(AdminWindowController.SidebarType.SIDEBAR_VIEWREQUEST);
+//        activeRequests.getItems().clear();
+//        activeRequests.getItems().addAll( DatabaseController.getAllRequests());
     }
 
     @FXML

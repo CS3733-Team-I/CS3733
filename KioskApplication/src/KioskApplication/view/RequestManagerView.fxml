@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TitledPane alignment="CENTER" animated="false" layoutX="213.0" prefHeight="500.0" prefWidth="700.0" text="Request Manager" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane layoutX="112.0" layoutY="138.0" prefHeight="455.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button mnemonicParsing="false" text="Complete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-                           <GridPane.margin>
-                              <Insets right="5.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <TextField maxWidth="120.0" minWidth="120.0" prefWidth="120.0" promptText="Request ID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                     </children>
-                  </GridPane>
-               </children>
-            </AnchorPane>
-        </content>
+      <VBox fx:id="requestBox" layoutY="196.0" prefHeight="104.0" prefWidth="200.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="196.0">
+         <children>
+            <ComboBox fx:id="activeRequests" prefWidth="190.0" promptText="Active Requests">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Item1" />
+                        <String fx:value="Item2" />
+                        <String fx:value="Item3" />
+                        <String fx:value="Item4" />
+                        <String fx:value="Item5" />
+                        <String fx:value="Item6" />
+                        <String fx:value="Item7" />
+                        <String fx:value="Item8" />
+                        <String fx:value="Item9" />
+                        <String fx:value="Item10" />
+                    </FXCollections>
+                </items>
+               <VBox.margin>
+                  <Insets left="5.0" top="35.0" />
+               </VBox.margin>
+            </ComboBox>
+         </children>
+      </VBox>
+      <Label layoutX="22.0" layoutY="14.0" text="Request Manager">
          <font>
             <Font size="20.0" />
          </font>
-      </TitledPane>
+      </Label>
+      <Button fx:id="btnComplete" layoutX="29.0" layoutY="406.0" mnemonicParsing="false" onAction="#onCompletePressed" text="Complete Request" />
+      <Button fx:id="btnBack" layoutX="50.0" layoutY="555.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#onBackPressed" text="Back" />
+      <Label fx:id="totalRequests" layoutX="14.0" layoutY="96.0" text="Total Requests:" />
+      <Button fx:id="btnPopReq" layoutX="29.0" layoutY="165.0" mnemonicParsing="false" onAction="#showRequests" text="Populate Requests" />
+      <TextField fx:id="txtID" alignment="CENTER" layoutX="7.0" layoutY="360.0" promptText="Request ID" />
    </children>
 </AnchorPane>
