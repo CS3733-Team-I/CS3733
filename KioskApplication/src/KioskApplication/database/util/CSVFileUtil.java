@@ -16,14 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CSVFileUtil {
-    public static void readNodesCSV(String path) {
-        File file = new File(path);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public static void readNodesCSV(InputStream  in) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         String line;
         Connection conn = null;
@@ -259,18 +253,8 @@ public class CSVFileUtil {
         }
     }
 
-    public static void readEdgesCSV(String path) {
-        File file = new File(path);
-
-        BufferedReader bReader = null;
-        try {
-            bReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            bReader.readLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void readEdgesCSV(InputStream  in) {
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(in));
 
         String line;
         Connection conn = null;
