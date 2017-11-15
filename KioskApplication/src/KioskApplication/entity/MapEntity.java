@@ -54,6 +54,8 @@ public class MapEntity implements IMapEntity {
         return null;
     }
 
+
+
     @Override
     public ArrayList<Node> getAllNodes() {
         ArrayList<Node> allNodes = new ArrayList<>();

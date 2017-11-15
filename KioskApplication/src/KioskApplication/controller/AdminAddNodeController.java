@@ -112,23 +112,19 @@ public class AdminAddNodeController {
     }
 
     private String formatInt(int nodeTypeCount) {
-        if(nodeTypeCount+1 < 10){
-            return "00" + (nodeTypeCount+1);
-        }
-        else if(nodeTypeCount+1 < 100){
-            return "0" + (nodeTypeCount+1);
-        }
-        else if(nodeTypeCount+1 <= 999){
-            return (nodeTypeCount+1) + "";
-        }
-        else {
+
+        if (nodeTypeCount + 1 < 10) {
+            return "00" + (nodeTypeCount + 1);
+        } else if (nodeTypeCount + 1 < 100) {
+            return "0" + (nodeTypeCount + 1);
+        } else if (nodeTypeCount + 1 <= 999) {
+            return (nodeTypeCount + 1) + "";
+        } else {
             return "";
         }
-    }
-
-    public void generateNodeTypeCount(){
 
     }
+
 
     @FXML
     void onBackPressed() throws IOException{
