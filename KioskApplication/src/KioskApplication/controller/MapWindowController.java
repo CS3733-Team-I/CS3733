@@ -1,5 +1,6 @@
 package KioskApplication.controller;
 
+import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.utility.NodeFloor;
 import javafx.fxml.FXML;
@@ -39,5 +40,6 @@ abstract class MapWindowController extends SplitPane {
 
     abstract void mapLocationClicked(double x, double y);
     abstract void mapNodeClicked(Node node);
+    abstract void mapEdgeClicked(Edge edge);
     abstract void mapFloorChanged(NodeFloor floor);
 }

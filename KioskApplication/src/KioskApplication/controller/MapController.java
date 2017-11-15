@@ -39,6 +39,9 @@ public class MapController {
     private NodeFloor currentFloor = NodeFloor.THIRD;
     private HashMap<NodeFloor, Point2D> previousPositions;
 
+    private boolean showNodes = false;
+    private boolean showEdges = false;
+
     public MapController() {
         previousPositions = new HashMap<>();
     }
@@ -47,25 +50,26 @@ public class MapController {
         parent = controller;
     }
 
+    public void setShowNodes(boolean showNodes) {
+        this.showNodes = showNodes;
+
+        this.clearMap();
+        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
+        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+    }
+
+    public void setShowEdges(boolean showEdges) {
+        this.showEdges = showEdges;
+
+        // TODO remove copypasta
+        this.clearMap();
+        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
+        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+    }
+
     public void clearMap() {
         stackPane.getChildren().clear();
         stackPane.getChildren().add(mapView);
-    }
-
-    public void drawEdgesOnMap(List<Edge> edges) {
-        MapEntity mapEntity = MapEntity.getInstance();
-        AnchorPane edgesPane = new AnchorPane();
-        for (Edge e : edges) {
-            Node node1 = mapEntity.getNode(e.getNode1ID());
-            Node node2 = mapEntity.getNode(e.getNode2ID());
-
-            // TODO(jerry) make this more modular, maybe into an FXML file??
-            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-            edgeView.setStroke(Color.PURPLE);
-            edgeView.setStrokeWidth(10);
-            edgesPane.getChildren().add(edgeView);
-        }
-        stackPane.getChildren().add(edgesPane);
     }
 
     public void drawNodesOnMap(List<Node> nodes) {
@@ -74,10 +78,43 @@ public class MapController {
                 javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/KioskApplication/view/NodeView.fxml"));
                 nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
                 nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
+                nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
+                nodeObject.setMouseTransparent(false);
                 stackPane.getChildren().add(nodeObject);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void drawEdgesOnMap(List<Edge> edges) {
+        MapEntity mapEntity = MapEntity.getInstance();
+        AnchorPane edgesPane = new AnchorPane();
+        edgesPane.setMouseTransparent(true);
+        for (Edge e : edges) {
+            Node node1 = mapEntity.getNode(e.getNode1ID());
+            Node node2 = mapEntity.getNode(e.getNode2ID());
+
+            // TODO(jerry) make this more modular, maybe into an FXML file??
+            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
+            edgeView.setStroke(Color.PURPLE);
+            edgeView.setStrokeWidth(10);
+            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
+            edgeView.setMouseTransparent(false);
+            edgesPane.getChildren().add(edgeView);
+        }
+        stackPane.getChildren().add(edgesPane);
+    }
+
+    public void mapEdgeClicked(Edge e) {
+        if (!parent.equals(null)) {
+            parent.mapEdgeClicked(e);
+        }
+    }
+
+    public void mapNodeClicked(Node n) {
+        if (!parent.equals(null)) {
+            parent.mapNodeClicked(n);
         }
     }
 
@@ -96,7 +133,7 @@ public class MapController {
         String floorImageURL = "";
         switch (floor) {
             case LOWERLEVEL_2:
-                floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerleve21.png").toString();
+                floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerlevel2.png").toString();
                 break;
             case LOWERLEVEL_1:
                 floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerlevel1.png").toString();
@@ -188,6 +225,9 @@ public class MapController {
     protected void floorSelected() {
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
+
+        setShowNodes(showNodes);
+        setShowEdges(showEdges);
 
         parent.mapFloorChanged(selectedFloor);
     }

@@ -14,31 +14,67 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.SIDE
 
 public class AdminAddNodeController {
     AdminWindowController parent;
+    NodeFloor floor;
 
-    AdminAddNodeController(AdminWindowController parent) {
+    AdminAddNodeController(AdminWindowController parent, NodeFloor floor) {
         this.parent = parent;
+        this.floor = floor;
     }
 
-    @FXML private TextField xcoord;
+    @FXML
+    private TextField xcoord;
 
-    @FXML private TextField ycoord;
+    @FXML
+    private TextField ycoord;
 
-    @FXML private TextField nodeID;
+    @FXML
+    private TextField nodeID;
 
-    @FXML private ChoiceBox floorChoiceBox;
+    @FXML
+    private ChoiceBox floorChoiceBox;
 
-    @FXML private ChoiceBox buildingChoiceBox;
+    @FXML
+    private ChoiceBox buildingChoiceBox;
 
-    @FXML private ChoiceBox nodeTypeChoiceBox;
+    @FXML
+    private ChoiceBox nodeTypeChoiceBox;
 
-    @FXML private TextField lname;
+    @FXML
+    private TextField lname;
 
-    @FXML private TextField sname;
+    @FXML
+    private TextField sname;
 
-    @FXML private ChoiceBox teamAssignedChoiceBox;
+    @FXML
+    private ChoiceBox teamAssignedChoiceBox;
 
-    @FXML private Label errorMsg;
+    @FXML
+    private Label errorMsg;
 
+    @FXML
+    protected void initialize() throws IOException {
+        System.out.println(floor.ordinal());
+        floorChoiceBox.setValue(getFloorTxt());
+    }
+
+    public String getFloorTxt(){
+        switch(floor.ordinal()){
+            case 0:
+                return ("L2");
+            case 1:
+                return ("L1");
+            case 2:
+                return ("0G");
+            case 3:
+                return ("01");
+            case 4:
+                return ("02");
+            case 5:
+                return ("03");
+            default:
+                return ("00");
+        }
+    }
 
     public void setCoords(double x, double y){
         System.out.println("setCoords");

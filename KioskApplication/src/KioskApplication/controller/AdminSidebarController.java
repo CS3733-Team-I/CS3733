@@ -3,6 +3,7 @@ package KioskApplication.controller;
 import KioskApplication.database.DatabaseController;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
+import KioskApplication.utility.NodeFloor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,20 +31,25 @@ public class AdminSidebarController {
 
 
     AdminWindowController parent;
+
     private boolean isDisplay;
-    @FXML
-    Label AdminInfo;
-    @FXML
-    Button infoButton;
 
+    @FXML Label AdminInfo;
+    @FXML Button infoButton;
     @FXML private CheckBox showNodes;
-
     @FXML private CheckBox showEdges;
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
         this.isDisplay = false;
     }
+
+    @FXML
+    protected void initialize() {
+        parent.setShowNodes(showNodes.isSelected());
+        parent.setShowEdges(showEdges.isSelected());
+    }
+
     @FXML
     void displayAdminInfo() {
         infoButton.setText("Display My Information");
@@ -63,13 +69,13 @@ public class AdminSidebarController {
     void showNodes(){
         boolean isS = showNodes.isSelected();
         System.out.println(isS);
-        this.parent.showNodes(isS);
+        this.parent.setShowNodes(isS);
     }
 
     @FXML
     void showEdges(){
         boolean isS = showEdges.isSelected();
-        this.parent.showEdges(isS);
+        this.parent.setShowEdges(isS);
     }
 
     @FXML
