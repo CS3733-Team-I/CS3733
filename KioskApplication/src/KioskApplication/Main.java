@@ -21,7 +21,7 @@ public class Main extends Application {
         MapEntity.getInstance().readAllFromDatabase();
 
         Parent root = FXMLLoader.load(getClass().getResource("/KioskApplication/view/MainWindowView.fxml"));
-        primaryStage.setTitle("UI Framework");
+        primaryStage.setTitle("Iteration 1");
 
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();

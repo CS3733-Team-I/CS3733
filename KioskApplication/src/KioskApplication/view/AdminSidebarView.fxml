@@ -13,6 +13,6 @@
       <Button mnemonicParsing="false" onAction="#onSaveClicked" text="Save CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onAddEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Add Edge" />
       <Label fx:id="AdminInfo" layoutY="508.0" prefHeight="27.0" prefWidth="200.0" />
-      <Button layoutX="21.0" layoutY="481.0" mnemonicParsing="false" onAction="#displayAdminInfo" text="Display My Information" />
+      <Button fx:id="infoButton" layoutX="21.0" layoutY="481.0" mnemonicParsing="false" onAction="#displayAdminInfo" text="Display My Information" />
    </children>
 </AnchorPane>
