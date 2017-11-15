@@ -65,10 +65,14 @@ public class AdminSidebarController {
     void onSaveClicked() {
         try {
             URI mapINodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapInodes.csv").toString());
-            CSVFileUtil.writeNodesCSV(mapINodes.getPath());
+            CSVFileUtil.writeNodesCSV(mapINodes.getPath(), false);
+
+            URI mapWNodes = new URI(getClass().getResource("/KioskApplication/resources/csv/MapWnodes.csv").toString());
+            CSVFileUtil.writeNodesCSV(mapWNodes.getPath(), true);
+
 
             URI mapIEdges = new URI(getClass().getResource("/KioskApplication/resources/csv/MapIedges.csv").toString());
-            CSVFileUtil.writeEdgesCSV(mapINodes.getPath());
+            CSVFileUtil.writeEdgesCSV(mapIEdges.getPath(), false);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
