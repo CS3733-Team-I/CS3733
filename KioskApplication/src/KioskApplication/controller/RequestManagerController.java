@@ -3,12 +3,9 @@ package KioskApplication.controller;
 import KioskApplication.database.DatabaseController;
 import KioskApplication.entity.Request;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -65,9 +62,5 @@ public class RequestManagerController {
         DatabaseController.deleteRequest(ID);
         System.out.println("Complete Pressed \n");
     }
-
-
-
-
 
 }
