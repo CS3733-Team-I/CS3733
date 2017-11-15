@@ -5,21 +5,24 @@ import KioskApplication.database.objects.Node;
 
 import java.util.LinkedList;
 
-public class StartNode extends PathfindingNode {
+public class StartNode extends PathfinderNode {
+
 
     public StartNode(Node node) {
         super(node);
     }
 
     @Override
-    //TODO: recursive method to build a path from this node, its parent, etc. back to the start.
+    //Recursive method to build a path from this node, its parent, etc. back to the start.
     public LinkedList<Edge> buildPath(){
-        return new LinkedList<Edge>();
+        //StartNode should be the final recursion, so create a new path that will form the basis of the assembled path.
+        return new LinkedList<>();
     }
 
     @Override
-    //Cost to reach this node; this is the start, so cost is zero.
-    public int calculatePreviousCost(){
-        return 0;
+    //Calculate estimated cost to end.
+    public void calculateCost(PathfinderNode endNode){
+        this.previousCost = 0;  //first node, so no previous cost.
+        this.totalCost = this.heuristic(endNode);
     }
 }

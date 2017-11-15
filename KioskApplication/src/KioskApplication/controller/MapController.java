@@ -22,6 +22,7 @@ import javafx.scene.shape.Line;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MapController {
@@ -186,6 +187,19 @@ public class MapController {
     @FXML
     protected void onMapClicked(MouseEvent event) {
         if (!parent.equals(null)) {
+            // Check if clicked location is a node
+            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
+            for (Node node : floorNodes) {
+                Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
+                                                      30, 30); // TODO magic numbers
+                Point2D clickPosition = new Point2D(event.getX(), event.getY());
+
+                if (nodeArea.contains(clickPosition)) {
+                    parent.mapNodeClicked(node);
+                    return;
+                }
+            }
+
             // Otherwise return the x,y coordinates
             parent.mapLocationClicked(event.getX(), event.getY());
         }

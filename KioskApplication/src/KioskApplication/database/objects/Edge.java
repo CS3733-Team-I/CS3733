@@ -17,6 +17,7 @@ public class Edge {
 
     @Override
     public boolean equals(Object obj) {
+        if(obj == null) return false;
         if (obj.getClass() == this.getClass()) {
             Edge other = (Edge)obj;
             return (edgeID.equals(other.getEdgeID()) &&

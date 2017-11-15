@@ -54,6 +54,8 @@ public class Node {
 
     @Override
     public boolean equals(Object obj) {
+        if(obj == null) return false;
+
         if (obj.getClass() == this.getClass()) {
             Node other = (Node)obj;
             return (nodeID.equals(((Node) obj).getNodeID()) &&
