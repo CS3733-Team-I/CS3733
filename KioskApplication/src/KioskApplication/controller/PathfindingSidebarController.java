@@ -4,6 +4,7 @@ import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
+import KioskApplication.pathfinder.Pathfinder;
 import KioskApplication.utility.NodeBuilding;
 import KioskApplication.utility.NodeFloor;
 import KioskApplication.utility.NodeType;
@@ -29,8 +30,10 @@ public class PathfindingSidebarController {
         this.parent = parent;
     }
 
+
+
     @FXML
     void btGeneratePathPressed() throws IOException {
-        pathfindingOutputText.setText(inputStartID.getText()+inputEndID.getText());
+        Pathfinder.GeneratePath()
     }
 }
