@@ -3,6 +3,7 @@ package KioskApplication.controller;
 import KioskApplication.database.util.CSVFileUtil;
 import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,9 +14,16 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 public class AdminSidebarController {
 
     AdminWindowController parent;
+    @FXML
+    Label AdminInfo;
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
+    }
+    @FXML
+    void displayAdminInfo() {
+        System.out.println(parent.curr_admin_email);
+        this.AdminInfo.setText(parent.curr_admin_email);
     }
 
     @FXML
