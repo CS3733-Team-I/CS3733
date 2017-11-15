@@ -45,6 +45,14 @@ public class AdminAddEdgeController {
             edgeID.setText("Enter Nodes");
     }
 
+    void updateEdgeIDonP(){
+        System.out.println("Node1: " + (node1ID.getText().toString().isEmpty()) + " Node2: " + node2ID.getText()); // ?
+        if(!node1ID.getText().toString().isEmpty() && !node2ID.getText().toString().isEmpty()) // ?
+            edgeID.setText(node1ID.getText() + "_" + node2ID.getText());
+        else
+            edgeID.setText("Enter Nodes");
+    }
+
     int lastChanged = 1;
     public void onMapNodePressed(Node node){
         if(node1ID.getText() != node.getNodeID() && node2ID.getText() != node.getNodeID()){ // If node is not already one of the ones selected
@@ -66,7 +74,7 @@ public class AdminAddEdgeController {
                 }
             }
         }
-
+        updateEdgeIDonP();
     }
 
     @FXML
