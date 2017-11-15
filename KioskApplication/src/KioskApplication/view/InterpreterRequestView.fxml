@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="178.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
     <children>
           <Label fx:id="requestTitle" layoutX="15.0" text="Interpreter Request" textAlignment="CENTER">
               <padding>
@@ -20,10 +20,10 @@
                   <Font name="System Bold" size="16.0" />
               </font>
           </Label>
-          <Button fx:id="btnSubmit" layoutX="26.0" layoutY="541.0" mnemonicParsing="false" onAction="#addRequest" text="Submit" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="98.0" />
+          <Button fx:id="btnSubmit" layoutX="19.0" layoutY="478.0" mnemonicParsing="false" onAction="#addRequest" prefHeight="27.0" prefWidth="87.0" text="Submit" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="72.0" />
           <Label fx:id="lbLocation" layoutX="15.0" layoutY="203.0" text="Room:" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="128.0" AnchorPane.topAnchor="203.0" />
           <TextField fx:id="txtLocation" layoutX="16.0" layoutY="220.0" text="My Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0" />
-      <Button fx:id="btnCancel" layoutX="96.0" layoutY="541.0" mnemonicParsing="false" onAction="#onCancelPressed" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="96.0" AnchorPane.rightAnchor="30.0" />
+      <Button fx:id="btnCancel" layoutX="20.0" layoutY="539.0" mnemonicParsing="false" onAction="#onCancelPressed" prefHeight="27.0" prefWidth="87.0" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="71.0" />
       <ChoiceBox fx:id="langMenu" layoutX="15.0" layoutY="165.0" prefWidth="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="165.0">
          <items>
              <FXCollections fx:factory="observableArrayList">

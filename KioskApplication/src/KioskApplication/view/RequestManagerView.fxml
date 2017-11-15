@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ComboBox fx:id="activeRequests" prefWidth="190.0" promptText="Active Requests" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
           <items>
@@ -32,10 +32,10 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="btnComplete" layoutX="73.0" layoutY="394.0" mnemonicParsing="false" onAction="#onCompletePressed" text="Complete Request" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="400.0" />
+      <Button fx:id="btnComplete" layoutX="34.0" layoutY="400.0" mnemonicParsing="false" onAction="#onCompletePressed" text="Complete Request" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="400.0" />
       <Button fx:id="btnBack" layoutX="50.0" layoutY="555.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#onBackPressed" text="Back" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
       <Label fx:id="totalRequests" layoutX="14.0" layoutY="96.0" text="Total Requests:" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0" />
-      <Button fx:id="btnPopReq" layoutX="130.0" layoutY="137.0" mnemonicParsing="false" onAction="#showRequests" text="Refresh" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
+      <Button fx:id="btnPopReq" layoutX="74.0" layoutY="137.0" mnemonicParsing="false" onAction="#showRequests" prefHeight="27.0" prefWidth="116.0" text="Refresh" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
       <TextField fx:id="txtID" alignment="CENTER" layoutX="21.0" layoutY="362.0" promptText="Request ID" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="365.0" />
    </children>
 </AnchorPane>
