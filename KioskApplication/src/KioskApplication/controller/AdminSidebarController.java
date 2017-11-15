@@ -22,22 +22,16 @@ import javafx.scene.control.TextField;
 import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 
 public class AdminSidebarController {
-
-    @FXML
-    private MenuButton requestMenu;
-
-    @FXML
-    private MenuItem interpreterSelect;
-
+    @FXML private Label AdminInfo;
+    @FXML private Button infoButton;
+    @FXML private CheckBox showNodes;
+    @FXML private CheckBox showEdges;
+    @FXML private MenuButton requestMenu;
+    @FXML private MenuItem interpreterSelect;
 
     AdminWindowController parent;
 
     private boolean isDisplay;
-
-    @FXML Label AdminInfo;
-    @FXML Button infoButton;
-    @FXML private CheckBox showNodes;
-    @FXML private CheckBox showEdges;
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
@@ -114,8 +108,6 @@ public class AdminSidebarController {
         System.out.println("Request Manager Pressed\n");
 
         this.parent.switchTo(AdminWindowController.SidebarType.SIDEBAR_VIEWREQUEST);
-//        activeRequests.getItems().clear();
-//        activeRequests.getItems().addAll( DatabaseController.getAllRequests());
     }
 
     @FXML
@@ -131,6 +123,9 @@ public class AdminSidebarController {
             CSVFileUtil.readEdgesCSV(mapIEdges.getPath());
 
             MapEntity.getInstance().readAllFromDatabase();
+            
+            parent.setShowNodes(showNodes.isSelected());
+            parent.setShowEdges(showEdges.isSelected());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
