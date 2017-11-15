@@ -5,6 +5,7 @@ import KioskApplication.entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +21,10 @@ public class AdminSidebarController {
     Label AdminInfo;
     @FXML
     Button infoButton;
+
+    @FXML private CheckBox showNodes;
+
+    @FXML private CheckBox showEdges;
 
     AdminSidebarController(AdminWindowController parent) {
         this.parent = parent;
@@ -41,6 +46,19 @@ public class AdminSidebarController {
     }
 
     @FXML
+    void showNodes(){
+        boolean isS = showNodes.isSelected();
+        System.out.println(isS);
+        this.parent.showNodes(isS);
+    }
+
+    @FXML
+    void showEdges(){
+        boolean isS = showEdges.isSelected();
+        this.parent.showEdges(isS);
+    }
+
+    @FXML
     void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
 
@@ -57,6 +75,11 @@ public class AdminSidebarController {
     @FXML
     void onAddEdgePressed() throws IOException{
         this.parent.switchTo(SIDEBAR_ADD_EDGE);
+    }
+
+    @FXML
+    void onDeleteEdgePressed() throws IOException{
+        this.parent.switchTo(SIDEBAR_DEL_EDGE);
     }
 
     @FXML

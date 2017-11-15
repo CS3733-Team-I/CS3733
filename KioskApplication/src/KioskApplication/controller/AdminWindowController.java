@@ -17,7 +17,7 @@ public class AdminWindowController extends MapWindowController {
         SIDEBAR_ADD_NODE,
         SIDEBAR_EDIT_NODE,
         SIDEBAR_ADD_EDGE,
-        SIDEBAR_EDIT_EDGE,
+        SIDEBAR_DEL_EDGE,
         SIDEBAR_MENU,
         SIDEBAR_INTERPRETER
     }
@@ -25,6 +25,7 @@ public class AdminWindowController extends MapWindowController {
     AdminAddNodeController addNodeController = null;
     AdminEditNodeController editNodeController = null;
     AdminAddEdgeController addEdgeController = null;
+    AdminDeleteEdgeController deleteEdgeController = null;
     InterpreterRequestController interpreterRequestController = null;
 
     SidebarType currentSidebar;
@@ -39,6 +40,14 @@ public class AdminWindowController extends MapWindowController {
 
     public void reset() {
         this.curr_admin_email = "";
+    }
+
+    public void showNodes(boolean toggle){
+        // toggle the nodes (true means show, false means hide)
+    }
+
+    public void showEdges(boolean toggle){
+        // toggle the edges (true means show, false means hide)
     }
 
     public void switchTo(SidebarType sidebar) throws IOException {
@@ -63,6 +72,12 @@ public class AdminWindowController extends MapWindowController {
                 loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/addEdge.fxml"));
                 addEdgeController = new AdminAddEdgeController(this);
                 loader.setController(addEdgeController);
+                break;
+
+            case SIDEBAR_DEL_EDGE:
+                loader = new FXMLLoader(getClass().getResource("/KioskApplication/view/deleteEdge.fxml"));
+                deleteEdgeController = new AdminDeleteEdgeController(this);
+                loader.setController(deleteEdgeController);
                 break;
 
             case SIDEBAR_EDIT_NODE:
