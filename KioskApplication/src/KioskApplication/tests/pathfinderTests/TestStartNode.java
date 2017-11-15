@@ -3,10 +3,8 @@ package KioskApplication.tests.pathfinderTests;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.entity.MapEntity;
-import KioskApplication.pathfinder.PathfindingNode;
 import KioskApplication.pathfinder.StartNode;
 import KioskApplication.utility.NodeFloor;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -83,19 +83,19 @@ public class Pathfinder {
             throw new PathfinderException("No defined end node, please define valid end location");
         }
         StartNode startNode = new StartNode(startingNode);
-        PathfindingNode endNode = new PathfindingNode(endingNode);
+        PathfinderNode endNode = new PathfinderNode(endingNode);
 
         // create lists for explored, frontier and unexplored nodes
-        HashMap<String, PathfindingNode> exploredNodes = new HashMap<>();
-        HashMap<String, PathfindingNode> frontierNodes = new HashMap<>();
+        HashMap<String, PathfinderNode> exploredNodes = new HashMap<>();
+        HashMap<String, PathfinderNode> frontierNodes = new HashMap<>();
 
         //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
         // list of unexplored nodes initialized as all nodes
         LinkedList<Node> allNodes = map.getAllNodes();
-        HashMap<String, PathfindingNode> unexploredNodes = new HashMap<>();
+        HashMap<String, PathfinderNode> unexploredNodes = new HashMap<>();
         for(Node node : allNodes) {
             if(!unexploredNodes.containsKey(node.getNodeID()))
-                unexploredNodes.put(node.getNodeID(), new PathfindingNode(node));
+                unexploredNodes.put(node.getNodeID(), new PathfinderNode(node));
         }
 
         //TODO: add proper handling for start and end nodes on different floors; for now, just returns exception
@@ -113,7 +113,7 @@ public class Pathfinder {
         startNode.prepForFrontier(null, endNode);
         frontierNodes.put(startNode.getNode().getNodeID(), startNode);
         // initialize lowest cost node
-        PathfindingNode lowestCost = null;
+        PathfinderNode lowestCost = null;
         // while loop for generating path of connecting nodes
         //TODO: add actual loop logic
 
@@ -125,14 +125,14 @@ public class Pathfinder {
 
             // initialize lowest cost node
             // TODO hack
-            for (PathfindingNode node : frontierNodes.values()) {
+            for (PathfinderNode node : frontierNodes.values()) {
                 lowestCost = node;
                 break;
             }
 
             // go through all nodes in list and find the one with the lowest total cost and replace that as
             // the lowestCost node
-            for(Map.Entry<String, PathfindingNode> entry : frontierNodes.entrySet()){
+            for(Map.Entry<String, PathfinderNode> entry : frontierNodes.entrySet()){
                 if(entry.getValue().getTotalCost() < lowestCost.getTotalCost())
                     lowestCost = entry.getValue();
             }
@@ -154,7 +154,7 @@ public class Pathfinder {
             }
         }
 
-        PathfindingNode lastNode = lowestCost;
+        PathfinderNode lastNode = lowestCost;
 
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 

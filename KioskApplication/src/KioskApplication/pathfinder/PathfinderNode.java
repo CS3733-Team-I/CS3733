@@ -6,19 +6,19 @@ import KioskApplication.entity.MapEntity;
 
 import java.util.LinkedList;
 
-public class PathfindingNode {
+public class PathfinderNode {
 
     protected Node node;
     protected int previousCost;
     protected int totalCost;
-    protected PathfindingNode parentNode;
+    protected PathfinderNode parentNode;
 
-    public PathfindingNode(Node node) {
+    public PathfinderNode(Node node) {
         this.node = node;
     }
 
     //Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
-    public void prepForFrontier(PathfindingNode parent, PathfindingNode endNode){
+    public void prepForFrontier(PathfinderNode parent, PathfinderNode endNode){
         this.parentNode = parent;
         this.calculateCost(endNode);
     }
@@ -34,21 +34,21 @@ public class PathfindingNode {
     }
 
     //estimate the remaining cost to reach the end node from this node.  Currently uses straight-line distance.
-    public int heuristic(PathfindingNode node){
+    public int heuristic(PathfinderNode node){
         double xDistance = node.getNode().getXcoord() - this.node.getXcoord();
         double yDistance = node.getNode().getYcoord() - this.node.getYcoord();
-        int straightLine = (int) Math.pow((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)), -2);
-        return straightLine;
+        int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        return straightLineDistance;
     }
 
     //Calculates the cost to reach this node and the estimated total cost from here to the end.
-    public void calculateCost(PathfindingNode endNode){
+    public void calculateCost(PathfinderNode endNode){
         //Assuming all edges are straight lines, the cost of the edge from the parent node should be the straight-line
         //distance between the two.
         int xDistance = Math.abs(this.node.getXcoord() - this.parentNode.getNode().getXcoord());
         int yDistance = Math.abs(this.node.getYcoord() - this.parentNode.getNode().getYcoord());
         //Calculate distance with Pythagorean theorem
-        int straightLineDistance = (int) Math.pow((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)), -2);
+        int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
         //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
         //node to here.
         this.previousCost = straightLineDistance + this.parentNode.getPreviousCost();
@@ -68,7 +68,7 @@ public class PathfindingNode {
         return totalCost;
     }
 
-    public PathfindingNode getParentNode() {
+    public PathfinderNode getParentNode() {
         return parentNode;
     }
 }

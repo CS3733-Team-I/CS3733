@@ -5,7 +5,7 @@ import KioskApplication.database.objects.Node;
 
 import java.util.LinkedList;
 
-public class StartNode extends PathfindingNode {
+public class StartNode extends PathfinderNode {
 
 
     public StartNode(Node node) {
@@ -23,7 +23,7 @@ public class StartNode extends PathfindingNode {
 
     @Override
     //Calculate estimated cost to end.
-    public void calculateCost(PathfindingNode endNode){
+    public void calculateCost(PathfinderNode endNode){
         this.previousCost = 0;  //first node, so no previous cost.
         this.totalCost = this.heuristic(endNode);
     }
