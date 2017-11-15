@@ -1,13 +1,11 @@
 package KioskApplication.controller;
 
-import KioskApplication.entity.InterpreterRequest;
+import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Node;
-import KioskApplication.entity.MapEntity;
+import KioskApplication.entity.InterpreterRequest;
+import KioskApplication.database.connection.Connector;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javafx.event.ActionEvent;
 
@@ -35,13 +33,8 @@ public class InterpreterRequestController {
     private TextField txtLocation;
 
     @FXML
-    private MenuButton langSelect;
+    private ChoiceBox langMenu;
 
-    @FXML
-    private MenuItem spanish;
-
-    @FXML
-    private MenuItem chinese;
 
     @FXML
     void onInterpreterPressed() throws IOException {
@@ -58,39 +51,41 @@ public class InterpreterRequestController {
     }
 
     @FXML
-    public void addRequest(){
-        btnSubmit.setOnAction(e -> sendRequest(e));
-    }
-
-    @FXML
-    public InterpreterRequest sendRequest(ActionEvent e){
+    public void addRequest() throws IOException {
+        int interpID;
         String location = txtLocation.getText();
-        //default should be "Current Location"
 
-        Node nodeLocation; //store location here
+        //sets nodeLocation to default my location
+        Node nodeLocation = DatabaseController.getNode(location);
 
-        //ArrayList<Node> nodes = MapEntity.getAllNodes();
-//        for(int i=0; i<nodes.size(); i++){
-//            if(nodes.longName.equals(location) || nodes.shortName.equls(location)){
-//                return nodes.get(i); //this line or next line?
-//                nodeLocation = nodes.get(i);
-//            }
-//        }
-        //find the node with the same location name
         String language = "None";
-        if(langSelect.getItems()==spanish){
+        if(langMenu.getValue().toString().equals("Spanish")){
             language = "Spanish";
-        }else if(langSelect.getItems()==chinese) {
+        }else if(langMenu.getValue().toString().equals("Chinese")) {
             language = "Chinese";
         }
 
-        String employee; //get from login information
+        //Finds current admin that is logged in
+        String adminEmail = parent.curr_admin_email;
 
-        /*creates the request object
-        InterpreterRequest newRequest = new InterpreterRequest(nodeLocation,employee, language);
-        return newRequest;
-        */
-        System.out.println("location: " + location + "language: " + language);
-        return null;
+        if(DatabaseController.getAllInterpreterRequests().isEmpty()){
+            interpID = 0;
+        }else{
+            interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
+        }
+
+
+        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+
+        //Adds the Interpreter request to the database
+        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+        System.out.println(DatabaseController.getAllInterpreterRequests());
+
+        this.parent.switchTo(SIDEBAR_MENU);
+    }
+
+    public void onMapNodeClicked(Node n) {
+        txtLocation.setText(n.getNodeID());
     }
 }

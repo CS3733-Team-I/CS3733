@@ -16,4 +16,5 @@ public class Administrator {
     public boolean login_check(Administrator A) {
         return Email.equals(A.Email) && Password.equals(A.Password);
     }
+
 }
