@@ -5,6 +5,7 @@ import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 public class PathfindingSidebarController {
 
     @FXML VBox waypointListVbox;
+    @FXML private CheckBox showNodes;
 
     PathfindingWindowController parent = null;
 
@@ -36,6 +38,13 @@ public class PathfindingSidebarController {
     }
 
     @FXML
+    void showNodes(){
+        boolean isS = showNodes.isSelected();
+        System.out.println(isS);
+        this.parent.setShowNodes(isS);
+    }
+
+    @FXML
     void onResetPressed() {
         currentNodes.clear();
         waypointListVbox.getChildren().clear();
@@ -52,6 +61,11 @@ public class PathfindingSidebarController {
 
             currentNodes.clear();
         }
+    }
+
+    @FXML
+    void btClearPathPressed() throws IOException {
+        parent.ClearPathOnMap();
     }
 }
 //Two node IDs for testing: IDEPT00503 and IREST00103

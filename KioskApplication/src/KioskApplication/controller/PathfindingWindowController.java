@@ -29,6 +29,14 @@ public class PathfindingWindowController extends MapWindowController {
         getMapController().drawPath(path);
     }
 
+    public void setShowNodes(boolean toggle) {
+        getMapController().setShowNodes(toggle);
+    }
+
+    void ClearPathOnMap() throws IOException {
+        getMapController().clearPath();
+    }
+
     @Override
     void mapLocationClicked(double x, double y) {
         System.out.println(String.format("pathfinder Map Clicked: %f %f\n", x, y));
