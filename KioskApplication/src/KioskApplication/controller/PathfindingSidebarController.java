@@ -18,7 +18,6 @@ import java.util.List;
 
 public class PathfindingSidebarController {
 
-    @FXML TextField tb1;
     @FXML TextField inputStartID;
     @FXML TextField inputEndID;
 
@@ -28,11 +27,6 @@ public class PathfindingSidebarController {
 
     PathfindingSidebarController(PathfindingWindowController parent) {
         this.parent = parent;
-    }
-
-    @FXML
-    void GoPressed() {
-        System.out.println(String.format("Search input: %s\n", tb1.getText()));
     }
 
     @FXML
