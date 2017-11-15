@@ -4,6 +4,7 @@ import KioskApplication.database.DatabaseController;
 import KioskApplication.database.objects.Edge;
 import KioskApplication.database.objects.Node;
 import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,14 @@ public class MapEntity implements IMapEntity {
     }
 
     @Override
+    public void editNode(Node n) {
+        NodeFloor f = n.getFloor();
+        if(floorExists(f)) {
+            floors.get(f).editNode(n);
+        }
+    }
+
+    @Override
     public Node getNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
             Node thisNode = floors.get(floor).getNode(s);
@@ -53,6 +62,8 @@ public class MapEntity implements IMapEntity {
         }
         return null;
     }
+
+
 
     @Override
     public LinkedList<Node> getAllNodes() {
@@ -66,8 +77,16 @@ public class MapEntity implements IMapEntity {
     }
 
     public LinkedList<Node> getNodesOnFloor(NodeFloor floor) {
-        return floors.get(floor).getAllNodes();
+        if (floors.containsKey(floor))
+            return floors.get(floor).getAllNodes();
+        else
+            return new LinkedList<>();
     }
+
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
+        return DatabaseController.getNodeTypeCount(nodeType, floor, teamAssigned);
+    }
+
 
     @Override
     public void removeNode(String s) {
@@ -81,6 +100,11 @@ public class MapEntity implements IMapEntity {
     public void addEdge(Edge e) {
         edges.put(e.getEdgeID(),e);
         DatabaseController.addEdge(e);
+    }
+
+    public void editEdge(Edge e) {
+        edges.put(e.getEdgeID(), e);
+        DatabaseController.updateEdge(e);
     }
 
     public Edge getEdge(String s) {

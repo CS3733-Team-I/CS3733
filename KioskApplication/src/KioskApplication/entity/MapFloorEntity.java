@@ -25,6 +25,12 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
+    public void editNode(Node n) {
+        nodes.put(n.getNodeID(), n);
+        DatabaseController.updateNode(n);
+    }
+
+    @Override
     public Node getNode(String s) {
         // Load node from local data
         Node node = nodes.get(s);

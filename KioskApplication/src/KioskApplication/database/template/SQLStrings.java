@@ -36,6 +36,11 @@ public class SQLStrings {
             " employee VARCHAR(20) NOT NULL" +
             ")";
 
+    public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
+    public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
+    public static final String DROP_REQUEST_TABLE = "DROP TABLE t_requests";
+    public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
+
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
     public static final String EDGE_INSERT = "insert into t_edges values(?, ?, ?)";
@@ -45,10 +50,11 @@ public class SQLStrings {
     public static final String EDGE_SELECT_ALL = "select * from t_edges";
 
     public static final String NODE_INSERT = "insert into t_nodes values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where edgeID=?";
+    public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where nodeID=?";
     public static final String NODE_SELECT = "SELECT * FROM t_nodes where nodeID=?";
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
+    public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
 
     public static final String REQUEST_INSERT = "insert into t_requests values(?, ?, ?)";
     public static final String REQUEST_UPDATE = "update t_requests set locationNode=?, set employee=? where requestID=?";
