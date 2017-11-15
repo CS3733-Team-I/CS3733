@@ -151,7 +151,8 @@ public class MapEntity implements IMapEntity {
     public Edge getConnectingEdge(Node node1, Node node2){
         ArrayList<Edge> node1Edges = getEdges(node1);
         for(Edge edge: node1Edges){
-            if(edge.getNode1ID().equals(node2.getNodeID()) || edge.getNode2ID().equals(node2.getNodeID()))
+            if((edge.getNode1ID().equals(node1.getNodeID()) && (edge.getNode2ID().equals(node2.getNodeID()))) ||
+               (edge.getNode1ID().equals(node2.getNodeID()) && (edge.getNode2ID().equals(node1.getNodeID())))    )
                 return edge;
         }
         return null;
