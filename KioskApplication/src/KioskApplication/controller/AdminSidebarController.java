@@ -16,14 +16,12 @@ import static KioskApplication.controller.AdminWindowController.SidebarType.*;
 public class AdminSidebarController {
 
     AdminWindowController parent;
+
     private boolean isDisplay;
-    @FXML
-    Label AdminInfo;
-    @FXML
-    Button infoButton;
 
+    @FXML Label AdminInfo;
+    @FXML Button infoButton;
     @FXML private CheckBox showNodes;
-
     @FXML private CheckBox showEdges;
 
     AdminSidebarController(AdminWindowController parent) {
