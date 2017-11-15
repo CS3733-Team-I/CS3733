@@ -5,6 +5,7 @@ import KioskApplication.entity.MapEntity;
 import KioskApplication.entity.Path;
 import KioskApplication.pathfinder.Pathfinder;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 public class PathfindingSidebarController {
 
     @FXML VBox waypointListVbox;
+    @FXML private CheckBox showNodes;
 
     PathfindingWindowController parent = null;
 
@@ -33,6 +35,13 @@ public class PathfindingSidebarController {
             nodeNameTextField.setEditable(false);
             waypointListVbox.getChildren().add(nodeNameTextField);
         }
+    }
+
+    @FXML
+    void showNodes(){
+        boolean isS = showNodes.isSelected();
+        System.out.println(isS);
+        this.parent.setShowNodes(isS);
     }
 
     @FXML
