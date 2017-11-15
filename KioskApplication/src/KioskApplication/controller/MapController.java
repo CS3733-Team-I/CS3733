@@ -89,6 +89,7 @@ public class MapController {
     public void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
         AnchorPane edgesPane = new AnchorPane();
+        edgesPane.setMouseTransparent(true);
         for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
@@ -211,7 +212,8 @@ public class MapController {
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
 
-        clearMap(); // TODO do we always want to do this?? maybe delegate to parent controllers
+        setShowNodes(showNodes);
+        setShowEdges(showEdges);
 
         parent.mapFloorChanged(selectedFloor);
     }
