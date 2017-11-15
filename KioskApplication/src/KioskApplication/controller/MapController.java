@@ -133,7 +133,7 @@ public class MapController {
         String floorImageURL = "";
         switch (floor) {
             case LOWERLEVEL_2:
-                floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerleve21.png").toString();
+                floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerlevel2.png").toString();
                 break;
             case LOWERLEVEL_1:
                 floorImageURL = getClass().getResource("/KioskApplication/resources/images/00_thelowerlevel1.png").toString();
