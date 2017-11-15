@@ -14,16 +14,16 @@
       <Button mnemonicParsing="false" onAction="#onReadClicked" text="Read CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
       <Button mnemonicParsing="false" onAction="#onSaveClicked" text="Save CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
       <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onAddEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Add Edge" />
-      <MenuButton fx:id="requestMenu" layoutX="28.0" layoutY="202.0" mnemonicParsing="false" text="Request Service">
+      <MenuButton fx:id="requestMenu" layoutX="28.0" layoutY="246.0" mnemonicParsing="false" text="Request Service">
         <items>
           <MenuItem fx:id="interpreterSelect" mnemonicParsing="false" onAction="#onInterpreterPressed" text="Interpreter" />
         </items>
       </MenuButton>
-      <Button fx:id="btnManager" layoutX="29.0" layoutY="255.0" mnemonicParsing="false" onAction="#viewRequests" text="Requests Manager" />
+      <Button fx:id="btnManager" layoutX="29.0" layoutY="292.0" mnemonicParsing="false" onAction="#viewRequests" text="Requests Manager" />
       <Label fx:id="AdminInfo" layoutY="508.0" prefHeight="27.0" prefWidth="200.0" textAlignment="CENTER" />
       <Button fx:id="infoButton" layoutX="13.0" layoutY="483.0" mnemonicParsing="false" onAction="#displayAdminInfo" text="Display My Information" />
-      <CheckBox fx:id="showNodes" layoutX="42.0" layoutY="300.0" mnemonicParsing="false" onAction="#showNodes" text="Show Nodes" />
-      <CheckBox fx:id="sEdges" layoutX="42.0" layoutY="329.0" mnemonicParsing="false" onAction="#showEdges" text="Show Edges" />
+      <CheckBox fx:id="showNodes" layoutX="38.0" layoutY="343.0" mnemonicParsing="false" onAction="#showNodes" text="Show Nodes" />
+      <CheckBox fx:id="sEdges" layoutX="38.0" layoutY="381.0" mnemonicParsing="false" onAction="#showEdges" prefHeight="21.0" prefWidth="112.0" text="Show Edges" />
       <Button layoutX="41.0" layoutY="202.0" mnemonicParsing="false" onAction="#onDeleteEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Delete Edge" />
    </children>
 </AnchorPane>
