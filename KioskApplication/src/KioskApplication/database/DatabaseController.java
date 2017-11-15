@@ -7,6 +7,8 @@ import KioskApplication.database.template.ConnectionDetails;
 import KioskApplication.database.util.DBUtil;
 import KioskApplication.entity.InterpreterRequest;
 import KioskApplication.entity.Request;
+import KioskApplication.utility.NodeFloor;
+import KioskApplication.utility.NodeType;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.Connection;
@@ -46,6 +48,16 @@ public class DatabaseController {
             }
         }
         return null;
+    }
+
+    public static int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
+        int result = 0;
+        try{
+            return Connector.selectCountNodeType(instanceConnection,nodeType, floor, teamAssigned);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static boolean removeNode(Node node) {

@@ -20,8 +20,7 @@ public class TestMapEntity {
     private Node n1,n2,n3,n4;
     private Edge e1,e2,e3;
 
-    @Before
-    public void setup() {
+    public TestMapEntity() {
         DatabaseController.initTests();
         m = MapEntity.getInstance();
 

@@ -14,8 +14,7 @@ public class TestMapFloorEntity {
     private MapFloorEntity m;
     private Node n1;
 
-    @Before
-    public void setup() {
+    public TestMapFloorEntity() {
         DatabaseController.initTests();
         m = new MapFloorEntity();
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
