@@ -17,7 +17,7 @@ public class Request {
     }
 
     public Request(String nodeID, String employee, int requestID) {
-        this.location = DatabaseController.getNode(nodeID);
+        this.location = DatabaseController.getInstance().getNode(nodeID);
         this.employee = employee;
         this.requestID = requestID;
     }

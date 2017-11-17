@@ -9,10 +9,13 @@ public class InterpreterRequest{
     int interpreterID;
     Request request;
 
+    DatabaseController dbController;
+
     //Node Based
     public InterpreterRequest(Node location, String employee, String language,
                               int requestID, int interpreterID) {
-        request = DatabaseController.addRequest(requestID, location.getNodeID(), employee);
+        dbController = DatabaseController.getInstance();
+        request = dbController.addRequest(requestID, location.getNodeID(), employee);
         this.language = language;
         this.interpreterID = interpreterID;
     }
@@ -20,21 +23,23 @@ public class InterpreterRequest{
     //LocationID Based
     public InterpreterRequest(String locationID, String employee, String language,
                               int requestID, int interpreterID) {
-        request = DatabaseController.addRequest(requestID, locationID, employee);
+        dbController = DatabaseController.getInstance();
+        request = dbController.addRequest(requestID, locationID, employee);
         this.language = language;
         this.interpreterID = interpreterID;
     }
 
     //Gets the Interpreter Request?? NOT SURE
     public InterpreterRequest(String language, int interpreterID, int requestID) {
-        request = DatabaseController.getRequest(requestID);
+        dbController = DatabaseController.getInstance();
+        request = dbController.getRequest(requestID);
         this.language = language;
         this.interpreterID = interpreterID;
     }
 
     //Completes Request and clears it from the database
     public void completeInterpreterRequest(){
-        DatabaseController.deleteRequest(this.request.requestID);
+        dbController.deleteRequest(this.request.requestID);
     }
 
     //Getters for testing

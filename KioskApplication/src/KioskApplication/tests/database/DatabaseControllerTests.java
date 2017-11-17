@@ -17,17 +17,20 @@ import java.util.List;
 
 public class DatabaseControllerTests {
 
+    DatabaseController dbController;
+
     public DatabaseControllerTests() {
-        DatabaseController.initTests();
+        dbController = DatabaseController.getInstance();
+        dbController.initTests();
     }
 
     @After
     public void removeAllFromDB() {
-        List<Node> nodes = DatabaseController.getAllNodes();
-        for (Node node : nodes) DatabaseController.removeNode(node);
+        List<Node> nodes = dbController.getAllNodes();
+        for (Node node : nodes) dbController.removeNode(node);
 
-        List<Edge> edges = DatabaseController.getAllEdges();
-        for (Edge edge : edges) DatabaseController.removeEdge(edge);
+        List<Edge> edges = dbController.getAllEdges();
+        for (Edge edge : edges) dbController.removeEdge(edge);
     }
 
     @Test
@@ -35,8 +38,8 @@ public class DatabaseControllerTests {
         Node node = new Node("NODE1", 123, 472,
                              NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                              "Test Node", "TN1", "I");
-        DatabaseController.addNode(node);
-        Node receivedNode  = DatabaseController.getNode(node.getNodeID());
+        dbController.addNode(node);
+        Node receivedNode  = dbController.getNode(node.getNodeID());
         Assert.assertEquals(receivedNode, node);
     }
 
@@ -45,7 +48,7 @@ public class DatabaseControllerTests {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
-        DatabaseController.addNode(node);
+        dbController.addNode(node);
 
         // Change node parameters
         node.setXcoord(392);
@@ -57,9 +60,9 @@ public class DatabaseControllerTests {
         node.setShortName("node1");
         node.setTeamAssigned("Z");
 
-        DatabaseController.updateNode(node);
+        dbController.updateNode(node);
 
-        Node receivedNode = DatabaseController.getNode(node.getNodeID());
+        Node receivedNode = dbController.getNode(node.getNodeID());
         Assert.assertEquals(receivedNode, node);
     }
 
@@ -68,11 +71,11 @@ public class DatabaseControllerTests {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
-        DatabaseController.addNode(node);
+        dbController.addNode(node);
 
-        DatabaseController.removeNode(node);
+        dbController.removeNode(node);
 
-        Node receivedNode = DatabaseController.getNode(node.getNodeID());
+        Node receivedNode = dbController.getNode(node.getNodeID());
         Assert.assertTrue(receivedNode == null);
     }
 
@@ -85,14 +88,14 @@ public class DatabaseControllerTests {
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node 2", "TN2", "I");
 
-        DatabaseController.addNode(node1);
-        DatabaseController.addNode(node2);
+        dbController.addNode(node1);
+        dbController.addNode(node2);
 
         Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
 
-        DatabaseController.addEdge(edge1);
+        dbController.addEdge(edge1);
 
-        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Edge receivedEdge = dbController.getEdge(edge1.getEdgeID());
         Assert.assertEquals(edge1, receivedEdge);
     }
 
@@ -105,14 +108,14 @@ public class DatabaseControllerTests {
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node 2", "TN2", "I");
 
-        DatabaseController.addNode(node1);
-        DatabaseController.addNode(node2);
+        dbController.addNode(node1);
+        dbController.addNode(node2);
 
         Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
 
-        DatabaseController.removeEdge(edge1);
+        dbController.removeEdge(edge1);
 
-        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Edge receivedEdge = dbController.getEdge(edge1.getEdgeID());
         Assert.assertTrue(receivedEdge == null);
     }
 
@@ -125,14 +128,14 @@ public class DatabaseControllerTests {
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node 2", "TN2", "I");
 
-        DatabaseController.addNode(node1);
-        DatabaseController.addNode(node2);
+        dbController.addNode(node1);
+        dbController.addNode(node2);
 
         Edge edge1 = new Edge("NODE1_NODE2", node1.getNodeID(), node2.getNodeID());
 
-        DatabaseController.removeNode(node1);
+        dbController.removeNode(node1);
 
-        Edge receivedEdge = DatabaseController.getEdge(edge1.getEdgeID());
+        Edge receivedEdge = dbController.getEdge(edge1.getEdgeID());
         Assert.assertTrue(receivedEdge == null);
     }
 }

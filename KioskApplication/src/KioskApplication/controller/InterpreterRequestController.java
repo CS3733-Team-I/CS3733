@@ -19,8 +19,11 @@ public class InterpreterRequestController {
 
     AdminWindowController parent;
 
+    DatabaseController dbController;
+
     public InterpreterRequestController(AdminWindowController parent) {
         this.parent = parent;
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML
@@ -56,7 +59,7 @@ public class InterpreterRequestController {
         String location = txtLocation.getText();
 
         //sets nodeLocation to default my location
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = dbController.getNode(location);
 
         String language = "None";
         if(langMenu.getValue().toString().equals("Spanish")){
@@ -68,19 +71,19 @@ public class InterpreterRequestController {
         //Finds current admin that is logged in
         String adminEmail = parent.curr_admin_email;
 
-        if(DatabaseController.getAllInterpreterRequests().isEmpty()){
+        if(dbController.getAllInterpreterRequests().isEmpty()){
             interpID = 0;
         }else{
-            interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
+            interpID = dbController.getAllInterpreterRequests().get(dbController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
         }
 
 
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
 
         //Adds the Interpreter request to the database
-        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        dbController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+        dbController.addIntepreterRequest(language, interpID, interpID);
+        System.out.println(dbController.getAllInterpreterRequests());
 
         this.parent.switchTo(SIDEBAR_MENU);
     }
