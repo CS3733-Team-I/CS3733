@@ -10,7 +10,7 @@ If you have imported the project previously, you should close that project and n
 
 Then finish the import. You should now have the project setup. To add the Git project to IntelliJ, a small box will appear in the bottom-left corner. It looks like this:
 
-![Add to VCS](add_VCS.PNG)
+![Add to VCS](add_vcs.PNG)
 
 Click it and click "add to root." If the box disappears, you can click the bottom bar and then click "add to root." 
 
