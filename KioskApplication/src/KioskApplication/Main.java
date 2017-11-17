@@ -17,7 +17,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        DatabaseController.init();
+        DatabaseController.getInstance();
         MapEntity.getInstance().readAllFromDatabase();
 
         Parent root = FXMLLoader.load(getClass().getResource("/KioskApplication/view/MainWindowView.fxml"));

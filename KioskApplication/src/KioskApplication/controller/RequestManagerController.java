@@ -15,9 +15,13 @@ public class RequestManagerController {
 
     AdminWindowController parent;
 
+    DatabaseController dbController;
+
     public RequestManagerController(AdminWindowController parent) {
 
         this.parent = parent;
+
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML
@@ -37,7 +41,7 @@ public class RequestManagerController {
 
     @FXML
     void showRequests(){
-        ArrayList<Request> requests = DatabaseController.getAllRequests();
+        ArrayList<Request> requests = dbController.getAllRequests();
         ArrayList<String> reqIDs = new ArrayList<String>();
         for (int i = 0; i < requests.size(); i++) {
              reqIDs.add("Request ID: " + requests.get(i).getRequestID());
@@ -45,7 +49,7 @@ public class RequestManagerController {
 
         activeRequests.getItems().clear();
         activeRequests.getItems().addAll(reqIDs);
-        int requestNum = DatabaseController.getAllRequests().size();
+        int requestNum = dbController.getAllRequests().size();
         totalRequests.setText("Total Requests: " + requestNum + ".");
     }
 
@@ -59,7 +63,7 @@ public class RequestManagerController {
     @FXML
     void onCompletePressed(){
         int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
+        dbController.deleteRequest(ID);
         System.out.println("Complete Pressed \n");
     }
 

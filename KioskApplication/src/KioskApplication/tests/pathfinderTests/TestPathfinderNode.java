@@ -21,10 +21,13 @@ public class TestPathfinderNode {
 
     private Node n1,n2,n3;
     private PathfinderNode pn1,pn2,pn3;
+    private DatabaseController dbController;
 
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        dbController = DatabaseController.getInstance();
+
+        dbController.initTests();
 
         n1  = new Node("NODE1",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
         n2  = new Node("NODE2",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");

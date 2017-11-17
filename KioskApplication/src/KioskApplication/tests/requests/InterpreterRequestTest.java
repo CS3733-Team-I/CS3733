@@ -23,9 +23,13 @@ public class InterpreterRequestTest {
     private Node n1,n2,n3,n4,n5;
     private Edge e1,e2,e3;
 
+    private DatabaseController dbController;
+
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        dbController = DatabaseController.getInstance();
+
+        dbController.initTests();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);
