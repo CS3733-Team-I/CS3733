@@ -31,6 +31,7 @@ public class Pathfinder {
 
         //Check to see if the start node is valid; if not, use a default starting position.
         //TODO: the default should be set to a real node at an actual location on the map.
+        //TODO talk to ui about admin control of start node
         if (startNode.equals(null) || startNode.getNodeID().equals(null)){
             startNode = new Node("Node1", NodeFloor.THIRD);
             waypoints.removeFirst();
