@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ComboBox fx:id="activeRequests" prefWidth="190.0" promptText="Active Requests" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
-          <items>
-              <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="Item1" />
-                  <String fx:value="Item2" />
-                  <String fx:value="Item3" />
-                  <String fx:value="Item4" />
-                  <String fx:value="Item5" />
-                  <String fx:value="Item6" />
-                  <String fx:value="Item7" />
-                  <String fx:value="Item8" />
-                  <String fx:value="Item9" />
-                  <String fx:value="Item10" />
-              </FXCollections>
-          </items>
-      </ComboBox>
-      <Label layoutX="22.0" layoutY="14.0" text="Request Manager">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnComplete" layoutX="34.0" layoutY="400.0" mnemonicParsing="false" onAction="#onCompletePressed" text="Complete Request" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="400.0" />
-      <Button fx:id="btnBack" layoutX="50.0" layoutY="555.0" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#onBackPressed" text="Back" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-      <Label fx:id="totalRequests" layoutX="14.0" layoutY="96.0" text="Total Requests:" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0" />
-      <Button fx:id="btnPopReq" layoutX="74.0" layoutY="137.0" mnemonicParsing="false" onAction="#showRequests" prefHeight="27.0" prefWidth="116.0" text="Refresh" AnchorPane.leftAnchor="74.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
-      <TextField fx:id="txtID" alignment="CENTER" layoutX="21.0" layoutY="362.0" promptText="Request ID" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="365.0" />
+      <GridPane layoutX="249.0" layoutY="170.0" prefHeight="720.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Request Manager" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </Label>
+            <JFXListView style="-fx-background-color: lightgray;" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
+               <GridPane.margin>
+                  <Insets left="10.0" right="10.0" />
+               </GridPane.margin>
+            </JFXListView>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>
