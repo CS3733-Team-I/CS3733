@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TestPathfinder {
 
+    private Pathfinder pathfinder;
     private Node n1, n2, n3, n4, n5, n6, n7;
     private Edge e1, e2, e3, e4, e5, e6;
     private MapEntity map = MapEntity.getInstance();
@@ -24,6 +25,7 @@ public class TestPathfinder {
     @Before
     public void setup() {
 
+        pathfinder = new Pathfinder();
 
         /* Map Structure
          n1 - n2 - n3 - n5 - n6
@@ -80,8 +82,7 @@ public class TestPathfinder {
 
     @Test
     public void testPath() {
-        Pathfinder aStarPathfinder = new A_star();
-        Path path1 = aStarPathfinder.generatePath(n1, n6);
+        Path path1 = pathfinder.generatePath(n1, n6);
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e1);
@@ -105,8 +106,7 @@ public class TestPathfinder {
 
     @Test
     public void testWrongPath() {
-        Pathfinder aStarPathfinder = new A_star();
-        Path path1 = aStarPathfinder.generatePath(n1, n6);
+        Path path1 = pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e2);
         testPathEdges.add(e2);
@@ -126,8 +126,7 @@ public class TestPathfinder {
 
     @Test
     public void testAnotherPath() {
-        Pathfinder aStarPathfinder = new A_star();
-        Path path2 = aStarPathfinder.generatePath(n1, n4);
+        Path path2 = pathfinder.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
         testPath2Edges.add(e3);
@@ -150,8 +149,6 @@ public class TestPathfinder {
         nodes.add(n7);
         nodes.add(n6);
         //TODO: test multiple waypoints
-        Pathfinder aStarPathfinder = new A_star();
-        Path multiPath = aStarPathfinder.generatePath(nodes);
-
+        Path multiPath = pathfinder.generatePath(nodes);
     }
 }

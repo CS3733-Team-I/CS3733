@@ -10,13 +10,8 @@ import java.util.Map;
 
 public class A_star implements SearchAlgorithm {
 
-    /**
-     * Given two nodes, uses the A* search algorithm to find a path between them.
-     * @param startingNode Node that the algorithm should start at
-     * @param endingNode Node that the algorithm should end at
-     * @return LinkedList<Edge>
-     * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
-     */
+
+    @Override
     public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 

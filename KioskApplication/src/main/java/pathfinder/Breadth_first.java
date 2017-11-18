@@ -5,9 +5,10 @@ import database.objects.Node;
 
 import java.util.LinkedList;
 
-public class Breath_first extends Pathfinder{
+public class Breadth_first implements SearchAlgorithm{
 
-    LinkedList<Edge> algorithm(Node startNode, Node endNode)throws PathfinderException{
+    @Override
+    public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{
         //TODO write algorithm
         return new LinkedList<Edge>();
     }

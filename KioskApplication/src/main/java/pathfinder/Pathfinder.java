@@ -10,10 +10,15 @@ import java.util.*;
 
 public class Pathfinder {
 
-    SearchAlgorithm searchAlgorithm;
+    private SearchAlgorithm searchAlgorithm;
 
     public Pathfinder(SearchAlgorithm searchAlgorithm) {
         this.searchAlgorithm = searchAlgorithm;
+    }
+
+    //Alternate constructor; if no search algorithm is selected, default to A*
+    public Pathfinder() {
+        this.searchAlgorithm = new A_star();
     }
 
     /**
