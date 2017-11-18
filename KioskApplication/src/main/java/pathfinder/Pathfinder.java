@@ -8,7 +8,13 @@ import utility.NodeFloor;
 
 import java.util.*;
 
-public abstract class Pathfinder {
+public class Pathfinder {
+
+    SearchAlgorithm searchAlgorithm;
+
+    public Pathfinder(SearchAlgorithm searchAlgorithm) {
+        this.searchAlgorithm = searchAlgorithm;
+    }
 
     /**
      * Given a list of multiple waypoints, finds a path between them.  Returns a Path object containing the list of
@@ -61,7 +67,7 @@ public abstract class Pathfinder {
 
             //Now, find the path from the previous waypoint to this one.
             try{
-                pathEdges.addAll(algorithm(startNode, endNode));   //Add this section to the rest of the path.
+                pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
             }catch(PathfinderException e){
                 System.out.println("Error: pathfinder exception" + e.getMessage());
                 e.printStackTrace();
@@ -88,5 +94,8 @@ public abstract class Pathfinder {
         waypoints.add(endNode);
         return(generatePath(waypoints));
     }
-    abstract LinkedList<Edge> algorithm(Node startNode, Node endNode)throws PathfinderException;
+
+    public void setSearchAlgorithm(SearchAlgorithm searchAlgorithm) {
+        this.searchAlgorithm = searchAlgorithm;
+    }
 }

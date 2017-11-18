@@ -53,9 +53,8 @@ public class PathfindingSidebarController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            MapEntity map = MapEntity.getInstance();
-            Pathfinder aStarPathfinder = new A_star();
-            Path path = aStarPathfinder.generatePath(currentNodes);
+            Pathfinder pathfinder = new Pathfinder(new A_star());
+            Path path = pathfinder.generatePath(currentNodes);
             parent.displayPathOnMap(path);
 
             waypointListVbox.getChildren().clear();

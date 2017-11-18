@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class A_star extends Pathfinder {
+public class A_star implements SearchAlgorithm {
 
     /**
      * Given two nodes, uses the A* search algorithm to find a path between them.
@@ -17,7 +17,7 @@ public class A_star extends Pathfinder {
      * @return LinkedList<Edge>
      * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
-    LinkedList<Edge> algorithm(Node startingNode, Node endingNode) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
         StartNode startNode = new StartNode(startingNode);
