@@ -20,10 +20,16 @@ Name: Run
 GradleProject: Click the folder icon and select this project
 Tasks: run
 
+![setup run configuration](images/run.jpg)
+
 Name: Run Tests
 GradleProject: Click the folder icon and select this project
 Tasks: test
 
+![setup run configuration](images/test.jpg)
+
 Name: Create JAR
 GradleProject: Click the folder icon and select this project
 Tasks: jar
+
+![setup run configuration](images/jar.jpg)
