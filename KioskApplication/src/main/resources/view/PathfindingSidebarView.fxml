@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="45.0" layoutY="508.0" mnemonicParsing="false" onAction="#btGeneratePathPressed" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #6495ed;" text="Generate Path" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Button layoutX="21.0" layoutY="92.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #95ed64;" text="Search" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
+      <TextField layoutX="10.0" layoutY="14.0" promptText="Search for waypoints..." AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ScrollPane hbarPolicy="NEVER" layoutX="1.0" layoutY="356.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="300.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <VBox fx:id="waypointListVbox" layoutY="-52.0" prefHeight="200.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <Label layoutX="10.0" layoutY="253.0" prefHeight="30.0" prefWidth="125.0" text="Current Waypoints:" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="10.0" />
+      <Button layoutX="38.0" layoutY="240.0" mnemonicParsing="false" onAction="#onResetPressed" prefHeight="30.0" prefWidth="125.0" style="-fx-background-color: #ed6495;" text="Clear Waypoints" AnchorPane.bottomAnchor="330.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <Button layoutX="111.0" layoutY="556.0" mnemonicParsing="false" onAction="#btClearPathPressed" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #ff7f50#ff7f50;" text="Clear Path" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <CheckBox fx:id="showNodes" layoutX="50.0" layoutY="213.0" mnemonicParsing="false" onAction="#showNodes" prefHeight="27.0" prefWidth="101.0" text="Show Nodes" AnchorPane.bottomAnchor="365.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+   </children>
+</fx:root>
