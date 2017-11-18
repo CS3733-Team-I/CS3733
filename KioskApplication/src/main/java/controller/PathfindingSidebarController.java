@@ -3,6 +3,7 @@ package controller;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import pathfinder.A_star;
 import pathfinder.Pathfinder;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -53,7 +54,8 @@ public class PathfindingSidebarController {
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
             MapEntity map = MapEntity.getInstance();
-            Path path = Pathfinder.generatePath(currentNodes);
+            Pathfinder aStarPathfinder = new A_star();
+            Path path = aStarPathfinder.generatePath(currentNodes);
             parent.displayPathOnMap(path);
 
             waypointListVbox.getChildren().clear();

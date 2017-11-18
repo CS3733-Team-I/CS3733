@@ -4,6 +4,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import pathfinder.A_star;
 import pathfinder.Pathfinder;
 import utility.NodeFloor;
 import org.junit.Before;
@@ -79,7 +80,8 @@ public class TestPathfinder {
 
     @Test
     public void testPath() {
-        Path path1 = Pathfinder.generatePath(n1, n6);
+        Pathfinder aStarPathfinder = new A_star();
+        Path path1 = aStarPathfinder.generatePath(n1, n6);
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e1);
@@ -103,7 +105,8 @@ public class TestPathfinder {
 
     @Test
     public void testWrongPath() {
-        Path path1 = Pathfinder.generatePath(n1, n6);
+        Pathfinder aStarPathfinder = new A_star();
+        Path path1 = aStarPathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e2);
         testPathEdges.add(e2);
@@ -123,7 +126,8 @@ public class TestPathfinder {
 
     @Test
     public void testAnotherPath() {
-        Path path2 = Pathfinder.generatePath(n1, n4);
+        Pathfinder aStarPathfinder = new A_star();
+        Path path2 = aStarPathfinder.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
         testPath2Edges.add(e3);
@@ -145,8 +149,9 @@ public class TestPathfinder {
         nodes.add(n1);
         nodes.add(n7);
         nodes.add(n6);
-
-        Path multiPath = Pathfinder.generatePath(nodes);
+        //TODO: test multiple waypoints
+        Pathfinder aStarPathfinder = new A_star();
+        Path multiPath = aStarPathfinder.generatePath(nodes);
 
     }
 }
