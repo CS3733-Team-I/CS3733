@@ -1,48 +1,42 @@
 package controller;
 
 import database.DatabaseController;
+import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import utility.ApplicationScreen;
+import utility.NodeFloor;
 
 import java.io.IOException;
 
-import static controller.AdminWindowController.SidebarType.SIDEBAR_INTERPRETER;
-import static controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
+public class InterpreterRequestController extends ScreenController{
 
-public class InterpreterRequestController {
-
-    AdminWindowController parent;
-
-    public InterpreterRequestController(AdminWindowController parent) {
-        this.parent = parent;
+    public InterpreterRequestController(MainWindowController parent, MapController map) {
+        super(parent, map);
     }
 
-    @FXML
-    private Button btnSubmit;
-
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private TextField txtLocation;
-
-    @FXML
-    private ChoiceBox langMenu;
+    @FXML private Button btnSubmit;
+    @FXML private Button btnCancel;
+    @FXML private TextField txtLocation;
+    @FXML private ChoiceBox langMenu;
 
 
     @FXML
     void onInterpreterPressed() throws IOException {
         System.out.println("Interpreter Request Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_INTERPRETER);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_INTERPRETER);
     }
 
     @FXML
     void onCancelPressed() throws IOException{
         System.out.println("Cancel Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_MENU);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @FXML
@@ -61,7 +55,7 @@ public class InterpreterRequestController {
         }
 
         //Finds current admin that is logged in
-        String adminEmail = parent.curr_admin_email;
+        String adminEmail = ""; //TODO implement something new for parent.curr_admin_email
 
         if(DatabaseController.getAllInterpreterRequests().isEmpty()){
             interpID = 0;
@@ -77,10 +71,34 @@ public class InterpreterRequestController {
         DatabaseController.addIntepreterRequest(language, interpID, interpID);
         System.out.println(DatabaseController.getAllInterpreterRequests());
 
-        this.parent.switchTo(SIDEBAR_MENU);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
+    @Override
+    public javafx.scene.Node getContentView() {
+        if (contentView == null) {
+            contentView = loadView("/view/InterpreterRequestView.fxml");
+        }
+
+        return contentView;
+    }
+
+    @Override
+    public void onMapLocationClicked(Point2D location) { }
+
+    @Override
     public void onMapNodeClicked(Node n) {
         txtLocation.setText(n.getNodeID());
+    }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) { }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) { }
+
+    @Override
+    public void resetScreen() {
+        // TODO implement this
     }
 }

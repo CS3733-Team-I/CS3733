@@ -1,48 +1,39 @@
 package controller;
 
+import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import utility.ApplicationScreen;
+import utility.NodeBuilding;
+import utility.NodeFloor;
+import utility.NodeType;
 
 import java.io.IOException;
 
-import static controller.AdminWindowController.SidebarType.SIDEBAR_ADD_NODE;
-import static controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
-
-public class AdminEditNodeController {
-    AdminWindowController parent;
+public class AdminEditNodeController extends ScreenController {
     NodeFloor floor;
 
-    AdminEditNodeController(AdminWindowController parent, NodeFloor floor) {
-        this.parent = parent;
-        this.floor = floor;
+    AdminEditNodeController(MainWindowController parent, MapController map) {
+        super(parent, map);
+
+        this.floor = map.getCurrentFloor();
     }
 
 
     @FXML private TextField xcoord;
-
     @FXML private TextField ycoord;
-
     @FXML private TextField nodeID;
-
     @FXML private ChoiceBox floorChoiceBox;
-
     @FXML private ChoiceBox buildingChoiceBox;
-
     @FXML private ChoiceBox nodeTypeChoiceBox;
-
     @FXML private TextField lname;
-
     @FXML private TextField sname;
-
     @FXML private ChoiceBox teamAssignedChoiceBox;
-
     @FXML private Label errorMsg;
 
     @FXML
@@ -80,6 +71,19 @@ public class AdminEditNodeController {
         //ycoord.setText(String.valueOf(y));
     }
 
+    @Override
+    public javafx.scene.Node getContentView() {
+        if (contentView == null) {
+            contentView = loadView("/view/editNode.fxml");
+        }
+
+        return contentView;
+    }
+
+    @Override
+    public void onMapLocationClicked(Point2D location) { }
+
+    @Override
     public void onMapNodeClicked(Node node){
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
@@ -90,6 +94,17 @@ public class AdminEditNodeController {
         sname.setText(node.getShortName());
         teamAssignedChoiceBox.setValue(convertTeam(node.getTeamAssigned().toString()));
         nodeID.setText(node.getNodeID());
+    }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) { }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) { }
+
+    @Override
+    public void resetScreen() {
+        // TODO implement this
     }
 
     public String convertFloor(String eString){
@@ -138,14 +153,15 @@ public class AdminEditNodeController {
     void onAddPressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_ADD_NODE);
+
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @FXML
     void onBackPressed() throws IOException{
         System.out.println("Back Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_MENU);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @FXML
@@ -231,7 +247,8 @@ public class AdminEditNodeController {
 
                 if (isSuccess) { // If successfully deleted
                     System.out.println("Node " + nodeID.getText() + " Deleted");
-                    this.parent.switchTo(SIDEBAR_MENU);
+
+                    getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
                 }
                 else  // If DB failed to delete
                     System.out.println("Failed to remove node: " + nodeID.getText());
@@ -322,7 +339,8 @@ public class AdminEditNodeController {
                 // Update Node
                 MapEntity.getInstance().editNode(node1);
                 System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
-                this.parent.switchTo(SIDEBAR_MENU);
+
+                getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
             }
         }
     }
