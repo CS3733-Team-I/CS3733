@@ -37,14 +37,11 @@ public class MapController {
     private static double DEFAULT_VVALUE = 0.3;
 
     private NodeFloor currentFloor = NodeFloor.THIRD;
-    private HashMap<NodeFloor, Point2D> previousPositions;
 
     private boolean showNodes = false;
     private boolean showEdges = false;
 
-    public MapController() {
-        previousPositions = new HashMap<>();
-    }
+    public MapController() { }
 
     public void setParent(MainWindowController controller) {
         parent = controller;
@@ -160,19 +157,6 @@ public class MapController {
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
-
-        Point2D currentMapPosition = new Point2D(scrollPane.getHvalue(), scrollPane.getVvalue());
-        previousPositions.put(currentFloor, currentMapPosition);
-
-        try {
-            Point2D lastMapPosition = previousPositions.get(floor);
-            scrollPane.setHvalue(lastMapPosition.getX());
-            scrollPane.setVvalue(lastMapPosition.getY());
-        } catch (Exception e) {
-            // Previous position didn't exist, just set default values for now
-            scrollPane.setHvalue(0.5);
-            scrollPane.setVvalue(0.5);
-        }
 
         currentFloor = floor;
     }

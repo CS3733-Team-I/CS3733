@@ -13,7 +13,10 @@ public class MapEntity implements IMapEntity {
     private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
 
-    private static MapEntity instance = null;
+    private static class MapEntitySingleton {
+        private static final MapEntity _instance = new MapEntity();
+
+    }
 
     protected MapEntity() {
         floors = new HashMap<>();
@@ -21,8 +24,7 @@ public class MapEntity implements IMapEntity {
     }
 
     public static MapEntity getInstance() {
-        if (instance == null) instance = new MapEntity();
-        return instance;
+        return MapEntitySingleton._instance;
     }
 
     // TODO do this somewhere else, and be more smart about our database access
