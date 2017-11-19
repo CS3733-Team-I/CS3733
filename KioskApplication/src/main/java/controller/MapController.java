@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MapController {
+    @FXML private AnchorPane container;
     @FXML private ImageView mapView;
     @FXML private StackPane stackPane;
     @FXML private ScrollPane scrollPane;
@@ -178,6 +179,15 @@ public class MapController {
 
     public NodeFloor getCurrentFloor() {
         return currentFloor;
+    }
+
+    public void setAnchor(double top, double left, double bottom, double  right) {
+        if (container != null) {
+            AnchorPane.setTopAnchor(container, top);
+            AnchorPane.setLeftAnchor(container, left);
+            AnchorPane.setRightAnchor(container, bottom);
+            AnchorPane.setBottomAnchor(container, right);
+        }
     }
 
     @FXML

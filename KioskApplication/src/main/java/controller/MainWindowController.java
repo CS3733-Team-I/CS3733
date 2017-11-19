@@ -35,10 +35,6 @@ public class MainWindowController {
         controllers = new HashMap<>();
 
         mapView = new AnchorPane();
-        AnchorPane.setTopAnchor(mapView, 0.0);
-        AnchorPane.setLeftAnchor(mapView, 200.0); // TODO make the sidebar actually float over the map
-        AnchorPane.setRightAnchor(mapView, 0.0);
-        AnchorPane.setBottomAnchor(mapView, 0.0);
     }
 
     public void switchToScreen(ApplicationScreen screen) {
@@ -100,9 +96,13 @@ public class MainWindowController {
                 break;
         }
 
+        // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(controller.getContentView());
+
+        // Reset controller's view
+        controller.resetScreen();
 
         currentScreen = screen;
     }
