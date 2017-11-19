@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import utility.ApplicationScreen;
 
 import java.io.IOException;
 
@@ -33,8 +34,9 @@ public class LoginController {
     public void OnLoginClicked() throws IOException {
 
         if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
-            parent.switchTo(MainWindowController.MainWindowScene.ADMIN);
-            parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
+            parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
+            // TODO replace this
+            // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
             parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
@@ -46,7 +48,7 @@ public class LoginController {
 
     @FXML
     public void OnBackClicked () throws IOException {
-        parent. switchTo(MainWindowController.MainWindowScene.PATHFINDING);
+        parent.switchToScreen(ApplicationScreen.PATHFINDING);
         parent.LoginPopup.getChildren().clear();
         parent.LoginPopup.getChildren().add(parent.switchButton);
     }

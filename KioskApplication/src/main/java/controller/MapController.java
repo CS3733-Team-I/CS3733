@@ -4,7 +4,6 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import utility.NodeFloor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -18,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import utility.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class MapController {
     @FXML private ScrollPane scrollPane;
     @FXML private ComboBox<NodeFloor> floorSelector;
 
-    private MapWindowController parent = null;
+    private MainWindowController parent = null;
 
     private static double DEFAULT_HVALUE = 0.52;
     private static double DEFAULT_VVALUE = 0.3;
@@ -45,7 +45,7 @@ public class MapController {
         previousPositions = new HashMap<>();
     }
 
-    public void setParent(MapWindowController controller) {
+    public void setParent(MainWindowController controller) {
         parent = controller;
     }
 
@@ -107,13 +107,13 @@ public class MapController {
 
     public void mapEdgeClicked(Edge e) {
         if (!parent.equals(null)) {
-            parent.mapEdgeClicked(e);
+            parent.onMapEdgeClicked(e);
         }
     }
 
     public void mapNodeClicked(Node n) {
         if (!parent.equals(null)) {
-            parent.mapNodeClicked(n);
+            parent.onMapNodeClicked(n);
         }
     }
 
@@ -198,13 +198,13 @@ public class MapController {
                 Point2D clickPosition = new Point2D(event.getX(), event.getY());
 
                 if (nodeArea.contains(clickPosition)) {
-                    parent.mapNodeClicked(node);
+                    parent.onMapNodeClicked(node);
                     return;
                 }
             }
 
             // Otherwise return the x,y coordinates
-            parent.mapLocationClicked(event.getX(), event.getY());
+            parent.onMapLocationClicked(new Point2D(event.getX(), event.getY()));
         }
     }
 
@@ -232,6 +232,6 @@ public class MapController {
         setShowNodes(showNodes);
         setShowEdges(showEdges);
 
-        parent.mapFloorChanged(selectedFloor);
+        parent.onMapFloorChanged(selectedFloor);
     }
 }

@@ -1,23 +1,23 @@
 package controller;
 
 import database.DatabaseController;
+import database.objects.Edge;
 import entity.Request;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import utility.ApplicationScreen;
+import utility.NodeFloor;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
+public class RequestManagerController extends ScreenController {
 
-public class RequestManagerController {
-
-    AdminWindowController parent;
-
-    public RequestManagerController(AdminWindowController parent) {
-
-        this.parent = parent;
+    public RequestManagerController(MainWindowController parent, MapController map) {
+        super(parent, map);
     }
 
     @FXML
@@ -32,7 +32,7 @@ public class RequestManagerController {
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
 
-        this.parent.switchTo(AdminWindowController.SidebarType.SIDEBAR_VIEWREQUEST);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
     }
 
     @FXML
@@ -53,7 +53,7 @@ public class RequestManagerController {
     void onBackPressed() throws IOException {
         System.out.println("Cancel Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_MENU);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @FXML
@@ -63,4 +63,29 @@ public class RequestManagerController {
         System.out.println("Complete Pressed \n");
     }
 
+    @Override
+    public javafx.scene.Node getContentView() {
+        if (contentView == null) {
+            contentView = loadView("/view/RequestManagerView.fxml");
+        }
+
+        return contentView;
+    }
+
+    @Override
+    public void onMapLocationClicked(Point2D location) { }
+
+    @Override
+    public void onMapNodeClicked(database.objects.Node node) { }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) { }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) { }
+
+    @Override
+    public void resetScreen() {
+        // TODO implement this
+    }
 }

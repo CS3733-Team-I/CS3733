@@ -1,61 +1,90 @@
 package controller;
 
+import database.objects.Edge;
+import database.objects.Node;
 import entity.Administrator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import utility.ApplicationScreen;
+import utility.NodeFloor;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class MainWindowController {
 
     @FXML Button switchButton;
-    @FXML Pane contentWindow;
+    @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
     Administrator curr_admin;
 
-    enum MainWindowScene {
-        PATHFINDING,
-        ADMIN
+    ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
+
+    AnchorPane mapView;
+    MapController mapController;
+
+    HashMap<ApplicationScreen, ScreenController> controllers;
+
+    public MainWindowController() {
+        controllers = new HashMap<>();
+
+        mapView = new AnchorPane();
+        AnchorPane.setTopAnchor(mapView, 0.0);
+        AnchorPane.setLeftAnchor(mapView, 200.0); // TODO make the sidebar actually float over the map
+        AnchorPane.setRightAnchor(mapView, 0.0);
+        AnchorPane.setBottomAnchor(mapView, 0.0);
     }
 
-    MainWindowScene currentView = MainWindowScene.PATHFINDING;
+    public void switchToScreen(ApplicationScreen screen) {
+        ScreenController controller = controllers.get(screen);
 
-    AdminWindowController adminWindow;
-    PathfindingWindowController pathfindingWindow;
+        if (controller == null) {
+            switch (screen) {
+                case ADMIN_MENU:
+                    controller = new AdminSidebarController(this, mapController);
+                    switchButton.setText("Logoff");
+                    switchButton.requestFocus();
+                    break;
 
-    public MainWindowController() {}
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    switchButton.setText("Admin Login");
+                    switchButton.requestFocus();
+                    break;
 
-    void switchTo(MainWindowScene scene) throws IOException{
-        switch (scene) {
-            case ADMIN:
-                currentView = MainWindowScene.ADMIN;
-                contentWindow.getChildren().setAll(adminWindow);
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
-                break;
+                default:
+                    break;
+            }
 
-            case PATHFINDING:
-                currentView = MainWindowScene.PATHFINDING;
-                contentWindow.getChildren().setAll(pathfindingWindow);
-                switchButton.setText("Admin Login");
-                switchButton.requestFocus();
-                break;
+            controllers.put(screen, controller);
         }
+
+        contentWindow.getChildren().clear();
+        contentWindow.getChildren().add(mapView);
+        contentWindow.getChildren().add(controller.getContentView());
+
+        currentScreen = screen;
     }
 
     @FXML
     protected void initialize() throws IOException
     {
-        // Initialize admin window and pathfinding window
-        adminWindow = new AdminWindowController();
-        pathfindingWindow = new PathfindingWindowController();
+        // Initialize MapView with MapController
+        mapController = new MapController();
+        mapController.setParent(this);
 
-        this.switchTo(MainWindowScene.PATHFINDING);
+        FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
+        mapPaneLoader.setRoot(mapView);
+        mapPaneLoader.setController(mapController);
+        mapPaneLoader.load();
+
+        this.switchToScreen(ApplicationScreen.PATHFINDING);
     }
 
     @FXML
@@ -71,15 +100,37 @@ public class MainWindowController {
 
     @FXML
     public void switchButtonClicked() throws IOException {
-        switch (currentView) {
-            case ADMIN:
-                this.switchTo(MainWindowScene.PATHFINDING);
-                this.adminWindow.reset();
+        switch (currentScreen) {
+            case ADMIN_VIEWREQUEST:
+            case ADMIN_INTERPRETER:
+            case ADMIN_EDIT_NODE:
+            case ADMIN_DEL_EDGE:
+            case ADMIN_ADD_NODE:
+            case ADMIN_ADD_EDGE:
+            case ADMIN_MENU:
+                this.switchToScreen(ApplicationScreen.PATHFINDING);
+                controllers.get(currentScreen).resetScreen();
                 this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
                 this.Login();
                 break;
         }
+    }
+
+    public void onMapNodeClicked(Node n) {
+        controllers.get(currentScreen).onMapNodeClicked(n);
+    }
+
+    public void onMapEdgeClicked(Edge e) {
+        controllers.get(currentScreen).onMapEdgeClicked(e);
+    }
+
+    public void onMapLocationClicked(Point2D location) {
+        controllers.get(currentScreen).onMapLocationClicked(location);
+    }
+
+    public void onMapFloorChanged(NodeFloor selectedFloor) {
+        controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 }
