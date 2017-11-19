@@ -53,7 +53,7 @@ public class PathfindingSidebarController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder(new A_star());
+            Pathfinder pathfinder = new Pathfinder();
             Path path = pathfinder.generatePath(currentNodes);
             parent.displayPathOnMap(path);
 
