@@ -17,6 +17,7 @@ public abstract class ScreenController {
     @FXML protected javafx.scene.Node contentView;
 
     public ScreenController(MainWindowController parent, MapController mapController) {
+        this.parent = parent;
         this.mapController = mapController;
     }
 

@@ -55,6 +55,30 @@ public class MainWindowController {
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
 
+                case ADMIN_ADD_NODE:
+                    controller = new AdminAddNodeController(this, mapController);
+                    break;
+
+                case ADMIN_EDIT_NODE:
+                    controller = new AdminEditNodeController(this, mapController);
+                    break;
+
+                case ADMIN_ADD_EDGE:
+                    controller = new AdminAddEdgeController(this, mapController);
+                    break;
+
+                case ADMIN_DEL_EDGE:
+                    controller = new AdminDeleteEdgeController(this, mapController);
+                    break;
+
+                case ADMIN_VIEWREQUEST:
+                    controller = new RequestManagerController(this, mapController);
+                    break;
+
+                case ADMIN_INTERPRETER:
+                    controller = new InterpreterRequestController(this, mapController);
+                    break;
+
                 default:
                     break;
             }

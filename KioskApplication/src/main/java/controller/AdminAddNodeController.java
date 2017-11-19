@@ -16,9 +16,10 @@ import utility.NodeType;
 public class AdminAddNodeController extends ScreenController {
     NodeFloor floor;
 
-    AdminAddNodeController(MainWindowController parent, MapController map, NodeFloor floor) {
+    AdminAddNodeController(MainWindowController parent, MapController map) {
         super(parent, map);
-        this.floor = floor;
+
+        this.floor = map.getCurrentFloor();
     }
 
     @FXML private TextField xcoord;

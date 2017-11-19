@@ -18,10 +18,10 @@ import java.io.IOException;
 public class AdminEditNodeController extends ScreenController {
     NodeFloor floor;
 
-    AdminEditNodeController(MainWindowController parent, MapController map, NodeFloor floor) {
+    AdminEditNodeController(MainWindowController parent, MapController map) {
         super(parent, map);
 
-        this.floor = floor;
+        this.floor = map.getCurrentFloor();
     }
 
 

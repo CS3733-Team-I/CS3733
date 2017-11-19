@@ -25,6 +25,7 @@ public class AdminSidebarController extends ScreenController {
 
     AdminSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
+
         this.isDisplay = false;
     }
 
@@ -51,11 +52,6 @@ public class AdminSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        // TODO: implement this
-    }
-
-    @FXML
-    protected void initialize() {
         getMapController().setShowNodes(showNodes.isSelected());
         getMapController().setShowEdges(showEdges.isSelected());
     }
