@@ -1,57 +1,40 @@
 package controller;
+
+import database.objects.Edge;
+import database.objects.Node;
 import entity.MapEntity;
-import utility.*;
-import database.objects.*;
+import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.fxml.FXML;
+import utility.ApplicationScreen;
+import utility.NodeBuilding;
+import utility.NodeFloor;
+import utility.NodeType;
 
-import java.io.IOException;
-
-import static controller.AdminWindowController.SidebarType.SIDEBAR_MENU;
-
-public class AdminAddNodeController {
-    AdminWindowController parent;
+public class AdminAddNodeController extends ScreenController {
     NodeFloor floor;
 
-    AdminAddNodeController(AdminWindowController parent, NodeFloor floor) {
-        this.parent = parent;
-        this.floor = floor;
+    AdminAddNodeController(MainWindowController parent, MapController map) {
+        super(parent, map);
+
+        this.floor = map.getCurrentFloor();
     }
 
-    @FXML
-    private TextField xcoord;
+    @FXML private TextField xcoord;
+    @FXML private TextField ycoord;
+    @FXML private TextField nodeID;
+    @FXML private ChoiceBox floorChoiceBox;
+    @FXML private ChoiceBox buildingChoiceBox;
+    @FXML private ChoiceBox nodeTypeChoiceBox;
+    @FXML private TextField lname;
+    @FXML private TextField sname;
+    @FXML private ChoiceBox teamAssignedChoiceBox;
+    @FXML private Label errorMsg;
 
     @FXML
-    private TextField ycoord;
-
-    @FXML
-    private TextField nodeID;
-
-    @FXML
-    private ChoiceBox floorChoiceBox;
-
-    @FXML
-    private ChoiceBox buildingChoiceBox;
-
-    @FXML
-    private ChoiceBox nodeTypeChoiceBox;
-
-    @FXML
-    private TextField lname;
-
-    @FXML
-    private TextField sname;
-
-    @FXML
-    private ChoiceBox teamAssignedChoiceBox;
-
-    @FXML
-    private Label errorMsg;
-
-    @FXML
-    protected void initialize() throws IOException {
+    protected void initialize() {
         System.out.println(floor.ordinal());
         floorChoiceBox.setValue(getFloorTxt());
     }
@@ -75,12 +58,6 @@ public class AdminAddNodeController {
         }
     }
 
-    public void setCoords(double x, double y){
-        System.out.println("setCoords");
-        xcoord.setText(String.valueOf(x));
-        ycoord.setText(String.valueOf(y));
-    }
-
     /*@FXML
     void onfloorClicked() throws IOException{
         floorChoiceBox.setItems(FXCollections.observableArrayList("L2", "L1", "G", "1", "2", "3"));
@@ -95,59 +72,22 @@ public class AdminAddNodeController {
     }*/
 
     @FXML
-    void updateNodeID() throws IOException {
+    void updateNodeID() {
         System.out.println("updateNodeID");
         if(!floorChoiceBox.getValue().equals(null) && !floorChoiceBox.getValue().equals("--select--")
                 && !nodeTypeChoiceBox.getValue().equals(null) && !nodeTypeChoiceBox.getValue().equals("--select--")
                 && !teamAssignedChoiceBox.getValue().equals(null) && !teamAssignedChoiceBox.getValue().equals("--select--")){
 
-            NodeType nodeType = NodeType.HALL;
-            if(nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
-                nodeType = NodeType.ELEV;
-            if(nodeTypeChoiceBox.getValue().toString().equals("HALL"))
-                nodeType = NodeType.HALL;
-            if(nodeTypeChoiceBox.getValue().toString().equals("REST"))
-                nodeType = NodeType.REST;
-            if(nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
-                nodeType = NodeType.DEPT;
-            if(nodeTypeChoiceBox.getValue().toString().equals("STAI"))
-                nodeType = NodeType.STAI;
-            if(nodeTypeChoiceBox.getValue().toString().equals("CONF"))
-                nodeType = NodeType.CONF;
-            if(nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
-                nodeType = NodeType.EXIT;
-            if(nodeTypeChoiceBox.getValue().toString().equals("INFO"))
-                nodeType = NodeType.INFO;
-            if(nodeTypeChoiceBox.getValue().toString().equals("LABS"))
-                nodeType = NodeType.LABS;
-            if(nodeTypeChoiceBox.getValue().toString().equals("SERV"))
-                nodeType = NodeType.SERV;
-
-
-            NodeFloor floor = NodeFloor.THIRD; // Default
-            if(floorChoiceBox.getValue().toString().equals("L2"))
-                floor = NodeFloor.LOWERLEVEL_2;
-            if(floorChoiceBox.getValue().toString().equals("L1"))
-                floor = NodeFloor.LOWERLEVEL_1;
-            if(floorChoiceBox.getValue().toString().equals("0G"))
-                floor = NodeFloor.GROUND;
-            if(floorChoiceBox.getValue().toString().equals("01"))
-                floor = NodeFloor.FIRST;
-            if(floorChoiceBox.getValue().toString().equals("02"))
-                floor = NodeFloor.SECOND;
-            if(floorChoiceBox.getValue().toString().equals("03"))
-                floor = NodeFloor.THIRD;
-
-
+            NodeType nodeType = getNodeType();
+            NodeFloor floor = getNodeFloor();
+            // get the number of nodes of the same type, floor and team
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
-
-
+            // Set the determined nodeID
             nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
         }
     }
 
     private String formatInt(int nodeTypeCount) {
-
         if (nodeTypeCount + 1 < 10) {
             return "00" + (nodeTypeCount + 1);
         } else if (nodeTypeCount + 1 < 100) {
@@ -162,14 +102,14 @@ public class AdminAddNodeController {
 
 
     @FXML
-    void onBackPressed() throws IOException{
+    void onBackPressed() {
         System.out.println("Back Pressed\n");
 
-        this.parent.switchTo(SIDEBAR_MENU);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @FXML
-    void onSubmitClicked() throws IOException{
+    void onSubmitClicked() {
         errorMsg.setText("");
         if(nodeID.getText().equals(null) || nodeID.getText().equals(""))
             errorMsg.setText("You must input the node ID!");
@@ -191,53 +131,13 @@ public class AdminAddNodeController {
             errorMsg.setText("You must input the team assigned!");
         else {
             // Determine floor
-            NodeFloor floor = NodeFloor.THIRD; // Default
-            if(floorChoiceBox.getValue().toString().equals("L2"))
-                floor = NodeFloor.LOWERLEVEL_2;
-            if(floorChoiceBox.getValue().toString().equals("L1"))
-                floor = NodeFloor.LOWERLEVEL_1;
-            if(floorChoiceBox.getValue().toString().equals("0G"))
-                floor = NodeFloor.GROUND;
-            if(floorChoiceBox.getValue().toString().equals("01"))
-                floor = NodeFloor.FIRST;
-            if(floorChoiceBox.getValue().toString().equals("02"))
-                floor = NodeFloor.SECOND;
-            if(floorChoiceBox.getValue().toString().equals("03"))
-                floor = NodeFloor.THIRD;
+            NodeFloor floor = getNodeFloor();
 
             // Determine building
-            NodeBuilding building = NodeBuilding.FRANCIS45; // Default
-            if(buildingChoiceBox.getValue().toString().equals("FRANCIS45"))
-                building = NodeBuilding.FRANCIS45;
-            if(buildingChoiceBox.getValue().toString().equals("BTM"))
-                building = NodeBuilding.BTM;
-            if(buildingChoiceBox.getValue().toString().equals("SHAPIRO"))
-                building = NodeBuilding.SHAPIRO;
-            if(buildingChoiceBox.getValue().toString().equals("TOWER"))
-                building = NodeBuilding.TOWER;
+            NodeBuilding building = getNodeBuilding();
 
             // Determine type
-            NodeType type = NodeType.HALL; // Default
-            if(nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
-                type = NodeType.ELEV;
-            if(nodeTypeChoiceBox.getValue().toString().equals("HALL"))
-                type = NodeType.HALL;
-            if(nodeTypeChoiceBox.getValue().toString().equals("REST"))
-                type = NodeType.REST;
-            if(nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
-                type = NodeType.DEPT;
-            if(nodeTypeChoiceBox.getValue().toString().equals("STAI"))
-                type = NodeType.STAI;
-            if(nodeTypeChoiceBox.getValue().toString().equals("CONF"))
-                type = NodeType.CONF;
-            if(nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
-                type = NodeType.EXIT;
-            if(nodeTypeChoiceBox.getValue().toString().equals("INFO"))
-                type = NodeType.INFO;
-            if(nodeTypeChoiceBox.getValue().toString().equals("LABS"))
-                type = NodeType.LABS;
-            if(nodeTypeChoiceBox.getValue().toString().equals("SERV"))
-                type = NodeType.SERV;
+            NodeType type = getNodeType();
 
             System.out.println("Adding node?");
             // Ensure there is no existing node with that ID
@@ -248,9 +148,105 @@ public class AdminAddNodeController {
                 System.out.println("ssssss");
                 MapEntity.getInstance().addNode(node1);
                 System.out.println("Adding node " + nodeID.getText());
-                this.parent.switchTo(SIDEBAR_MENU);
+                getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
             }
         }
     }
 
+    public NodeType getNodeType() {
+        NodeType type = NodeType.HALL; // Default
+        if(nodeTypeChoiceBox.getValue().toString().equals("ELEV"))
+            type = NodeType.ELEV;
+        if(nodeTypeChoiceBox.getValue().toString().equals("HALL"))
+            type = NodeType.HALL;
+        if(nodeTypeChoiceBox.getValue().toString().equals("REST"))
+            type = NodeType.REST;
+        if(nodeTypeChoiceBox.getValue().toString().equals("DEPT"))
+            type = NodeType.DEPT;
+        if(nodeTypeChoiceBox.getValue().toString().equals("STAI"))
+            type = NodeType.STAI;
+        if(nodeTypeChoiceBox.getValue().toString().equals("CONF"))
+            type = NodeType.CONF;
+        if(nodeTypeChoiceBox.getValue().toString().equals("EXIT"))
+            type = NodeType.EXIT;
+        if(nodeTypeChoiceBox.getValue().toString().equals("INFO"))
+            type = NodeType.INFO;
+        if(nodeTypeChoiceBox.getValue().toString().equals("LABS"))
+            type = NodeType.LABS;
+        if(nodeTypeChoiceBox.getValue().toString().equals("SERV"))
+            type = NodeType.SERV;
+        return type;
+    }
+
+    public NodeFloor getNodeFloor(){
+        NodeFloor fl = NodeFloor.THIRD; // Default
+        if(floorChoiceBox.getValue().toString().equals("L2"))
+            fl = NodeFloor.LOWERLEVEL_2;
+        if(floorChoiceBox.getValue().toString().equals("L1"))
+            fl = NodeFloor.LOWERLEVEL_1;
+        if(floorChoiceBox.getValue().toString().equals("0G"))
+            fl = NodeFloor.GROUND;
+        if(floorChoiceBox.getValue().toString().equals("01"))
+            fl = NodeFloor.FIRST;
+        if(floorChoiceBox.getValue().toString().equals("02"))
+            fl = NodeFloor.SECOND;
+        if(floorChoiceBox.getValue().toString().equals("03"))
+            fl = NodeFloor.THIRD;
+        return fl;
+    }
+
+    public NodeBuilding getNodeBuilding(){
+        NodeBuilding building = NodeBuilding.FRANCIS45; // Default
+        if(buildingChoiceBox.getValue().toString().equals("FRANCIS45"))
+            building = NodeBuilding.FRANCIS45;
+        if(buildingChoiceBox.getValue().toString().equals("BTM"))
+            building = NodeBuilding.BTM;
+        if(buildingChoiceBox.getValue().toString().equals("SHAPIRO"))
+            building = NodeBuilding.SHAPIRO;
+        if(buildingChoiceBox.getValue().toString().equals("TOWER"))
+            building = NodeBuilding.TOWER;
+        return building;
+    }
+
+    @Override
+    public javafx.scene.Node getContentView() {
+        if (contentView == null) {
+            contentView = loadView("/view/addNode.fxml");
+        }
+
+        return contentView;
+    }
+
+    @Override
+    public void onMapLocationClicked(Point2D location) {
+        System.out.println("setCoords");
+        xcoord.setText(String.valueOf(location.getX()));
+        ycoord.setText(String.valueOf(location.getY()));
+    }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) {
+        floorChoiceBox.setValue(getFloorTxt());
+        updateNodeID();
+    }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) {}
+
+    @Override
+    public void onMapNodeClicked(Node node) {}
+
+    @Override
+    public void resetScreen() {
+        xcoord.setText("");
+        ycoord.setText("");
+        nodeID.setText("");
+        floorChoiceBox.setValue(getFloorTxt());
+        buildingChoiceBox.setValue("--select--");
+        nodeTypeChoiceBox.setValue("--select--");
+        lname.setText("");
+        sname.setText("");
+        teamAssignedChoiceBox.setValue("I");
+        errorMsg.setText("");
+    }
 }
