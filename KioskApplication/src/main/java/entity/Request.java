@@ -9,6 +9,8 @@ public class Request {
     Node location;
     String employee;
     int requestID;
+    String notes;
+
 
     public Request(Node location, String employee, int requestID) {
         this.location = location;

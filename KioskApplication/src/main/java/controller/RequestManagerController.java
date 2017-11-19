@@ -33,10 +33,11 @@ public class RequestManagerController {
         System.out.println("Request Manager Pressed\n");
 
         this.parent.switchTo(AdminWindowController.SidebarType.SIDEBAR_VIEWREQUEST);
+
     }
 
     @FXML
-    void showRequests(){
+    void showNewRequests(){
         ArrayList<Request> requests = DatabaseController.getAllRequests();
         ArrayList<String> reqIDs = new ArrayList<String>();
         for (int i = 0; i < requests.size(); i++) {
