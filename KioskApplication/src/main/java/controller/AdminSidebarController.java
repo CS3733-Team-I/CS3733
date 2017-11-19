@@ -124,6 +124,7 @@ public class AdminSidebarController extends ScreenController {
 
     @FXML
     void onReadClicked() {
+        // TODO implement this better
         // Load nodes
         CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapAnodes.csv"));
         CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapBnodes.csv"));
