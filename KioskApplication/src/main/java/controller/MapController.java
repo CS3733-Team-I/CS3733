@@ -189,7 +189,7 @@ public class MapController {
 
     @FXML
     protected void onMapClicked(MouseEvent event) {
-        if (!parent.equals(null)) {
+        if (parent != null) {
             // Check if clicked location is a node
             LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
             for (Node node : floorNodes) {

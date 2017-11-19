@@ -28,16 +28,6 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes = new LinkedList<>();
     }
 
-    public void addNode(Node node) {
-        if (!currentNodes.contains(node)) {
-            currentNodes.add(node);
-
-            TextField nodeNameTextField = new TextField(node.getNodeID());
-            nodeNameTextField.setEditable(false);
-            waypointListVbox.getChildren().add(nodeNameTextField);
-        }
-    }
-
     @FXML
     void showNodes(){
         boolean isS = showNodes.isSelected();
@@ -85,7 +75,13 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
+        if (!currentNodes.contains(node)) {
+            currentNodes.add(node);
 
+            TextField nodeNameTextField = new TextField(node.getNodeID());
+            nodeNameTextField.setEditable(false);
+            waypointListVbox.getChildren().add(nodeNameTextField);
+        }
     }
 
     @Override

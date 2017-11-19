@@ -44,18 +44,15 @@ public class MainWindowController {
     public void switchToScreen(ApplicationScreen screen) {
         ScreenController controller = controllers.get(screen);
 
+        // Initialize controller if it doesn't exist
         if (controller == null) {
             switch (screen) {
                 case ADMIN_MENU:
                     controller = new AdminSidebarController(this, mapController);
-                    switchButton.setText("Logoff");
-                    switchButton.requestFocus();
                     break;
 
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
-                    switchButton.setText("Admin Login");
-                    switchButton.requestFocus();
                     break;
 
                 default:
@@ -63,6 +60,20 @@ public class MainWindowController {
             }
 
             controllers.put(screen, controller);
+        }
+
+        // Additional actions on screen switch
+        switch (screen) {
+            case ADMIN_MENU:
+                switchButton.setText("Logoff");
+                switchButton.requestFocus();
+                break;
+            case PATHFINDING:
+                switchButton.setText("Admin Login");
+                switchButton.requestFocus();
+                break;
+            default:
+                break;
         }
 
         contentWindow.getChildren().clear();
