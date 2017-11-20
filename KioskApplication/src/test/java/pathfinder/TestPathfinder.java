@@ -153,11 +153,11 @@ public class TestPathfinder {
         Path multiPath = pathfinder.generatePath(nodes);
     }
 
-    //TODO this doesnt test anything yet will test brath first search soon
+    //TODO this doesnt test anything yet will test breadth first search soon
     @Test
     public void testBreathFirstSearch() {
-        Pathfinder breath = new Pathfinder(new BreadthFirst());
-        Path path = breath.generatePath(n1, n4);
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
         testPath2Edges.add(e3);
