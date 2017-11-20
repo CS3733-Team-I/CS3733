@@ -2,6 +2,7 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
+import entity.InterpreterRequest;
 import entity.Request;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -41,9 +42,15 @@ public class RequestManagerController extends ScreenController {
         activeRequests.getChildren().clear();
         ArrayList<Request> requests = DatabaseController.getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
-            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + requests.get(i).getRequestID());
+            int id = requests.get(i).getRequestID();
+            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
             requestTextField.setEditable(false);
+            Label typeOfRequest = new Label("Type: generic");
+            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
+            //TODO find what type of reqeust it is
             activeRequests.getChildren().add(requestTextField);
+            activeRequests.getChildren().add(typeOfRequest);
+            activeRequests.getChildren().add(locationOfRequest);
         }
     }
 
