@@ -29,4 +29,7 @@ public class Request {
     public int getRequestID(){
         return this.requestID;
     }
+    public Node getLocation(){
+        return this.location;
+    }
 }

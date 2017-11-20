@@ -1,21 +1,35 @@
 package controller;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import entity.Administrator;
 import entity.AdministratorList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class LoginController {
+public class LoginController implements Initializable{
 
     @FXML
-    TextField tfEmail;
+    JFXTextField tfEmail;
     @FXML
-    PasswordField pfPassword;
+    JFXPasswordField pfPassword;
     @FXML
     Label errorMsg;
 
@@ -26,23 +40,54 @@ public class LoginController {
     public LoginController(MainWindowController parent) {
         this.parent = parent;
         this.AdminList = new AdministratorList();
-        AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
+        AdminList.addAdministrator(new Administrator("boss@hospital.com", "123"));
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        RequiredFieldValidator EmailValidator = new RequiredFieldValidator();
+        RequiredFieldValidator PasswordValidator = new RequiredFieldValidator();
+
+        tfEmail.getValidators().add(EmailValidator);
+        pfPassword.getValidators().add(PasswordValidator);
+        EmailValidator.setMessage("Email Required");
+        PasswordValidator.setMessage("Password Required");
+
+        tfEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    tfEmail.validate();
+                }
+            }
+        });
+        pfPassword.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    pfPassword.validate();
+                }
+            }
+        });
+
+
+        Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
+        EmailValidator.setIcon(new ImageView(invalidInputIcn));
+        PasswordValidator.setIcon(new ImageView(invalidInputIcn));
+
+    }
 
     @FXML
     public void OnLoginClicked() throws IOException {
 
-        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
+        if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
             parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
-            parent.loginPopup.getChildren().clear();
-            parent.loginPopup.getChildren().add(parent.switchButton);
-            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
-            //parent.serviceTab.setDisable(false);
-            //parent.managerTab.setDisable(false);
-            //parent.builderTab.setDisable(false);
+            parent.LoginPopup.getChildren().clear();
+            parent.LoginPopup.getChildren().add(parent.switchButton);
+            parent.currentScreen = ApplicationScreen.ADMIN_MENU;
+//            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
             errorMsg.setText("Invalid Login. ");
@@ -52,7 +97,7 @@ public class LoginController {
     @FXML
     public void OnBackClicked () throws IOException {
         parent.switchToScreen(ApplicationScreen.PATHFINDING);
-        parent.loginPopup.getChildren().clear();
-        parent.loginPopup.getChildren().add(parent.switchButton);
+        parent.LoginPopup.getChildren().clear();
+        parent.LoginPopup.getChildren().add(parent.switchButton);
     }
 }

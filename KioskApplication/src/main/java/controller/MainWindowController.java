@@ -1,6 +1,10 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
@@ -11,8 +15,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -21,13 +28,14 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML Button switchButton;
-    @FXML AnchorPane contentWindow;
-    @FXML AnchorPane loginPopup;
-    @FXML Label lbAdminInfo;
-
     @FXML JFXTabPane tabPane;
 
+    @FXML AnchorPane contentWindow;
+    @FXML AnchorPane LoginPopup;
+    @FXML JFXButton switchButton;
+    //@FXML Label lbAdminInfo;
+    //@FXML JFXDrawer Sidebar;
+    @FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -99,11 +107,8 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Admin viewLoginScreen");
+                switchButton.setText("Employee Login");
                 switchButton.requestFocus();
-                //serviceTab.setDisable(true);
-                //managerTab.setDisable(true);
-                //builderTab.setDisable(true);
                 break;
             default:
                 break;
@@ -164,18 +169,42 @@ public class MainWindowController {
         });
 
         this.switchToScreen(ApplicationScreen.PATHFINDING);
+
+        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
+        //Initialize Hamburger
+//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
+//        BATransition.setRate(-1);
+//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+//            BATransition.setRate(BATransition.getRate()*-1);
+//            BATransition.play();
+//
+//            if(Sidebar.isShown()) {
+//                System.out.println("HERE1");
+//                Sidebar.close();
+//            }
+//            else {
+//                System.out.println("HERE2");
+//                Sidebar.open();
+//            }
+//        });
     }
 
     @FXML
-    private void viewLoginScreen() throws IOException{
-        // TODO this isn't great OO, rewrite at some point
+    private void Login() throws IOException{
         LoginController loginController = new LoginController(this);
-        FXMLLoader loader;
-        loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
         loader.setController(loginController);
-        loginPopup.getChildren().clear();
-        loginPopup.getChildren().add(loader.load());
-        loginController.tfEmail.requestFocus();
+        javafx.scene.Node view = loader.load();
+
+        BorderPane loginContainer = new BorderPane();
+        AnchorPane.setTopAnchor(loginContainer, 0.0);
+        AnchorPane.setLeftAnchor(loginContainer, 0.0);
+        AnchorPane.setBottomAnchor(loginContainer, 0.0);
+        AnchorPane.setRightAnchor(loginContainer, 0.0);
+
+        loginContainer.setCenter(view);
+
+        contentWindow.getChildren().add(loginContainer);
     }
 
     @FXML
@@ -191,10 +220,11 @@ public class MainWindowController {
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
-                this.lbAdminInfo.setText("");
+                currentScreen = ApplicationScreen.PATHFINDING;
+                //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.viewLoginScreen();
+                this.Login();
                 break;
         }
     }
