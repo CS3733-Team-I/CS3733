@@ -52,6 +52,15 @@ public class PathfinderNode {
         return previousCost;
     }
 
+    public LinkedList<PathfinderNode> getConnectedNodes(MapEntity mapEntity){
+        LinkedList<Node> nodeslist = mapEntity.getConnectedNodes(node);
+        LinkedList<PathfinderNode> holder = new LinkedList<>();
+        for(Node n: nodeslist){
+            holder.add(new PathfinderNode(n));
+        }
+        return holder;
+    }
+
 
     public int getTotalCost() {
         return totalCost;
