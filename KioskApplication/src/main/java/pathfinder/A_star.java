@@ -144,7 +144,7 @@ public class A_star implements SearchAlgorithm {
      * @param parent node that you came from
      * @param endNode node after this node
      */
-    private void prepForFrontier(PathfinderNode node, PathfinderNode parent, PathfinderNode endNode){
+    public void prepForFrontier(PathfinderNode node, PathfinderNode parent, PathfinderNode endNode){
         node.setParentNode(parent);
         int previousCost = node.calculatePreviousCost(parent);
         node.setPreviousCost(previousCost);
