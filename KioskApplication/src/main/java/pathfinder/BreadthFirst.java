@@ -5,7 +5,7 @@ import database.objects.Node;
 
 import java.util.LinkedList;
 
-public class Breadth_first implements SearchAlgorithm{
+public class BreadthFirst implements SearchAlgorithm{
 
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{

@@ -13,10 +13,10 @@ public class A_star implements SearchAlgorithm {
 
     /**
      * Uses the A* search algorithm to find a path between two nodes.
-     * @param startingNode
-     * @param endingNode
-     * @return
-     * @throws PathfinderException
+     * @param startingNode node to start navigation from
+     * @param endingNode node to end navigation at
+     * @return LinkedList<Edge> a linked list of edges
+     * @throws PathfinderException if there are errors
      */
     @Override
     public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
@@ -121,31 +121,30 @@ public class A_star implements SearchAlgorithm {
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 
         // handler for no path found
-        if(pathEdges.equals(null))throw new PathfinderException("No Path was found, Please choose another path");
+        if(pathEdges == null)throw new PathfinderException("No Path was found, Please choose another path");
         // return generated path of nodes
         return pathEdges;
     }
 
     /**
      * Estimates the distance between two nodes.
-     * @param node1
-     * @param node2
+     * @param node1 a pathfinding node
+     * @param node2 another pathfinding node
      * @return  An estimate of the distance between node1 and node2.
      */
-    public int heuristic(PathfinderNode node1, PathfinderNode node2){
+    private int heuristic(PathfinderNode node1, PathfinderNode node2){
         double xDistance = node1.getNode().getXcoord() - node2.getNode().getXcoord();
         double yDistance = node1.getNode().getYcoord() - node2.getNode().getYcoord();
-        int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-        return straightLineDistance;
+        return (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
     }
 
     /**
      * Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
-     * @param node
-     * @param parent
-     * @param endNode
+     * @param node current node to do calculations on
+     * @param parent node that you came from
+     * @param endNode node after this node
      */
-    public void prepForFrontier(PathfinderNode node, PathfinderNode parent, PathfinderNode endNode){
+    private void prepForFrontier(PathfinderNode node, PathfinderNode parent, PathfinderNode endNode){
         node.setParentNode(parent);
         int previousCost = node.calculatePreviousCost(parent);
         node.setPreviousCost(previousCost);
