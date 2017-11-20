@@ -6,20 +6,22 @@ import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class InterpreterRequestController extends ScreenController{
+public class RequestSubmitterController extends ScreenController implements Initializable{
 
-    public InterpreterRequestController(MainWindowController parent, MapController map) {
+    public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
     }
 
@@ -27,6 +29,14 @@ public class InterpreterRequestController extends ScreenController{
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
     @FXML private JFXComboBox langMenu;
+    @FXML private Tab InterpreterTab;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        Image InterpreterIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
+        InterpreterTab.setGraphic(new ImageView(InterpreterIcn));
+    }
+
 
 
     @FXML
@@ -88,7 +98,7 @@ public class InterpreterRequestController extends ScreenController{
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/SubmitRequestView.fxml");
+            contentView = loadView("/view/RequestSubmitterView.fxml");
         }
 
         return contentView;
