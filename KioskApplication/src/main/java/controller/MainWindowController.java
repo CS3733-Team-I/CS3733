@@ -131,6 +131,7 @@ public class MainWindowController {
         loader.setController(LC);
         LoginPopup.getChildren().clear();
         LoginPopup.getChildren().add(loader.load());
+
         LC.tfEmail.requestFocus();
     }
 

@@ -1,5 +1,7 @@
 package controller;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import entity.Administrator;
 import entity.AdministratorList;
 import javafx.fxml.FXML;
@@ -13,9 +15,9 @@ import java.io.IOException;
 public class LoginController {
 
     @FXML
-    TextField tfEmail;
+    JFXTextField tfEmail;
     @FXML
-    PasswordField pfPassword;
+    JFXPasswordField pfPassword;
     @FXML
     Label errorMsg;
 
