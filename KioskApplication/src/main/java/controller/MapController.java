@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import utility.NodeFloor;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -232,6 +233,7 @@ public class MapController {
 //        double pinH = wayPointObject.getBoundsInLocal().getHeight();
         wayPointObject.setTranslateX(event.getX()-24);
         wayPointObject.setTranslateY(event.getY()-60);
+        //TODO hanld waypoint option
         wayPointObject.setOnAction(ActionEvent -> WaypointOptions());
         stackPane.getChildren().add(wayPointObject);
         this.wayPoints.add(wayPointObject);
@@ -240,7 +242,7 @@ public class MapController {
 //        System.out.println("actually at "+ wayPointObject.getLayoutX() + " " + wayPointObject.getLayoutX());
 
     }
-
+    //TODO hanld waypoint option
     @FXML
     private void WaypointOptions() {
         System.out.println("Here");
@@ -261,7 +263,6 @@ public class MapController {
     }
 
     private void zoom(double scaleValue) {
-//    System.out.println("airportapp.Controller.zoom, scaleValue: " + scaleValue);
         double scrollH = scrollPane.getHvalue();
         double scrollV = scrollPane.getVvalue();
         zoomGroup.setScaleX(scaleValue);
