@@ -11,8 +11,8 @@
       <JFXTabPane fx:id="tabPane" prefHeight="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab text="Map" />
-            <Tab text="Edit" />
-            <Tab text="Request Manager" />
+            <Tab fx:id="builderTab" text="Edit" />
+            <Tab fx:id="managerTab" text="Request Manager" />
          </tabs>
       </JFXTabPane>
       <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />

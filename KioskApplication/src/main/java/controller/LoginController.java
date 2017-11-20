@@ -41,8 +41,8 @@ public class LoginController {
             parent.LoginPopup.getChildren().add(parent.switchButton);
             parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
             //parent.serviceTab.setDisable(false);
-            //parent.managerTab.setDisable(false);
-            //parent.builderTab.setDisable(false);
+            parent.managerTab.setDisable(false);
+            parent.builderTab.setDisable(false);
         }
         else {
             errorMsg.setText("Invalid Login. ");

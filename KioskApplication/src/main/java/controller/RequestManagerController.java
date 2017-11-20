@@ -38,9 +38,10 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(){
+        activeRequests.getChildren().clear();
         ArrayList<Request> requests = DatabaseController.getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
-            TextField requestTextField = new TextField("Request ID: " + requests.get(i).getRequestID());
+            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + requests.get(i).getRequestID());
             requestTextField.setEditable(false);
             activeRequests.getChildren().add(requestTextField);
         }
@@ -58,6 +59,7 @@ public class RequestManagerController extends ScreenController {
         int ID = Integer.parseInt(txtID.getText());
         DatabaseController.deleteRequest(ID);
         System.out.println("Complete Pressed \n");
+        showRequests();
     }
 
     @Override

@@ -26,6 +26,8 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
+    @FXML Tab managerTab;
+    @FXML Tab builderTab;
 
     @FXML JFXTabPane tabPane;
 
