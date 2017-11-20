@@ -37,9 +37,12 @@ public class LoginController {
             parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
-            parent.LoginPopup.getChildren().clear();
-            parent.LoginPopup.getChildren().add(parent.switchButton);
+            parent.loginPopup.getChildren().clear();
+            parent.loginPopup.getChildren().add(parent.switchButton);
             parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
+            //parent.serviceTab.setDisable(false);
+            //parent.managerTab.setDisable(false);
+            //parent.builderTab.setDisable(false);
         }
         else {
             errorMsg.setText("Invalid Login. ");
@@ -49,7 +52,7 @@ public class LoginController {
     @FXML
     public void OnBackClicked () throws IOException {
         parent.switchToScreen(ApplicationScreen.PATHFINDING);
-        parent.LoginPopup.getChildren().clear();
-        parent.LoginPopup.getChildren().add(parent.switchButton);
+        parent.loginPopup.getChildren().clear();
+        parent.loginPopup.getChildren().add(parent.switchButton);
     }
 }
