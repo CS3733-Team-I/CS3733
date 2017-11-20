@@ -16,7 +16,7 @@ public class Main extends Application {
         MapEntity.getInstance().readAllFromDatabase();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
-        primaryStage.setTitle("Iteration 1");
+        primaryStage.setTitle("Iteration 2");
 
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
