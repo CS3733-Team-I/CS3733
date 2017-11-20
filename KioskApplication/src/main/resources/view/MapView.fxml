@@ -4,63 +4,37 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.effect.Blend?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
 
 <fx:root fx:id="container" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.52" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.3" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane fx:id="stackPane" alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
+            <StackPane alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/03_thethirdfloor.png" />
                      </image>
                   </ImageView>
+                  <AnchorPane fx:id="edgesPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="pathPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>
          </content>
       </ScrollPane>
-      <JFXButton buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" style="-fx-background-color: #42f4ee;" text="Recenter" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
-         <ripplerFill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-               <stops>
-                  <Stop color="#2e0ae4" />
-                  <Stop color="WHITE" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </ripplerFill>
-      </JFXButton>
-      <JFXComboBox fx:id="floorSelector" labelFloat="true" onAction="#floorSelected" prefHeight="27.0" prefWidth="157.0" promptText="   Select Floor" style="-fx-background-color: #a9d7f2;" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="0.0">
-         <effect>
-            <Blend mode="OVERLAY">
-               <topInput>
-                  <Shadow />
-               </topInput>
-            </Blend>
-         </effect>
-         <cursor>
-            <Cursor fx:constant="CROSSHAIR" />
-         </cursor>
-      </JFXComboBox>
-      <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" AnchorPane.bottomAnchor="119.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="116.0">
+      <JFXButton buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <JFXComboBox fx:id="floorSelector" onAction="#floorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
          <children>
-            <JFXButton onAction="#zoomInPressed" prefHeight="0.0" prefWidth="30.0" ripplerFill="#ffffff00">
-               <VBox.margin>
-                  <Insets left="5.0" />
-               </VBox.margin>
-            </JFXButton>
             <JFXButton buttonType="RAISED" onAction="#zoomInPressed" style="-fx-background-color: #00ffbf;" text="+">
                <ripplerFill>
                   <LinearGradient cycleMethod="REFLECT" endX="1.0" endY="0.12980769230769226" startX="1.0" startY="1.0">
