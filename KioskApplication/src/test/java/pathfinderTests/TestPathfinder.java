@@ -151,4 +151,6 @@ public class TestPathfinder {
         //TODO: test multiple waypoints
         Path multiPath = pathfinder.generatePath(nodes);
     }
+
+
 }

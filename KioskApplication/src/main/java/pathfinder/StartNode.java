@@ -24,4 +24,8 @@ public class StartNode extends PathfinderNode {
     public int calculatePreviousCost(PathfinderNode potentialParent){
         return 0;  //first node, so no previous cost.
     }
+    @Override
+    public void setParentNode(PathfinderNode parentNode) {
+        this.parentNode = parentNode;
+    }
 }

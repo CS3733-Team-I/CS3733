@@ -16,6 +16,9 @@ public class PathfinderNode {
 
     public PathfinderNode(Node node) {
         this.node = node;
+        this.parentNode = null;
+        this.childNodes = new LinkedList<>();
+
     }
 
     //Recursive method to build a path from this node, its parent, etc. back to the start.

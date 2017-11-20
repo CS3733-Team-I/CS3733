@@ -101,6 +101,10 @@ public class Pathfinder {
         return(generatePath(waypoints));
     }
 
+    public SearchAlgorithm getSearchAlgorithm() {
+        return searchAlgorithm;
+    }
+
     public void setSearchAlgorithm(SearchAlgorithm searchAlgorithm) {
         this.searchAlgorithm = searchAlgorithm;
     }
