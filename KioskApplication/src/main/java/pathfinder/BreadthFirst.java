@@ -39,22 +39,23 @@ public class BreadthFirst implements SearchAlgorithm{
         PathfinderNode previousNode = null;
 
         while(!queue.isEmpty()){
-            PathfinderNode current = queue.remove();
+            PathfinderNode current = queue.remove(0);
             if(current.node.getNodeID().equals(endingNode.getNode().getNodeID())) {
-                endingNode.setParentNode(previousNode);
-                return endingNode.buildPath();
+               // endingNode.setParentNode(previousNode);
+                return current.buildPath();
             }
             else{
                 if(getAndCheckForConnectedNodes(explored,current,map).isEmpty()){
-                    queue.add(current.parentNode);//throw new PathfinderException("No path found"); check this
+                   // current.parentNode = pr
+                   // queue.add(queue.remove());//throw new PathfinderException("No path found"); check this
                 }
                 else{
                     queue.addAll(getAndCheckForConnectedNodes(explored,current,map));
                 }
             }
-            current.setParentNode(previousNode);
+            //current.setParentNode(previousNode);
             explored.add(current);
-            previousNode = current;
+           // previousNode = current;
         }
         return endingNode.buildPath();
     }
@@ -64,6 +65,8 @@ public class BreadthFirst implements SearchAlgorithm{
         LinkedList<PathfinderNode> holder = new LinkedList<>();
         holder.addAll(connectedNodes);
         for(PathfinderNode pathfinderNode1: connectedNodes){
+            if(pathfinderNode1.parentNode == null && pathfinderNode !=null)
+                pathfinderNode1.parentNode = pathfinderNode;
             for (PathfinderNode explored: listExplored){
                 if(pathfinderNode1.node.getNodeID().equals(explored.getNode().getNodeID())){
                     holder.remove(pathfinderNode1);
