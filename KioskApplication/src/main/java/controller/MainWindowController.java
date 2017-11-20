@@ -106,7 +106,6 @@ public class MainWindowController {
 
         // Reset controller's view
         controller.resetScreen();
-
         currentScreen = screen;
     }
 
