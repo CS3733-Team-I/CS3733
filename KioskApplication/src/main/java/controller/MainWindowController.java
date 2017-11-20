@@ -100,6 +100,7 @@ public class MainWindowController {
 
         // Display view with new controller
         contentWindow.getChildren().clear();
+        Sidebar.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         Sidebar.getChildren().add(controller.getContentView());
 
