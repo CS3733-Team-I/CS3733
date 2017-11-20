@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXDrawer?>
-<?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
@@ -11,7 +9,6 @@
     <children>
         <AnchorPane fx:id="contentWindow" layoutY="49.0" prefHeight="221.0" prefWidth="488.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="49.0" />
         <AnchorPane fx:id="LoginPopup" prefHeight="140.0" prefWidth="200.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="130.0" />
-      <JFXDrawer fx:id="Sidebar" layoutY="49.0" prefHeight="221.0" prefWidth="100.0" style="-fx-background-color: #bff2ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="60.0" />
       <JFXButton fx:id="switchButton" buttonType="RAISED" layoutX="360.0" layoutY="14.0" onAction="#switchButtonClicked" prefHeight="33.0" prefWidth="128.0" style="-fx-background-color: #4286f4;" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="14.0">
          <ripplerFill>
             <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
@@ -22,6 +19,5 @@
             </RadialGradient>
          </ripplerFill>
       </JFXButton>
-      <JFXHamburger fx:id="SidebarHam" layoutX="14.0" layoutY="14.0" />
     </children>
 </AnchorPane>

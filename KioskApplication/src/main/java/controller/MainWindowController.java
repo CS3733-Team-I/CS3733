@@ -26,7 +26,7 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
-    @FXML JFXDrawer Sidebar;
+    //@FXML JFXDrawer Sidebar;
     @FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
@@ -104,10 +104,10 @@ public class MainWindowController {
 
         // Display view with new controller
         contentWindow.getChildren().clear();
-        Sidebar.getChildren().clear();
+        //Sidebar.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        Sidebar.getChildren().add(controller.getContentView());
-        Sidebar.close();
+        //idebar.getChildren().add(controller.getContentView());
+        contentWindow.getChildren().add(controller.getContentView());
 
         // Reset controller's view
         controller.resetScreen();
@@ -128,12 +128,12 @@ public class MainWindowController {
         this.switchToScreen(ApplicationScreen.PATHFINDING);
 
         //Initialize Hamburger
-        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
-        BATransition.setRate(-1);
-        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
-            BATransition.setRate(BATransition.getRate()*-1);
-            BATransition.play();
-            this.Sidebar.toggle();//TODO THIS IS NOT WORKING
+//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
+//        BATransition.setRate(-1);
+//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+//            BATransition.setRate(BATransition.getRate()*-1);
+//            BATransition.play();
+//            //TODO THIS IS NOT WORKING
 //            if(Sidebar.isShown()) {
 //                System.out.println("HERE1");
 //                Sidebar.close();
@@ -142,7 +142,7 @@ public class MainWindowController {
 //                System.out.println("HERE2");
 //                Sidebar.open();
 //            }
-        });
+//        });
     }
 
     @FXML
