@@ -8,8 +8,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -20,6 +23,7 @@ import javafx.scene.shape.Line;
 import utility.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +34,10 @@ public class MapController {
     @FXML private StackPane stackPane;
     @FXML private ScrollPane scrollPane;
     @FXML private ComboBox<NodeFloor> floorSelector;
+    @FXML private Slider zoomSlider;
+    @FXML private MenuButton mapPin;
+
+    Group zoomGroup;
 
     private MainWindowController parent = null;
 
@@ -43,8 +51,22 @@ public class MapController {
 
     public MapController() { }
 
-    public void setParent(MainWindowController controller) {
+    public void setParent(MainWindowController controller)
+    {
         parent = controller;
+    }
+
+    public void ScrollGroupInit() {
+        zoomSlider.setMin(0.5);
+        zoomSlider.setMax(1.5);
+        zoomSlider.setValue(1.0);
+        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
+        // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
+        Group contentGroup = new Group();
+        zoomGroup = new Group();
+        contentGroup.getChildren().add(zoomGroup);
+        zoomGroup.getChildren().add(scrollPane.getContent());
+        scrollPane.setContent(contentGroup);
     }
 
     public void setShowNodes(boolean showNodes) {
@@ -204,13 +226,28 @@ public class MapController {
 
     @FXML
     protected void zoomInPressed() {
-        System.out.println("Zoom in pressed.");
+        //System.out.println("Zoom in clicked");
+        double sliderVal = zoomSlider.getValue();
+        zoomSlider.setValue(sliderVal += 0.1);
     }
 
     @FXML
     protected void zoomOutPressed() {
-        System.out.println("Zoom out pressed.");
+        //System.out.println("Zoom out clicked");
+        double sliderVal = zoomSlider.getValue();
+        zoomSlider.setValue(sliderVal + -0.1);
     }
+
+    private void zoom(double scaleValue) {
+//    System.out.println("airportapp.Controller.zoom, scaleValue: " + scaleValue);
+        double scrollH = scrollPane.getHvalue();
+        double scrollV = scrollPane.getVvalue();
+        zoomGroup.setScaleX(scaleValue);
+        zoomGroup.setScaleY(scaleValue);
+        scrollPane.setHvalue(scrollH);
+        scrollPane.setVvalue(scrollV);
+    }
+
 
     @FXML
     protected void recenterPressed() {

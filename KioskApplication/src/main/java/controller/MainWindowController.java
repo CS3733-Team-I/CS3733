@@ -114,11 +114,12 @@ public class MainWindowController {
         mapController = new MapController();
         mapController.setParent(this);
 
+
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-
+        mapController.ScrollGroupInit();
         this.switchToScreen(ApplicationScreen.PATHFINDING);
     }
 
