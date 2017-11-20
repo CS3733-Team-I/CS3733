@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CSVFileUtil {
-    public static void readNodesCSV(InputStream  in) {
+    public static void readNodesCSV(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         String line;
@@ -127,14 +127,28 @@ public class CSVFileUtil {
                             elements[7].trim(),
                             elements[8].trim());
 
+                    // Attempt to first insert the node to the database
+                    boolean success = false;
                     try {
                         Connector.insertNode(conn, node);
-                    } catch (SQLException e1) {
-                        if (e1.getSQLState() != "23505") {
+                        success = true;
+                    } catch (SQLException e) {
+                        if (e.getSQLState() != "23505") {
                             break;
                         }
                     }
-                    //        System.out.println(line);
+
+                    // If the insert failed try to update instead
+                    if (!success) {
+                        try {
+                            Connector.updateNode(conn, node);
+                        } catch (SQLException e) {
+                            if (e.getSQLState() != "23505") {
+                                break;
+                            }
+                        }
+                    }
+
                 }
             }
         } catch (IOException e2) {

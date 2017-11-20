@@ -1,47 +1,40 @@
 package controller;
 
+import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import pathfinder.A_star;
 import pathfinder.Pathfinder;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import pathfinder.Pathfinder;
+import utility.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class PathfindingSidebarController {
+public class PathfindingSidebarController extends ScreenController {
 
     @FXML VBox waypointListVbox;
     @FXML private CheckBox showNodes;
 
-    PathfindingWindowController parent = null;
-
     LinkedList<Node> currentNodes;
 
-    PathfindingSidebarController(PathfindingWindowController parent) {
-        this.parent = parent;
+    public PathfindingSidebarController(MainWindowController parent, MapController map) {
+        super(parent, map);
+
         currentNodes = new LinkedList<>();
-    }
-
-    public void addNode(Node node) {
-        if (!currentNodes.contains(node)) {
-            currentNodes.add(node);
-
-            TextField nodeNameTextField = new TextField(node.getNodeID());
-            nodeNameTextField.setEditable(false);
-            waypointListVbox.getChildren().add(nodeNameTextField);
-        }
     }
 
     @FXML
     void showNodes(){
         boolean isS = showNodes.isSelected();
         System.out.println(isS);
-        this.parent.setShowNodes(isS);
+        getMapController().setShowNodes(isS);
     }
 
     @FXML
@@ -65,7 +58,50 @@ public class PathfindingSidebarController {
 
     @FXML
     void btClearPathPressed() throws IOException {
-        parent.ClearPathOnMap();
+        getMapController().clearMap();
+    }
+
+    @Override
+    public javafx.scene.Node getContentView() {
+        if (contentView == null) {
+            contentView = loadView("/view/PathfindingSidebarView.fxml");
+        }
+
+        return contentView;
+    }
+
+    @Override
+    public void onMapLocationClicked(Point2D location) {
+
+    }
+
+    @Override
+    public void onMapNodeClicked(Node node) {
+        if (!currentNodes.contains(node)) {
+            currentNodes.add(node);
+
+            TextField nodeNameTextField = new TextField(node.getNodeID());
+            nodeNameTextField.setEditable(false);
+            waypointListVbox.getChildren().add(nodeNameTextField);
+        }
+    }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) {
+
+    }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) {
+
+    }
+
+    @Override
+    public void resetScreen() {
+        onResetPressed();
+        showNodes.setSelected(false);
+        getMapController().setShowNodes(false);
+
+        getMapController().setAnchor(0, 200, 0, 0);
     }
 }
-//Two node IDs for testing: IDEPT00503 and IREST00103
