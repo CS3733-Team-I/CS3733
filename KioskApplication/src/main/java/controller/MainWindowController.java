@@ -81,6 +81,10 @@ public class MainWindowController {
                     controller = new InterpreterRequestController(this, mapController);
                     break;
 
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    break;
+
                 default:
                     break;
             }
@@ -153,8 +157,7 @@ public class MainWindowController {
                         //switchToScreen(ApplicationScreen.ADMIN_MENU);
                         break;
                     case "Settings":
-                        // TODO implement settings screen
-                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                         break;
                 }
             }
@@ -184,6 +187,7 @@ public class MainWindowController {
             case ADMIN_DEL_EDGE:
             case ADMIN_ADD_NODE:
             case ADMIN_ADD_EDGE:
+            case ADMIN_SETTINGS:
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();

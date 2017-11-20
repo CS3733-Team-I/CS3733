@@ -84,6 +84,8 @@ public class AdminAddNodeController extends ScreenController {
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
             // Set the determined nodeID
             nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+            // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
+            // TODO implement this
         }
     }
 
