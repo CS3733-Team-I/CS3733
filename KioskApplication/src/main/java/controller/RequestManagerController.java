@@ -8,6 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -21,7 +22,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
-    private ComboBox activeRequests;
+    private VBox activeRequests;
     @FXML
     private Label totalRequests;
     @FXML
@@ -38,15 +39,11 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void showRequests(){
         ArrayList<Request> requests = DatabaseController.getAllRequests();
-        ArrayList<String> reqIDs = new ArrayList<String>();
         for (int i = 0; i < requests.size(); i++) {
-             reqIDs.add("Request ID: " + requests.get(i).getRequestID());
+            TextField requestTextField = new TextField("Request ID: " + requests.get(i).getRequestID());
+            requestTextField.setEditable(false);
+            activeRequests.getChildren().add(requestTextField);
         }
-
-        activeRequests.getItems().clear();
-        activeRequests.getItems().addAll(reqIDs);
-        int requestNum = DatabaseController.getAllRequests().size();
-        totalRequests.setText("Total Requests: " + requestNum + ".");
     }
 
     @FXML
@@ -86,6 +83,6 @@ public class RequestManagerController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        // TODO implement this
+        getMapController().setAnchor(0,400,0,0);
     }
 }

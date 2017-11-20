@@ -139,6 +139,9 @@ public class MainWindowController {
                     case "Edit":
                         switchToScreen(ApplicationScreen.ADMIN_MENU);
                         break;
+                    case "Request Manager":
+                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        break;
                 }
             }
         });

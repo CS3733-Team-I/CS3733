@@ -6,22 +6,13 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import javafx.scene.layout.VBox?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
    <children>
       <JFXTabPane fx:id="tabPane" prefHeight="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab text="Map" />
             <Tab text="Edit" />
-            <Tab text="Request" />
+            <Tab text="Request Manager" />
          </tabs>
       </JFXTabPane>
       <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
