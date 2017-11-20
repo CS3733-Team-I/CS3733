@@ -5,6 +5,7 @@ import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import pathfinder.A_star;
+import pathfinder.BreadthFirst;
 import pathfinder.Pathfinder;
 import utility.NodeFloor;
 import org.junit.Before;
@@ -150,6 +151,26 @@ public class TestPathfinder {
         nodes.add(n6);
         //TODO: test multiple waypoints
         Path multiPath = pathfinder.generatePath(nodes);
+    }
+
+    //TODO this doesnt test anything yet will test brath first search soon
+    @Test
+    public void testBreathFirstSearch() {
+        Pathfinder breath = new Pathfinder(new BreadthFirst());
+        Path path = breath.generatePath(n1, n4);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(e1);
+        testPath2Edges.add(e3);
+
+       // LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        //testPath2Waypoints.add(n1);
+       // testPath2Waypoints.add(n4);
+
+       // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+       // assertTrue(path.equals(testPath2Edges));
+       // System.out.println(path2.getEdges().toString());
+       // System.out.println(testPath2.getEdges().toString());
     }
 
 
