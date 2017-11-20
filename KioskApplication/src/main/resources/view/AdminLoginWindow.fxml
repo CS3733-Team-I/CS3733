@@ -10,8 +10,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Rectangle?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="520.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
@@ -35,15 +33,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </JFXPasswordField>
-                  <JFXButton buttonType="RAISED" onAction="#OnLoginClicked" prefHeight="46.0" prefWidth="180.0" style="-fx-background-color: #4c90ff;" text="Login &gt;&gt;">
-                     <ripplerFill>
-                        <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-                           <stops>
-                              <Stop color="#13c60d" />
-                              <Stop color="WHITE" offset="1.0" />
-                           </stops>
-                        </RadialGradient>
-                     </ripplerFill>
+                  <JFXButton buttonType="RAISED" onAction="#OnLoginClicked" prefHeight="46.0" prefWidth="180.0" ripplerFill="BLACK" style="-fx-background-color: #4c90ff;" text="Login &gt;&gt;">
                      <VBox.margin>
                         <Insets top="30.0" />
                      </VBox.margin>

@@ -191,13 +191,20 @@ public class MainWindowController {
 
     @FXML
     private void Login() throws IOException{
-        LoginController LC = new LoginController(this);
-        FXMLLoader loader;
-        loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
-        loader.setController(LC);
-        LoginPopup.getChildren().clear();
-        LoginPopup.getChildren().add(loader.load());
-        LC.tfEmail.requestFocus();
+        LoginController loginController = new LoginController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
+        loader.setController(loginController);
+        javafx.scene.Node view = loader.load();
+
+        BorderPane loginContainer = new BorderPane();
+        AnchorPane.setTopAnchor(loginContainer, 0.0);
+        AnchorPane.setLeftAnchor(loginContainer, 0.0);
+        AnchorPane.setBottomAnchor(loginContainer, 0.0);
+        AnchorPane.setRightAnchor(loginContainer, 0.0);
+
+        loginContainer.setCenter(view);
+
+        contentWindow.getChildren().add(loginContainer);
     }
 
     @FXML
