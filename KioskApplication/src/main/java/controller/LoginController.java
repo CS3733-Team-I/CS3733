@@ -70,13 +70,11 @@ public class LoginController implements Initializable{
             }
         });
 
-        try {
-            Image invalidInputIcn = new Image(new FileInputStream("/images/invalid_input.png"));
-            EmailValidator.setIcon(new ImageView(invalidInputIcn));
-            PasswordValidator.setIcon(new ImageView(invalidInputIcn));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
+        EmailValidator.setIcon(new ImageView(invalidInputIcn));
+        PasswordValidator.setIcon(new ImageView(invalidInputIcn));
+
     }
 
     @FXML
