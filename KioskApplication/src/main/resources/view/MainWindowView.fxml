@@ -6,18 +6,22 @@
 <?import javafx.scene.paint.Stop?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
-   <children>
-      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <AnchorPane fx:id="LoginPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="227.0" prefWidth="249.0" AnchorPane.rightAnchor="560.0" AnchorPane.topAnchor="150.0" />
-      <JFXButton fx:id="switchButton" buttonType="RAISED" onAction="#switchButtonClicked" prefHeight="36.0" prefWidth="117.0" style="-fx-background-color: #1a68ef;" text="Employee Login" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-         <ripplerFill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-               <stops>
-                  <Stop color="#1bc627" />
-                  <Stop color="WHITE" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </ripplerFill>
-      </JFXButton>
-   </children>
+    <children>
+        <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane prefHeight="84.0" prefWidth="430.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <JFXButton fx:id="switchButton" buttonType="RAISED" layoutX="302.0" onAction="#switchButtonClicked" prefHeight="33.0" prefWidth="128.0" style="-fx-background-color: #4286f4;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <ripplerFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop color="#3ddd19d6" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </RadialGradient>
+               </ripplerFill>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+        <AnchorPane fx:id="LoginPopup" prefHeight="140.0" prefWidth="200.0" AnchorPane.rightAnchor="230.0" AnchorPane.topAnchor="150.0" />
+    </children>
 </AnchorPane>

@@ -74,7 +74,7 @@
                   <Insets left="5.0" />
                </VBox.margin>
             </JFXButton>
-            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.0" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" showTickLabels="true" showTickMarks="true" value="1.0" />
+            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.2" min="0.2" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" showTickLabels="true" showTickMarks="true" value="1.2" />
             <JFXButton buttonType="RAISED" onAction="#zoomOutPressed" style="-fx-background-color: #00ff77;" text="-">
                <VBox.margin>
                   <Insets left="5.0" />

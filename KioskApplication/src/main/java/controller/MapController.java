@@ -59,9 +59,9 @@ public class MapController {
     //this method should be called when ever the instance of this class is created to enable zooming,
     //must be called after setController() and load()
     public void ScrollGroupInit() {
-        zoomSlider.setMin(0);
-        zoomSlider.setMax(2);
-        zoomSlider.setValue(1);
+        zoomSlider.setMin(0.2);
+        zoomSlider.setMax(2.2);
+        zoomSlider.setValue(1.2);
         zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
         Group contentGroup = new Group();
