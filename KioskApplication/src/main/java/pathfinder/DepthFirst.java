@@ -37,8 +37,11 @@ public class DepthFirst implements SearchAlgorithm{
         //Get map
         MapEntity map = MapEntity.getInstance();
 
+        //Create list to return
+        LinkedList<Edge> returnList = new LinkedList<>();
+
         //return an empty list if you are at the end node
-        if(startingNode.equals(endingNode)) return new LinkedList<>();
+        if(startingNode.equals(endingNode)) return returnList;
 
         //add self to list of visited nodes
         visitedNodes.add(startingNode);
@@ -57,14 +60,14 @@ public class DepthFirst implements SearchAlgorithm{
             if(!visitedNodes.contains(n)) {
                 try {
                     newPath = findPath(n, endingNode, visitedNodes);
-                    if(newPath.size()==0) return newPath;
+                    returnList.addAll(newPath);
+                    return returnList;
                 } catch (DeadEndException e) {
                     //System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
         }
-        if(newPath == null) throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
-        return newPath;
+        throw new PathfinderException(startingNode.getNodeID() + ". Got to the end of the DF search");
     }
 }
