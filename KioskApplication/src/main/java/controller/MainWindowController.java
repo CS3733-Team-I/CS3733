@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -24,7 +23,7 @@ public class MainWindowController {
 
     @FXML Button switchButton;
     @FXML AnchorPane contentWindow;
-    @FXML AnchorPane LoginPopup;
+    @FXML AnchorPane loginPopup;
     @FXML Label lbAdminInfo;
 
     @FXML JFXTabPane tabPane;
@@ -96,7 +95,7 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Admin Login");
+                switchButton.setText("Admin viewLoginScreen");
                 switchButton.requestFocus();
                 //serviceTab.setDisable(true);
                 //managerTab.setDisable(true);
@@ -106,10 +105,17 @@ public class MainWindowController {
                 break;
         }
 
+        javafx.scene.Node contentView = controller.getContentView();
+
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        contentWindow.getChildren().add(controller.getContentView());
+        contentWindow.getChildren().add(contentView);
+
+        // Fit sidebar to window
+        AnchorPane.setTopAnchor(contentView, 0.0);
+        AnchorPane.setBottomAnchor(contentView, 0.0);
+        AnchorPane.setLeftAnchor(contentView, 0.0);
 
         // Reset controller's view
         controller.resetScreen();
@@ -132,12 +138,23 @@ public class MainWindowController {
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
-                switch (newValue.getText()) {
+                switch (newValue.getText()) { // TODO make this more modular/language independent
                     case "Map":
                         switchToScreen(ApplicationScreen.PATHFINDING);
                         break;
-                    case "Edit":
+                    case "Map Builder":
                         switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Request Manager":
+                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        break;
+                    case "Request Submit":
+                        // TODO implement new request screen
+                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Settings":
+                        // TODO implement settings screen
+                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
                         break;
                 }
             }
@@ -147,14 +164,15 @@ public class MainWindowController {
     }
 
     @FXML
-    private void Login() throws IOException{
-        LoginController LC = new LoginController(this);
+    private void viewLoginScreen() throws IOException{
+        // TODO this isn't great OO, rewrite at some point
+        LoginController loginController = new LoginController(this);
         FXMLLoader loader;
         loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
-        loader.setController(LC);
-        LoginPopup.getChildren().clear();
-        LoginPopup.getChildren().add(loader.load());
-        LC.tfEmail.requestFocus();
+        loader.setController(loginController);
+        loginPopup.getChildren().clear();
+        loginPopup.getChildren().add(loader.load());
+        loginController.tfEmail.requestFocus();
     }
 
     @FXML
@@ -172,7 +190,7 @@ public class MainWindowController {
                 this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.Login();
+                this.viewLoginScreen();
                 break;
         }
     }
