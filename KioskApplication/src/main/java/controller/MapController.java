@@ -9,22 +9,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import utility.NodeFloor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +32,7 @@ public class MapController {
     @FXML private ScrollPane scrollPane;
     @FXML private ComboBox<NodeFloor> floorSelector;
     @FXML private Slider zoomSlider;
-    @FXML private MenuButton mapPin;
+    @FXML private ArrayList<MenuButton> wayPoints;
 
     Group zoomGroup;
 
@@ -49,13 +46,17 @@ public class MapController {
     private boolean showNodes = false;
     private boolean showEdges = false;
 
-    public MapController() { }
+    public MapController() {
+        this.wayPoints = new ArrayList<MenuButton>();
+    }
 
     public void setParent(MainWindowController controller)
     {
         parent = controller;
     }
 
+    //this method should be called when ever the instance of this class is created to enable zooming,
+    //must be called after setController() and load()
     public void ScrollGroupInit() {
         zoomSlider.setMin(0.5);
         zoomSlider.setMax(1.5);
@@ -204,7 +205,7 @@ public class MapController {
     }
 
     @FXML
-    protected void onMapClicked(MouseEvent event) {
+    protected void onMapClicked(MouseEvent event) throws IOException{
         if (parent != null) {
             // Check if clicked location is a node
             LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
@@ -222,6 +223,27 @@ public class MapController {
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(new Point2D(event.getX(), event.getY()));
         }
+
+
+        // put the pin and set it's info
+        javafx.scene.control.MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
+        /*Offsets, don't remove*/
+//        double pinW = wayPointObject.getBoundsInLocal().getWidth();
+//        double pinH = wayPointObject.getBoundsInLocal().getHeight();
+        wayPointObject.setTranslateX(event.getX()-24);
+        wayPointObject.setTranslateY(event.getY()-60);
+        wayPointObject.setOnAction(ActionEvent -> WaypointOptions());
+        stackPane.getChildren().add(wayPointObject);
+        this.wayPoints.add(wayPointObject);
+
+//        System.out.println("should be at "+ (event.getX() - (pinW / 2)) + " " + (event.getY() - (pinH / 2)));
+//        System.out.println("actually at "+ wayPointObject.getLayoutX() + " " + wayPointObject.getLayoutX());
+
+    }
+
+    @FXML
+    private void WaypointOptions() {
+        System.out.println("Here");
     }
 
     @FXML
@@ -257,6 +279,7 @@ public class MapController {
 
     @FXML
     protected void floorSelected() {
+        System.out.println("Here");
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
 
