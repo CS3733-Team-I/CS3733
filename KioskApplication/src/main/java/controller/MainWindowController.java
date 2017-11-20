@@ -66,11 +66,11 @@ public class MainWindowController {
                     break;
 
                 case ADMIN_ADD_EDGE:
-                    controller = new AdminAddEdgeController(this, mapController);
+                    controller = new AdminEdgeController(this, mapController);
                     break;
 
                 case ADMIN_DEL_EDGE:
-                    controller = new AdminDeleteEdgeController(this, mapController);
+                    controller = new AdminEdgeController(this, mapController);
                     break;
 
                 case ADMIN_VIEWREQUEST:
