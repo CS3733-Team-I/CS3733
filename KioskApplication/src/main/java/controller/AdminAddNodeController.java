@@ -213,7 +213,6 @@ public class AdminAddNodeController extends ScreenController {
         if (contentView == null) {
             contentView = loadView("/view/addNode.fxml");
         }
-
         return contentView;
     }
 

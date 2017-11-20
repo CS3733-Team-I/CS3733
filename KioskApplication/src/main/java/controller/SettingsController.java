@@ -1,8 +1,10 @@
 package controller;
 
 import database.objects.Edge;
+import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import utility.ApplicationScreen;
 import utility.NodeFloor;
 
 public class SettingsController extends ScreenController {
@@ -11,9 +13,19 @@ public class SettingsController extends ScreenController {
         super(parent, mapController);
     }
 
+    @FXML
+    void onBackPressed() {
+        System.out.println("Back Pressed\n");
+
+        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+    }
+
     @Override
     public Node getContentView() {
-        return null; // TODO change
+        if (contentView == null) {
+            contentView = loadView("/view/settings.fxml");
+        }
+        return contentView;
     }
 
     @Override
