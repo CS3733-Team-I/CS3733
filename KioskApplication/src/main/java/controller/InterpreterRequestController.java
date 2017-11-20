@@ -1,13 +1,13 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -19,10 +19,10 @@ public class InterpreterRequestController extends ScreenController{
         super(parent, map);
     }
 
-    @FXML private Button btnSubmit;
-    @FXML private Button btnCancel;
-    @FXML private TextField txtLocation;
-    @FXML private ChoiceBox langMenu;
+    @FXML private JFXButton btnSubmit;
+    @FXML private JFXButton btnCancel;
+    @FXML private JFXTextField txtLocation;
+    @FXML private JFXComboBox langMenu;
 
 
     @FXML
@@ -30,6 +30,8 @@ public class InterpreterRequestController extends ScreenController{
         System.out.println("Interpreter Request Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_INTERPRETER);
+        langMenu.getItems().clear();
+        langMenu.getItems().addAll("Spanish","German","Mandarin");
     }
 
     @FXML
@@ -79,7 +81,7 @@ public class InterpreterRequestController extends ScreenController{
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/InterpreterRequestView.fxml");
+            contentView = loadView("/view/SubmitRequestView.fxml");
         }
 
         return contentView;
