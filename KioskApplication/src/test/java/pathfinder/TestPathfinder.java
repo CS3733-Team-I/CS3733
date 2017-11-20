@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -149,29 +150,27 @@ public class TestPathfinder {
         nodes.add(n1);
         nodes.add(n7);
         nodes.add(n6);
-        //TODO: test multiple waypoints
-        Path multiPath = pathfinder.generatePath(nodes);
+
+        Path multipath = pathfinder.generatePath(nodes);
+
+        LinkedList<Edge> testMultipathEdges = new LinkedList<>();
+        testMultipathEdges.add(e1);
+        testMultipathEdges.add(e4);
+        testMultipathEdges.add(e4);
+        testMultipathEdges.add(e2);
+        testMultipathEdges.add(e5);
+        testMultipathEdges.add(e6);
+
+        Path testMultipath = new Path(nodes, testMultipathEdges);
+
+        System.out.println("Expected path:");
+        for(Edge edge: testMultipath.getEdges())
+            System.out.println("\t" + edge.getEdgeID());
+        System.out.println("Actual path:");
+        for(Edge edge: multipath.getEdges())
+            System.out.println("\t" + edge.getEdgeID());
+
+        assertTrue(multipath.equals(testMultipath));
+
     }
-
-    //TODO this doesnt test anything yet will test breadth first search soon
-    @Test
-    public void testBreathFirstSearch() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n1, n4);
-        LinkedList<Edge> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(e1);
-        testPath2Edges.add(e3);
-
-       // LinkedList<Node> testPath2Waypoints = new LinkedList<>();
-        //testPath2Waypoints.add(n1);
-       // testPath2Waypoints.add(n4);
-
-       // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
-
-       // assertTrue(path.equals(testPath2Edges));
-       // System.out.println(path2.getEdges().toString());
-       // System.out.println(testPath2.getEdges().toString());
-    }
-
-
 }
