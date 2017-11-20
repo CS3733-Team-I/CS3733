@@ -75,15 +75,6 @@ public class MapController implements Initializable{
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
-
-        //add Rippler effect
-        JFXRippler mapRippler = new JFXRippler(mapView);
-        mapRippler.setMaskType(JFXRippler.RipplerMask.RECT);
-        mapRippler.setRipplerFill(Paint.valueOf("#0019ff"));
-        mapRippler.setRipplerRadius(100);
-        //mapRippler.setOverlayVisible(true,true);
-
-        container.getChildren().add(mapRippler);
     }
 
     public void setShowNodes(boolean showNodes) {
