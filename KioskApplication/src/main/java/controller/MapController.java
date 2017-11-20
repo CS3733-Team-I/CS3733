@@ -59,9 +59,9 @@ public class MapController {
     //this method should be called when ever the instance of this class is created to enable zooming,
     //must be called after setController() and load()
     public void ScrollGroupInit() {
-        zoomSlider.setMin(0.5);
-        zoomSlider.setMax(1.5);
-        zoomSlider.setValue(1.0);
+        zoomSlider.setMin(0);
+        zoomSlider.setMax(2);
+        zoomSlider.setValue(1);
         zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
         Group contentGroup = new Group();
@@ -252,7 +252,7 @@ public class MapController {
     protected void zoomInPressed() {
         //System.out.println("Zoom in clicked");
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal += 0.1);
+        zoomSlider.setValue(sliderVal + 0.1);
     }
 
     @FXML
