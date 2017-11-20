@@ -37,7 +37,7 @@ public class Pathfinder {
         //Check to see if the start node is valid; if not, use a default starting position.
         //TODO: the default should be set to a real node at an actual location on the map.
         //TODO talk to ui about admin control of start node
-        if (startNode.equals(null) || startNode.getNodeID().equals(null)){
+        if (startNode ==null || startNode.getNodeID()==null){
             startNode = new Node("Node1", NodeFloor.THIRD);
             waypoints.removeFirst();
             waypoints.addFirst(startNode);
@@ -58,7 +58,7 @@ public class Pathfinder {
             //check if the node is valid.  If not, throw an exception.
             try{
                 // if end node is not defined then throw exception for not valid
-                if (endNode.equals(null) || endNode.getNodeID().equals(null))
+                if (endNode == null || endNode.getNodeID()==null)
                     throw new PathfinderException("No defined end node, please define valid end location");
             }catch(PathfinderException e){
             }

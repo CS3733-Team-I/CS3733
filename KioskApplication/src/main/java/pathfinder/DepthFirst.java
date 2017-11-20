@@ -13,9 +13,11 @@ public class DepthFirst implements SearchAlgorithm{
         //Get map
         MapEntity map = MapEntity.getInstance();
 
-        //Convert the start and end nodes into pathfinding nodes
+        //Convert the start and end nodes into pathfinder nodes
         StartNode startNode = new StartNode(startingNode);
         PathfinderNode endNode = new PathfinderNode(endingNode);
+
+
 
         //TODO: write algorithm
 

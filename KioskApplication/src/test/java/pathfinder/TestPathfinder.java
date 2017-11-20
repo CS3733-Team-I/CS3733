@@ -1,4 +1,4 @@
-package KioskApplication.tests.pathfinderTests;
+package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
@@ -22,12 +22,14 @@ public class TestPathfinder {
     private Pathfinder pathfinder;
     private Node n1, n2, n3, n4, n5, n6, n7;
     private Edge e1, e2, e3, e4, e5, e6;
-    private MapEntity map = MapEntity.getInstance();
+    private MapEntity map;
 
+    //Build map for testing all algorithms
     @Before
     public void setup() {
 
-        pathfinder = new Pathfinder();
+        DatabaseController.initTests();
+        map = MapEntity.getInstance();
 
         /* Map Structure
          n1 - n2 - n3 - n5 - n6
@@ -36,7 +38,6 @@ public class TestPathfinder {
             n7   n4
         */
 
-        DatabaseController.initTests();
         n1 = new Node("NODE1", NodeFloor.THIRD);
         n1.setXcoord(10);
         n1.setYcoord(10);
@@ -82,8 +83,12 @@ public class TestPathfinder {
         map.addEdge(e6);
     }
 
+    //A-star algorithm tests
     @Test
-    public void testPath() {
+    public void testPathAstar() {
+
+        pathfinder = new Pathfinder(); //defaults to A-star
+
         Path path1 = pathfinder.generatePath(n1, n6);
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
@@ -107,7 +112,10 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testWrongPath() {
+    public void testWrongPathAstar() {
+
+        pathfinder = new Pathfinder(); //defaults to A-star
+
         Path path1 = pathfinder.generatePath(n1, n6);
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(e2);
@@ -127,7 +135,10 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testAnotherPath() {
+    public void testAnotherPathAstar() {
+
+        pathfinder = new Pathfinder(); //defaults to A-star
+
         Path path2 = pathfinder.generatePath(n1, n4);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
@@ -145,7 +156,10 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testMultipleWaypointTest() {
+    public void testMultipleWaypointAstar() {
+
+        pathfinder = new Pathfinder(); //defaults to A-star
+
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(n1);
         nodes.add(n7);
@@ -173,4 +187,25 @@ public class TestPathfinder {
         assertTrue(multipath.equals(testMultipath));
 
     }
+
+    @Test
+    public void testPrepForFrontier(){
+        //TODO: add tests
+    }
+
+    @Test
+    public void testHeuristic(){
+        //TODO: add tests
+    }
+
+    @Test
+    public void testFindPath(){
+        //TODO: add tests
+    }
+
+    //Depth first algorithm tests
+    //TODO tests
+
+    //Breadth first algorithm tests
+    //TODO tests
 }
