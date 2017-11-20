@@ -55,12 +55,14 @@ public class InterpreterRequestController extends ScreenController{
         }
 
         //Finds current admin that is logged in
-        String adminEmail = ""; //TODO implement something new for parent.curr_admin_email
+        //currently a dummy email
+        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
-        if(DatabaseController.getAllInterpreterRequests().isEmpty()){
+
+        if(DatabaseController.getAllRequests().isEmpty()){
             interpID = 0;
         }else{
-            interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
+            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
         }
 
 

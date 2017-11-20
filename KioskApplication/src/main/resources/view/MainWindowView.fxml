@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
    <children>
-      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <AnchorPane fx:id="LoginPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Label fx:id="lbAdminInfo" layoutY="37.0" prefHeight="27.0" prefWidth="200.0" />
-            <Button fx:id="switchButton" layoutX="100.0" layoutY="10.0" mnemonicParsing="false" onAction="#switchButtonClicked" text="Pathfinding" />
-         </children>
-      </AnchorPane>
+      <JFXTabPane fx:id="tabPane" prefHeight="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <tabs>
+            <Tab text="Map" />
+            <Tab text="Map Builder" />
+            <Tab text="Request Manager" />
+            <Tab text="Request Submit" />
+            <Tab text="Settings" />
+         </tabs>
+      </JFXTabPane>
+      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+       <JFXButton fx:id="switchButton" buttonType="RAISED" layoutX="360.0" layoutY="14.0" onAction="#switchButtonClicked" prefHeight="33.0" prefWidth="128.0" ripplerFill="BLACK" style="-fx-background-color: #4286f4;" textFill="WHITE" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+       </JFXButton>
    </children>
 </AnchorPane>

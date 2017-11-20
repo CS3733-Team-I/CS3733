@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+
+<MenuButton fx:id="mapPin" mnemonicParsing="false" styleClass="map-pin" stylesheets="@../cssStyleSheet/airportapp.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <MenuItem mnemonicParsing="false" text="Get Info" />
+      <MenuItem mnemonicParsing="false" text="Remove" />
+   </items>
+</MenuButton>

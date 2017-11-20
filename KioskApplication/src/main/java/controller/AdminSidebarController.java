@@ -54,6 +54,7 @@ public class AdminSidebarController extends ScreenController {
     public void resetScreen() {
         getMapController().setShowNodes(showNodes.isSelected());
         getMapController().setShowEdges(showEdges.isSelected());
+        getMapController().setAnchor(0, 200, 0, 0);
     }
 
     @FXML
