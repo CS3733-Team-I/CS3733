@@ -51,6 +51,7 @@ public class RequestEntity {
     //TODO: incorporate search class into application so that nodeID can become location
     public void submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
+        interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
         DatabaseController.addInterpreterRequest(iR);
     }
 
@@ -70,12 +71,28 @@ public class RequestEntity {
 
     }
 
-    //
+    //Generic request deleting method
     public void deleteRequest(String requestID){
         String requestType = requestID.substring(0,2);
         if(requestType.equals("Int")){
+            interpreterRequests.remove(requestID);
             DatabaseController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
+        }
+        else if(requestType.equals("Sec")){
+            System.out.println("Deleting SecurityRequest");
+        }
+        else if(requestType.equals("Foo")){
+            System.out.println("Deleting FoodRequest");
+        }
+        else if(requestType.equals("Jan")){
+            System.out.println("Deleting JanitorRequest");
+        }
+        else if(requestType.equals("Ins")){
+            System.out.println("Deleting InsideTransportationRequest");
+        }
+        else if(requestType.equals("Out")){
+            System.out.println("Deleting OutsideTransportationRequest");
         }
         else{
             System.out.println("Invalid requestID");

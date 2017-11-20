@@ -245,7 +245,6 @@ public class DatabaseController {
             }
         }
     }
-    //TODO: Update this method
     public static int updateInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.updateInterpreter(instanceConnection, iR);
