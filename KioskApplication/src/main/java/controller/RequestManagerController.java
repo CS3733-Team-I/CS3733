@@ -65,6 +65,7 @@ public class RequestManagerController extends ScreenController {
     void onCompletePressed(){
         int ID = Integer.parseInt(txtID.getText());
         DatabaseController.deleteRequest(ID);
+        txtID.clear();
         System.out.println("Complete Pressed \n");
         showRequests();
     }
