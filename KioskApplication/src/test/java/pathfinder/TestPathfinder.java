@@ -257,6 +257,57 @@ public class TestPathfinder {
     }
 
     //Breadth first algorithm tests
+    @Test
+    public void testBreathFirstSearch() {
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n01, n02);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(e01);
+
+        assertTrue(path.getEdges().equals(testPath2Edges));
+    }
+
+    @Test
+    public void testBreathFirstSearch1() {
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n01, n17);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(map.getConnectingEdge(n01,n02));
+        testPath2Edges.add(map.getConnectingEdge(n02,n08));
+        testPath2Edges.add(map.getConnectingEdge(n08,n11));
+        testPath2Edges.add(map.getConnectingEdge(n11,n12));
+        testPath2Edges.add(map.getConnectingEdge(n12,n17));
+
+        assertTrue(path.getEdges().equals(testPath2Edges));
+        // System.out.println(path.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+
+    @Test
+    public void testBreathFirstSearchtestpathequality() {
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n02, n05);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(e02);
+        testPath2Edges.add(e05);
+        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        testPath2Waypoints.add(n02);
+        testPath2Waypoints.add(n05);
+
+        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+        assertTrue(path.equals(testPath2));
+        // System.out.println(path2.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+
+    /* TODO  write test for exceptions
+     @Test (expected = PathfinderException.class)
+    public void testPathfinderException(){
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n2, n8);
+    }
+     */
 
     //TODO tests
 }
