@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import utility.ApplicationScreen;
@@ -22,6 +23,10 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
+    @FXML Tab mapTab;
+    @FXML Tab builderTab;
+    @FXML Tab serviceTab;
+    @FXML Tab managerTab;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;

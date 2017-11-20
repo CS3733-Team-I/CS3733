@@ -40,6 +40,9 @@ public class LoginController {
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
             parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
+            parent.serviceTab.setDisable(false);
+            parent.managerTab.setDisable(false);
+            parent.builderTab.setDisable(false);
         }
         else {
             errorMsg.setText("Invalid Login. ");
@@ -51,5 +54,8 @@ public class LoginController {
         parent.switchToScreen(ApplicationScreen.PATHFINDING);
         parent.LoginPopup.getChildren().clear();
         parent.LoginPopup.getChildren().add(parent.switchButton);
+        parent.serviceTab.setDisable(true);
+        parent.managerTab.setDisable(true);
+        parent.builderTab.setDisable(true);
     }
 }
