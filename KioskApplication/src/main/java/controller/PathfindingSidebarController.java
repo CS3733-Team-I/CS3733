@@ -48,7 +48,7 @@ public class PathfindingSidebarController extends ScreenController {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder();
             Path path = pathfinder.generatePath(currentNodes);
-            parent.displayPathOnMap(path);
+            getMapController().drawPath(path);
 
             waypointListVbox.getChildren().clear();
 
