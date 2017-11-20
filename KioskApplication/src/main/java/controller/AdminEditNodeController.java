@@ -105,7 +105,6 @@ public class AdminEditNodeController extends ScreenController {
     public void resetScreen() {
         xcoord.setText("");
         ycoord.setText("");
-        nodeID.setText("");
         floorChoiceBox.setValue(getFloorTxt());
         buildingChoiceBox.setValue("--select--");
         nodeTypeChoiceBox.setValue("--select--");
@@ -113,6 +112,7 @@ public class AdminEditNodeController extends ScreenController {
         sname.setText("");
         teamAssignedChoiceBox.setValue("I");
         errorMsg.setText("");
+        nodeID.setText("");
     }
 
     public String convertFloor(String eString){
