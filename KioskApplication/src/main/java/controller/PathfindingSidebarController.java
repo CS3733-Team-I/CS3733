@@ -48,7 +48,7 @@ public class PathfindingSidebarController extends ScreenController {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder();
             Path path = pathfinder.generatePath(currentNodes);
-            parent.displayPathOnMap(path);
+            getMapController().drawPath(path);
 
             waypointListVbox.getChildren().clear();
 
@@ -100,6 +100,7 @@ public class PathfindingSidebarController extends ScreenController {
     public void resetScreen() {
         onResetPressed();
         showNodes.setSelected(false);
+        getMapController().setShowEdges(false);
         getMapController().setShowNodes(false);
 
         getMapController().setAnchor(0, 200, 0, 0);
