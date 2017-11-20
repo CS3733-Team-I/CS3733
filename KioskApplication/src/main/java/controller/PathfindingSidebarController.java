@@ -100,6 +100,7 @@ public class PathfindingSidebarController extends ScreenController {
     public void resetScreen() {
         onResetPressed();
         showNodes.setSelected(false);
+        getMapController().setShowEdges(false);
         getMapController().setShowNodes(false);
 
         getMapController().setAnchor(0, 200, 0, 0);
