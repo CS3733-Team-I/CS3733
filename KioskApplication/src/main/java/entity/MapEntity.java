@@ -18,7 +18,7 @@ public class MapEntity implements IMapEntity {
 
     }
 
-    protected MapEntity() {
+    private MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
     }

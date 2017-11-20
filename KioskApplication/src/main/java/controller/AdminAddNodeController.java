@@ -240,7 +240,6 @@ public class AdminAddNodeController extends ScreenController {
     public void resetScreen() {
         xcoord.setText("");
         ycoord.setText("");
-        nodeID.setText("");
         floorChoiceBox.setValue(getFloorTxt());
         buildingChoiceBox.setValue("--select--");
         nodeTypeChoiceBox.setValue("--select--");
@@ -248,5 +247,6 @@ public class AdminAddNodeController extends ScreenController {
         sname.setText("");
         teamAssignedChoiceBox.setValue("I");
         errorMsg.setText("");
+        nodeID.setText("");
     }
 }

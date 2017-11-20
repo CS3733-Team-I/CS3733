@@ -1,19 +1,24 @@
 package controller;
 
+import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -22,7 +27,8 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML Button switchButton;
+    @FXML JFXTabPane tabPane;
+
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     //@FXML Label lbAdminInfo;
@@ -102,15 +108,22 @@ public class MainWindowController {
                 break;
         }
 
+        javafx.scene.Node contentView = controller.getContentView();
+
         // Display view with new controller
         contentWindow.getChildren().clear();
-        //Sidebar.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        //idebar.getChildren().add(controller.getContentView());
-        contentWindow.getChildren().add(controller.getContentView());
+        contentWindow.getChildren().add(contentView);
+
+        // Fit sidebar to window
+        AnchorPane.setTopAnchor(contentView, 0.0);
+        AnchorPane.setBottomAnchor(contentView, 0.0);
+        AnchorPane.setLeftAnchor(contentView, 0.0);
 
         // Reset controller's view
         controller.resetScreen();
+
+        currentScreen = screen;
     }
 
     @FXML
@@ -124,7 +137,32 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-        //mapController.ScrollGroupInit();
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
+                switch (newValue.getText()) { // TODO make this more modular/language independent
+                    case "Map":
+                        switchToScreen(ApplicationScreen.PATHFINDING);
+                        break;
+                    case "Map Builder":
+                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Request Manager":
+                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        break;
+                    case "Request Submit":
+                        // TODO implement new request screen
+                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Settings":
+                        // TODO implement settings screen
+                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                }
+            }
+        });
+
         this.switchToScreen(ApplicationScreen.PATHFINDING);
 
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
