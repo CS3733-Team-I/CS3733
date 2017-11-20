@@ -116,7 +116,7 @@ public class MapController {
             edgeView.setPickOnBounds(false);
             edgesPane.getChildren().add(edgeView);
         }
-        edgesPane.getChildren().add(edgesPane);
+        this.edgesPane.getChildren().add(edgesPane);
     }
 
     public void mapEdgeClicked(Edge e) {
