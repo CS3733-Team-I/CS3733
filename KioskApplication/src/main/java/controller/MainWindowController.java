@@ -80,7 +80,7 @@ public class MainWindowController {
                     break;
 
                 case REQUEST_INTERFACE:
-                    controller = new InterpreterRequestController(this, mapController);
+                    controller = new RequestSubmitterController(this, mapController);
                     break;
 
                 case ADMIN_SETTINGS:

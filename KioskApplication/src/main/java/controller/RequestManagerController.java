@@ -5,6 +5,7 @@ import database.objects.Edge;
 import entity.InterpreterRequest;
 import entity.Request;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -28,6 +29,7 @@ public class RequestManagerController extends ScreenController {
     private Label totalRequests;
     @FXML
     private TextField txtID;
+
 
 
     @FXML

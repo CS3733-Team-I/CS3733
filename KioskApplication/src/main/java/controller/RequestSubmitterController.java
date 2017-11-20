@@ -30,11 +30,35 @@ public class RequestSubmitterController extends ScreenController implements Init
     @FXML private JFXTextField txtLocation;
     @FXML private JFXComboBox langMenu;
     @FXML private Tab InterpreterTab;
+    @FXML private Tab FoodTab;
+    @FXML private Tab SecurityTab;
+    @FXML private Tab SanatitionTab;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Image InterpreterIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
-        InterpreterTab.setGraphic(new ImageView(InterpreterIcn));
+        Image InterpreterIcn = new Image(getClass().getResource("/images/interpreterIcon.png").toString());
+        ImageView InterpreterIcnView = new ImageView(InterpreterIcn);
+        InterpreterIcnView.setFitHeight(24);
+        InterpreterIcnView.setFitWidth(24);
+        InterpreterTab.setGraphic(InterpreterIcnView);
+
+        Image FoodIcn = new Image(getClass().getResource("/images/foodIcon.png").toString());
+        ImageView FoodIcnIcnView = new ImageView(FoodIcn);
+        FoodIcnIcnView.setFitHeight(24);
+        FoodIcnIcnView.setFitWidth(24);
+        FoodTab.setGraphic(FoodIcnIcnView);
+
+        Image SecurityIcn = new Image(getClass().getResource("/images/securityIcon.png").toString());
+        ImageView SecurityIcnView = new ImageView(SecurityIcn);
+        SecurityIcnView.setFitHeight(24);
+        SecurityIcnView.setFitWidth(24);
+        SecurityTab.setGraphic(SecurityIcnView);
+
+        Image SanatitionIcn = new Image(getClass().getResource("/images/sanatitionIcon.png").toString());
+        ImageView SanatitionIcnView = new ImageView(SanatitionIcn);
+        SanatitionIcnView.setFitHeight(24);
+        SanatitionIcnView.setFitWidth(24);
+        SanatitionTab.setGraphic(SanatitionIcnView);
     }
 
 

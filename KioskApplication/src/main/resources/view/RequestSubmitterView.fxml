@@ -18,7 +18,7 @@
    <children>
       <JFXTabPane layoutX="44.0" layoutY="161.0" prefHeight="580.0" prefWidth="178.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab text="Interpreter">
+            <Tab fx:id="InterpreterTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -69,15 +69,20 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab text="Security">
+            <Tab fx:id="FoodTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab text="Food">
+            <Tab fx:id="SecurityTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
+            </Tab>
+            <Tab fx:id="SanatitionTab">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
             </Tab>
          </tabs>
       </JFXTabPane>
