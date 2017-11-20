@@ -6,6 +6,7 @@ public enum ApplicationScreen {
     ADMIN_EDIT_NODE,
     ADMIN_ADD_EDGE,
     ADMIN_DEL_EDGE,
+    ADMIN_SETTINGS,
     ADMIN_MENU,
     ADMIN_INTERPRETER,
     ADMIN_VIEWREQUEST,
