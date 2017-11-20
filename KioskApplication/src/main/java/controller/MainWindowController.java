@@ -96,6 +96,9 @@ public class MainWindowController {
             case PATHFINDING:
                 switchButton.setText("Admin Login");
                 switchButton.requestFocus();
+                serviceTab.setDisable(true);
+                managerTab.setDisable(true);
+                builderTab.setDisable(true);
                 break;
             default:
                 break;

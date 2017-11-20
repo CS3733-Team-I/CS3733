@@ -54,8 +54,5 @@ public class LoginController {
         parent.switchToScreen(ApplicationScreen.PATHFINDING);
         parent.LoginPopup.getChildren().clear();
         parent.LoginPopup.getChildren().add(parent.switchButton);
-        parent.serviceTab.setDisable(true);
-        parent.managerTab.setDisable(true);
-        parent.builderTab.setDisable(true);
     }
 }
