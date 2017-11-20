@@ -65,12 +65,8 @@ public class MainWindowController {
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
 
-                case ADMIN_ADD_NODE:
-                    controller = new AdminAddNodeController(this, mapController);
-                    break;
-
-                case ADMIN_EDIT_NODE:
-                    controller = new AdminEditNodeController(this, mapController);
+                case ADMIN_NODE:
+                    controller = new AdminNodeController(this, mapController);
                     break;
 
                 case ADMIN_EDGE:
@@ -208,8 +204,7 @@ public class MainWindowController {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
             case ADMIN_INTERPRETER:
-            case ADMIN_EDIT_NODE:
-            case ADMIN_ADD_NODE:
+            case ADMIN_NODE:
             case ADMIN_EDGE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:

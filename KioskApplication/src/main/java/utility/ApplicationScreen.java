@@ -2,8 +2,7 @@ package utility;
 
 public enum ApplicationScreen {
     PATHFINDING,
-    ADMIN_ADD_NODE,
-    ADMIN_EDIT_NODE,
+    ADMIN_NODE,
     ADMIN_EDGE,
     ADMIN_SETTINGS,
     ADMIN_MENU,
