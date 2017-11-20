@@ -11,6 +11,8 @@ import utility.NodeFloor;
 
 import java.util.LinkedList;
 
+import static org.junit.Assert.assertTrue;
+
 public class TestBreadthFirst {
 
     private Pathfinder pathfinder;
@@ -76,14 +78,15 @@ public class TestBreadthFirst {
         map.addEdge(e6);
     }
 
-    //TODO this doesnt test anything yet will test breadth first search soon
+    //TODO add more tests
     @Test
     public void testBreathFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n1, n4);
+        Path path = breadth.generatePath(n1, n2);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e1);
-        testPath2Edges.add(e3);
+
+        //testPath2Edges.add(e3);
 
         // LinkedList<Node> testPath2Waypoints = new LinkedList<>();
         //testPath2Waypoints.add(n1);
@@ -91,7 +94,27 @@ public class TestBreadthFirst {
 
         // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
 
-        // assertTrue(path.equals(testPath2Edges));
+         assertTrue(path.equals(testPath2Edges));
+        // System.out.println(path2.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+
+    @Test
+    public void testBreathFirstSearch1() {
+        Pathfinder breadth = new Pathfinder(new BreadthFirst());
+        Path path = breadth.generatePath(n1, n7);
+        LinkedList<Edge> testPath2Edges = new LinkedList<>();
+       // testPath2Edges.add(e1);
+
+        //testPath2Edges.add(e3);
+
+        // LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        //testPath2Waypoints.add(n1);
+        // testPath2Waypoints.add(n4);
+
+        // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+       // assertTrue(path.equals(testPath2Edges));
         // System.out.println(path2.getEdges().toString());
         // System.out.println(testPath2.getEdges().toString());
     }
