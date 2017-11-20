@@ -1,8 +1,11 @@
 package controller;
 
+import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -23,10 +26,9 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
-    @FXML Tab mapTab;
-    @FXML Tab builderTab;
-    @FXML Tab serviceTab;
-    @FXML Tab managerTab;
+
+    @FXML JFXTabPane tabPane;
+
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -126,6 +128,20 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
+                switch (newValue.getText()) {
+                    case "Map":
+                        switchToScreen(ApplicationScreen.PATHFINDING);
+                        break;
+                    case "Edit":
+                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                }
+            }
+        });
 
         this.switchToScreen(ApplicationScreen.PATHFINDING);
     }
