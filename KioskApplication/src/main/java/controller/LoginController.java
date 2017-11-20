@@ -40,7 +40,7 @@ public class LoginController implements Initializable{
     public LoginController(MainWindowController parent) {
         this.parent = parent;
         this.AdminList = new AdministratorList();
-        AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
+        AdminList.addAdministrator(new Administrator("boss@hospital.com", "123"));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class LoginController implements Initializable{
     @FXML
     public void OnLoginClicked() throws IOException {
 
-        if(AdminList.validLogin(new Administrator(tfEmail.getText(), pfPassword.getText()))) {
+        if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
             parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController

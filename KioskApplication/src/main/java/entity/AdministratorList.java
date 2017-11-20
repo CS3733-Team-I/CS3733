@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class AdministratorList {
     private HashMap<String, Administrator> administrators;
 
-    private AdministratorList() {
+    public AdministratorList() {
         administrators = new HashMap<>();
         addAdministrator(new Administrator("boss@hospital.com", "123"));
     }

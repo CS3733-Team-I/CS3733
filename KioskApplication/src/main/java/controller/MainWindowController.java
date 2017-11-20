@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
@@ -31,6 +32,7 @@ public class MainWindowController {
 
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
+    @FXML JFXButton switchButton;
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
     @FXML JFXHamburger SidebarHam;
