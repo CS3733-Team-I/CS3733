@@ -32,42 +32,45 @@ public class BreadthFirst implements SearchAlgorithm{
             endingNode.setParentNode(startingNode);
             return endingNode.buildPath();
         }
-
+        // make linked list for queue and explored
         LinkedList<PathfinderNode> queue = new LinkedList<>();
         ArrayList<PathfinderNode> explored = new ArrayList<>();
         queue.add(startingNode);
-        PathfinderNode previousNode = null;
 
         while(!queue.isEmpty()){
+            // remove first in index
             PathfinderNode current = queue.remove(0);
             if(current.node.getNodeID().equals(endingNode.getNode().getNodeID())) {
-               // endingNode.setParentNode(previousNode);
+                // we found our path now generate it
                 return current.buildPath();
             }
             else{
                 if(getAndCheckForConnectedNodes(explored,current,map).isEmpty()){
-                   // current.parentNode = pr
-                   // queue.add(queue.remove());//throw new PathfinderException("No path found"); check this
+                    // no path is found throw excepetion
                 }
                 else{
+                    // add connected nodes not explored in queue
                     queue.addAll(getAndCheckForConnectedNodes(explored,current,map));
                 }
             }
-            //current.setParentNode(previousNode);
+            // add to explored list
             explored.add(current);
-           // previousNode = current;
         }
-        return endingNode.buildPath();
+
+        throw new PathfinderException("No path found");
     }
 
     LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+        // initalize connected nodes list from current node
         LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
         holder.addAll(connectedNodes);
         for(PathfinderNode pathfinderNode1: connectedNodes){
+            // add parent node for edge generation if partent node is not created
             if(pathfinderNode1.parentNode == null && pathfinderNode !=null)
                 pathfinderNode1.parentNode = pathfinderNode;
             for (PathfinderNode explored: listExplored){
+                // remove from queue list if in explored list
                 if(pathfinderNode1.node.getNodeID().equals(explored.getNode().getNodeID())){
                     holder.remove(pathfinderNode1);
                 }
