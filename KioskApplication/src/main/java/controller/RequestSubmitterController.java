@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
@@ -9,6 +10,7 @@ import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +35,7 @@ public class RequestSubmitterController extends ScreenController implements Init
     @FXML private Tab FoodTab;
     @FXML private Tab SecurityTab;
     @FXML private Tab SanatitionTab;
+    @FXML private JFXDatePicker timeDP;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -59,14 +62,14 @@ public class RequestSubmitterController extends ScreenController implements Init
         SanatitionIcnView.setFitHeight(24);
         SanatitionIcnView.setFitWidth(24);
         SanatitionTab.setGraphic(SanatitionIcnView);
+
+        
     }
 
 
 
     @FXML
     void onInterpreterPressed() throws IOException {
-        System.out.println("Interpreter Request Pressed\n");
-
         getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
     }
 

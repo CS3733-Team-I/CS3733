@@ -4,6 +4,7 @@ import database.DatabaseController;
 import database.objects.Edge;
 import entity.InterpreterRequest;
 import entity.Request;
+import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -42,7 +43,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void showRequests(){
         activeRequests.getChildren().clear();
-        ArrayList<Request> requests = DatabaseController.getAllRequests();
+        LinkedList<Request> requests = RequestEntity.getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
             int id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
