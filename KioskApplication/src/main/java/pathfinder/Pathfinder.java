@@ -37,7 +37,7 @@ public class Pathfinder {
         //Check to see if the start node is valid; if not, use a default starting position.
         //TODO: the default should be set to a real node at an actual location on the map.
         //TODO talk to ui about admin control of start node
-        if (startNode ==null || startNode.getNodeID()==null){
+        if (startNode == null || startNode.getNodeID() == null){
             startNode = new Node("Node1", NodeFloor.THIRD);
             waypoints.removeFirst();
             waypoints.addFirst(startNode);
@@ -86,6 +86,8 @@ public class Pathfinder {
         //Combine the list of waypoints and the path of edges into a Path object and return.
         return(new Path(waypoints, pathEdges));
     }
+
+    //Old method. use the method that takes a LinkedList
     /**
      * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
      * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into

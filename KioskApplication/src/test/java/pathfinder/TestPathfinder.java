@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 public class TestPathfinder {
 
     private Pathfinder pathfinder;
-    private Node n1, n2, n3, n4, n5, n6, n7;
+    private Node n1, n2, n3, n4, n5, n6, n7, n8, n9;
     private Edge e1, e2, e3, e4, e5, e6;
     private MapEntity map;
 
@@ -32,7 +32,7 @@ public class TestPathfinder {
         map = MapEntity.getInstance();
 
         /* Map Structure
-         n1 - n2 - n3 - n5 - n6
+         n1 - n2 - n3 - n5 - n6   n8   n9
                |
               / \
             n7   n4
@@ -59,6 +59,12 @@ public class TestPathfinder {
         n7 = new Node("NODE7", NodeFloor.THIRD);
         n7.setXcoord(20);
         n7.setYcoord(20);
+        n8 = new Node("NODE8", NodeFloor.THIRD);
+        n8.setXcoord(60);
+        n8.setYcoord(10);
+        n9 = new Node("NODE9", NodeFloor.THIRD);
+        n9.setXcoord(70);
+        n9.setYcoord(10);
 
         map.addNode(n1);
         map.addNode(n2);
@@ -67,6 +73,8 @@ public class TestPathfinder {
         map.addNode(n5);
         map.addNode(n6);
         map.addNode(n7);
+        map.addNode(n8);
+        map.addNode(n9);
 
         e1 = new Edge("EDGE1", n1.getNodeID(), n2.getNodeID());
         e2 = new Edge("EDGE2", n2.getNodeID(), n3.getNodeID());
@@ -189,22 +197,46 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testPrepForFrontier(){
+    public void testPrepForFrontierAstar(){
         //TODO: add tests
     }
 
     @Test
-    public void testHeuristic(){
+    public void testHeuristicAstar(){
         //TODO: add tests
     }
 
     @Test
-    public void testFindPath(){
+    public void testFindPathAstar(){
         //TODO: add tests
     }
 
     //Depth first algorithm tests
     //TODO tests
+    @Test
+    public void testFindPathDF() throws PathfinderException{
+
+        SearchAlgorithm alg = new DepthFirst();
+
+        //Should return an empty list if you are at the end node
+        assertTrue(alg.findPath(n1,n1).size() == 0);
+
+        //TODO more
+    }
+
+    //no path
+    @Test(expected = DeadEndException.class)
+    public void testDeadEndException1DF() throws PathfinderException{
+        SearchAlgorithm alg = new DepthFirst();
+        alg.findPath(n8,n9);
+    }
+
+    //path but no connection
+    @Test(expected = DeadEndException.class)
+    public void testDeadEndException2DF() throws PathfinderException{
+        SearchAlgorithm alg = new DepthFirst();
+        alg.findPath(n1,n8);
+    }
 
     //Breadth first algorithm tests
     //TODO tests
