@@ -55,13 +55,9 @@ public class AdminEdgeController extends ScreenController {
             if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
                 MapEntity.getInstance().removeEdge(edge.getEdgeID());
                 System.out.println("Removed Edge: " + edge.getEdgeID());
-                //getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
-                // TODO refresh edges
             } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
                 MapEntity.getInstance().removeEdge(edge2.getEdgeID());
                 System.out.println("Removed Edge: " + edge2.getEdgeID());
-                //getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
-                // TODO refresh edges
             } else {
                 System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());
             }
@@ -79,8 +75,7 @@ public class AdminEdgeController extends ScreenController {
                 // If not then add edge
                 MapEntity.getInstance().addEdge(edge);
                 System.out.println("Added Edge: " + edge.getEdgeID());
-
-                getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+                resetScreen();
             } else {
                 System.out.println("Edge already in the database: " + edge.getEdgeID());
 
@@ -119,7 +114,7 @@ public class AdminEdgeController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/addEdge.fxml");
+            contentView = loadView("/view/edgeSidebar.fxml");
         }
 
         return contentView;
@@ -138,7 +133,9 @@ public class AdminEdgeController extends ScreenController {
     public void onMapFloorChanged(NodeFloor floor) { }
 
     @Override
-    public void onMapLocationClicked(Point2D location) { }
+    public void onMapLocationClicked(Point2D location) {
+        // TODO disable location markers
+    }
 
     @Override
     public void resetScreen() {
@@ -146,5 +143,6 @@ public class AdminEdgeController extends ScreenController {
         node2ID.setText("");
         edgeID.setText("");
         errorMsg.setText("");
+        // TODO refresh edges
     }
 }

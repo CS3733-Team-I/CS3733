@@ -73,11 +73,7 @@ public class MainWindowController {
                     controller = new AdminEditNodeController(this, mapController);
                     break;
 
-                case ADMIN_ADD_EDGE:
-                    controller = new AdminEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_DEL_EDGE:
+                case ADMIN_EDGE:
                     controller = new AdminEdgeController(this, mapController);
                     break;
 
@@ -213,9 +209,8 @@ public class MainWindowController {
             case ADMIN_VIEWREQUEST:
             case ADMIN_INTERPRETER:
             case ADMIN_EDIT_NODE:
-            case ADMIN_DEL_EDGE:
             case ADMIN_ADD_NODE:
-            case ADMIN_ADD_EDGE:
+            case ADMIN_EDGE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);

@@ -13,7 +13,7 @@
       <Button layoutX="41.0" layoutY="84.0" mnemonicParsing="false" onAction="#onEditPressed" prefHeight="27.0" prefWidth="118.0" text="Edit Node" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="100.0" />
       <Button mnemonicParsing="false" onAction="#onReadClicked" text="Read CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
       <Button mnemonicParsing="false" onAction="#onSaveClicked" text="Save CSV" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onAddEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Add Edge" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="150.0" />
+      <Button layoutX="41.0" layoutY="150.0" mnemonicParsing="false" onAction="#onEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Edge" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="150.0" />
       <MenuButton fx:id="requestMenu" layoutX="42.0" layoutY="249.0" mnemonicParsing="false" text="Request Service" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="250.0">
         <items>
           <MenuItem fx:id="interpreterSelect" mnemonicParsing="false" onAction="#onInterpreterPressed" text="Interpreter" />
@@ -24,6 +24,5 @@
       <Button fx:id="infoButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#displayAdminInfo" text="Display My Information" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="450.0" />
       <CheckBox fx:id="showNodes" layoutX="38.0" layoutY="343.0" mnemonicParsing="false" onAction="#showNodes" selected="true" text="Show Nodes" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="74.0" AnchorPane.topAnchor="350.0" />
       <CheckBox fx:id="showEdges" layoutX="38.0" layoutY="381.0" mnemonicParsing="false" onAction="#showEdges" prefHeight="21.0" prefWidth="112.0" selected="true" text="Show Edges" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="74.0" AnchorPane.topAnchor="400.0" />
-      <Button layoutX="41.0" layoutY="202.0" mnemonicParsing="false" onAction="#onDeleteEdgePressed" prefHeight="27.0" prefWidth="118.0" text="Delete Edge" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="200.0" />
    </children>
 </AnchorPane>
