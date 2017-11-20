@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXDrawer;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
@@ -22,6 +23,7 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
+    @FXML JFXDrawer Sidebar;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -99,7 +101,7 @@ public class MainWindowController {
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        contentWindow.getChildren().add(controller.getContentView());
+        Sidebar.getChildren().add(controller.getContentView());
 
         // Reset controller's view
         controller.resetScreen();
