@@ -25,9 +25,16 @@ public class DepthFirst implements SearchAlgorithm{
         //return an empty list if you are at the end node
         if(startingNode.equals(endingNode)) return new LinkedList<>();
 
+        //add self to list of visited nodes
+        visitedNodes.add(startingNode);
+
         //throw an exception if there is no where else to go
         LinkedList<Node> connected = map.getConnectedNodes(startingNode);
-        if(connected.size() == 0) throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
+        if(connected.size() == 0 ||
+           (connected.size() == 1 && visitedNodes.contains(connected.get(0)))
+          ) {
+            throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
+        }
 
         //iterate through the connected nodes and see if there is a path to the end
         LinkedList<Edge> newPath = null;
