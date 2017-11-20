@@ -239,8 +239,8 @@ public class TestPathfinder {
         assertTrue(alg.findPath(n01,n01).size() == 0);
 
         //Test an actual path
-        //System.out.println(alg.findPath(n01,n07));
-        //assertTrue(alg.findPath(n01,n06).size() == 4);
+        System.out.println(alg.findPath(n01,n02));
+        assertTrue(alg.findPath(n01,n02).size() == 1);
         //TODO more
     }
 
@@ -250,13 +250,13 @@ public class TestPathfinder {
         alg.findPath(n18,n19);
     }
 
-    @Test(expected = DeadEndException.class) //test that the exception is thrown when there is a path but no connection
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testDeadEndException2DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
         alg.findPath(n01,n19);
     }
 
     //Breadth first algorithm tests
-    
+
     //TODO tests
 }

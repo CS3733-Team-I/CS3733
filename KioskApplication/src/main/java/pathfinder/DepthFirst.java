@@ -55,7 +55,7 @@ public class DepthFirst implements SearchAlgorithm{
         }
 
         //iterate through the connected nodes and see if there is a path to the end
-        LinkedList<Edge> newPath = null;
+        LinkedList<Edge> newPath;
         for(Node n: connected) {
             if(!visitedNodes.contains(n)) {
                 try {
@@ -63,7 +63,7 @@ public class DepthFirst implements SearchAlgorithm{
                     returnList.addAll(newPath);
                     return returnList;
                 } catch (DeadEndException e) {
-                    //System.out.println("Ran into a dead end at node " + e.getMessage());
+                    System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
