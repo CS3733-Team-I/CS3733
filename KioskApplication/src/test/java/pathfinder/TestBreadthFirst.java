@@ -94,7 +94,7 @@ public class TestBreadthFirst {
 
         // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
 
-         assertTrue(path.equals(testPath2Edges));
+         assertTrue(path.getEdges().equals(testPath2Edges));
         // System.out.println(path2.getEdges().toString());
         // System.out.println(testPath2.getEdges().toString());
     }
@@ -104,9 +104,8 @@ public class TestBreadthFirst {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = breadth.generatePath(n1, n7);
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
-       // testPath2Edges.add(e1);
-
-        //testPath2Edges.add(e3);
+        testPath2Edges.add(e1);
+        testPath2Edges.add(e4);
 
         // LinkedList<Node> testPath2Waypoints = new LinkedList<>();
         //testPath2Waypoints.add(n1);
@@ -114,7 +113,7 @@ public class TestBreadthFirst {
 
         // Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
 
-       // assertTrue(path.equals(testPath2Edges));
+        assertTrue(path.getEdges().equals(testPath2Edges));
         // System.out.println(path2.getEdges().toString());
         // System.out.println(testPath2.getEdges().toString());
     }
