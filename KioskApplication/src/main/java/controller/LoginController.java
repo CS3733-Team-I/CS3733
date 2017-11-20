@@ -2,17 +2,29 @@ package controller;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import entity.Administrator;
 import entity.AdministratorList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class LoginController {
+public class LoginController implements Initializable{
 
     @FXML
     JFXTextField tfEmail;
@@ -31,6 +43,41 @@ public class LoginController {
         AdminList.add_administrator(new Administrator("boss@hospital.com", "123"));
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        RequiredFieldValidator EmailValidator = new RequiredFieldValidator();
+        RequiredFieldValidator PasswordValidator = new RequiredFieldValidator();
+
+        tfEmail.getValidators().add(EmailValidator);
+        pfPassword.getValidators().add(PasswordValidator);
+        EmailValidator.setMessage("Email Required");
+        PasswordValidator.setMessage("Password Required");
+
+        tfEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    tfEmail.validate();
+                }
+            }
+        });
+        pfPassword.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue) {
+                    pfPassword.validate();
+                }
+            }
+        });
+
+        try {
+            Image invalidInputIcn = new Image(new FileInputStream("/images/invalid_input.png"));
+            EmailValidator.setIcon(new ImageView(invalidInputIcn));
+            PasswordValidator.setIcon(new ImageView(invalidInputIcn));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @FXML
     public void OnLoginClicked() throws IOException {

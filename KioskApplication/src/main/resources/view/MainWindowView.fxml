@@ -22,6 +22,6 @@
             </JFXButton>
          </children>
       </AnchorPane>
-        <AnchorPane fx:id="LoginPopup" prefHeight="140.0" prefWidth="200.0" AnchorPane.rightAnchor="230.0" AnchorPane.topAnchor="150.0" />
+        <AnchorPane fx:id="LoginPopup" prefHeight="140.0" prefWidth="200.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="130.0" />
     </children>
 </AnchorPane>
