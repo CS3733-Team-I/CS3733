@@ -12,7 +12,7 @@ public class PathfinderNode {
     protected int previousCost;
     protected int totalCost;
     protected PathfinderNode parentNode;
-    protected  LinkedList<PathfinderNode> childNodes;
+    private   LinkedList<PathfinderNode> childNodes;
 
     public PathfinderNode(Node node) {
         this.node = node;
@@ -76,11 +76,11 @@ public class PathfinderNode {
         this.totalCost = totalCost;
     }
 
-    public void addChild(PathfinderNode childNode) {
+    private void addChild(PathfinderNode childNode) {
         this.childNodes.add(childNode);
     }
 
-    public void removeChild(PathfinderNode childNode){
+    private void removeChild(PathfinderNode childNode){
         if(this.childNodes.contains(childNode))
             this.childNodes.remove(childNode);
     }
@@ -89,5 +89,9 @@ public class PathfinderNode {
         this.previousCost = calculatePreviousCost(this.parentNode);
         for(PathfinderNode node: childNodes)
             node.recalculateCosts();
+    }
+
+    public LinkedList<PathfinderNode> getChildNodes() {
+        return childNodes;
     }
 }

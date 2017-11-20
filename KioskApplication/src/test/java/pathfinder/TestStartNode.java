@@ -35,11 +35,4 @@ public class TestStartNode {
         startNode.calculatePreviousCost(startNode) ;
         assertEquals(0, startNode.getTotalCost());
     }
-
-    // maybe make a test that checks if connection to Pathfinding Node is working
-    //@Test
-    //public void testLinkToPathfindingNode(){
-
-    //}
-
 }
