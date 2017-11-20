@@ -1,7 +1,7 @@
 package controller;
 
 import database.DatabaseController;
-import entity.Request;
+import database.objects.Request;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;

@@ -4,7 +4,7 @@ package KioskApplication.tests.requests;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.InterpreterRequest;
+import database.objects.InterpreterRequest;
 import entity.MapEntity;
 import utility.NodeBuilding;
 import utility.NodeFloor;
