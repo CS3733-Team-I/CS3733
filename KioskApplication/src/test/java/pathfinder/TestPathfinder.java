@@ -31,7 +31,27 @@ public class TestPathfinder {
         DatabaseController.initTests();
         map = MapEntity.getInstance();
 
-        /* Map Structure
+        //TODO implement new test map
+        /* New Map Structure
+           Double lines are twice as long
+
+              X   10    20    30    40    50    60    70    80
+           Y
+           10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
+                         |           |
+           20           n08 - n09   n10 - - - - n15
+                         |           |        /
+           30           n11 - n12 - n13 - n14 - n16
+                               |
+           40                 n17
+
+           50                 n18   n19
+
+           60                 n20 - n21
+                               |     |
+           70                 n22 - n23
+
+        Old Map Structure
          n1 - n2 - n3 - n5 - n6   n8   n9
                |
               / \
@@ -221,6 +241,9 @@ public class TestPathfinder {
         //Should return an empty list if you are at the end node
         assertTrue(alg.findPath(n1,n1).size() == 0);
 
+        //Test an actual path
+        //System.out.println(alg.findPath(n1,n6));
+        assertTrue(alg.findPath(n1,n6).size() == 4);
         //TODO more
     }
 
