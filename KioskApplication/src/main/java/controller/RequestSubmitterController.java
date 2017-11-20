@@ -144,6 +144,6 @@ public class RequestSubmitterController extends ScreenController implements Init
 
     @Override
     public void resetScreen() {
-        // TODO implement this
+        getMapController().setAnchor(0,200,0,0);
     }
-}
+    }
