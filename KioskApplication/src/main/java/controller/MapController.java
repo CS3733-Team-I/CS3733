@@ -1,11 +1,13 @@
 package controller;
 
+import com.jfoenix.controls.JFXRippler;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -17,16 +19,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import utility.NodeFloor;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class MapController {
+public class MapController implements Initializable{
     @FXML private AnchorPane container;
     @FXML private ImageView mapView;
     @FXML private StackPane stackPane;
@@ -58,7 +63,8 @@ public class MapController {
 
     //this method should be called when ever the instance of this class is created to enable zooming,
     //must be called after setController() and load()
-    public void ScrollGroupInit() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         zoomSlider.setMin(0.2);
         zoomSlider.setMax(2.2);
         zoomSlider.setValue(1.2);
@@ -69,6 +75,15 @@ public class MapController {
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
+
+        //add Rippler effect
+        JFXRippler mapRippler = new JFXRippler(mapView);
+        mapRippler.setMaskType(JFXRippler.RipplerMask.RECT);
+        mapRippler.setRipplerFill(Paint.valueOf("#0019ff"));
+        mapRippler.setRipplerRadius(100);
+        //mapRippler.setOverlayVisible(true,true);
+
+        container.getChildren().add(mapRippler);
     }
 
     public void setShowNodes(boolean showNodes) {
