@@ -25,7 +25,7 @@ public class MainWindowController {
     @FXML Button switchButton;
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
-    @FXML Label lbAdminInfo;
+    //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
     @FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
@@ -127,13 +127,14 @@ public class MainWindowController {
         //mapController.ScrollGroupInit();
         this.switchToScreen(ApplicationScreen.PATHFINDING);
 
+        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
         //Initialize Hamburger
 //        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
 //        BATransition.setRate(-1);
 //        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
 //            BATransition.setRate(BATransition.getRate()*-1);
 //            BATransition.play();
-//            //TODO THIS IS NOT WORKING
+//
 //            if(Sidebar.isShown()) {
 //                System.out.println("HERE1");
 //                Sidebar.close();
@@ -169,9 +170,11 @@ public class MainWindowController {
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
-                this.lbAdminInfo.setText("");
+                currentScreen = ApplicationScreen.PATHFINDING;
+                //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
+                //System.out.println("HERE!");
                 this.Login();
                 break;
         }
