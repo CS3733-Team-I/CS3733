@@ -43,7 +43,7 @@ public class DepthFirst implements SearchAlgorithm{
                 try {
                     newPath = findPath(n, endingNode, visitedNodes);
                 } catch (DeadEndException e) {
-                    System.out.println("Ran into a dead end at node " + e.getMessaage());
+                    //System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
