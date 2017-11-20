@@ -6,8 +6,12 @@ import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -29,10 +33,9 @@ public class InterpreterRequestController extends ScreenController{
     void onInterpreterPressed() throws IOException {
         System.out.println("Interpreter Request Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_INTERPRETER);
-        langMenu.getItems().clear();
-        langMenu.getItems().addAll("Spanish","German","Mandarin");
+        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
     }
+
 
     @FXML
     void onCancelPressed() throws IOException{
@@ -49,12 +52,16 @@ public class InterpreterRequestController extends ScreenController{
         //sets nodeLocation to default my location
         Node nodeLocation = DatabaseController.getNode(location);
 
+        //TODO this doesn't return a language... returns null
         String language = "None";
         if(langMenu.getValue().toString().equals("Spanish")){
             language = "Spanish";
-        }else if(langMenu.getValue().toString().equals("Chinese")) {
-            language = "Chinese";
+        }else if(langMenu.getValue().toString().equals("Mandarin")) {
+            language = "Mandarin";
+        }else if(langMenu.getValue().toString().equals("German")){
+            language= "German";
         }
+
 
         //Finds current admin that is logged in
         //currently a dummy email

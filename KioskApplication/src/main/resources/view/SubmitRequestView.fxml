@@ -5,6 +5,8 @@
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -33,16 +35,11 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <JFXTextField fx:id="txtLocation" alignment="CENTER" promptText="Location" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <JFXTextField fx:id="txtLocation" alignment="CENTER" editable="false" promptText="Location" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <GridPane.margin>
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXTextField>
-                              <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Language" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                  <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                 </GridPane.margin>
-                              </JFXComboBox>
                               <JFXButton fx:id="btnCancel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onCancelPressed" style="-fx-background-color: pink;" text="Clear" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets bottom="10.0" top="10.0" />
@@ -54,6 +51,18 @@
                                  </GridPane.margin>
                               </JFXButton>
                               <JFXTextArea promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                              <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                  <items>
+                                      <FXCollections fx:factory="observableArrayList">
+                                          <String fx:value="Spanish" />
+                                          <String fx:value="German" />
+                                          <String fx:value="Mandarin" />
+                                      </FXCollections>
+                                  </items>
+                                  <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </JFXComboBox>
                            </children>
                         </GridPane>
                      </children>

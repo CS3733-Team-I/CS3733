@@ -1,10 +1,8 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
@@ -13,13 +11,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -85,7 +79,7 @@ public class MainWindowController {
                     controller = new RequestManagerController(this, mapController);
                     break;
 
-                case ADMIN_INTERPRETER:
+                case REQUEST_INTERFACE:
                     controller = new InterpreterRequestController(this, mapController);
                     break;
 
@@ -158,8 +152,7 @@ public class MainWindowController {
                         switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
                         break;
                     case "Request Submit":
-                        // TODO implement new request screen
-                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
                         break;
                     case "Settings":
                         switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
@@ -211,7 +204,7 @@ public class MainWindowController {
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
-            case ADMIN_INTERPRETER:
+            case REQUEST_INTERFACE:
             case ADMIN_EDIT_NODE:
             case ADMIN_DEL_EDGE:
             case ADMIN_ADD_NODE:
