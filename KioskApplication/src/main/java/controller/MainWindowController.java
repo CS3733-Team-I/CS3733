@@ -10,9 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -21,12 +22,11 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML Button switchButton;
-    @FXML AnchorPane contentWindow;
-    @FXML AnchorPane loginPopup;
-    @FXML Label lbAdminInfo;
-
     @FXML JFXTabPane tabPane;
+
+    @FXML AnchorPane contentWindow;
+
+    @FXML Button loginButton;;
 
     Administrator curr_admin;
 
@@ -91,12 +91,12 @@ public class MainWindowController {
         // Additional actions on screen switch
         switch (screen) {
             case ADMIN_MENU:
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
+                loginButton.setText("Logoff");
+                loginButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Admin viewLoginScreen");
-                switchButton.requestFocus();
+                loginButton.setText("Admin Login");
+                loginButton.requestFocus();
                 //serviceTab.setDisable(true);
                 //managerTab.setDisable(true);
                 //builderTab.setDisable(true);
@@ -167,12 +167,19 @@ public class MainWindowController {
     private void viewLoginScreen() throws IOException{
         // TODO this isn't great OO, rewrite at some point
         LoginController loginController = new LoginController(this);
-        FXMLLoader loader;
-        loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
         loader.setController(loginController);
-        loginPopup.getChildren().clear();
-        loginPopup.getChildren().add(loader.load());
-        loginController.tfEmail.requestFocus();
+        javafx.scene.Node view = loader.load();
+
+        BorderPane loginContainer = new BorderPane();
+        AnchorPane.setTopAnchor(loginContainer, 0.0);
+        AnchorPane.setLeftAnchor(loginContainer, 0.0);
+        AnchorPane.setBottomAnchor(loginContainer, 0.0);
+        AnchorPane.setRightAnchor(loginContainer, 0.0);
+
+        loginContainer.setCenter(view);
+
+        contentWindow.getChildren().add(loginContainer);
     }
 
     @FXML
@@ -187,7 +194,6 @@ public class MainWindowController {
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
-                this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
                 this.viewLoginScreen();

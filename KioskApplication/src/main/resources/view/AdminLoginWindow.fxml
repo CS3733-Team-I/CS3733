@@ -1,34 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="164.0" prefWidth="200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="140.0" prefWidth="200.0">
-         <children>
-            <TextField fx:id="tfEmail" prefHeight="27.0" prefWidth="200.0" promptText="Email" />
-            <PasswordField fx:id="pfPassword" promptText="Password" />
-            <Button mnemonicParsing="false" onAction="#OnLoginClicked" prefHeight="27.0" prefWidth="100.0" text="Login">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
-               </VBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#OnBackClicked" prefHeight="27.0" prefWidth="100.0" text="Back">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="50.0" right="50.0" />
-               </VBox.margin>
-            </Button>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-      <Label fx:id="errorMsg" layoutX="-1.0" layoutY="131.0" prefHeight="27.0" prefWidth="200.0" textFill="RED" />
+      <Label fx:id="errorLabel" alignment="CENTER" layoutX="51.0" layoutY="240.0" text="Label" textAlignment="CENTER" textFill="#b71c1c" visible="false" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="300.0" />
+      <JFXButton buttonType="RAISED" cancelButton="true" layoutX="329.0" layoutY="171.0" onAction="#onBackPressed" ripplerFill="#b71c1c" style="-fx-background-color: #757575;" text="Cancel" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="245.0" />
+      <JFXTextField fx:id="emailField" labelFloat="true" layoutX="65.0" layoutY="73.0" promptText="Email" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="100.0" />
+      <JFXButton buttonType="RAISED" cancelButton="true" layoutX="50.0" layoutY="200.0" onAction="#onLoginPressed" prefHeight="25.0" prefWidth="200.0" ripplerFill="#757575" style="-fx-background-color: #00c853;" text="Login" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="200.0" />
+      <JFXPasswordField fx:id="passwordField" labelFloat="true" layoutX="50.0" layoutY="143.0" prefHeight="25.0" prefWidth="200.0" promptText="Password" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="150.0" />
    </children>
 </AnchorPane>
