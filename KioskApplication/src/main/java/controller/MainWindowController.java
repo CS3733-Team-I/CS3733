@@ -194,7 +194,6 @@ public class MainWindowController {
         loader.setController(LC);
         LoginPopup.getChildren().clear();
         LoginPopup.getChildren().add(loader.load());
-
         LC.tfEmail.requestFocus();
     }
 
@@ -214,7 +213,6 @@ public class MainWindowController {
                 //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                //System.out.println("HERE!");
                 this.Login();
                 break;
         }

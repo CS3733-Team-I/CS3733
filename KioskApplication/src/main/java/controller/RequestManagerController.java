@@ -2,12 +2,14 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
+import entity.InterpreterRequest;
 import entity.Request;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -21,7 +23,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
-    private ComboBox activeRequests;
+    private VBox activeRequests;
     @FXML
     private Label totalRequests;
     @FXML
@@ -37,16 +39,19 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(){
+        activeRequests.getChildren().clear();
         ArrayList<Request> requests = DatabaseController.getAllRequests();
-        ArrayList<String> reqIDs = new ArrayList<String>();
         for (int i = 0; i < requests.size(); i++) {
-             reqIDs.add("Request ID: " + requests.get(i).getRequestID());
+            int id = requests.get(i).getRequestID();
+            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
+            requestTextField.setEditable(false);
+            Label typeOfRequest = new Label("Type: generic");
+            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
+            //TODO find what type of reqeust it is
+            activeRequests.getChildren().add(requestTextField);
+            activeRequests.getChildren().add(typeOfRequest);
+            activeRequests.getChildren().add(locationOfRequest);
         }
-
-        activeRequests.getItems().clear();
-        activeRequests.getItems().addAll(reqIDs);
-        int requestNum = DatabaseController.getAllRequests().size();
-        totalRequests.setText("Total Requests: " + requestNum + ".");
     }
 
     @FXML
@@ -60,7 +65,9 @@ public class RequestManagerController extends ScreenController {
     void onCompletePressed(){
         int ID = Integer.parseInt(txtID.getText());
         DatabaseController.deleteRequest(ID);
+        txtID.clear();
         System.out.println("Complete Pressed \n");
+        showRequests();
     }
 
     @Override
@@ -86,6 +93,6 @@ public class RequestManagerController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        // TODO implement this
+        getMapController().setAnchor(0,400,0,0);
     }
 }
