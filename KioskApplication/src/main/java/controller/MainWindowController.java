@@ -89,7 +89,7 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Admin Login");
+                switchButton.setText("Employee Login");
                 switchButton.requestFocus();
                 break;
             default:
