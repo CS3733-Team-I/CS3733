@@ -1,6 +1,8 @@
 package controller;
 
 import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
@@ -9,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import utility.ApplicationScreen;
@@ -24,6 +27,7 @@ public class MainWindowController {
     @FXML AnchorPane LoginPopup;
     @FXML Label lbAdminInfo;
     @FXML JFXDrawer Sidebar;
+    @FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -103,10 +107,10 @@ public class MainWindowController {
         Sidebar.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         Sidebar.getChildren().add(controller.getContentView());
+        Sidebar.close();
 
         // Reset controller's view
         controller.resetScreen();
-        currentScreen = screen;
     }
 
     @FXML
@@ -122,6 +126,23 @@ public class MainWindowController {
         mapPaneLoader.load();
         //mapController.ScrollGroupInit();
         this.switchToScreen(ApplicationScreen.PATHFINDING);
+
+        //Initialize Hamburger
+        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
+        BATransition.setRate(-1);
+        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+            BATransition.setRate(BATransition.getRate()*-1);
+            BATransition.play();
+            this.Sidebar.toggle();//TODO THIS IS NOT WORKING
+//            if(Sidebar.isShown()) {
+//                System.out.println("HERE1");
+//                Sidebar.close();
+//            }
+//            else {
+//                System.out.println("HERE2");
+//                Sidebar.open();
+//            }
+        });
     }
 
     @FXML
