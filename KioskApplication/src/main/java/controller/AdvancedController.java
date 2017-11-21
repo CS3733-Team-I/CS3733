@@ -70,7 +70,8 @@ public class AdvancedController extends ScreenController {
         DFSBtn.setToggleGroup(g);
         DFSBtn.setUserData("DFS");
 
-        tabAnchor.setVisible(false);
+        tabAnchor.setVisible(true);
+        settingDrawer.open();
 
         Image databaseIcon = new Image(getClass().getResource("/images/icons/nukeIcon.png").toString());
         ImageView databaseIconView = new ImageView(databaseIcon);
