@@ -13,7 +13,7 @@ public class InterpreterRequest extends Request {
     public InterpreterRequest(String nodeID, String employee, String note, Language language) {
         super(nodeID, employee, note);
         this.language = language;
-        this.requestID = "INT" + nodeID + this.getSubmittedTime().toString();
+        this.requestID = "Int" + this.getSubmittedTime().toString() + nodeID;
     }
 
     //for retrieving uncomplete iRs

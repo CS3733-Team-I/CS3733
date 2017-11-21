@@ -1,4 +1,4 @@
-package KioskApplication.tests.database;
+package database;
 
 import database.DatabaseController;
 import database.objects.Edge;
