@@ -250,13 +250,25 @@ public class TestPathfinder {
 
         SearchAlgorithm alg = new DepthFirst();
 
+        LinkedList<Edge> path;
+
         //Should return an empty list if you are at the end node
-        assertTrue(alg.findPath(n01,n01).size() == 0);
+        path = alg.findPath(n01,n01);
+        assertTrue(path.size() == 0);
+
+
 
         //Test an actual path
-        System.out.println(alg.findPath(n01,n02));
-        assertTrue(alg.findPath(n01,n02).size() == 1);
-        //TODO more
+        path = alg.findPath(n01,n02);
+        assertEquals(path.size(),1);
+        assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+
+        //Test another actual path
+        path = alg.findPath(n01,n03);
+        assertEquals(path.size(),2);
+        assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+        assertEquals(path.get(1),map.getConnectingEdge(n02,n03));
+
     }
 
     @Test(expected = DeadEndException.class) //test that the exception is thrown when there is no path or connection

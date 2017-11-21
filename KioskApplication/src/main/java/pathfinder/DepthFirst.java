@@ -60,10 +60,12 @@ public class DepthFirst implements SearchAlgorithm{
             if(!visitedNodes.contains(n)) {
                 try {
                     newPath = findPath(n, endingNode, visitedNodes);
+                    returnList.add(map.getConnectingEdge(startingNode,n));
+                    //System.out.println(returnList + " " + n.getNodeID());
                     returnList.addAll(newPath);
                     return returnList;
                 } catch (DeadEndException e) {
-                    System.out.println("Ran into a dead end at node " + e.getMessage());
+                    //System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
