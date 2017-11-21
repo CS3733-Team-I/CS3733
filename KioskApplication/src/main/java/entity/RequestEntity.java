@@ -17,15 +17,16 @@ public class RequestEntity {
     //private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
 
-    private static RequestEntity instance = null;
-
-    protected RequestEntity() {
+    private RequestEntity() {
         interpreterRequests=new HashMap<>();
     }
 
+    private static class RequestEntitySingleton{
+        private static final RequestEntity _instance = new RequestEntity();
+    }
+
     public static RequestEntity getInstance() {
-        if (instance == null) instance = new RequestEntity();
-        return instance;
+        return RequestEntitySingleton._instance;
     }
 
     public void readAllFromDatabase(){
@@ -55,15 +56,13 @@ public class RequestEntity {
         DatabaseController.addInterpreterRequest(iR);
     }
 
-    public Request getRequest(String requestID){
-        String requestType = requestID.substring(0,2);
-        if(requestType.equals("Int")){
-            System.out.println("Getting InterpreterRequest");
+    public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
+        System.out.println("Getting InterpreterRequest");
+        if(interpreterRequests.containsKey(requestID)){
             return interpreterRequests.get(requestID);
         }
         else{
-            System.out.println("Invalid requestID");
-            return null;
+            throw new NullPointerException("Unable to find InterpreterRequest in database");
         }
     }
 
@@ -73,7 +72,7 @@ public class RequestEntity {
 
     //Generic request deleting method
     public void deleteRequest(String requestID){
-        String requestType = requestID.substring(0,2);
+        String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             interpreterRequests.remove(requestID);
             DatabaseController.deleteInterpreterRequest(requestID);
