@@ -12,6 +12,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.NodeFloor;
 
 import java.io.IOException;
@@ -47,8 +48,14 @@ public class PathfindingSidebarController extends ScreenController {
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder();
-            Path path = pathfinder.generatePath(currentNodes);
-            getMapController().drawPath(path);
+            try{
+                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().drawPath(path);
+            }
+            catch(PathfinderException exception){
+                System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+            }
+
 
             waypointListVbox.getChildren().clear();
 

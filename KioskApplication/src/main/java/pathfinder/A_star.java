@@ -33,7 +33,6 @@ public class A_star implements SearchAlgorithm {
         HashMap<String, PathfinderNode> frontierNodes = new HashMap<>();
 
         //Next, get a list of all the nodes in the area you want to search (in this case, the whole map).
-        //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
         LinkedList<Node> allNodes = map.getAllNodes();
 
         //At start, no nodes have been explored, so put them all in the Unexplored list.
@@ -54,7 +53,6 @@ public class A_star implements SearchAlgorithm {
 
         //Now, start searching.
         PathfinderNode lowestCost = null;
-        //TODO: add actual loop logic?
         while(true){
 
             //Check to see if there's anywhere in the frontier left to search.
@@ -121,7 +119,8 @@ public class A_star implements SearchAlgorithm {
         LinkedList<Edge> pathEdges = lastNode.buildPath();
 
         // handler for no path found
-        if(pathEdges == null)throw new PathfinderException("No Path was found, Please choose another path");
+        if(pathEdges == null)
+            throw new PathfinderException("No path found.");
         // return generated path of nodes
         return pathEdges;
     }

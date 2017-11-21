@@ -29,7 +29,7 @@ public class Pathfinder {
      * @param waypoints A list of nodes through which the path should pass
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
-    public Path generatePath(LinkedList<Node> waypoints){
+    public Path generatePath(LinkedList<Node> waypoints) throws PathfinderException{
 
         LinkedList<Edge> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
@@ -56,28 +56,16 @@ public class Pathfinder {
             }
 
             //check if the node is valid.  If not, throw an exception.
-            try{
-                // if end node is not defined then throw exception for not valid
-                if (endNode == null || endNode.getNodeID()==null)
-                    throw new PathfinderException("No defined end node, please define valid end location");
-            }catch(PathfinderException e){
-            }
+            // if end node is not defined then throw exception for not valid
+            if (endNode == null || endNode.getNodeID() == null)
+                throw new PathfinderException("No defined end node, please define valid end location");
 
             //Check to make sure the nodes are all on the same floor; if not, throw exception.
-            try{
-                if(!endNode.getFloor().equals(floor))
-                    throw new PathfinderException("Pathfinder across multiple floors not currently supported.");
-            }
-            catch(PathfinderException e){
-            }
+            if(!endNode.getFloor().equals(floor))
+                throw new PathfinderException("Pathfinder across multiple floors not currently supported.");
 
             //Now, find the path from the previous waypoint to this one.
-            try{
-                pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
-            }catch(PathfinderException e){
-                System.out.println("Error: pathfinder exception" + e.getMessage());
-                e.printStackTrace();
-            }
+            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
@@ -96,7 +84,7 @@ public class Pathfinder {
      * @param endNode Node that the algorithm should end at
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
-    public Path generatePath(Node startNode, Node endNode){
+    public Path generatePath(Node startNode, Node endNode) throws PathfinderException{
         LinkedList<Node> waypoints = new LinkedList<>();
         waypoints.add(startNode);
         waypoints.add(endNode);
