@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
-    //something
+
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
     }
