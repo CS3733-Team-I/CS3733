@@ -12,3 +12,8 @@
     -fx-stroke: #F0F1EC;
     -fx-stroke-width: 20pt;
 }
+
+.tab {
+
+    -fx-pref-width: 50pt
+}
