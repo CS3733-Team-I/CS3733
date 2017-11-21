@@ -41,6 +41,7 @@ public class SQLStrings {
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_INTERPRETERS_TABLE = "DROP TABLE t_interpreters";
+    public static final String DROP_SCHEMA = "DROP SCHEMA LOCALKIOSK";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
