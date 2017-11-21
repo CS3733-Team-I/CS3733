@@ -92,6 +92,11 @@ public class RequestSubmitterController extends ScreenController implements Init
     }
 
     @FXML
+    void onInterpreterPressed() throws IOException {
+        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+    }
+
+    @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
         Node nodeLocation = DatabaseController.getNode(location);
