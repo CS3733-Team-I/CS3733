@@ -37,19 +37,19 @@ public class TestPathfinderNode {
         map = MapEntity.getInstance();
 
 
-        n1  = new Node("NODE1",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n2  = new Node("NODE2",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n3  = new Node("NODE3",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n4  = new Node("NODE4",100,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n5  = new Node("NODE5",2,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
-        n6  = new Node("NODE6",11,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n1  = new Node("NODE1A",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n2  = new Node("NODE2A",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n3  = new Node("NODE3A",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n4  = new Node("NODE4A",100,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n5  = new Node("NODE5A",2,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
+        n6  = new Node("NODE6A",11,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
 
-        e1 = new Edge("EDGE1", n1.getNodeID(), n2.getNodeID());
-        e2 = new Edge("EDGE2", n2.getNodeID(), n3.getNodeID());
-        e3 = new Edge("EDGE3", n1.getNodeID(), n4.getNodeID());
-        e4 = new Edge("EDGE4", n4.getNodeID(), n3.getNodeID());
-        e5 = new Edge("EDGE5", n3.getNodeID(), n5.getNodeID());
-        e6 = new Edge("EDGE6", n5.getNodeID(), n6.getNodeID());
+        e1 = new Edge("EDGE1A", n1.getNodeID(), n2.getNodeID());
+        e2 = new Edge("EDGE2A", n2.getNodeID(), n3.getNodeID());
+        e3 = new Edge("EDGE3A", n1.getNodeID(), n4.getNodeID());
+        e4 = new Edge("EDGE4A", n4.getNodeID(), n3.getNodeID());
+        e5 = new Edge("EDGE5A", n3.getNodeID(), n5.getNodeID());
+        e6 = new Edge("EDGE6A", n5.getNodeID(), n6.getNodeID());
 
         map.addNode(n1);
         map.addNode(n2);
