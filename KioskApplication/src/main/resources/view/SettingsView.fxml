@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.SettingsView">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <JFXTabPane id="tab-header-area" layoutX="131.0" layoutY="113.0" prefHeight="600.0" prefWidth="1080.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <tabs>
+                  <Tab text="Pathdfinding">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="110.0" layoutY="63.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
+                              <RadioButton fx:id="AstarBtn" layoutX="90.0" layoutY="500.0" mnemonicParsing="false" onAction="#OnSASel" text="A*" />
+                              <RadioButton fx:id="DijkstraBtn" layoutX="85.0" layoutY="428.0" mnemonicParsing="false" onAction="#OnSASel" text="Dijkstras" />
+                              <RadioButton fx:id="BFSBtn" layoutX="86.0" layoutY="371.0" mnemonicParsing="false" onAction="#OnSASel" text="BFS" />
+                              <RadioButton fx:id="DFSBtn" layoutX="85.0" layoutY="316.0" mnemonicParsing="false" onAction="#OnSASel" text="DFS" />
+                              <Label fx:id="SALabel" layoutX="90.0" layoutY="262.0" text="Search Algorithm" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </JFXTabPane>
+         </children>
+      </AnchorPane>
+      <GridPane prefHeight="400.0" prefWidth="199.0" style="-fx-background-color: #DDDED0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <JFXButton buttonType="RAISED" prefHeight="110.0" prefWidth="199.0" style="-fx-background-color: #0090AD;" text="Pathfinding" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </GridPane.margin>
+            </JFXButton>
+            <JFXButton prefHeight="167.0" prefWidth="179.0" style="-fx-background-color: #0090AD;" text="Display" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </GridPane.margin>
+            </JFXButton>
+            <JFXButton prefHeight="176.0" prefWidth="286.0" style="-fx-background-color: #0090AD;" text="About" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </GridPane.margin>
+            </JFXButton>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
