@@ -2,19 +2,18 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
-import entity.InterpreterRequest;
-import entity.Request;
+import database.objects.Request;
+import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
@@ -30,6 +29,7 @@ public class RequestManagerController extends ScreenController {
     private TextField txtID;
 
 
+
     @FXML
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
@@ -40,15 +40,18 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void showRequests(){
         activeRequests.getChildren().clear();
-        ArrayList<Request> requests = DatabaseController.getAllRequests();
+        LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
-            int id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
+            String id = requests.get(i).getRequestID();
+            TextField requestTextField = new TextField(requests.get(i).getassigner());
+            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
-            Label typeOfRequest = new Label("Type: generic");
-            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
+            Label requestID = new Label("ID: " + id);
+            Label typeOfRequest = new Label("Type: Interpreter");
+            Label locationOfRequest = new Label(location);
             //TODO find what type of reqeust it is
             activeRequests.getChildren().add(requestTextField);
+            activeRequests.getChildren().add(requestID);
             activeRequests.getChildren().add(typeOfRequest);
             activeRequests.getChildren().add(locationOfRequest);
         }
@@ -63,8 +66,8 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void onCompletePressed(){
-        int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
+        String ID = txtID.getText();
+        RequestEntity.getInstance().deleteRequest(ID);
         txtID.clear();
         System.out.println("Complete Pressed \n");
         showRequests();

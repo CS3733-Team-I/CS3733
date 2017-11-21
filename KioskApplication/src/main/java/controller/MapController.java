@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -12,14 +13,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -36,7 +36,7 @@ public class MapController {
     @FXML private AnchorPane waypointPane;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
-    @FXML private Slider zoomSlider;
+    @FXML private JFXSlider zoomSlider;
 
     private Group zoomGroup;
 
@@ -219,6 +219,11 @@ public class MapController {
         zoomGroup.setScaleY(scaleValue);
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
+    }
+
+    public void setFloorSelectorPosition(Point2D position) {
+        AnchorPane.setTopAnchor(floorSelector, position.getY());
+        AnchorPane.setLeftAnchor(floorSelector, position.getX());
     }
 
     @FXML

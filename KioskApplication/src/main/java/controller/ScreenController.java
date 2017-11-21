@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 
@@ -35,6 +35,7 @@ public abstract class ScreenController {
             loader.setController(this);
             view = loader.load();
         } catch (IOException e) {
+            System.out.println("Load " + this + "view failed," + " initialize with empty view");
             e.printStackTrace();
 
             view = new AnchorPane(); // Initialize contentView as an empty view
@@ -48,5 +49,6 @@ public abstract class ScreenController {
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
 
+    public void onScreenChanged() {}
     public abstract void resetScreen();
 }
