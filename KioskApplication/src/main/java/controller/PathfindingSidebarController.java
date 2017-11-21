@@ -28,6 +28,10 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes = new LinkedList<>();
     }
 
+    public void setPathfinderalg(int pathfinderalg){
+
+    }
+
     @FXML
     void showNodes(){
         boolean isS = showNodes.isSelected();

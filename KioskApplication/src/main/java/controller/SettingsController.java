@@ -1,6 +1,7 @@
 package controller;
 
 import database.objects.Edge;
+import entity.AlgorithmSetting;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -29,13 +30,13 @@ public class SettingsController extends ScreenController {
     @FXML
     void initialize(){
         AstarBtn.setToggleGroup(g);
-        AstarBtn.setUserData("Astar");
+        AstarBtn.setUserData(1); // Astar
         DijkstraBtn.setToggleGroup(g);
-        DijkstraBtn.setUserData("Dijkstra");
+        DijkstraBtn.setUserData(2); // Dijkstra
         BFSBtn.setToggleGroup(g);
-        BFSBtn.setUserData("BFS");
+        BFSBtn.setUserData(3); // BFS
         DFSBtn.setToggleGroup(g);
-        DFSBtn.setUserData("DFS");
+        DFSBtn.setUserData(4); // DFS
 
     }
 
@@ -49,6 +50,9 @@ public class SettingsController extends ScreenController {
     @FXML
     void OnSASel(){
         SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
+        // Send data to pathfinder.pathfinder
+        AlgorithmSetting.getInstance().changeAlgorithm(g.getSelectedToggle().getUserData().toString());
+        System.out.println(AlgorithmSetting.getInstance().getAlgorithm());
     }
 
     @Override
