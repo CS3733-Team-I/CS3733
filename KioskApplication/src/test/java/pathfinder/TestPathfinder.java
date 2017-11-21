@@ -5,10 +5,10 @@ import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import org.junit.BeforeClass;
-import utility.NodeBuilding;
-import utility.NodeFloor;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
 import org.junit.Test;
-import utility.NodeType;
+import utility.Node.NodeType;
 
 import java.util.LinkedList;
 
