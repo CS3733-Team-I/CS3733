@@ -8,6 +8,7 @@ import javafx.scene.control.RadioButton;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleGroup;
+import pathfinder.*;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -30,13 +31,13 @@ public class SettingsController extends ScreenController {
     @FXML
     void initialize(){
         AstarBtn.setToggleGroup(g);
-        AstarBtn.setUserData(1); // Astar
+        AstarBtn.setUserData(new A_star()); // Astar
         DijkstraBtn.setToggleGroup(g);
-        DijkstraBtn.setUserData(2); // Dijkstra
+        DijkstraBtn.setUserData(new Dijkstra()); // Dijkstra
         BFSBtn.setToggleGroup(g);
-        BFSBtn.setUserData(3); // BFS
+        BFSBtn.setUserData(new BreadthFirst()); // BFS
         DFSBtn.setToggleGroup(g);
-        DFSBtn.setUserData(4); // DFS
+        DFSBtn.setUserData(new DepthFirst()); // DFS
 
     }
 
@@ -51,7 +52,7 @@ public class SettingsController extends ScreenController {
     void OnSASel(){
         SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
         // Send data to pathfinder.pathfinder
-        AlgorithmSetting.getInstance().changeAlgorithm(g.getSelectedToggle().getUserData().toString());
+        AlgorithmSetting.getInstance().changeAlgorithm((SearchAlgorithm) g.getSelectedToggle().getUserData());
         System.out.println(AlgorithmSetting.getInstance().getAlgorithm());
     }
 

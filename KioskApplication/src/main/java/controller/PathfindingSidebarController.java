@@ -2,6 +2,7 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import entity.AlgorithmSetting;
 import entity.MapEntity;
 import entity.Path;
 import pathfinder.A_star;
@@ -51,7 +52,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder();
+            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
             try{
                 Path path = pathfinder.generatePath(currentNodes);
                 getMapController().drawPath(path);
