@@ -35,6 +35,7 @@ public abstract class ScreenController {
             loader.setController(this);
             view = loader.load();
         } catch (IOException e) {
+            System.out.println("Load " + this + "view failed," + " initialize with empty view");
             e.printStackTrace();
 
             view = new AnchorPane(); // Initialize contentView as an empty view
