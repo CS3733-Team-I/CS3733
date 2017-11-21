@@ -257,6 +257,7 @@ public class TestPathfinder {
     }
 
     //Breadth first algorithm tests
+
     @Test
     public void testBreathFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
