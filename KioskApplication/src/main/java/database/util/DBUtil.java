@@ -54,9 +54,8 @@ public class DBUtil {
 
     public static void dropAllTables(Connection conn) {
         String drop1 = DROP_EDGE_TABLE;
-        String drop2 = DROP_INTERPRETER_TABLE;
-        String drop3 = DROP_REQUEST_TABLE;
-        String drop4 = DROP_NODE_TABLE;
+        String drop2 = DROP_INTERPRETERS_TABLE;
+        String drop3 = DROP_NODE_TABLE;
 
         PreparedStatement preparedStatement = null;
         try {
@@ -83,11 +82,6 @@ public class DBUtil {
         }
 
         PreparedStatement preparedStatement3  = null;
-        try {
-            preparedStatement3 = conn.prepareStatement(drop4);
-            preparedStatement3.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 }

@@ -1,4 +1,4 @@
-package KioskApplication.tests.requests;
+package requests;
 
 
 import database.DatabaseController;
@@ -6,6 +6,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.objects.InterpreterRequest;
 import entity.MapEntity;
+import utility.Language;
 import utility.NodeBuilding;
 import utility.NodeFloor;
 import utility.NodeType;
@@ -13,15 +14,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class InterpreterRequestTest {
+    @Test
+    public void testIDGenerationHeader(){
+        InterpreterRequest iR = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
+        assertEquals("Int",iR.getRequestID().substring(0,3));
+    }
+
+    @Test
+    public void testIDGenerationTimeDifference(){
+        InterpreterRequest iR1 = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
+        InterpreterRequest iR2 = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
+        assertNotEquals(iR1.getRequestID(),iR2.getRequestID());
+    }
+    /*
 
     //setup code duplicated from TestMapEntity.java
     private MapEntity m;
     private Node n1,n2,n3,n4,n5;
     private Edge e1,e2,e3;
 
-    @Before
+    /*@Before
     public void setup() {
         DatabaseController.initTests();
         m = MapEntity.getInstance();
@@ -43,14 +58,7 @@ public class InterpreterRequestTest {
     //I want to verify that any information I put into for an interpreter request, I can also get out
     @Test
     public void testIRInterpeterID(){
-        //setup
-        m.addNode(n1);
-        InterpreterRequest IR1=new InterpreterRequest(n1,"Nurse Joy","Japanese",1,2);
-        InterpreterRequest IR2=new InterpreterRequest("Japanese",2,1);
-        assertEquals(IR1.getInterpreterID(),IR2.getInterpreterID());
-        //Clean up
-        IR1.completeInterpreterRequest();
-        m.removeNode(n1.getNodeID());
+        InterpreterRequest iR = new InterpreterRequest("current location",)
     }
 
     @Test
@@ -91,7 +99,7 @@ public class InterpreterRequestTest {
 
 
 
-    /*
+
     //New tests for addRequest() method
     @Test
     public void testNodeSearcher(){
@@ -115,6 +123,6 @@ public class InterpreterRequestTest {
         m.removeNode(n2.getNodeID());
         m.removeNode(n5.getNodeID());
 
-    }
-    */
+    }*/
+
 }
