@@ -9,7 +9,7 @@ public class PathfinderException extends Exception{
         System.out.println(message);
     }
 
-    public String getMessaage() {
+    public String getMessage() {
         return message;
     }
 }

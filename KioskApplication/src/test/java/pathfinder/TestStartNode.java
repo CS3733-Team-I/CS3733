@@ -19,28 +19,20 @@ public class TestStartNode {
 
     @Before
     public void setup(){
-        MapEntity map = MapEntity.getInstance();
         startNode = new StartNode(new Node("Node1", NodeFloor.THIRD));
         startNode.getNode().setXcoord(1);
         startNode.getNode().setYcoord(9);
     }
 
     @Test
-    public void testLinkedListisEmpty(){
-        LinkedList<Edge> startnodeedges = startNode.buildPath();
-        assertTrue(startnodeedges.isEmpty());
+    public void testLinkedListIsEmpty(){
+        LinkedList<Edge> startNodeEdges = startNode.buildPath();
+        assertTrue(startNodeEdges.isEmpty());
     }
 
     @Test
-    public void testCalculateCost(){
-        startNode.calculateCost(startNode) ;
+    public void testCalculatePreviousCost(){
+        startNode.calculatePreviousCost(startNode) ;
         assertEquals(0, startNode.getTotalCost());
     }
-
-    // maybe make a test that checks if connection to Pathfinding Node is working
-    //@Test
-    //public void testlinktoPathfindingNode(){
-
-    //}
-
 }
