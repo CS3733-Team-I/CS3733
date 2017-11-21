@@ -1,28 +1,21 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
-import com.jfoenix.transitions.hamburger.HamburgerNextArrowBasicTransition;
 import database.objects.Edge;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class AdvancedController extends ScreenController {
 
@@ -68,22 +61,26 @@ public class AdvancedController extends ScreenController {
 
         tabAnchor.setVisible(false);
 
-        GridPane SettingsAnchor= FXMLLoader.load(getClass().getResource("/view/SettingsView.fxml"));
+        GridPane SettingsAnchor= FXMLLoader.load(getClass().getResource("/view/SettingOptionsView.fxml"));
         SingleSelectionModel<Tab> selectionModel = settingTabPane.getSelectionModel();
         for(Node node : SettingsAnchor.getChildren()) {
             if(node.getAccessibleText() != null) {
                 node.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, (e)->{
                     switch (node.getAccessibleText())
                     {
-                        case "pathfinding":
+                        case "about":
                             selectionModel.select(0);
                             break;
-                        case "display":
+                        case "database":
                             selectionModel.select(1);
                             break;
-                        case "about":
+                        case "display":
                             selectionModel.select(2);
                             break;
+                        case "pathfinding":
+                            selectionModel.select(3);
+                            break;
+
                         default:
                             System.out.println("Tab not accessible, index: " + selectionModel.getSelectedIndex());
                             throw new IndexOutOfBoundsException();
