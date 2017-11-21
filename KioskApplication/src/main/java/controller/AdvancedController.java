@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import utility.ApplicationScreen;
@@ -21,6 +23,15 @@ public class AdvancedController extends ScreenController {
 
     @FXML
     private AnchorPane tabAnchor;
+
+    @FXML
+    private Tab databaseTab;
+    @FXML
+    private Tab displayTab;
+    @FXML
+    private Tab pathfindingTab;
+    @FXML
+    private Tab aboutTab;
 
     @FXML
     private JFXHamburger settingHam;
@@ -60,6 +71,30 @@ public class AdvancedController extends ScreenController {
         DFSBtn.setUserData("DFS");
 
         tabAnchor.setVisible(false);
+
+        Image databaseIcon = new Image(getClass().getResource("/images/icons/nukeIcon.png").toString());
+        ImageView databaseIconView = new ImageView(databaseIcon);
+        databaseIconView.setFitHeight(24);
+        databaseIconView.setFitWidth(24);
+        databaseTab.setGraphic(databaseIconView);
+
+        Image displayIcon = new Image(getClass().getResource("/images/icons/displayIcon.png").toString());
+        ImageView displayIconView = new ImageView(displayIcon);
+        displayIconView.setFitHeight(24);
+        displayIconView.setFitWidth(24);
+        displayTab.setGraphic(displayIconView);
+
+        Image pathfindingTabIcon = new Image(getClass().getResource("/images/icons/pathfindingIcon.png").toString());
+        ImageView pathfindingIconView = new ImageView(pathfindingTabIcon);
+        pathfindingIconView.setFitHeight(24);
+        pathfindingIconView.setFitWidth(24);
+        pathfindingTab.setGraphic(pathfindingIconView);
+
+        Image aboutIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
+        ImageView aboutIconView = new ImageView(aboutIcon);
+        displayIconView.setFitHeight(24);
+        displayIconView.setFitWidth(24);
+        displayTab.setGraphic(aboutIconView);
 
         GridPane SettingsAnchor= FXMLLoader.load(getClass().getResource("/view/SettingOptionsView.fxml"));
         SingleSelectionModel<Tab> selectionModel = settingTabPane.getSelectionModel();
