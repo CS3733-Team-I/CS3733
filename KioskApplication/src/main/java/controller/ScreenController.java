@@ -48,5 +48,6 @@ public abstract class ScreenController {
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
 
+    public void onScreenChanged() {}
     public abstract void resetScreen();
 }

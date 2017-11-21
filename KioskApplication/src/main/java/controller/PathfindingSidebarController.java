@@ -107,6 +107,11 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @Override
+    public void onScreenChanged() {
+        getMapController().setFloorSelectorPosition(new Point2D(10, 10));
+    }
+
+    @Override
     public void resetScreen() {
         onResetPressed();
         showNodesCheckbox.setSelected(false);

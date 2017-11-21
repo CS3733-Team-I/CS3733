@@ -46,6 +46,11 @@ public class MainWindowController {
     }
 
     public void switchToScreen(ApplicationScreen screen) {
+        ScreenController currentScreen = controllers.get(this.currentScreen);
+        if (currentScreen != null) {
+            currentScreen.onScreenChanged();
+        }
+
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
@@ -123,7 +128,7 @@ public class MainWindowController {
         // Reset controller's view
         controller.resetScreen();
 
-        currentScreen = screen;
+        this.currentScreen = screen;
     }
 
     @FXML
