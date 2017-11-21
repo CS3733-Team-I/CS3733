@@ -53,18 +53,21 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXTextField>
-                              <JFXButton fx:id="btnCancel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#onCancelPressed" style="-fx-background-color: pink;" text="Clear" GridPane.rowIndex="6">
+                              <JFXButton fx:id="btnCancel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: pink;" text="Clear" GridPane.rowIndex="6">
                                  <GridPane.margin>
                                     <Insets bottom="10.0" top="10.0" />
                                  </GridPane.margin>
                               </JFXButton>
-                              <JFXButton fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" style="-fx-background-color: lightgreen;" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                              <JFXButton fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" style="-fx-background-color: lightgreen;" text="Submit" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                  <GridPane.margin>
-                                    <Insets bottom="10.0" top="10.0" />
+                                    <Insets bottom="10.0" left="50.0" top="10.0" />
                                  </GridPane.margin>
                               </JFXButton>
-                              <JFXTextArea promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                              <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                              <JFXTextArea promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" top="5.0" />
+                                 </GridPane.margin></JFXTextArea>
+                              <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="3" GridPane.rowIndex="3">
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">
                                           <String fx:value="Spanish" />
@@ -73,7 +76,7 @@
                                       </FXCollections>
                                   </items>
                                   <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
+                                    <Insets left="5.0" right="35.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
                               <JFXTimePicker defaultColor="#259ceb" promptText="Select Time" GridPane.columnSpan="3" GridPane.rowIndex="2">

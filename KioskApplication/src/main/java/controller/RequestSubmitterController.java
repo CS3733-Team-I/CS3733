@@ -102,6 +102,7 @@ public class RequestSubmitterController extends ScreenController implements Init
         Node nodeLocation = DatabaseController.getNode(location);
         String notes = "";
 
+
         Language language = Language.NONE;
         String languageSelected = langMenu.getValue().toString();
         switch (languageSelected){
@@ -129,9 +130,7 @@ public class RequestSubmitterController extends ScreenController implements Init
         //node ID, employee, notes, language
         RequestEntity.getInstance().submitInterpreterRequest(nodeLocation.getNodeID(), adminEmail, notes, language);
 
-        //Adds the Interpreter request to the database
-//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+
         System.out.println(DatabaseController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
