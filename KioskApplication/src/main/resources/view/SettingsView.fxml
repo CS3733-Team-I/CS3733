@@ -17,19 +17,19 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <JFXButton buttonType="RAISED" prefHeight="110.0" prefWidth="199.0" style="-fx-background-color: #0090AD;" text="Pathfinding" GridPane.rowIndex="1">
+      <JFXButton accessibleText="pathfinding" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="140.0" style="-fx-background-color: #0090AD;" text="Pathfinding">
          <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" top="10.0" />
          </GridPane.margin>
       </JFXButton>
-      <JFXButton prefHeight="167.0" prefWidth="179.0" style="-fx-background-color: #0090AD;" text="Display" GridPane.rowIndex="2">
+      <JFXButton accessibleText="display" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="140.0" style="-fx-background-color: #0090AD;" text="Display" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" top="10.0" />
          </GridPane.margin>
       </JFXButton>
-      <JFXButton prefHeight="176.0" prefWidth="286.0" style="-fx-background-color: #0090AD;" text="About" GridPane.rowIndex="3">
+      <JFXButton accessibleText="about" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="140.0" style="-fx-background-color: #0090AD;" text="About" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" top="10.0" />
          </GridPane.margin>
       </JFXButton>
    </children>

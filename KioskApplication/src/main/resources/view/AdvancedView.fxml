@@ -13,13 +13,13 @@
       <JFXDrawer fx:id="settingDrawer" layoutX="3.0" layoutY="3.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <AnchorPane fx:id="tabAnchor" layoutX="153.0" layoutY="2.0" prefHeight="600.0" prefWidth="1127.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXTabPane id="tab-header-area" layoutX="131.0" layoutY="113.0" prefHeight="600.0" prefWidth="1080.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <JFXTabPane id="tab-header-area" fx:id="settingTabPane" layoutX="131.0" layoutY="113.0" prefHeight="600.0" prefWidth="1080.0" style="-fx-background-color: #F0F1EC;" stylesheets="@../css/SubTab.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab text="Pathdfinding">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1085.0">
                            <children>
-                              <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="110.0" layoutY="63.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
+                              <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="276.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
                               <RadioButton fx:id="AstarBtn" layoutX="90.0" layoutY="500.0" mnemonicParsing="false" onAction="#OnSASel" text="A*" />
                               <RadioButton fx:id="DijkstraBtn" layoutX="85.0" layoutY="428.0" mnemonicParsing="false" onAction="#OnSASel" text="Dijkstras" />
                               <RadioButton fx:id="BFSBtn" layoutX="86.0" layoutY="371.0" mnemonicParsing="false" onAction="#OnSASel" text="BFS" />
@@ -28,6 +28,16 @@
                            </children>
                         </AnchorPane>
                      </content>
+                  </Tab>
+                  <Tab text="Display">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab text="About">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
                   </Tab>
                </tabs>
             </JFXTabPane>

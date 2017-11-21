@@ -10,11 +10,9 @@ import database.objects.Edge;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -39,9 +37,6 @@ public class AdvancedController extends ScreenController {
 
     @FXML
     private JFXDrawer settingDrawer;
-
-    @FXML
-    private JFXButton btPathfinding;
 
     @FXML
     private Label SALabel;
@@ -73,8 +68,29 @@ public class AdvancedController extends ScreenController {
 
         tabAnchor.setVisible(false);
 
-        GridPane SettingsViewLoader= FXMLLoader.load(getClass().getResource("/view/SettingsView.fxml"));
-        settingDrawer.setSidePane(SettingsViewLoader);
+        GridPane SettingsAnchor= FXMLLoader.load(getClass().getResource("/view/SettingsView.fxml"));
+        SingleSelectionModel<Tab> selectionModel = settingTabPane.getSelectionModel();
+        for(Node node : SettingsAnchor.getChildren()) {
+            if(node.getAccessibleText() != null) {
+                node.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, (e)->{
+                    switch (node.getAccessibleText())
+                    {
+                        case "pathfinding":
+                            selectionModel.select(0);
+                            break;
+                        case "display":
+                            selectionModel.select(1);
+                            break;
+                        case "about":
+                            selectionModel.select(2);
+                            break;
+                        default:
+                            System.out.println("Tab not accessible, index: " + selectionModel.getSelectedIndex());
+                            throw new IndexOutOfBoundsException();
+                    }
+                });
+            }
+        }
 
         HamburgerBackArrowBasicTransition t1 = new HamburgerBackArrowBasicTransition(settingHam);
         t1.setRate(-1);
@@ -91,6 +107,7 @@ public class AdvancedController extends ScreenController {
                 tabAnchor.setVisible(true);
             }
         });
+        settingDrawer.setSidePane(SettingsAnchor);
     }
 
     @FXML
