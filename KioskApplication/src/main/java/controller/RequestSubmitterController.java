@@ -7,6 +7,8 @@ import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.Request;
+import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -15,10 +17,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
+import utility.Language;
 import utility.NodeFloor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class RequestSubmitterController extends ScreenController implements Initializable{
@@ -83,20 +87,22 @@ public class RequestSubmitterController extends ScreenController implements Init
 
     @FXML
     public void addRequest() throws IOException {
-        int interpID;
         String location = txtLocation.getText();
-
-        //sets nodeLocation to default my location
         Node nodeLocation = DatabaseController.getNode(location);
+        String notes = "";
 
-        //TODO this doesn't return a language... returns null
-        String language = "None";
-        if(langMenu.getValue().toString().equals("Spanish")){
-            language = "Spanish";
-        }else if(langMenu.getValue().toString().equals("Mandarin")) {
-            language = "Mandarin";
-        }else if(langMenu.getValue().toString().equals("German")){
-            language= "German";
+        Language language = Language.NONE;
+        String languageSelected = langMenu.getValue().toString();
+        switch (languageSelected){
+            case "Spanish":
+                language = Language.SPANISH;
+                break;
+            case "Mandarin":
+                language = Language.CHINESE;
+                break;
+            case "German":
+                language = Language.GERMAN;
+                break;
         }
 
 
@@ -104,19 +110,17 @@ public class RequestSubmitterController extends ScreenController implements Init
         //currently a dummy email
         String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
-
-        if(DatabaseController.getAllRequests().isEmpty()){
-            interpID = 0;
-        }else{
-            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
-        }
+        LinkedList<Request> allRequests = RequestEntity.getInstance().getAllRequests();
 
 
-        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + languageSelected + ". Admin Email: " + adminEmail);
+
+        //node ID, employee, notes, language
+        RequestEntity.getInstance().submitInterpreterRequest(nodeLocation.getNodeID(), adminEmail, notes, language);
 
         //Adds the Interpreter request to the database
-        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
         System.out.println(DatabaseController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
