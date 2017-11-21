@@ -117,10 +117,7 @@ public class RequestSubmitterController extends ScreenController {
         //node ID, employee, notes, language
         RequestEntity.getInstance().submitInterpreterRequest(nodeLocation.getNodeID(), adminEmail, notes, language);
 
-        //Adds the Interpreter request to the database
-//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        System.out.println(RequestEntity.getInstance().getAllRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
