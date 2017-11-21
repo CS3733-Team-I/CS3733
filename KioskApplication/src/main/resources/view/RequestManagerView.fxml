@@ -88,10 +88,10 @@
                                           <Insets right="5.0" />
                                        </GridPane.margin>
                                     </JFXButton>
-                                    <JFXButton buttonType="RAISED" onAction="#onCompletePressed" text="Complete" GridPane.rowIndex="10" />
-                                    <JFXTextField fx:id="txtID" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" promptText="ID #" GridPane.halignment="RIGHT" GridPane.rowIndex="10">
+                                    <JFXButton buttonType="RAISED" onAction="#onCompletePressed" text="Delete Selected" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+                                    <JFXTextField fx:id="txtID" alignment="CENTER" maxWidth="1.7976931348623157E308" promptText="Select an ID" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                                        <GridPane.margin>
-                                          <Insets right="5.0" />
+                                          <Insets left="5.0" right="5.0" />
                                        </GridPane.margin>
                                     </JFXTextField>
                                  </children>
