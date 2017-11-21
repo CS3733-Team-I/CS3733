@@ -20,17 +20,26 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws SQLException {
-        return getConnection(DBURL);
+        return getConnection(DBURL+DBCREATE);
     }
 
     public static Connection getTestConnection() throws SQLException {
-        return getConnection(DBTESTURL);
+        try {
+            return getConnection(DBTESTURL + DBCREATE);
+        } catch (SQLException e){
+            return getConnection(DBTESTURL);
+        }
     }
 
     public static void closeConnection(Connection con) throws SQLException {
         if(con != null){
             con.close();
         }
+    }
+
+    public static Connection closeTestConnection() throws SQLException{
+        DriverManager.getConnection(DBTESTURL+DBSHUTDOWN);
+        return null;
     }
 
     public static void createTables(Connection conn) throws SQLException {

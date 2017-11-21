@@ -56,9 +56,14 @@ public class RequestEntity {
         DatabaseController.addInterpreterRequest(iR);
     }
 
-    public InterpreterRequest getInterpreterRequest(String requestID){
+    public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
         System.out.println("Getting InterpreterRequest");
-        return interpreterRequests.get(requestID);
+        if(interpreterRequests.containsKey(requestID)){
+            return interpreterRequests.get(requestID);
+        }
+        else{
+            throw new NullPointerException("Unable to find InterpreterRequest in database");
+        }
     }
 
     public void submitSecurityRequest(){
