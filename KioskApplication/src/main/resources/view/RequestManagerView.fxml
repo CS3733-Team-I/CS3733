@@ -80,7 +80,7 @@
                                     <JFXCheckBox text="Maintenance" GridPane.rowIndex="5" />
                                     <JFXCheckBox text="IT Help" GridPane.rowIndex="6" />
                                     <JFXCheckBox text="Transportation" GridPane.rowIndex="7" />
-                                    <JFXButton buttonType="RAISED" style="-fx-background-color: green;" text="Create New" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
+                                    <JFXButton buttonType="RAISED" onAction="#submitRequest" style="-fx-background-color: green;" text="Create New" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
                                        <opaqueInsets>
                                           <Insets />
                                        </opaqueInsets>

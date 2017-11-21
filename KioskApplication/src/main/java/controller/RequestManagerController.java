@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -95,6 +94,11 @@ public class RequestManagerController extends ScreenController {
         txtID.clear();
         System.out.println("Complete Pressed \n");
         showRequests();
+    }
+
+    @FXML
+    void submitRequest(){
+        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
     }
 
     @Override
