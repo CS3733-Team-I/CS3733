@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -51,8 +50,6 @@
                   <Insets bottom="5.0" />
                </GridPane.margin>
             </Label>
-            <JFXCheckBox fx:id="showNodes" onAction="#showNodes" text="Show Nodes" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <JFXCheckBox fx:id="showEdges" onAction="#showEdges" text="Show Edges" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>

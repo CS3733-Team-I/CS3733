@@ -14,8 +14,6 @@ import java.io.IOException;
 public class AdminSidebarController extends ScreenController {
     @FXML private Label AdminInfo;
     @FXML private Button infoButton;
-    @FXML private CheckBox showNodes;
-    @FXML private CheckBox showEdges;
     @FXML private MenuButton requestMenu;
     @FXML private MenuItem interpreterSelect;
 
@@ -50,8 +48,7 @@ public class AdminSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setShowNodes(showNodes.isSelected());
-        getMapController().setShowEdges(showEdges.isSelected());
+        getMapController().reloadDisplay();
         getMapController().setAnchor(0, 200, 0, 0);
     }
 
@@ -68,19 +65,6 @@ public class AdminSidebarController extends ScreenController {
             infoButton.setText("Display My Information");
             isDisplay = false;
         }
-    }
-
-    @FXML
-    void showNodes(){
-        boolean isS = showNodes.isSelected();
-        System.out.println(isS);
-        getMapController().setShowNodes(isS);
-    }
-
-    @FXML
-    void showEdges(){
-        boolean isS = showEdges.isSelected();
-        getMapController().setShowEdges(isS);
     }
 
     @FXML
@@ -150,8 +134,7 @@ public class AdminSidebarController extends ScreenController {
 
         MapEntity.getInstance().readAllFromDatabase();
 
-        getMapController().setShowNodes(showNodes.isSelected());
-        getMapController().setShowEdges(showEdges.isSelected());
+        getMapController().reloadDisplay();
     }
 
     @FXML
