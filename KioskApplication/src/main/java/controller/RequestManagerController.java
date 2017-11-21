@@ -76,7 +76,7 @@ public class RequestManagerController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/resources/view/RequestManagerView.fxml");
+            contentView = loadView("/view/RequestManagerView.fxml");
         }
 
         return contentView;

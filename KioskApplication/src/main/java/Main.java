@@ -12,7 +12,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/view/MainWindowView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
         primaryStage.setTitle("Iteration 2");
 
         primaryStage.setScene(new Scene(root, 1280, 720));

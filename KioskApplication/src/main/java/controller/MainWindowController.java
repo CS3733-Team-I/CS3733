@@ -139,7 +139,7 @@ public class MainWindowController {
         mapController = new MapController();
         mapController.setParent(this);
 
-        FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/resources/view/MapView.fxml"));
+        FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
@@ -192,7 +192,7 @@ public class MainWindowController {
     @FXML
     private void Login() throws IOException{
         LoginController loginController = new LoginController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/view/AdminLoginWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
         loader.setController(loginController);
         javafx.scene.Node view = loader.load();
 

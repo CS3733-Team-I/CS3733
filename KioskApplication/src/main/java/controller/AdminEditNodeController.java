@@ -74,7 +74,7 @@ public class AdminEditNodeController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/resources/view/editNode.fxml");
+            contentView = loadView("/view/editNode.fxml");
         }
         return contentView;
     }

@@ -82,7 +82,7 @@ public class InterpreterRequestController extends ScreenController{
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/resources/view/InterpreterRequestView.fxml");
+            contentView = loadView("/view/InterpreterRequestView.fxml");
         }
 
         return contentView;
