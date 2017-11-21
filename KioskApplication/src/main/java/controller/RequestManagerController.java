@@ -43,13 +43,15 @@ public class RequestManagerController extends ScreenController {
         LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getassigner() + " ID: " + id);
+            TextField requestTextField = new TextField(requests.get(i).getassigner());
             String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
-            Label typeOfRequest = new Label("Type: generic");
+            Label requestID = new Label("ID: " + id);
+            Label typeOfRequest = new Label("Type: Interpreter");
             Label locationOfRequest = new Label(location);
             //TODO find what type of reqeust it is
             activeRequests.getChildren().add(requestTextField);
+            activeRequests.getChildren().add(requestID);
             activeRequests.getChildren().add(typeOfRequest);
             activeRequests.getChildren().add(locationOfRequest);
         }

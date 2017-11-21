@@ -3,8 +3,11 @@ package controller;
 import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.AlgorithmSetting;
 import entity.MapEntity;
 import entity.Path;
+import pathfinder.A_star;
+import pathfinder.Pathfinder;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -12,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
@@ -30,6 +34,10 @@ public class PathfindingSidebarController extends ScreenController {
         super(parent, map);
 
         currentNodes = new LinkedList<>();
+    }
+
+    public void setPathfinderalg(int pathfinderalg){
+
     }
 
     @FXML
@@ -56,9 +64,15 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            MapEntity map = MapEntity.getInstance();
-            Path path = Pathfinder.generatePath(currentNodes);
-            getMapController().drawPath(path);
+            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
+            try{
+                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().drawPath(path);
+            }
+            catch(PathfinderException exception){
+                System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+            }
+
 
             waypointListVbox.getChildren().clear();
 
@@ -114,7 +128,7 @@ public class PathfindingSidebarController extends ScreenController {
     @Override
     public void resetScreen() {
         onResetPressed();
-        showNodesCheckbox.setSelected(false);
+
         getMapController().setShowNodes(false);
         getMapController().setShowEdges(false);
 

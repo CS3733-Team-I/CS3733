@@ -84,27 +84,15 @@ public class AdminSidebarController extends ScreenController {
     }
 
     @FXML
-    void onAddPressed() throws IOException {
+    void onNodePressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_ADD_NODE);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_NODE);
     }
 
     @FXML
-    void onEditPressed() throws IOException {
-        System.out.println("Edit Pressed\n");
-
-        getParent().switchToScreen(ApplicationScreen.ADMIN_EDIT_NODE);
-    }
-
-    @FXML
-    void onAddEdgePressed() throws IOException{
-        getParent().switchToScreen(ApplicationScreen.ADMIN_ADD_EDGE);
-    }
-
-    @FXML
-    void onDeleteEdgePressed() throws IOException{
-        getParent().switchToScreen(ApplicationScreen.ADMIN_DEL_EDGE);
+    void onEdgePressed() throws IOException{
+        getParent().switchToScreen(ApplicationScreen.ADMIN_EDGE);
     }
 
     @FXML
