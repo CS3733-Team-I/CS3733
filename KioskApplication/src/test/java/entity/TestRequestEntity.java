@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.After;
 import utility.Request.Language;
 import utility.Node.NodeFloor;
+import utility.Request.RequestProgressStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -38,6 +39,12 @@ public class TestRequestEntity {
         m.addNode(n1);
     }
 
+    @After
+    public void cleanUp(){
+        //removes node
+        m.removeNode(n1.getNodeID());
+    }
+
     @Test
     public void testAddRemoveInterpreterRequest(){
         InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
@@ -56,7 +63,17 @@ public class TestRequestEntity {
         } catch (NullPointerException e){
             assertEquals("Unable to find InterpreterRequest in database",e.getMessage());
         }
-        //removes node
-        m.removeNode(n1.getNodeID());
+    }
+
+    @Test
+    public void testCompleteRequest(){
+        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        //adds interpreter request to database and hashmap
+        r.submitInterpreterRequest(iR1.getNodeID(),iR1.getassigner(),iR1.getNote(), iR1.getLanguage());
+        //completes request
+        r.completeRequest(iR1.getRequestID());
+        //retrieves completed request
+        InterpreterRequest iR2 = r.getInterpreterRequest(iR1.getRequestID());
+        assertEquals(RequestProgressStatus.DONE,iR2.getStatus());
     }
 }

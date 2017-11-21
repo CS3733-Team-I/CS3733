@@ -98,6 +98,11 @@ public class RequestEntity {
         }
     }
 
+    public void completeRequest(String requestID){
+        InterpreterRequest iR = interpreterRequests.get(requestID);
+        iR.setStatus(RequestProgressStatus.DONE);
+    }
+
     public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);

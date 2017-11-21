@@ -24,7 +24,7 @@ public class SQLStrings {
 
     public static final String CREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
             //Base attributes
-            " requestID VARCHAR(100) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
             " REFERENCES t_nodes ON DELETE CASCADE," +
             " submittedTime TIMESTAMP NOT NULL," +

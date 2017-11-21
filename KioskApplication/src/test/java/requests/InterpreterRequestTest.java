@@ -6,6 +6,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.objects.InterpreterRequest;
 import entity.MapEntity;
+import org.apache.derby.catalog.types.SynonymAliasInfo;
 import utility.Request.Language;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,15 +18,23 @@ public class InterpreterRequestTest {
 
     @Test
     public void testIDGenerationHeader(){
-        InterpreterRequest iR = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
+        InterpreterRequest iR = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
         assertEquals("Int",iR.getRequestID().substring(0,3));
     }
 
     @Test
     public void testIDGenerationTimeDifference(){
-        InterpreterRequest iR1 = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
-        InterpreterRequest iR2 = new InterpreterRequest("current loc","nurse","", Language.ARABIC);
+        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
+        InterpreterRequest iR2 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
         assertNotEquals(iR1.getRequestID(),iR2.getRequestID());
+    }
+
+    @Test
+    public void testIDGenerationSizeLimit(){
+        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
+        System.out.println(iR1.getRequestID());
+        System.out.println(iR1.getRequestID().length());
+        System.out.println(iR1.getSubmittedTime().toString().length());
     }
 
 }
