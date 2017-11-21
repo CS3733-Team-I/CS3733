@@ -16,6 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
@@ -25,7 +26,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SettingsController extends ScreenController {
+public class AdvancedController extends ScreenController {
+
+    @FXML
+    private AnchorPane tabAnchor;
+
     @FXML
     private JFXHamburger settingHam;
 
@@ -38,7 +43,8 @@ public class SettingsController extends ScreenController {
     @FXML
     private JFXButton btPathfinding;
 
-    @FXML private Label SALabel;
+    @FXML
+    private Label SALabel;
 
     @FXML private RadioButton AstarBtn;
 
@@ -48,36 +54,48 @@ public class SettingsController extends ScreenController {
 
     @FXML private RadioButton DFSBtn;
 
-    public SettingsController(MainWindowController parent, MapController mapController) {
+    ToggleGroup g = new ToggleGroup();
+
+    public AdvancedController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
     }
-    ToggleGroup g = new ToggleGroup();
 
 
     public void initialize() throws IOException{
-//        AstarBtn.setToggleGroup(g);
-//        AstarBtn.setUserData("Astar");
-//        DijkstraBtn.setToggleGroup(g);
-//        DijkstraBtn.setUserData("Dijkstra");
-//        BFSBtn.setToggleGroup(g);
-//        BFSBtn.setUserData("BFS");
-//        DFSBtn.setToggleGroup(g);
-//        DFSBtn.setUserData("DFS");
+        AstarBtn.setToggleGroup(g);
+        AstarBtn.setUserData("Astar");
+        DijkstraBtn.setToggleGroup(g);
+        DijkstraBtn.setUserData("Dijkstra");
+        BFSBtn.setToggleGroup(g);
+        BFSBtn.setUserData("BFS");
+        DFSBtn.setToggleGroup(g);
+        DFSBtn.setUserData("DFS");
 
-        AnchorPane settingView = FXMLLoader.load(getClass().getResource("view/SettingsView.fxml"));
-        HamburgerNextArrowBasicTransition t1 = new HamburgerNextArrowBasicTransition(settingHam);
+        tabAnchor.setVisible(false);
+
+        GridPane SettingsViewLoader= FXMLLoader.load(getClass().getResource("/view/SettingsView.fxml"));
+        settingDrawer.setSidePane(SettingsViewLoader);
+
+        HamburgerBackArrowBasicTransition t1 = new HamburgerBackArrowBasicTransition(settingHam);
         t1.setRate(-1);
         settingHam.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, (e) -> {
             t1.setRate(t1.getRate() * -1);
             t1.play();
             if (settingDrawer.isShown()) {
-                System.out.println("HERE1");
+                //System.out.println("HERE1");
                 settingDrawer.close();
+                tabAnchor.setVisible(false);
             } else {
-                System.out.println("HERE2");
+                //System.out.println("HERE2");
                 settingDrawer.open();
+                tabAnchor.setVisible(true);
             }
         });
+    }
+
+    @FXML
+    void OnSASel(){
+        SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
     }
 
     @FXML
@@ -85,11 +103,6 @@ public class SettingsController extends ScreenController {
         System.out.println("Back Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
-    }
-
-    @FXML
-    void OnSASel(){
-        SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
     }
 
     @Override
@@ -114,5 +127,6 @@ public class SettingsController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setAnchor(0, 0, 0, 0);
     }
 }

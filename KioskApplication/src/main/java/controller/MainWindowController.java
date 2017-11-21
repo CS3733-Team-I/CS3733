@@ -88,7 +88,7 @@ public class MainWindowController {
                     break;
 
                 case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
+                    controller = new AdvancedController(this, mapController);
                     break;
 
                 default:
