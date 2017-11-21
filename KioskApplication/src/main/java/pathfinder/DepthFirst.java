@@ -8,6 +8,13 @@ import java.util.LinkedList;
 
 public class DepthFirst implements SearchAlgorithm{
 
+    /**
+     * Override method that takes two nodes and then calls the helper method
+     * @param startingNode node to start navigation from
+     * @param endingNode node to end navigation at
+     * @return LinkedList<Edge> a linked list of edges
+     * @throws PathfinderException if there are errors. Uses a DeadEndException to pass up a list of visited nodes to the method that called it
+     */
     @Override
     public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
 
@@ -17,13 +24,24 @@ public class DepthFirst implements SearchAlgorithm{
         return findPath(startingNode, endingNode, visitedNodes);
     }
 
-    //helper method that takes a list of visited nodes
+    /**
+     * helper method that takes two nodes and a list of previously visited nodes and returns a list of edges
+     * connecting them or throws an exception.
+     * @param startingNode node to start navigation from
+     * @param endingNode node to end navigation at
+     * @param visitedNodes a list of nodes that have been visited and that should not be checked to avoid infinite loops
+     * @return LinkedList<Edge> a linked list of edges
+     * @throws PathfinderException throws a DeadEndException that contains the visited nodes for use by the caller
+     */
     private LinkedList<Edge> findPath(Node startingNode, Node endingNode, LinkedList<Node> visitedNodes) throws PathfinderException {
         //Get map
         MapEntity map = MapEntity.getInstance();
 
+        //Create list to return
+        LinkedList<Edge> returnList = new LinkedList<>();
+
         //return an empty list if you are at the end node
-        if(startingNode.equals(endingNode)) return new LinkedList<>();
+        if(startingNode.equals(endingNode)) return returnList;
 
         //add self to list of visited nodes
         visitedNodes.add(startingNode);
@@ -37,18 +55,19 @@ public class DepthFirst implements SearchAlgorithm{
         }
 
         //iterate through the connected nodes and see if there is a path to the end
-        LinkedList<Edge> newPath = null;
+        LinkedList<Edge> newPath;
         for(Node n: connected) {
             if(!visitedNodes.contains(n)) {
                 try {
                     newPath = findPath(n, endingNode, visitedNodes);
+                    returnList.addAll(newPath);
+                    return returnList;
                 } catch (DeadEndException e) {
-                    //System.out.println("Ran into a dead end at node " + e.getMessage());
+                    System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
         }
-        if(newPath == null) throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
-        return newPath;
+        throw new PathfinderException(startingNode.getNodeID() + ". Got to the end of the DF search");
     }
 }
