@@ -83,18 +83,18 @@ public class TestA_star {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    @Test
-    public void testPrepForFrontier(){
-        //TODO: add tests
-    }
-
-    @Test
-    public void testHeuristic(){
-        //TODO: add tests
-    }
-
-    @Test
-    public void testFindPath(){
-        //TODO: add tests
-    }
+//    @Test
+//    public void testPrepForFrontier(){
+//        //TODO: add tests
+//    }
+//
+//    @Test
+//    public void testHeuristic(){
+//        //TODO: add tests
+//    }
+//
+//    @Test
+//    public void testFindPath(){
+//        //TODO: add tests
+//    }
 }

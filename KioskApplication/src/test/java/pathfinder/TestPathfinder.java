@@ -125,7 +125,12 @@ public class TestPathfinder {
 
         pathfinder = new Pathfinder(); //defaults to A-star
 
-        Path path1 = pathfinder.generatePath(n01, n07);
+        Path path1 = null;
+        try {
+            path1 = pathfinder.generatePath(n01, n07);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(map.getConnectingEdge(n01,n02));
@@ -153,7 +158,12 @@ public class TestPathfinder {
 
         pathfinder = new Pathfinder(); //defaults to A-star
 
-        Path path1 = pathfinder.generatePath(n01, n06);
+        Path path1 = null;
+        try {
+            path1 = pathfinder.generatePath(n01, n06);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(map.getConnectingEdge(n01,n02));
@@ -186,7 +196,12 @@ public class TestPathfinder {
         nodes.add(n12);
         nodes.add(n07);
 
-        Path multipath = pathfinder.generatePath(nodes);
+        Path multipath = null;
+        try {
+            multipath = pathfinder.generatePath(nodes);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
 
         LinkedList<Edge> testPathEdges = new LinkedList<>();
         testPathEdges.add(map.getConnectingEdge(n01,n02));
@@ -260,7 +275,12 @@ public class TestPathfinder {
     @Test
     public void testBreathFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n01, n02);
+        Path path = null;
+        try {
+            path = breadth.generatePath(n01, n02);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(e01);
 
@@ -270,7 +290,12 @@ public class TestPathfinder {
     @Test
     public void testBreathFirstSearch1() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n01, n17);
+        Path path = null;
+        try {
+            path = breadth.generatePath(n01, n17);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
         testPath2Edges.add(map.getConnectingEdge(n01,n02));
         testPath2Edges.add(map.getConnectingEdge(n02,n08));
@@ -286,10 +311,16 @@ public class TestPathfinder {
     @Test
     public void testBreathFirstSearchtestpathequality() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n02, n05);
+        Path path = null;
+        try {
+            path = breadth.generatePath(n02, n05);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
         LinkedList<Edge> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(e02);
-        testPath2Edges.add(e05);
+        testPath2Edges.add(map.getConnectingEdge(n02,n03));
+        testPath2Edges.add(map.getConnectingEdge(n03,n04));
+        testPath2Edges.add(map.getConnectingEdge(n04,n05));
         LinkedList<Node> testPath2Waypoints = new LinkedList<>();
         testPath2Waypoints.add(n02);
         testPath2Waypoints.add(n05);
