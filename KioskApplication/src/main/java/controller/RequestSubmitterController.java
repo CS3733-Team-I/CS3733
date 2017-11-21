@@ -89,43 +89,42 @@ public class RequestSubmitterController extends ScreenController implements Init
 
     @FXML
     public void addRequest() throws IOException {
-        int interpID;
-        String location = txtLocation.getText();
-
-        //sets nodeLocation to default my location
-        Node nodeLocation = DatabaseController.getNode(location);
-
-        //TODO this doesn't return a language... returns null
-        String language = "None";
-        if(langMenu.getValue().toString().equals("Spanish")){
-            language = "Spanish";
-        }else if(langMenu.getValue().toString().equals("Mandarin")) {
-            language = "Mandarin";
-        }else if(langMenu.getValue().toString().equals("German")){
-            language= "German";
-        }
-
-
-        //Finds current admin that is logged in
-        //currently a dummy email
-        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
-
-
-        if(DatabaseController.getAllRequests().isEmpty()){
-            interpID = 0;
-        }else{
-            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
-        }
-
-
-        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
-
-        //Adds the Interpreter request to the database
-        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
-
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+//        int interpID;
+//        String location = txtLocation.getText();
+//
+//        //sets nodeLocation to default my location
+//        Node nodeLocation = DatabaseController.getNode(location);
+//
+//        //TODO this doesn't return a language... returns null
+//        String language = "None";
+//        if(langMenu.getValue().toString().equals("Spanish")){
+//            language = "Spanish";
+//        }else if(langMenu.getValue().toString().equals("Mandarin")) {
+//            language = "Mandarin";
+//        }else if(langMenu.getValue().toString().equals("German")){
+//            language= "German";
+//        }
+//
+//
+//        //Finds current admin that is logged in
+//        //currently a dummy email
+//        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
+//
+//        if(DatabaseController.getAllRequests().isEmpty()){
+//            interpID = 0;
+//        }else{
+//            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
+//        }
+//
+//
+//        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
+//
+//        //Adds the Interpreter request to the database
+//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
+//        System.out.println(DatabaseController.getAllInterpreterRequests());
+//
+//        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
     @Override

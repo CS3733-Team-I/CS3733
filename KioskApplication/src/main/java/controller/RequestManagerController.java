@@ -2,7 +2,6 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
-import entity.InterpreterRequest;
 import entity.Request;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
@@ -42,19 +41,19 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(){
-        activeRequests.getChildren().clear();
-        LinkedList<Request> requests = RequestEntity.getAllRequests();
-        for (int i = 0; i < requests.size(); i++) {
-            int id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
-            requestTextField.setEditable(false);
-            Label typeOfRequest = new Label("Type: generic");
-            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
-            //TODO find what type of reqeust it is
-            activeRequests.getChildren().add(requestTextField);
-            activeRequests.getChildren().add(typeOfRequest);
-            activeRequests.getChildren().add(locationOfRequest);
-        }
+//        activeRequests.getChildren().clear();
+//        LinkedList<Request> requests = RequestEntity.getAllRequests();
+//        for (int i = 0; i < requests.size(); i++) {
+//            int id = requests.get(i).getRequestID();
+//            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
+//            requestTextField.setEditable(false);
+//            Label typeOfRequest = new Label("Type: generic");
+//            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
+//            //TODO find what type of reqeust it is
+//            activeRequests.getChildren().add(requestTextField);
+//            activeRequests.getChildren().add(typeOfRequest);
+//            activeRequests.getChildren().add(locationOfRequest);
+//        }
     }
 
     @FXML
@@ -66,11 +65,11 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void onCompletePressed(){
-        int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
-        txtID.clear();
-        System.out.println("Complete Pressed \n");
-        showRequests();
+//        int ID = Integer.parseInt(txtID.getText());
+//        DatabaseController.deleteRequest(ID);
+//        txtID.clear();
+//        System.out.println("Complete Pressed \n");
+//        showRequests();
     }
 
     @Override
