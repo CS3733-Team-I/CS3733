@@ -1,12 +1,14 @@
 package controller;
 
 import database.objects.Edge;
+import entity.AlgorithmSetting;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleGroup;
+import pathfinder.*;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
@@ -29,13 +31,13 @@ public class SettingsController extends ScreenController {
     @FXML
     void initialize(){
         AstarBtn.setToggleGroup(g);
-        AstarBtn.setUserData("Astar");
+        AstarBtn.setUserData(new A_star()); // Astar
         DijkstraBtn.setToggleGroup(g);
-        DijkstraBtn.setUserData("Dijkstra");
+        DijkstraBtn.setUserData(new Dijkstra()); // Dijkstra
         BFSBtn.setToggleGroup(g);
-        BFSBtn.setUserData("BFS");
+        BFSBtn.setUserData(new BreadthFirst()); // BFS
         DFSBtn.setToggleGroup(g);
-        DFSBtn.setUserData("DFS");
+        DFSBtn.setUserData(new DepthFirst()); // DFS
 
     }
 
@@ -49,6 +51,9 @@ public class SettingsController extends ScreenController {
     @FXML
     void OnSASel(){
         SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
+        // Send data to pathfinder.pathfinder
+        AlgorithmSetting.getInstance().changeAlgorithm((SearchAlgorithm) g.getSelectedToggle().getUserData());
+        System.out.println(AlgorithmSetting.getInstance().getAlgorithm());
     }
 
     @Override

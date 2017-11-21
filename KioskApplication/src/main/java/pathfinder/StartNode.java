@@ -21,8 +21,11 @@ public class StartNode extends PathfinderNode {
 
     @Override
     //Calculate estimated cost to end.
-    public void calculateCost(PathfinderNode endNode){
-        this.previousCost = 0;  //first node, so no previous cost.
-        this.totalCost = this.heuristic(endNode);
+    public int calculatePreviousCost(PathfinderNode potentialParent){
+        return 0;  //first node, so no previous cost.
+    }
+    @Override
+    public void setParentNode(PathfinderNode parentNode) {
+        this.parentNode = parentNode;
     }
 }
