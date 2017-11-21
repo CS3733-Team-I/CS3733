@@ -33,25 +33,25 @@ public abstract class Request {
     }
 
     //Use to retrieve uncompleted requests
-    public Request(String requestID, String nodeID, Timestamp submittedTime, String assigner, String note, RequestProgressStatus status){
+    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, RequestProgressStatus status){
         this.requestID=requestID;
         this.nodeID=nodeID;
-        this.submittedTime=submittedTime;
         this.assigner=assigner;
         this.note=note;
-        this.status=status;
+        this.submittedTime=submittedTime;
         this.completedTime=null;
+        this.status=status;
     }
 
     //Use to retrieve completed requests
-    public Request(String requestID, String nodeID, Timestamp submittedTime, String assigner, String note, Timestamp completedTime){
+    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, Timestamp completedTime){
         this.requestID=requestID;
         this.nodeID=nodeID;
-        this.submittedTime=submittedTime;
         this.assigner=assigner;
         this.note=note;
-        this.status=RequestProgressStatus.DONE;
+        this.submittedTime=submittedTime;
         this.completedTime=completedTime;
+        this.status=RequestProgressStatus.DONE;
     }
 
     public void updateLocation(String nodeID){
@@ -71,22 +71,27 @@ public abstract class Request {
         this.completedTime=new Timestamp(System.currentTimeMillis());
     }
 
-    //Getters for testing
+        //Getters for testing
     public String getRequestID() {
         return requestID;
     }
     public String getNodeID(){return this.nodeID;}
-    public Timestamp getSubmittedTime() {
-        return submittedTime;
-    }
-    public String getassigner(){
+    public String getAssigner(){
         return this.assigner;
     }
     public String getNote() {
         return note;
     }
+    public Timestamp getSubmittedTime() {
+        return submittedTime;
+    }
     public Timestamp getCompletedTime() {
-        return completedTime;
+        if(this.status==RequestProgressStatus.DONE){
+            return completedTime;
+        }
+        else {
+            return null;
+        }
     }
     public RequestProgressStatus getStatus() {
         return status;
@@ -107,4 +112,6 @@ public abstract class Request {
     public void setStatus(RequestProgressStatus status) {
         this.status = status;
     }
+
+
 }
