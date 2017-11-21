@@ -5,21 +5,19 @@ package database.connection;
 import database.objects.Edge;
 import database.objects.Node;
 import database.template.SQLStrings;
-import entity.InterpreterRequest;
-import entity.Request;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import database.objects.InterpreterRequest;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
+import utility.Request.Language;
+import utility.Request.RequestProgressStatus;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import static database.template.SQLStrings.*;
 
-//TODO: For the love of god, please put in some comments so things make sense
 public class Connector {
     public static int insertEdge(Connection conn, Edge edge) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(EDGE_INSERT);
@@ -157,7 +155,7 @@ public class Connector {
 
 
 
-    public static Request insertRequest(Connection conn, int requestID,
+    /*public static Request insertRequest(Connection conn, int requestID,
                                      String locationNode, String employee) throws SQLException{
         String sql = REQUEST_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -214,61 +212,116 @@ public class Connector {
         }
         return requests;
     }
+    */
 
-    public static InterpreterRequest insetInterpreter(Connection conn, int interpreterID, String language,
-                                        int requestID) throws SQLException {
+    /*String requestID;
+    String nodeID;
+    Date submittedTime;
+    String employee;
+    String note;
+    boolean completed;
+    Date completedTime;*/
+
+    /**TODO: make request database access as generic as possible to reduce workload**/
+
+    public static void insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
         String sql = INTERPRETER_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, interpreterID);
-        pstmt.setString(2, language);
-        pstmt.setInt(3, requestID);
-
+        pstmt.setInt(6, iR.getStatus().ordinal());
+        pstmt.setInt(8, iR.getLanguage().ordinal());
+        pstmt.setString(1, iR.getRequestID());
+        pstmt.setString(2, iR.getNodeID());
+        pstmt.setString(4, iR.getassigner());
+        pstmt.setString(5, iR.getNote());
+        pstmt.setTimestamp(3, iR.getSubmittedTime());
+        pstmt.setTimestamp(7, null);
         pstmt.executeUpdate();
-
-        return new InterpreterRequest(language, interpreterID, requestID);
+        return;
     }
 
-    public static int updateIntepreter(Connection conn, int interpreterID,
-                                        String language, int requestID) throws SQLException {
+    //TODO: get this to work with the interpreterRequest table
+    public static int updateInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
         String sql = INTERPRETER_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, language);
-        pstmt.setInt(2, requestID);
-        pstmt.setInt(3, interpreterID);
-
+        pstmt.setInt(8, iR.getLanguage().ordinal());
+        pstmt.setString(2, iR.getNodeID());
+        pstmt.setString(4, iR.getassigner());
+        pstmt.setString(5, iR.getNote());
         return pstmt.executeUpdate();
     }
 
-    public static InterpreterRequest selectInterpreter(Connection conn, int interpreterID) throws SQLException {
+    public static InterpreterRequest selectInterpreter(Connection conn, String requestID) throws SQLException {
         String sql = INTERPRETER_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, interpreterID);
+        pstmt.setString(1, requestID);
         InterpreterRequest interpreterRequest = null;
 
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
-            interpreterRequest = new InterpreterRequest(rs.getString(2), rs.getInt(1),
-            rs.getInt(3));
+            //for completed InterpreterRequests
+            if(RequestProgressStatus.values()[rs.getInt("status")]==RequestProgressStatus.DONE){
+                interpreterRequest = new InterpreterRequest(
+                        rs.getString("requestID"),
+                        rs.getString("nodeID"),
+                        rs.getTimestamp("submittedTime"),
+                        rs.getString("assigner"),
+                        rs.getString("note"),
+                        rs.getTimestamp("completedTime"),
+                        Language.values()[rs.getInt("language")]);
+            }
+            //for uncompleted InterpreterRequests
+            else{
+                interpreterRequest = new InterpreterRequest(
+                        rs.getString("requestID"),
+                        rs.getString("nodeID"),
+                        rs.getTimestamp("submittedTime"),
+                        rs.getString("assigner"),
+                        rs.getString("note"),
+                        RequestProgressStatus.values()[rs.getInt("status")],
+                        Language.values()[rs.getInt("language")]);
+            }
         }
         return interpreterRequest;
     }
 
-    public static void deleteInterpreter(Connection conn, int interpreterID) throws SQLException {
+    public static void deleteInterpreter(Connection conn, String requestID) throws SQLException {
         String sql = INTERPRETER_DELETE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, interpreterID);
+        pstmt.setString(1, requestID);
         pstmt.executeUpdate();
     }
 
-    public static ArrayList<InterpreterRequest> selectAllInterpeters(Connection conn) throws SQLException {
+    public static LinkedList<InterpreterRequest> selectAllInterpreters(Connection conn) throws SQLException {
         String sql = INTERPRETER_SELECT_ALL;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
 
-        ArrayList<InterpreterRequest> interpreterRequests = new ArrayList<>();
+        LinkedList<InterpreterRequest> interpreterRequests = new LinkedList<>();
         while(rs.next()) {
-            interpreterRequests.add(new InterpreterRequest(rs.getString(2),
-                    rs.getInt(1), rs.getInt(3)));
+            InterpreterRequest interpreterRequest = null;
+            //for completed InterpreterRequests
+            if(RequestProgressStatus.values()[rs.getInt("status")]==RequestProgressStatus.DONE){
+                interpreterRequest = new InterpreterRequest(
+                        rs.getString("requestID"),
+                        rs.getString("nodeID"),
+                        rs.getTimestamp("submittedTime"),
+                        rs.getString("assigner"),
+                        rs.getString("note"),
+                        rs.getTimestamp("completedTime"),
+                        Language.values()[rs.getInt("language")]);
+            }
+            //for uncompleted InterpreterRequests
+            else{
+                interpreterRequest = new InterpreterRequest(
+                        rs.getString("requestID"),
+                        rs.getString("nodeID"),
+                        rs.getTimestamp("submittedTime"),
+                        rs.getString("assigner"),
+                        rs.getString("note"),
+                        RequestProgressStatus.values()[rs.getInt("status")],
+                        Language.values()[rs.getInt("language")]);
+            }
+            interpreterRequests.add(interpreterRequest);
         }
         return interpreterRequests;
     }

@@ -1,46 +1,46 @@
 package controller;
 
-import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class MapController implements Initializable{
+public class MapController {
     @FXML private AnchorPane container;
-    @FXML private ImageView mapView;
-    @FXML private StackPane stackPane;
-    @FXML private ScrollPane scrollPane;
-    @FXML private ComboBox<NodeFloor> floorSelector;
-    @FXML private Slider zoomSlider;
-    @FXML private ArrayList<MenuButton> wayPoints;
 
-    Group zoomGroup;
+    @FXML private ScrollPane scrollPane;
+
+    @FXML private ImageView mapView;
+    @FXML private AnchorPane nodesPane;
+    @FXML private AnchorPane edgesPane;
+    @FXML private AnchorPane waypointPane;
+
+    @FXML private JFXComboBox<NodeFloor> floorSelector;
+    @FXML private JFXSlider zoomSlider;
+
+    private Group zoomGroup;
+
+    private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
 
@@ -53,7 +53,7 @@ public class MapController implements Initializable{
     private boolean showEdges = false;
 
     public MapController() {
-        this.wayPoints = new ArrayList<MenuButton>();
+        waypoints = new LinkedList<>();
     }
 
     public void setParent(MainWindowController controller)
@@ -61,26 +61,10 @@ public class MapController implements Initializable{
         parent = controller;
     }
 
-    //this method should be called when ever the instance of this class is created to enable zooming,
-    //must be called after setController() and load()
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        zoomSlider.setMin(0.2);
-        zoomSlider.setMax(2.2);
-        zoomSlider.setValue(1.2);
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
-        // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
-        Group contentGroup = new Group();
-        zoomGroup = new Group();
-        contentGroup.getChildren().add(zoomGroup);
-        zoomGroup.getChildren().add(scrollPane.getContent());
-        scrollPane.setContent(contentGroup);
-    }
-
     public void setShowNodes(boolean showNodes) {
         this.showNodes = showNodes;
 
-        this.clearMap();
+        this.nodesPane.getChildren().clear();
         if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
     }
@@ -89,14 +73,16 @@ public class MapController implements Initializable{
         this.showEdges = showEdges;
 
         // TODO remove copypasta
-        this.clearMap();
+        this.edgesPane.getChildren().clear();
         if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
     }
 
     public void clearMap() {
-        stackPane.getChildren().clear();
-        stackPane.getChildren().add(mapView);
+        nodesPane.getChildren().clear();
+        edgesPane.getChildren().clear();
+        waypointPane.getChildren().clear();
+        waypoints.clear();
     }
 
     public void drawNodesOnMap(List<Node> nodes) {
@@ -107,7 +93,7 @@ public class MapController implements Initializable{
                 nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
                 nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
                 nodeObject.setMouseTransparent(false);
-                stackPane.getChildren().add(nodeObject);
+                nodesPane.getChildren().add(nodeObject);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -130,7 +116,7 @@ public class MapController implements Initializable{
             edgeView.setPickOnBounds(false);
             edgesPane.getChildren().add(edgeView);
         }
-        stackPane.getChildren().add(edgesPane);
+        this.edgesPane.getChildren().add(edgesPane);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -156,8 +142,30 @@ public class MapController implements Initializable{
         drawNodesOnMap(path.getWaypoints());
     }
 
-    public void clearPath() {
-        clearMap();
+    public void addWaypoint(Point2D location) {
+        try {
+            // put the pin and set it's info
+            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
+
+            /*Offsets, don't remove*/
+            // double pinW = wayPointObject.getBoundsInLocal().getWidth();
+            // double pinH = wayPointObject.getBoundsInLocal().getHeight();
+
+            // TODO magic numbers
+            wayPointObject.setTranslateX(location.getX() - 24);
+            wayPointObject.setTranslateY(location.getY() - 60);
+
+            //TODO handle waypoint option
+            //wayPointObject.setOnAction(ActionEvent -> WaypointOptions());
+
+            waypoints.add(wayPointObject);
+            waypointPane.getChildren().add(wayPointObject);
+
+            // System.out.println("should be at "+ (event.getX() - (pinW / 2)) + " " + (event.getY() - (pinH / 2)));
+            // System.out.println("actually at "+ wayPointObject.getLayoutX() + " " + wayPointObject.getLayoutX());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadFloor(NodeFloor floor) {
@@ -204,21 +212,51 @@ public class MapController implements Initializable{
         }
     }
 
+    private void zoom(double scaleValue) {
+        double scrollH = scrollPane.getHvalue();
+        double scrollV = scrollPane.getVvalue();
+        zoomGroup.setScaleX(scaleValue);
+        zoomGroup.setScaleY(scaleValue);
+        scrollPane.setHvalue(scrollH);
+        scrollPane.setVvalue(scrollV);
+    }
+
+    public void setFloorSelectorPosition(Point2D position) {
+        AnchorPane.setTopAnchor(floorSelector, position.getY());
+        AnchorPane.setLeftAnchor(floorSelector, position.getX());
+    }
+
     @FXML
     protected void initialize() {
         floorSelector.getItems().addAll(NodeFloor.values());
 
         loadFloor(currentFloor);
+
+        nodesPane.setPickOnBounds(false);
+        edgesPane.setPickOnBounds(false);
+        waypointPane.setPickOnBounds(false);
+
+        zoomSlider.setMin(0.2);
+        zoomSlider.setMax(2.2);
+        zoomSlider.setValue(1.2);
+        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
+
+        // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
+        Group contentGroup = new Group();
+        zoomGroup = new Group();
+        contentGroup.getChildren().add(zoomGroup);
+        zoomGroup.getChildren().add(scrollPane.getContent());
+        scrollPane.setContent(contentGroup);
     }
 
     @FXML
-    protected void onMapClicked(MouseEvent event) throws IOException{
+    protected void onMapClicked(MouseEvent event) throws IOException {
         if (parent != null) {
             // Check if clicked location is a node
             LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
             for (Node node : floorNodes) {
                 Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
-                                                      30, 30); // TODO magic numbers
+                        30, 30); // TODO magic numbers
                 Point2D clickPosition = new Point2D(event.getX(), event.getY());
 
                 if (nodeArea.contains(clickPosition)) {
@@ -230,28 +268,6 @@ public class MapController implements Initializable{
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(new Point2D(event.getX(), event.getY()));
         }
-
-
-        // put the pin and set it's info
-        javafx.scene.control.MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
-        /*Offsets, don't remove*/
-//        double pinW = wayPointObject.getBoundsInLocal().getWidth();
-//        double pinH = wayPointObject.getBoundsInLocal().getHeight();
-        wayPointObject.setTranslateX(event.getX()-24);
-        wayPointObject.setTranslateY(event.getY()-60);
-        //TODO hanld waypoint option
-        wayPointObject.setOnAction(ActionEvent -> WaypointOptions());
-        stackPane.getChildren().add(wayPointObject);
-        this.wayPoints.add(wayPointObject);
-
-//        System.out.println("should be at "+ (event.getX() - (pinW / 2)) + " " + (event.getY() - (pinH / 2)));
-//        System.out.println("actually at "+ wayPointObject.getLayoutX() + " " + wayPointObject.getLayoutX());
-
-    }
-    //TODO hanld waypoint option
-    @FXML
-    private void WaypointOptions() {
-        System.out.println("Here");
     }
 
     @FXML
@@ -267,16 +283,6 @@ public class MapController implements Initializable{
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal + -0.1);
     }
-
-    private void zoom(double scaleValue) {
-        double scrollH = scrollPane.getHvalue();
-        double scrollV = scrollPane.getVvalue();
-        zoomGroup.setScaleX(scaleValue);
-        zoomGroup.setScaleY(scaleValue);
-        scrollPane.setHvalue(scrollH);
-        scrollPane.setVvalue(scrollV);
-    }
-
 
     @FXML
     protected void recenterPressed() {

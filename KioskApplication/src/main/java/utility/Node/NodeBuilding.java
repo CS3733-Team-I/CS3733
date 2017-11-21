@@ -1,4 +1,4 @@
-package utility;
+package utility.Node;
 
 public enum NodeBuilding {
     FRANCIS45,

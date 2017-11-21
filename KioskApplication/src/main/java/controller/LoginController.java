@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LoginController implements Initializable{
+public class LoginController {
 
     @FXML
     JFXTextField tfEmail;
@@ -43,8 +43,8 @@ public class LoginController implements Initializable{
         AdminList.addAdministrator(new Administrator("boss@hospital.com", "123"));
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    public void initialize() {
         RequiredFieldValidator EmailValidator = new RequiredFieldValidator();
         RequiredFieldValidator PasswordValidator = new RequiredFieldValidator();
 

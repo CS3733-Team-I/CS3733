@@ -12,8 +12,8 @@
          <tabs>
             <Tab text="Map" />
             <Tab text="Map Builder" />
-            <Tab text="Request Manager" />
             <Tab text="Request Submit" />
+            <Tab text="Request Manager" />
             <Tab text="Settings" />
          </tabs>
       </JFXTabPane>

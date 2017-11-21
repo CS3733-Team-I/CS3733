@@ -2,9 +2,6 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
@@ -13,15 +10,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,7 +28,7 @@ public class MainWindowController {
     @FXML JFXButton switchButton;
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
-    @FXML JFXHamburger SidebarHam;
+    //@FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -52,6 +45,11 @@ public class MainWindowController {
     }
 
     public void switchToScreen(ApplicationScreen screen) {
+        ScreenController currentScreen = controllers.get(this.currentScreen);
+        if (currentScreen != null) {
+            currentScreen.onScreenChanged();
+        }
+
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
@@ -85,8 +83,8 @@ public class MainWindowController {
                     controller = new RequestManagerController(this, mapController);
                     break;
 
-                case ADMIN_INTERPRETER:
-                    controller = new InterpreterRequestController(this, mapController);
+                case REQUEST_INTERFACE:
+                    controller = new RequestSubmitterController(this, mapController);
                     break;
 
                 case ADMIN_SETTINGS:
@@ -129,7 +127,7 @@ public class MainWindowController {
         // Reset controller's view
         controller.resetScreen();
 
-        currentScreen = screen;
+        this.currentScreen = screen;
     }
 
     @FXML
@@ -158,8 +156,7 @@ public class MainWindowController {
                         switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
                         break;
                     case "Request Submit":
-                        // TODO implement new request screen
-                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
                         break;
                     case "Settings":
                         switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
@@ -211,7 +208,7 @@ public class MainWindowController {
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
-            case ADMIN_INTERPRETER:
+            case REQUEST_INTERFACE:
             case ADMIN_EDIT_NODE:
             case ADMIN_DEL_EDGE:
             case ADMIN_ADD_NODE:

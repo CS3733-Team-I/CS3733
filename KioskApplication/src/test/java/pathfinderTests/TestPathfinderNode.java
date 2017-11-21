@@ -6,9 +6,9 @@ import database.objects.Node;
 import entity.MapEntity;
 import pathfinder.PathfinderNode;
 import pathfinder.StartNode;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 

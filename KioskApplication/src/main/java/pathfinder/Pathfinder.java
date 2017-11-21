@@ -4,7 +4,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.util.*;
 

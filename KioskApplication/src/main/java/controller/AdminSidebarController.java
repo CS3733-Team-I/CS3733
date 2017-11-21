@@ -7,11 +7,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class AdminSidebarController extends ScreenController {
     @FXML private Label AdminInfo;
@@ -113,7 +111,7 @@ public class AdminSidebarController extends ScreenController {
     void onInterpreterPressed() throws IOException{
         System.out.println("Interpreter Request Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_INTERPRETER);
+        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
     }
 
     @FXML

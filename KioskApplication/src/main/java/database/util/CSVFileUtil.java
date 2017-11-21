@@ -5,9 +5,9 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.template.CSVFormat;
 import database.template.SQLStrings;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 import java.io.*;
 import java.sql.Connection;
