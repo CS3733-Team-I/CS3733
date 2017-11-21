@@ -6,7 +6,7 @@ public class PathfinderException extends Exception{
 
     public PathfinderException(String message){
         this.message = message;
-        System.out.println(message);
+        //System.out.println(message);
     }
 
     public String getMessage() {

@@ -4,14 +4,14 @@ import database.connection.Connector;
 import database.objects.Edge;
 import database.objects.Node;
 import database.util.DBUtil;
-import entity.InterpreterRequest;
-import entity.Request;
-import utility.NodeFloor;
-import utility.NodeType;
+import database.objects.InterpreterRequest;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 //Node and Edge objects should only be made here
@@ -179,7 +179,7 @@ public class DatabaseController {
         }
     }
   
-    public static Request addRequest(int requestID, String nodeID, String employee) {
+    /*public static Request addRequest(int requestID, String nodeID, String employee) {
         try {
             return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
         } catch(SQLException e) {
@@ -233,22 +233,21 @@ public class DatabaseController {
             }
         }
         return new ArrayList<Request>();
-    }
+    }*/
 
-    public static InterpreterRequest addIntepreterRequest(String language, int interpreterID, int requestID) {
+    public static void addInterpreterRequest(InterpreterRequest iR) {
         try {
-            return Connector.insetInterpreter(instanceConnection, interpreterID, language, requestID);
+            Connector.insertInterpreter(instanceConnection, iR);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }
-        return null;
     }
-
-    public static int updateInterpreterRequest(String language, int interpreterID, int requestID) {
+    //TODO: Update this method
+    public static int updateInterpreterRequest(InterpreterRequest iR) {
         try {
-            return Connector.updateIntepreter(instanceConnection, interpreterID, language, requestID);
+            return Connector.updateInterpreter(instanceConnection, iR);
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
@@ -257,9 +256,9 @@ public class DatabaseController {
         return 0;
     }
 
-    public static InterpreterRequest getInterpreterRequest(int interpreterID) {
+    public static InterpreterRequest getInterpreterRequest(String requestID) {
         try {
-            return Connector.selectInterpreter(instanceConnection, interpreterID);
+            return Connector.selectInterpreter(instanceConnection, requestID);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
@@ -268,9 +267,9 @@ public class DatabaseController {
         return null;
     }
 
-    public static boolean deleteInterpreterRequest(int interpreterID) {
+    public static boolean deleteInterpreterRequest(String requestID) {
         try {
-            Connector.deleteInterpreter(instanceConnection, interpreterID);
+            Connector.deleteInterpreter(instanceConnection, requestID);
             return true;
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
@@ -280,15 +279,15 @@ public class DatabaseController {
         return false;
     }
 
-    public static ArrayList<InterpreterRequest> getAllInterpreterRequests() {
+    public static LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
-            return Connector.selectAllInterpeters(instanceConnection);
+            return Connector.selectAllInterpreters(instanceConnection);
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }
-        return new ArrayList<InterpreterRequest>();
+        return new LinkedList<InterpreterRequest>();
     }
 
     public static void deleteTestTables() {

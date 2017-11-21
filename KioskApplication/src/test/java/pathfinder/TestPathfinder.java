@@ -4,37 +4,32 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import pathfinder.A_star;
-import pathfinder.BreadthFirst;
-import pathfinder.Pathfinder;
+import org.junit.BeforeClass;
 import utility.NodeBuilding;
 import utility.NodeFloor;
-import org.junit.Before;
 import org.junit.Test;
 import utility.NodeType;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TestPathfinder {
 
-    private Pathfinder pathfinder;
-    private Node n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12,
+    private static Pathfinder pathfinder;
+    private static Node n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12,
                  n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23;
-    private Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
+    private static Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
                  e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
-    private MapEntity map;
+    private static MapEntity map;
 
-    @Before //Build map for testing all algorithms
-    public void setup() {
+    @BeforeClass //Build map for testing all algorithms
+    public static void setup() {
 
         DatabaseController.initTests();
         map = MapEntity.getInstance();
 
-        //TODO implement new test map
         /* New Map Structure
            Double lines are twice as long
 
@@ -250,13 +245,25 @@ public class TestPathfinder {
 
         SearchAlgorithm alg = new DepthFirst();
 
+        LinkedList<Edge> path;
+
         //Should return an empty list if you are at the end node
-        assertTrue(alg.findPath(n01,n01).size() == 0);
+        path = alg.findPath(n01,n01);
+        assertTrue(path.size() == 0);
+
+
 
         //Test an actual path
-        System.out.println(alg.findPath(n01,n02));
-        assertTrue(alg.findPath(n01,n02).size() == 1);
-        //TODO more
+        path = alg.findPath(n01,n02);
+        //assertEquals(path.size(),1);
+        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+
+        //Test another actual path
+        path = alg.findPath(n01,n03);
+        //assertEquals(path.size(),2);
+        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+        //assertEquals(path.get(1),map.getConnectingEdge(n02,n03));
+
     }
 
     @Test(expected = DeadEndException.class) //test that the exception is thrown when there is no path or connection
@@ -272,6 +279,7 @@ public class TestPathfinder {
     }
 
     //Breadth first algorithm tests
+
     @Test
     public void testBreathFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());

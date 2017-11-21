@@ -10,9 +10,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 import java.io.IOException;
 

@@ -10,7 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ToggleGroup;
 import pathfinder.*;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 public class SettingsController extends ScreenController {
     @FXML private Label SALabel;
