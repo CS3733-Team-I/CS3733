@@ -4,12 +4,9 @@ import com.jfoenix.controls.*;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import database.objects.Request;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
@@ -20,9 +17,7 @@ import utility.NodeFloor;
 import utility.RequestType;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.LinkedList;
-import java.util.ResourceBundle;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -35,49 +30,49 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
     @FXML private JFXComboBox langMenu;
-    @FXML private Tab InterpreterTab;
-    @FXML private Tab FoodTab;
-    @FXML private Tab SecurityTab;
-    @FXML private Tab JanitorTab;
+    @FXML private Tab interpreterTab;
+    @FXML private Tab foodTab;
+    @FXML private Tab securityTab;
+    @FXML private Tab janitorTab;
     @FXML private JFXDatePicker timeDP;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     @FXML
     public void initialize() {
-        Image InterpreterIcn = new Image(getClass().getResource("/images/interpreterIcon.png").toString());
-        ImageView InterpreterIcnView = new ImageView(InterpreterIcn);
-        InterpreterIcnView.setFitHeight(24);
-        InterpreterIcnView.setFitWidth(24);
-        InterpreterTab.setGraphic(InterpreterIcnView);
+        Image interpreterIcon = new Image(getClass().getResource("/images/icons/interpreterIcon.png").toString());
+        ImageView interpreterIconView = new ImageView(interpreterIcon);
+        interpreterIconView.setFitHeight(24);
+        interpreterIconView.setFitWidth(24);
+        interpreterTab.setGraphic(interpreterIconView);
 
-        Image FoodIcn = new Image(getClass().getResource("/images/foodIcon.png").toString());
-        ImageView FoodIcnIcnView = new ImageView(FoodIcn);
-        FoodIcnIcnView.setFitHeight(24);
-        FoodIcnIcnView.setFitWidth(24);
-        FoodTab.setGraphic(FoodIcnIcnView);
+        Image foodIcon = new Image(getClass().getResource("/images/icons/foodIcon.png").toString());
+        ImageView foodIconView = new ImageView(foodIcon);
+        foodIconView.setFitHeight(24);
+        foodIconView.setFitWidth(24);
+        foodTab.setGraphic(foodIconView);
 
-        Image SecurityIcn = new Image(getClass().getResource("/images/securityIcon.png").toString());
-        ImageView SecurityIcnView = new ImageView(SecurityIcn);
-        SecurityIcnView.setFitHeight(24);
-        SecurityIcnView.setFitWidth(24);
-        SecurityTab.setGraphic(SecurityIcnView);
+        Image securityIcon = new Image(getClass().getResource("/images/icons/securityIcon.png").toString());
+        ImageView securityIconView = new ImageView(securityIcon);
+        securityIconView.setFitHeight(24);
+        securityIconView.setFitWidth(24);
+        securityTab.setGraphic(securityIconView);
 
-        Image JanitorIcn = new Image(getClass().getResource("/images/janitor.png").toString());
-        ImageView JanitorIcnView = new ImageView(JanitorIcn);
-        JanitorIcnView.setFitHeight(24);
-        JanitorIcnView.setFitWidth(24);
-        JanitorTab.setGraphic(JanitorIcnView);
+        Image janitorIcon = new Image(getClass().getResource("/images/icons/janitor.png").toString());
+        ImageView janitorIconView = new ImageView(janitorIcon);
+        janitorIconView.setFitHeight(24);
+        janitorIconView.setFitWidth(24);
+        janitorTab.setGraphic(janitorIconView);
 
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-            if (newValue == InterpreterTab) {
+            if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
-            } else if (newValue == FoodTab) {
+            } else if (newValue == foodTab) {
                 System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
-            } else if (newValue == SecurityTab) {
+            } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SERUITUY;
-            } else if (newValue == JanitorTab) {
+            } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
         });
@@ -161,4 +156,4 @@ public class RequestSubmitterController extends ScreenController {
     public void resetScreen() {
         getMapController().setAnchor(0,200,0,0);
     }
-    }
+}

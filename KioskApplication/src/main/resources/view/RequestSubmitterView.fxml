@@ -20,7 +20,7 @@
    <children>
       <JFXTabPane fx:id="requestTypeTabs" layoutX="44.0" layoutY="161.0" prefHeight="580.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab fx:id="InterpreterTab">
+            <Tab fx:id="interpreterTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -40,7 +40,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <JFXDatePicker defaultColor="#259ceb" prefHeight="27.0" prefWidth="188.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                              <JFXDatePicker defaultColor="#259ceb" prefHeight="27.0" prefWidth="200.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets left="10.0" />
                                  </opaqueInsets>
@@ -76,7 +76,7 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
-                              <JFXTimePicker defaultColor="#259ceb" promptText="Select Time" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                              <JFXTimePicker defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets left="5.0" />
                                  </GridPane.margin>
@@ -87,17 +87,17 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="FoodTab">
+            <Tab fx:id="foodTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab fx:id="SecurityTab">
+            <Tab fx:id="securityTab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab fx:id="JanitorTab">
+            <Tab fx:id="janitorTab">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
