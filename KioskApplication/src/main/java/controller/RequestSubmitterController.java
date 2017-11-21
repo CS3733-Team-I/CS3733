@@ -23,6 +23,7 @@ public class RequestSubmitterController extends ScreenController {
 
     public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML private JFXTabPane requestTypeTabs;
@@ -38,6 +39,8 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXTimePicker timePicker;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
+
+    DatabaseController dbController;
 
     @FXML
     public void initialize() {
@@ -87,7 +90,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = dbController.getNode(location);
         String notes = "";
 
         Language language = Language.NONE;
@@ -120,7 +123,7 @@ public class RequestSubmitterController extends ScreenController {
         //Adds the Interpreter request to the database
 //        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
 //        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        System.out.println(dbController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
