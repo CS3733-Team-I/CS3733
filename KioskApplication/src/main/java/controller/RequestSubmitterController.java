@@ -1,21 +1,20 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
+import utility.RequestType;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +26,7 @@ public class RequestSubmitterController extends ScreenController implements Init
         super(parent, map);
     }
 
+    @FXML private JFXTabPane requestTypeTabs;
     @FXML private JFXButton btnSubmit;
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
@@ -34,8 +34,11 @@ public class RequestSubmitterController extends ScreenController implements Init
     @FXML private Tab InterpreterTab;
     @FXML private Tab FoodTab;
     @FXML private Tab SecurityTab;
-    @FXML private Tab SanatitionTab;
+    @FXML private Tab JanitorTab;
     @FXML private JFXDatePicker timeDP;
+
+    RequestType currentRequestType = RequestType.INTERPRETER;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -57,28 +60,31 @@ public class RequestSubmitterController extends ScreenController implements Init
         SecurityIcnView.setFitWidth(24);
         SecurityTab.setGraphic(SecurityIcnView);
 
-        Image SanatitionIcn = new Image(getClass().getResource("/images/sanatitionIcon.png").toString());
-        ImageView SanatitionIcnView = new ImageView(SanatitionIcn);
-        SanatitionIcnView.setFitHeight(24);
-        SanatitionIcnView.setFitWidth(24);
-        SanatitionTab.setGraphic(SanatitionIcnView);
+        Image JanitorIcn = new Image(getClass().getResource("/images/janitor.png").toString());
+        ImageView JanitorIcnView = new ImageView(JanitorIcn);
+        JanitorIcnView.setFitHeight(24);
+        JanitorIcnView.setFitWidth(24);
+        JanitorTab.setGraphic(JanitorIcnView);
 
-        
-    }
+        requestTypeTabs.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
+                if (newValue == InterpreterTab) {
+                    currentRequestType = RequestType.INTERPRETER;
+                }
+                else if (newValue == FoodTab) {
+                    System.out.println("FOOD");
+                    currentRequestType = RequestType.FOOD;
+                }
+                else if (newValue == SecurityTab) {
+                    currentRequestType = RequestType.SERUITUY;
+                }
+                else if (newValue == JanitorTab) {
+                    currentRequestType = RequestType.JANITOR;
+                }
+            }
 
-
-
-    @FXML
-    void onInterpreterPressed() throws IOException {
-        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
-    }
-
-
-    @FXML
-    void onCancelPressed() throws IOException{
-        System.out.println("Cancel Pressed\n");
-
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        });
     }
 
     @FXML

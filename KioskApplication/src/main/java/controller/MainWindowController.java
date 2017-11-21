@@ -29,7 +29,7 @@ public class MainWindowController {
     @FXML JFXButton switchButton;
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
-    @FXML JFXHamburger SidebarHam;
+    //@FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;

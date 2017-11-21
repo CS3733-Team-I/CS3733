@@ -40,7 +40,14 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <JFXDatePicker prefHeight="27.0" prefWidth="178.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                              <JFXDatePicker defaultColor="#259ceb" prefHeight="27.0" prefWidth="188.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                                 <opaqueInsets>
+                                    <Insets left="10.0" />
+                                 </opaqueInsets>
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </JFXDatePicker>
                               <JFXTextField fx:id="txtLocation" alignment="CENTER" editable="false" promptText="Location" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <GridPane.margin>
                                     <Insets left="5.0" right="5.0" />
@@ -56,7 +63,7 @@
                                     <Insets bottom="10.0" top="10.0" />
                                  </GridPane.margin>
                               </JFXButton>
-                              <JFXTextArea promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <JFXTextArea promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                               <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">
@@ -69,7 +76,11 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
-                              <JFXTimePicker GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                              <JFXTimePicker defaultColor="#259ceb" promptText="Select Time" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </JFXTimePicker>
                            </children>
                         </GridPane>
                      </children>
@@ -86,7 +97,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab fx:id="SanatitionTab">
+            <Tab fx:id="JanitorTab">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
