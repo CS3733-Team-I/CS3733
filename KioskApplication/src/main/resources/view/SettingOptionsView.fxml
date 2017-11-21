@@ -5,12 +5,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<GridPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="150.0" style="-fx-background-color: #DDDED0;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="150.0" style="-fx-background-color: #DDDED0;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -21,21 +23,38 @@
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
+         <font>
+            <Font name="Apple SD GothicNeo ExtraBold" size="14.0" />
+         </font>
       </JFXButton>
       <JFXButton accessibleText="pathfinding" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="130.0" style="-fx-background-color: #0090AD;" text="Pathfinding" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
+         <font>
+            <Font name="Apple SD GothicNeo ExtraBold" size="14.0" />
+         </font>
       </JFXButton>
       <JFXButton accessibleText="display" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="130.0" style="-fx-background-color: #0090AD;" text="Display" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
+         <font>
+            <Font name="Apple SD GothicNeo ExtraBold" size="14.0" />
+         </font>
       </JFXButton>
       <JFXButton accessibleText="about" buttonType="RAISED" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="130.0" style="-fx-background-color: #0090AD;" text="About">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" top="10.0" />
          </GridPane.margin>
+         <font>
+            <Font name="Apple SD GothicNeo ExtraBold" size="14.0" />
+         </font>
+      </JFXButton>
+      <JFXButton accessibleText="reset" buttonType="RAISED" prefHeight="55.0" prefWidth="150.0" style="-fx-background-color: #8e0000;" text="Restore To Default" textFill="WHITE" GridPane.rowIndex="4">
+         <font>
+            <Font name="Apple SD GothicNeo ExtraBold" size="14.0" />
+         </font>
       </JFXButton>
    </children>
 </GridPane>

@@ -74,27 +74,27 @@ public class AdvancedController extends ScreenController {
 
         Image databaseIcon = new Image(getClass().getResource("/images/icons/nukeIcon.png").toString());
         ImageView databaseIconView = new ImageView(databaseIcon);
-        databaseIconView.setFitHeight(24);
-        databaseIconView.setFitWidth(24);
+        databaseIconView.setFitHeight(48);
+        databaseIconView.setFitWidth(48);
         databaseTab.setGraphic(databaseIconView);
 
         Image displayIcon = new Image(getClass().getResource("/images/icons/displayIcon.png").toString());
         ImageView displayIconView = new ImageView(displayIcon);
-        displayIconView.setFitHeight(24);
-        displayIconView.setFitWidth(24);
+        displayIconView.setFitHeight(48);
+        displayIconView.setFitWidth(48);
         displayTab.setGraphic(displayIconView);
 
         Image pathfindingTabIcon = new Image(getClass().getResource("/images/icons/pathfindingIcon.png").toString());
         ImageView pathfindingIconView = new ImageView(pathfindingTabIcon);
-        pathfindingIconView.setFitHeight(24);
-        pathfindingIconView.setFitWidth(24);
+        pathfindingIconView.setFitHeight(48);
+        pathfindingIconView.setFitWidth(48);
         pathfindingTab.setGraphic(pathfindingIconView);
 
         Image aboutIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
         ImageView aboutIconView = new ImageView(aboutIcon);
-        displayIconView.setFitHeight(24);
-        displayIconView.setFitWidth(24);
-        displayTab.setGraphic(aboutIconView);
+        displayIconView.setFitHeight(48);
+        displayIconView.setFitWidth(48);
+        aboutTab.setGraphic(aboutIconView);
 
         GridPane SettingsAnchor= FXMLLoader.load(getClass().getResource("/view/SettingOptionsView.fxml"));
         SingleSelectionModel<Tab> selectionModel = settingTabPane.getSelectionModel();
@@ -115,7 +115,9 @@ public class AdvancedController extends ScreenController {
                         case "pathfinding":
                             selectionModel.select(3);
                             break;
-
+                        case "reset":
+                            resetPressed();
+                            break;
                         default:
                             System.out.println("Tab not accessible, index: " + selectionModel.getSelectedIndex());
                             throw new IndexOutOfBoundsException();
@@ -160,6 +162,10 @@ public class AdvancedController extends ScreenController {
             contentView = loadView("/view/AdvancedView.fxml");
         }
         return contentView;
+    }
+
+    private void resetPressed() {
+        System.out.println("Reset");
     }
 
     @Override

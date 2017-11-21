@@ -18,22 +18,22 @@
          <children>
             <JFXTabPane id="tab-header-area" fx:id="settingTabPane" layoutX="131.0" layoutY="113.0" prefHeight="600.0" prefWidth="1080.0" style="-fx-background-color: #F0F1EC;" stylesheets="@../css/AdvancedSubTab.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>
-                  <Tab text="About">
+                  <Tab fx:id="aboutTab">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab text="Database">
+                  <Tab fx:id="databaseTab">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab text="Display">
+                  <Tab fx:id="displayTab">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                   </Tab>
-                  <Tab text="Pathdfinding">
+                  <Tab fx:id="pathfindingTab">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1085.0">
                            <children>

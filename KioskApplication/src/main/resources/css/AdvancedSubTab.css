@@ -14,6 +14,6 @@
 }
 
 .tab {
-
-    -fx-pref-width: 150pt
+    -fx-pref-height: 30pt;
+    -fx-pref-width: 100pt
 }
