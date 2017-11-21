@@ -5,9 +5,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.util.DBUtil;
 import database.objects.InterpreterRequest;
-import database.objects.Request;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 import java.sql.Connection;
 import java.sql.SQLException;

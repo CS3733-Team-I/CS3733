@@ -3,7 +3,7 @@ package KioskApplication.tests.entity;
 import database.DatabaseController;
 import database.objects.Node;
 import entity.MapFloorEntity;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

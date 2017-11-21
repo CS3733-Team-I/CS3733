@@ -1,7 +1,7 @@
 package database.objects;
 
-import utility.Language;
-import utility.RequestProgressStatus;
+import utility.Request.Language;
+import utility.Request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 

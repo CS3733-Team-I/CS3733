@@ -3,8 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
-import utility.Language;
-import utility.RequestProgressStatus;
+import utility.Request.Language;
+import utility.Request.RequestProgressStatus;
 
 import java.util.HashMap;
 import java.util.LinkedList;

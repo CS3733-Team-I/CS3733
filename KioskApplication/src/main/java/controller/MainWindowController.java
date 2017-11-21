@@ -1,7 +1,6 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
@@ -15,7 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;

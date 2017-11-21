@@ -19,7 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;

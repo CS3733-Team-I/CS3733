@@ -1,12 +1,6 @@
 package database.objects;
 
-import database.DatabaseController;
-import database.objects.Node;
-import utility.RequestProgressStatus;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Date;
+import utility.Request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 

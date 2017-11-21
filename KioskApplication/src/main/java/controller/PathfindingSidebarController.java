@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;

@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 

@@ -5,17 +5,14 @@ import database.objects.Edge;
 import database.objects.Request;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {

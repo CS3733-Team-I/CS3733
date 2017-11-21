@@ -6,9 +6,9 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.objects.InterpreterRequest;
 import entity.MapEntity;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class InterpreterRequestTest {
         n3 = new Node("NODE3", NodeFloor.LOWERLEVEL_2);
         n4 = new Node("NODE4", NodeFloor.FIRST);
 
-        n5 = new Node("0DEPT00399", 0, 0, utility.NodeFloor.GROUND,
+        n5 = new Node("0DEPT00399", 0, 0, NodeFloor.GROUND,
                 NodeBuilding.FRANCIS45, NodeType.HALL, "Test Room", "TR", "TeamI");
 
         e1 = new Edge("EDGE1", "NODE1", "NODE2");

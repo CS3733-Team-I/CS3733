@@ -1,7 +1,5 @@
 package database.template;
 
-import utility.RequestProgressStatus;
-
 public class SQLStrings {
 
     public static final String CREATE_NODE_TABLE = "create table t_nodes(" +
