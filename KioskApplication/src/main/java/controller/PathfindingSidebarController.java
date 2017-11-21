@@ -2,6 +2,7 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import entity.AlgorithmSetting;
 import entity.MapEntity;
 import entity.Path;
 import pathfinder.A_star;
@@ -12,6 +13,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.NodeFloor;
 
 import java.io.IOException;
@@ -30,6 +32,10 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes = new LinkedList<>();
     }
 
+    public void setPathfinderalg(int pathfinderalg){
+
+    }
+
     @FXML
     void showNodes(){
         boolean isS = showNodes.isSelected();
@@ -46,9 +52,15 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder();
-            Path path = pathfinder.generatePath(currentNodes);
-            getMapController().drawPath(path);
+            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
+            try{
+                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().drawPath(path);
+            }
+            catch(PathfinderException exception){
+                System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+            }
+
 
             waypointListVbox.getChildren().clear();
 
@@ -102,6 +114,7 @@ public class PathfindingSidebarController extends ScreenController {
         showNodes.setSelected(false);
         getMapController().setShowEdges(false);
         getMapController().setShowNodes(false);
+        getMapController().setShowEdges(false);
 
         getMapController().setAnchor(0, 200, 0, 0);
     }

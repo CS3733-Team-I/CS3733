@@ -1,13 +1,13 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -19,10 +19,10 @@ public class InterpreterRequestController extends ScreenController{
         super(parent, map);
     }
 
-    @FXML private Button btnSubmit;
-    @FXML private Button btnCancel;
-    @FXML private TextField txtLocation;
-    @FXML private ChoiceBox langMenu;
+    @FXML private JFXButton btnSubmit;
+    @FXML private JFXButton btnCancel;
+    @FXML private JFXTextField txtLocation;
+    @FXML private JFXComboBox langMenu;
 
 
     @FXML
@@ -30,6 +30,8 @@ public class InterpreterRequestController extends ScreenController{
         System.out.println("Interpreter Request Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_INTERPRETER);
+        langMenu.getItems().clear();
+        langMenu.getItems().addAll("Spanish","German","Mandarin");
     }
 
     @FXML
@@ -55,12 +57,14 @@ public class InterpreterRequestController extends ScreenController{
         }
 
         //Finds current admin that is logged in
-        String adminEmail = ""; //TODO implement something new for parent.curr_admin_email
+        //currently a dummy email
+        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
-        if(DatabaseController.getAllInterpreterRequests().isEmpty()){
+
+        if(DatabaseController.getAllRequests().isEmpty()){
             interpID = 0;
         }else{
-            interpID = DatabaseController.getAllInterpreterRequests().get(DatabaseController.getAllInterpreterRequests().size()-1).getInterpreterID() + 1;
+            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
         }
 
 
@@ -77,7 +81,7 @@ public class InterpreterRequestController extends ScreenController{
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/InterpreterRequestView.fxml");
+            contentView = loadView("/view/SubmitRequestView.fxml");
         }
 
         return contentView;

@@ -5,6 +5,7 @@ import database.objects.Node;
 import entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,14 +14,18 @@ import utility.NodeBuilding;
 import utility.NodeFloor;
 import utility.NodeType;
 
-public class AdminAddNodeController extends ScreenController {
+import java.io.IOException;
+
+public class AdminNodeController extends ScreenController {
     NodeFloor floor;
 
-    AdminAddNodeController(MainWindowController parent, MapController map) {
+    AdminNodeController(MainWindowController parent, MapController map) {
         super(parent, map);
 
         this.floor = map.getCurrentFloor();
     }
+
+    private boolean isAdd = true;
 
     @FXML private TextField xcoord;
     @FXML private TextField ycoord;
@@ -32,11 +37,12 @@ public class AdminAddNodeController extends ScreenController {
     @FXML private TextField sname;
     @FXML private ChoiceBox teamAssignedChoiceBox;
     @FXML private Label errorMsg;
+    @FXML private Button submitButton;
+    @FXML private Button DeleteBtn;
 
     @FXML
     protected void initialize() {
-        System.out.println(floor.ordinal());
-        floorChoiceBox.setValue(getFloorTxt());
+        resetScreen();
     }
 
     public String getFloorTxt(){
@@ -58,19 +64,6 @@ public class AdminAddNodeController extends ScreenController {
         }
     }
 
-    /*@FXML
-    void onfloorClicked() throws IOException{
-        floorChoiceBox.setItems(FXCollections.observableArrayList("L2", "L1", "G", "1", "2", "3"));
-        floorChoiceBox.
-    }*/
-
-    /*@FXML
-    void onAddPressed() throws IOException {
-        System.out.println("Add Pressed\n");
-
-        this.parent.switchTo(SIDEBAR_ADD_NODE);
-    }*/
-
     @FXML
     void updateNodeID() {
         System.out.println("updateNodeID");
@@ -84,6 +77,8 @@ public class AdminAddNodeController extends ScreenController {
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
             // Set the determined nodeID
             nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+            // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
+            // TODO implement this
         }
     }
 
@@ -97,14 +92,11 @@ public class AdminAddNodeController extends ScreenController {
         } else {
             return "";
         }
-
     }
-
 
     @FXML
     void onBackPressed() {
         System.out.println("Back Pressed\n");
-
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
@@ -127,8 +119,9 @@ public class AdminAddNodeController extends ScreenController {
             errorMsg.setText("You must input a long name!");
         else if(sname.getText().equals(null) || sname.getText().equals(""))
             errorMsg.setText("You must input a short name!");
-        else if(teamAssignedChoiceBox.getValue().equals(null) || teamAssignedChoiceBox.getValue().equals(""))
+        else if(teamAssignedChoiceBox.getValue().equals(null) || teamAssignedChoiceBox.getValue().equals("")) {
             errorMsg.setText("You must input the team assigned!");
+        }
         else {
             // Determine floor
             NodeFloor floor = getNodeFloor();
@@ -139,16 +132,29 @@ public class AdminAddNodeController extends ScreenController {
             // Determine type
             NodeType type = getNodeType();
 
-            System.out.println("Adding node?");
-            // Ensure there is no existing node with that ID
-            if(MapEntity.getInstance().getNode(nodeID.getText()) == null) {
-                //create new node
-                Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), "Team " + teamAssignedChoiceBox.getValue().toString());
-                // Add Node
-                System.out.println("ssssss");
-                MapEntity.getInstance().addNode(node1);
-                System.out.println("Adding node " + nodeID.getText());
-                getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+            if(isAdd) {
+                System.out.println("Adding node?");
+                // Ensure there is no existing node with that ID
+                if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
+                    //create new node
+                    Node node1 = new Node(nodeID.getText(), (int) Double.parseDouble(xcoord.getText()), (int) Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
+                    // Add Node
+                    MapEntity.getInstance().addNode(node1);
+                    System.out.println("Adding node " + nodeID.getText());
+                    resetScreen();
+                }
+            }else{
+                System.out.println("Editing node?");
+                // Find the existing node with that ID
+                if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
+                    System.out.println("Editing node " + nodeID.getText());
+                    // Create Node
+                    Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
+                    // Update Node
+                    MapEntity.getInstance().editNode(node1);
+                    System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
+                    resetScreen();
+                }
             }
         }
     }
@@ -211,36 +217,152 @@ public class AdminAddNodeController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/addNode.fxml");
+            contentView = loadView("/view/nodeSidebar.fxml");
         }
-
         return contentView;
+    }
+
+    public String convertFloor(String eString){
+        switch (eString){
+            case "THIRD":
+                return "03";
+            case "SECOND":
+                return "02";
+            case "FIRST":
+                return "01";
+            case "LOWERLEVEL_2":
+                return "L1";
+            case "LOWERLEVEL_1":
+                return "L2";
+        }
+        return "";
+    }
+
+    public String convertTeam(String eString){
+        System.out.println("Team: [" + eString + "]");
+        switch (eString){
+            case "Team A":
+                return "A";
+            case "Team B":
+                return "B";
+            case "Team C":
+                return "C";
+            case "Team D":
+                return "D";
+            case "Team E":
+                return "E";
+            case "Team F":
+                return "F";
+            case "Team G":
+                return "G";
+            case "Team H":
+                return "H";
+            case "Team I":
+                return "I";
+            default:
+                return "";
+        }
+    }
+
+    public String convertToDBTeam(String eString){
+        System.out.println("Team: [" + eString + "]");
+        switch (eString){
+            case "A":
+                return "Team A";
+            case "B":
+                return "Team B";
+            case "C":
+                return "Team C";
+            case "D":
+                return "Team D";
+            case "E":
+                return "Team E";
+            case "F":
+                return "Team F";
+            case "G":
+                return "Team G";
+            case "H":
+                return "Team H";
+            case "I":
+                return "Team I";
+            default:
+                return "";
+        }
     }
 
     @Override
     public void onMapLocationClicked(Point2D location) {
         System.out.println("setCoords");
+        resetScreen();
         xcoord.setText(String.valueOf(location.getX()));
         ycoord.setText(String.valueOf(location.getY()));
+        isAdd = true;
+        submitButton.setText("Add");
+        DeleteBtn.setVisible(false);
     }
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-        floorChoiceBox.setValue(getFloorTxt());
-        updateNodeID();
+        if(isAdd) {
+            floorChoiceBox.setValue(getFloorTxt());
+            updateNodeID();
+        }
     }
 
     @Override
     public void onMapEdgeClicked(Edge edge) {}
 
     @Override
-    public void onMapNodeClicked(Node node) {}
+    public void onMapNodeClicked(Node node) {
+        xcoord.setText(String.valueOf(node.getXcoord()));
+        ycoord.setText(String.valueOf(node.getYcoord()));
+        floorChoiceBox.setValue(convertFloor(node.getFloor().toString()));
+        buildingChoiceBox.setValue(node.getBuilding().toString());
+        nodeTypeChoiceBox.setValue(node.getNodeType().toString());
+        lname.setText(node.getLongName());
+        sname.setText(node.getShortName());
+        String team = convertTeam(node.getTeamAssigned().toString());
+        teamAssignedChoiceBox.setValue(team);
+        nodeID.setText(node.getNodeID());
+        isAdd = false;
+        DeleteBtn.setVisible(true);
+        submitButton.setText("Edit");
+    }
+    @FXML
+    void deleteNode() throws IOException {
+        if(nodeID.getText().equals("") || nodeID.getText() == null){ // If no node selected
+            System.out.println("No Node Selected");
+        }
+        else{
+            System.out.println("Delete node: " + nodeID.getText());
+            // Check to ensure node with that ID is in database
+            Node delN = null;
+            delN = MapEntity.getInstance().getNode(nodeID.getText());
+            if(delN != null) {
+                // Delete node
+                boolean isSuccess = true;
+                MapEntity.getInstance().removeNode(delN.getNodeID());
+
+                if (isSuccess) { // If successfully deleted
+                    System.out.println("Node " + nodeID.getText() + " Deleted");
+                    resetScreen();
+                }
+                else  // If DB failed to delete
+                    System.out.println("Failed to remove node: " + nodeID.getText());
+            }
+            else { // If not, notify user
+                System.out.println("Node " + nodeID.getText() + " is not in the database");
+            }
+        }
+    }
 
     @Override
     public void resetScreen() {
+        isAdd = true;
+        DeleteBtn.setVisible(false);
+        submitButton.setText("Add");
         xcoord.setText("");
         ycoord.setText("");
-        nodeID.setText("");
         floorChoiceBox.setValue(getFloorTxt());
         buildingChoiceBox.setValue("--select--");
         nodeTypeChoiceBox.setValue("--select--");
@@ -248,5 +370,6 @@ public class AdminAddNodeController extends ScreenController {
         sname.setText("");
         teamAssignedChoiceBox.setValue("I");
         errorMsg.setText("");
+        nodeID.setText("");
     }
 }

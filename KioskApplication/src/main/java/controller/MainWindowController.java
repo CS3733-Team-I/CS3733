@@ -1,15 +1,25 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import utility.ApplicationScreen;
 import utility.NodeFloor;
 
@@ -18,10 +28,14 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML Button switchButton;
+    @FXML JFXTabPane tabPane;
+
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
-    @FXML Label lbAdminInfo;
+    @FXML JFXButton switchButton;
+    //@FXML Label lbAdminInfo;
+    //@FXML JFXDrawer Sidebar;
+    @FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
@@ -51,20 +65,12 @@ public class MainWindowController {
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
 
-                case ADMIN_ADD_NODE:
-                    controller = new AdminAddNodeController(this, mapController);
+                case ADMIN_NODE:
+                    controller = new AdminNodeController(this, mapController);
                     break;
 
-                case ADMIN_EDIT_NODE:
-                    controller = new AdminEditNodeController(this, mapController);
-                    break;
-
-                case ADMIN_ADD_EDGE:
-                    controller = new AdminAddEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_DEL_EDGE:
-                    controller = new AdminDeleteEdgeController(this, mapController);
+                case ADMIN_EDGE:
+                    controller = new AdminEdgeController(this, mapController);
                     break;
 
                 case ADMIN_VIEWREQUEST:
@@ -73,6 +79,10 @@ public class MainWindowController {
 
                 case ADMIN_INTERPRETER:
                     controller = new InterpreterRequestController(this, mapController);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
                     break;
 
                 default:
@@ -89,17 +99,24 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Admin Login");
+                switchButton.setText("Employee Login");
                 switchButton.requestFocus();
                 break;
             default:
                 break;
         }
 
+        javafx.scene.Node contentView = controller.getContentView();
+
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        contentWindow.getChildren().add(controller.getContentView());
+        contentWindow.getChildren().add(contentView);
+
+        // Fit sidebar to window
+        AnchorPane.setTopAnchor(contentView, 0.0);
+        AnchorPane.setBottomAnchor(contentView, 0.0);
+        AnchorPane.setLeftAnchor(contentView, 0.0);
 
         // Reset controller's view
         controller.resetScreen();
@@ -119,18 +136,67 @@ public class MainWindowController {
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
 
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
+                switch (newValue.getText()) { // TODO make this more modular/language independent
+                    case "Map":
+                        switchToScreen(ApplicationScreen.PATHFINDING);
+                        break;
+                    case "Map Builder":
+                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Request Manager":
+                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        break;
+                    case "Request Submit":
+                        // TODO implement new request screen
+                        //switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Settings":
+                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+                        break;
+                }
+            }
+        });
+
         this.switchToScreen(ApplicationScreen.PATHFINDING);
+
+        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
+        //Initialize Hamburger
+//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
+//        BATransition.setRate(-1);
+//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+//            BATransition.setRate(BATransition.getRate()*-1);
+//            BATransition.play();
+//
+//            if(Sidebar.isShown()) {
+//                System.out.println("HERE1");
+//                Sidebar.close();
+//            }
+//            else {
+//                System.out.println("HERE2");
+//                Sidebar.open();
+//            }
+//        });
     }
 
     @FXML
     private void Login() throws IOException{
-        LoginController LC = new LoginController(this);
-        FXMLLoader loader;
-        loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
-        loader.setController(LC);
-        LoginPopup.getChildren().clear();
-        LoginPopup.getChildren().add(loader.load());
-        LC.tfEmail.requestFocus();
+        LoginController loginController = new LoginController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
+        loader.setController(loginController);
+        javafx.scene.Node view = loader.load();
+
+        BorderPane loginContainer = new BorderPane();
+        AnchorPane.setTopAnchor(loginContainer, 0.0);
+        AnchorPane.setLeftAnchor(loginContainer, 0.0);
+        AnchorPane.setBottomAnchor(loginContainer, 0.0);
+        AnchorPane.setRightAnchor(loginContainer, 0.0);
+
+        loginContainer.setCenter(view);
+
+        contentWindow.getChildren().add(loginContainer);
     }
 
     @FXML
@@ -138,14 +204,14 @@ public class MainWindowController {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
             case ADMIN_INTERPRETER:
-            case ADMIN_EDIT_NODE:
-            case ADMIN_DEL_EDGE:
-            case ADMIN_ADD_NODE:
-            case ADMIN_ADD_EDGE:
+            case ADMIN_NODE:
+            case ADMIN_EDGE:
+            case ADMIN_SETTINGS:
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
-                this.lbAdminInfo.setText("");
+                currentScreen = ApplicationScreen.PATHFINDING;
+                //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
                 this.Login();
