@@ -1,16 +1,21 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.RequestEntity;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
+
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -50,12 +55,30 @@ public class RequestManagerController extends ScreenController {
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");
             Label locationOfRequest = new Label(location);
+            JFXButton selectID = new JFXButton("Select");
+            selectID.setOnAction(new EventHandler<ActionEvent>() {
+                @Override public void handle(ActionEvent e) {
+                    txtID.setText(id);
+                }
+            });
+            selectID.setStyle("-fx-background-color: #DFB951;");
+
             //TODO find what type of reqeust it is
             activeRequests.getChildren().add(requestTextField);
             activeRequests.getChildren().add(requestID);
             activeRequests.getChildren().add(typeOfRequest);
             activeRequests.getChildren().add(locationOfRequest);
+            activeRequests.getChildren().add(selectID);
         }
+    }
+
+    public void btncode(ActionEvent e){
+
+    }
+
+    @FXML
+    void selectIDPressed(String id){
+        txtID.setText(id);
     }
 
     @FXML
