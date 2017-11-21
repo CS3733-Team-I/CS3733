@@ -39,7 +39,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <JFXDatePicker defaultColor="#259ceb" prefHeight="27.0" prefWidth="200.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                              <JFXDatePicker fx:id="datePicker" defaultColor="#259ceb" prefHeight="27.0" prefWidth="200.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets left="10.0" />
                                  </opaqueInsets>
@@ -80,7 +80,7 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
-                              <JFXTimePicker defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                              <JFXTimePicker fx:id="timePicker" defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets left="5.0" />
                                  </GridPane.margin>

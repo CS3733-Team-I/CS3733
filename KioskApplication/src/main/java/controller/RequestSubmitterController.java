@@ -34,7 +34,8 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private Tab foodTab;
     @FXML private Tab securityTab;
     @FXML private Tab janitorTab;
-    @FXML private JFXDatePicker timeDP;
+    @FXML private JFXDatePicker datePicker;
+    @FXML private JFXTimePicker timePicker;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
