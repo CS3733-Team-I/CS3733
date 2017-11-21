@@ -47,7 +47,7 @@
                                     <Insets left="5.0" />
                                  </GridPane.margin>
                               </JFXDatePicker>
-                              <JFXTextField fx:id="txtLocation" editable="false" promptText="Location" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <JFXTextField fx:id="txtLocation" promptText="Location" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <GridPane.margin>
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
