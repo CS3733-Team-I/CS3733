@@ -1,4 +1,4 @@
-package KioskApplication.tests.pathfinderTests;
+package pathfinderTests;
 
 import database.objects.Edge;
 import database.objects.Node;

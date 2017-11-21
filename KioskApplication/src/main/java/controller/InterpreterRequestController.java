@@ -17,12 +17,15 @@ public class InterpreterRequestController extends ScreenController{
 
     public InterpreterRequestController(MainWindowController parent, MapController map) {
         super(parent, map);
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML private Button btnSubmit;
     @FXML private Button btnCancel;
     @FXML private TextField txtLocation;
     @FXML private ChoiceBox langMenu;
+
+    DatabaseController dbController;
 
 
     @FXML
@@ -45,7 +48,7 @@ public class InterpreterRequestController extends ScreenController{
         String location = txtLocation.getText();
 
         //sets nodeLocation to default my location
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = dbController.getNode(location);
 
         String language = "None";
         if(langMenu.getValue().toString().equals("Spanish")){
@@ -59,19 +62,19 @@ public class InterpreterRequestController extends ScreenController{
         String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
 
-        if(DatabaseController.getAllRequests().isEmpty()){
+        if(dbController.getAllRequests().isEmpty()){
             interpID = 0;
         }else{
-            interpID = DatabaseController.getAllRequests().get(DatabaseController.getAllRequests().size()-1).getRequestID() + 1;
+            interpID = dbController.getAllRequests().get(dbController.getAllRequests().size()-1).getRequestID() + 1;
         }
 
 
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + language + ". Admin Email: " + adminEmail + ". Interpreter ID: " + interpID);
 
         //Adds the Interpreter request to the database
-        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        dbController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
+        dbController.addIntepreterRequest(language, interpID, interpID);
+        System.out.println(dbController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
@@ -79,7 +82,7 @@ public class InterpreterRequestController extends ScreenController{
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/InterpreterRequestView.fxml");
+            contentView = loadView("/resources/view/InterpreterRequestView.fxml");
         }
 
         return contentView;

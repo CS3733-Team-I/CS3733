@@ -11,20 +11,23 @@ public class MapFloorEntity implements IMapEntity{
     //Key is the nodeID or edgeID
     private HashMap<String, Node> nodes;
 
+    DatabaseController dbController;
+
     public MapFloorEntity() {
         nodes = new HashMap<>();
+        dbController = DatabaseController.getInstance();
     }
 
     @Override
     public void addNode(Node n) {
         nodes.put(n.getNodeID(), n);
-        DatabaseController.addNode(n);
+        dbController.addNode(n);
     }
 
     @Override
     public void editNode(Node n) {
         nodes.put(n.getNodeID(), n);
-        DatabaseController.updateNode(n);
+        dbController.updateNode(n);
     }
 
     @Override
@@ -34,7 +37,7 @@ public class MapFloorEntity implements IMapEntity{
 
         // If edge doesn't exist, attempt to load it from the database
         if (node == null) {
-            node = DatabaseController.getNode(s);
+            node = dbController.getNode(s);
             // Add edge to local data if found
             if (node != null) nodes.put(s, node);
         }
@@ -56,6 +59,6 @@ public class MapFloorEntity implements IMapEntity{
     @Override
     public void removeNode(String s) {
         nodes.remove(s);
-        DatabaseController.removeNode(new Node(s));
+        dbController.removeNode(new Node(s));
     }
 }

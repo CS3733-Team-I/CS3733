@@ -10,14 +10,19 @@ public class Request {
     String employee;
     int requestID;
 
+    DatabaseController dbController;
+
     public Request(Node location, String employee, int requestID) {
         this.location = location;
         this.employee = employee;
         this.requestID = requestID;
+
+        dbController = DatabaseController.getInstance();
     }
 
     public Request(String nodeID, String employee, int requestID) {
-        this.location = DatabaseController.getNode(nodeID);
+        dbController = DatabaseController.getInstance();
+        this.location = dbController.getNode(nodeID);
         this.employee = employee;
         this.requestID = requestID;
     }

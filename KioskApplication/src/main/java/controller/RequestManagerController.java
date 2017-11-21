@@ -20,6 +20,7 @@ public class RequestManagerController extends ScreenController {
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
+        dbCOntroller = DatabaseController.getInstance();
     }
 
     @FXML
@@ -28,6 +29,8 @@ public class RequestManagerController extends ScreenController {
     private Label totalRequests;
     @FXML
     private TextField txtID;
+
+    DatabaseController dbCOntroller;
 
 
     @FXML
@@ -40,7 +43,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void showRequests(){
         activeRequests.getChildren().clear();
-        ArrayList<Request> requests = DatabaseController.getAllRequests();
+        ArrayList<Request> requests = dbCOntroller.getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
             int id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
@@ -64,7 +67,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void onCompletePressed(){
         int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
+        dbCOntroller.deleteRequest(ID);
         txtID.clear();
         System.out.println("Complete Pressed \n");
         showRequests();
@@ -73,7 +76,7 @@ public class RequestManagerController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/RequestManagerView.fxml");
+            contentView = loadView("/resources/view/RequestManagerView.fxml");
         }
 
         return contentView;

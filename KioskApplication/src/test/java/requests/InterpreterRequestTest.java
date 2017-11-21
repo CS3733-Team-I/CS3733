@@ -1,4 +1,4 @@
-package KioskApplication.tests.requests;
+package requests;
 
 
 import database.DatabaseController;
@@ -21,9 +21,11 @@ public class InterpreterRequestTest {
     private Node n1,n2,n3,n4,n5;
     private Edge e1,e2,e3;
 
+    DatabaseController dbController;
+
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        dbController = DatabaseController.getTestInstance();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);

@@ -1,4 +1,4 @@
-package KioskApplication.tests.pathfinderTests;
+package pathfinderTests;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
@@ -20,6 +20,8 @@ public class TestPathfinder {
     private Edge e1, e2, e3, e4, e5, e6;
     private MapEntity map = MapEntity.getInstance();
 
+    private DatabaseController dbController;
+
     @Before
     public void setup() {
 
@@ -31,7 +33,7 @@ public class TestPathfinder {
             n7   n4
         */
 
-        DatabaseController.initTests();
+        dbController = DatabaseController.getTestInstance();
         n1 = new Node("NODE1", NodeFloor.THIRD);
         n1.setXcoord(10);
         n1.setYcoord(10);

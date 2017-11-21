@@ -102,7 +102,7 @@ public class MapController implements Initializable{
     public void drawNodesOnMap(List<Node> nodes) {
         for (Node n : nodes) {
             try {
-                javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/view/NodeView.fxml"));
+                javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/resources/view/NodeView.fxml"));
                 nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
                 nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
                 nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
@@ -164,22 +164,22 @@ public class MapController implements Initializable{
         String floorImageURL = "";
         switch (floor) {
             case LOWERLEVEL_2:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel2.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/00_thelowerlevel2.png").toString();
                 break;
             case LOWERLEVEL_1:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel1.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/00_thelowerlevel1.png").toString();
                 break;
             case GROUND:
-                floorImageURL = getClass().getResource("/images/00_thegroundfloor.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/00_thegroundfloor.png").toString();
                 break;
             case FIRST:
-                floorImageURL = getClass().getResource("/images/01_thefirstfloor.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/01_thefirstfloor.png").toString();
                 break;
             case SECOND:
-                floorImageURL = getClass().getResource("/images/02_thesecondfloor.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/02_thesecondfloor.png").toString();
                 break;
             case THIRD:
-                floorImageURL = getClass().getResource("/images/03_thethirdfloor.png").toString();
+                floorImageURL = getClass().getResource("/resources/images/03_thethirdfloor.png").toString();
                 break;
         }
 
@@ -233,7 +233,7 @@ public class MapController implements Initializable{
 
 
         // put the pin and set it's info
-        javafx.scene.control.MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
+        javafx.scene.control.MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/resources/view/wayPointView.fxml"));
         /*Offsets, don't remove*/
 //        double pinW = wayPointObject.getBoundsInLocal().getWidth();
 //        double pinH = wayPointObject.getBoundsInLocal().getHeight();

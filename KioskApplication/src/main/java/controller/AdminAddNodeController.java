@@ -213,7 +213,7 @@ public class AdminAddNodeController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/addNode.fxml");
+            contentView = loadView("/resources/view/addNode.fxml");
         }
         return contentView;
     }

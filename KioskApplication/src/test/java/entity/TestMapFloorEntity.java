@@ -1,4 +1,4 @@
-package KioskApplication.tests.entity;
+package entity;
 
 import database.DatabaseController;
 import database.objects.Node;
@@ -12,9 +12,11 @@ public class TestMapFloorEntity {
 
     private MapFloorEntity m;
     private Node n1;
+    DatabaseController dbController;
 
     public TestMapFloorEntity() {
-        DatabaseController.initTests();
+
+        dbController = DatabaseController.getTestInstance();
         m = new MapFloorEntity();
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
     }

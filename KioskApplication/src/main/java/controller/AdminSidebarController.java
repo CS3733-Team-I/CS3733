@@ -32,7 +32,7 @@ public class AdminSidebarController extends ScreenController {
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/AdminSidebarView.fxml");
+            contentView = loadView("/resources/view/AdminSidebarView.fxml");
         }
 
         return contentView;
@@ -127,28 +127,28 @@ public class AdminSidebarController extends ScreenController {
     void onReadClicked() {
         // TODO implement this better
         // Load nodes
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapAnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapBnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapCnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapDnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapEnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapFnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapGnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapHnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapInodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapWnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapAnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapBnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapCnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapDnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapEnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapFnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapGnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapHnodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapInodes.csv"));
+        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/resources/csv/MapWnodes.csv"));
 
         // Load edges
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapAedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapBedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapCedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapDedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapEedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapFedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapGedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapHedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapIedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapWedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapAedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapBedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapCedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapDedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapEedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapFedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapGedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapHedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapIedges.csv"));
+        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/resources/csv/MapWedges.csv"));
 
         MapEntity.getInstance().readAllFromDatabase();
 

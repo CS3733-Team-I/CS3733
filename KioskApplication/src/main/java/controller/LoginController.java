@@ -71,7 +71,7 @@ public class LoginController implements Initializable{
         });
 
 
-        Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
+        Image invalidInputIcn = new Image(getClass().getResource("/resources/images/invalid_input.png").toString());
         EmailValidator.setIcon(new ImageView(invalidInputIcn));
         PasswordValidator.setIcon(new ImageView(invalidInputIcn));
 

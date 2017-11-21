@@ -54,7 +54,7 @@ public class SettingsController extends ScreenController {
     @Override
     public Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/settings.fxml");
+            contentView = loadView("/resources/view/settings.fxml");
         }
         return contentView;
     }
