@@ -2,17 +2,18 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
-import entity.Request;
+import database.objects.Request;
+import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
@@ -22,11 +23,12 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
-    private ComboBox activeRequests;
+    private VBox activeRequests;
     @FXML
     private Label totalRequests;
     @FXML
     private TextField txtID;
+
 
 
     @FXML
@@ -38,16 +40,22 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(){
-        ArrayList<Request> requests = DatabaseController.getAllRequests();
-        ArrayList<String> reqIDs = new ArrayList<String>();
+        activeRequests.getChildren().clear();
+        LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
-             reqIDs.add("Request ID: " + requests.get(i).getRequestID());
+            String id = requests.get(i).getRequestID();
+            TextField requestTextField = new TextField(requests.get(i).getassigner());
+            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
+            requestTextField.setEditable(false);
+            Label requestID = new Label("ID: " + id);
+            Label typeOfRequest = new Label("Type: Interpreter");
+            Label locationOfRequest = new Label(location);
+            //TODO find what type of reqeust it is
+            activeRequests.getChildren().add(requestTextField);
+            activeRequests.getChildren().add(requestID);
+            activeRequests.getChildren().add(typeOfRequest);
+            activeRequests.getChildren().add(locationOfRequest);
         }
-
-        activeRequests.getItems().clear();
-        activeRequests.getItems().addAll(reqIDs);
-        int requestNum = DatabaseController.getAllRequests().size();
-        totalRequests.setText("Total Requests: " + requestNum + ".");
     }
 
     @FXML
@@ -59,9 +67,11 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void onCompletePressed(){
-        int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
+        String ID = txtID.getText();
+        RequestEntity.getInstance().deleteRequest(ID);
+        txtID.clear();
         System.out.println("Complete Pressed \n");
+        showRequests();
     }
 
     @Override
@@ -87,6 +97,6 @@ public class RequestManagerController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        // TODO implement this
+        getMapController().setAnchor(0,400,0,0);
     }
 }

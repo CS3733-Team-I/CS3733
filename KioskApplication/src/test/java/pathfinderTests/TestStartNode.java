@@ -4,7 +4,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import pathfinder.StartNode;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -9,9 +9,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 public class AdminAddNodeController extends ScreenController {
     NodeFloor floor;
@@ -84,6 +84,8 @@ public class AdminAddNodeController extends ScreenController {
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
             // Set the determined nodeID
             nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+            // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
+            // TODO implement this
         }
     }
 
@@ -213,7 +215,6 @@ public class AdminAddNodeController extends ScreenController {
         if (contentView == null) {
             contentView = loadView("/view/addNode.fxml");
         }
-
         return contentView;
     }
 
@@ -240,7 +241,6 @@ public class AdminAddNodeController extends ScreenController {
     public void resetScreen() {
         xcoord.setText("");
         ycoord.setText("");
-        nodeID.setText("");
         floorChoiceBox.setValue(getFloorTxt());
         buildingChoiceBox.setValue("--select--");
         nodeTypeChoiceBox.setValue("--select--");
@@ -248,5 +248,6 @@ public class AdminAddNodeController extends ScreenController {
         sname.setText("");
         teamAssignedChoiceBox.setValue("I");
         errorMsg.setText("");
+        nodeID.setText("");
     }
 }

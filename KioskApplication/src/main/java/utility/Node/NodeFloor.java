@@ -1,4 +1,4 @@
-package utility;
+package utility.Node;
 
 public enum NodeFloor {
     LOWERLEVEL_2,

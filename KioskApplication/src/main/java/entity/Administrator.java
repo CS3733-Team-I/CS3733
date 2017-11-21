@@ -1,20 +1,20 @@
 package entity;
 
 public class Administrator {
-    private String Email;
-    private String Password;
+    private String email;
+    private String password;
 
     public Administrator(String email, String password) {
-        Email = email;
-        Password = password;
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
-    public boolean login_check(Administrator A) {
-        return Email.equals(A.Email) && Password.equals(A.Password);
+    public boolean verifyLogin(Administrator admin) {
+        return email.equals(admin.email) && password.equals(admin.password);
     }
 
 }

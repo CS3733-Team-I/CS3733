@@ -1,24 +1,28 @@
 package controller;
 
+import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
-import utility.NodeFloor;
+import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class PathfindingSidebarController extends ScreenController {
 
-    @FXML VBox waypointListVbox;
-    @FXML private CheckBox showNodes;
+    @FXML private AnchorPane container;
+    @FXML private AnchorPane waypointsContainer;
+    @FXML private VBox waypointListVbox;
+    @FXML private JFXCheckBox showNodesCheckbox;
 
     LinkedList<Node> currentNodes;
 
@@ -29,8 +33,16 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @FXML
+    void initialize() {
+        // Set containers to be transparent to mouse events
+        container.setPickOnBounds(false);
+        waypointsContainer.setPickOnBounds(false);
+        waypointListVbox.setPickOnBounds(false);
+    }
+
+    @FXML
     void showNodes(){
-        boolean isS = showNodes.isSelected();
+        boolean isS = showNodesCheckbox.isSelected();
         System.out.println(isS);
         getMapController().setShowNodes(isS);
     }
@@ -78,9 +90,9 @@ public class PathfindingSidebarController extends ScreenController {
         if (!currentNodes.contains(node)) {
             currentNodes.add(node);
 
-            TextField nodeNameTextField = new TextField(node.getNodeID());
-            nodeNameTextField.setEditable(false);
-            waypointListVbox.getChildren().add(nodeNameTextField);
+            Label nodeNameLabel = new Label(node.getNodeID());
+            nodeNameLabel.setTextFill(Color.BLACK);
+            waypointListVbox.getChildren().add(nodeNameLabel);
         }
     }
 
@@ -95,11 +107,18 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @Override
+    public void onScreenChanged() {
+        getMapController().setFloorSelectorPosition(new Point2D(10, 10));
+    }
+
+    @Override
     public void resetScreen() {
         onResetPressed();
-        showNodes.setSelected(false);
+        showNodesCheckbox.setSelected(false);
         getMapController().setShowNodes(false);
+        getMapController().setShowEdges(false);
 
-        getMapController().setAnchor(0, 200, 0, 0);
+        getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setFloorSelectorPosition(new Point2D(325, 20));
     }
 }

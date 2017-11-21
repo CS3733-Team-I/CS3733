@@ -1,28 +1,33 @@
 package entity;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdministratorList {
-    private ArrayList<Administrator> Administrators;
-
-    public void add_administrator(Administrator A) {
-        Administrators.add(A);
-    }
+    private HashMap<String, Administrator> administrators;
 
     public AdministratorList() {
-        Administrators = new ArrayList<Administrator>();
+        administrators = new HashMap<>();
+        addAdministrator(new Administrator("boss@hospital.com", "123"));
     }
 
-    public boolean validLogin(Administrator A) {
-        boolean ret_val = false;
-        int i;
-        for(i = 0; i < Administrators.size(); i++) {
-            ret_val |= Administrators.get(i).login_check(A);
+    private static class AdministratorListSingleton {
+        private static final AdministratorList _instance = new AdministratorList();
+    }
+
+    public static AdministratorList getInstance() {
+        return AdministratorListSingleton._instance;
+    }
+
+    public void addAdministrator(Administrator admin) {
+        administrators.put(admin.getEmail(), admin);
+    }
+
+    public boolean isValidLogin(String username, String password) {
+        Administrator admin = administrators.get(username);
+        if (admin != null) {
+            return admin.verifyLogin(new Administrator(username, password));
+        } else {
+            return false;
         }
-        return ret_val;
-    }
-
-    public ArrayList<Administrator> getAdministrators() {
-        return Administrators;
     }
 }

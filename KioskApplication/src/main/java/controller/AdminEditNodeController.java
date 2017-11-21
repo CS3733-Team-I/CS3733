@@ -9,9 +9,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 
 import java.io.IOException;
 
@@ -105,7 +105,6 @@ public class AdminEditNodeController extends ScreenController {
     public void resetScreen() {
         xcoord.setText("");
         ycoord.setText("");
-        nodeID.setText("");
         floorChoiceBox.setValue(getFloorTxt());
         buildingChoiceBox.setValue("--select--");
         nodeTypeChoiceBox.setValue("--select--");
@@ -113,6 +112,7 @@ public class AdminEditNodeController extends ScreenController {
         sname.setText("");
         teamAssignedChoiceBox.setValue("I");
         errorMsg.setText("");
+        nodeID.setText("");
     }
 
     public String convertFloor(String eString){
@@ -179,6 +179,8 @@ public class AdminEditNodeController extends ScreenController {
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, floor, "Team " + teamAssignedChoiceBox.getValue().toString());
 
             nodeID.setText(teamAssignedChoiceBox.getValue().toString() + nodeTypeChoiceBox.getValue().toString() + formatInt(nodeTypeCount) + floorChoiceBox.getValue().toString());
+            // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
+            // TODO implement this
         }
     }
 

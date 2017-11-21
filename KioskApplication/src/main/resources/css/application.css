@@ -1,0 +1,69 @@
+/* Colors:
+ * Main - #00589F
+ * Accent: #5084d1
+ * Dark Accent: #003070
+ * Gray 1 - #DDDED0
+ * Grey 2- #F0F1EC
+ * Background: #FFFFFF
+ */
+
+/* TAB PANE STYLES */
+
+.jfx-tab-pane .headers-region {
+    -fx-background-color: #00589F;
+}
+
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #00589F;
+}
+
+.jfx-tab-pane .tab-header-area .jfx-rippler{
+    -fx-rippler-fill: #FFFFFF;
+}
+
+.jfx-tab-pane .tab-selected-line {
+    -fx-background-color: #FFFFFF;
+}
+
+.jfx-date-picker {
+    -jfx-default-color: #00589F;
+}
+
+.jfx-time-picker {
+    -jfx-default-color: #00589F;
+}
+
+.jfx-text-area {
+    -jfx-focus-color: #00589F;
+}
+
+.jfx-text-field {
+    -jfx-focus-color: #00589F;
+}
+
+/* SLIDER */
+
+.jfx-slider-style {
+    -jfx-indicator-position: right;
+}
+
+.jfx-slider-style > .thumb {
+    -fx-background-color: #03a9f4;
+}
+
+.jfx-slider-style .track {
+    -fx-background-color: #ff5252;
+    -fx-pref-height: 5px;
+    -fx-pref-width: 5px;
+}
+
+.jfx-slider-style .sliderValue {
+    -fx-stroke: WHITE;
+    -fx-font-size: 10.0;
+}
+
+/* CUSTOM STYLES */
+
+#transparent {
+    -fx-background: transparent;
+}

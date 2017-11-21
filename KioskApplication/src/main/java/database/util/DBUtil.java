@@ -40,9 +40,7 @@ public class DBUtil {
 
         String sql2 = CREATE_EDGE_TABLE;
 
-        String sql3 = CREATE_REQUESTS_TABLE;
-
-        String sql4 = CREATE_INTERPRETERS_TABLE;
+        String sql3 = CREATE_INTERPRETERS_TABLE;
 
         PreparedStatement pstmt0 = conn.prepareStatement(schema);
         pstmt0.execute();
@@ -52,8 +50,6 @@ public class DBUtil {
         pstmt2.execute();
         PreparedStatement pstmt3 = conn.prepareStatement(sql3);
         pstmt3.execute();
-        PreparedStatement pstmt4 = conn.prepareStatement(sql4);
-        pstmt4.execute();
     }
 
     public static void dropAllTables(Connection conn) {

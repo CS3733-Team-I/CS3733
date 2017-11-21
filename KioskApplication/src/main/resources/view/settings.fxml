@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600" prefWidth="200" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="58.0" layoutY="24.0" text="Settings">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="201.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
+      <RadioButton fx:id="AstarBtn" layoutX="35.0" layoutY="101.0" mnemonicParsing="false" onAction="#OnSASel" text="A*" />
+      <RadioButton fx:id="DijkstraBtn" layoutX="35.0" layoutY="137.0" mnemonicParsing="false" onAction="#OnSASel" text="Dijkstras" />
+      <RadioButton fx:id="BFSBtn" layoutX="35.0" layoutY="174.0" mnemonicParsing="false" onAction="#OnSASel" text="BFS" />
+      <RadioButton fx:id="DFSBtn" layoutX="35.0" layoutY="214.0" mnemonicParsing="false" onAction="#OnSASel" text="DFS" />
+      <Label fx:id="SALabel" layoutX="23.0" layoutY="63.0" text="Search Algorithm" />
+   </children>
+</AnchorPane>
