@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-public class RequestSubmitterController extends ScreenController implements Initializable{
+public class RequestSubmitterController extends ScreenController {
 
     public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -43,9 +43,8 @@ public class RequestSubmitterController extends ScreenController implements Init
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    public void initialize() {
         Image InterpreterIcn = new Image(getClass().getResource("/images/interpreterIcon.png").toString());
         ImageView InterpreterIcnView = new ImageView(InterpreterIcn);
         InterpreterIcnView.setFitHeight(24);
@@ -70,24 +69,17 @@ public class RequestSubmitterController extends ScreenController implements Init
         JanitorIcnView.setFitWidth(24);
         JanitorTab.setGraphic(JanitorIcnView);
 
-        requestTypeTabs.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
-                if (newValue == InterpreterTab) {
-                    currentRequestType = RequestType.INTERPRETER;
-                }
-                else if (newValue == FoodTab) {
-                    System.out.println("FOOD");
-                    currentRequestType = RequestType.FOOD;
-                }
-                else if (newValue == SecurityTab) {
-                    currentRequestType = RequestType.SERUITUY;
-                }
-                else if (newValue == JanitorTab) {
-                    currentRequestType = RequestType.JANITOR;
-                }
+        requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == InterpreterTab) {
+                currentRequestType = RequestType.INTERPRETER;
+            } else if (newValue == FoodTab) {
+                System.out.println("FOOD");
+                currentRequestType = RequestType.FOOD;
+            } else if (newValue == SecurityTab) {
+                currentRequestType = RequestType.SERUITUY;
+            } else if (newValue == JanitorTab) {
+                currentRequestType = RequestType.JANITOR;
             }
-
         });
     }
 
@@ -135,6 +127,11 @@ public class RequestSubmitterController extends ScreenController implements Init
         System.out.println(DatabaseController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+    }
+
+    @FXML
+    public void onCancelPressed() {
+
     }
 
     @Override
