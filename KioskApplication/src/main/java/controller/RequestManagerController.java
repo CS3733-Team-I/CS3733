@@ -2,8 +2,7 @@ package controller;
 
 import database.DatabaseController;
 import database.objects.Edge;
-import entity.InterpreterRequest;
-import entity.Request;
+import database.objects.Request;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,6 +16,7 @@ import utility.NodeFloor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
@@ -43,13 +43,14 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void showRequests(){
         activeRequests.getChildren().clear();
-        LinkedList<Request> requests = RequestEntity.getAllRequests();
+        LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
-            int id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getEmployee() + " ID: " + id);
+            String id = requests.get(i).getRequestID();
+            TextField requestTextField = new TextField(requests.get(i).getassigner() + " ID: " + id);
+            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label typeOfRequest = new Label("Type: generic");
-            Label locationOfRequest = new Label(requests.get(i).getLocation().getLongName());
+            Label locationOfRequest = new Label(location);
             //TODO find what type of reqeust it is
             activeRequests.getChildren().add(requestTextField);
             activeRequests.getChildren().add(typeOfRequest);
@@ -66,8 +67,8 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void onCompletePressed(){
-        int ID = Integer.parseInt(txtID.getText());
-        DatabaseController.deleteRequest(ID);
+        String ID = txtID.getText();
+        RequestEntity.getInstance().deleteRequest(ID);
         txtID.clear();
         System.out.println("Complete Pressed \n");
         showRequests();
