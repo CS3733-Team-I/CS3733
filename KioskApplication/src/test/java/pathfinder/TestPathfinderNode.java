@@ -1,4 +1,4 @@
-package KioskApplication.tests.pathfinderTests;
+package pathfinder;
 
 import database.DatabaseController;
 import database.objects.Edge;
@@ -32,8 +32,6 @@ public class TestPathfinderNode {
     public void setup() {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Build map
-        DatabaseController.initTests();
-
         map = MapEntity.getInstance();
 
 

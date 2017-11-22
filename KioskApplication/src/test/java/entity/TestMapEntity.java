@@ -1,4 +1,4 @@
-package KioskApplication.tests.entity;
+package entity;
 
 import database.DatabaseController;
 import database.objects.Edge;
@@ -22,7 +22,7 @@ public class TestMapEntity {
 
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        DatabaseController.getTestInstance();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);

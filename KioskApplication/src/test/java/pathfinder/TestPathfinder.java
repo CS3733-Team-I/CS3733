@@ -1,21 +1,18 @@
 package pathfinder;
+
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import pathfinder.A_star;
-import pathfinder.BreadthFirst;
-import pathfinder.Pathfinder;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
 import utility.Node.NodeType;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -30,8 +27,6 @@ public class TestPathfinder {
 
     @Before //Build map for testing all algorithms
     public void setup() {
-
-        DatabaseController.initTests();
         map = MapEntity.getInstance();
 
         //TODO implement new test map

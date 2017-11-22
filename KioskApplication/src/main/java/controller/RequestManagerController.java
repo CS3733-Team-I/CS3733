@@ -3,6 +3,7 @@ package controller;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
+import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -21,14 +22,9 @@ public class RequestManagerController extends ScreenController {
         super(parent, map);
     }
 
-    @FXML
-    private VBox activeRequests;
-    @FXML
-    private Label totalRequests;
-    @FXML
-    private TextField txtID;
-
-
+    @FXML private VBox activeRequests;
+    @FXML private Label totalRequests;
+    @FXML private TextField txtID;
 
     @FXML
     void viewRequests() throws IOException {
@@ -44,7 +40,7 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getAssigner());
-            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
+            String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");
