@@ -31,7 +31,7 @@
          </content>
       </ScrollPane>
       <JFXButton fx:id="recenterButton" buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <JFXComboBox fx:id="floorSelector" onAction="#floorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <JFXComboBox fx:id="floorSelector" onAction="#floorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="10.0" />
       <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
          <children>
             <JFXButton buttonType="RAISED" onAction="#zoomInPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
