@@ -91,10 +91,10 @@ public class MapController {
     }
 
     public void clearMap() {
-        nodesPane.getChildren().clear();
-        edgesPane.getChildren().clear();
         waypointPane.getChildren().clear();
         waypoints.clear();
+
+        reloadDisplay();
     }
 
     public void drawNodesOnMap(List<Node> nodes) {

@@ -62,7 +62,7 @@ public class MainWindowController {
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
-/*
+
                 case ADMIN_NODE:
                     controller = new AdminNodeController(this, mapController);
                     break;
@@ -70,7 +70,7 @@ public class MainWindowController {
                 case ADMIN_EDGE:
                     controller = new AdminEdgeController(this, mapController);
                     break;
-*/
+
                 case ADMIN_VIEWREQUEST:
                     controller = new RequestManagerController(this, mapController);
                     break;

@@ -48,7 +48,6 @@ public class AdminSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().reloadDisplay();
         getMapController().setAnchor(0, 200, 0, 0);
     }
 
@@ -68,7 +67,7 @@ public class AdminSidebarController extends ScreenController {
     }
 
     @FXML
-    void onAddPressed() throws IOException {
+    void onNodePressed() throws IOException {
         System.out.println("Add Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_NODE);

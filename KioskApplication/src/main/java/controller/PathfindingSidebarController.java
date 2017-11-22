@@ -4,10 +4,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.AlgorithmSetting;
-import entity.MapEntity;
 import entity.Path;
-import pathfinder.A_star;
-import pathfinder.Pathfinder;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -26,7 +23,6 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
     @FXML private VBox waypointListVbox;
-    @FXML private JFXCheckBox showNodesCheckbox;
 
     LinkedList<Node> currentNodes;
 
@@ -49,16 +45,11 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @FXML
-    void showNodes(){
-        boolean isS = showNodesCheckbox.isSelected();
-        System.out.println(isS);
-        getMapController().setShowNodes(isS);
-    }
-
-    @FXML
     void onResetPressed() {
         currentNodes.clear();
         waypointListVbox.getChildren().clear();
+
+        getMapController().clearMap();
     }
 
     @FXML
@@ -107,6 +98,8 @@ public class PathfindingSidebarController extends ScreenController {
             Label nodeNameLabel = new Label(node.getNodeID());
             nodeNameLabel.setTextFill(Color.BLACK);
             waypointListVbox.getChildren().add(nodeNameLabel);
+
+            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()));
         }
     }
 
@@ -122,17 +115,15 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onScreenChanged() {
-        getMapController().setFloorSelectorPosition(new Point2D(10, 10));
+
     }
 
     @Override
     public void resetScreen() {
         onResetPressed();
 
-        getMapController().setShowNodes(false);
-        getMapController().setShowEdges(false);
+        getMapController().reloadDisplay();
 
-        getMapController().setAnchor(0, 0, 0, 0);
-        getMapController().setFloorSelectorPosition(new Point2D(325, 20));
+        getMapController().setAnchor(0, 300, 0, 0);
     }
 }
