@@ -12,15 +12,13 @@ public class PathfinderNode {
     protected int previousCost;
     protected int totalCost;
     protected PathfinderNode parentNode;
+    private   LinkedList<PathfinderNode> childNodes;
 
     public PathfinderNode(Node node) {
         this.node = node;
-    }
+        this.parentNode = null;
+        this.childNodes = new LinkedList<>();
 
-    //Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
-    public void prepForFrontier(PathfinderNode parent, PathfinderNode endNode){
-        this.parentNode = parent;
-        this.calculateCost(endNode);
     }
 
     //Recursive method to build a path from this node, its parent, etc. back to the start.
@@ -33,26 +31,17 @@ public class PathfinderNode {
         return path;
     }
 
-    //estimate the remaining cost to reach the end node from this node.  Currently uses straight-line distance.
-    public int heuristic(PathfinderNode node){
-        double xDistance = node.getNode().getXcoord() - this.node.getXcoord();
-        double yDistance = node.getNode().getYcoord() - this.node.getYcoord();
-        int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-        return straightLineDistance;
-    }
-
     //Calculates the cost to reach this node and the estimated total cost from here to the end.
-    public void calculateCost(PathfinderNode endNode){
+    public int calculatePreviousCost(PathfinderNode potentialParent){
         //Assuming all edges are straight lines, the cost of the edge from the parent node should be the straight-line
         //distance between the two.
-        int xDistance = Math.abs(this.node.getXcoord() - this.parentNode.getNode().getXcoord());
-        int yDistance = Math.abs(this.node.getYcoord() - this.parentNode.getNode().getYcoord());
+        int xDistance = Math.abs(this.node.getXcoord() - potentialParent.getNode().getXcoord());
+        int yDistance = Math.abs(this.node.getYcoord() - potentialParent.getNode().getYcoord());
         //Calculate distance with Pythagorean theorem
         int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
         //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
         //node to here.
-        this.previousCost = straightLineDistance + this.parentNode.getPreviousCost();
-        this.totalCost = this.previousCost + this.heuristic(endNode);
+        return(straightLineDistance + potentialParent.getPreviousCost());
     }
 
     public Node getNode() {
@@ -63,6 +52,15 @@ public class PathfinderNode {
         return previousCost;
     }
 
+    public LinkedList<PathfinderNode> getConnectedNodes(MapEntity mapEntity){
+        LinkedList<Node> nodeslist = mapEntity.getConnectedNodes(node);
+        LinkedList<PathfinderNode> holder = new LinkedList<>();
+        for(Node n: nodeslist){
+            holder.add(new PathfinderNode(n));
+        }
+        return holder;
+    }
+
 
     public int getTotalCost() {
         return totalCost;
@@ -70,5 +68,39 @@ public class PathfinderNode {
 
     public PathfinderNode getParentNode() {
         return parentNode;
+    }
+
+    public void setParentNode(PathfinderNode parentNode) {
+        if(this.parentNode != null)
+            this.parentNode.removeChild(this);
+        this.parentNode = parentNode;
+        parentNode.addChild(this);
+    }
+
+    public void setPreviousCost(int previousCost) {
+        this.previousCost = previousCost;
+    }
+
+    public void setTotalCost(int totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    private void addChild(PathfinderNode childNode) {
+        this.childNodes.add(childNode);
+    }
+
+    private void removeChild(PathfinderNode childNode){
+        if(this.childNodes.contains(childNode))
+            this.childNodes.remove(childNode);
+    }
+
+    public void recalculateCosts(){
+        this.previousCost = calculatePreviousCost(this.parentNode);
+        for(PathfinderNode node: childNodes)
+            node.recalculateCosts();
+    }
+
+    public LinkedList<PathfinderNode> getChildNodes() {
+        return childNodes;
     }
 }

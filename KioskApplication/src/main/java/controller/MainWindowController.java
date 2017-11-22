@@ -62,23 +62,15 @@ public class MainWindowController {
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
-
-                case ADMIN_ADD_NODE:
-                    controller = new AdminAddNodeController(this, mapController);
+/*
+                case ADMIN_NODE:
+                    controller = new AdminNodeController(this, mapController);
                     break;
 
-                case ADMIN_EDIT_NODE:
-                    controller = new AdminEditNodeController(this, mapController);
+                case ADMIN_EDGE:
+                    controller = new AdminEdgeController(this, mapController);
                     break;
-
-                case ADMIN_ADD_EDGE:
-                    controller = new AdminAddEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_DEL_EDGE:
-                    controller = new AdminDeleteEdgeController(this, mapController);
-                    break;
-
+*/
                 case ADMIN_VIEWREQUEST:
                     controller = new RequestManagerController(this, mapController);
                     break;
@@ -88,7 +80,7 @@ public class MainWindowController {
                     break;
 
                 case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
+                    controller = new AdvancedController(this, mapController);
                     break;
 
                 default:
@@ -208,11 +200,11 @@ public class MainWindowController {
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
+                /*
+            case ADMIN_NODE:
+            case ADMIN_EDGE:
+            */
             case REQUEST_INTERFACE:
-            case ADMIN_EDIT_NODE:
-            case ADMIN_DEL_EDGE:
-            case ADMIN_ADD_NODE:
-            case ADMIN_ADD_EDGE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);

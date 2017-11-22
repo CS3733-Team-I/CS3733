@@ -41,8 +41,7 @@
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
-      </VBox>
-      <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
+      </VBox>      <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
          <children>
             <JFXButton buttonType="RAISED" onAction="#zoomInPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
                <VBox.margin>

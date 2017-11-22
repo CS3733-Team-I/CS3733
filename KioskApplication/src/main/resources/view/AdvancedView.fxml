@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXDrawer fx:id="settingDrawer" defaultDrawerSize="150.0" layoutX="5.0" layoutY="3.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane fx:id="tabAnchor" layoutX="153.0" layoutY="2.0" prefHeight="600.0" prefWidth="1127.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <JFXTabPane id="tab-header-area" fx:id="settingTabPane" layoutX="131.0" layoutY="113.0" prefHeight="600.0" prefWidth="1080.0" style="-fx-background-color: #F0F1EC;" stylesheets="@../css/AdvancedSubTab.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <tabs>
+                  <Tab fx:id="aboutTab">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab fx:id="databaseTab">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab fx:id="displayTab">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab fx:id="pathfindingTab">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1085.0">
+                           <children>
+                              <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="276.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
+                              <Label fx:id="SALabel" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="217.0" text="Search Algorithm">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font></Label>
+                              <VBox layoutX="61.0" layoutY="110.0" prefHeight="227.0" prefWidth="155.0">
+                                 <children>
+                                    <JFXRadioButton fx:id="DFSBtn" onAction="#OnSASel" text="Depth-first Search">
+                                       <VBox.margin>
+                                          <Insets bottom="20.0" />
+                                       </VBox.margin>
+                                    </JFXRadioButton>
+                                    <JFXRadioButton fx:id="BFSBtn" onAction="#OnSASel" text="Breadth-first Search">
+                                       <VBox.margin>
+                                          <Insets bottom="20.0" />
+                                       </VBox.margin>
+                                    </JFXRadioButton>
+                                    <JFXRadioButton fx:id="DijkstraBtn" onAction="#OnSASel" text="Dijkstras">
+                                       <VBox.margin>
+                                          <Insets bottom="20.0" />
+                                       </VBox.margin>
+                                    </JFXRadioButton>
+                                    <JFXRadioButton fx:id="AstarBtn" onAction="#OnSASel" text="A *">
+                                       <VBox.margin>
+                                          <Insets bottom="20.0" />
+                                       </VBox.margin>
+                                    </JFXRadioButton>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </JFXTabPane>
+         </children>
+      </AnchorPane>
+      <JFXHamburger fx:id="settingHam" layoutX="-7.0" layoutY="-7.0" prefHeight="50.0" prefWidth="76.0" />
+   </children>
+</AnchorPane>

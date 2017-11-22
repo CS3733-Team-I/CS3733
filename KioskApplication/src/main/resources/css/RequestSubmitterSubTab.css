@@ -1,0 +1,20 @@
+/*
+    The sub tab bar
+*/
+
+.jfx-tab-pane .headers-region {
+    -fx-background-color:  #0090AD;
+}
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color:  #0090AD;
+}
+.jfx-tab-pane .tab-selected-line {
+    -fx-stroke: #DDDED0;
+    -fx-stroke-width: 20pt;
+}
+
+.tab {
+
+    -fx-pref-width: 50pt
+
+}

@@ -23,21 +23,32 @@ public class RequestSubmitterController extends ScreenController {
 
     public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML private JFXTabPane requestTypeTabs;
+
+    /*language related*/
+    @FXML private Tab interpreterTab;
+    @FXML private JFXComboBox langMenu;
+    /*food related*/
+    @FXML private Tab foodTab;
+    @FXML private JFXComboBox foodMenu;
+    /*security related*/
+    @FXML private Tab securityTab;
+    /*janitor related*/
+    @FXML private Tab janitorTab;
+
+
     @FXML private JFXButton btnSubmit;
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
-    @FXML private JFXComboBox langMenu;
-    @FXML private Tab interpreterTab;
-    @FXML private Tab foodTab;
-    @FXML private Tab securityTab;
-    @FXML private Tab janitorTab;
     @FXML private JFXDatePicker datePicker;
     @FXML private JFXTimePicker timePicker;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
+
+    DatabaseController dbController;
 
     @FXML
     public void initialize() {
@@ -87,7 +98,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = dbController.getNode(location);
         String notes = "";
 
         Language language = Language.NONE;
@@ -120,7 +131,7 @@ public class RequestSubmitterController extends ScreenController {
         //Adds the Interpreter request to the database
 //        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
 //        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        System.out.println(dbController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
