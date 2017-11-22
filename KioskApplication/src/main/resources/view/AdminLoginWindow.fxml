@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="134.0" fitWidth="180.0" layoutX="170.0" layoutY="42.0">
                <image>
-                  <Image url="@../../../../../CS3733/KioskApplication/src/main/resources/images/BWH_logo.jpg" />
+                  <Image url="@CS3733/KioskApplication/src/main/resources/images/BWH_logo.jpg" />
                </image>
             </ImageView>
             <VBox layoutX="170.0" layoutY="176.0" prefHeight="270.0" prefWidth="180.0" style="-fx-background-color: #ffffff;">
