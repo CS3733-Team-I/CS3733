@@ -60,10 +60,6 @@ public class Pathfinder {
             if (endNode == null || endNode.getNodeID() == null)
                 throw new PathfinderException("No defined end node, please define valid end location");
 
-            //Check to make sure the nodes are all on the same floor; if not, throw exception.
-            if(!endNode.getFloor().equals(floor))
-                throw new PathfinderException("Pathfinder across multiple floors not currently supported.");
-
             //Now, find the path from the previous waypoint to this one.
             pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.

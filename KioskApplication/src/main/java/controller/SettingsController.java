@@ -2,10 +2,15 @@ package controller;
 
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
+import entity.AlgorithmSetting;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import pathfinder.A_star;
+import pathfinder.BreadthFirst;
+import pathfinder.DepthFirst;
+import pathfinder.Dijkstra;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
@@ -45,7 +50,25 @@ public class SettingsController extends ScreenController {
 
     @FXML
     void onSearchAlgorithmSelected(){
+        AlgorithmSetting algorithmSetting = AlgorithmSetting.getInstance();
+        switch(searchAlgToggleGroup.getSelectedToggle().getUserData().toString()){
+            case "Astar":
+                algorithmSetting.changeAlgorithm(new A_star());
+                break;
+            case "Dijkstra":
+                algorithmSetting.changeAlgorithm(new Dijkstra());
+                break;
+            case "BFS":
+                algorithmSetting.changeAlgorithm(new BreadthFirst());
+                break;
+            case "DFS":
+                algorithmSetting.changeAlgorithm(new DepthFirst());
+                break;
+            default:
+                break;
+        }
         searchAlgorithmLabel.setText("Search Algorithm: " + searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
+
     }
 
     @FXML
