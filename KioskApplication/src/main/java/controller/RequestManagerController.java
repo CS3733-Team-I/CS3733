@@ -1,7 +1,6 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
-import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.MapEntity;
@@ -15,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
+import utility.Request.RequestProgressStatus;
 
 
 import java.io.IOException;
@@ -33,6 +33,8 @@ public class RequestManagerController extends ScreenController {
     private Label totalRequests;
     @FXML
     private TextField txtID;
+    @FXML
+    private JFXButton completeButton;
 
     @FXML
     void viewRequests() throws IOException {
@@ -42,15 +44,33 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
-    void showRequests(){
+    void newRequests(){
+        completeButton.setText("Assign Selected");
+        showRequests(RequestProgressStatus.TO_DO);
+    }
+
+    @FXML
+    void inProgressRequests(){
+        completeButton.setText("Complete Selected");
+        showRequests(RequestProgressStatus.IN_PROGRESS);
+    }
+
+    @FXML
+    void doneRequests(){
+        completeButton.setText("Delete Selected");
+        showRequests(RequestProgressStatus.DONE);
+    }
+
+    @FXML
+    void showRequests(RequestProgressStatus status){
         activeRequests.getChildren().clear();
-        LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
+        LinkedList<Request> requests = RequestEntity.getInstance().getStatusRequests(status);
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getassigner());
+            TextField requestTextField = new TextField(id);
             String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
-            Label requestID = new Label("ID: " + id);
+            Label requestID = new Label("Employee: " + requests.get(i).getassigner());
             Label typeOfRequest = new Label("Type: Interpreter");
             Label locationOfRequest = new Label(location);
             JFXButton selectID = new JFXButton("Select");
@@ -89,10 +109,24 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void onCompletePressed(){
         String ID = txtID.getText();
-        RequestEntity.getInstance().deleteRequest(ID);
+        Request request = RequestEntity.getInstance().getInterpreterRequest(ID);
+        RequestProgressStatus status = request.getStatus();
+        switch (status){
+            case DONE:
+                RequestEntity.getInstance().deleteRequest(ID);
+                doneRequests();
+                break;
+            case IN_PROGRESS:
+                request.complete();
+                inProgressRequests();
+                break;
+            case TO_DO:
+                request.inProgress();
+                newRequests();
+                break;
+        }
         txtID.clear();
         System.out.println("Complete Pressed \n");
-        showRequests();
     }
 
     @FXML

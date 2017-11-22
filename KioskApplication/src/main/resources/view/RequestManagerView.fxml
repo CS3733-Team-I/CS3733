@@ -33,9 +33,9 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#showRequests" style="-fx-background-color: lightgreen;" text="New" />
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: lightyellow;" text="Current" GridPane.rowIndex="1" />
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: lightblue;" text="Done" GridPane.rowIndex="2" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#newRequests" style="-fx-background-color: lightgreen;" text="New" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#inProgressRequests" style="-fx-background-color: lightyellow;" text="Current" GridPane.rowIndex="1" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#doneRequests" style="-fx-background-color: lightblue;" text="Done" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                            </children>
@@ -88,7 +88,7 @@
                                           <Insets right="5.0" />
                                        </GridPane.margin>
                                     </JFXButton>
-                                    <JFXButton buttonType="RAISED" onAction="#onCompletePressed" text="Delete Selected" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+                                    <JFXButton fx:id="completeButton" buttonType="RAISED" onAction="#onCompletePressed" text="Delete Selected" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
                                     <JFXTextField fx:id="txtID" alignment="CENTER" maxWidth="1.7976931348623157E308" promptText="Select an ID" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                                        <GridPane.margin>
                                           <Insets left="5.0" right="5.0" />

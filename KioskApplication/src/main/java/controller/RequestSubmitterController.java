@@ -110,7 +110,6 @@ public class RequestSubmitterController extends ScreenController {
         //currently a dummy email
         String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
-        LinkedList<Request> allRequests = RequestEntity.getInstance().getAllRequests();
 
 
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + languageSelected + ". Admin Email: " + adminEmail);
@@ -118,6 +117,12 @@ public class RequestSubmitterController extends ScreenController {
         //node ID, employee, notes, language
         RequestEntity.getInstance().submitInterpreterRequest(nodeLocation.getNodeID(), adminEmail, notes, language);
 
+
+        LinkedList<Request> allRequests = RequestEntity.getInstance().getAllRequests();
+
+//        RequestEntity.getInstance().getInterpreterRequest(allRequests.getLast().getRequestID()).inProgress();
+
+        System.out.println(allRequests.getLast().getStatus());
         System.out.println(RequestEntity.getInstance().getAllRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);

@@ -49,6 +49,33 @@ public class RequestEntity {
         return allRequests;
     }
 
+    public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
+        LinkedList<Request> toDoRequests = new LinkedList<>();
+        LinkedList<Request> requests = getAllRequests();
+        for (int i = 0; i < requests.size(); i++) {
+            switch (status){
+                case TO_DO:
+                    if(requests.get(i).getStatus().equals(RequestProgressStatus.TO_DO)){
+                        toDoRequests.add(requests.get(i));
+                    }
+                    break;
+                case IN_PROGRESS:
+                    if(requests.get(i).getStatus().equals(RequestProgressStatus.IN_PROGRESS)){
+                        toDoRequests.add(requests.get(i));
+                    }
+                    break;
+                case DONE:
+                    if(requests.get(i).getStatus().equals(RequestProgressStatus.DONE)){
+                        toDoRequests.add(requests.get(i));
+                    }
+                    break;
+            }
+
+
+        }
+        return toDoRequests;
+    }
+
     private void addInterpreterRequest(InterpreterRequest iR){
         String rID = iR.getRequestID();
         interpreterRequests.put(rID, iR);
