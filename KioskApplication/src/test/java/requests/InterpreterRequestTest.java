@@ -1,4 +1,4 @@
-package KioskApplication.tests.requests;
+package requests;
 
 
 import database.DatabaseController;
@@ -23,7 +23,7 @@ public class InterpreterRequestTest {
 
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        DatabaseController.getTestInstance();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);
@@ -38,7 +38,7 @@ public class InterpreterRequestTest {
         e2 = new Edge("EDGE2", "NODE3", "NODE4");
         e3 = new Edge("EDGE3", "NODE1", "NODE4");
     }
-
+/*
 
     //I want to verify that any information I put into for an interpreter request, I can also get out
     @Test
@@ -89,7 +89,7 @@ public class InterpreterRequestTest {
         m.removeNode(n1.getNodeID());
     }
 
-
+*/
 
     /*
     //New tests for addRequest() method

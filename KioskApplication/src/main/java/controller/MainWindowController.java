@@ -62,7 +62,7 @@ public class MainWindowController {
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
-
+/*
                 case ADMIN_NODE:
                     controller = new AdminNodeController(this, mapController);
                     break;
@@ -70,7 +70,7 @@ public class MainWindowController {
                 case ADMIN_EDGE:
                     controller = new AdminEdgeController(this, mapController);
                     break;
-
+*/
                 case ADMIN_VIEWREQUEST:
                     controller = new RequestManagerController(this, mapController);
                     break;
@@ -200,8 +200,10 @@ public class MainWindowController {
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
+                /*
             case ADMIN_NODE:
             case ADMIN_EDGE:
+            */
             case REQUEST_INTERFACE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:

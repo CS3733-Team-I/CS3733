@@ -19,6 +19,8 @@ public class RequestManagerController extends ScreenController {
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
+
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML
@@ -28,6 +30,8 @@ public class RequestManagerController extends ScreenController {
     @FXML
     private TextField txtID;
 
+
+    private DatabaseController dbController;
 
 
     @FXML
@@ -44,7 +48,7 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getassigner());
-            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
+            String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");
