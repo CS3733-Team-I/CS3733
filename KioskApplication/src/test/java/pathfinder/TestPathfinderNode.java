@@ -8,9 +8,9 @@ import pathfinder.A_star;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderNode;
 import pathfinder.StartNode;
-import utility.NodeBuilding;
-import utility.NodeFloor;
-import utility.NodeType;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
+import utility.Node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 

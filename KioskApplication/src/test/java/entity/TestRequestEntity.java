@@ -46,7 +46,7 @@ public class TestRequestEntity {
     }
 
     @Test
-    public void testAddRemoveInterpreterRequest(){
+    public void testGetDeletedInterpreterRequest(){
         InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
         //adds interpreter request to database and hashmap
         r.submitInterpreterRequest(iR1.getNodeID(),iR1.getAssigner(),iR1.getNote(), iR1.getLanguage());
@@ -66,16 +66,37 @@ public class TestRequestEntity {
     }
 
     @Test
-    public void testCompleteRequest(){
+    public void testGetInterpreterRequestID(){
         InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
         //adds interpreter request to database and hashmap
         r.submitInterpreterRequest(iR1.getNodeID(),iR1.getAssigner(),iR1.getNote(), iR1.getLanguage());
-        //completes request
-        r.completeRequest(iR1.getRequestID());
-        //retrieves completed request
+        //retrieves interpreter request from the hashmap
         InterpreterRequest iR2 = r.getInterpreterRequest(iR1.getRequestID());
-        assertEquals(RequestProgressStatus.DONE,iR2.getStatus());
+        assertEquals(iR1.getRequestID(),iR2.getRequestID());
         r.deleteRequest(iR1.getRequestID());
+    }
+
+    @Test
+    public void testGetInterpreterRequestNodeID(){
+        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        //adds interpreter request to database and hashmap
+        r.submitInterpreterRequest(iR1.getNodeID(),iR1.getAssigner(),iR1.getNote(), iR1.getLanguage());
+        //retrieves interpreter request from the hashmap
+        InterpreterRequest iR2 = r.getInterpreterRequest(iR1.getRequestID());
+        assertEquals(iR1.getNodeID(),iR2.getNodeID());
+        r.deleteRequest(iR1.getRequestID());
+    }
+
+    @Test
+    public void testCompleteRequest(){
+        //adds interpreter request to database and hashmap
+        String iR1ID = r.submitInterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        //completes request
+        r.completeRequest(iR1ID);
+        //retrieves completed request
+        InterpreterRequest iR2 = r.getInterpreterRequest(iR1ID);
+        assertEquals(RequestProgressStatus.DONE,iR2.getStatus());
+        r.deleteRequest(iR1ID);
     }
 
     @Test
@@ -100,5 +121,26 @@ public class TestRequestEntity {
         InterpreterRequest iR2 = r.getInterpreterRequest(iR1.getRequestID());
         assertEquals(iR1,iR2);
         r.deleteRequest(iR1.getRequestID());
+    }
+
+    @Test
+    public void testUpdateRequest(){
+        m.addNode(n2);
+        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        InterpreterRequest iR2 = new InterpreterRequest("NODE2","emp@hospital.com", "Says name is Wilson Wong", Language.CHINESE);
+        //adds interpreter request to database and hashmap
+        r.submitInterpreterRequest(iR1.getNodeID(),iR1.getAssigner(),iR1.getNote(), iR1.getLanguage());
+        r.updateInterpreterRequest(iR1.getRequestID(), iR2.getNodeID(), iR2.getAssigner(), iR2.getNote(), iR2.getSubmittedTime(), iR2.getCompletedTime(), iR2.getStatus(), iR2.getLanguage());
+        InterpreterRequest iR3 = r.getInterpreterRequest(iR1.getRequestID());
+        assertEquals(iR1.getRequestID(),iR3.getRequestID());
+        assertEquals(iR2.getNodeID(),iR3.getNodeID());
+        assertEquals(iR2.getAssigner(),iR3.getAssigner());
+        assertEquals(iR2.getNote(),iR3.getNote());
+        assertEquals(iR2.getSubmittedTime(),iR3.getSubmittedTime());
+        assertEquals(iR2.getCompletedTime(),iR3.getCompletedTime());
+        assertEquals(iR2.getStatus(),iR3.getStatus());
+        assertEquals(iR2.getLanguage(),iR3.getLanguage());
+        r.deleteRequest(iR3.getRequestID());
+        m.removeNode(n2.getNodeID());
     }
 }

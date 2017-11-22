@@ -24,34 +24,25 @@ public abstract class Request {
     }*/
     //Use this to generate new requests
     public Request(String nodeID, String assigner, String note) {
+        long t = System.currentTimeMillis();
         this.nodeID=nodeID;
-        this.submittedTime=new Timestamp(System.currentTimeMillis());
+        this.submittedTime=new Timestamp(t);
         this.assigner=assigner;
         this.note=note;
         this.status=RequestProgressStatus.TO_DO;
-        this.completedTime=null;
+        //TODO: make completed timestamp less hacky, implement a null design pattern possibly
+        this.completedTime=new Timestamp(t-1);
     }
 
-    //Use to retrieve uncompleted requests
-    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, RequestProgressStatus status){
-        this.requestID=requestID;
-        this.nodeID=nodeID;
-        this.assigner=assigner;
-        this.note=note;
-        this.submittedTime=submittedTime;
-        this.completedTime=null;
-        this.status=status;
-    }
-
-    //Use to retrieve completed requests
-    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, Timestamp completedTime){
+    //Use to retrieve requests
+    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, Timestamp completedTime, RequestProgressStatus status){
         this.requestID=requestID;
         this.nodeID=nodeID;
         this.assigner=assigner;
         this.note=note;
         this.submittedTime=submittedTime;
         this.completedTime=completedTime;
-        this.status=RequestProgressStatus.DONE;
+        this.status=status;
     }
 
     public void updateLocation(String nodeID){
@@ -113,5 +104,11 @@ public abstract class Request {
         this.status = status;
     }
 
+    public void setSubmittedTime(Timestamp submittedTime) {
+        this.submittedTime = submittedTime;
+    }
 
+    public void setCompletedTime(Timestamp completedTime) {
+        this.completedTime = completedTime;
+    }
 }

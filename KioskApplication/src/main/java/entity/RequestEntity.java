@@ -6,6 +6,7 @@ import database.objects.Request;
 import utility.Request.Language;
 import utility.Request.RequestProgressStatus;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -53,10 +54,11 @@ public class RequestEntity {
 
     //Each type of Request has its own table in the database
     //TODO: incorporate search class into application so that nodeID can become location
-    public void submitInterpreterRequest(String nodeID, String employee, String note, Language language){
+    public String submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
         interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
         DatabaseController.addInterpreterRequest(iR);
+        return iR.getRequestID();
     }
 
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
@@ -166,13 +168,16 @@ public class RequestEntity {
     }
 
     public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+                                         Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
         oldReq.setNodeID(nodeID);
         oldReq.setAssigner(assigner);
         oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
         //not sure if editing the status is needed
-        //oldReq.setStatus(status);
+        oldReq.setStatus(status);
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
         DatabaseController.updateInterpreterRequest(oldReq);

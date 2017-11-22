@@ -22,6 +22,16 @@ public class SQLStrings {
             " REFERENCES t_nodes ON DELETE CASCADE" +
             ")";
 
+    public static final String CREATE_REQUEST_TABLE_ATTRIBUTES =
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
+                    " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
+                    " REFERENCES t_nodes ON DELETE CASCADE," +
+                    " assigner VARCHAR(30) NOT NULL," +
+                    " note CLOB(256)," +
+                    " submittedTime TIMESTAMP NOT NULL," +
+                    " completedTime TIMESTAMP," +
+                    " status INT NOT NULL";
+
     public static final String CREATE_INTERPRETERS_TABLE = "CREATE TABLE t_interpreters(" +
             //Base attributes
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
@@ -62,7 +72,7 @@ public class SQLStrings {
             " nodeID=?," +
             " assigner=?," +
             " note=?,"+
-            " submittedTime=?"+
+            " submittedTime=?,"+
             " completedTime=?,"+
             " status=?,"+
             " language=?"+

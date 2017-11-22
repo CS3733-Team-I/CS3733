@@ -16,15 +16,9 @@ public class InterpreterRequest extends Request {
         this.requestID = "Int" + this.getSubmittedTime().toString() + nodeID;
     }
 
-    //for retrieving uncomplete iRs
-    public InterpreterRequest(String requestID, String nodeID, String assignee, String note, Timestamp submittedTime, RequestProgressStatus status, Language language) {
-        super(requestID, nodeID, assignee, note, submittedTime, status);
-        this.language = language;
-    }
-
-    //for retrieving complete iRs
-    public InterpreterRequest(String requestID, String nodeID, String assignee, String note, Timestamp submittedTime, Timestamp completedTime, Language language) {
-        super(requestID, nodeID, assignee, note, submittedTime, completedTime);
+    //for retrieving iRs
+    public InterpreterRequest(String requestID, String nodeID, String assignee, String note, Timestamp submittedTime, Timestamp completedTime, RequestProgressStatus status, Language language) {
+        super(requestID, nodeID, assignee, note, submittedTime, completedTime, status);
         this.language = language;
     }
 

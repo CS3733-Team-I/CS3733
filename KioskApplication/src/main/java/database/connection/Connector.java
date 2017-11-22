@@ -192,27 +192,15 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             //for completed InterpreterRequests
-            if(RequestProgressStatus.values()[rs.getInt("status")]==RequestProgressStatus.DONE){
-                interpreterRequest = new InterpreterRequest(
-                        rs.getString("requestID"),
-                        rs.getString("nodeID"),
-                        rs.getString("assigner"),
-                        rs.getString("note"),
-                        rs.getTimestamp("submittedTime"),
-                        rs.getTimestamp("completedTime"),
-                        Language.values()[rs.getInt("language")]);
-            }
-            //for uncompleted InterpreterRequests
-            else{
-                interpreterRequest = new InterpreterRequest(
-                        rs.getString("requestID"),
-                        rs.getString("nodeID"),
-                        rs.getString("assigner"),
-                        rs.getString("note"),
-                        rs.getTimestamp("submittedTime"),
-                        RequestProgressStatus.values()[rs.getInt("status")],
-                        Language.values()[rs.getInt("language")]);
-            }
+           interpreterRequest = new InterpreterRequest(
+                rs.getString("requestID"),
+                rs.getString("nodeID"),
+                rs.getString("assigner"),
+                rs.getString("note"),
+                rs.getTimestamp("submittedTime"),
+                rs.getTimestamp("completedTime"),
+                RequestProgressStatus.values()[rs.getInt("status")],
+                Language.values()[rs.getInt("language")]);
         }
         return interpreterRequest;
     }
@@ -233,27 +221,16 @@ public class Connector {
         while(rs.next()) {
             InterpreterRequest interpreterRequest = null;
             //for completed InterpreterRequests
-            if(RequestProgressStatus.values()[rs.getInt("status")]==RequestProgressStatus.DONE){
-                interpreterRequest = new InterpreterRequest(
-                        rs.getString("requestID"),
-                        rs.getString("nodeID"),
-                        rs.getString("assigner"),
-                        rs.getString("note"),
-                        rs.getTimestamp("submittedTime"),
-                        rs.getTimestamp("completedTime"),
-                        Language.values()[rs.getInt("language")]);
-            }
-            //for uncompleted InterpreterRequests
-            else{
-                interpreterRequest = new InterpreterRequest(
-                        rs.getString("requestID"),
-                        rs.getString("nodeID"),
-                        rs.getString("assigner"),
-                        rs.getString("note"),
-                        rs.getTimestamp("submittedTime"),
-                        RequestProgressStatus.values()[rs.getInt("status")],
-                        Language.values()[rs.getInt("language")]);
-            }
+            interpreterRequest = new InterpreterRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getString("assigner"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    Language.values()[rs.getInt("language")]);
+
             interpreterRequests.add(interpreterRequest);
         }
         return interpreterRequests;
