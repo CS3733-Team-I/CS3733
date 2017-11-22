@@ -145,7 +145,7 @@ public class MapController {
     public void addWaypoint(Point2D location) {
         try {
             // put the pin and set it's info
-            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
+            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
 
             /*Offsets, don't remove*/
             // double pinW = wayPointObject.getBoundsInLocal().getWidth();

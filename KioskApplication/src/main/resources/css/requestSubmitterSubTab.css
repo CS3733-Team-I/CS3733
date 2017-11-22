@@ -2,7 +2,7 @@
     The sub tab bar
 */
 
-.jfx-tab-pane .headers-region {
+/*.jfx-tab-pane .headers-region {
     -fx-background-color:  #0090AD;
 }
 .jfx-tab-pane .tab-header-background {
@@ -14,6 +14,5 @@
 }
 
 .tab {
-    -fx-pref-height: 30pt;
-    -fx-pref-width: 100pt
-}
+    -fx-pref-width: 50pt
+}*/

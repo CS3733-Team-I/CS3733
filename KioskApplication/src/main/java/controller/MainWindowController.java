@@ -80,7 +80,7 @@ public class MainWindowController {
                     break;
 
                 case ADMIN_SETTINGS:
-                    controller = new AdvancedController(this, mapController);
+                    controller = new SettingsController(this, mapController);
                     break;
 
                 default:
@@ -97,7 +97,7 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Employee Login");
+                switchButton.setText("Employee login");
                 switchButton.requestFocus();
                 break;
             default:
@@ -179,7 +179,7 @@ public class MainWindowController {
     }
 
     @FXML
-    private void Login() throws IOException{
+    private void login() throws IOException{
         LoginController loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
         loader.setController(loginController);
@@ -211,7 +211,7 @@ public class MainWindowController {
                 //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.Login();
+                this.login();
                 break;
         }
     }
