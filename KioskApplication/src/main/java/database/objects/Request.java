@@ -32,6 +32,7 @@ public abstract class Request {
         this.status=RequestProgressStatus.TO_DO;
         //TODO: make completed timestamp less hacky, implement a null design pattern possibly
         this.completedTime=new Timestamp(t-1);
+        this.requestID=submittedTime.toString()+nodeID;
     }
 
     //Use to retrieve requests
@@ -77,12 +78,7 @@ public abstract class Request {
         return submittedTime;
     }
     public Timestamp getCompletedTime() {
-        if(this.status==RequestProgressStatus.DONE){
-            return completedTime;
-        }
-        else {
-            return null;
-        }
+        return completedTime;
     }
     public RequestProgressStatus getStatus() {
         return status;

@@ -13,7 +13,7 @@ public class InterpreterRequest extends Request {
     public InterpreterRequest(String nodeID, String employee, String note, Language language) {
         super(nodeID, employee, note);
         this.language = language;
-        this.requestID = "Int" + this.getSubmittedTime().toString() + nodeID;
+        this.requestID = "Int"+this.requestID;
     }
 
     //for retrieving iRs
@@ -33,9 +33,9 @@ public class InterpreterRequest extends Request {
                     this.getAssigner().equals(other.getAssigner())&&
                     this.getNote().equals(other.getNote())&&
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
+                    this.getCompletedTime().equals(other.getCompletedTime())&&
                     this.getStatus()==other.getStatus()&&
-                    this.language==other.getLanguage();//&&
-                    //this.getCompletedTime().equals(other.getCompletedTime());
+                    this.language==other.getLanguage();
         }
         else{
             return false;

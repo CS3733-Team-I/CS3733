@@ -22,25 +22,29 @@ public class SQLStrings {
             " REFERENCES t_nodes ON DELETE CASCADE" +
             ")";
 
-    public static final String CREATE_REQUEST_TABLE_ATTRIBUTES =
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
+    public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
+                    "( requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
                     " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
                     " REFERENCES t_nodes ON DELETE CASCADE," +
-                    " assigner VARCHAR(30) NOT NULL," +
-                    " note CLOB(256)," +
+                    " assigner VARCHAR(50) NOT NULL," +
+                    " note CLOB(280)," +
                     " submittedTime TIMESTAMP NOT NULL," +
-                    " completedTime TIMESTAMP," +
+                    " completedTime TIMESTAMP NOT NULL," +
                     " status INT NOT NULL";
 
-    public static final String CREATE_INTERPRETERS_TABLE = "CREATE TABLE t_interpreters(" +
+    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters";
+
+    public static final String WITH_INTERPRETER_ATTRIBUTES = ", language INT NOT NULL)";
+
+    public static final String YCREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
             //Base attributes
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
             " REFERENCES t_nodes ON DELETE CASCADE," +
-            " assigner VARCHAR(30) NOT NULL," +
+            " assigner VARCHAR(50) NOT NULL," +
             " note CLOB(256)," +
             " submittedTime TIMESTAMP NOT NULL," +
-            " completedTime TIMESTAMP," +
+            " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL," +
             //Unique request attributes
             " language INT NOT NULL" +
@@ -78,6 +82,6 @@ public class SQLStrings {
             " language=?"+
             " where requestID=?";
     public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
-    public static final String INTERPRETER_DELETE = "delete from t_interpreters where requestID=?";
+    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
 }

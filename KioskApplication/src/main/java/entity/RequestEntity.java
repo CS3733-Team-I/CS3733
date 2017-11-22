@@ -28,9 +28,29 @@ public class RequestEntity {
         dbController = DatabaseController.getInstance();
     }
 
+    protected RequestEntity(boolean test) {
+        interpreterRequests=new HashMap<>();
+
+        if(test){
+            dbController = DatabaseController.getTestInstance();
+        }
+        else {
+            dbController = DatabaseController.getInstance();
+        }
+    }
+
     public static RequestEntity getInstance() {
-        if (instance == null) instance = new RequestEntity();
-        return instance;
+        return SingletonHelper.instance;
+    }
+
+    public static RequestEntity getTestInstance(){
+        return SingletonHelper.testInstance;
+    }
+
+    private static class SingletonHelper {
+        private static final RequestEntity instance = new RequestEntity();
+        private static final RequestEntity testInstance = new RequestEntity(true) {
+        };
     }
 
     public void readAllFromDatabase(){

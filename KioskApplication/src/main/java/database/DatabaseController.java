@@ -140,7 +140,7 @@ public class DatabaseController {
         return false;
     }
 
-    public  int addEdge(Edge edge) {
+    public int addEdge(Edge edge) {
         try {
             return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
@@ -151,7 +151,7 @@ public class DatabaseController {
         return 0;
     }
 
-    public  int updateEdge(Edge edge) {
+    public int updateEdge(Edge edge) {
         try{
             return Connector.updateEdge(instanceConnection, edge);
         } catch (SQLException e) {
@@ -184,17 +184,18 @@ public class DatabaseController {
 
 
 
-    public static void addInterpreterRequest(InterpreterRequest iR) {
+    public int addInterpreterRequest(InterpreterRequest iR) {
         try {
-            Connector.insertInterpreter(instanceConnection, iR);
+            return Connector.insertInterpreter(instanceConnection, iR);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }
+        return 0;
     }
     //TODO: Update this method
-    public  int updateInterpreterRequest(InterpreterRequest iR) {
+    public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.updateInterpreter(instanceConnection, iR);
         } catch (SQLException e) {

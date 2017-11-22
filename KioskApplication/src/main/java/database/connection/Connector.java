@@ -153,21 +153,17 @@ public class Connector {
     }
 
     /**TODO: make request database access as generic as possible to reduce workload**/
-    public static void insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        String sql = INTERPRETER_INSERT;
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(6, iR.getStatus().ordinal());
-        pstmt.setInt(8, iR.getLanguage().ordinal());
+    public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT);
         pstmt.setString(1, iR.getRequestID());
         pstmt.setString(2, iR.getNodeID());
         pstmt.setString(3, iR.getAssigner());
         pstmt.setString(4, iR.getNote());
         pstmt.setTimestamp(5, iR.getSubmittedTime());
-        pstmt.setTimestamp(6, null);
+        pstmt.setTimestamp(6, iR.getCompletedTime());
         pstmt.setInt(7, iR.getStatus().ordinal());
         pstmt.setInt(8, iR.getLanguage().ordinal());
-        pstmt.executeUpdate();
-        return;
+        return pstmt.executeUpdate();
     }
 
     public static int updateInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
@@ -195,7 +191,7 @@ public class Connector {
         if(rs.next()) {
             //for completed InterpreterRequests
            interpreterRequest = new InterpreterRequest(
-                rs.getString("requestID"),
+                requestID,
                 rs.getString("nodeID"),
                 rs.getString("assigner"),
                 rs.getString("note"),
@@ -207,11 +203,10 @@ public class Connector {
         return interpreterRequest;
     }
 
-    public static void deleteInterpreter(Connection conn, String requestID) throws SQLException {
-        String sql = INTERPRETER_DELETE;
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+    public static boolean deleteInterpreter(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_DELETE);
         pstmt.setString(1, requestID);
-        pstmt.executeUpdate();
+        return pstmt.execute();
     }
 
     public static LinkedList<InterpreterRequest> selectAllInterpreters(Connection conn) throws SQLException {

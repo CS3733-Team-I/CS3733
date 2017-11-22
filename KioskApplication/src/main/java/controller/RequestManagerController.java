@@ -47,7 +47,7 @@ public class RequestManagerController extends ScreenController {
         LinkedList<Request> requests = RequestEntity.getInstance().getAllRequests();
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getassigner());
+            TextField requestTextField = new TextField(requests.get(i).getAssigner());
             String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
