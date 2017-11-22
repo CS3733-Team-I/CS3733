@@ -27,7 +27,7 @@ public class TestPathfinder {
     @BeforeClass //Build map for testing all algorithms
     public static void setup() {
 
-        DatabaseController.initTests();
+        DatabaseController.getTestInstance();
         map = MapEntity.getInstance();
 
         /* New Map Structure

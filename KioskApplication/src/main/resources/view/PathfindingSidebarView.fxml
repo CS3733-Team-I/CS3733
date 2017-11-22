@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Rectangle arcHeight="10.0" arcWidth="10.0" fill="WHITE" height="45.0" layoutX="10.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" width="305.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <Label layoutX="10.0" layoutY="268.0" prefHeight="30.0" prefWidth="125.0" text="Current Waypoints:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="268.0" />
-      <JFXButton fx:id="btnSubmit" layoutX="220.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #2196f3;" text="Search" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="20.0">
+      <JFXButton fx:id="btnSubmit" layoutX="220.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #2196f3;" text="Search" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </JFXButton>
-      <JFXTextField layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="Search" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
+      <JFXTextField layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="Search" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <JFXButton layoutX="109.0" layoutY="273.0" onAction="#btGeneratePathPressed" ripplerFill="BLACK" style="-fx-background-color: lightgreen;" text="Navigate" AnchorPane.leftAnchor="125.0" AnchorPane.topAnchor="270.0" />
       <JFXButton layoutX="189.0" layoutY="271.0" onAction="#onResetPressed" ripplerFill="BLACK" style="-fx-background-color: #ef5350;" text="Clear Path" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="271.0" />
-      <JFXCheckBox fx:id="showNodesCheckbox" layoutX="10.0" layoutY="55.0" onAction="#showNodes" text="Show Nodes" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
-      <AnchorPane fx:id="waypointsContainer" layoutX="10.0" layoutY="296.0" prefHeight="300.0" prefWidth="275.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0">
+      <AnchorPane fx:id="waypointsContainer" layoutX="10.0" layoutY="296.0" prefHeight="300.0" prefWidth="275.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="300.0">
          <children>
             <VBox id="transparent" fx:id="waypointListVbox" centerShape="false" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>

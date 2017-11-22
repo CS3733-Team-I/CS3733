@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
@@ -17,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import utility.Node.NodeFloor;
@@ -37,6 +39,10 @@ public class MapController {
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+
+    @FXML private VBox optionsBox;
+    @FXML private JFXCheckBox showNodesBox;
+    @FXML private JFXCheckBox showEdgesBox;
 
     private Group zoomGroup;
 
@@ -78,11 +84,17 @@ public class MapController {
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
     }
 
+
+    public void reloadDisplay() {
+        showEdges();
+        showNodes();
+    }
+
     public void clearMap() {
-        nodesPane.getChildren().clear();
-        edgesPane.getChildren().clear();
         waypointPane.getChildren().clear();
         waypoints.clear();
+
+        reloadDisplay();
     }
 
     public void drawNodesOnMap(List<Node> nodes) {
@@ -145,7 +157,7 @@ public class MapController {
     public void addWaypoint(Point2D location) {
         try {
             // put the pin and set it's info
-            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/wayPointView.fxml"));
+            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
 
             /*Offsets, don't remove*/
             // double pinW = wayPointObject.getBoundsInLocal().getWidth();
@@ -300,5 +312,17 @@ public class MapController {
         setShowEdges(showEdges);
 
         parent.onMapFloorChanged(selectedFloor);
+    }
+
+    @FXML
+    void showNodes() {
+        boolean selected = showNodesBox.isSelected();
+        setShowNodes(selected);
+    }
+
+    @FXML
+    void showEdges() {
+        boolean selected = showEdgesBox.isSelected();
+        setShowEdges(selected);
     }
 }
