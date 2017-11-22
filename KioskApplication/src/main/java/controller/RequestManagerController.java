@@ -90,10 +90,6 @@ public class RequestManagerController extends ScreenController {
         }
     }
 
-    public void btncode(ActionEvent e){
-
-    }
-
     @FXML
     void selectIDPressed(String id){
         txtID.setText(id);
