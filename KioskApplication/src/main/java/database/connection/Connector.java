@@ -227,14 +227,14 @@ public class Connector {
     public static void insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
         String sql = INTERPRETER_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(6, iR.getStatus().ordinal());
-        pstmt.setInt(8, iR.getLanguage().ordinal());
         pstmt.setString(1, iR.getRequestID());
         pstmt.setString(2, iR.getNodeID());
+        pstmt.setTimestamp(3, iR.getSubmittedTime());
         pstmt.setString(4, iR.getassigner());
         pstmt.setString(5, iR.getNote());
-        pstmt.setTimestamp(3, iR.getSubmittedTime());
-        pstmt.setTimestamp(7, null);
+        pstmt.setInt(6, iR.getStatus().ordinal());
+        pstmt.setTimestamp(7, new Timestamp(0));
+        pstmt.setInt(8, iR.getLanguage().ordinal());
         pstmt.executeUpdate();
         return;
     }

@@ -5,6 +5,7 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import database.objects.Request;
+import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -87,7 +88,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = MapEntity.getInstance().getNode(location);
         String notes = "";
 
         Language language = Language.NONE;
@@ -152,6 +153,6 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0,200,0,0);
+        getMapController().setAnchor(0,235,0,0);
     }
 }

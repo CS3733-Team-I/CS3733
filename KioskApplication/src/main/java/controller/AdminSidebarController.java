@@ -14,8 +14,6 @@ import java.io.IOException;
 public class AdminSidebarController extends ScreenController {
     @FXML private Label AdminInfo;
     @FXML private Button infoButton;
-    @FXML private CheckBox showNodes;
-    @FXML private CheckBox showEdges;
     @FXML private MenuButton requestMenu;
     @FXML private MenuItem interpreterSelect;
 
@@ -50,8 +48,6 @@ public class AdminSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setShowNodes(showNodes.isSelected());
-        getMapController().setShowEdges(showEdges.isSelected());
         getMapController().setAnchor(0, 200, 0, 0);
     }
 
@@ -71,40 +67,15 @@ public class AdminSidebarController extends ScreenController {
     }
 
     @FXML
-    void showNodes(){
-        boolean isS = showNodes.isSelected();
-        System.out.println(isS);
-        getMapController().setShowNodes(isS);
-    }
-
-    @FXML
-    void showEdges(){
-        boolean isS = showEdges.isSelected();
-        getMapController().setShowEdges(isS);
-    }
-
-    @FXML
-    void onAddPressed() throws IOException {
+    void onNodePressed() throws IOException {
         System.out.println("Add Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_ADD_NODE);
+        getParent().switchToScreen(ApplicationScreen.ADMIN_NODE);
     }
 
     @FXML
-    void onEditPressed() throws IOException {
-        System.out.println("Edit Pressed\n");
-
-        getParent().switchToScreen(ApplicationScreen.ADMIN_EDIT_NODE);
-    }
-
-    @FXML
-    void onAddEdgePressed() throws IOException{
-        getParent().switchToScreen(ApplicationScreen.ADMIN_ADD_EDGE);
-    }
-
-    @FXML
-    void onDeleteEdgePressed() throws IOException{
-        getParent().switchToScreen(ApplicationScreen.ADMIN_DEL_EDGE);
+    void onEdgePressed() throws IOException{
+        getParent().switchToScreen(ApplicationScreen.ADMIN_EDGE);
     }
 
     @FXML
@@ -150,8 +121,7 @@ public class AdminSidebarController extends ScreenController {
 
         MapEntity.getInstance().readAllFromDatabase();
 
-        getMapController().setShowNodes(showNodes.isSelected());
-        getMapController().setShowEdges(showEdges.isSelected());
+        getMapController().reloadDisplay();
     }
 
     @FXML

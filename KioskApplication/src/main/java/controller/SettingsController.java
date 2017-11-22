@@ -1,42 +1,51 @@
 package controller;
 
+import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.ToggleGroup;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
+import java.io.IOException;
+
 public class SettingsController extends ScreenController {
-    @FXML private Label SALabel;
 
-    @FXML private RadioButton AstarBtn;
+    @FXML private JFXTabPane settingTabPane;
+    @FXML private Tab databaseTab;
+    @FXML private Tab displayTab;
+    @FXML private Tab pathfindingTab;
+    @FXML private Tab aboutTab;
 
-    @FXML private RadioButton DijkstraBtn;
+    @FXML private Label searchAlgorithmLabel;
+    @FXML private RadioButton astarButton;
+    @FXML private RadioButton dijkstraButton;
+    @FXML private RadioButton bfsButton;
+    @FXML private RadioButton dfsButton;
 
-    @FXML private RadioButton BFSBtn;
-
-    @FXML private RadioButton DFSBtn;
+    ToggleGroup searchAlgToggleGroup = new ToggleGroup();
 
     public SettingsController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
     }
-    ToggleGroup g = new ToggleGroup();
+
+
+    public void initialize() throws IOException{
+        astarButton.setToggleGroup(searchAlgToggleGroup);
+        astarButton.setUserData("Astar");
+        dijkstraButton.setToggleGroup(searchAlgToggleGroup);
+        dijkstraButton.setUserData("Dijkstra");
+        bfsButton.setToggleGroup(searchAlgToggleGroup);
+        bfsButton.setUserData("BFS");
+        dfsButton.setToggleGroup(searchAlgToggleGroup);
+        dfsButton.setUserData("DFS");
+    }
 
     @FXML
-    void initialize(){
-        AstarBtn.setToggleGroup(g);
-        AstarBtn.setUserData("Astar");
-        DijkstraBtn.setToggleGroup(g);
-        DijkstraBtn.setUserData("Dijkstra");
-        BFSBtn.setToggleGroup(g);
-        BFSBtn.setUserData("BFS");
-        DFSBtn.setToggleGroup(g);
-        DFSBtn.setUserData("DFS");
-
+    void onSearchAlgorithmSelected(){
+        searchAlgorithmLabel.setText("Search Algorithm: " + searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
     @FXML
@@ -46,17 +55,16 @@ public class SettingsController extends ScreenController {
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
 
-    @FXML
-    void OnSASel(){
-        SALabel.setText("Search Algorithm: " + g.getSelectedToggle().getUserData().toString());
-    }
-
     @Override
     public Node getContentView() {
         if (contentView == null) {
-            contentView = loadView("/view/settings.fxml");
+            contentView = loadView("/view/SettingsView.fxml");
         }
         return contentView;
+    }
+
+    private void resetPressed() {
+        System.out.println("Reset");
     }
 
     @Override
@@ -73,5 +81,6 @@ public class SettingsController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setAnchor(0, 0, 0, 0);
     }
 }

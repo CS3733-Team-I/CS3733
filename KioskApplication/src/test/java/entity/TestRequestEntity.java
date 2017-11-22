@@ -23,7 +23,7 @@ public class TestRequestEntity {
 
     @Before
     public void setup(){
-        DatabaseController.initTests();
+        DatabaseController.getTestInstance();
         r = RequestEntity.getInstance();
         m = MapEntity.getInstance();
 

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
+import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,8 +34,6 @@ public class RequestManagerController extends ScreenController {
     @FXML
     private TextField txtID;
 
-
-
     @FXML
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
@@ -49,7 +48,7 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getassigner());
-            String location = DatabaseController.getNode(requests.get(i).getNodeID()).getLongName();
+            String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");

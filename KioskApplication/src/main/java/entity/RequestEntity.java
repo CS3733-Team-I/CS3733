@@ -17,8 +17,14 @@ public class RequestEntity {
     //private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
 
-    private RequestEntity() {
+    private static RequestEntity instance = null;
+
+    private DatabaseController dbController;
+
+    protected RequestEntity() {
         interpreterRequests=new HashMap<>();
+
+        dbController = DatabaseController.getInstance();
     }
 
     private static class RequestEntitySingleton{
@@ -30,7 +36,7 @@ public class RequestEntity {
     }
 
     public void readAllFromDatabase(){
-        LinkedList<InterpreterRequest> interpreterRequests = DatabaseController.getAllInterpreterRequests();
+        LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for(InterpreterRequest iR:interpreterRequests)
             addInterpreterRequest(iR);
     }
@@ -53,7 +59,7 @@ public class RequestEntity {
     public void submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
         interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
-        DatabaseController.addInterpreterRequest(iR);
+        dbController.addInterpreterRequest(iR);
     }
 
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
@@ -75,7 +81,7 @@ public class RequestEntity {
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             interpreterRequests.remove(requestID);
-            DatabaseController.deleteInterpreterRequest(requestID);
+            dbController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
@@ -113,6 +119,6 @@ public class RequestEntity {
         //oldReq.setStatus(status);
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
-        DatabaseController.updateInterpreterRequest(oldReq);
+        dbController.updateInterpreterRequest(oldReq);
     }
 }

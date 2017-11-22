@@ -3,7 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.MapEntity;
+import entity.AlgorithmSetting;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
@@ -22,7 +23,6 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
     @FXML private VBox waypointListVbox;
-    @FXML private JFXCheckBox showNodesCheckbox;
 
     LinkedList<Node> currentNodes;
 
@@ -30,6 +30,10 @@ public class PathfindingSidebarController extends ScreenController {
         super(parent, map);
 
         currentNodes = new LinkedList<>();
+    }
+
+    public void setPathfinderalg(int pathfinderalg){
+
     }
 
     @FXML
@@ -41,24 +45,25 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @FXML
-    void showNodes(){
-        boolean isS = showNodesCheckbox.isSelected();
-        System.out.println(isS);
-        getMapController().setShowNodes(isS);
-    }
-
-    @FXML
     void onResetPressed() {
         currentNodes.clear();
         waypointListVbox.getChildren().clear();
+
+        getMapController().clearMap();
     }
 
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            MapEntity map = MapEntity.getInstance();
-            Path path = Pathfinder.generatePath(currentNodes);
-            getMapController().drawPath(path);
+            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
+            try{
+                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().drawPath(path);
+            }
+            catch(PathfinderException exception){
+                System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+            }
+
 
             waypointListVbox.getChildren().clear();
 
@@ -93,6 +98,8 @@ public class PathfindingSidebarController extends ScreenController {
             Label nodeNameLabel = new Label(node.getNodeID());
             nodeNameLabel.setTextFill(Color.BLACK);
             waypointListVbox.getChildren().add(nodeNameLabel);
+
+            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()));
         }
     }
 
@@ -108,17 +115,15 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onScreenChanged() {
-        getMapController().setFloorSelectorPosition(new Point2D(10, 10));
+
     }
 
     @Override
     public void resetScreen() {
         onResetPressed();
-        showNodesCheckbox.setSelected(false);
-        getMapController().setShowNodes(false);
-        getMapController().setShowEdges(false);
 
-        getMapController().setAnchor(0, 0, 0, 0);
-        getMapController().setFloorSelectorPosition(new Point2D(325, 20));
+        getMapController().reloadDisplay();
+
+        getMapController().setAnchor(0, 300, 0, 0);
     }
 }

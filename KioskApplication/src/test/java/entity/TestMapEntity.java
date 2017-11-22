@@ -1,4 +1,4 @@
-package KioskApplication.tests.entity;
+package entity;
 
 import database.DatabaseController;
 import database.objects.Edge;
@@ -17,18 +17,19 @@ import static org.junit.Assert.assertTrue;
 public class TestMapEntity {
 
     private MapEntity m;
-    private Node n1,n2,n3,n4;
+    private Node n1,n2,n3,n4,n5;
     private Edge e1,e2,e3;
 
     @Before
     public void setup() {
-        DatabaseController.initTests();
+        DatabaseController.getTestInstance();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);
         n2 = new Node("NODE2", NodeFloor.LOWERLEVEL_1);
         n3 = new Node("NODE3", NodeFloor.LOWERLEVEL_2);
         n4 = new Node("NODE4", NodeFloor.FIRST);
+        n5 = new Node("Node5", NodeFloor.FIRST);
 
         e1 = new Edge("EDGE1", "NODE1", "NODE2");
         e2 = new Edge("EDGE2", "NODE3", "NODE4");
@@ -113,6 +114,9 @@ public class TestMapEntity {
         //Test to see which edges are connected to node 4
         ArrayList<Edge> edgesOfNode4 = m.getEdges(n4);
         assertTrue(edgesOfNode4.contains(e2) && edgesOfNode4.contains(e3));
+
+        //Test that node 5 has no edges
+        assertTrue(m.getEdges(n5).size() == 0);
 
         m.removeEdge(e1.getEdgeID());
         m.removeEdge(e2.getEdgeID());

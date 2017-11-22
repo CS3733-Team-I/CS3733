@@ -63,20 +63,12 @@ public class MainWindowController {
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
 
-                case ADMIN_ADD_NODE:
-                    controller = new AdminAddNodeController(this, mapController);
+                case ADMIN_NODE:
+                    controller = new AdminNodeController(this, mapController);
                     break;
 
-                case ADMIN_EDIT_NODE:
-                    controller = new AdminEditNodeController(this, mapController);
-                    break;
-
-                case ADMIN_ADD_EDGE:
-                    controller = new AdminAddEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_DEL_EDGE:
-                    controller = new AdminDeleteEdgeController(this, mapController);
+                case ADMIN_EDGE:
+                    controller = new AdminEdgeController(this, mapController);
                     break;
 
                 case ADMIN_VIEWREQUEST:
@@ -105,7 +97,7 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Employee Login");
+                switchButton.setText("Employee login");
                 switchButton.requestFocus();
                 break;
             default:
@@ -187,7 +179,7 @@ public class MainWindowController {
     }
 
     @FXML
-    private void Login() throws IOException{
+    private void login() throws IOException{
         LoginController loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
         loader.setController(loginController);
@@ -208,11 +200,11 @@ public class MainWindowController {
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
             case ADMIN_VIEWREQUEST:
+                /*
+            case ADMIN_NODE:
+            case ADMIN_EDGE:
+            */
             case REQUEST_INTERFACE:
-            case ADMIN_EDIT_NODE:
-            case ADMIN_DEL_EDGE:
-            case ADMIN_ADD_NODE:
-            case ADMIN_ADD_EDGE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
@@ -221,7 +213,7 @@ public class MainWindowController {
                 //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.Login();
+                this.login();
                 break;
         }
     }
