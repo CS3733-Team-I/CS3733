@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
@@ -17,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import utility.Node.NodeFloor;
@@ -37,6 +39,10 @@ public class MapController {
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+
+    @FXML private VBox optionsBox;
+    @FXML private JFXCheckBox showNodesBox;
+    @FXML private JFXCheckBox showEdgesBox;
 
     private Group zoomGroup;
 
@@ -76,6 +82,12 @@ public class MapController {
         this.edgesPane.getChildren().clear();
         if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+    }
+
+
+    public void reloadDisplay() {
+        showEdges();
+        showNodes();
     }
 
     public void clearMap() {
@@ -300,5 +312,17 @@ public class MapController {
         setShowEdges(showEdges);
 
         parent.onMapFloorChanged(selectedFloor);
+    }
+
+    @FXML
+    void showNodes() {
+        boolean selected = showNodesBox.isSelected();
+        setShowNodes(selected);
+    }
+
+    @FXML
+    void showEdges() {
+        boolean selected = showEdgesBox.isSelected();
+        setShowEdges(selected);
     }
 }
