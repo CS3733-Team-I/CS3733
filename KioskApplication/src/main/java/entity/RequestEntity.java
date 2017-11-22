@@ -3,6 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
+import database.objects.SecurityRequest;
 import utility.Request.Language;
 import utility.Request.RequestProgressStatus;
 
@@ -11,7 +12,7 @@ import java.util.LinkedList;
 
 public class RequestEntity {
     private HashMap<String,InterpreterRequest> interpreterRequests;
-    //private HashMap<String,SecurityRequest> securityRequests;
+    private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,FoodRequest> foodRequests;
     //private HashMap<String,JanitorRequest> janitorRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
@@ -23,6 +24,7 @@ public class RequestEntity {
 
     protected RequestEntity() {
         interpreterRequests=new HashMap<>();
+        securityRequests=new HashMap<>();
 
         dbController = DatabaseController.getInstance();
     }
@@ -45,6 +47,9 @@ public class RequestEntity {
         LinkedList<Request> allRequests = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
             allRequests.add(iR);
+        }
+        for(SecurityRequest sR: securityRequests.values()){
+            allRequests.add(sR);
         }
         return allRequests;
     }
@@ -80,6 +85,13 @@ public class RequestEntity {
         String rID = iR.getRequestID();
         interpreterRequests.put(rID, iR);
     }
+
+    private void addSecurityRequest(SecurityRequest securityRequest){
+        String rID = securityRequest.getRequestID();
+        securityRequests.put(rID, securityRequest);
+    }
+
+    //TODO: stopped here finish with adding securityRequests
 
     //Each type of Request has its own table in the database
     //TODO: incorporate search class into application so that nodeID can become location
