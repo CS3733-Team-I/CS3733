@@ -26,14 +26,22 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @FXML private JFXTabPane requestTypeTabs;
+
+    /*language related*/
+    @FXML private Tab interpreterTab;
+    @FXML private JFXComboBox langMenu;
+    /*food related*/
+    @FXML private Tab foodTab;
+    @FXML private JFXComboBox foodMenu;
+    /*security related*/
+    @FXML private Tab securityTab;
+    /*janitor related*/
+    @FXML private Tab janitorTab;
+
+
     @FXML private JFXButton btnSubmit;
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
-    @FXML private JFXComboBox langMenu;
-    @FXML private Tab interpreterTab;
-    @FXML private Tab foodTab;
-    @FXML private Tab securityTab;
-    @FXML private Tab janitorTab;
     @FXML private JFXDatePicker datePicker;
     @FXML private JFXTimePicker timePicker;
 
