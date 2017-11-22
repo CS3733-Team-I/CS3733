@@ -20,8 +20,12 @@ public class RequestEntity {
 
     private static RequestEntity instance = null;
 
+    private DatabaseController dbController;
+
     protected RequestEntity() {
         interpreterRequests=new HashMap<>();
+
+        dbController = DatabaseController.getInstance();
     }
 
     public static RequestEntity getInstance() {
@@ -30,7 +34,7 @@ public class RequestEntity {
     }
 
     public void readAllFromDatabase(){
-        LinkedList<InterpreterRequest> interpreterRequests = DatabaseController.getAllInterpreterRequests();
+        LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for(InterpreterRequest iR:interpreterRequests) {
             String rID = iR.getRequestID();
             //updates the entire hashmap when called
@@ -57,7 +61,7 @@ public class RequestEntity {
     public String submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
         interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
-        DatabaseController.addInterpreterRequest(iR);
+        dbController.addInterpreterRequest(iR);
         return iR.getRequestID();
     }
 
@@ -86,7 +90,7 @@ public class RequestEntity {
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             interpreterRequests.remove(requestID);
-            DatabaseController.deleteInterpreterRequest(requestID);
+            dbController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
@@ -114,7 +118,7 @@ public class RequestEntity {
         String requestType = requestID.substring(0,2);
         if(requestType.equals("Int")){
             interpreterRequests.remove(requestID);
-            DatabaseController.deleteInterpreterRequest(requestID);
+            dbController.deleteInterpreterRequest(requestID);
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
@@ -144,7 +148,7 @@ public class RequestEntity {
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.complete();
             interpreterRequests.replace(requestID,iR);
-            DatabaseController.updateInterpreterRequest(iR);
+            dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
@@ -180,6 +184,6 @@ public class RequestEntity {
         oldReq.setStatus(status);
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
-        DatabaseController.updateInterpreterRequest(oldReq);
+        dbController.updateInterpreterRequest(oldReq);
     }
 }

@@ -23,6 +23,7 @@ public class RequestSubmitterController extends ScreenController {
 
     public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML private JFXTabPane requestTypeTabs;
@@ -47,28 +48,34 @@ public class RequestSubmitterController extends ScreenController {
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
+    DatabaseController dbController;
+
     @FXML
     public void initialize() {
         Image interpreterIcon = new Image(getClass().getResource("/images/icons/interpreterIcon.png").toString());
         ImageView interpreterIconView = new ImageView(interpreterIcon);
+        interpreterIconView.setRotate(90);
         interpreterIconView.setFitHeight(24);
         interpreterIconView.setFitWidth(24);
         interpreterTab.setGraphic(interpreterIconView);
 
         Image foodIcon = new Image(getClass().getResource("/images/icons/foodIcon.png").toString());
         ImageView foodIconView = new ImageView(foodIcon);
+        foodIconView.setRotate(90);
         foodIconView.setFitHeight(24);
         foodIconView.setFitWidth(24);
         foodTab.setGraphic(foodIconView);
 
         Image securityIcon = new Image(getClass().getResource("/images/icons/securityIcon.png").toString());
         ImageView securityIconView = new ImageView(securityIcon);
+        securityIconView.setRotate(90);
         securityIconView.setFitHeight(24);
         securityIconView.setFitWidth(24);
         securityTab.setGraphic(securityIconView);
 
         Image janitorIcon = new Image(getClass().getResource("/images/icons/janitor.png").toString());
         ImageView janitorIconView = new ImageView(janitorIcon);
+        janitorIconView.setRotate(90);
         janitorIconView.setFitHeight(24);
         janitorIconView.setFitWidth(24);
         janitorTab.setGraphic(janitorIconView);
@@ -95,7 +102,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        Node nodeLocation = DatabaseController.getNode(location);
+        Node nodeLocation = dbController.getNode(location);
         String notes = "";
 
         Language language = Language.NONE;
@@ -128,7 +135,7 @@ public class RequestSubmitterController extends ScreenController {
         //Adds the Interpreter request to the database
 //        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
 //        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(DatabaseController.getAllInterpreterRequests());
+        System.out.println(dbController.getAllInterpreterRequests());
 
         getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
     }
@@ -163,6 +170,6 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0,200,0,0);
+        getMapController().setAnchor(0,235,0,0);
     }
 }

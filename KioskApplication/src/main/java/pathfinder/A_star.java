@@ -57,7 +57,7 @@ public class A_star implements SearchAlgorithm {
 
             //Check to see if there's anywhere in the frontier left to search.
             if (frontierNodes.isEmpty())
-                break;
+                throw new PathfinderException("No path found.");
 
             //If there is, check which node in the frontier has the lowest estimated cost.  Start by pick any node from
             //the frontier.  TODO: this <for-loop, break after one iteration> is a bad way to pick one item from a list;
@@ -115,12 +115,7 @@ public class A_star implements SearchAlgorithm {
         }
 
         PathfinderNode lastNode = lowestCost;
-
         LinkedList<Edge> pathEdges = lastNode.buildPath();
-
-        // handler for no path found
-        if(pathEdges == null)
-            throw new PathfinderException("No path found.");
         // return generated path of nodes
         return pathEdges;
     }

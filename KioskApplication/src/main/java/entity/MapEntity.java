@@ -13,6 +13,8 @@ public class MapEntity implements IMapEntity {
     private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
 
+    private DatabaseController dbController;
+
     private static class MapEntitySingleton {
         private static final MapEntity _instance = new MapEntity();
 
@@ -21,6 +23,8 @@ public class MapEntity implements IMapEntity {
     private MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
+
+        dbController = DatabaseController.getInstance();
     }
 
     public static MapEntity getInstance() {
@@ -29,11 +33,11 @@ public class MapEntity implements IMapEntity {
 
     // TODO do this somewhere else, and be more smart about our database access
     public void readAllFromDatabase() {
-        ArrayList<Node> nodes = DatabaseController.getAllNodes();
+        ArrayList<Node> nodes = dbController.getAllNodes();
         for (Node node : nodes)
             addNode(node);
 
-        ArrayList<Edge> edges = DatabaseController.getAllEdges();
+        ArrayList<Edge> edges = dbController.getAllEdges();
         for (Edge edge : edges)
             addEdge(edge);
     }
@@ -84,7 +88,7 @@ public class MapEntity implements IMapEntity {
     }
 
     public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
-        return DatabaseController.getNodeTypeCount(nodeType, floor, teamAssigned);
+        return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
     }
 
     // TODO this is an expensive function, should probably rewrite
@@ -122,12 +126,12 @@ public class MapEntity implements IMapEntity {
 
     public void addEdge(Edge e) {
         edges.put(e.getEdgeID(),e);
-        DatabaseController.addEdge(e);
+        dbController.addEdge(e);
     }
 
     public void editEdge(Edge e) {
         edges.put(e.getEdgeID(), e);
-        DatabaseController.updateEdge(e);
+        dbController.updateEdge(e);
     }
 
     public Edge getEdge(String s) {
@@ -136,7 +140,7 @@ public class MapEntity implements IMapEntity {
 
         // If edge doesn't exist, attempt to load it from the database
         if (edge == null) {
-            edge = DatabaseController.getEdge(s);
+            edge = dbController.getEdge(s);
             // Add edge to local data if found
             if (edge != null) edges.put(s, edge);
         }
@@ -147,7 +151,7 @@ public class MapEntity implements IMapEntity {
     // TODO pass edge as param instead of string
     public void removeEdge(String s) {
         edges.remove(s);
-        DatabaseController.removeEdge(new Edge(s, "", ""));
+        dbController.removeEdge(new Edge(s, "", ""));
     }
 
     public ArrayList<Edge> getEdges(Node n) {

@@ -47,27 +47,42 @@ public class DepthFirst implements SearchAlgorithm{
         visitedNodes.add(startingNode);
 
         //throw an exception if there is no where else to go
-        LinkedList<Node> connected = map.getConnectedNodes(startingNode);
-        if(connected.size() == 0 ||
-           (connected.size() == 1 && visitedNodes.contains(connected.get(0)))
-          ) {
+        if(!isOpenConnectedNode(startingNode,visitedNodes)) {
             throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
         }
 
         //iterate through the connected nodes and see if there is a path to the end
         LinkedList<Edge> newPath;
+
+        LinkedList<Node> connected = map.getConnectedNodes(startingNode);
         for(Node n: connected) {
             if(!visitedNodes.contains(n)) {
                 try {
                     newPath = findPath(n, endingNode, visitedNodes);
+                    returnList.add(map.getConnectingEdge(startingNode,n));
+                    //System.out.println(returnList + " " + n.getNodeID());
                     returnList.addAll(newPath);
                     return returnList;
                 } catch (DeadEndException e) {
-                    System.out.println("Ran into a dead end at node " + e.getMessage());
+                    //System.out.println("Ran into a dead end at node " + e.getMessage());
                     visitedNodes.addAll(e.getVisitedNodes());
                 }
             }
         }
         throw new PathfinderException(startingNode.getNodeID() + ". Got to the end of the DF search");
+    }
+
+    private boolean isOpenConnectedNode(Node node, LinkedList<Node> visitedNodes) {
+        MapEntity map = MapEntity.getInstance();
+
+        LinkedList<Node> connectedNodes = map.getConnectedNodes(node);
+
+        if(connectedNodes.size()==0) return false;
+
+        for(Node c : connectedNodes) {
+            if(!visitedNodes.contains(c)) return true;
+        }
+
+        return false;
     }
 }

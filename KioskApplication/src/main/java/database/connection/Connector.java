@@ -156,6 +156,8 @@ public class Connector {
     public static void insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
         String sql = INTERPRETER_INSERT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(6, iR.getStatus().ordinal());
+        pstmt.setInt(8, iR.getLanguage().ordinal());
         pstmt.setString(1, iR.getRequestID());
         pstmt.setString(2, iR.getNodeID());
         pstmt.setString(3, iR.getAssigner());
