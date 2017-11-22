@@ -7,11 +7,11 @@ import entity.Path;
 import pathfinder.A_star;
 import pathfinder.BreadthFirst;
 import pathfinder.Pathfinder;
-import utility.NodeBuilding;
-import utility.NodeFloor;
+import utility.Node.NodeBuilding;
+import utility.Node.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
-import utility.NodeType;
+import utility.Node.NodeType;
 
 import java.util.LinkedList;
 

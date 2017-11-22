@@ -6,6 +6,7 @@ import database.objects.Request;
 import utility.Request.Language;
 import utility.Request.RequestProgressStatus;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -30,8 +31,17 @@ public class RequestEntity {
 
     public void readAllFromDatabase(){
         LinkedList<InterpreterRequest> interpreterRequests = DatabaseController.getAllInterpreterRequests();
-        for(InterpreterRequest iR:interpreterRequests)
-            addInterpreterRequest(iR);
+        for(InterpreterRequest iR:interpreterRequests) {
+            String rID = iR.getRequestID();
+            //updates the entire hashmap when called
+            if (this.interpreterRequests.containsKey(rID)) {
+                this.interpreterRequests.replace(rID, iR);
+            }
+            //adds new InterpreterRequests
+            else{
+                this.interpreterRequests.put(rID,iR);
+            }
+        }
     }
 
     public LinkedList<Request> getAllRequests(){
@@ -42,28 +52,28 @@ public class RequestEntity {
         return allRequests;
     }
 
-    private void addInterpreterRequest(InterpreterRequest iR){
-        String rID = iR.getRequestID();
-        interpreterRequests.put(rID, iR);
-    }
-
     //Each type of Request has its own table in the database
     //TODO: incorporate search class into application so that nodeID can become location
-    public void submitInterpreterRequest(String nodeID, String employee, String note, Language language){
+    public String submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
         interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
         DatabaseController.addInterpreterRequest(iR);
+        return iR.getRequestID();
     }
 
-    public Request getRequest(String requestID){
-        String requestType = requestID.substring(0,2);
-        if(requestType.equals("Int")){
-            System.out.println("Getting InterpreterRequest");
+    public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
+        System.out.println("Getting InterpreterRequest");
+        if(interpreterRequests.containsKey(requestID)) {
             return interpreterRequests.get(requestID);
         }
         else{
-            System.out.println("Invalid requestID");
-            return null;
+            readAllFromDatabase();
+            if(interpreterRequests.containsKey(requestID)){
+                return interpreterRequests.get(requestID);
+            }
+            else{
+                throw new NullPointerException("Unable to find InterpreterRequest in database");
+            }
         }
     }
 
@@ -73,7 +83,7 @@ public class RequestEntity {
 
     //Generic request deleting method
     public void deleteRequest(String requestID){
-        String requestType = requestID.substring(0,2);
+        String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             interpreterRequests.remove(requestID);
             DatabaseController.deleteInterpreterRequest(requestID);
@@ -99,14 +109,75 @@ public class RequestEntity {
         }
     }
 
+    //Generic request deleting method
+    public void inProgressRequest(String requestID){
+        String requestType = requestID.substring(0,2);
+        if(requestType.equals("Int")){
+            interpreterRequests.remove(requestID);
+            DatabaseController.deleteInterpreterRequest(requestID);
+            System.out.println("In Progress InterpreterRequest");
+        }
+        else if(requestType.equals("Sec")){
+            System.out.println("In Progress SecurityRequest");
+        }
+        else if(requestType.equals("Foo")){
+            System.out.println("In Progress FoodRequest");
+        }
+        else if(requestType.equals("Jan")){
+            System.out.println("In Progress JanitorRequest");
+        }
+        else if(requestType.equals("Ins")){
+            System.out.println("In Progress InsideTransportationRequest");
+        }
+        else if(requestType.equals("Out")){
+            System.out.println("In Progress OutsideTransportationRequest");
+        }
+        else{
+            System.out.println("Invalid requestID");
+        }
+    }
+
+    //Generic request completing method
+    public void completeRequest(String requestID){
+        String requestType = requestID.substring(0,3);
+        if(requestType.equals("Int")){
+            InterpreterRequest iR = interpreterRequests.get(requestID);
+            iR.complete();
+            interpreterRequests.replace(requestID,iR);
+            DatabaseController.updateInterpreterRequest(iR);
+            System.out.println("Complete InterpreterRequest");
+        }
+        else if(requestType.equals("Sec")){
+            System.out.println("Complete SecurityRequest");
+        }
+        else if(requestType.equals("Foo")){
+            System.out.println("Complete FoodRequest");
+        }
+        else if(requestType.equals("Jan")){
+            System.out.println("Complete JanitorRequest");
+        }
+        else if(requestType.equals("Ins")){
+            System.out.println("Complete InsideTransportationRequest");
+        }
+        else if(requestType.equals("Out")){
+            System.out.println("Complete OutsideTransportationRequest");
+        }
+        else{
+            System.out.println("Invalid requestID");
+        }
+    }
+
     public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+                                         Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
         oldReq.setNodeID(nodeID);
         oldReq.setAssigner(assigner);
         oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
         //not sure if editing the status is needed
-        //oldReq.setStatus(status);
+        oldReq.setStatus(status);
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
         DatabaseController.updateInterpreterRequest(oldReq);

@@ -178,62 +178,6 @@ public class DatabaseController {
             }
         }
     }
-  
-    /*public static Request addRequest(int requestID, String nodeID, String employee) {
-        try {
-            return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
-        } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static int updateRequest(int requestID, String nodeID, String employee) {
-        try {
-            return Connector.updateRequest(instanceConnection, requestID, nodeID, employee);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return 0;
-    }
-
-    public static Request getRequest(int requestID) {
-        try {
-            return Connector.selectRequest(instanceConnection, requestID);
-        } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static boolean deleteRequest(int requestID) {
-        try {
-            Connector.deleteRequest(instanceConnection, requestID);
-            return true;
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    public static ArrayList<Request> getAllRequests() {
-        try {
-            return Connector.selectAllRequests(instanceConnection);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return new ArrayList<Request>();
-    }*/
 
     public static void addInterpreterRequest(InterpreterRequest iR) {
         try {
