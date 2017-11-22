@@ -64,6 +64,14 @@
 
 /* CUSTOM STYLES */
 
+#rounded-container {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: white;
+    -fx-border-radius: 5;
+    -fx-border-width: 5;
+}
+
 #transparent {
     -fx-background: transparent;
 }
