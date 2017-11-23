@@ -6,11 +6,16 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import utility.Node.NodeFloor;
 
 public class MiniMapController extends ScreenController{
 
     @FXML public ImageView miniMapView;
+    @FXML private AnchorPane navigationPane;
+    @FXML private Rectangle navigationRec;
 
     MiniMapController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
@@ -18,7 +23,6 @@ public class MiniMapController extends ScreenController{
 
     @FXML
     protected void initialize() {
-
     }
 
     //Todo NULL POINTER???
@@ -26,6 +30,14 @@ public class MiniMapController extends ScreenController{
         miniMapView.setImage(floorImage);
         miniMapView.setFitWidth(200);
         miniMapView.setFitHeight(150);
+    }
+
+    void setNavigationRecH(double newHValue) {
+        System.out.println("New HValue: " + newHValue);
+    }
+
+    void setNavigationRecV(double newVValue) {
+        System.out.println("New HValue: " + newVValue);
     }
 
     @Override
