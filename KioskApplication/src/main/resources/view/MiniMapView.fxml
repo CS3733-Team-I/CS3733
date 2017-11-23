@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="136.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -17,7 +17,7 @@
             </ImageView>
             <AnchorPane fx:id="navigationPane" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Rectangle fx:id="navigationRec" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="34.0" layoutX="79.0" layoutY="42.0" smooth="false" stroke="#00589f" strokeType="INSIDE" strokeWidth="2.0" style="-fx-fill: TRANSPARENT;" width="55.0" />
+                  <Rectangle fx:id="navigationRec" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="34.0" layoutX="80.0" layoutY="40.0" smooth="false" stroke="#00589f" strokeType="INSIDE" strokeWidth="2.0" style="-fx-fill: TRANSPARENT;" width="55.0" />
                </children>
             </AnchorPane>
          </children>

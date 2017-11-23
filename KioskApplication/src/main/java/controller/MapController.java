@@ -213,6 +213,8 @@ public class MapController {
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
+        //System.out.println("Image Width: " + floorImage.getWidth());
+        //System.out.println("Image Height: " + floorImage.getHeight());
 
         miniMapController.switchFloor(floorImage);
 
@@ -272,6 +274,7 @@ public class MapController {
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
 
+        //update minimap navigationRec's position
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -283,6 +286,20 @@ public class MapController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setNavigationRecV((double)newValue);
+            }
+        });
+        //adjust minimap navigationRec's width:height
+        container.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecWidth((double)newValue);
+            }
+        });
+
+        container.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecHeight((double)newValue);
             }
         });
     }

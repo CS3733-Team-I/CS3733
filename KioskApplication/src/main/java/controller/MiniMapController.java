@@ -17,8 +17,20 @@ public class MiniMapController extends ScreenController{
     @FXML private AnchorPane navigationPane;
     @FXML private Rectangle navigationRec;
 
+    private double imageWidth;
+    private double imageHeight;
+    private double RAHRatio; //navigation and main map's anchorpane
+    private double RAWRatio; //navigation and main map's anchorpane
+
     MiniMapController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
+        //set default value
+        //default value
+        imageWidth = 5000;
+        imageHeight = 3400;
+
+        RAWRatio = 200/imageWidth;
+        RAHRatio = 136/imageHeight;
     }
 
     @FXML
@@ -28,16 +40,41 @@ public class MiniMapController extends ScreenController{
     //Todo NULL POINTER???
     void switchFloor(Image floorImage) {
         miniMapView.setImage(floorImage);
-        miniMapView.setFitWidth(200);
-        miniMapView.setFitHeight(150);
-    }
 
+        imageWidth = floorImage.getWidth();
+        imageHeight = floorImage.getHeight();
+
+        RAHRatio = miniMapView.getFitHeight()/imageHeight;
+        RAWRatio = miniMapView.getFitWidth()/imageWidth;
+    }
+    /**
+     * Set Navigation Rectangle's position
+     *
+     */
     void setNavigationRecH(double newHValue) {
         System.out.println("New HValue: " + newHValue);
     }
 
     void setNavigationRecV(double newVValue) {
         System.out.println("New HValue: " + newVValue);
+    }
+    /**
+     * Set Navigation Rectangle's size
+     * Width and Height according to the ratio of map image size and viewable region (anchorpane)
+     */
+    void setNavigationRecWidth(double newWidthValue) {
+//        System.out.println("New height "+ newWValue * RAHRatio);
+//        System.out.println("W"+newWValue);
+//        System.out.println("Hratio"+RAHRatio);
+        navigationRec.setWidth(newWidthValue * RAWRatio);
+    }
+
+    void setNavigationRecHeight(double newHeightValue) {
+//        System.out.println("New Width "+ newWValue * RAWRatio);
+//        System.out.println("Anchor height"+newWValue);
+//        System.out.println("Wratio"+RAWRatio);
+        navigationRec.setHeight(newHeightValue * RAHRatio);
+
     }
 
     @Override
