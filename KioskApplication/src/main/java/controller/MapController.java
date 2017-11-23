@@ -240,6 +240,8 @@ public class MapController {
         zoomGroup.setScaleY(scaleValue);
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
+        miniMapController.NavigationRecZoom(scaleValue);
+        //System.out.println(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {

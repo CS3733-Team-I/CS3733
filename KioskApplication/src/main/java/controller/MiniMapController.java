@@ -83,7 +83,7 @@ public class MiniMapController extends ScreenController{
 //        System.out.println("New Y: " + (newVValue * miniMapView.getFitHeight())*recYOffset);
     }
     /**
-     * Set Navigation Rectangle's size
+     * Set Navigation Rectangle's size according to window resize event
      * Width and Height according to the ratio of map image size and viewable region (anchorpane)
      */
     void setNavigationRecWidth(double newWidthValue) {
@@ -102,6 +102,15 @@ public class MiniMapController extends ScreenController{
 //        System.out.println("Wratio"+RAWRatio);
         navigationRec.setHeight(newHeightValue * RAHRatio);
         recYOffset = (miniMapView.getFitHeight() - navigationRec.getHeight())/(miniMapView.getFitHeight());
+    }
+
+    /**
+     * Set Navigation Rectangle's size according to zoom event
+     * Width and Height according to the ratio of map image size and viewable region (zoomgroup)
+     */
+    void NavigationRecZoom(double scaleValue) {
+        navigationRec.setWidth(navigationRec.getWidth()/scaleValue);
+        navigationRec.setHeight(navigationRec.getHeight()/scaleValue);
     }
 
     @Override
