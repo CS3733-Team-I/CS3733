@@ -48,7 +48,7 @@ public class MiniMapController extends ScreenController{
         recXOffset = (200 - 39.2)/(200);
         recYOffset = (136 - 39.2)/(136);
     }
-
+    //TODO MINIMAP SHOULD SHOW PATH AND WAYPOINTS
     @FXML
     protected void initialize() {
         //set navigation rectangle's initial position
@@ -81,6 +81,7 @@ public class MiniMapController extends ScreenController{
         /**
          * Handles drag event on navigation rectangle
          */
+        //TODO DRAG NO intermediate MOTION???
         navigationRec.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
