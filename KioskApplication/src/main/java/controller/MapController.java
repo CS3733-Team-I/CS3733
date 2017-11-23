@@ -1,6 +1,5 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
@@ -31,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MapController {
-    @FXML private AnchorPane container;
+    @FXML protected AnchorPane container;
 
     @FXML private ScrollPane scrollPane;
 
@@ -56,8 +55,8 @@ public class MapController {
 
     private MainWindowController parent = null;
 
-    private static double DEFAULT_HVALUE = 0.52;
-    private static double DEFAULT_VVALUE = 0.3;
+    protected static double DEFAULT_HVALUE = 0.52;
+    protected static double DEFAULT_VVALUE = 0.3;
 
     private NodeFloor currentFloor = NodeFloor.THIRD;
 
@@ -278,14 +277,14 @@ public class MapController {
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecH((double)newValue);
+                miniMapController.setNavigationRecX((double)newValue/scrollPane.getHmax());
             }
         });
 
         scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecV((double)newValue);
+                miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
             }
         });
         //adjust minimap navigationRec's width:height

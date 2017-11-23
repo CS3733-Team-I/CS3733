@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import utility.Node.NodeFloor;
 
+import static controller.MapController.DEFAULT_HVALUE;
+import static controller.MapController.DEFAULT_VVALUE;
+
 public class MiniMapController extends ScreenController{
 
     @FXML public ImageView miniMapView;
@@ -21,6 +24,8 @@ public class MiniMapController extends ScreenController{
     private double imageHeight;
     private double RAHRatio; //navigation and main map's anchorpane
     private double RAWRatio; //navigation and main map's anchorpane
+    private double recXOffset; //navigation X scrollable region offset
+    private double recYOffset; //navigation Y scrollable region offset
 
     MiniMapController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
@@ -31,13 +36,26 @@ public class MiniMapController extends ScreenController{
 
         RAWRatio = 200/imageWidth;
         RAHRatio = 136/imageHeight;
+
+        recXOffset = (200 - 39.2)/(200);
+        recYOffset = (136 - 39.2)/(136);
     }
 
     @FXML
     protected void initialize() {
+        //set navigation rectangle's initial position
+        navigationRec.setWidth(mapController.container.getWidth() * RAWRatio);
+        navigationRec.setHeight(mapController.container.getHeight() * RAHRatio);
+//        System.out.println("Xoffset: " + recXOffset);
+//        System.out.println("Yoffset: " + recYOffset);
+        recXOffset = (miniMapView.getFitWidth() - navigationRec.getWidth())/(miniMapView.getFitWidth());
+        recYOffset = (miniMapView.getFitHeight() - navigationRec.getHeight())/(miniMapView.getFitHeight());
+//        System.out.println("Xoffset: " + recXOffset);
+//        System.out.println("Yoffset: " + recYOffset);
+        navigationRec.setX((DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
+        navigationRec.setY((DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
     }
 
-    //Todo NULL POINTER???
     void switchFloor(Image floorImage) {
         miniMapView.setImage(floorImage);
 
@@ -49,32 +67,41 @@ public class MiniMapController extends ScreenController{
     }
     /**
      * Set Navigation Rectangle's position
-     *
+     * Based on viewable region (scrollpane) coordinates
      */
-    void setNavigationRecH(double newHValue) {
-        System.out.println("New HValue: " + newHValue);
+    void setNavigationRecX(double newHValue) {
+
+        navigationRec.setX((newHValue * miniMapView.getFitWidth())*recXOffset);
+//        System.out.println("Xoffset: " + recXOffset);
+//        System.out.println("New X: " + (newHValue * miniMapView.getFitWidth())*recXOffset);
     }
 
-    void setNavigationRecV(double newVValue) {
-        System.out.println("New HValue: " + newVValue);
+    void setNavigationRecY(double newVValue) {
+
+        navigationRec.setY((newVValue * miniMapView.getFitHeight())*recYOffset);
+//        System.out.println("Yoffset: " + recYOffset);
+//        System.out.println("New Y: " + (newVValue * miniMapView.getFitHeight())*recYOffset);
     }
     /**
      * Set Navigation Rectangle's size
      * Width and Height according to the ratio of map image size and viewable region (anchorpane)
      */
     void setNavigationRecWidth(double newWidthValue) {
-//        System.out.println("New height "+ newWValue * RAHRatio);
+        //For reference, do not remove comments
+//        System.out.println("New Width "+ newWidthValue * RAWRatio);
 //        System.out.println("W"+newWValue);
 //        System.out.println("Hratio"+RAHRatio);
         navigationRec.setWidth(newWidthValue * RAWRatio);
+        recXOffset = (miniMapView.getFitWidth() - navigationRec.getWidth())/(miniMapView.getFitWidth());
     }
 
     void setNavigationRecHeight(double newHeightValue) {
-//        System.out.println("New Width "+ newWValue * RAWRatio);
+        //For reference, do not remove comments
+//        System.out.println("New Height "+ newHeightValue * RAHRatio);
 //        System.out.println("Anchor height"+newWValue);
 //        System.out.println("Wratio"+RAWRatio);
         navigationRec.setHeight(newHeightValue * RAHRatio);
-
+        recYOffset = (miniMapView.getFitHeight() - navigationRec.getHeight())/(miniMapView.getFitHeight());
     }
 
     @Override
