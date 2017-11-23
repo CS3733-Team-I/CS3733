@@ -56,7 +56,7 @@ public class MainWindowController {
         if (controller == null) {
             switch (screen) {
                 case ADMIN_MENU:
-                    controller = new AdminSidebarController(this, mapController);
+                    controller = new MapBuilderController(this, mapController);
                     break;
 
                 case PATHFINDING:
