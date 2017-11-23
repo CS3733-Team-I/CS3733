@@ -7,6 +7,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -28,9 +30,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MapController {
-    @FXML private AnchorPane container;
+    @FXML protected AnchorPane container;
 
-    @FXML private ScrollPane scrollPane;
+    @FXML protected ScrollPane scrollPane;
 
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesPane;
@@ -44,14 +46,17 @@ public class MapController {
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
 
+    @FXML public AnchorPane miniMapPane;
+    MiniMapController miniMapController;
+
     private Group zoomGroup;
 
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
 
-    private static double DEFAULT_HVALUE = 0.52;
-    private static double DEFAULT_VVALUE = 0.3;
+    protected static double DEFAULT_HVALUE = 0.52;
+    protected static double DEFAULT_VVALUE = 0.3;
 
     private NodeFloor currentFloor = NodeFloor.THIRD;
 
@@ -207,6 +212,10 @@ public class MapController {
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
+        //System.out.println("Image Width: " + floorImage.getWidth());
+        //System.out.println("Image Height: " + floorImage.getHeight());
+
+        miniMapController.switchFloor(floorImage);
 
         currentFloor = floor;
     }
@@ -231,6 +240,8 @@ public class MapController {
         zoomGroup.setScaleY(scaleValue);
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
+        miniMapController.NavigationRecZoom(scaleValue);
+        //System.out.println(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {
@@ -240,6 +251,10 @@ public class MapController {
 
     @FXML
     protected void initialize() {
+        miniMapController = new MiniMapController(parent, this);
+        miniMapPane.getChildren().clear();
+        miniMapPane.getChildren().add(miniMapController.getContentView());
+
         floorSelector.getItems().addAll(NodeFloor.values());
 
         loadFloor(currentFloor);
@@ -259,6 +274,35 @@ public class MapController {
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
+
+        //update minimap navigationRec's position
+        scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecX((double)newValue/scrollPane.getHmax());
+            }
+        });
+
+        scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
+            }
+        });
+        //adjust minimap navigationRec's width:height
+        container.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecWidth((double)newValue);
+            }
+        });
+
+        container.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecHeight((double)newValue);
+            }
+        });
     }
 
     @FXML

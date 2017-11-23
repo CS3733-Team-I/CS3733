@@ -129,6 +129,7 @@ public class MainWindowController {
         mapController = new MapController();
         mapController.setParent(this);
 
+
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
@@ -158,24 +159,6 @@ public class MainWindowController {
         });
 
         this.switchToScreen(ApplicationScreen.PATHFINDING);
-
-        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
-        //Initialize Hamburger
-//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
-//        BATransition.setRate(-1);
-//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
-//            BATransition.setRate(BATransition.getRate()*-1);
-//            BATransition.play();
-//
-//            if(Sidebar.isShown()) {
-//                System.out.println("HERE1");
-//                Sidebar.close();
-//            }
-//            else {
-//                System.out.println("HERE2");
-//                Sidebar.open();
-//            }
-//        });
     }
 
     @FXML
