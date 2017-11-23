@@ -35,7 +35,6 @@ public class MainWindowController {
 
     AnchorPane mapView;
     MapController mapController;
-    MiniMapController miniMapController;
 
     HashMap<ApplicationScreen, ScreenController> controllers;
 
@@ -129,7 +128,7 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        miniMapController = new MiniMapController(this, mapController);
+
 
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
@@ -160,9 +159,6 @@ public class MainWindowController {
         });
 
         this.switchToScreen(ApplicationScreen.PATHFINDING);
-        mapController.miniMapPane.getChildren().clear();
-        mapController.miniMapPane.getChildren().add(miniMapController.getContentView());
-        controllers.put(ApplicationScreen.MINI_MAP, miniMapController); //dummy
     }
 
     @FXML

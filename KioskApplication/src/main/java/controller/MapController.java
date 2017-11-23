@@ -46,6 +46,7 @@ public class MapController {
     @FXML private JFXCheckBox showEdgesBox;
 
     @FXML public AnchorPane miniMapPane;
+    MiniMapController miniMapController;
 
     private Group zoomGroup;
 
@@ -211,6 +212,8 @@ public class MapController {
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
 
+        miniMapController.switchFloor(floorImage);
+
         currentFloor = floor;
     }
 
@@ -243,6 +246,10 @@ public class MapController {
 
     @FXML
     protected void initialize() {
+        miniMapController = new MiniMapController(parent, this);
+        miniMapPane.getChildren().clear();
+        miniMapPane.getChildren().add(miniMapController.getContentView());
+
         floorSelector.getItems().addAll(NodeFloor.values());
 
         loadFloor(currentFloor);
