@@ -97,7 +97,7 @@ public class MainWindowController {
                 switchButton.requestFocus();
                 break;
             case PATHFINDING:
-                switchButton.setText("Employee login");
+                switchButton.setText("Staff Login");
                 switchButton.requestFocus();
                 break;
             default:
@@ -181,7 +181,7 @@ public class MainWindowController {
     @FXML
     private void login() throws IOException{
         LoginController loginController = new LoginController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
         loader.setController(loginController);
         javafx.scene.Node view = loader.load();
 
@@ -191,9 +191,10 @@ public class MainWindowController {
         AnchorPane.setBottomAnchor(loginContainer, 0.0);
         AnchorPane.setRightAnchor(loginContainer, 0.0);
 
-        loginContainer.setCenter(view);
+        loginContainer.setRight(view);
 
         contentWindow.getChildren().add(loginContainer);
+        loginContainer.requestFocus();
     }
 
     @FXML

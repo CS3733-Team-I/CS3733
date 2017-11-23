@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import entity.Administrator;
 import entity.AdministratorList;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -14,8 +15,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import utility.ApplicationScreen;
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,9 +35,11 @@ public class LoginController {
     JFXPasswordField pfPassword;
     @FXML
     Label errorMsg;
+    @FXML
+    GridPane gpLogin;
 
     MainWindowController parent;
-    AdministratorList AdminList;
+    private AdministratorList AdminList;
 
     //To get login info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
@@ -74,7 +79,15 @@ public class LoginController {
         Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
         EmailValidator.setIcon(new ImageView(invalidInputIcn));
         PasswordValidator.setIcon(new ImageView(invalidInputIcn));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tfEmail.requestFocus();
+            }
+        });
 
+        System.out.print("Email Focus: ");
+        System.out.println(tfEmail.isFocused());
     }
 
     @FXML
