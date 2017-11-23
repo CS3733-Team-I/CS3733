@@ -61,6 +61,9 @@ public class MiniMapController extends ScreenController{
         navigationRec.setX((DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
         navigationRec.setY((DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
 
+        /**
+         * sync navigation rectangle's position with viewable region(scroll pane)
+         */
         navigationRec.yProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -92,7 +95,34 @@ public class MiniMapController extends ScreenController{
                 event.consume();
             }
         });
-        //navigationRec
+        navigationRec.setOnDragEntered(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                navigationRec.setFill(Color.BLUE);
+                event.consume();
+            }
+        });
+        navigationRec.setOnDragExited(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                navigationRec.setFill(Color.TRANSPARENT);
+                event.consume();
+            }
+        });
+        navigationRec.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                event.setDropCompleted(true);
+                event.consume();
+            }
+        });
+        navigationRec.setOnDragDone(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                event.consume();
+            }
+        });
     }
 
     void switchFloor(Image floorImage) {
