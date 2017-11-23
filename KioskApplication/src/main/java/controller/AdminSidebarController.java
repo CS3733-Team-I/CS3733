@@ -12,17 +12,12 @@ import utility.Node.NodeFloor;
 import java.io.IOException;
 
 public class AdminSidebarController extends ScreenController {
-    @FXML private Label AdminInfo;
-    @FXML private Button infoButton;
-    @FXML private MenuButton requestMenu;
-    @FXML private MenuItem interpreterSelect;
 
-    private boolean isDisplay;
 
     AdminSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
 
-        this.isDisplay = false;
+
     }
 
     @Override
@@ -49,21 +44,6 @@ public class AdminSidebarController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0, 200, 0, 0);
-    }
-
-    @FXML
-    void displayAdminInfo() {
-        infoButton.setText("Display My Information");
-        if(!isDisplay) {
-            this.AdminInfo.setText(""); // TODO: redo admin mail field
-            infoButton.setText("Hide My Information");
-            isDisplay = true;
-        }
-        else {
-            this.AdminInfo.setText("");
-            infoButton.setText("Display My Information");
-            isDisplay = false;
-        }
     }
 
     @FXML
