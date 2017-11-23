@@ -8,4 +8,5 @@ public enum ApplicationScreen {
     ADMIN_MENU,
     REQUEST_INTERFACE,
     ADMIN_VIEWREQUEST,
+    MINI_MAP
 }
