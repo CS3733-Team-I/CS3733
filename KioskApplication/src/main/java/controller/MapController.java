@@ -32,7 +32,7 @@ import java.util.List;
 public class MapController {
     @FXML protected AnchorPane container;
 
-    @FXML private ScrollPane scrollPane;
+    @FXML protected ScrollPane scrollPane;
 
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesPane;

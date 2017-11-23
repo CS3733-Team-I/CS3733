@@ -2,13 +2,20 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import utility.DragResizeMod;
 import utility.Node.NodeFloor;
 
 import static controller.MapController.DEFAULT_HVALUE;
@@ -46,14 +53,33 @@ public class MiniMapController extends ScreenController{
         //set navigation rectangle's initial position
         navigationRec.setWidth(mapController.container.getWidth() * RAWRatio);
         navigationRec.setHeight(mapController.container.getHeight() * RAHRatio);
-//        System.out.println("Xoffset: " + recXOffset);
-//        System.out.println("Yoffset: " + recYOffset);
+
         recXOffset = (miniMapView.getFitWidth() - navigationRec.getWidth())/(miniMapView.getFitWidth());
         recYOffset = (miniMapView.getFitHeight() - navigationRec.getHeight())/(miniMapView.getFitHeight());
-//        System.out.println("Xoffset: " + recXOffset);
-//        System.out.println("Yoffset: " + recYOffset);
+
         navigationRec.setX((DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
         navigationRec.setY((DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
+
+        navigationRec.yProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mapController.scrollPane.setVvalue((double)newValue * mapController.scrollPane.getVmax()/(miniMapView.getFitHeight()*recYOffset));
+            }
+        });
+        navigationRec.xProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mapController.scrollPane.setHvalue((double)newValue * mapController.scrollPane.getHmax()/(miniMapView.getFitWidth()*recXOffset));
+            }
+        });
+//        DragResizeMod.makeResizable(navigationRec);
+//        navigationRec.setOnDragDetected(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                Dragboard db = navigationRec.startDragAndDrop(TransferMode.ANY);
+//                System.out.println("HERE");
+//            }
+//        });
     }
 
     void switchFloor(Image floorImage) {
@@ -108,9 +134,18 @@ public class MiniMapController extends ScreenController{
      * Set Navigation Rectangle's size according to zoom event
      * Width and Height according to the ratio of map image size and viewable region (zoomgroup)
      */
+    //TODO THIS NEEDS A MULTIPLIER TO MAKE IT MORE ACCURATE
     void NavigationRecZoom(double scaleValue) {
-        navigationRec.setWidth(navigationRec.getWidth()/scaleValue);
-        navigationRec.setHeight(navigationRec.getHeight()/scaleValue);
+//        System.out.println("ScaleValue: " + scaleValue);
+        navigationRec.setScaleX(1/scaleValue);
+        navigationRec.setScaleY(1/scaleValue);
+//        navigationRec.setWidth(navigationRec.getWidth()/scaleValue);
+//        navigationRec.setHeight(navigationRec.getHeight()/scaleValue);
+    }
+    @FXML
+    protected void onMouseClicked(MouseEvent event) {
+        navigationRec.setX(event.getX()-navigationRec.getWidth()/2);
+        navigationRec.setY(event.getY()-navigationRec.getHeight()/2);
     }
 
     @Override
