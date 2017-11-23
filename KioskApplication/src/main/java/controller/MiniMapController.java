@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -72,14 +73,26 @@ public class MiniMapController extends ScreenController{
                 mapController.scrollPane.setHvalue((double)newValue * mapController.scrollPane.getHmax()/(miniMapView.getFitWidth()*recXOffset));
             }
         });
-//        DragResizeMod.makeResizable(navigationRec);
-//        navigationRec.setOnDragDetected(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                Dragboard db = navigationRec.startDragAndDrop(TransferMode.ANY);
-//                System.out.println("HERE");
-//            }
-//        });
+
+        //DragResizeMod.makeResizable(navigationRec);
+        /**
+         * Handles drag event on navigation rectangle
+         */
+        navigationRec.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Dragboard db = navigationRec.startDragAndDrop(TransferMode.MOVE);
+                event.consume();
+            }
+        });
+        navigationRec.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                event.acceptTransferModes(TransferMode.MOVE);
+                event.consume();
+            }
+        });
+        //navigationRec
     }
 
     void switchFloor(Image floorImage) {
