@@ -15,15 +15,15 @@
    <children>
       <JFXTabPane fx:id="tabPane" prefHeight="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab text="Map" />
-            <Tab text="Map Builder" />
-            <Tab text="Request Submit" />
-            <Tab text="Request Manager" />
-            <Tab text="Settings" />
+            <Tab fx:id="tabMap" text="Map" />
+            <Tab fx:id="tabMB" text="Map Builder" />
+            <Tab fx:id="tabRS" text="Request Submit" />
+            <Tab fx:id="tabRM" text="Request Manager" />
+            <Tab fx:id="tabSettings" text="Settings" />
          </tabs>
       </JFXTabPane>
       <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
-       <JFXButton fx:id="switchButton" layoutX="670.0" onAction="#switchButtonClicked" prefHeight="35.0" prefWidth="130.0" ripplerFill="BLACK" style="-fx-background-color: #4286f4; -fx-background-radius: 0;" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+       <JFXButton fx:id="switchButton" focusTraversable="false" layoutX="670.0" onAction="#switchButtonClicked" prefHeight="35.0" prefWidth="130.0" ripplerFill="BLACK" style="-fx-background-color: #4286f4; -fx-background-radius: 0;" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

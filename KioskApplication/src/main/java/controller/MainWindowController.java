@@ -26,6 +26,11 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     @FXML AnchorPane LoginPopup;
     @FXML JFXButton switchButton;
+    @FXML Tab tabMap;
+    @FXML Tab tabMB;
+    @FXML Tab tabRS;
+    @FXML Tab tabRM;
+    @FXML Tab tabSettings;
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
     //@FXML JFXHamburger SidebarHam;
@@ -95,10 +100,16 @@ public class MainWindowController {
             case ADMIN_MENU:
                 switchButton.setText("Logoff");
                 switchButton.requestFocus();
+                //shows all but the Map tab for logged in Users
+                tabPane.getTabs().remove(tabMap);
+                tabPane.getTabs().addAll(tabMB,tabRM,tabRS,tabSettings);
                 break;
             case PATHFINDING:
                 switchButton.setText("Staff Login");
                 switchButton.requestFocus();
+                //hides all but the Map tab from non logged in users
+                tabPane.getTabs().removeAll(tabMap,tabMB,tabRM,tabRS,tabSettings);
+                tabPane.getTabs().add(tabMap);
                 break;
             default:
                 break;
