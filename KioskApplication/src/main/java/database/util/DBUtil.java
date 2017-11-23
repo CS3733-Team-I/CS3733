@@ -40,7 +40,7 @@ public class DBUtil {
 
         String sql2 = CREATE_EDGE_TABLE;
 
-        String sql3 = CREATE_INTERPRETERS_TABLE;
+        String sql3 = CREATE_INTERPRETER_TABLE+WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES;
 
         PreparedStatement pstmt0 = conn.prepareStatement(schema);
         pstmt0.execute();
