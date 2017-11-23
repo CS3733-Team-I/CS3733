@@ -194,7 +194,6 @@ public class MainWindowController {
         loginContainer.setRight(view);
 
         contentWindow.getChildren().add(loginContainer);
-        loginContainer.requestFocus();
     }
 
     @FXML

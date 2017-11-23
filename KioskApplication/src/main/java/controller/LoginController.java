@@ -35,8 +35,6 @@ public class LoginController {
     JFXPasswordField pfPassword;
     @FXML
     Label errorMsg;
-    @FXML
-    GridPane gpLogin;
 
     MainWindowController parent;
     private AdministratorList AdminList;
@@ -79,15 +77,14 @@ public class LoginController {
         Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
         EmailValidator.setIcon(new ImageView(invalidInputIcn));
         PasswordValidator.setIcon(new ImageView(invalidInputIcn));
+
+        //Puts focus on email textfield
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 tfEmail.requestFocus();
             }
         });
-
-        System.out.print("Email Focus: ");
-        System.out.println(tfEmail.isFocused());
     }
 
     @FXML
