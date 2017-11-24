@@ -5,37 +5,26 @@ import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
-import entity.Path;
-import javafx.animation.*;
-import javafx.beans.binding.ListBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.util.Duration;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 public class MainWindowController {
 
     @FXML JFXTabPane tabPane;
 
     @FXML AnchorPane contentWindow;
-    @FXML AnchorPane LoginPopup;
+    @FXML BorderPane loginPopup;
     @FXML JFXButton switchButton;
     @FXML Tab tabMap;
     @FXML Tab tabMB;
@@ -200,45 +189,56 @@ public class MainWindowController {
 //        });
     }
 
+    protected void removeLoginPopup(){
+        this.loginPopup.getChildren().clear();
+        this.switchButton.setDisable(false);
+        this.tabMap.setDisable(false);
+        this.mapView.setDisable(false);
+        //this.loginPopup.getChildren().add(this.switchButton);
+    }
+
     @FXML
-    private void login() throws IOException{
+    private void addLoginPopup() throws IOException{
+        this.switchButton.setDisable(true);
+        this.tabMap.setDisable(true);
+        this.mapView.setDisable(true);
         LoginController loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
         loader.setController(loginController);
         javafx.scene.Node view = loader.load();
 
-        BorderPane loginContainer = new BorderPane();
-        //AnchorPane.setTopAnchor(loginContainer, 0.0);
-        //AnchorPane.setLeftAnchor(loginContainer, 0.0);
-        //AnchorPane.setBottomAnchor(loginContainer, 0.0);
-        //AnchorPane.setRightAnchor(loginContainer, 0.0);
+        this.loginPopup = new BorderPane();
+        AnchorPane.setTopAnchor(loginPopup, 0.0);
+        AnchorPane.setLeftAnchor(loginPopup, 0.0);
+        AnchorPane.setBottomAnchor(loginPopup, 0.0);
+        AnchorPane.setRightAnchor(loginPopup, 0.0);
 
-        loginContainer.setCenter(view);
+        loginPopup.setRight(view);
+        contentWindow.getChildren().add(loginPopup);
 
-        contentWindow.getChildren().add(loginContainer);
-
+        /*//TODO: make this slide in transition code work
+        double screenWidth=contentWindow.getWidth();
         javafx.scene.shape.Path path = new javafx.scene.shape.Path();
-        path.getElements().add(new MoveTo(800,-300));
-        path.getElements().add(new LineTo( 800, 200));
-        //path.getElements().add(new CubicCurveTo(0, 120, 0, 240, 380, 240));
+        path.getElements().add(new MoveTo(-200,0));
+        path.getElements().add(new LineTo( 0, 0));
         PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(4000));
+        pathTransition.setDuration(Duration.millis(500));
+        contentWindow.getChildren().add(path);
         pathTransition.setPath(path);
         pathTransition.setNode(loginContainer.getCenter());
-        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-        pathTransition.setCycleCount(Timeline.INDEFINITE);
-        pathTransition.setAutoReverse(true);
+        pathTransition.setOrientation(PathTransition.OrientationType.NONE);
+        pathTransition.setCycleCount(1);
         pathTransition.play();
+        System.out.println(loginController.getLoginAnchorHeight());
+        System.out.println(loginController.getLoginAnchorWidth());*/
     }
 
     @FXML
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
+            //case ADMIN_NODE:
+            //case ADMIN_EDGE:
             case ADMIN_VIEWREQUEST:
-                /*
-            case ADMIN_NODE:
-            case ADMIN_EDGE:
-            */
             case REQUEST_INTERFACE:
             case ADMIN_SETTINGS:
             case ADMIN_MENU:
@@ -248,7 +248,8 @@ public class MainWindowController {
                 //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.login();
+                this.addLoginPopup();
+                this.switchButton.setDisable(true);
                 break;
         }
     }
