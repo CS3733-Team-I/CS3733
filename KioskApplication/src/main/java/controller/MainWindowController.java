@@ -14,6 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
@@ -37,6 +38,9 @@ public class MainWindowController {
     //@FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
 
+    //will be changed to refer to LoginEntity once completed
+    KioskPermission permission;
+
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
     AnchorPane mapView;
@@ -56,6 +60,8 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
+
+        permission = KioskPermission.NONEMPLOYEE;
 
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
@@ -99,6 +105,8 @@ public class MainWindowController {
         //hides the popup
         loginPopup.setVisible(false);
 
+        checkPermissions();
+
         this.switchToScreen(ApplicationScreen.PATHFINDING);
 
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
@@ -118,6 +126,28 @@ public class MainWindowController {
 //                Sidebar.open();
 //            }
 //        });
+    }
+
+    public void checkPermissions() {
+        switch (permission) {
+            case NONEMPLOYEE:
+                switchButton.setText("Staff Login");
+                //hides all but the Map tab from non logged in users
+                tabPane.getTabs().removeAll(tabMap,tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().add(tabMap);
+                break;
+            case EMPLOYEE:
+                switchButton.setText("Logoff");
+                tabPane.getTabs().add(tabRS);
+            case ADMIN:
+                switchButton.setText("Logoff");
+                //default to showing all nodes and edges
+                mapController.showEdgesBox.setSelected(true);
+                mapController.showNodesBox.setSelected(true);
+                //shows all but the Map tab for logged in Users
+                tabPane.getTabs().addAll(tabMB, tabRM, tabRS, tabSettings);
+                break;
+        }
     }
 
     public void switchToScreen(ApplicationScreen screen) {
@@ -157,31 +187,11 @@ public class MainWindowController {
             controllers.put(screen, controller);
         }
 
-        // Additional actions on screen switch
-        switch (screen) {
-            case PATHFINDING:
-                switchButton.setText("Staff Login");
-                switchButton.requestFocus();
-                //hides all but the Map tab from non logged in users
-                tabPane.getTabs().removeAll(tabMap,tabMB,tabRM,tabRS,tabSettings);
-                tabPane.getTabs().add(tabMap);
-                break;
-            case MAP_BUILDER:
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
-                //default to showing all nodes and edges
-                mapController.showEdgesBox.setSelected(true);
-                mapController.showNodesBox.setSelected(true);
-                //shows all but the Map tab for logged in Users
-                tabPane.getTabs().remove(tabMap);
-                tabPane.getTabs().addAll(tabMB,tabRM,tabRS,tabSettings);
-                break;
-
-            default:
+            /*default:
                 mapController.showEdgesBox.setSelected(false);
                 mapController.showNodesBox.setSelected(false);
                 break;
-        }
+                */
 
         javafx.scene.Node contentView = controller.getContentView();
 
@@ -242,21 +252,17 @@ public class MainWindowController {
 
     @FXML
     public void switchButtonClicked() throws IOException {
-        switch (currentScreen) {
-            case REQUEST_MANAGER:
-                /*
-            case ADMIN_NODE:
-            case ADMIN_EDGE:
-            */
-            case REQUEST_SUBMITTER:
-            case ADMIN_SETTINGS:
-            case MAP_BUILDER:
+        switch (permission) {
+            case ADMIN:
+            case EMPLOYEE:
+                this.permission=KioskPermission.NONEMPLOYEE;
+                checkPermissions();
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
                 currentScreen = ApplicationScreen.PATHFINDING;
                 //this.lbAdminInfo.setText("");
                 break;
-            case PATHFINDING:
+            case NONEMPLOYEE:
                 this.openLoginPopup();
                 break;
         }

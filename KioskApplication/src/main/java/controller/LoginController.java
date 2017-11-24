@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 
 import java.io.IOException;
 
@@ -68,11 +69,12 @@ public class LoginController {
     public void OnLoginClicked() throws IOException {
 
         if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
-            parent.switchToScreen(ApplicationScreen.MAP_BUILDER);
+            parent.permission = KioskPermission.ADMIN;
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
             resetFields();
             parent.closeLoginPopup();
+            parent.checkPermissions();
             parent.currentScreen = ApplicationScreen.MAP_BUILDER;
 //            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
@@ -83,7 +85,7 @@ public class LoginController {
 
     @FXML
     public void OnBackClicked () throws IOException {
-        parent.switchToScreen(ApplicationScreen.PATHFINDING);
+        //parent.switchToScreen(ApplicationScreen.PATHFINDING);
         tfEmail.clear();
         pfPassword.clear();
         resetFields();
