@@ -125,13 +125,13 @@ public class MapEntity implements IMapEntity {
     }
 
     public void addEdge(Edge e) {
-        dbController.addEdge(e);
         edges.put(e.getEdgeID(),e);
+        dbController.addEdge(e);
     }
 
     public void editEdge(Edge e) {
-        dbController.updateEdge(e);
         edges.put(e.getEdgeID(), e);
+        dbController.updateEdge(e);
     }
 
     public Edge getEdge(String s) {

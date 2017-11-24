@@ -236,9 +236,9 @@ public class CsvFileUtil {
             }
 
             while (reader.readRecord()) {
-                String id = reader.get(fields[0]);
-                String firstNodeID = reader.get(fields[1]);
-                String secondNodeID = reader.get(fields[2]);
+                String id = reader.get(fields[0]).trim();
+                String firstNodeID = reader.get(fields[1]).trim();
+                String secondNodeID = reader.get(fields[2]).trim();
 
                 Edge edge = new Edge(id, firstNodeID, secondNodeID);
 
