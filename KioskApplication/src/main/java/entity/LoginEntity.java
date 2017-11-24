@@ -43,6 +43,8 @@ public class LoginEntity {
         else {
             permission = KioskPermission.NONEMPLOYEE;
             dbC = DatabaseController.getInstance();
+            //TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
+            admins.putIfAbsent("boss@hospital.com", "123");
         }
     }
 

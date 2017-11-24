@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.RequiredFieldValidator;
 import entity.Administrator;
 import entity.AdministratorList;
+import entity.LoginEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,13 +36,12 @@ public class LoginController {
     Label errorMsg;
 
     MainWindowController parent;
-    AdministratorList AdminList;
+    private LoginEntity l;
 
     //To get login info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
         this.parent = parent;
-        this.AdminList = new AdministratorList();
-        AdminList.addAdministrator(new Administrator("boss@hospital.com", "123"));
+        l=LoginEntity.getInstance();
     }
 
     @FXML
@@ -79,8 +80,8 @@ public class LoginController {
 
     @FXML
     public void OnLoginClicked() throws IOException {
-
-        if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
+        KioskPermission access = l.validate(tfEmail.getText(),pfPassword.getText());
+        if(access==KioskPermission.ADMIN) {
             parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
