@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.embed.swing.*?>
+<?import javafx.scene.shape.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -22,7 +24,11 @@
             <Tab fx:id="tabSettings" text="Settings" />
          </tabs>
       </JFXTabPane>
-      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+         <children>
+            <SwingNode fx:id="endNode" layoutX="300.0" layoutY="100.0" />
+            <SwingNode fx:id="endNode1" layoutX="1010.0" layoutY="110.0" />
+         </children></AnchorPane>
        <JFXButton fx:id="switchButton" focusTraversable="false" layoutX="670.0" onAction="#switchButtonClicked" prefHeight="35.0" prefWidth="130.0" ripplerFill="BLACK" style="-fx-background-color: #4286f4; -fx-background-radius: 0;" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font name="System Bold" size="12.0" />

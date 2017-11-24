@@ -35,6 +35,8 @@ public class LoginController {
     JFXPasswordField pfPassword;
     @FXML
     Label errorMsg;
+    @FXML
+    ImageView errorIcon;
 
     MainWindowController parent;
     private AdministratorList AdminList;
@@ -48,13 +50,6 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        RequiredFieldValidator EmailValidator = new RequiredFieldValidator();
-        RequiredFieldValidator PasswordValidator = new RequiredFieldValidator();
-
-        tfEmail.getValidators().add(EmailValidator);
-        pfPassword.getValidators().add(PasswordValidator);
-        EmailValidator.setMessage("Email Required");
-        PasswordValidator.setMessage("Password Required");
 
         tfEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -72,11 +67,6 @@ public class LoginController {
                 }
             }
         });
-
-
-        Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
-        EmailValidator.setIcon(new ImageView(invalidInputIcn));
-        PasswordValidator.setIcon(new ImageView(invalidInputIcn));
 
         //Puts focus on email textfield
         Platform.runLater(new Runnable() {
@@ -100,7 +90,8 @@ public class LoginController {
 //            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
-            errorMsg.setText("Invalid Login. ");
+            errorIcon.setVisible(true);
+            errorMsg.setText("Invalid Login");
         }
     }
 

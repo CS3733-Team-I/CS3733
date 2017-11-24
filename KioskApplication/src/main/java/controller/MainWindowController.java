@@ -5,19 +5,30 @@ import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
+import entity.Path;
+import javafx.animation.*;
+import javafx.beans.binding.ListBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.util.Duration;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainWindowController {
 
@@ -197,14 +208,27 @@ public class MainWindowController {
         javafx.scene.Node view = loader.load();
 
         BorderPane loginContainer = new BorderPane();
-        AnchorPane.setTopAnchor(loginContainer, 0.0);
-        AnchorPane.setLeftAnchor(loginContainer, 0.0);
-        AnchorPane.setBottomAnchor(loginContainer, 0.0);
-        AnchorPane.setRightAnchor(loginContainer, 0.0);
+        //AnchorPane.setTopAnchor(loginContainer, 0.0);
+        //AnchorPane.setLeftAnchor(loginContainer, 0.0);
+        //AnchorPane.setBottomAnchor(loginContainer, 0.0);
+        //AnchorPane.setRightAnchor(loginContainer, 0.0);
 
-        loginContainer.setRight(view);
+        loginContainer.setCenter(view);
 
         contentWindow.getChildren().add(loginContainer);
+
+        javafx.scene.shape.Path path = new javafx.scene.shape.Path();
+        path.getElements().add(new MoveTo(800,-300));
+        path.getElements().add(new LineTo( 800, 200));
+        //path.getElements().add(new CubicCurveTo(0, 120, 0, 240, 380, 240));
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(4000));
+        pathTransition.setPath(path);
+        pathTransition.setNode(loginContainer.getCenter());
+        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+        pathTransition.setCycleCount(Timeline.INDEFINITE);
+        pathTransition.setAutoReverse(true);
+        pathTransition.play();
     }
 
     @FXML
