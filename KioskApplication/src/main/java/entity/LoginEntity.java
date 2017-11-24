@@ -33,6 +33,9 @@ public class LoginEntity {
     }
 
     private LoginEntity(Boolean test){
+        employees = new HashMap<>();
+        admins = new HashMap<>();
+        this.userName="";
         if (test){
             permission = KioskPermission.ADMIN;
             dbC = DatabaseController.getTestInstance();
@@ -86,8 +89,6 @@ public class LoginEntity {
 
     //For checking log in credentials
     public KioskPermission validate(String userName, String password){
-        this.admins.putIfAbsent("boss@hospital.com","123");
-        this.employees.putIfAbsent("emp@hospital.com","1");
         if(admins.containsKey(userName)){
             if (admins.get(userName).equals(password)){
                 this.userName = userName;
