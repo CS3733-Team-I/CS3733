@@ -1,5 +1,8 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXToggleButton;
 import database.objects.Edge;
 import database.util.CSVFileUtil;
 import entity.MapEntity;
@@ -7,18 +10,44 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.TextFlow;
 import utility.Node.NodeFloor;
 
 public class MapBuilderController extends ScreenController {
 
     @FXML
     private TabPane builderTabPane;
+    /**
+     * Nodes related fields
+     */
     private Tab nodeTab;
+    @FXML private JFXButton btInfo;
+    @FXML private TextFlow tfNodeInfo;
+    @FXML private TextField xcoord;
+    @FXML private TextField ycoord;
+    @FXML private TextField nodeID;
+    /**
+     * Edges related fields
+     */
     private Tab edgeTab;
     private Tab databaseTab;
 
     MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
+    }
+
+    @FXML
+    public  void initialize() {
+        Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
+        ImageView infoIconView = new ImageView(infoIcon);
+        infoIconView.setRotate(90);
+        infoIconView.setFitHeight(24);
+        infoIconView.setFitWidth(24);
+        btInfo.setGraphic(infoIconView);
+        tfNodeInfo.setVisible(false);
     }
 
     @Override
@@ -95,5 +124,15 @@ public class MapBuilderController extends ScreenController {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }*/
+    }
+
+    @FXML
+    void onbtInfoClicked() {
+        if(tfNodeInfo.isVisible()) {
+            tfNodeInfo.setVisible(false);
+        }
+        else {
+            tfNodeInfo.setVisible(true);
+        }
     }
 }
