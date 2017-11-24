@@ -87,7 +87,7 @@ public class RequestSubmitterController extends ScreenController {
                 System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
-                currentRequestType = RequestType.SERUITUY;
+                currentRequestType = RequestType.SECURITY;
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }

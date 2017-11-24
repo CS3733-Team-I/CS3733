@@ -3,6 +3,6 @@ package utility.Request;
 public enum RequestType {
     INTERPRETER,
     FOOD,
-    SERUITUY,
+    SECURITY,
     JANITOR
 }
