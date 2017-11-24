@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.Node.NodeFloor;
 
@@ -51,8 +52,8 @@ public class MapController {
 
 
     //list of showing nodes or edges
-    private ArrayList<javafx.scene.Node> nodeObjectList;
-    private ArrayList<javafx.scene.Node> edgeObjectList;
+    private ArrayList<Circle> nodeObjectList;
+    private ArrayList<Line> edgeObjectList;
     //protected  javafx.scene.Node heightLightedNode;
 
     private Group zoomGroup;
@@ -74,22 +75,22 @@ public class MapController {
     }
 
     public void highlightNode(database.objects.Node node) {
-        for(javafx.scene.Node nodeO : nodeObjectList) {
+        for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == node.getNodeID()) {
 
                 nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setStyle("-fx-border-color:red; -fx-background-color: #00589F;");
+                nodeO.setFill(Color.BLUE);
                 nodesEdgesPane.getChildren().add(nodeO);
             }
         }
     }
 
     public void dehighlightNode(database.objects.Node node) {
-        for(javafx.scene.Node nodeO : nodeObjectList) {
+        for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == node.getNodeID()) {
 
                 nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setStyle("-fx-border-color:transparent; -fx-background-color: transparent;");
+                nodeO.setFill(Color.GRAY);
                 nodesEdgesPane.getChildren().add(nodeO);
             }
         }
@@ -109,19 +110,17 @@ public class MapController {
 
     public void drawNodesOnMap(List<Node> nodes) {
         for (Node n : nodes) {
-            try {
-                javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/view/NodeView.fxml"));
-                nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
-                nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
-                nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
-                nodeObject.setMouseTransparent(false);
+            //use a scene shape so that it can be properly highlighted (more interactive)
+            Circle nodeView = new Circle(n.getXcoord(), n.getYcoord(), 14, Color.GRAY);
+            nodeView.setStrokeWidth(3);
+            nodeView.setMouseTransparent(false);
+            nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
+            nodeView.setPickOnBounds(false);
+            nodeView.setAccessibleText(n.getNodeID());
 
-                nodesEdgesPane.getChildren().add(nodeObject);
-                nodeObject.setAccessibleText(n.getNodeID());
-                nodeObjectList.add(nodeObject);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            nodesEdgesPane.getChildren().add(nodeView);
+            nodeObjectList.add(nodeView);
+
         }
     }
 
@@ -133,11 +132,15 @@ public class MapController {
             Node node2 = mapEntity.getNode(e.getNode2ID());
 
             // TODO(jerry) make this more modular, maybe into an FXML file??
+            // TODO(leo) keep this as it is, or it can NOT properly interact with other map modules
             Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
             edgeView.setStroke(Color.PURPLE);
             edgeView.setStrokeWidth(10);
+            edgeView.setMouseTransparent(false);
             edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
             edgeView.setPickOnBounds(false);
+            edgeView.setAccessibleText(e.getEdgeID());
+
             edgeObjectList.add(edgeView);
             nodesEdgesPane.getChildren().add(edgeView);
         }
@@ -261,16 +264,14 @@ public class MapController {
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
-        nodeObjectList = new ArrayList<javafx.scene.Node>();
-        edgeObjectList = new ArrayList<javafx.scene.Node>();
+        nodeObjectList = new ArrayList<Circle>();
+        edgeObjectList = new ArrayList<Line>();
 
         floorSelector.getItems().addAll(NodeFloor.values());
 
         miniMapController = new MiniMapController(parent, this);
         miniMapPane.getChildren().clear();
         miniMapPane.getChildren().add(miniMapController.getContentView());
-
-
 
         zoomSlider.setMin(0.2);
         zoomSlider.setMax(2.2);
@@ -285,13 +286,16 @@ public class MapController {
         scrollPane.setContent(contentGroup);
 
         //floor changing listeners
+        //TODO Solve the Null pointer issue with another way
+        final boolean offsetBool = false;
         floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
-                NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
-                loadFloor(selectedFloor);
+                loadFloor(newValue);
+                //at application start up, map controller is created first thus no sidebar controller is available at the time
 
-                parent.onMapFloorChanged(selectedFloor);
+                parent.onMapFloorChanged(newValue);
+
                 reloadDisplay();
             }
         });
@@ -356,8 +360,6 @@ public class MapController {
                 miniMapController.setNavigationRecHeight((double)newValue);
             }
         });
-
-        floorSelector.setValue(NodeFloor.THIRD);
     }
 
     @FXML

@@ -214,6 +214,9 @@ public class MainWindowController {
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
+//        System.out.println("controller: " + controllers);
+//        System.out.println("currentScreen: " + currentScreen);
+//        System.out.println("selectedFloor: "+ selectedFloor);
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 }

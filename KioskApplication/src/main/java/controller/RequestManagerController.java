@@ -33,6 +33,11 @@ public class RequestManagerController extends ScreenController {
 
     private DatabaseController dbController;
 
+    @FXML
+    void initialize() {
+        mapController.floorSelector.setValue(NodeFloor.THIRD);
+    }
+
 
     @FXML
     void viewRequests() throws IOException {

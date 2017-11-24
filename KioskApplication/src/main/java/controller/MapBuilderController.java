@@ -72,6 +72,10 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() {
+
+        mapController.showEdgesBox.setSelected(true);
+        mapController.showNodesBox.setSelected(true);
+
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
@@ -127,7 +131,9 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
-        mapController.dehighlightNode(heightLightedNode);
+        if(heightLightedNode != null) {
+            mapController.dehighlightNode(heightLightedNode);
+        }
         heightLightedNode = node;
         mapController.highlightNode(node);
         //switch to node tab
