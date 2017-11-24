@@ -26,6 +26,7 @@ import javafx.scene.shape.Line;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,8 +36,7 @@ public class MapController {
     @FXML protected ScrollPane scrollPane;
 
     @FXML private ImageView mapView;
-    @FXML private AnchorPane nodesPane;
-    @FXML private AnchorPane edgesPane;
+    @FXML private AnchorPane nodesEdgesPane;
     @FXML private AnchorPane waypointPane;
 
     @FXML protected JFXComboBox<NodeFloor> floorSelector;
@@ -48,6 +48,11 @@ public class MapController {
 
     @FXML public AnchorPane miniMapPane;
     MiniMapController miniMapController;
+
+
+    //list of showing nodes or edges
+    private ArrayList<javafx.scene.Node> nodeObjectList;
+    private ArrayList<javafx.scene.Node> edgeObjectList;
 
     private Group zoomGroup;
 
@@ -75,7 +80,7 @@ public class MapController {
     public void setShowNodes(boolean showNodes) {
         this.showNodes = showNodes;
 
-        this.nodesPane.getChildren().clear();
+        this.nodesEdgesPane.getChildren().clear();
         if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
     }
@@ -84,11 +89,14 @@ public class MapController {
         this.showEdges = showEdges;
 
         // TODO remove copypasta
-        this.edgesPane.getChildren().clear();
+        this.nodesEdgesPane.getChildren().clear();
         if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
         if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
     }
 
+    public void highlightNode(database.objects.Node node) {
+
+    }
 
     public void reloadDisplay() {
         showEdges();
@@ -103,6 +111,7 @@ public class MapController {
     }
 
     public void drawNodesOnMap(List<Node> nodes) {
+        nodeObjectList.clear();
         for (Node n : nodes) {
             try {
                 javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/view/NodeView.fxml"));
@@ -110,7 +119,10 @@ public class MapController {
                 nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
                 nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
                 nodeObject.setMouseTransparent(false);
-                nodesPane.getChildren().add(nodeObject);
+
+                nodeObject.setStyle("-fx-border-color:red; -fx-background-color: blue;");
+                nodesEdgesPane.getChildren().add(nodeObject);
+                nodeObjectList.add(nodeObject);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,8 +131,8 @@ public class MapController {
 
     public void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
-        AnchorPane edgesPane = new AnchorPane();
-        edgesPane.setPickOnBounds(false);
+        nodesEdgesPane.setPickOnBounds(false);
+        edgeObjectList.clear();
         for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
@@ -131,9 +143,10 @@ public class MapController {
             edgeView.setStrokeWidth(10);
             edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
             edgeView.setPickOnBounds(false);
-            edgesPane.getChildren().add(edgeView);
+            edgeObjectList.add(edgeView);
+            nodesEdgesPane.getChildren().add(edgeView);
         }
-        this.edgesPane.getChildren().add(edgesPane);
+        //this.nodesEdgesPane.getChildren().add(nodesEdgesPane);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -251,6 +264,9 @@ public class MapController {
 
     @FXML
     protected void initialize() {
+        nodeObjectList = new ArrayList<javafx.scene.Node>();
+        edgeObjectList = new ArrayList<javafx.scene.Node>();
+
         miniMapController = new MiniMapController(parent, this);
         miniMapPane.getChildren().clear();
         miniMapPane.getChildren().add(miniMapController.getContentView());
@@ -259,8 +275,7 @@ public class MapController {
 
         loadFloor(currentFloor);
 
-        nodesPane.setPickOnBounds(false);
-        edgesPane.setPickOnBounds(false);
+        nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         zoomSlider.setMin(0.2);
