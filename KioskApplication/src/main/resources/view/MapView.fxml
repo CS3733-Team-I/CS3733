@@ -24,8 +24,7 @@
                         <Image url="@../images/03_thethirdfloor.png" />
                      </image>
                   </ImageView>
-                  <AnchorPane fx:id="edgesPane" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="nodesPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="nodesEdgesPane" prefHeight="200.0" prefWidth="200.0" />
                   <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>

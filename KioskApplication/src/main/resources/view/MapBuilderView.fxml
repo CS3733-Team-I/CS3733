@@ -102,7 +102,7 @@
                               <JFXComboBox fx:id="CBnodeBuilding" prefHeight="27.0" prefWidth="195.0" promptText="Building" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                               <JFXTextField fx:id="sName" text="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                               <JFXTextField fx:id="lName" text="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-                              <JFXToggleButton fx:id="btInfo" onAction="#onbtInfoClicked" text="Instruction" GridPane.columnSpan="4" GridPane.rowIndex="11" />
+                              <JFXToggleButton fx:id="btInfo" onAction="#onbtInfoClicked" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="11" />
                            </children>
                         </GridPane>
                      </children>

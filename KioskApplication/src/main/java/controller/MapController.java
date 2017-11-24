@@ -53,6 +53,7 @@ public class MapController {
     //list of showing nodes or edges
     private ArrayList<javafx.scene.Node> nodeObjectList;
     private ArrayList<javafx.scene.Node> edgeObjectList;
+    //protected  javafx.scene.Node heightLightedNode;
 
     private Group zoomGroup;
 
@@ -65,9 +66,6 @@ public class MapController {
 
     private NodeFloor currentFloor = NodeFloor.THIRD;
 
-    private boolean showNodes = false;
-    private boolean showEdges = false;
-
     public MapController() {
         waypoints = new LinkedList<>();
     }
@@ -77,25 +75,26 @@ public class MapController {
         parent = controller;
     }
 
-    public void setShowNodes(boolean showNodes) {
-        this.showNodes = showNodes;
-
-        this.nodesEdgesPane.getChildren().clear();
-        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
-        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
-    }
-
-    public void setShowEdges(boolean showEdges) {
-        this.showEdges = showEdges;
-
-        // TODO remove copypasta
-        this.nodesEdgesPane.getChildren().clear();
-        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
-        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
-    }
-
     public void highlightNode(database.objects.Node node) {
+        for(javafx.scene.Node nodeO : nodeObjectList) {
+            if(nodeO.getAccessibleText() == node.getNodeID()) {
 
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setStyle("-fx-border-color:red; -fx-background-color: #00589F;");
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
+        }
+    }
+
+    public void dehighlightNode(database.objects.Node node) {
+        for(javafx.scene.Node nodeO : nodeObjectList) {
+            if(nodeO.getAccessibleText() == node.getNodeID()) {
+
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setStyle("-fx-border-color:transparent; -fx-background-color: transparent;");
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
+        }
     }
 
     public void reloadDisplay() {
@@ -111,7 +110,6 @@ public class MapController {
     }
 
     public void drawNodesOnMap(List<Node> nodes) {
-        nodeObjectList.clear();
         for (Node n : nodes) {
             try {
                 javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/view/NodeView.fxml"));
@@ -120,8 +118,8 @@ public class MapController {
                 nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
                 nodeObject.setMouseTransparent(false);
 
-                nodeObject.setStyle("-fx-border-color:red; -fx-background-color: blue;");
                 nodesEdgesPane.getChildren().add(nodeObject);
+                nodeObject.setAccessibleText(n.getNodeID());
                 nodeObjectList.add(nodeObject);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,7 +130,6 @@ public class MapController {
     public void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
         nodesEdgesPane.setPickOnBounds(false);
-        edgeObjectList.clear();
         for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
@@ -367,21 +364,32 @@ public class MapController {
         NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
         loadFloor(selectedFloor);
 
-        setShowNodes(showNodes);
-        setShowEdges(showEdges);
-
         parent.onMapFloorChanged(selectedFloor);
     }
 
     @FXML
     void showNodes() {
-        boolean selected = showNodesBox.isSelected();
-        setShowNodes(selected);
+        if(showNodesBox.isSelected()) {
+            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+        }
+        else {
+            for (javafx.scene.Node n : nodeObjectList) {
+                nodesEdgesPane.getChildren().remove(n);
+            }
+            nodeObjectList.clear();
+        }
     }
 
     @FXML
     void showEdges() {
-        boolean selected = showEdgesBox.isSelected();
-        setShowEdges(selected);
+        if(showEdgesBox.isSelected()) {
+            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
+        }
+        else {
+            for (javafx.scene.Node n: edgeObjectList) {
+                nodesEdgesPane.getChildren().remove(n);
+            }
+            edgeObjectList.clear();
+        }
     }
 }

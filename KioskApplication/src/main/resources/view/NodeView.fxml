@@ -2,21 +2,11 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="28.0" prefWidth="28.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="30.0" prefWidth="30.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Circle layoutX="14.0" layoutY="14.0" mouseTransparent="true" radius="14.0" stroke="BLACK" strokeType="INSIDE">
-         <fill>
-            <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-               <stops>
-                  <Stop color="#57e9ff" />
-                  <Stop color="#008cff" offset="1.0" />
-               </stops>
-            </RadialGradient>
-         </fill>
+      <Circle fill="#ddded1" layoutX="14.0" layoutY="14.0" mouseTransparent="true" radius="14.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

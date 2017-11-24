@@ -1,10 +1,10 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import database.objects.Edge;
+import database.objects.Node;
 import database.util.CSVFileUtil;
 import entity.MapEntity;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +28,7 @@ public class MapBuilderController extends ScreenController {
     /**
      * Nodes related fields
      */
+    Node heightLightedNode;
     //default, nodeFloor is in sync with main map
     NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeType nodeType = NodeType.CONF;
@@ -71,6 +72,9 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() {
+        CBnodeType.getItems().addAll(NodeType.values());
+        CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
+        CBnodeBuilding.getItems().addAll(NodeBuilding.values());
 
         Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
         ImageView infoIconView = new ImageView(infoIcon);
@@ -123,6 +127,9 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
+        mapController.dehighlightNode(heightLightedNode);
+        heightLightedNode = node;
+        mapController.highlightNode(node);
         //switch to node tab
         SingleSelectionModel<Tab> selectionModel = builderTabPane.getSelectionModel();
         selectionModel.select(nodeTab);
