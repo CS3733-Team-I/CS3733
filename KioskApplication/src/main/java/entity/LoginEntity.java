@@ -69,17 +69,21 @@ public class LoginEntity {
     }
 
     //TODO prevent people from locking themselves and others out in a nontest scenario
-    public void deleteLogin(String userName){
+    public void deleteLogin(String userName, String password){
         //Verifies that the user is an Admin
         if(this.permission==KioskPermission.ADMIN) {
+            //test cleanup method, haven't made this ready to work with the actual application
             if (dbC.equals(DatabaseController.getTestInstance())) {
-                employees.remove(userName);
-            }
-        }
-        else if (admins.containsKey(userName)){
-            //test cleanup method
-            if(dbC.equals(DatabaseController.getTestInstance())){
-                admins.remove(userName);
+                if(employees.containsKey(userName)) {
+                    if(employees.get(userName).equals(password)) {
+                        employees.remove(userName);
+                    }
+                }
+                else if (admins.containsKey(userName)){
+                    if(admins.get(userName).equals(password)) {
+                        admins.remove(userName);
+                    }
+                }
             }
         }
         else {
