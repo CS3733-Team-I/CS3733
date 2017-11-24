@@ -30,38 +30,38 @@ public class TestLoginEntity {
     @Test
     public void testInitialPermission(){
         assertEquals(KioskPermission.ADMIN,l.getPermission());
-        assertEquals("",l.getUserName());
+        assertEquals("",l.getLoginName());
     }
 
     @Test
     public void testValidatePermissionToAdmin(){
         l.validate("hgskhgjh","sghvnjdkhgr");
         assertEquals(KioskPermission.ADMIN,l.validate("boss@hospital.com","123"));
-        assertEquals("boss@hospital.com",l.getUserName());
+        assertEquals("boss@hospital.com",l.getLoginName());
     }
 
     @Test
     public void testValidatePermissionEmployee(){
         assertEquals(KioskPermission.EMPLOYEE, l.validate("emp@hospital.com","12"));
-        assertEquals("emp@hospital.com",l.getUserName());
+        assertEquals("emp@hospital.com",l.getLoginName());
     }
 
     @Test
     public void testValidatePermissionToNonEmployee(){
         assertEquals(KioskPermission.NONEMPLOYEE, l.validate("nonemp@hospital.com","1"));
-        assertEquals("",l.getUserName());
+        assertEquals("",l.getLoginName());
     }
 
     @Test
     public void testInvalidAdminPassword(){
         assertEquals(KioskPermission.NONEMPLOYEE,l.validate("boss@hospital.com","12"));
-        assertEquals("",l.getUserName());
+        assertEquals("",l.getLoginName());
     }
 
     @Test
     public void testInvalidEmployeePassword(){
         assertEquals(KioskPermission.NONEMPLOYEE,l.validate("emp@hospital.com","123"));
-        assertEquals("",l.getUserName());
+        assertEquals("",l.getLoginName());
     }
 
     //Employees should not delete the admin login

@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class LoginEntity {
     private DatabaseController dbC;
     private KioskPermission permission;
-    private String userName;
+    private String loginName;
     private HashMap<String,String> employees;
     private HashMap<String,String> admins;
 
@@ -35,7 +35,7 @@ public class LoginEntity {
     private LoginEntity(Boolean test){
         employees = new HashMap<>();
         admins = new HashMap<>();
-        this.userName="";
+        this.loginName="";
         if (test){
             permission = KioskPermission.ADMIN;
             dbC = DatabaseController.getTestInstance();
@@ -50,38 +50,38 @@ public class LoginEntity {
         return permission;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLoginName() {
+        return loginName;
     }
 
     //TODO add some sorts of security methods to this
-    public void addLogin(String userName, String password, boolean admin){
+    public void addLogin(String loginName, String password, boolean admin){
         if(this.permission==KioskPermission.ADMIN){
             if(admin){
                 if (dbC.equals(DatabaseController.getTestInstance())) {
-                    admins.putIfAbsent(userName, password);
+                    admins.putIfAbsent(loginName, password);
                 }
             }
             else {
-                employees.putIfAbsent(userName, password);
+                employees.putIfAbsent(loginName, password);
             }
         }
     }
 
     //TODO prevent people from locking themselves and others out in a nontest scenario
-    public void deleteLogin(String userName, String password){
+    public void deleteLogin(String loginName, String password){
         //Verifies that the user is an Admin
         if(this.permission==KioskPermission.ADMIN) {
             //test cleanup method, haven't made this ready to work with the actual application
             if (dbC.equals(DatabaseController.getTestInstance())) {
-                if(employees.containsKey(userName)) {
-                    if(employees.get(userName).equals(password)) {
-                        employees.remove(userName);
+                if(employees.containsKey(loginName)) {
+                    if(employees.get(loginName).equals(password)) {
+                        employees.remove(loginName);
                     }
                 }
-                else if (admins.containsKey(userName)){
-                    if(admins.get(userName).equals(password)) {
-                        admins.remove(userName);
+                else if (admins.containsKey(loginName)){
+                    if(admins.get(loginName).equals(password)) {
+                        admins.remove(loginName);
                     }
                 }
             }
@@ -92,19 +92,19 @@ public class LoginEntity {
     }
 
     //For checking log in credentials
-    public KioskPermission validate(String userName, String password){
-        if(admins.containsKey(userName)){
-            if (admins.get(userName).equals(password)){
-                this.userName = userName;
+    public KioskPermission validate(String loginName, String password){
+        if(admins.containsKey(loginName)){
+            if (admins.get(loginName).equals(password)){
+                this.loginName = loginName;
                 permission = KioskPermission.ADMIN;
             }
             else {
                 validationFail();
             }
         }
-        else if(employees.containsKey(userName)){
-            if (employees.get(userName).equals(password)){
-                this.userName = userName;
+        else if(employees.containsKey(loginName)){
+            if (employees.get(loginName).equals(password)){
+                this.loginName = loginName;
                 permission = KioskPermission.EMPLOYEE;
             }
             else {
@@ -119,7 +119,7 @@ public class LoginEntity {
 
     //Helper method for validate
     private void validationFail(){
-        this.userName = "";
+        this.loginName = "";
         permission = KioskPermission.NONEMPLOYEE;
     }
 }
