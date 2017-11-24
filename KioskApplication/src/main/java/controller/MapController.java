@@ -39,7 +39,7 @@ public class MapController {
     @FXML private AnchorPane edgesPane;
     @FXML private AnchorPane waypointPane;
 
-    @FXML private JFXComboBox<NodeFloor> floorSelector;
+    @FXML protected JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
 
     @FXML private VBox optionsBox;
