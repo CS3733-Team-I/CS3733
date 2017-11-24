@@ -107,8 +107,6 @@ public class MainWindowController {
 
         checkPermissions();
 
-        this.switchToScreen(ApplicationScreen.PATHFINDING);
-
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
         //Initialize Hamburger
 //        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
@@ -128,6 +126,7 @@ public class MainWindowController {
 //        });
     }
 
+    //checks permissions of user and adjusts visible tabs and screens
     public void checkPermissions() {
         switch (permission) {
             case NONEMPLOYEE:
@@ -135,6 +134,11 @@ public class MainWindowController {
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().removeAll(tabMap,tabMB, tabRM, tabRS, tabSettings);
                 tabPane.getTabs().add(tabMap);
+                switchToScreen(ApplicationScreen.PATHFINDING);
+                controllers.get(currentScreen).resetScreen();
+                currentScreen = ApplicationScreen.PATHFINDING;
+                mapController.showEdgesBox.setSelected(false);
+                mapController.showNodesBox.setSelected(false);
                 break;
             case EMPLOYEE:
                 switchButton.setText("Logoff");
@@ -257,9 +261,6 @@ public class MainWindowController {
             case EMPLOYEE:
                 this.permission=KioskPermission.NONEMPLOYEE;
                 checkPermissions();
-                this.switchToScreen(ApplicationScreen.PATHFINDING);
-                controllers.get(currentScreen).resetScreen();
-                currentScreen = ApplicationScreen.PATHFINDING;
                 //this.lbAdminInfo.setText("");
                 break;
             case NONEMPLOYEE:
