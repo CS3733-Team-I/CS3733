@@ -21,11 +21,12 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML JFXTabPane tabPane;
-
     @FXML AnchorPane contentWindow;
+    @FXML AnchorPane sideBarWindow;
     @FXML BorderPane loginPopup;
     @FXML JFXButton switchButton;
+
+    @FXML JFXTabPane tabPane;
     @FXML Tab tabMap;
     @FXML Tab tabMB;
     @FXML Tab tabRS;
@@ -47,6 +48,62 @@ public class MainWindowController {
         controllers = new HashMap<>();
 
         mapView = new AnchorPane();
+    }
+
+    @FXML
+    protected void initialize() throws IOException
+    {
+        // Initialize MapView with MapController
+        mapController = new MapController();
+        mapController.setParent(this);
+
+        FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
+        mapPaneLoader.setRoot(mapView);
+        mapPaneLoader.setController(mapController);
+        mapPaneLoader.load();
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
+                switch (newValue.getText()) { // TODO make this more modular/language independent
+                    case "Map":
+                        switchToScreen(ApplicationScreen.PATHFINDING);
+                        break;
+                    case "Map Builder":
+                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        break;
+                    case "Request Manager":
+                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        break;
+                    case "Request Submit":
+                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+                        break;
+                    case "Settings":
+                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+                        break;
+                }
+            }
+        });
+
+        this.switchToScreen(ApplicationScreen.PATHFINDING);
+
+        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
+        //Initialize Hamburger
+//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
+//        BATransition.setRate(-1);
+//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
+//            BATransition.setRate(BATransition.getRate()*-1);
+//            BATransition.play();
+//
+//            if(Sidebar.isShown()) {
+//                System.out.println("HERE1");
+//                Sidebar.close();
+//            }
+//            else {
+//                System.out.println("HERE2");
+//                Sidebar.open();
+//            }
+//        });
     }
 
     public void switchToScreen(ApplicationScreen screen) {
@@ -117,15 +174,23 @@ public class MainWindowController {
 
         javafx.scene.Node contentView = controller.getContentView();
 
+        this.sideBarWindow = new AnchorPane(contentView);
+
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
-        contentWindow.getChildren().add(contentView);
+        //contentWindow.getChildren().add(contentView);
 
         // Fit sidebar to window
-        AnchorPane.setTopAnchor(contentView, 0.0);
+        /*AnchorPane.setTopAnchor(contentView, 0.0);
         AnchorPane.setBottomAnchor(contentView, 0.0);
         AnchorPane.setLeftAnchor(contentView, 0.0);
+        */
+
+        AnchorPane.setTopAnchor(sideBarWindow, 0.0);
+        AnchorPane.setBottomAnchor(sideBarWindow, 0.0);
+        AnchorPane.setLeftAnchor(sideBarWindow, 0.0);
+        contentWindow.getChildren().add(sideBarWindow);
 
         // Reset controller's view
         controller.resetScreen();
@@ -133,66 +198,12 @@ public class MainWindowController {
         this.currentScreen = screen;
     }
 
-    @FXML
-    protected void initialize() throws IOException
-    {
-        // Initialize MapView with MapController
-        mapController = new MapController();
-        mapController.setParent(this);
-
-        FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
-        mapPaneLoader.setRoot(mapView);
-        mapPaneLoader.setController(mapController);
-        mapPaneLoader.load();
-
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
-                switch (newValue.getText()) { // TODO make this more modular/language independent
-                    case "Map":
-                        switchToScreen(ApplicationScreen.PATHFINDING);
-                        break;
-                    case "Map Builder":
-                        switchToScreen(ApplicationScreen.ADMIN_MENU);
-                        break;
-                    case "Request Manager":
-                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
-                        break;
-                    case "Request Submit":
-                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
-                        break;
-                    case "Settings":
-                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
-                        break;
-                }
-            }
-        });
-
-        this.switchToScreen(ApplicationScreen.PATHFINDING);
-
-        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
-        //Initialize Hamburger
-//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
-//        BATransition.setRate(-1);
-//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
-//            BATransition.setRate(BATransition.getRate()*-1);
-//            BATransition.play();
-//
-//            if(Sidebar.isShown()) {
-//                System.out.println("HERE1");
-//                Sidebar.close();
-//            }
-//            else {
-//                System.out.println("HERE2");
-//                Sidebar.open();
-//            }
-//        });
-    }
-
     protected void removeLoginPopup(){
         this.loginPopup.getChildren().clear();
         this.switchButton.setDisable(false);
+        this.tabPane.setDisable(false);
         this.tabMap.setDisable(false);
+        this.sideBarWindow.setDisable(false);
         this.mapView.setDisable(false);
         //this.loginPopup.getChildren().add(this.switchButton);
     }
@@ -200,7 +211,9 @@ public class MainWindowController {
     @FXML
     private void addLoginPopup() throws IOException{
         this.switchButton.setDisable(true);
+        this.tabPane.setDisable(true);
         this.tabMap.setDisable(true);
+        this.sideBarWindow.setDisable(true);
         this.mapView.setDisable(true);
         LoginController loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
@@ -215,6 +228,7 @@ public class MainWindowController {
 
         loginPopup.setRight(view);
         contentWindow.getChildren().add(loginPopup);
+        System.out.println(contentWindow.getChildren().toString());
 
         /*//TODO: make this slide in transition code work
         double screenWidth=contentWindow.getWidth();
@@ -249,7 +263,6 @@ public class MainWindowController {
                 break;
             case PATHFINDING:
                 this.addLoginPopup();
-                this.switchButton.setDisable(true);
                 break;
         }
     }
