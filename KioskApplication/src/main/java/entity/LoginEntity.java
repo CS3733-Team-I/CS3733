@@ -34,9 +34,11 @@ public class LoginEntity {
 
     private LoginEntity(Boolean test){
         if (test){
+            permission = KioskPermission.ADMIN;
             dbC = DatabaseController.getTestInstance();
         }
         else {
+            permission = KioskPermission.NONEMPLOYEE;
             dbC = DatabaseController.getInstance();
         }
     }
@@ -47,6 +49,39 @@ public class LoginEntity {
 
     public String getUserName() {
         return userName;
+    }
+
+    //TODO add some sorts of security methods to this
+    public void addLogin(String userName, String password, boolean admin){
+        if(this.permission==KioskPermission.ADMIN){
+            if(admin){
+                if (dbC.equals(DatabaseController.getTestInstance())) {
+                    admins.putIfAbsent(userName, password);
+                }
+            }
+            else {
+                employees.putIfAbsent(userName, password);
+            }
+        }
+    }
+
+    //TODO prevent people from locking themselves and others out in a nontest scenario
+    public void deleteLogin(String userName){
+        //Verifies that the user is an Admin
+        if(this.permission==KioskPermission.ADMIN) {
+            if (dbC.equals(DatabaseController.getTestInstance())) {
+                employees.remove(userName);
+            }
+        }
+        else if (admins.containsKey(userName)){
+            //test cleanup method
+            if(dbC.equals(DatabaseController.getTestInstance())){
+                admins.remove(userName);
+            }
+        }
+        else {
+            return;
+        }
     }
 
     //For checking log in credentials
