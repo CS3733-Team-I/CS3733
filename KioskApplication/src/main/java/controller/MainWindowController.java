@@ -131,27 +131,18 @@ public class MainWindowController {
         // Initialize controller if it doesn't exist
         if (controller == null) {
             switch (screen) {
-                case ADMIN_MENU:
-                    controller = new AdminSidebarController(this, mapController);
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
                     break;
 
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
-
-                case ADMIN_NODE:
-                    controller = new AdminNodeController(this, mapController);
-                    break;
-
-                case ADMIN_EDGE:
-                    controller = new AdminEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_VIEWREQUEST:
+                case REQUEST_MANAGER:
                     controller = new RequestManagerController(this, mapController);
                     break;
 
-                case REQUEST_INTERFACE:
+                case REQUEST_SUBMITTER:
                     controller = new RequestSubmitterController(this, mapController);
                     break;
 
@@ -168,13 +159,6 @@ public class MainWindowController {
 
         // Additional actions on screen switch
         switch (screen) {
-            case ADMIN_MENU:
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
-                //shows all but the Map tab for logged in Users
-                tabPane.getTabs().remove(tabMap);
-                tabPane.getTabs().addAll(tabMB,tabRM,tabRS,tabSettings);
-                break;
             case PATHFINDING:
                 switchButton.setText("Staff Login");
                 switchButton.requestFocus();
@@ -182,7 +166,20 @@ public class MainWindowController {
                 tabPane.getTabs().removeAll(tabMap,tabMB,tabRM,tabRS,tabSettings);
                 tabPane.getTabs().add(tabMap);
                 break;
+            case MAP_BUILDER:
+                switchButton.setText("Logoff");
+                switchButton.requestFocus();
+                //default to showing all nodes and edges
+                mapController.showEdgesBox.setSelected(true);
+                mapController.showNodesBox.setSelected(true);
+                //shows all but the Map tab for logged in Users
+                tabPane.getTabs().remove(tabMap);
+                tabPane.getTabs().addAll(tabMB,tabRM,tabRS,tabSettings);
+                break;
+
             default:
+                mapController.showEdgesBox.setSelected(false);
+                mapController.showNodesBox.setSelected(false);
                 break;
         }
 
@@ -197,11 +194,6 @@ public class MainWindowController {
         //contentWindow.getChildren().add(contentView);
 
         // Fit sidebar to window
-        /*AnchorPane.setTopAnchor(contentView, 0.0);
-        AnchorPane.setBottomAnchor(contentView, 0.0);
-        AnchorPane.setLeftAnchor(contentView, 0.0);
-        */
-
         AnchorPane.setTopAnchor(sideBarWindow, 0.0);
         AnchorPane.setBottomAnchor(sideBarWindow, 0.0);
         AnchorPane.setLeftAnchor(sideBarWindow, 0.0);
@@ -251,12 +243,14 @@ public class MainWindowController {
     @FXML
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
-            //case ADMIN_NODE:
-            //case ADMIN_EDGE:
-            case ADMIN_VIEWREQUEST:
-            case REQUEST_INTERFACE:
+            case REQUEST_MANAGER:
+                /*
+            case ADMIN_NODE:
+            case ADMIN_EDGE:
+            */
+            case REQUEST_SUBMITTER:
             case ADMIN_SETTINGS:
-            case ADMIN_MENU:
+            case MAP_BUILDER:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
                 currentScreen = ApplicationScreen.PATHFINDING;
@@ -281,6 +275,9 @@ public class MainWindowController {
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
+//        System.out.println("controller: " + controllers);
+//        System.out.println("currentScreen: " + currentScreen);
+//        System.out.println("selectedFloor: "+ selectedFloor);
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 }
