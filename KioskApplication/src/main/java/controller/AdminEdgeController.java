@@ -42,7 +42,7 @@ public class AdminEdgeController extends ScreenController {
 
     @FXML
     void onBackPressed() throws IOException{
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML

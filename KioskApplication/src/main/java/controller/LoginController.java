@@ -8,21 +8,12 @@ import entity.AdministratorList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LoginController {
 
@@ -81,12 +72,12 @@ public class LoginController {
     public void OnLoginClicked() throws IOException {
 
         if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
-            parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
+            parent.switchToScreen(ApplicationScreen.MAP_BUILDER);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
             parent.LoginPopup.getChildren().clear();
             parent.LoginPopup.getChildren().add(parent.switchButton);
-            parent.currentScreen = ApplicationScreen.ADMIN_MENU;
+            parent.currentScreen = ApplicationScreen.MAP_BUILDER;
 //            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {

@@ -75,7 +75,7 @@ public class SettingsController extends ScreenController {
     void onBackPressed() {
         System.out.println("Back Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @Override

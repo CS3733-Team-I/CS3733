@@ -55,27 +55,18 @@ public class MainWindowController {
         // Initialize controller if it doesn't exist
         if (controller == null) {
             switch (screen) {
-                case ADMIN_MENU:
+                case MAP_BUILDER:
                     controller = new MapBuilderController(this, mapController);
                     break;
 
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
                     break;
-
-                case ADMIN_NODE:
-                    controller = new AdminNodeController(this, mapController);
-                    break;
-
-                case ADMIN_EDGE:
-                    controller = new AdminEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_VIEWREQUEST:
+                case REQUEST_MANAGER:
                     controller = new RequestManagerController(this, mapController);
                     break;
 
-                case REQUEST_INTERFACE:
+                case REQUEST_SUBMITTER:
                     controller = new RequestSubmitterController(this, mapController);
                     break;
 
@@ -92,15 +83,21 @@ public class MainWindowController {
 
         // Additional actions on screen switch
         switch (screen) {
-            case ADMIN_MENU:
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
-                break;
             case PATHFINDING:
                 switchButton.setText("Employee login");
                 switchButton.requestFocus();
                 break;
+            case MAP_BUILDER:
+                switchButton.setText("Logoff");
+                switchButton.requestFocus();
+                //default to showing all nodes and edges
+                mapController.showEdgesBox.setSelected(true);
+                mapController.showNodesBox.setSelected(true);
+                break;
+
             default:
+                mapController.showEdgesBox.setSelected(false);
+                mapController.showNodesBox.setSelected(false);
                 break;
         }
 
@@ -143,13 +140,13 @@ public class MainWindowController {
                         switchToScreen(ApplicationScreen.PATHFINDING);
                         break;
                     case "Map Builder":
-                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.MAP_BUILDER);
                         break;
                     case "Request Manager":
-                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                         break;
                     case "Request Submit":
-                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                         break;
                     case "Settings":
                         switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
@@ -182,14 +179,14 @@ public class MainWindowController {
     @FXML
     public void switchButtonClicked() throws IOException {
         switch (currentScreen) {
-            case ADMIN_VIEWREQUEST:
+            case REQUEST_MANAGER:
                 /*
             case ADMIN_NODE:
             case ADMIN_EDGE:
             */
-            case REQUEST_INTERFACE:
+            case REQUEST_SUBMITTER:
             case ADMIN_SETTINGS:
-            case ADMIN_MENU:
+            case MAP_BUILDER:
                 this.switchToScreen(ApplicationScreen.PATHFINDING);
                 controllers.get(currentScreen).resetScreen();
                 currentScreen = ApplicationScreen.PATHFINDING;

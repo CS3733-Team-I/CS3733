@@ -112,6 +112,7 @@ public class MapController {
         for (Node n : nodes) {
             //use a scene shape so that it can be properly highlighted (more interactive)
             Circle nodeView = new Circle(n.getXcoord(), n.getYcoord(), 14, Color.GRAY);
+            nodeView.setStroke(Color.BLACK);
             nodeView.setStrokeWidth(3);
             nodeView.setMouseTransparent(false);
             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
@@ -163,7 +164,7 @@ public class MapController {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        loadFloor(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
 
         clearMap();
         drawEdgesOnMap(path.getEdges());
@@ -195,7 +196,11 @@ public class MapController {
             e.printStackTrace();
         }
     }
-
+    /**
+     * This method's visibility should be keep private and only used in MapController's listener
+     * For switching bwtween floors, either in this class or sidebar controller classes,
+     * call "mapController.floorSelector.setValue(your floor)"
+     */
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {
