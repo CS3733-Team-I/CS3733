@@ -35,7 +35,6 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void initialize() {
-        mapController.floorSelector.setValue(NodeFloor.THIRD);
     }
 
 

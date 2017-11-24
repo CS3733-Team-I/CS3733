@@ -52,7 +52,6 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     public void initialize() {
-        mapController.floorSelector.setValue(NodeFloor.THIRD);
         Image interpreterIcon = new Image(getClass().getResource("/images/icons/interpreterIcon.png").toString());
         ImageView interpreterIconView = new ImageView(interpreterIcon);
         interpreterIconView.setRotate(90);
