@@ -70,13 +70,13 @@ public class MainWindowController {
                         switchToScreen(ApplicationScreen.PATHFINDING);
                         break;
                     case "Map Builder":
-                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.MAP_BUILDER);
                         break;
                     case "Request Manager":
-                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                         break;
                     case "Request Submit":
-                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                         break;
                     case "Settings":
                         switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
