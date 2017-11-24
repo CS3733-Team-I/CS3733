@@ -5,17 +5,16 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.util.DBUtil;
 import database.objects.InterpreterRequest;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 
-//Node and Edge objects should only be made here
+//node and Edge objects should only be made here
 public class DatabaseController {
 
     private  Connection instanceConnection = null;

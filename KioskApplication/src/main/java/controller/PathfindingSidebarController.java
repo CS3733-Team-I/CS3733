@@ -1,6 +1,5 @@
 package controller;
 
-import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.AlgorithmSetting;
@@ -13,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;

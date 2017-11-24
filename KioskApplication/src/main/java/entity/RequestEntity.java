@@ -3,8 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
-import utility.Request.Language;
-import utility.Request.RequestProgressStatus;
+import utility.request.Language;
+import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class RequestEntity {
         return allRequests;
     }
 
-    //Each type of Request has its own table in the database
+    //Each type of request has its own table in the database
     //TODO: incorporate search class into application so that nodeID can become location
     public String submitInterpreterRequest(String nodeID, String employee, String note, Language language){
         InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);

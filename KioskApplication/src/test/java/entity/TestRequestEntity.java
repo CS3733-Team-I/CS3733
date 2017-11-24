@@ -7,11 +7,9 @@ import database.objects.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
-import utility.Request.Language;
-import utility.Node.NodeFloor;
-import utility.Request.RequestProgressStatus;
-
-import java.sql.Timestamp;
+import utility.request.Language;
+import utility.node.NodeFloor;
+import utility.request.RequestProgressStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -114,7 +112,7 @@ public class TestRequestEntity {
     public void testUpdateRequest(){
         //adds interpreter request to database and hashmap
         String testIRID = r.submitInterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
-        //Interpreter Request to be modified
+        //Interpreter request to be modified
         InterpreterRequest iR1 = new InterpreterRequest("NODE2","emp@hospital.com", "Says name is Wilson Wong", Language.CHINESE);
         //modifying interpreter request
         r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssigner(), iR1.getNote(), iR1.getSubmittedTime(), iR1.getCompletedTime(), iR1.getStatus(), iR1.getLanguage());

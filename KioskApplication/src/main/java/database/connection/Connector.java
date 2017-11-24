@@ -6,11 +6,11 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.template.SQLStrings;
 import database.objects.InterpreterRequest;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
-import utility.Request.Language;
-import utility.Request.RequestProgressStatus;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
+import utility.request.Language;
+import utility.request.RequestProgressStatus;
 
 import java.sql.*;
 import java.util.ArrayList;

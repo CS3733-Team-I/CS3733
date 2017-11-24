@@ -10,9 +10,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.io.IOException;
 
@@ -138,7 +138,7 @@ public class AdminNodeController extends ScreenController {
                 if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
                     //create new node
                     Node node1 = new Node(nodeID.getText(), (int) Double.parseDouble(xcoord.getText()), (int) Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
-                    // Add Node
+                    // Add node
                     MapEntity.getInstance().addNode(node1);
                     System.out.println("Adding node " + nodeID.getText());
                     resetScreen();
@@ -148,9 +148,9 @@ public class AdminNodeController extends ScreenController {
                 // Find the existing node with that ID
                 if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
                     System.out.println("Editing node " + nodeID.getText());
-                    // Create Node
+                    // Create node
                     Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
-                    // Update Node
+                    // Update node
                     MapEntity.getInstance().editNode(node1);
                     System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
                     resetScreen();
@@ -331,7 +331,7 @@ public class AdminNodeController extends ScreenController {
     @FXML
     void deleteNode() throws IOException {
         if(nodeID.getText().equals("") || nodeID.getText() == null){ // If no node selected
-            System.out.println("No Node Selected");
+            System.out.println("No node Selected");
         }
         else{
             System.out.println("Delete node: " + nodeID.getText());
@@ -344,14 +344,14 @@ public class AdminNodeController extends ScreenController {
                 MapEntity.getInstance().removeNode(delN.getNodeID());
 
                 if (isSuccess) { // If successfully deleted
-                    System.out.println("Node " + nodeID.getText() + " Deleted");
+                    System.out.println("node " + nodeID.getText() + " Deleted");
                     resetScreen();
                 }
                 else  // If DB failed to delete
                     System.out.println("Failed to remove node: " + nodeID.getText());
             }
             else { // If not, notify user
-                System.out.println("Node " + nodeID.getText() + " is not in the database");
+                System.out.println("node " + nodeID.getText() + " is not in the database");
             }
         }
     }

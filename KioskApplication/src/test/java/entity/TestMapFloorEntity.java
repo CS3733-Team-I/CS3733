@@ -2,8 +2,7 @@ package entity;
 
 import database.DatabaseController;
 import database.objects.Node;
-import entity.MapFloorEntity;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

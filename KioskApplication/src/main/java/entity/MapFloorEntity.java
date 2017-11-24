@@ -21,14 +21,14 @@ public class MapFloorEntity implements IMapEntity{
 
     @Override
     public void addNode(Node n) {
-        nodes.put(n.getNodeID(), n);
         dbController.addNode(n);
+        nodes.put(n.getNodeID(), n);
     }
 
     @Override
     public void editNode(Node n) {
-        nodes.put(n.getNodeID(), n);
         dbController.updateNode(n);
+        nodes.put(n.getNodeID(), n);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MapFloorEntity implements IMapEntity{
 
     @Override
     public void removeNode(String s) {
-        nodes.remove(s);
         dbController.removeNode(new Node(s));
+        nodes.remove(s);
     }
 }

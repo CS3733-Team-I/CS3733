@@ -3,8 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.*;
 
@@ -125,13 +125,13 @@ public class MapEntity implements IMapEntity {
     }
 
     public void addEdge(Edge e) {
-        edges.put(e.getEdgeID(),e);
         dbController.addEdge(e);
+        edges.put(e.getEdgeID(),e);
     }
 
     public void editEdge(Edge e) {
-        edges.put(e.getEdgeID(), e);
         dbController.updateEdge(e);
+        edges.put(e.getEdgeID(), e);
     }
 
     public Edge getEdge(String s) {
@@ -150,8 +150,8 @@ public class MapEntity implements IMapEntity {
 
     // TODO pass edge as param instead of string
     public void removeEdge(String s) {
-        edges.remove(s);
         dbController.removeEdge(new Edge(s, "", ""));
+        edges.remove(s);
     }
 
     public ArrayList<Edge> getEdges(Node n) {

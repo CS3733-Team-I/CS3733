@@ -1,6 +1,6 @@
 package database.objects;
 
-import utility.Request.RequestProgressStatus;
+import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 
@@ -17,7 +17,7 @@ public abstract class Request {
     private Timestamp completedTime;
 
 
-    /*public Request(Node location, String assigner, int requestID) {
+    /*public request(node location, String assigner, int requestID) {
         this.location = location;
         this.assigner = assigner;
         this.requestID = requestID;

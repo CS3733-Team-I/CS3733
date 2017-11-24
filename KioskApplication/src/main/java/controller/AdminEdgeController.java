@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
 

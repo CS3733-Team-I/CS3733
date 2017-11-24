@@ -4,13 +4,9 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
-import pathfinder.A_star;
-import pathfinder.Pathfinder;
-import pathfinder.PathfinderNode;
-import pathfinder.StartNode;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 

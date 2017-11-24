@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class MapController {
     //list of showing nodes or edges
     private ArrayList<Circle> nodeObjectList;
     private ArrayList<Line> edgeObjectList;
-    //protected  javafx.scene.Node heightLightedNode;
+    //protected  javafx.scene.node heightLightedNode;
 
     private Group zoomGroup;
 

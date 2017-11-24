@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -40,7 +40,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void viewRequests() throws IOException {
-        System.out.println("Request Manager Pressed\n");
+        System.out.println("request Manager Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }

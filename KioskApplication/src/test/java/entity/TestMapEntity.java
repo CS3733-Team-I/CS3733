@@ -3,8 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.MapEntity;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 import org.junit.Before;
 import org.junit.Test;
 
