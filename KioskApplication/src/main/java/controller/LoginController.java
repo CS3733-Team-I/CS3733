@@ -18,13 +18,11 @@ import java.io.IOException;
 public class LoginController {
 
     @FXML
-    JFXTextField tfEmail;
+    private JFXTextField tfEmail;
     @FXML
-    JFXPasswordField pfPassword;
+    private JFXPasswordField pfPassword;
     @FXML
-    Label errorMsg;
-    @FXML
-    ImageView errorIcon;
+    private Label errorMsg;
     @FXML
     private AnchorPane loginAnchor;
 
@@ -74,20 +72,29 @@ public class LoginController {
             parent.switchToScreen(ApplicationScreen.ADMIN_MENU);
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
-            parent.removeLoginPopup();
+            resetFields();
+            parent.closeLoginPopup();
             parent.currentScreen = ApplicationScreen.ADMIN_MENU;
 //            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
-            errorIcon.setVisible(true);
-            errorMsg.setText("Invalid Login");
+            errorMsg.setVisible(true);
         }
     }
 
     @FXML
     public void OnBackClicked () throws IOException {
         parent.switchToScreen(ApplicationScreen.PATHFINDING);
-        parent.removeLoginPopup();
+        tfEmail.clear();
+        pfPassword.clear();
+        resetFields();
+        parent.closeLoginPopup();
+    }
+
+    private void resetFields(){
+        tfEmail.clear();
+        pfPassword.clear();
+        errorMsg.setVisible(false);
     }
 
     public double getLoginAnchorWidth() {

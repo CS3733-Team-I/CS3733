@@ -85,6 +85,20 @@ public class MainWindowController {
             }
         });
 
+        LoginController loginController = new LoginController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
+        loader.setController(loginController);
+        javafx.scene.Node view = loader.load();
+
+        this.loginPopup = new BorderPane();
+        AnchorPane.setTopAnchor(loginPopup, 0.0);
+        AnchorPane.setLeftAnchor(loginPopup, 0.0);
+        AnchorPane.setBottomAnchor(loginPopup, 0.0);
+        AnchorPane.setRightAnchor(loginPopup, 0.0);
+        loginPopup.setRight(view);
+        //hides the popup
+        loginPopup.setVisible(false);
+
         this.switchToScreen(ApplicationScreen.PATHFINDING);
 
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
@@ -179,6 +193,7 @@ public class MainWindowController {
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
+        contentWindow.getChildren().add(loginPopup);
         //contentWindow.getChildren().add(contentView);
 
         // Fit sidebar to window
@@ -198,37 +213,23 @@ public class MainWindowController {
         this.currentScreen = screen;
     }
 
-    protected void removeLoginPopup(){
-        this.loginPopup.getChildren().clear();
+    protected void closeLoginPopup(){
+        this.loginPopup.setVisible(false);
         this.switchButton.setDisable(false);
         this.tabPane.setDisable(false);
         this.tabMap.setDisable(false);
         this.sideBarWindow.setDisable(false);
         this.mapView.setDisable(false);
-        //this.loginPopup.getChildren().add(this.switchButton);
     }
 
     @FXML
-    private void addLoginPopup() throws IOException{
+    private void openLoginPopup() throws IOException{
+        this.loginPopup.setVisible(true);
         this.switchButton.setDisable(true);
         this.tabPane.setDisable(true);
         this.tabMap.setDisable(true);
         this.sideBarWindow.setDisable(true);
         this.mapView.setDisable(true);
-        LoginController loginController = new LoginController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
-        loader.setController(loginController);
-        javafx.scene.Node view = loader.load();
-
-        this.loginPopup = new BorderPane();
-        AnchorPane.setTopAnchor(loginPopup, 0.0);
-        AnchorPane.setLeftAnchor(loginPopup, 0.0);
-        AnchorPane.setBottomAnchor(loginPopup, 0.0);
-        AnchorPane.setRightAnchor(loginPopup, 0.0);
-
-        loginPopup.setRight(view);
-        contentWindow.getChildren().add(loginPopup);
-        System.out.println(contentWindow.getChildren().toString());
 
         /*//TODO: make this slide in transition code work
         double screenWidth=contentWindow.getWidth();
@@ -262,7 +263,7 @@ public class MainWindowController {
                 //this.lbAdminInfo.setText("");
                 break;
             case PATHFINDING:
-                this.addLoginPopup();
+                this.openLoginPopup();
                 break;
         }
     }
