@@ -11,6 +11,7 @@ import entity.MapEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -81,17 +82,13 @@ public class MapBuilderController extends ScreenController {
      */
     //TODO
     @FXML
-    protected List<database.objects.Node> selectedNodes;
-    protected List<database.objects.Edge> selectedEdges;
     private ObservableList<database.objects.Node> observableSelectedNodes;
     private ObservableList<database.objects.Edge> observableSelectedEdges;
 
     MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
-        selectedNodes = new ArrayList<database.objects.Node>();
-        selectedEdges = new ArrayList<database.objects.Edge>();
-        observableSelectedNodes = FXCollections.observableList(selectedNodes);
-        observableSelectedEdges = FXCollections.observableList(selectedEdges);
+        observableSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableSelectedEdges = FXCollections.<database.objects.Edge>observableArrayList();
     }
 
     @FXML
@@ -152,6 +149,19 @@ public class MapBuilderController extends ScreenController {
                 updateNodeID();
             }
         });
+        //keep track on selected nodes and edges list
+        observableSelectedNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                System.out.println("Node Change Detected");
+            }
+        });
+        observableSelectedEdges.addListener(new ListChangeListener<Edge>() {
+            @Override
+            public void onChanged(Change<? extends Edge> c) {
+                System.out.println("Edge Change Detected");
+            }
+        });
     }
 
     @Override
@@ -163,6 +173,7 @@ public class MapBuilderController extends ScreenController {
         return contentView;
     }
 
+    //TODO
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         //detects double-click events
@@ -175,11 +186,13 @@ public class MapBuilderController extends ScreenController {
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
         //dehighlight previous hightlighted node
-        for(database.objects.Node n : selectedNodes) {
+        for(database.objects.Node n : observableSelectedNodes) {
             mapController.DehighlightNode(n);
         }
-        selectedNodes.clear();
-        selectedNodes.add(node);
+
+        observableSelectedNodes.clear();
+        observableSelectedNodes.add(node);
+        System.out.println("node added");
         mapController.HighlightNode(node);
 
         //switch to node tab
@@ -198,6 +211,10 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapEdgeClicked(database.objects.Edge edge) {
+
+        observableSelectedEdges.clear();
+        observableSelectedEdges.add(edge);
+
         //switch to edge tab
         selectionModel.select(1);
     }
