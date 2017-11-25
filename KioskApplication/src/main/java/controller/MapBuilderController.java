@@ -4,11 +4,14 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.validation.RequiredFieldValidator;
+import database.objects.Edge;
 import database.objects.Node;
 import database.util.CSVFileUtil;
 import entity.MapEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
@@ -22,6 +25,7 @@ import utility.Node.NodeType;
 import utility.Node.TeamAssigned;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapBuilderController extends ScreenController {
 
@@ -77,13 +81,17 @@ public class MapBuilderController extends ScreenController {
      */
     //TODO
     @FXML
-    private ArrayList<database.objects.Node> selectedNodes;
-    private ArrayList<database.objects.Edge> selectedEdges;
+    protected List<database.objects.Node> selectedNodes;
+    protected List<database.objects.Edge> selectedEdges;
+    private ObservableList<database.objects.Node> observableSelectedNodes;
+    private ObservableList<database.objects.Edge> observableSelectedEdges;
 
     MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
         selectedNodes = new ArrayList<database.objects.Node>();
         selectedEdges = new ArrayList<database.objects.Edge>();
+        observableSelectedNodes = FXCollections.observableList(selectedNodes);
+        observableSelectedEdges = FXCollections.observableList(selectedEdges);
     }
 
     @FXML
