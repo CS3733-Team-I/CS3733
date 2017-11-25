@@ -1,26 +1,48 @@
 package utility.csv;
 
 import com.csvreader.CsvReader;
-import database.connection.Connector;
 import database.objects.Edge;
 import database.objects.Node;
-import database.template.SQLStrings;
-import database.util.DBUtil;
 import entity.MapEntity;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
-import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class CsvFileUtil {
 
     public static final String NODE_CSV_HEAD = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned";
     public static final String EDGE_CSV_HEAD = "edgeID,startNode,endNode";
+
+    public static void readAllCSVs() {
+        try {
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapAnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapBnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapCnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapDnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapEnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapFnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapGnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapHnodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapInodes.csv").toURI().getPath());
+            readNodesCSV(CsvFileUtil.class.getResource("/csv/MapWnodes.csv").toURI().getPath());
+
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapAedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapBedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapCedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapDedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapEedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapFedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapGedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapHedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapIedges.csv").toURI().getPath());
+            readEdgesCSV(CsvFileUtil.class.getResource("/csv/MapWedges.csv").toURI().getPath());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void readNodesCSV(String path) {
         MapEntity map = MapEntity.getInstance();

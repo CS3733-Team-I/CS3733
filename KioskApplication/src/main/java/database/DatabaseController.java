@@ -143,7 +143,10 @@ public class DatabaseController {
         try {
             return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+            if (e.getSQLState() == "23503") {
+                System.err.println(String.format("ERROR Addding Edge: (%s, %s, %s)", edge.getEdgeID(), edge.getNode1ID(), edge.getNode2ID()));
+                System.err.println(e.getMessage());
+            } else if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }

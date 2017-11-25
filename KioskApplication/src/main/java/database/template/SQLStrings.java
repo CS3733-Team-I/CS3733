@@ -9,8 +9,8 @@ public class SQLStrings {
             "  floor int NOT NULL," +
             "  building int NOT NULL," +
             "  nodeType int NOT NULL," +
-            "  longName VARCHAR(100) NOT NULL," +
-            "  shortName VARCHAR(25) NOT NULL," +
+            "  longName VARCHAR(255) NOT NULL," +
+            "  shortName VARCHAR(255) NOT NULL," +
             "  teamAssigned VARCHAR(6) NOT NULL" +
             ")";
 
