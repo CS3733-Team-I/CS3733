@@ -31,6 +31,7 @@ import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class MapController {
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == changedNode.getNodeID()) {
                 nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setFill(Color.YELLOW);
+                nodeO.setFill(Color.RED);
                 nodesEdgesPane.getChildren().add(nodeO);
             }
         }
@@ -144,7 +145,7 @@ public class MapController {
         reloadDisplay();
     }
 
-    public void drawNodesOnMap(List<Node> nodes) {
+    protected void drawNodesOnMap(List<database.objects.Node> nodes) {
         for (Node n : nodes) {
             //use a scene shape so that it can be properly highlighted (more interactive)
             Circle nodeView = new Circle(n.getXcoord(), n.getYcoord(), 14, Color.GRAY);
@@ -161,7 +162,24 @@ public class MapController {
         }
     }
 
-    public void drawEdgesOnMap(List<Edge> edges) {
+    protected void undrawNodeOnMap(database.objects.Node node) {
+        for(Circle nodeObject : nodeObjectList) {
+            if(nodeObject.getAccessibleText() == node.getNodeID()) {
+                nodesEdgesPane.getChildren().remove(nodeObject);
+            }
+        }
+        //remove undrawn node from nodeObjectList
+        Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
+        while(nodeObjectIterator.hasNext()) {
+            Circle circle = nodeObjectIterator.next();
+            if(node.getNodeID().equals(circle.getAccessibleText())) {
+                nodeObjectIterator.remove();
+                break;
+            }
+        }
+    }
+
+    protected void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
         nodesEdgesPane.setPickOnBounds(false);
         for (Edge e : edges) {

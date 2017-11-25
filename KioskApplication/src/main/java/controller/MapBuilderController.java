@@ -226,9 +226,7 @@ public class MapBuilderController extends ScreenController {
         {
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
                     mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
-            mapController.observableHighlightededNewNodes.clear();
             mapController.observableHighlightededNewNodes.add(newNode);
-            observableNewNodes.clear();
             observableNewNodes.add(newNode);
         }
     }
