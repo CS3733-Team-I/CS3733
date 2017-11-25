@@ -7,6 +7,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -20,29 +22,39 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MapController {
-    @FXML private AnchorPane container;
+    @FXML protected AnchorPane container;
 
-    @FXML private ScrollPane scrollPane;
+    @FXML protected ScrollPane scrollPane;
 
     @FXML private ImageView mapView;
-    @FXML private AnchorPane nodesPane;
-    @FXML private AnchorPane edgesPane;
+    @FXML private AnchorPane nodesEdgesPane;
     @FXML private AnchorPane waypointPane;
 
-    @FXML private JFXComboBox<NodeFloor> floorSelector;
+    @FXML protected JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
 
     @FXML private VBox optionsBox;
-    @FXML private JFXCheckBox showNodesBox;
-    @FXML private JFXCheckBox showEdgesBox;
+    @FXML protected JFXCheckBox showNodesBox;
+    @FXML protected JFXCheckBox showEdgesBox;
+
+    @FXML public AnchorPane miniMapPane;
+    MiniMapController miniMapController;
+
+
+    //list of showing nodes or edges
+    private ArrayList<Circle> nodeObjectList;
+    private ArrayList<Line> edgeObjectList;
+    //protected  javafx.scene.Node heightLightedNode;
 
     private Group zoomGroup;
 
@@ -50,13 +62,8 @@ public class MapController {
 
     private MainWindowController parent = null;
 
-    private static double DEFAULT_HVALUE = 0.52;
-    private static double DEFAULT_VVALUE = 0.3;
-
-    private NodeFloor currentFloor = NodeFloor.THIRD;
-
-    private boolean showNodes = false;
-    private boolean showEdges = false;
+    protected static double DEFAULT_HVALUE = 0.52;
+    protected static double DEFAULT_VVALUE = 0.3;
 
     public MapController() {
         waypoints = new LinkedList<>();
@@ -67,27 +74,31 @@ public class MapController {
         parent = controller;
     }
 
-    public void setShowNodes(boolean showNodes) {
-        this.showNodes = showNodes;
+    public void highlightNode(database.objects.Node node) {
+        for(Circle nodeO : nodeObjectList) {
+            if(nodeO.getAccessibleText() == node.getNodeID()) {
 
-        this.nodesPane.getChildren().clear();
-        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
-        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setFill(Color.BLUE);
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
+        }
     }
 
-    public void setShowEdges(boolean showEdges) {
-        this.showEdges = showEdges;
+    public void dehighlightNode(database.objects.Node node) {
+        for(Circle nodeO : nodeObjectList) {
+            if(nodeO.getAccessibleText() == node.getNodeID()) {
 
-        // TODO remove copypasta
-        this.edgesPane.getChildren().clear();
-        if (this.showEdges) drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(currentFloor));
-        if (this.showNodes) drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(currentFloor));
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setFill(Color.GRAY);
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
+        }
     }
-
 
     public void reloadDisplay() {
-        showEdges();
-        showNodes();
+        showNodesBox.setSelected(false);
+        showEdgesBox.setSelected(false);
     }
 
     public void clearMap() {
@@ -99,36 +110,42 @@ public class MapController {
 
     public void drawNodesOnMap(List<Node> nodes) {
         for (Node n : nodes) {
-            try {
-                javafx.scene.Node nodeObject = FXMLLoader.load(getClass().getResource("/view/NodeView.fxml"));
-                nodeObject.setTranslateX(n.getXcoord() - 14); // TODO magic numbers
-                nodeObject.setTranslateY(n.getYcoord() - 14); // TODO magic numbers
-                nodeObject.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
-                nodeObject.setMouseTransparent(false);
-                nodesPane.getChildren().add(nodeObject);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //use a scene shape so that it can be properly highlighted (more interactive)
+            Circle nodeView = new Circle(n.getXcoord(), n.getYcoord(), 14, Color.GRAY);
+            nodeView.setStroke(Color.BLACK);
+            nodeView.setStrokeWidth(3);
+            nodeView.setMouseTransparent(false);
+            nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
+            nodeView.setPickOnBounds(false);
+            nodeView.setAccessibleText(n.getNodeID());
+
+            nodesEdgesPane.getChildren().add(nodeView);
+            nodeObjectList.add(nodeView);
+
         }
     }
 
     public void drawEdgesOnMap(List<Edge> edges) {
         MapEntity mapEntity = MapEntity.getInstance();
-        AnchorPane edgesPane = new AnchorPane();
-        edgesPane.setPickOnBounds(false);
+        nodesEdgesPane.setPickOnBounds(false);
         for (Edge e : edges) {
             Node node1 = mapEntity.getNode(e.getNode1ID());
             Node node2 = mapEntity.getNode(e.getNode2ID());
 
             // TODO(jerry) make this more modular, maybe into an FXML file??
+            // TODO(leo) keep this as it is, or it can NOT properly interact with other map modules
             Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
             edgeView.setStroke(Color.PURPLE);
             edgeView.setStrokeWidth(10);
+            edgeView.setMouseTransparent(false);
             edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
             edgeView.setPickOnBounds(false);
-            edgesPane.getChildren().add(edgeView);
+            edgeView.setAccessibleText(e.getEdgeID());
+
+            edgeObjectList.add(edgeView);
+            nodesEdgesPane.getChildren().add(edgeView);
         }
-        this.edgesPane.getChildren().add(edgesPane);
+        //this.nodesEdgesPane.getChildren().add(nodesEdgesPane);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -147,7 +164,7 @@ public class MapController {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        loadFloor(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
 
         clearMap();
         drawEdgesOnMap(path.getEdges());
@@ -179,7 +196,11 @@ public class MapController {
             e.printStackTrace();
         }
     }
-
+    /**
+     * This method's visibility should be keep private and only used in MapController's listener
+     * For switching bwtween floors, either in this class or sidebar controller classes,
+     * call "mapController.floorSelector.setValue(your floor)"
+     */
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {
@@ -207,12 +228,14 @@ public class MapController {
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
+        //System.out.println("Image Width: " + floorImage.getWidth());
+        //System.out.println("Image Height: " + floorImage.getHeight());
 
-        currentFloor = floor;
+        miniMapController.switchFloor(floorImage);
     }
 
     public NodeFloor getCurrentFloor() {
-        return currentFloor;
+        return floorSelector.getValue();
     }
 
     public void setAnchor(double top, double left, double bottom, double  right) {
@@ -231,6 +254,8 @@ public class MapController {
         zoomGroup.setScaleY(scaleValue);
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
+        miniMapController.NavigationRecZoom(scaleValue);
+        //System.out.println(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {
@@ -240,13 +265,18 @@ public class MapController {
 
     @FXML
     protected void initialize() {
+
+        nodesEdgesPane.setPickOnBounds(false);
+        waypointPane.setPickOnBounds(false);
+
+        nodeObjectList = new ArrayList<Circle>();
+        edgeObjectList = new ArrayList<Line>();
+
         floorSelector.getItems().addAll(NodeFloor.values());
 
-        loadFloor(currentFloor);
-
-        nodesPane.setPickOnBounds(false);
-        edgesPane.setPickOnBounds(false);
-        waypointPane.setPickOnBounds(false);
+        miniMapController = new MiniMapController(parent, this);
+        miniMapPane.getChildren().clear();
+        miniMapPane.getChildren().add(miniMapController.getContentView());
 
         zoomSlider.setMin(0.2);
         zoomSlider.setMax(2.2);
@@ -259,13 +289,89 @@ public class MapController {
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
+
+        //floor changing listeners
+        //TODO Solve the Null pointer issue with another way
+        final boolean offsetBool = false;
+        floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
+            @Override
+            public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
+                loadFloor(newValue);
+                //at application start up, map controller is created first thus no sidebar controller is available at the time
+
+                parent.onMapFloorChanged(newValue);
+
+                reloadDisplay();
+            }
+        });
+        //checkboxes for showing nodes and edges
+        /**
+         * Benefit of using listener instead of calling methods to to prevent the checkbox and display state off-sync
+         */
+        showNodesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue) {
+                    drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue()));
+                }
+                else {
+                    for (javafx.scene.Node n : nodeObjectList) {
+                        nodesEdgesPane.getChildren().remove(n);
+                    }
+                    nodeObjectList.clear();
+                }
+            }
+        });
+        showEdgesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue) {
+                    drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(floorSelector.getValue()));
+                }
+                else {
+                    for (javafx.scene.Node n: edgeObjectList) {
+                        nodesEdgesPane.getChildren().remove(n);
+                    }
+                    edgeObjectList.clear();
+                }
+            }
+        });
+
+        //update minimap navigationRec's position
+        scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecX((double)newValue/scrollPane.getHmax());
+            }
+        });
+
+        scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
+            }
+        });
+        //adjust minimap navigationRec's width:height
+        container.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecWidth((double)newValue);
+            }
+        });
+
+        container.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setNavigationRecHeight((double)newValue);
+            }
+        });
     }
 
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
         if (parent != null) {
             // Check if clicked location is a node
-            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(currentFloor);
+            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue());
             for (Node node : floorNodes) {
                 Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
                         30, 30); // TODO magic numbers
@@ -300,29 +406,5 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
-    }
-
-    @FXML
-    protected void floorSelected() {
-        System.out.println("Here");
-        NodeFloor selectedFloor = floorSelector.getSelectionModel().getSelectedItem();
-        loadFloor(selectedFloor);
-
-        setShowNodes(showNodes);
-        setShowEdges(showEdges);
-
-        parent.onMapFloorChanged(selectedFloor);
-    }
-
-    @FXML
-    void showNodes() {
-        boolean selected = showNodesBox.isSelected();
-        setShowNodes(selected);
-    }
-
-    @FXML
-    void showEdges() {
-        boolean selected = showEdgesBox.isSelected();
-        setShowEdges(selected);
     }
 }

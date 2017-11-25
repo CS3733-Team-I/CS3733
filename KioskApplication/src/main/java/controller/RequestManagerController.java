@@ -33,12 +33,16 @@ public class RequestManagerController extends ScreenController {
 
     private DatabaseController dbController;
 
+    @FXML
+    void initialize() {
+    }
+
 
     @FXML
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+        getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }
 
     @FXML
@@ -65,7 +69,7 @@ public class RequestManagerController extends ScreenController {
     void onBackPressed() throws IOException {
         System.out.println("Cancel Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML
