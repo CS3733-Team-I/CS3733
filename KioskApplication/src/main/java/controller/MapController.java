@@ -74,7 +74,7 @@ public class MapController {
         parent = controller;
     }
 
-    public void highlightNode(database.objects.Node node) {
+    public void HighlightNode(database.objects.Node node) {
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == node.getNodeID()) {
 
@@ -85,7 +85,7 @@ public class MapController {
         }
     }
 
-    public void dehighlightNode(database.objects.Node node) {
+    public void DehighlightNode(database.objects.Node node) {
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == node.getNodeID()) {
 
@@ -95,6 +95,21 @@ public class MapController {
             }
         }
     }
+
+    public void HightlightChangedNode(database.objects.Node node) {
+        for(Circle nodeO : nodeObjectList) {
+            if(nodeO.getAccessibleText() == node.getNodeID()) {
+
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setFill(Color.YELLOW);
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
+        }
+    }
+
+//    public void HighlightNewNode(database.objects.Node node) {
+//        Circle newNodeView = new Circle(node.getXcoord(), node.getYcoord(), 14, Color.)
+//    }
 
     public void reloadDisplay() {
         showNodesBox.setSelected(false);
@@ -384,10 +399,11 @@ public class MapController {
                     parent.onMapNodeClicked(node);
                     return;
                 }
+
             }
 
             // Otherwise return the x,y coordinates
-            parent.onMapLocationClicked(new Point2D(event.getX(), event.getY()));
+            parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
         }
     }
 

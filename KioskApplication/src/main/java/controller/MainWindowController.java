@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -207,8 +208,8 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        controllers.get(currentScreen).onMapLocationClicked(e, location);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {

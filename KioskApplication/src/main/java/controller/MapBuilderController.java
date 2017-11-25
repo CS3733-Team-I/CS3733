@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.validation.RequiredFieldValidator;
-import database.objects.Edge;
 import database.objects.Node;
 import database.util.CSVFileUtil;
 import entity.MapEntity;
@@ -26,8 +25,12 @@ import java.util.ArrayList;
 
 public class MapBuilderController extends ScreenController {
 
+    /**
+     * General
+     */
     @FXML
     private TabPane builderTabPane;
+    SingleSelectionModel<Tab> selectionModel;
     /**
      * Nodes related fields
      */
@@ -74,17 +77,18 @@ public class MapBuilderController extends ScreenController {
      */
     //TODO
     @FXML
-    private ArrayList<javafx.scene.Node> selectedNodes;
-    private ArrayList<javafx.scene.Node> selectedEdges;
+    private ArrayList<database.objects.Node> selectedNodes;
+    private ArrayList<database.objects.Edge> selectedEdges;
 
     MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
-        selectedNodes = new ArrayList<javafx.scene.Node>();
-        selectedEdges = new ArrayList<javafx.scene.Node>();
+        selectedNodes = new ArrayList<database.objects.Node>();
+        selectedEdges = new ArrayList<database.objects.Edge>();
     }
 
     @FXML
     public void initialize() {
+        selectionModel = builderTabPane.getSelectionModel();
         /**
          * Node Input put validators
          */
@@ -152,20 +156,26 @@ public class MapBuilderController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) {
-
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        //detects double-click events
+        if(e.getClickCount() == 2)
+        {
+            System.out.println("123");
+        }
     }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
-        if(heightLightedNode != null) {
-            mapController.dehighlightNode(heightLightedNode);
+        //dehighlight previous hightlighted node
+        for(database.objects.Node n : selectedNodes) {
+            mapController.DehighlightNode(n);
         }
-        heightLightedNode = node;
-        mapController.highlightNode(node);
+        selectedNodes.clear();
+        selectedNodes.add(node);
+        mapController.HighlightNode(node);
+
         //switch to node tab
-        SingleSelectionModel<Tab> selectionModel = builderTabPane.getSelectionModel();
-        selectionModel.select(nodeTab);
+        selectionModel.select(0);
 
         xcoord.setText(String.valueOf(node.getXcoord()));
         ycoord.setText(String.valueOf(node.getYcoord()));
@@ -179,10 +189,9 @@ public class MapBuilderController extends ScreenController {
     }
 
     @Override
-    public void onMapEdgeClicked(Edge edge) {
+    public void onMapEdgeClicked(database.objects.Edge edge) {
         //switch to edge tab
-        SingleSelectionModel<Tab> selectionModel = builderTabPane.getSelectionModel();
-        selectionModel.select(edgeTab);
+        selectionModel.select(1);
     }
 
     @Override
