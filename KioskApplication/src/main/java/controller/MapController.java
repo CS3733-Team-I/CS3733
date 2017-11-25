@@ -365,6 +365,9 @@ public class MapController {
                 miniMapController.setNavigationRecHeight((double)newValue);
             }
         });
+        /**
+         * Detect double click event to add a node
+         */
     }
 
     @FXML

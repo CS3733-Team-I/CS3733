@@ -3,6 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.validation.RequiredFieldValidator;
 import database.objects.Edge;
 import database.objects.Node;
 import database.util.CSVFileUtil;
@@ -72,6 +73,17 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() {
+        /**
+         * Input put validators
+         */
+//        RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
+//        RequiredFieldValidator dNameValidator = new RequiredFieldValidator();
+//
+//        tfEmail.getValidators().add(EmailValidator);
+//        pfPassword.getValidators().add(PasswordValidator);
+//        EmailValidator.setMessage("Email Required");
+//        PasswordValidator.setMessage("Password Required");
+
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
@@ -163,6 +175,10 @@ public class MapBuilderController extends ScreenController {
         getMapController().setAnchor(0, 350, 0, 0);
     }
 
+
+    /**
+     * Handles Database Related operations
+     */
     @FXML
     void onReadClicked() {
         // TODO implement this better
@@ -213,8 +229,11 @@ public class MapBuilderController extends ScreenController {
         }*/
     }
 
+    /**
+     * Handles Node Related operations
+     */
     @FXML
-    private void onbtInfoClicked() {
+    private void ontfNodeInfoClicked() {
         if (tfNodeInfo.isVisible()) {
             tfNodeInfo.setVisible(false);
         } else {
@@ -310,5 +329,9 @@ public class MapBuilderController extends ScreenController {
             default:
                 return TeamAssigned.I;
         }
+    }
+    //TODO
+    public void saveNode() {
+
     }
 }
