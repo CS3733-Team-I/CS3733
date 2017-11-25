@@ -211,4 +211,14 @@ public class DatabaseControllerTests {
         InterpreterRequest recievedIR = dbController.getInterpreterRequest(iR.getRequestID());
         Assert.assertTrue(recievedIR==null);
     }
+
+    /**
+     * Tests for employee information
+     * What I need to test:
+     * 1. Getting a loginIDs
+     * 2. Getting passwords
+     * 3. Getting permissions
+     * 4. Getting employee type
+     * 5. Adding an employee login
+     */
 }
