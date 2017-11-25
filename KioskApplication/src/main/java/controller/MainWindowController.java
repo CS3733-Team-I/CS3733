@@ -14,6 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.Node.NodeFloor;
 
 import java.io.IOException;
@@ -21,15 +22,24 @@ import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML JFXTabPane tabPane;
-
     @FXML AnchorPane contentWindow;
-    @FXML AnchorPane LoginPopup;
+    javafx.scene.Node contentNode;
+    @FXML BorderPane loginPopup;
     @FXML JFXButton switchButton;
+
+    @FXML JFXTabPane tabPane;
+    @FXML Tab tabMap;
+    @FXML Tab tabMB;
+    @FXML Tab tabRS;
+    @FXML Tab tabRM;
+    @FXML Tab tabSettings;
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
     //@FXML JFXHamburger SidebarHam;
     Administrator curr_admin;
+
+    //will be changed to refer to LoginEntity once completed
+    KioskPermission permission;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -44,90 +54,14 @@ public class MainWindowController {
         mapView = new AnchorPane();
     }
 
-    public void switchToScreen(ApplicationScreen screen) {
-        ScreenController currentScreen = controllers.get(this.currentScreen);
-        if (currentScreen != null) {
-            currentScreen.onScreenChanged();
-        }
-
-        ScreenController controller = controllers.get(screen);
-
-        // Initialize controller if it doesn't exist
-        if (controller == null) {
-            switch (screen) {
-                case ADMIN_MENU:
-                    controller = new AdminSidebarController(this, mapController);
-                    break;
-
-                case PATHFINDING:
-                    controller = new PathfindingSidebarController(this, mapController);
-                    break;
-
-                case ADMIN_NODE:
-                    controller = new AdminNodeController(this, mapController);
-                    break;
-
-                case ADMIN_EDGE:
-                    controller = new AdminEdgeController(this, mapController);
-                    break;
-
-                case ADMIN_VIEWREQUEST:
-                    controller = new RequestManagerController(this, mapController);
-                    break;
-
-                case REQUEST_INTERFACE:
-                    controller = new RequestSubmitterController(this, mapController);
-                    break;
-
-                case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
-                    break;
-
-                default:
-                    break;
-            }
-
-            controllers.put(screen, controller);
-        }
-
-        // Additional actions on screen switch
-        switch (screen) {
-            case ADMIN_MENU:
-                switchButton.setText("Logoff");
-                switchButton.requestFocus();
-                break;
-            case PATHFINDING:
-                switchButton.setText("Employee login");
-                switchButton.requestFocus();
-                break;
-            default:
-                break;
-        }
-
-        javafx.scene.Node contentView = controller.getContentView();
-
-        // Display view with new controller
-        contentWindow.getChildren().clear();
-        contentWindow.getChildren().add(mapView);
-        contentWindow.getChildren().add(contentView);
-
-        // Fit sidebar to window
-        AnchorPane.setTopAnchor(contentView, 0.0);
-        AnchorPane.setBottomAnchor(contentView, 0.0);
-        AnchorPane.setLeftAnchor(contentView, 0.0);
-
-        // Reset controller's view
-        controller.resetScreen();
-
-        this.currentScreen = screen;
-    }
-
     @FXML
     protected void initialize() throws IOException
     {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
+
+        permission = KioskPermission.NONEMPLOYEE;
 
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
@@ -142,13 +76,13 @@ public class MainWindowController {
                         switchToScreen(ApplicationScreen.PATHFINDING);
                         break;
                     case "Map Builder":
-                        switchToScreen(ApplicationScreen.ADMIN_MENU);
+                        switchToScreen(ApplicationScreen.MAP_BUILDER);
                         break;
                     case "Request Manager":
-                        switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                         break;
                     case "Request Submit":
-                        switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                         break;
                     case "Settings":
                         switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
@@ -157,7 +91,21 @@ public class MainWindowController {
             }
         });
 
-        this.switchToScreen(ApplicationScreen.PATHFINDING);
+        LoginController loginController = new LoginController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
+        loader.setController(loginController);
+        javafx.scene.Node view = loader.load();
+
+        this.loginPopup = new BorderPane();
+        AnchorPane.setTopAnchor(loginPopup, 0.0);
+        AnchorPane.setLeftAnchor(loginPopup, 0.0);
+        AnchorPane.setBottomAnchor(loginPopup, 0.0);
+        AnchorPane.setRightAnchor(loginPopup, 0.0);
+        loginPopup.setRight(view);
+        //hides the popup
+        loginPopup.setVisible(false);
+
+        checkPermissions();
 
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
         //Initialize Hamburger
@@ -178,42 +126,142 @@ public class MainWindowController {
 //        });
     }
 
+    //checks permissions of user and adjusts visible tabs and screens
+    public void checkPermissions() {
+        switch (permission) {
+            case NONEMPLOYEE:
+                switchButton.setText("Staff Login");
+                //hides all but the Map tab from non logged in users
+                tabPane.getTabs().removeAll(tabMap,tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().add(tabMap);
+                switchToScreen(ApplicationScreen.PATHFINDING);
+                controllers.get(currentScreen).resetScreen();
+                currentScreen = ApplicationScreen.PATHFINDING;
+                mapController.showEdgesBox.setSelected(false);
+                mapController.showNodesBox.setSelected(false);
+                break;
+            case EMPLOYEE:
+                switchButton.setText("Logoff");
+                tabPane.getTabs().add(tabRS);
+            case ADMIN:
+                switchButton.setText("Logoff");
+                //default to showing all nodes and edges
+                mapController.showEdgesBox.setSelected(true);
+                mapController.showNodesBox.setSelected(true);
+                //shows all but the Map tab for logged in Users
+                tabPane.getTabs().addAll(tabMB, tabRM, tabRS, tabSettings);
+                break;
+        }
+    }
+
+    public void switchToScreen(ApplicationScreen screen) {
+        ScreenController currentScreen = controllers.get(this.currentScreen);
+        if (currentScreen != null) {
+            currentScreen.onScreenChanged();
+        }
+
+        ScreenController controller = controllers.get(screen);
+
+        // Initialize controller if it doesn't exist
+        if (controller == null) {
+            switch (screen) {
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
+                    break;
+
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    break;
+                case REQUEST_MANAGER:
+                    controller = new RequestManagerController(this, mapController);
+                    break;
+
+                case REQUEST_SUBMITTER:
+                    controller = new RequestSubmitterController(this, mapController);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    break;
+
+                default:
+                    break;
+            }
+
+            controllers.put(screen, controller);
+        }
+
+            /*default:
+                mapController.showEdgesBox.setSelected(false);
+                mapController.showNodesBox.setSelected(false);
+                break;
+                */
+
+        contentNode = controller.getContentView();
+
+        // Display view with new controller
+        contentWindow.getChildren().clear();
+        contentWindow.getChildren().add(mapView);
+        contentWindow.getChildren().add(loginPopup);
+        contentWindow.getChildren().add(contentNode);
+
+        // Fit sidebar to window
+        AnchorPane.setTopAnchor(contentNode, 0.0);
+        AnchorPane.setBottomAnchor(contentNode, 0.0);
+        AnchorPane.setLeftAnchor(contentNode, 0.0);
+
+        // Reset controller's view
+        controller.resetScreen();
+
+        this.currentScreen = screen;
+    }
+
+    protected void closeLoginPopup(){
+        this.loginPopup.setVisible(false);
+        this.switchButton.setDisable(false);
+        this.tabPane.setDisable(false);
+        this.tabMap.setDisable(false);
+        this.contentNode.setDisable(false);
+        this.mapView.setDisable(false);
+    }
+
     @FXML
-    private void login() throws IOException{
-        LoginController loginController = new LoginController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminLoginWindow.fxml"));
-        loader.setController(loginController);
-        javafx.scene.Node view = loader.load();
+    private void openLoginPopup() throws IOException{
+        this.loginPopup.setVisible(true);
+        this.switchButton.setDisable(true);
+        this.tabPane.setDisable(true);
+        this.tabMap.setDisable(true);
+        this.contentNode.setDisable(true);
+        this.mapView.setDisable(true);
 
-        BorderPane loginContainer = new BorderPane();
-        AnchorPane.setTopAnchor(loginContainer, 0.0);
-        AnchorPane.setLeftAnchor(loginContainer, 0.0);
-        AnchorPane.setBottomAnchor(loginContainer, 0.0);
-        AnchorPane.setRightAnchor(loginContainer, 0.0);
-
-        loginContainer.setCenter(view);
-
-        contentWindow.getChildren().add(loginContainer);
+        /*//TODO: make this slide in transition code work
+        double screenWidth=contentWindow.getWidth();
+        javafx.scene.shape.Path path = new javafx.scene.shape.Path();
+        path.getElements().add(new MoveTo(-200,0));
+        path.getElements().add(new LineTo( 0, 0));
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(500));
+        contentWindow.getChildren().add(path);
+        pathTransition.setPath(path);
+        pathTransition.setNode(loginContainer.getCenter());
+        pathTransition.setOrientation(PathTransition.OrientationType.NONE);
+        pathTransition.setCycleCount(1);
+        pathTransition.play();
+        System.out.println(loginController.getLoginAnchorHeight());
+        System.out.println(loginController.getLoginAnchorWidth());*/
     }
 
     @FXML
     public void switchButtonClicked() throws IOException {
-        switch (currentScreen) {
-            case ADMIN_VIEWREQUEST:
-                /*
-            case ADMIN_NODE:
-            case ADMIN_EDGE:
-            */
-            case REQUEST_INTERFACE:
-            case ADMIN_SETTINGS:
-            case ADMIN_MENU:
-                this.switchToScreen(ApplicationScreen.PATHFINDING);
-                controllers.get(currentScreen).resetScreen();
-                currentScreen = ApplicationScreen.PATHFINDING;
+        switch (permission) {
+            case ADMIN:
+            case EMPLOYEE:
+                this.permission=KioskPermission.NONEMPLOYEE;
+                checkPermissions();
                 //this.lbAdminInfo.setText("");
                 break;
-            case PATHFINDING:
-                this.login();
+            case NONEMPLOYEE:
+                this.openLoginPopup();
                 break;
         }
     }
@@ -231,6 +279,9 @@ public class MainWindowController {
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
+//        System.out.println("controller: " + controllers);
+//        System.out.println("currentScreen: " + currentScreen);
+//        System.out.println("selectedFloor: "+ selectedFloor);
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 }

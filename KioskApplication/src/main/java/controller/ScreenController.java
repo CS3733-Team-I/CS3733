@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public abstract class ScreenController {
     private MainWindowController parent;
-    private MapController mapController;
+    protected MapController mapController;
 
     @FXML protected javafx.scene.Node contentView;
 

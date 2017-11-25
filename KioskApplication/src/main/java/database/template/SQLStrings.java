@@ -22,24 +22,39 @@ public class SQLStrings {
             " REFERENCES t_nodes ON DELETE CASCADE" +
             ")";
 
-    public static final String CREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
+    public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
+                    "( requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
+                    " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
+                    " REFERENCES t_nodes ON DELETE CASCADE," +
+                    " assigner VARCHAR(50) NOT NULL," +
+                    " note CLOB(280)," +
+                    " submittedTime TIMESTAMP NOT NULL," +
+                    " completedTime TIMESTAMP NOT NULL," +
+                    " status INT NOT NULL";
+
+    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters";
+
+    public static final String WITH_INTERPRETER_ATTRIBUTES = ", language INT NOT NULL)";
+
+    public static final String YCREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
             //Base attributes
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
             " REFERENCES t_nodes ON DELETE CASCADE," +
-            " submittedTime TIMESTAMP NOT NULL," +
-            " assigner VARCHAR(30) NOT NULL," +
+            " assigner VARCHAR(50) NOT NULL," +
             " note CLOB(256)," +
+            " submittedTime TIMESTAMP NOT NULL," +
+            " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL," +
-            " completedTime TIMESTAMP," +
             //Unique request attributes
             " language INT NOT NULL" +
             ")";
 
+
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
-    public static final String DROP_INTERPRETERS_TABLE = "DROP TABLE t_interpreters";
-    public static final String DROP_SCHEMA = "DROP SCHEMA LOCALKIOSK";
+    public static final String DROP_REQUEST_TABLE = "DROP TABLE t_requests";
+    public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
@@ -57,8 +72,16 @@ public class SQLStrings {
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
 
     public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String INTERPRETER_UPDATE = "update t_interpreters set locationNode=?, set assigner=?, set note=?, set completed=?, set completedTime=?, set language=? where requestID=?";
+    public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
+            " nodeID=?," +
+            " assigner=?," +
+            " note=?,"+
+            " submittedTime=?,"+
+            " completedTime=?,"+
+            " status=?,"+
+            " language=?"+
+            " where requestID=?";
     public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
-    public static final String INTERPRETER_DELETE = "delete from t_interpreters where requestID=?";
+    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
 }

@@ -39,6 +39,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
+        mapController.floorSelector.setValue(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointListVbox.setPickOnBounds(false);

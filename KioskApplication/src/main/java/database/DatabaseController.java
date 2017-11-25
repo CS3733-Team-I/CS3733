@@ -140,7 +140,7 @@ public class DatabaseController {
         return false;
     }
 
-    public  int addEdge(Edge edge) {
+    public int addEdge(Edge edge) {
         try {
             return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
@@ -151,7 +151,7 @@ public class DatabaseController {
         return 0;
     }
 
-    public  int updateEdge(Edge edge) {
+    public int updateEdge(Edge edge) {
         try{
             return Connector.updateEdge(instanceConnection, edge);
         } catch (SQLException e) {
@@ -181,74 +181,21 @@ public class DatabaseController {
     public static DatabaseController getTestInstance() {
         return SingletonHelper.testInstance;
     }
-  
-    /*public  Request addRequest(int requestID, String nodeID, String employee) {
-        try {
-            return Connector.insertRequest(instanceConnection, requestID, nodeID, employee);
-        } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
-    public  int updateRequest(int requestID, String nodeID, String employee) {
+
+
+    public int addInterpreterRequest(InterpreterRequest iR) {
         try {
-            return Connector.updateRequest(instanceConnection, requestID, nodeID, employee);
-        } catch (SQLException e) {
+            return Connector.insertInterpreter(instanceConnection, iR);
+        } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }
         return 0;
     }
-
-    public  Request getRequest(int requestID) {
-        try {
-            return Connector.selectRequest(instanceConnection, requestID);
-        } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public  boolean deleteRequest(int requestID) {
-        try {
-            Connector.deleteRequest(instanceConnection, requestID);
-            return true;
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    public  ArrayList<Request> getAllRequests() {
-        try {
-            return Connector.selectAllRequests(instanceConnection);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return new ArrayList<Request>();
-    }*/
-
-    public  void addInterpreterRequest(InterpreterRequest iR) {
-        try {
-            Connector.insertInterpreter(instanceConnection, iR);
-        } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-    }
     //TODO: Update this method
-    public  int updateInterpreterRequest(InterpreterRequest iR) {
+    public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.updateInterpreter(instanceConnection, iR);
         } catch (SQLException e) {

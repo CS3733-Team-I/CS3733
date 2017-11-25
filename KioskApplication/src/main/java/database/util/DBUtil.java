@@ -49,7 +49,7 @@ public class DBUtil {
 
         String sql2 = CREATE_EDGE_TABLE;
 
-        String sql3 = CREATE_INTERPRETERS_TABLE;
+        String sql3 = CREATE_INTERPRETER_TABLE+WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES;
 
         PreparedStatement pstmt0 = conn.prepareStatement(schema);
         pstmt0.execute();
@@ -63,9 +63,9 @@ public class DBUtil {
 
     public static void dropAllTables(Connection conn) {
         String drop1 = DROP_EDGE_TABLE;
-        String drop2 = DROP_INTERPRETERS_TABLE;
-        String drop3 = DROP_NODE_TABLE;
-        String drop4 = DROP_SCHEMA;
+        String drop2 = DROP_INTERPRETER_TABLE;
+        String drop3 = DROP_REQUEST_TABLE;
+        String drop4 = DROP_NODE_TABLE;
 
         PreparedStatement preparedStatement1 = null;
         try {
