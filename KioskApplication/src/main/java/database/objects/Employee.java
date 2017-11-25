@@ -4,18 +4,20 @@ import utility.KioskPermission;
 import utility.Request.RequestType;
 
 public class Employee {
+    private String loginID;
     private String loginName;
     // TODO make this somehow encrypted
     private String password;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
-    // Constructor
-    public Employee(String loginName, String password, KioskPermission permission, RequestType serviceAbility){
+    // Constructor security behind this will be added later
+    public Employee(String loginID, String loginName, String password, KioskPermission permission, RequestType serviceAbility){
+        this.loginID = loginID;
         this.loginName = loginName;
         this.password = password;
         switch (permission){
-            // in case someone tries putting NONEMPOLYEE IN
+            // Upping idiot resistance: in case someone tries putting NONEMPOLYEE in
             case NONEMPLOYEE:
                 this.permission=KioskPermission.EMPLOYEE;
                 break;
