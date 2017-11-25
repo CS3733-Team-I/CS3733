@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
+import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.MapEntity;
@@ -17,14 +18,16 @@ import utility.Node.NodeFloor;
 import utility.Request.RequestProgressStatus;
 
 
+
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
-
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
+
+        dbController = DatabaseController.getInstance();
     }
 
     @FXML
@@ -40,7 +43,7 @@ public class RequestManagerController extends ScreenController {
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_VIEWREQUEST);
+        getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }
 
     @FXML
@@ -67,8 +70,8 @@ public class RequestManagerController extends ScreenController {
         LinkedList<Request> requests = RequestEntity.getInstance().getStatusRequests(status);
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(id);
-            String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
+            TextField requestTextField = new TextField(requests.get(i).getAssigner());
+            String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("Employee: " + requests.get(i).getassigner());
             Label typeOfRequest = new Label("Type: Interpreter");
@@ -103,7 +106,7 @@ public class RequestManagerController extends ScreenController {
     void onBackPressed() throws IOException {
         System.out.println("Cancel Pressed\n");
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML

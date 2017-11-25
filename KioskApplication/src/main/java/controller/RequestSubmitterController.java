@@ -82,7 +82,7 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     void onInterpreterPressed() throws IOException {
-        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+        getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
     }
 
     @FXML
@@ -125,7 +125,7 @@ public class RequestSubmitterController extends ScreenController {
         System.out.println(allRequests.getLast().getStatus());
         System.out.println(RequestEntity.getInstance().getAllRequests());
 
-        getParent().switchToScreen(ApplicationScreen.ADMIN_MENU);
+        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML

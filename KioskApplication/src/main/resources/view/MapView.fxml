@@ -24,24 +24,24 @@
                         <Image url="@../images/03_thethirdfloor.png" />
                      </image>
                   </ImageView>
-                  <AnchorPane fx:id="edgesPane" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="nodesPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="nodesEdgesPane" prefHeight="200.0" prefWidth="200.0" />
                   <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>
          </content>
       </ScrollPane>
-      <JFXButton fx:id="recenterButton" buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <JFXComboBox fx:id="floorSelector" onAction="#floorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <VBox id="rounded-container" fx:id="opetionsBox" alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="125.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="10.0">
+      <JFXButton fx:id="recenterButton" buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <JFXComboBox fx:id="floorSelector" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <VBox id="rounded-container" fx:id="opetionsBox" alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="125.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0">
          <children>
-            <JFXCheckBox fx:id="showNodesBox" onAction="#showNodes" text="Show Nodes" />
-            <JFXCheckBox fx:id="showEdgesBox" onAction="#showEdges" text="Show Edges" />
+            <JFXCheckBox fx:id="showNodesBox" text="Show Nodes" />
+            <JFXCheckBox fx:id="showEdgesBox" text="Show Edges" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
-      </VBox>      <VBox layoutX="425.0" layoutY="116.0" prefHeight="221.0" prefWidth="32.0" spacing="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
+      </VBox>
+      <AnchorPane fx:id="miniMapPane" prefHeight="150.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />      <VBox layoutX="425.0" layoutY="84.0" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
          <children>
             <JFXButton buttonType="RAISED" onAction="#zoomInPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
                <VBox.margin>
@@ -51,7 +51,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.2" min="0.2" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" showTickLabels="true" showTickMarks="true" value="1.2" />
+            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.2" min="0.2" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="1.2" />
             <JFXButton buttonType="RAISED" onAction="#zoomOutPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />
