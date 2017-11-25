@@ -93,6 +93,7 @@ public class MainWindowController {
                 //default to showing all nodes and edges
                 mapController.showEdgesBox.setSelected(true);
                 mapController.showNodesBox.setSelected(true);
+                //change click on map event to be double click
                 break;
 
             default:

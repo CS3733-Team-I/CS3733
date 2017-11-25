@@ -22,6 +22,8 @@ import utility.Node.NodeFloor;
 import utility.Node.NodeType;
 import utility.Node.TeamAssigned;
 
+import java.util.ArrayList;
+
 public class MapBuilderController extends ScreenController {
 
     @FXML
@@ -67,22 +69,38 @@ public class MapBuilderController extends ScreenController {
     private Tab edgeTab;
     private Tab databaseTab;
 
+    /**
+     * Selected List
+     */
+    //TODO
+    @FXML
+    private ArrayList<javafx.scene.Node> selectedNodes;
+    private ArrayList<javafx.scene.Node> selectedEdges;
+
     MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
+        selectedNodes = new ArrayList<javafx.scene.Node>();
+        selectedEdges = new ArrayList<javafx.scene.Node>();
     }
 
     @FXML
     public void initialize() {
         /**
-         * Input put validators
+         * Node Input put validators
          */
-//        RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
-//        RequiredFieldValidator dNameValidator = new RequiredFieldValidator();
-//
-//        tfEmail.getValidators().add(EmailValidator);
-//        pfPassword.getValidators().add(PasswordValidator);
-//        EmailValidator.setMessage("Email Required");
-//        PasswordValidator.setMessage("Password Required");
+        //TODO USE THE VALIDATORs
+        RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
+        RequiredFieldValidator sNameValidator = new RequiredFieldValidator();
+//        RequiredFieldValidator CBnodeBuildingValidator = new RequiredFieldValidator();
+//        RequiredFieldValidator CBnodeTypeValidator = new RequiredFieldValidator();
+//        RequiredFieldValidator CBnodeTeamAssignedValidator = new RequiredFieldValidator();
+
+        lName.getValidators().add(lNameValidator);
+        sName.getValidators().add(sNameValidator);
+
+        lNameValidator.setMessage("Long Name Required");
+        sNameValidator.setMessage("Short Name Required");
+
 
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
@@ -135,6 +153,7 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapLocationClicked(Point2D location) {
+
     }
 
     @Override

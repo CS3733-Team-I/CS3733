@@ -104,9 +104,12 @@
                               <JFXTextField fx:id="sName" text="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                               <JFXTextField fx:id="lName" text="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                               <JFXToggleButton fx:id="btInfo" onAction="#ontfNodeInfoClicked" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="11" />
-                              <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="6">
+                              <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00589F;" GridPane.columnSpan="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <buttons>
-                                    <JFXButton />
+                                    <JFXButton buttonType="RAISED" text="Save" textFill="WHITE" />
+                                    <JFXButton buttonType="RAISED" text="Undo" textFill="WHITE" />
+                                    <JFXButton buttonType="RAISED" text="Redo" textFill="WHITE" />
+                                    <JFXButton buttonType="RAISED" prefWidth="84.0" text="Delete" textFill="WHITE" />
                                  </buttons>
                               </ButtonBar>
                            </children>
