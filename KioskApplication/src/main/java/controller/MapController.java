@@ -58,7 +58,7 @@ public class MapController {
     //list of showing nodes or edges
     private ArrayList<Circle> nodeObjectList;
     private ArrayList<Line> edgeObjectList;
-    protected ObservableList<database.objects.Node> observableHighlightededNodes;
+    protected ObservableList<database.objects.Node> observableHighlightededSelectedNodes;
     protected ObservableList<database.objects.Node> observableHighlightededChangedNodes;
     protected ObservableList<database.objects.Node> observableHighlightededNewNodes;
     protected ObservableList<database.objects.Edge> observableHighlightedEdges;
@@ -74,7 +74,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
-        observableHighlightededNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightededSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightededChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightededNewNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightedEdges = FXCollections.<database.objects.Edge>observableArrayList();
@@ -86,9 +86,10 @@ public class MapController {
     }
 
     public void HighlightSelectedNode(database.objects.Node selectedNode) {
+        System.out.println("Node ID is "+ selectedNode.getNodeID());
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == selectedNode.getNodeID()) {
-
+                System.out.println("TESTING!!");
                 nodesEdgesPane.getChildren().remove(nodeO);
                 nodeO.setFill(Color.BLUE);
                 nodesEdgesPane.getChildren().add(nodeO);
@@ -172,14 +173,14 @@ public class MapController {
             }
         }
         //remove undrawn node from nodeObjectList
-        Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
-        while(nodeObjectIterator.hasNext()) {
-            Circle circle = nodeObjectIterator.next();
-            if(node.getNodeID().equals(circle.getAccessibleText())) {
-                nodeObjectIterator.remove();
-                break;
-            }
-        }
+//        Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
+//        while(nodeObjectIterator.hasNext()) {
+//            Circle circle = nodeObjectIterator.next();
+//            if(node.getNodeID().equals(circle.getAccessibleText())) {
+//                nodeObjectIterator.remove();
+//                break;
+//            }
+//        }
     }
 
     protected void drawEdgesOnMap(List<Edge> edges) {
@@ -363,7 +364,7 @@ public class MapController {
         });
         //checkboxes for showing nodes and edges
         /**
-         * Benefit of using listener instead of calling methods to to prevent the checkbox and display state off-sync
+         * sync UI
          */
         showNodesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -425,22 +426,24 @@ public class MapController {
         /**
          * highlight nodes and edges
          */
-        observableHighlightededNodes.addListener(new ListChangeListener<Node>() {
+        observableHighlightededSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
+//                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
                                 DehighlightNode(deseletedNode);
-                            }
+//                            }
                         }
                     }
-                }
-
-                for (database.objects.Node selectedNode : observableHighlightededNodes) {
-                    HighlightSelectedNode(selectedNode);
+                    else if(c.wasAdded()) {
+                        for(database.objects.Node selectedNode : c.getAddedSubList()) {
+                            //System.out.println("TESTING");
+                            HighlightSelectedNode(selectedNode);
+                        }
+                    }
                 }
             }
         });
@@ -448,8 +451,15 @@ public class MapController {
         observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                for (database.objects.Node changedNode : observableHighlightededNodes) {
-                    HighlightChangedNode(changedNode);
+                while(c.next()) {
+                    if(c.wasAdded()){
+                        for(database.objects.Node changedNode : c.getAddedSubList()) {
+                            HighlightChangedNode(changedNode);
+                        }
+                    }
+                    else if(c.wasRemoved()) {
+                        //TODO IMPLEMENT THIS
+                    }
                 }
             }
         });
@@ -461,19 +471,26 @@ public class MapController {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
                             undrawNodeOnMap(deseletedNode);
+                            //System.out.println("Node ID need to be removed: " + deseletedNode.getNodeID());
+                            //remove undrawn node from nodeObjectList
+                            Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
+                            while(nodeObjectIterator.hasNext()) {
+                                Circle circle = nodeObjectIterator.next();
+                                if(deseletedNode.getNodeID().equals(circle.getAccessibleText())) {
+                                    //System.out.println("Removed node ID: " + circle.getAccessibleText());
+                                    nodeObjectIterator.remove();
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                    else if(c.wasAdded()) {
+                        for(database.objects.Node newNode : c.getAddedSubList()) {
+                            HighlightNewNode(newNode);
                         }
                     }
                 }
-                for (database.objects.Node newNode : observableHighlightededNewNodes) {
-                    HighlightNewNode(newNode);
-                }
-            }
-        });
-        //TODO
-        observableHighlightededNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-
             }
         });
     }

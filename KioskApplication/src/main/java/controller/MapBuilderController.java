@@ -27,9 +27,6 @@ import utility.Node.NodeFloor;
 import utility.Node.NodeType;
 import utility.Node.TeamAssigned;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MapBuilderController extends ScreenController {
 
     /**
@@ -206,7 +203,15 @@ public class MapBuilderController extends ScreenController {
         observableSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeDisplay.SELECTED);
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        setNodeAllDisable();
+                        return;
+                    }
+                    else if(c.wasAdded()) {
+                        updateNodeDisplay(NodeDisplay.SELECTED);
+                    }
+                }
             }
         });
         //TODO
@@ -220,13 +225,24 @@ public class MapBuilderController extends ScreenController {
                             mapController.observableHighlightededChangedNodes.add(changedNode);
                         }
                     }
+                    //TODO
+                    if(c.wasRemoved()) {
+                        return;
+                    }
                 }
             }
         });
         observableNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeDisplay.NEW);
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        return;
+                    }
+                    else if(c.wasAdded()) {
+                        updateNodeDisplay(NodeDisplay.NEW);
+                    }
+                }
             }
         });
         observableSelectedEdges.addListener(new ListChangeListener<Edge>() {
@@ -255,8 +271,11 @@ public class MapBuilderController extends ScreenController {
         if(e.getClickCount() == 2)
         {
             //remove selected nodes, if any
-            mapController.observableHighlightededNodes.clear();
+            mapController.observableHighlightededSelectedNodes.clear();
             observableSelectedNodes.clear();
+
+            //update Node ID
+            setNodeFieldToDefault();
 
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
                     mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
@@ -269,26 +288,40 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
-        //remove unsaved new nodes, if any IMPORTANT: THIS TWO LINES SHOULD ALWAYS BE AT THE BEGINNING (to remove new node after clicking on them)
 
-        mapController.observableHighlightededNewNodes.clear();
-        observableNewNodes.clear();
+        if(observableNewNodes.contains(node)) {
+            return;
+        }
+        else if(observableSelectedNodes.contains(node)) {
+            return;
+        }
+        else {
+            //remove unsaved new node, if any
+            mapController.observableHighlightededNewNodes.clear();
+            observableNewNodes.clear();
+            //System.out.println("TESTING");
+            //System.out.println("Is it empty? " + mapController.observableHighlightededSelectedNodes.isEmpty());
+            if(!mapController.observableHighlightededSelectedNodes.isEmpty()){
+                mapController.observableHighlightededSelectedNodes.clear();
+            }
+            mapController.observableHighlightededSelectedNodes.add(node);
+            if(!observableSelectedNodes.isEmpty()) {
+                observableSelectedNodes.clear();
+            }
+            observableSelectedNodes.add(node);
 
-        mapController.observableHighlightededNodes.clear();
-        mapController.observableHighlightededNodes.add(node);
-        observableSelectedNodes.clear();
-        observableSelectedNodes.add(node);
+            //switch to node tab
+            selectionModel.select(0);
+            //fill in node fields in done in observable list listener
+        }
 
-        //switch to node tab
-        selectionModel.select(0);
-        //fill in node fields in done in observable list listener
     }
 
     @Override
     public void onMapEdgeClicked(database.objects.Edge edge) {
         //remove changes on nodes
         //TODO make this into a method
-        mapController.observableHighlightededNodes.clear();
+        mapController.observableHighlightededSelectedNodes.clear();
         observableSelectedNodes.clear();
         mapController.observableHighlightededNewNodes.clear();
         observableNewNodes.clear();
@@ -390,7 +423,7 @@ public class MapBuilderController extends ScreenController {
         switch (nodeDisplay) {
             case SELECTED:
                 if(observableSelectedNodes.size() == 0) { //no node selected
-                    stNodeFieldDisable();
+                    setNodeAllDisable();
                 }
                 else if(observableSelectedNodes.size() == 1){
 
@@ -406,7 +439,7 @@ public class MapBuilderController extends ScreenController {
                     setNodeFieldEnable();
                 }
                 else {
-                    //TODO
+                    //TODO make this an exception
                     System.out.println("THIS SHOULD NEVER HAPPEN!!!!\n\n\n\n\n\n");
                 }
                 break;
@@ -414,7 +447,7 @@ public class MapBuilderController extends ScreenController {
                 break;
             case NEW:
                 if(observableNewNodes.size() == 0) { //no node selected
-                    stNodeFieldDisable();
+                    setNodeAllDisable();
                 }
                 else if(observableNewNodes.size() == 1){
 
@@ -430,7 +463,7 @@ public class MapBuilderController extends ScreenController {
                     setNodeFieldEnable();
                 }
                 else {
-                    //TODO
+                    //TODO make this an exception
                     System.out.println("THIS SHOULD NEVER HAPPEN!!!!\n\n\n\n\n\n");
                 }
                 break;
@@ -511,7 +544,7 @@ public class MapBuilderController extends ScreenController {
         btNodeRedo.setDisable(false);
         btNodeDelete.setDisable(false);
     }
-    private void stNodeFieldDisable() {
+    private void setNodeAllDisable() {
         CBnodeType.setDisable(true);
         CBnodeBuilding.setDisable(true);
         CBnodeTeamAssigned.setDisable(true);
