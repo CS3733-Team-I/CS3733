@@ -27,7 +27,6 @@ public class RequestManagerController extends ScreenController {
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
 
-        dbController = DatabaseController.getInstance();
     }
 
     @FXML
@@ -71,9 +70,9 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getAssigner());
-            String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
+            String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
-            Label requestID = new Label("Employee: " + requests.get(i).getassigner());
+            Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
             Label typeOfRequest = new Label("Type: Interpreter");
             Label locationOfRequest = new Label(location);
             JFXButton selectID = new JFXButton("Select");
@@ -134,7 +133,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void submitRequest(){
-        getParent().switchToScreen(ApplicationScreen.REQUEST_INTERFACE);
+        getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
     }
 
     @Override
