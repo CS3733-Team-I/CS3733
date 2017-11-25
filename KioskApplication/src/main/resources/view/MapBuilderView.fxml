@@ -56,7 +56,7 @@
                                  <children>
                                     <VBox prefHeight="137.0" prefWidth="320.0">
                                        <children>
-                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #00589F;" text="Click on a existing node to edit it. Double click on the map to create a new node." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #00589F;" text="Click on a existing node to edit it. Double click on the map to create a new node. Click on a unsaved new node again to remove it." textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                              <VBox.margin>
                                                 <Insets left="18.0" />
                                              </VBox.margin>

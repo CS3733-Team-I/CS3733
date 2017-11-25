@@ -239,7 +239,7 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
-        //remove unsaved new nodes, if any
+        //remove unsaved new nodes, if any IMPORTANT: THIS TWO LINES SHOULD ALWAYS BE AT THE BEGINNING (to remove new node after clicking on them)
         mapController.observableHighlightededNewNodes.clear();
         observableNewNodes.clear();
 
