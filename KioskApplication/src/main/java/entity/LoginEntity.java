@@ -14,6 +14,7 @@ public class LoginEntity {
     private DatabaseController dbC;
     private KioskPermission permission;
     private String loginName;
+    // TODO: make these less vulnerable
     private HashMap<String,String> employees;
     private HashMap<String,String> admins;
 
@@ -43,8 +44,9 @@ public class LoginEntity {
         else {
             permission = KioskPermission.NONEMPLOYEE;
             dbC = DatabaseController.getInstance();
-            //TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
+            // TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
             admins.putIfAbsent("boss@hospital.com", "123");
+            employees.putIfAbsent("emp@hospital.com", "12");
         }
     }
 
@@ -56,7 +58,7 @@ public class LoginEntity {
         return loginName;
     }
 
-    //TODO add some sorts of security methods to this
+    // TODO add security methods to this
     public void addLogin(String loginName, String password, boolean admin){
         if(this.permission==KioskPermission.ADMIN){
             if(admin){
@@ -70,7 +72,7 @@ public class LoginEntity {
         }
     }
 
-    //TODO prevent people from locking themselves and others out in a nontest scenario
+    // TODO prevent people from locking themselves and others out in a nontest scenario
     public void deleteLogin(String loginName, String password){
         //Verifies that the user is an Admin
         if(this.permission==KioskPermission.ADMIN) {
@@ -93,7 +95,8 @@ public class LoginEntity {
         }
     }
 
-    //For checking log in credentials
+    // For checking log in credentials
+    // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR PERMISSIONS
     public KioskPermission validate(String loginName, String password){
         if(admins.containsKey(loginName)){
             if (admins.get(loginName).equals(password)){
@@ -119,9 +122,19 @@ public class LoginEntity {
         return this.permission;
     }
 
-    //Helper method for validate
+    /**
+     * Helper method for validate, while it is technically identical in function to logOut(),
+     * it doesn't make sense for logOut() to be called when nobody is logged in
+     */
     private void validationFail(){
         this.loginName = "";
         permission = KioskPermission.NONEMPLOYEE;
+    }
+
+    // Logout method
+    public KioskPermission logOut(){
+        this.loginName = "";
+        permission = KioskPermission.NONEMPLOYEE;
+        return permission;
     }
 }
