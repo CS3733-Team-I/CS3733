@@ -120,11 +120,13 @@ public class MapController {
     }
 
     //TODO MAKE THIS FASTER
-    public void DehighlightAllNode() {
+    public void DehighlightNode(database.objects.Node dehighlightNode) {
         for(Circle nodeO : nodeObjectList) {
-            nodesEdgesPane.getChildren().remove(nodeO);
-            nodeO.setFill(Color.GRAY);
-            nodesEdgesPane.getChildren().add(nodeO);
+            if(nodeO.getAccessibleText() == dehighlightNode.getNodeID()) {
+                nodesEdgesPane.getChildren().remove(nodeO);
+                nodeO.setFill(Color.GRAY);
+                nodesEdgesPane.getChildren().add(nodeO);
+            }
         }
     }
 
@@ -425,16 +427,24 @@ public class MapController {
         observableHighlightededNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                DehighlightAllNode();
+                //revert deselected nodes to normal color
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            DehighlightNode(deseletedNode);
+                        }
+                    }
+                }
+
                 for (database.objects.Node selectedNode : observableHighlightededNodes) {
                     HighlightNode(selectedNode);
                 }
             }
         });
+        //TODO
         observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                DehighlightAllNode();
                 for (database.objects.Node changedNode : observableHighlightededNodes) {
                     HighlightChangedNode(changedNode);
                 }
@@ -443,7 +453,14 @@ public class MapController {
         observableHighlightededNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                DehighlightAllNode();
+                //remove unsaved new nodes
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            undrawNodeOnMap(deseletedNode);
+                        }
+                    }
+                }
                 for (database.objects.Node newNode : observableHighlightededNewNodes) {
                     HighlightNewNode(newNode);
                 }

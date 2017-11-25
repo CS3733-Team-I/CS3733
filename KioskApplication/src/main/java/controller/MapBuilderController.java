@@ -224,15 +224,25 @@ public class MapBuilderController extends ScreenController {
         //detects double-click events
         if(e.getClickCount() == 2)
         {
+            //remove selected nodes, if any
+            mapController.observableHighlightededNodes.clear();
+            observableSelectedNodes.clear();
+
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
                     mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
+            mapController.observableHighlightededNewNodes.clear();
             mapController.observableHighlightededNewNodes.add(newNode);
+            observableNewNodes.clear();
             observableNewNodes.add(newNode);
         }
     }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
+        //remove unsaved new nodes, if any
+        mapController.observableHighlightededNewNodes.clear();
+        observableNewNodes.clear();
+
         mapController.observableHighlightededNodes.clear();
         mapController.observableHighlightededNodes.add(node);
         observableSelectedNodes.clear();
