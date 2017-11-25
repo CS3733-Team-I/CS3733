@@ -93,7 +93,6 @@ public class MapBuilderController extends ScreenController {
      */
 
     private ObservableList<database.objects.Node> observableSelectedNodes;
-    //TODO changed nodes
     private ObservableList<database.objects.Node> observableChangedNodes;
     private ObservableList<database.objects.Node> observableNewNodes;
     private ObservableList<database.objects.Edge> observableSelectedEdges;
@@ -157,11 +156,13 @@ public class MapBuilderController extends ScreenController {
         //update floor based on the floor selector
         nodeFloor = mapController.getCurrentFloor();
 
+        //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETE
         mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
                 nodeFloor = mapController.getCurrentFloor();
-                updateNodeID();
+                //updateNodeID();
+                //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
             }
         });
         CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
@@ -169,6 +170,9 @@ public class MapBuilderController extends ScreenController {
             public void changed(ObservableValue<? extends NodeType> observable, NodeType oldValue, NodeType newValue) {
                 nodeType = newValue;
                 updateNodeID();
+                if(!CBnodeType.isDisable()) {
+                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                }
             }
         });
         CBnodeTeamAssigned.valueProperty().addListener(new ChangeListener<TeamAssigned>() {
@@ -176,9 +180,29 @@ public class MapBuilderController extends ScreenController {
             public void changed(ObservableValue<? extends TeamAssigned> observable, TeamAssigned oldValue, TeamAssigned newValue) {
                 nodeTeamAssigned = newValue;
                 updateNodeID();
+                if(!CBnodeTeamAssigned.isDisable()) {
+                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                }
             }
         });
-        //keep track on selected nodes and edges list
+        //notify changed node list
+        lName.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!lName.isDisable()) {
+                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                }
+            }
+        });
+        sName.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!sName.isDisable()) {
+                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                }
+            }
+        });
+        //keep track on selected, new, and changed nodes and edges list
         observableSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
@@ -189,7 +213,14 @@ public class MapBuilderController extends ScreenController {
         observableChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-
+                updateNodeDisplay(NodeDisplay.CHANGED);//currently do nothing
+                while(c.next()) {
+                    if(c.wasAdded()) {
+                        for(database.objects.Node changedNode : c.getAddedSubList()) {
+                            mapController.observableHighlightededChangedNodes.add(changedNode);
+                        }
+                    }
+                }
             }
         });
         observableNewNodes.addListener(new ListChangeListener<Node>() {
@@ -218,7 +249,6 @@ public class MapBuilderController extends ScreenController {
         return contentView;
     }
 
-    //TODO
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         //detects double-click events
@@ -240,6 +270,7 @@ public class MapBuilderController extends ScreenController {
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
         //remove unsaved new nodes, if any IMPORTANT: THIS TWO LINES SHOULD ALWAYS BE AT THE BEGINNING (to remove new node after clicking on them)
+
         mapController.observableHighlightededNewNodes.clear();
         observableNewNodes.clear();
 
@@ -255,6 +286,12 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapEdgeClicked(database.objects.Edge edge) {
+        //remove changes on nodes
+        //TODO make this into a method
+        mapController.observableHighlightededNodes.clear();
+        observableSelectedNodes.clear();
+        mapController.observableHighlightededNewNodes.clear();
+        observableNewNodes.clear();
 
         observableSelectedEdges.clear();
         observableSelectedEdges.add(edge);
@@ -347,7 +384,7 @@ public class MapBuilderController extends ScreenController {
             nodeAdvanced.setVisible(true);
         }
     }
-
+//TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeDisplay nodeDisplay) {
 
         switch (nodeDisplay) {
@@ -356,7 +393,7 @@ public class MapBuilderController extends ScreenController {
                     stNodeFieldDisable();
                 }
                 else if(observableSelectedNodes.size() == 1){
-                    setNodeFieldEnable();
+
                     xcoord.setText(String.valueOf(observableSelectedNodes.get(0).getXcoord()));
                     ycoord.setText(String.valueOf(observableSelectedNodes.get(0).getYcoord()));
 
@@ -366,20 +403,21 @@ public class MapBuilderController extends ScreenController {
                     sName.setText(observableSelectedNodes.get(0).getShortName());
                     CBnodeTeamAssigned.setValue(convertToTeamEnum(observableSelectedNodes.get(0).getTeamAssigned()));
                     nodeID.setText(observableSelectedNodes.get(0).getNodeID());
+                    setNodeFieldEnable();
                 }
                 else {
                     //TODO
                     System.out.println("THIS SHOULD NEVER HAPPEN!!!!\n\n\n\n\n\n");
                 }
                 break;
-            case CHANGED:
+            case CHANGED: //currently do nothing
                 break;
             case NEW:
                 if(observableNewNodes.size() == 0) { //no node selected
                     stNodeFieldDisable();
                 }
                 else if(observableNewNodes.size() == 1){
-                    setNodeFieldEnable();
+
                     xcoord.setText(String.valueOf(observableNewNodes.get(0).getXcoord()));
                     ycoord.setText(String.valueOf(observableNewNodes.get(0).getYcoord()));
 
@@ -389,6 +427,7 @@ public class MapBuilderController extends ScreenController {
                     sName.setText(observableNewNodes.get(0).getShortName());
                     CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
                     nodeID.setText(observableNewNodes.get(0).getNodeID());
+                    setNodeFieldEnable();
                 }
                 else {
                     //TODO

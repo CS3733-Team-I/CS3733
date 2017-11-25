@@ -85,7 +85,7 @@ public class MapController {
         parent = controller;
     }
 
-    public void HighlightNode(database.objects.Node selectedNode) {
+    public void HighlightSelectedNode(database.objects.Node selectedNode) {
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == selectedNode.getNodeID()) {
 
@@ -97,6 +97,7 @@ public class MapController {
     }
 
     public void HighlightChangedNode(database.objects.Node changedNode) {
+        System.out.println("Node changed");
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == changedNode.getNodeID()) {
                 nodesEdgesPane.getChildren().remove(nodeO);
@@ -431,13 +432,15 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            DehighlightNode(deseletedNode);
+                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
+                                DehighlightNode(deseletedNode);
+                            }
                         }
                     }
                 }
 
                 for (database.objects.Node selectedNode : observableHighlightededNodes) {
-                    HighlightNode(selectedNode);
+                    HighlightSelectedNode(selectedNode);
                 }
             }
         });
