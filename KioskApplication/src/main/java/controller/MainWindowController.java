@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class MainWindowController {
 
     @FXML AnchorPane contentWindow;
-    @FXML AnchorPane sideBarWindow;
+    javafx.scene.Node contentNode;
     @FXML BorderPane loginPopup;
     @FXML JFXButton switchButton;
 
@@ -197,21 +197,18 @@ public class MainWindowController {
                 break;
                 */
 
-        javafx.scene.Node contentView = controller.getContentView();
-
-        this.sideBarWindow = new AnchorPane(contentView);
+        contentNode = controller.getContentView();
 
         // Display view with new controller
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(loginPopup);
-        //contentWindow.getChildren().add(contentView);
+        contentWindow.getChildren().add(contentNode);
 
         // Fit sidebar to window
-        AnchorPane.setTopAnchor(sideBarWindow, 0.0);
-        AnchorPane.setBottomAnchor(sideBarWindow, 0.0);
-        AnchorPane.setLeftAnchor(sideBarWindow, 0.0);
-        contentWindow.getChildren().add(sideBarWindow);
+        AnchorPane.setTopAnchor(contentNode, 0.0);
+        AnchorPane.setBottomAnchor(contentNode, 0.0);
+        AnchorPane.setLeftAnchor(contentNode, 0.0);
 
         // Reset controller's view
         controller.resetScreen();
@@ -224,7 +221,7 @@ public class MainWindowController {
         this.switchButton.setDisable(false);
         this.tabPane.setDisable(false);
         this.tabMap.setDisable(false);
-        this.sideBarWindow.setDisable(false);
+        this.contentNode.setDisable(false);
         this.mapView.setDisable(false);
     }
 
@@ -234,7 +231,7 @@ public class MainWindowController {
         this.switchButton.setDisable(true);
         this.tabPane.setDisable(true);
         this.tabMap.setDisable(true);
-        this.sideBarWindow.setDisable(true);
+        this.contentNode.setDisable(true);
         this.mapView.setDisable(true);
 
         /*//TODO: make this slide in transition code work
