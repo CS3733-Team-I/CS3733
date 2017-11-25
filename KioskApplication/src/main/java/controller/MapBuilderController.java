@@ -41,7 +41,7 @@ public class MapBuilderController extends ScreenController {
     Node heightLightedNode;
     //default, nodeFloor is in sync with main map
     NodeFloor nodeFloor = NodeFloor.THIRD;
-    NodeType nodeType = NodeType.CONF;
+    NodeType nodeType = NodeType.TEMP;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     @FXML
     private Tab nodeTab;
@@ -51,7 +51,7 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
     @FXML
-    private JFXToggleButton btInfo;
+    private JFXToggleButton tbNodeInstruction;
     @FXML
     private TextFlow tfNodeInfo;
     @FXML
@@ -145,7 +145,7 @@ public class MapBuilderController extends ScreenController {
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
 
-        btInfo.setGraphic(infoIconView);
+        tbNodeInstruction.setGraphic(infoIconView);
 
         tfNodeInfo.setVisible(false);
 
@@ -160,6 +160,28 @@ public class MapBuilderController extends ScreenController {
                 nodeFloor = mapController.getCurrentFloor();
                 //updateNodeID();
                 //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+            }
+        });
+        tbNodeAdvanced.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(nodeAdvanced.isVisible()) {
+                    nodeAdvanced.setVisible(false);
+                }
+                else {
+                    nodeAdvanced.setVisible(true);
+                }
+            }
+        });
+        tbNodeInstruction.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (tfNodeInfo.isVisible()) {
+                    tfNodeInfo.setVisible(false);
+                } else {
+                    tfNodeInfo.setVisible(true);
+                }
+
             }
         });
         CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
@@ -399,24 +421,8 @@ public class MapBuilderController extends ScreenController {
     /**
      * Handles Node Related operations
      */
-    @FXML
-    private void ontfNodeInfoClicked() {
-        if (tfNodeInfo.isVisible()) {
-            tfNodeInfo.setVisible(false);
-        } else {
-            tfNodeInfo.setVisible(true);
-        }
-    }
 
-    @FXML
-    private void ontbNodeAdvancedClicked() {
-        if(nodeAdvanced.isVisible()) {
-            nodeAdvanced.setVisible(false);
-        }
-        else {
-            nodeAdvanced.setVisible(true);
-        }
-    }
+
 //TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeDisplay nodeDisplay) {
 
@@ -527,7 +533,7 @@ public class MapBuilderController extends ScreenController {
 
     private void setNodeFieldToDefault() {
         CBnodeBuilding.setValue(NodeBuilding.FRANCIS15);
-        CBnodeType.setValue(NodeType.HALL);
+        CBnodeType.setValue(NodeType.TEMP);
         CBnodeTeamAssigned.setValue(TeamAssigned.I);
     }
     private void setNodeFieldEnable() {
