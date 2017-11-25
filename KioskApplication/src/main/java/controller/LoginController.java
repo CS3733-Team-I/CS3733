@@ -2,30 +2,32 @@ package controller;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.validation.RequiredFieldValidator;
 import entity.Administrator;
 import entity.AdministratorList;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 
 import java.io.IOException;
 
 public class LoginController {
 
     @FXML
-    JFXTextField tfEmail;
+    private JFXTextField tfEmail;
     @FXML
-    JFXPasswordField pfPassword;
+    private JFXPasswordField pfPassword;
     @FXML
-    Label errorMsg;
+    private Label errorMsg;
+    @FXML
+    private AnchorPane loginAnchor;
 
     MainWindowController parent;
-    AdministratorList AdminList;
+    private AdministratorList AdminList;
 
     //To get login info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
@@ -36,13 +38,6 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        RequiredFieldValidator EmailValidator = new RequiredFieldValidator();
-        RequiredFieldValidator PasswordValidator = new RequiredFieldValidator();
-
-        tfEmail.getValidators().add(EmailValidator);
-        pfPassword.getValidators().add(PasswordValidator);
-        EmailValidator.setMessage("Email Required");
-        PasswordValidator.setMessage("Password Required");
 
         tfEmail.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -61,34 +56,53 @@ public class LoginController {
             }
         });
 
-
-        Image invalidInputIcn = new Image(getClass().getResource("/images/invalid_input.png").toString());
-        EmailValidator.setIcon(new ImageView(invalidInputIcn));
-        PasswordValidator.setIcon(new ImageView(invalidInputIcn));
-
+        //Puts focus on email textfield
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                tfEmail.requestFocus();
+            }
+        });
     }
 
     @FXML
     public void OnLoginClicked() throws IOException {
 
         if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
-            parent.switchToScreen(ApplicationScreen.MAP_BUILDER);
+            parent.permission = KioskPermission.ADMIN;
             // TODO replace this
             // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
-            parent.LoginPopup.getChildren().clear();
-            parent.LoginPopup.getChildren().add(parent.switchButton);
+            resetFields();
+            parent.closeLoginPopup();
+            parent.checkPermissions();
             parent.currentScreen = ApplicationScreen.MAP_BUILDER;
 //            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
-            errorMsg.setText("Invalid Login. ");
+            errorMsg.setVisible(true);
         }
     }
 
     @FXML
     public void OnBackClicked () throws IOException {
-        parent.switchToScreen(ApplicationScreen.PATHFINDING);
-        parent.LoginPopup.getChildren().clear();
-        parent.LoginPopup.getChildren().add(parent.switchButton);
+        //parent.switchToScreen(ApplicationScreen.PATHFINDING);
+        tfEmail.clear();
+        pfPassword.clear();
+        resetFields();
+        parent.closeLoginPopup();
+    }
+
+    private void resetFields(){
+        tfEmail.clear();
+        pfPassword.clear();
+        errorMsg.setVisible(false);
+    }
+
+    public double getLoginAnchorWidth() {
+        return loginAnchor.getWidth();
+    }
+
+    public double getLoginAnchorHeight() {
+        return loginAnchor.getHeight();
     }
 }
