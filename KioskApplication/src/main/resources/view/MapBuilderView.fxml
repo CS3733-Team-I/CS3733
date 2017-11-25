@@ -106,10 +106,10 @@
                               <JFXToggleButton fx:id="btInfo" onAction="#ontfNodeInfoClicked" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="11" />
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00589F;" GridPane.columnSpan="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <buttons>
-                                    <JFXButton buttonType="RAISED" text="Save" textFill="WHITE" />
-                                    <JFXButton buttonType="RAISED" text="Undo" textFill="WHITE" />
-                                    <JFXButton buttonType="RAISED" text="Redo" textFill="WHITE" />
-                                    <JFXButton buttonType="RAISED" prefWidth="84.0" text="Delete" textFill="WHITE" />
+                                    <JFXButton fx:id="btNodeSave" buttonType="RAISED" text="Save" textFill="WHITE" />
+                                    <JFXButton fx:id="btNodeUndo" buttonType="RAISED" text="Undo" textFill="WHITE" />
+                                    <JFXButton fx:id="btNodeRedo" buttonType="RAISED" text="Redo" textFill="WHITE" />
+                                    <JFXButton fx:id="btNodeDelete" buttonType="RAISED" prefWidth="84.0" text="Delete" textFill="WHITE" />
                                  </buttons>
                               </ButtonBar>
                            </children>

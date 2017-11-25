@@ -9,6 +9,9 @@ import entity.MapEntity;
 import entity.Path;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -54,7 +57,10 @@ public class MapController {
     //list of showing nodes or edges
     private ArrayList<Circle> nodeObjectList;
     private ArrayList<Line> edgeObjectList;
-    //protected  javafx.scene.Node heightLightedNode;
+    protected ObservableList<database.objects.Node> observableHighlightededNodes;
+    protected ObservableList<database.objects.Node> observableHighlightededChangedNodes;
+    protected ObservableList<database.objects.Node> observableHighlightededNewNodes;
+    protected ObservableList<database.objects.Edge> observableHighlightedEdges;
 
     private Group zoomGroup;
 
@@ -67,6 +73,10 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        observableHighlightededNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightededChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightededNewNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightedEdges = FXCollections.<database.objects.Edge>observableArrayList();
     }
 
     public void setParent(MainWindowController controller)
@@ -74,9 +84,9 @@ public class MapController {
         parent = controller;
     }
 
-    public void HighlightNode(database.objects.Node node) {
+    public void HighlightNode(database.objects.Node selectedNode) {
         for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == node.getNodeID()) {
+            if(nodeO.getAccessibleText() == selectedNode.getNodeID()) {
 
                 nodesEdgesPane.getChildren().remove(nodeO);
                 nodeO.setFill(Color.BLUE);
@@ -85,27 +95,38 @@ public class MapController {
         }
     }
 
-    public void DehighlightNode(database.objects.Node node) {
+    public void HighlightChangedNode(database.objects.Node changedNode) {
         for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == node.getNodeID()) {
-
-                nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setFill(Color.GRAY);
-                nodesEdgesPane.getChildren().add(nodeO);
-            }
-        }
-    }
-
-    public void HightlightChangedNode(database.objects.Node node) {
-        for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == node.getNodeID()) {
-
+            if(nodeO.getAccessibleText() == changedNode.getNodeID()) {
                 nodesEdgesPane.getChildren().remove(nodeO);
                 nodeO.setFill(Color.YELLOW);
                 nodesEdgesPane.getChildren().add(nodeO);
             }
         }
     }
+
+    public void HighlightNewNode(database.objects.Node newNode) {
+        Circle nodeView = new Circle(newNode.getXcoord(), newNode.getYcoord(), 14, Color.YELLOW);
+        nodeView.setStroke(Color.BLACK);
+        nodeView.setStrokeWidth(3);
+        nodeView.setMouseTransparent(false);
+        nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(newNode));
+        nodeView.setPickOnBounds(false);
+        nodeView.setAccessibleText(newNode.getNodeID());
+
+        nodesEdgesPane.getChildren().add(nodeView);
+        nodeObjectList.add(nodeView);
+    }
+
+    //TODO MAKE THIS FASTER
+    public void DehighlightAllNode() {
+        for(Circle nodeO : nodeObjectList) {
+            nodesEdgesPane.getChildren().remove(nodeO);
+            nodeO.setFill(Color.GRAY);
+            nodesEdgesPane.getChildren().add(nodeO);
+        }
+    }
+
 
 //    public void HighlightNewNode(database.objects.Node node) {
 //        Circle newNodeView = new Circle(node.getXcoord(), node.getYcoord(), 14, Color.)
@@ -381,8 +402,42 @@ public class MapController {
             }
         });
         /**
-         * Detect double click event to add a node
+         * highlight nodes and edges
          */
+        observableHighlightededNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                DehighlightAllNode();
+                for (database.objects.Node selectedNode : observableHighlightededNodes) {
+                    HighlightNode(selectedNode);
+                }
+            }
+        });
+        observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                DehighlightAllNode();
+                for (database.objects.Node changedNode : observableHighlightededNodes) {
+                    HighlightChangedNode(changedNode);
+                }
+            }
+        });
+        observableHighlightededNewNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                DehighlightAllNode();
+                for (database.objects.Node newNode : observableHighlightededNewNodes) {
+                    HighlightNewNode(newNode);
+                }
+            }
+        });
+        //TODO
+        observableHighlightededNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+
+            }
+        });
     }
 
     @FXML
