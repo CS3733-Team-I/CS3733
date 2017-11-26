@@ -53,7 +53,7 @@ public class LoginEntity {
             // TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
             addLogin("boss@hospital.com", "123",ADMIN,RequestType.GENERAL);
             addLogin("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
-            // initial login state, we don't want anyone to restart the application and gain access to admin powers
+            // initial employee state, we don't want anyone to restart the application and gain access to admin powers
             permission = NONEMPLOYEE;
         }
     }
@@ -70,7 +70,7 @@ public class LoginEntity {
     private void readAllFromDatabase(){
         LinkedList<Employee> employees = dbC.getAllEmployees();
         for (Employee emp : employees) {
-            // the login hashmap is linked to usernames because of their uniqueness and ease of accessing
+            // the employee hashmap is linked to usernames because of their uniqueness and ease of accessing
             this.logins.putIfAbsent(emp.getLoginName(),emp);
         }
     }
@@ -96,7 +96,7 @@ public class LoginEntity {
         if(permission==NONEMPLOYEE){
             return false;
         }
-        // updates the hashmap in case a login is missing
+        // updates the hashmap in case a employee is missing
         // TODO: make reading from the database more efficient, when someone is adding a lot of users, we don't want this to take forever
         readAllFromDatabase();
         if(logins.containsKey(loginName)){
@@ -114,7 +114,7 @@ public class LoginEntity {
                 logins.put(loginName,newEmployee);
                 dbC.addEmployee(newEmployee.getLoginID(),newEmployee.getLoginName(),newEmployee.getPassword(password),
                         newEmployee.getPermission(),newEmployee.getServiceAbility());
-                // TODO: Idea, create custom exception to inform the user on errors related to creating their login
+                // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
             }
         }
@@ -122,10 +122,10 @@ public class LoginEntity {
     }
 
     /**
-     * a login cannot be deleted from the database unless:
+     * a employee cannot be deleted from the database unless:
      * 1. It exists in the hashmap
      * 2. The deleter has higher permissions than the deletee or is a Super User
-     * 3. The deleter is not deleting their own login (unless this is a test case)
+     * 3. The deleter is not deleting their own employee (unless this is a test case)
      * @param loginName
      * @return
      */

@@ -18,7 +18,7 @@ public class Employee {
         this.loginName = loginName;
         // this is for frontend vs backend use
         if(passwordAlreadyEncrypted){
-            this.password=password;
+            this.password = password;
         }
         else {
             this.password = encryptPassword(password);
@@ -62,7 +62,15 @@ public class Employee {
 
     // Method for encrypting passwords, currently does jack shit LOL
     private String encryptPassword(String password){
-        return password;
+        char[] p = password.toCharArray();
+        String encPassword = "";
+        for (char c: p) {
+            int a = (int)c;
+            a++;
+            char o = (char) a;
+            encPassword=encPassword+o;
+        }
+        return encPassword.toString();
     }
 
     // method to update passwords

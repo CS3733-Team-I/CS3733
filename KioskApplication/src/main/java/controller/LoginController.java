@@ -27,7 +27,7 @@ public class LoginController {
     MainWindowController parent;
     LoginEntity l;
 
-    //To get login info, construct a new Login Controller
+    //To get employee info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
         this.parent = parent;
         l= LoginEntity.getInstance();
@@ -81,7 +81,7 @@ public class LoginController {
         parent.closeLoginPopup();
     }
 
-    //Helper function for resetting the internals of the login popup
+    //Helper function for resetting the internals of the employee popup
     private void resetFields(){
         tfEmail.clear();
         pfPassword.clear();
