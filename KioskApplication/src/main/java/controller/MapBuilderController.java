@@ -757,6 +757,7 @@ public class MapBuilderController extends ScreenController {
     @FXML
     private void loadDialog(ActionEvent event) {
 
+        //TODO FIND A BETTER PLACE TO PUT THE DIALOG
         nodeDialogLayout.setHeading(new Text("System Information"));
         nodeDialogLayout.setBody(new Text(nodeDialogString));
         JFXDialog nodeDialog = new JFXDialog(SPnodeDialog, nodeDialogLayout, JFXDialog.DialogTransition.CENTER);
