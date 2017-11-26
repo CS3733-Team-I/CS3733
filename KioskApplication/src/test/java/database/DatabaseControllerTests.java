@@ -1,10 +1,8 @@
 package database;
 
 import database.DatabaseController;
-import database.objects.Edge;
-import database.objects.InterpreterRequest;
-import database.objects.Node;
-import database.objects.Request;
+import database.objects.*;
+import utility.KioskPermission;
 import utility.Node.NodeBuilding;
 import utility.Node.NodeFloor;
 import utility.Node.NodeType;
@@ -13,9 +11,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import utility.Request.Language;
 import utility.Request.RequestProgressStatus;
+import utility.Request.RequestType;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class DatabaseControllerTests {
 
@@ -35,6 +39,9 @@ public class DatabaseControllerTests {
 
         List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for (InterpreterRequest iR: interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
+
+        List<Employee> employees = dbController.getAllEmployees();
+        for (Employee e: employees) dbController.removeEmployee(e.getLoginID());
     }
 
     @Test
@@ -221,4 +228,37 @@ public class DatabaseControllerTests {
      * 4. Getting employee type
      * 5. Adding an employee login
      */
+
+    @Test
+    public void testAddEmployee(){
+        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        assertEquals("Name",dbController.getEmployee("ID").getLoginName());
+    }
+
+    @Test
+    public void testRemoveEmployee(){
+        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.removeEmployee("ID");
+        assertNull(dbController.getEmployee("ID"));
+    }
+
+    @Test
+    public void testUpdateEmployee(){
+        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.updateEmployee("ID","NewName","NewPassword", KioskPermission.ADMIN, RequestType.GENERAL);
+        Employee updatedEmployee=dbController.getEmployee("ID");
+        assertEquals("NewName",updatedEmployee.getLoginName());
+        assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
+        assertEquals(RequestType.GENERAL,updatedEmployee.getServiceAbility());
+        assertTrue(updatedEmployee.validatePassword("NewPassword"));
+    }
+
+    @Test
+    public void testGetAllEmployees(){
+        dbController.addEmployee("ID1","Name1","password1", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee("ID2","Name2","password2", KioskPermission.ADMIN, RequestType.GENERAL);
+        LinkedList<Employee> employees = dbController.getAllEmployees();
+        assertEquals("ID1",employees.get(0).getLoginID());
+        assertEquals("ID2",employees.get(1).getLoginID());
+    }
 }

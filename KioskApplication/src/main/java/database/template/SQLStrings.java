@@ -96,9 +96,9 @@ public class SQLStrings {
 
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
-    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?)";
+    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?,?)";
     // this seems insecure AF
-    public static final String EMPLOYEE_UPDATE = "update t_employee set loginName=?, password=?, permission=?, serviceAbility=?, where loginID=?";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set loginName=?, password=?, permission=?, serviceAbility=? where loginID=?";
     // Included a get method for standardization purposes
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

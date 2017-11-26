@@ -28,6 +28,10 @@ public class Employee {
         this.serviceAbility = serviceAbility;
     }
 
+    public String getLoginID() {
+        return loginID;
+    }
+
     public String getLoginName() {
         return loginName;
     }
@@ -43,7 +47,7 @@ public class Employee {
     // Method to validate passwords
     // TODO make this more secure
     public boolean validatePassword(String password){
-        return (this.password==password);
+        return (this.password.equals(password));
     }
 
     // method to update passwords
