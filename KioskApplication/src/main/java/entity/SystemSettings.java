@@ -16,8 +16,8 @@ public class SystemSettings {
     private SystemSettings() {
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-                                                                              //if not set, default to A*
-        System.out.println(this.prefs.get("searchAlgorithm", "A*"));
+                                                                                //if not set, default to A*
+//        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
 
     public static SystemSettings getInstance() {
@@ -26,7 +26,7 @@ public class SystemSettings {
 
     public void setAlgorithm(String algorithmString){
         switch(algorithmString){
-            case "Astar":
+            case "A*":
                 this.algorithm = new A_star();
                 this.prefs.put("searchAlgorithm", "A*");
                 break;
