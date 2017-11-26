@@ -144,16 +144,19 @@ public class MapBuilderController extends ScreenController {
         infoIconView.setRotate(90);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
-
         tbNodeInstruction.setGraphic(infoIconView);
 
-        tfNodeInfo.setVisible(false);
 
+        nodeID.setEditable(false);
+        xcoord.setEditable(false);
+        ycoord.setEditable(false);
+        tfNodeInfo.setVisible(false);
         nodeAdvanced.setVisible(false);
+
         //update floor based on the floor selector
         nodeFloor = mapController.getCurrentFloor();
 
-        //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETE
+        //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETELY
         mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
@@ -312,6 +315,8 @@ public class MapBuilderController extends ScreenController {
     public void onMapNodeClicked(database.objects.Node node) {
 
         if(observableNewNodes.contains(node)) {
+            mapController.observableHighlightededNewNodes.clear();
+            observableNewNodes.clear();
             return;
         }
         else if(observableSelectedNodes.contains(node)) {
@@ -590,8 +595,20 @@ public class MapBuilderController extends ScreenController {
                 return TeamAssigned.I;
         }
     }
-    //TODO
-    public void SaveNode() {
 
+    public void SaveNode() {
+        for(database.objects.Node newNode : observableNewNodes) {
+            if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
+                MapEntity.getInstance().addNode(newNode);
+                System.out.println("Adding node " + nodeID.getText());
+            }
+            else { //duplicate node ID found
+
+            }
+        }
+        //clear new node list
+        for(database.objects.Node changedNode : observableChangedNodes) {
+
+        }
     }
 }
