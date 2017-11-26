@@ -20,7 +20,6 @@ public class SettingsController extends ScreenController {
     @FXML private Tab pathfindingTab;
     @FXML private Tab aboutTab;
 
-    @FXML private Label searchAlgorithmLabel;
     @FXML private RadioButton astarButton;
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
@@ -48,8 +47,6 @@ public class SettingsController extends ScreenController {
     void onSearchAlgorithmSelected(){
         SystemSettings systemSettings = SystemSettings.getInstance();
         systemSettings.setAlgorithm(searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
-        searchAlgorithmLabel.setText("Search Algorithm: " +
-                                     searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
     @FXML
