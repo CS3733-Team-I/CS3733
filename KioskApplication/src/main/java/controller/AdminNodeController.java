@@ -14,6 +14,7 @@ import utility.Node.NodeBuilding;
 import utility.Node.NodeFloor;
 import utility.Node.NodeType;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class AdminNodeController extends ScreenController {
@@ -291,7 +292,7 @@ public class AdminNodeController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) {
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         System.out.println("setCoords");
         resetScreen();
         xcoord.setText(String.valueOf(location.getX()));

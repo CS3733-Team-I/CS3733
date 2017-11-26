@@ -49,8 +49,7 @@ public class RequestEntity {
 
     private static class SingletonHelper {
         private static final RequestEntity instance = new RequestEntity();
-        private static final RequestEntity testInstance = new RequestEntity(true) {
-        };
+        private static final RequestEntity testInstance = new RequestEntity(true);
     }
 
     public void readAllFromDatabase(){

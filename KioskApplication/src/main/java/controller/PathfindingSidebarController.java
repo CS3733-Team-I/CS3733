@@ -14,6 +14,7 @@ import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.Node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -85,7 +86,7 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) {
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
 
     }
 
