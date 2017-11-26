@@ -326,7 +326,8 @@ public class DatabaseController {
                         rs.getString("loginName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
-                        RequestType.values()[rs.getInt("serviceAbility")]);
+                        RequestType.values()[rs.getInt("serviceAbility")],
+                        true);
             }
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
@@ -351,7 +352,8 @@ public class DatabaseController {
                         rs.getString("loginName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
-                        RequestType.values()[rs.getInt("serviceAbility")]);
+                        RequestType.values()[rs.getInt("serviceAbility")],
+                        true);
                 employees.add(employee);
             }
             return employees;

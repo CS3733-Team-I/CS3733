@@ -91,7 +91,6 @@ public class LoginEntity {
      * @return
      */
 
-    // TODO add security methods to this
     public boolean addLogin(String loginName, String password, KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
         if(permission==NONEMPLOYEE){
@@ -111,7 +110,7 @@ public class LoginEntity {
                 // Fun fact of the day, this code should work until 200ish years from now when the 14th digit gets added
                 // to the Java timestamp, that is if this system or even Java survives that long
                 String loginID = loginName + System.currentTimeMillis();
-                Employee newEmployee=new Employee(loginID, loginName, password, permission, serviceAbility);
+                Employee newEmployee=new Employee(loginID, loginName, password, permission, serviceAbility,false);
                 logins.put(loginName,newEmployee);
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their login
                 return true;
@@ -120,7 +119,14 @@ public class LoginEntity {
         return false;
     }
 
-    // TODO prevent people from locking themselves and others out in a nontest scenario
+    /**
+     * a login cannot be deleted from the database unless:
+     * 1. It exists in the hashmap
+     * 2. The deleter has higher permissions than the deletee or is a Super User
+     * 3. The deleter is not deleting their own login (unless this is a test case)
+     * @param loginName
+     * @return
+     */
     public boolean deleteLogin(String loginName){
         // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
         if(logins.containsKey(loginName)&&(loginName!=this.loginName||dbC.equals(DatabaseController.getTestInstance()))) {
@@ -140,8 +146,31 @@ public class LoginEntity {
         boolean updated = false;
         if (logins.get(loginName).updatePassword(newPassword, oldPassword)) {
             Employee emp = logins.get(loginName);
-            dbC.updateEmployee(emp.getLoginID(),emp.getLoginName(),newPassword,emp.getPermission(),emp.getServiceAbility());
+            dbC.updateEmployee(emp.getLoginID(),emp.getLoginName(),emp.getPassword(newPassword),emp.getPermission(),emp.getServiceAbility());
             updated = true;
+        }
+        return updated;
+    }
+
+    // For changing your username
+    public boolean updateUserName(String newLoginName, String newPassword){
+        //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
+        Employee currUser = logins.get(this.loginName);
+        //checks if the current user name is already in active use
+        boolean updated = !logins.containsKey(newLoginName);
+        if(updated){
+            //tries to update the current user's password
+            currUser.updatePassword(newLoginName, newPassword);
+        }
+        if(updated){
+            //updates internal hashmap
+            logins.remove(loginName);
+            logins.put(newLoginName,currUser);
+            //updates current userName
+            loginName=newLoginName;
+            //relays updated information to database
+            dbC.updateEmployee(currUser.getLoginID(),currUser.getLoginName(),newPassword,
+                    currUser.getPermission(),currUser.getServiceAbility());
         }
         return updated;
     }
