@@ -65,7 +65,7 @@
                                                 <Insets left="18.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #00589F;" text="Fill out their information and click on confirm to save." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #00589F;" text="When a node is selected, click an empty spot in map to deselect. Edit their information and click on confirm to save." textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                              <VBox.margin>
                                                 <Insets left="18.0" top="10.0" />
                                              </VBox.margin>
