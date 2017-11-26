@@ -141,6 +141,7 @@ public class MainWindowController {
                 switchButton.setText("Logoff");
                 tabPane.getTabs().add(tabRS);
                 break;
+            case SUPER_USER:
             case ADMIN:
                 switchButton.setText("Logoff");
                 //default to showing all nodes and edges
@@ -246,6 +247,7 @@ public class MainWindowController {
     @FXML
     public void switchButtonClicked() throws IOException {
         switch (l.getPermission()) {
+            case SUPER_USER:
             case ADMIN:
             case EMPLOYEE:
                 l.logOut();
