@@ -17,6 +17,7 @@ import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.Node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -191,11 +192,26 @@ public class MainWindowController {
             controllers.put(screen, controller);
         }
 
-            /*default:
-                mapController.showEdgesBox.setSelected(false);
-                mapController.showNodesBox.setSelected(false);
+        // Additional actions on screen switch
+        switch (screen) {
+//            case PATHFINDING:
+//                switchButton.setText("Employee login");
+//                switchButton.requestFocus();
+//                break;
+            case MAP_BUILDER:
+//                switchButton.setText("Logoff");
+//                switchButton.requestFocus();
+                //default to showing all nodes and edges
+                mapController.showEdgesBox.setSelected(true);
+                mapController.showNodesBox.setSelected(true);
+                //change click on map event to be double click
                 break;
-                */
+//
+//            default:
+//                mapController.showEdgesBox.setSelected(false);
+//                mapController.showNodesBox.setSelected(false);
+//                break;
+        }
 
         contentNode = controller.getContentView();
 
@@ -274,8 +290,8 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        controllers.get(currentScreen).onMapLocationClicked(e, location);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
