@@ -723,27 +723,25 @@ public class MapBuilderController extends ScreenController {
             if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
                 MapEntity.getInstance().addNode(newNode);
                 nodeDialogString += "Node ID: " + newNode.getNodeID() + " was successfully saved.\n";
+                mapController.observableHighlightededNewNodes.clear();
+                observableNewNodes.clear();
             }
             else { //duplicate node ID found
                 nodeDialogString += "Node ID: " + newNode.getNodeID() + "Duplicate ID found, not saved\n";
             }
         }
-        mapController.observableHighlightededNewNodes.clear();
-        observableNewNodes.clear();
 
         //clear new node list
         for(database.objects.Node changedNode : observableChangedNodes) {
             if(MapEntity.getInstance().getNode(changedNode.getNodeID()) != null) {
                 MapEntity.getInstance().editNode(changedNode);
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" was successfully edited.\n";
+                observableChangedNodes.clear();
             }
             else {
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
             }
         }
-
-        observableChangedNodes.clear();
-
         System.out.println(nodeDialogString);
     }
 
