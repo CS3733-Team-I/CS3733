@@ -499,17 +499,24 @@ public class MapController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasAdded()){
-                        for(database.objects.Node changedNode : c.getAddedSubList()) {
-                            if(observableHighlightededSelectedNodes.contains(changedNode)) {
-                                HighlightNode(changedNode, NodeDisplay.SELECTEDANDCHANGED);
+                        for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
+                            if(observableHighlightededSelectedNodes.contains(addedChangedNode)) {
+                                HighlightNode(addedChangedNode, NodeDisplay.SELECTEDANDCHANGED);
                             }
                             else {
-                                HighlightNode(changedNode, NodeDisplay.CHANGED);
+                                HighlightNode(addedChangedNode, NodeDisplay.CHANGED);
                             }
                         }
                     }
                     else if(c.wasRemoved()) {
-                        //TODO IMPLEMENT THIS
+                        for(database.objects.Node removedChangedNode : c.getRemoved()) {
+                            if(observableHighlightededSelectedNodes.contains(removedChangedNode)) {
+                                HighlightNode(removedChangedNode, NodeDisplay.SELECTED);
+                            }
+                            else {
+                                HighlightNode(removedChangedNode, NodeDisplay.NORMAL);
+                            }
+                        }
                     }
                 }
             }
@@ -520,10 +527,14 @@ public class MapController {
                 //remove unsaved new nodes
                 while(c.next()) {
                     if(c.wasRemoved()) {
-                        for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            undrawNodeOnMap(deseletedNode);
+                        for(database.objects.Node deseletedNewNode : c.getRemoved()) {
+                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null) {//the node was saved to database
+                                HighlightNode(deseletedNewNode, NodeDisplay.NORMAL);
+                            }
+                            else {
+                                undrawNodeOnMap(deseletedNewNode);
+                            }
                         }
-
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node newNode : c.getAddedSubList()) {

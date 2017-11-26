@@ -48,6 +48,7 @@ public class MapBuilderController extends ScreenController {
     //default, nodeFloor is in sync with main map
     NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeType nodeType = NodeType.TEMP;
+    NodeBuilding nodeBuilding = NodeBuilding.FRANCIS15;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     @FXML
     private Tab nodeTab;
@@ -202,7 +203,44 @@ public class MapBuilderController extends ScreenController {
                 nodeType = newValue;
                 updateNodeID();
                 if(!CBnodeType.isDisable()) {
-                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                    for(database.objects.Node changedTypeNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedTypeNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedTypeNode.getNodeID()) {
+                                    changingNode.setNodeType(CBnodeType.getValue());
+                                    System.out.println("1. New Node Type: " + changingNode.getNodeType());
+                                }
+                            }
+                        }
+                        else {
+                            System.out.println("2. adding to changed list: Node Type, before: " + changedTypeNode.getNodeType());
+                            changedTypeNode.setNodeType(CBnodeType.getValue());
+                            observableChangedNodes.add(changedTypeNode); //current selected node is changed
+                            System.out.println("2. adding to changed list: Node Type, after: " + changedTypeNode.getNodeType());
+                        }
+                    }
+                }
+            }
+        });
+        CBnodeBuilding.valueProperty().addListener(new ChangeListener<NodeBuilding>() {
+            @Override
+            public void changed(ObservableValue<? extends NodeBuilding> observable, NodeBuilding oldValue, NodeBuilding newValue) {
+                nodeBuilding = newValue;
+                updateNodeID();
+                if(!CBnodeBuilding.isDisable()) {
+                    for(database.objects.Node changedBuildingNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedBuildingNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() ==changedBuildingNode.getNodeID()) {
+                                    changingNode.setBuilding(CBnodeBuilding.getValue());
+                                }
+                            }
+                        }
+                        else {
+                            changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
+                            observableChangedNodes.add(changedBuildingNode);
+                        }
+                    }
                 }
             }
         });
@@ -212,7 +250,19 @@ public class MapBuilderController extends ScreenController {
                 nodeTeamAssigned = newValue;
                 updateNodeID();
                 if(!CBnodeTeamAssigned.isDisable()) {
-                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                    for(database.objects.Node changedTeamNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedTeamNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedTeamNode.getNodeID()) {
+                                    changingNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                                }
+                            }
+                        }
+                        else {
+                            changedTeamNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                            observableChangedNodes.add(changedTeamNode);
+                        }
+                    }
                 }
             }
         });
@@ -221,7 +271,19 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(!lName.isDisable()) {
-                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                    for(database.objects.Node changedLNameNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedLNameNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedLNameNode.getNodeID()) {
+                                    changingNode.setLongName(lName.getText());
+                                }
+                            }
+                        }
+                        else {
+                            changedLNameNode.setLongName(lName.getText());
+                            observableChangedNodes.add(changedLNameNode);
+                        }
+                    }
                 }
             }
         });
@@ -229,7 +291,20 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(!sName.isDisable()) {
-                    observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
+                    for(database.objects.Node changedSNameNode : observableSelectedNodes) {
+
+                        if(observableChangedNodes.contains(changedSNameNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedSNameNode.getNodeID()) {
+                                    changingNode.setShortName(sName.getText());
+                                }
+                            }
+                        }
+                        else {
+                            changedSNameNode.setShortName(sName.getText());
+                            observableChangedNodes.add(changedSNameNode);
+                        }
+                    }
                 }
             }
         });
@@ -240,7 +315,6 @@ public class MapBuilderController extends ScreenController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         updateNodeDisplay(NodeDisplay.SELECTED);
-                        return;
                     }
                     else if(c.wasAdded()) {
                         updateNodeDisplay(NodeDisplay.SELECTED);
@@ -257,13 +331,14 @@ public class MapBuilderController extends ScreenController {
                 updateNodeDisplay(NodeDisplay.CHANGED);//currently do nothing
                 while(c.next()) {
                     if(c.wasAdded()) {
-                        for(database.objects.Node changedNode : c.getAddedSubList()) {
-                            mapController.observableHighlightededChangedNodes.add(changedNode);
+                        for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
+                            mapController.observableHighlightededChangedNodes.add(addedChangedNode);
                         }
                     }
-                    //TODO
                     if(c.wasRemoved()) {
-                        return;
+                        for(database.objects.Node removedChangedNode : c.getRemoved()) {
+                            mapController.observableHighlightededChangedNodes.remove(removedChangedNode);
+                        }
                     }
                 }
                 if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
@@ -280,7 +355,6 @@ public class MapBuilderController extends ScreenController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         updateNodeDisplay(NodeDisplay.NEW);
-                        return;
                     }
                     else if(c.wasAdded()) {
                         updateNodeDisplay(NodeDisplay.NEW);
@@ -469,7 +543,23 @@ public class MapBuilderController extends ScreenController {
                     setNodeAllDisable();
                 }
                 else if(observableSelectedNodes.size() == 1){
+                    for(database.objects.Node targetNode : observableChangedNodes) {
+                        if(observableSelectedNodes.get(0).getNodeID() == targetNode.getNodeID()) {
+                            xcoord.setText(String.valueOf(targetNode.getXcoord()));
+                            ycoord.setText(String.valueOf(targetNode.getYcoord()));
 
+                            CBnodeBuilding.setValue(targetNode.getBuilding());
+                            CBnodeType.setValue(targetNode.getNodeType());
+                            CBnodeTeamAssigned.setValue(convertToTeamEnum(targetNode.getTeamAssigned()));
+
+                            lName.setText(targetNode.getLongName());
+                            sName.setText(targetNode.getShortName());
+
+                            nodeID.setText(targetNode.getNodeID());
+                            setNodeFieldEnable();
+                            return;
+                        }
+                    }
                     xcoord.setText(String.valueOf(observableSelectedNodes.get(0).getXcoord()));
                     ycoord.setText(String.valueOf(observableSelectedNodes.get(0).getYcoord()));
 
@@ -498,9 +588,10 @@ public class MapBuilderController extends ScreenController {
 
                     CBnodeBuilding.setValue(observableNewNodes.get(0).getBuilding());
                     CBnodeType.setValue(observableNewNodes.get(0).getNodeType());
+                    CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
+
                     lName.setText(observableNewNodes.get(0).getLongName());
                     sName.setText(observableNewNodes.get(0).getShortName());
-                    CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
                     nodeID.setText(observableNewNodes.get(0).getNodeID());
                 }
                 else {
@@ -603,23 +694,23 @@ public class MapBuilderController extends ScreenController {
 
     public TeamAssigned convertToTeamEnum(String DBTeamString){
         switch (DBTeamString){
-            case "Team A":
+            case "A":
                 return TeamAssigned.A;
-            case "Team B":
+            case "B":
                 return TeamAssigned.B;
-            case "Team C":
+            case "C":
                 return TeamAssigned.C;
-            case "Team D":
+            case "D":
                 return TeamAssigned.D;
-            case "Team E":
+            case "E":
                 return TeamAssigned.E;
-            case "Team F":
+            case "F":
                 return TeamAssigned.F;
-            case "Team G":
+            case "G":
                 return TeamAssigned.G;
-            case "Team H":
+            case "H":
                 return TeamAssigned.H;
-            case "Team I":
+            case "I":
                 return TeamAssigned.I;
             default:
                 return TeamAssigned.I;
@@ -629,12 +720,12 @@ public class MapBuilderController extends ScreenController {
     @FXML
     private void SaveNode() {
         for(database.objects.Node newNode : observableNewNodes) {
-            if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
+            if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
                 MapEntity.getInstance().addNode(newNode);
-                nodeDialogString += "Node ID: " + nodeID + " was successfully saved.\n";
+                nodeDialogString += "Node ID: " + newNode.getNodeID() + " was successfully saved.\n";
             }
             else { //duplicate node ID found
-                nodeDialogString += "Node ID: " + nodeID + "Duplicate ID found, not saved\n";
+                nodeDialogString += "Node ID: " + newNode.getNodeID() + "Duplicate ID found, not saved\n";
             }
         }
         mapController.observableHighlightededNewNodes.clear();
@@ -642,7 +733,7 @@ public class MapBuilderController extends ScreenController {
 
         //clear new node list
         for(database.objects.Node changedNode : observableChangedNodes) {
-            if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
+            if(MapEntity.getInstance().getNode(changedNode.getNodeID()) != null) {
                 MapEntity.getInstance().editNode(changedNode);
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" was successfully edited.\n";
             }
@@ -650,6 +741,9 @@ public class MapBuilderController extends ScreenController {
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
             }
         }
+
+        observableChangedNodes.clear();
+
         System.out.println(nodeDialogString);
     }
 
