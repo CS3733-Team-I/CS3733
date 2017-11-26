@@ -1,25 +1,27 @@
 package entity;
 
 import database.DatabaseController;
+import database.objects.Employee;
 import utility.KioskPermission;
+import utility.Request.RequestType;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 
-import static utility.KioskPermission.ADMIN;
-import static utility.KioskPermission.EMPLOYEE;
-import static utility.KioskPermission.NONEMPLOYEE;
+import static utility.KioskPermission.*;
 
 /**
  * Should handle user credential validation and connection to the user database for LoginController
  * Should also pass information to indicate the MainWindowController's state as Nonemployee, Employee, & Admin
+ * acts as a facade for the Employee class
  */
 public class LoginEntity {
     private DatabaseController dbC;
     private KioskPermission permission;
     private String loginName;
     // TODO: make these less vulnerable
-    private HashMap<String,String> employees;
-    private HashMap<String,String> admins;
+    private HashMap<String,Employee> logins;
 
     private static LoginEntity instance = null;
 
@@ -37,21 +39,22 @@ public class LoginEntity {
     }
 
     private LoginEntity(Boolean test){
-        employees = new HashMap<>();
-        admins = new HashMap<>();
+        logins = new HashMap<>();
         this.loginName="";
         if (test){
             // so tests can add and remove logins as needed
-            permission = ADMIN;
+            permission = SUPER_USER;
             dbC = DatabaseController.getTestInstance();
         }
         else {
-            // initial login state, we don't want anyone to restart the application and gain access to admin powers
-            permission = NONEMPLOYEE;
+            // remove once we have a better way to initialize things
+            permission = SUPER_USER;
             dbC = DatabaseController.getInstance();
             // TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
-            admins.putIfAbsent("boss@hospital.com", "123");
-            employees.putIfAbsent("emp@hospital.com", "12");
+            addLogin("boss@hospital.com", "123",ADMIN,RequestType.GENERAL);
+            addLogin("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
+            // initial login state, we don't want anyone to restart the application and gain access to admin powers
+            permission = NONEMPLOYEE;
         }
     }
 
@@ -63,78 +66,93 @@ public class LoginEntity {
         return loginName;
     }
 
-    // TODO add security methods to this
-    public void addLogin(String loginName, String password, boolean admin){
-        if(this.permission==ADMIN){
-            if(admin){
-                if (dbC.equals(DatabaseController.getTestInstance())) {
-                    admins.putIfAbsent(loginName, password);
-                }
-            }
-            else {
-                employees.putIfAbsent(loginName, password);
-            }
+    // Adds every employee from the database to the logins hashmap
+    private void readAllFromDatabase(){
+        LinkedList<Employee> employees = dbC.getAllEmployees();
+        for (Employee emp : employees) {
+            // the login hashmap is linked to usernames because of their uniqueness and ease of accessing
+            this.logins.putIfAbsent(emp.getLoginName(),emp);
         }
     }
 
-    // TODO prevent people from locking themselves and others out in a nontest scenario
-    public void deleteLogin(String loginName, String password){
-        // Verifies that the user is an Admin
-        if(this.permission==ADMIN) {
-            // test cleanup method, haven't made this ready to work with the actual application
-            if (dbC.equals(DatabaseController.getTestInstance())) {
-                if(employees.containsKey(loginName)) {
-                    if(employees.get(loginName).equals(password)) {
-                        employees.remove(loginName);
-                    }
-                }
-                else if (admins.containsKey(loginName)){
-                    if(admins.get(loginName).equals(password)) {
-                        admins.remove(loginName);
-                    }
-                }
+    /**
+     * This method should only allow Admins and Super Users to add new logins,
+     * New logins can't be added if:
+     * 1. the loginName already exists
+     * 2. the permission is greater than or equal to that of the current user (excluding Super Users)
+     * 3. the permission is NONEMPLOYEE
+     *
+     * Rules for new IDs, it should be the base username and if that ID is taken, that username+1 or 2 or 3 or...
+     *
+     * @param loginName
+     * @param password
+     * @param permission
+     * @param serviceAbility
+     * @return
+     */
+
+    // TODO add security methods to this
+    public boolean addLogin(String loginName, String password, KioskPermission permission, RequestType serviceAbility){
+        // Idiot resistance
+        if(permission==NONEMPLOYEE){
+            return false;
+        }
+        // updates the hashmap in case a login is missing
+        // TODO: make reading from the database more efficient, when someone is adding a lot of users, we don't want this to take forever
+        readAllFromDatabase();
+        if(logins.containsKey(loginName)){
+            return false;
+        }
+        // limits creating new logins to subordinates in the KioskPermission hierarchy
+        else if(this.permission.ordinal()>permission.ordinal()||this.permission==SUPER_USER){
+            // fitting it into the table
+            if(loginName.length()<=50){
+                // Autogenerates a permanent employee ID from the name and current timestamp
+                // Fun fact of the day, this code should work until 200ish years from now when the 14th digit gets added
+                // to the Java timestamp, that is if this system or even Java survives that long
+                String loginID = loginName + System.currentTimeMillis();
+                Employee newEmployee=new Employee(loginID, loginName, password, permission, serviceAbility);
+                logins.put(loginName,newEmployee);
+                // TODO: Idea, create custom exception to inform the user on errors related to creating their login
+                return true;
             }
         }
-        else {
-            return;
+        return false;
+    }
+
+    // TODO prevent people from locking themselves and others out in a nontest scenario
+    public boolean deleteLogin(String loginName){
+        // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
+        if(logins.containsKey(loginName)&&(loginName!=this.loginName||dbC.equals(DatabaseController.getTestInstance()))) {
+            Employee delEmp = logins.get(loginName);
+            // checks to see if the current user permissions are higher than the one they are deleting
+            if(delEmp.getPermission().ordinal()<this.permission.ordinal()||this.permission==SUPER_USER) {
+                logins.remove(loginName);
+                dbC.removeEmployee(delEmp.getLoginID());
+                return true;
+            }
         }
+        return false;
     }
 
     // Method for users to update only their passwords, and no one else's
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean updated = false;
-        switch (permission) {
-            case ADMIN:
-                if (oldPassword.equals(admins.get(loginName))) {
-                    admins.replace(loginName, oldPassword, newPassword);
-                    updated = true;
-                }
-                break;
-            case EMPLOYEE:
-                if (oldPassword.equals(employees.get(loginName))) {
-                    employees.replace(loginName, oldPassword, newPassword);
-                    updated = true;
-                }
+        if (logins.get(loginName).updatePassword(newPassword, oldPassword)) {
+            Employee emp = logins.get(loginName);
+            dbC.updateEmployee(emp.getLoginID(),emp.getLoginName(),newPassword,emp.getPermission(),emp.getServiceAbility());
+            updated = true;
         }
         return updated;
     }
 
     // For checking log in credentials
-    // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR PERMISSIONS
+    // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
     public KioskPermission validate(String loginName, String password){
-        if(admins.containsKey(loginName)){
-            if (admins.get(loginName).equals(password)){
+        if(logins.containsKey(loginName)){
+            if (logins.get(loginName).validatePassword(password)){
                 this.loginName = loginName;
-                permission = ADMIN;
-            }
-            else {
-                validationFail();
-            }
-        }
-        else if(employees.containsKey(loginName)){
-            if (employees.get(loginName).equals(password)){
-                this.loginName = loginName;
-                permission = EMPLOYEE;
+                permission = logins.get(loginName).getPermission();
             }
             else {
                 validationFail();

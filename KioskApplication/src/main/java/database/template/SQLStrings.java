@@ -86,8 +86,8 @@ public class SQLStrings {
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
-            " loginID Varchar(70) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
-            " loginName Varchar(70) NOT NULL,"+
+            " loginID Varchar(63) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
+            " loginName Varchar(50) NOT NULL,"+
             // not sure how I want to store passwords
             " password Varchar(70) NOT NULL,"+
             " permission INT NOT NULL,"+
