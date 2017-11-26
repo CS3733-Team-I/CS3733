@@ -227,7 +227,7 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
-                        setNodeAllDisable();
+                        updateNodeDisplay(NodeDisplay.SELECTED);
                         return;
                     }
                     else if(c.wasAdded()) {
@@ -236,7 +236,6 @@ public class MapBuilderController extends ScreenController {
                 }
             }
         });
-        //TODO
         observableChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
@@ -259,6 +258,7 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
+                        updateNodeDisplay(NodeDisplay.NEW);
                         return;
                     }
                     else if(c.wasAdded()) {
@@ -425,7 +425,7 @@ public class MapBuilderController extends ScreenController {
 
 //TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeDisplay nodeDisplay) {
-
+        setNodeAllDisable();
         switch (nodeDisplay) {
             case SELECTED:
                 if(observableSelectedNodes.size() == 0) { //no node selected
@@ -442,7 +442,6 @@ public class MapBuilderController extends ScreenController {
                     sName.setText(observableSelectedNodes.get(0).getShortName());
                     CBnodeTeamAssigned.setValue(convertToTeamEnum(observableSelectedNodes.get(0).getTeamAssigned()));
                     nodeID.setText(observableSelectedNodes.get(0).getNodeID());
-                    setNodeFieldEnable();
                 }
                 else {
                     //TODO make this an exception
@@ -466,7 +465,6 @@ public class MapBuilderController extends ScreenController {
                     sName.setText(observableNewNodes.get(0).getShortName());
                     CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
                     nodeID.setText(observableNewNodes.get(0).getNodeID());
-                    setNodeFieldEnable();
                 }
                 else {
                     //TODO make this an exception
@@ -474,6 +472,7 @@ public class MapBuilderController extends ScreenController {
                 }
                 break;
         }
+        setNodeFieldEnable();
     }
 
     public String getFloorTxt(){
