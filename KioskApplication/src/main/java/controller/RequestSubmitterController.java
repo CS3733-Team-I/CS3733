@@ -1,7 +1,6 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import database.objects.Request;
@@ -29,8 +28,10 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXTabPane requestTypeTabs;
     @FXML private JFXButton btnSubmit;
     @FXML private JFXButton btnCancel;
-    @FXML private JFXTextField txtLocation;
+    @FXML private JFXTextField intLocation;
     @FXML private JFXComboBox langMenu;
+    @FXML private JFXTextField secLocationField;
+    @FXML private JFXComboBox priorityMenu;
     @FXML private Tab interpreterTab;
     @FXML private Tab foodTab;
     @FXML private Tab securityTab;
@@ -39,6 +40,10 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXTimePicker timePicker;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
+
+    //Finds current admin that is logged in
+    //currently a dummy email
+    String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
 
     @FXML
     public void initialize() {
@@ -86,8 +91,8 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @FXML
-    public void addRequest() throws IOException {
-        String location = txtLocation.getText();
+    public void addIntRequest() throws IOException {
+        String location = intLocation.getText();
         Node nodeLocation = MapEntity.getInstance().getNode(location);
         String notes = "";
 
@@ -105,13 +110,6 @@ public class RequestSubmitterController extends ScreenController {
                 break;
         }
 
-
-        //Finds current admin that is logged in
-        //currently a dummy email
-        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
-
-
-
         System.out.println("location: " + nodeLocation.getLongName() + ". language: " + languageSelected + ". Admin Email: " + adminEmail);
 
         //node ID, employee, notes, language
@@ -119,17 +117,37 @@ public class RequestSubmitterController extends ScreenController {
 
 
         LinkedList<Request> allRequests = RequestEntity.getInstance().getAllRequests();
-
-//        RequestEntity.getInstance().getInterpreterRequest(allRequests.getLast().getRequestID()).inProgress();
-
-        System.out.println(allRequests.getLast().getStatus());
         System.out.println(RequestEntity.getInstance().getAllRequests());
 
-        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
+//        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML
-    public void onCancelPressed() {
+    public void intClear() {
+
+    }
+
+    @FXML
+    public void addSecRequest()throws IOException {
+        String location = secLocationField.getText();
+        Node nodeLocation = MapEntity.getInstance().getNode(location);
+        String notes = "";
+
+        int priority = 0;
+        priority = Integer.parseInt(priorityMenu.getValue().toString());
+
+
+        System.out.println("location: " + nodeLocation.getLongName() + ". priority: " + priority + ". Admin Email: " + adminEmail);
+
+        //node ID, employee, notes, priority
+        RequestEntity.getInstance().submitSecurityRequest(nodeLocation.getNodeID(), adminEmail, notes, priority);
+
+//        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
+    }
+
+    @FXML
+    public void clearSecPressed(){
+        secLocationField.setText("");
 
     }
 
@@ -147,7 +165,20 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node n) {
-        txtLocation.setText(n.getNodeID());
+        switch (currentRequestType){
+            case INTERPRETER:
+                intLocation.setText(n.getNodeID());
+                break;
+            case SERUITUY:
+                secLocationField.setText(n.getNodeID());
+                break;
+            case FOOD:
+                System.out.println("map clicked in Food tab");
+                break;
+            case JANITOR:
+                System.out.println("map clicked in Janitor tab");
+                break;
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package database;
 import database.connection.Connector;
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.SecurityRequest;
 import database.util.DBUtil;
 import database.objects.InterpreterRequest;
 import utility.Node.NodeFloor;
@@ -194,6 +195,18 @@ public class DatabaseController {
         }
         return 0;
     }
+
+    public int addSecurityRequest(SecurityRequest sR){
+        try{
+            return Connector.insertSecurity(instanceConnection, sR);
+        }catch(SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     //TODO: Update this method
     public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
@@ -206,9 +219,33 @@ public class DatabaseController {
         return 0;
     }
 
+    //TODO: Update this method
+    public int updateSecurityRequest(SecurityRequest sR) {
+        try {
+            return Connector.updateSecurity(instanceConnection, sR);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
             return Connector.selectInterpreter(instanceConnection, requestID);
+        } catch(SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public  SecurityRequest getSecurityRequest(String requestID) {
+        try {
+            return Connector.selectSecurity(instanceConnection, requestID);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
@@ -229,6 +266,18 @@ public class DatabaseController {
         return false;
     }
 
+    public  boolean deleteSecurityRequest(String requestID) {
+        try {
+            Connector.deleteSecurity(instanceConnection, requestID);
+            return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public  LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
@@ -238,6 +287,17 @@ public class DatabaseController {
             }
         }
         return new LinkedList<InterpreterRequest>();
+    }
+
+    public  LinkedList<SecurityRequest> getAllSecurityRequests() {
+        try {
+            return Connector.selectAllSecurity(instanceConnection);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<SecurityRequest>();
     }
 
     public  void deleteTestTables() {

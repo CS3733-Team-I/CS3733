@@ -4,6 +4,7 @@ package database.connection;
 
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.SecurityRequest;
 import database.template.SQLStrings;
 import database.objects.InterpreterRequest;
 import utility.Node.NodeBuilding;
@@ -231,6 +232,87 @@ public class Connector {
             interpreterRequests.add(interpreterRequest);
         }
         return interpreterRequests;
+    }
+
+    /**TODO: make request database access as generic as possible to reduce workload**/
+    public static int insertSecurity(Connection conn, SecurityRequest sR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(SECURITY_INSERT);
+        pstmt.setString(1, sR.getRequestID());
+        pstmt.setString(2, sR.getNodeID());
+        pstmt.setString(3, sR.getAssigner());
+        pstmt.setString(4, sR.getNote());
+        pstmt.setTimestamp(5, sR.getSubmittedTime());
+        pstmt.setTimestamp(6, sR.getCompletedTime());
+        pstmt.setInt(7, sR.getStatus().ordinal());
+        pstmt.setInt(8, sR.getPriority());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateSecurity(Connection conn, SecurityRequest sR) throws SQLException {
+        String sql = SECURITY_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, sR.getNodeID());
+        pstmt.setString(2, sR.getAssigner());
+        pstmt.setString(3, sR.getNote());
+        pstmt.setTimestamp(4, sR.getSubmittedTime());
+        pstmt.setTimestamp(5, sR.getCompletedTime());
+        pstmt.setInt(6, sR.getStatus().ordinal());
+        pstmt.setInt(7, sR.getPriority());
+        //search parameter below
+        pstmt.setString(8, sR.getRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static SecurityRequest selectSecurity(Connection conn, String requestID) throws SQLException {
+        String sql = SECURITY_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        SecurityRequest securityRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            //for completed InterpreterRequests
+            securityRequest = new SecurityRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getString("assigner"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority"));
+        }
+        return securityRequest;
+    }
+
+    public static boolean deleteSecurity(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(SECURITY_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<SecurityRequest> selectAllSecurity(Connection conn) throws SQLException {
+        String sql = SECURITY_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<SecurityRequest> securityRequests = new LinkedList<>();
+        while(rs.next()) {
+            SecurityRequest securityRequest = null;
+            //for completed InterpreterRequests
+            securityRequest = new SecurityRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getString("assigner"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority"));
+
+            securityRequests.add(securityRequest);
+        }
+        return securityRequests;
     }
 
 }

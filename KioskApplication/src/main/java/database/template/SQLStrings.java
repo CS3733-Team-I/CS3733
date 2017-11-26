@@ -51,10 +51,29 @@ public class SQLStrings {
             ")";
 
 
+    public static final String CREATE_SECURITY_TABLE = "create table t_security";
+
+    public static final String WITH_SECURITY_ATTRIBUTES = ", priority INT NOT NULL)";
+
+    public static final String YCREATE_SECURITY_TABLE = "create table t_security(" +
+            //Base attributes
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY," +
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
+            " REFERENCES t_nodes ON DELETE CASCADE," +
+            " assigner VARCHAR(50) NOT NULL," +
+            " note CLOB(256)," +
+            " submittedTime TIMESTAMP NOT NULL," +
+            " completedTime TIMESTAMP NOT NULL," +
+            " status INT NOT NULL," +
+            //Unique request attributes
+            " security INT NOT NULL" +
+            ")";
+
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_REQUEST_TABLE = "DROP TABLE t_requests";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
+    public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
@@ -84,4 +103,18 @@ public class SQLStrings {
     public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
     public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
+
+    public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String SECURITY_UPDATE = "update t_security set" +
+            " nodeID=?," +
+            " assigner=?," +
+            " note=?,"+
+            " submittedTime=?,"+
+            " completedTime=?,"+
+            " status=?,"+
+            " priority=?"+
+            " where requestID=?";
+    public static final String SECURITY_SELECT = "select * from t_security where requestID=?";
+    public static final String SECURITY_DELETE = "DELETE FROM t_security WHERE requestID = ?";
+    public static final String SECURITY_SELECT_ALL = "select * from t_security";
 }

@@ -69,11 +69,24 @@ public class RequestManagerController extends ScreenController {
         LinkedList<Request> requests = RequestEntity.getInstance().getStatusRequests(status);
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getAssigner());
+            TextField requestTextField = new TextField(requests.get(i).getRequestID());
             String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
-            Label typeOfRequest = new Label("Type: Interpreter");
+            String requestType = requests.get(i).getRequestID().substring(0,3);
+            Label typeOfRequest;
+            switch (requestType){
+                case "Int":
+                    typeOfRequest = new Label("Type: Interpreter");
+                    break;
+                case "Sec":
+                    typeOfRequest = new Label("Type: Security");
+                    break;
+                default:
+                    typeOfRequest = new Label("Type: Generic");
+                    break;
+            }
+
             Label locationOfRequest = new Label(location);
             JFXButton selectID = new JFXButton("Select");
             selectID.setOnAction(new EventHandler<ActionEvent>() {

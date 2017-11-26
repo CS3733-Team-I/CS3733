@@ -118,7 +118,6 @@ public class RequestEntity {
         securityRequests.put(rID, securityRequest);
     }
 
-    //TODO: stopped here finish with adding securityRequests
 
     //Each type of Request has its own table in the database
     //TODO: incorporate search class into application so that nodeID can become location
@@ -127,6 +126,13 @@ public class RequestEntity {
         interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
         dbController.addInterpreterRequest(iR);
         return iR.getRequestID();
+    }
+
+    public String submitSecurityRequest(String nodeID, String employee, String note, int priotiry){
+        SecurityRequest sR = new SecurityRequest(nodeID, employee, note, priotiry);
+        securityRequests.putIfAbsent(sR.getNodeID(),sR);
+        dbController.addSecurityRequest(sR);    //TODO: stopped here finish with adding securityRequests
+        return sR.getRequestID();
     }
 
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
@@ -145,8 +151,20 @@ public class RequestEntity {
         }
     }
 
-    public void submitSecurityRequest(){
-
+    public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
+        System.out.println("Getting Security Request");
+        if(securityRequests.containsKey(requestID)) {
+            return securityRequests.get(requestID);
+        }
+        else{
+            readAllFromDatabase();
+            if(securityRequests.containsKey(requestID)){
+                return securityRequests.get(requestID);
+            }
+            else{
+                throw new NullPointerException("Unable to find SecurityReqest in database");
+            }
+        }
     }
 
     //Generic request deleting method
@@ -158,6 +176,8 @@ public class RequestEntity {
             System.out.println("Deleting InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
+            securityRequests.remove(requestID);
+            dbController.deleteSecurityRequest(requestID);
             System.out.println("Deleting SecurityRequest");
         }
         else if(requestType.equals("Foo")){
@@ -186,6 +206,8 @@ public class RequestEntity {
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
+            securityRequests.remove(requestID);
+            dbController.deleteSecurityRequest(requestID);
             System.out.println("In Progress SecurityRequest");
         }
         else if(requestType.equals("Foo")){
@@ -216,6 +238,10 @@ public class RequestEntity {
             System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
+            SecurityRequest sR = securityRequests.get(requestID);
+            sR.complete();
+            securityRequests.replace(requestID, sR);
+            dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
         }
         else if(requestType.equals("Foo")){
@@ -249,5 +275,21 @@ public class RequestEntity {
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
         dbController.updateInterpreterRequest(oldReq);
+    }
+
+    public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
+                                         Timestamp submittedTime, Timestamp completedTime,
+                                         RequestProgressStatus status, int prority){
+        SecurityRequest oldReq = securityRequests.get(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssigner(assigner);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
+        oldReq.setPriority(prority);
+        //TODO: figure out how to make update request a generic method
+        dbController.updateSecurityRequest(oldReq);
     }
 }
