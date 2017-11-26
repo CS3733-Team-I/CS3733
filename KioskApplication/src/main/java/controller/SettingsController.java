@@ -34,6 +34,7 @@ public class SettingsController extends ScreenController {
 
 
     public void initialize() throws IOException{
+        SystemSettings systemSettings = SystemSettings.getInstance();
         astarButton.setToggleGroup(searchAlgToggleGroup);
         astarButton.setUserData("A*");
         dijkstraButton.setToggleGroup(searchAlgToggleGroup);
@@ -42,6 +43,11 @@ public class SettingsController extends ScreenController {
         bfsButton.setUserData("BFS");
         dfsButton.setToggleGroup(searchAlgToggleGroup);
         dfsButton.setUserData("DFS");
+        //Load saved selection; select appropriate radio button.
+        for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
+            if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
+                searchAlgToggleGroup.selectToggle(toggle);
+        }
     }
 
     @FXML

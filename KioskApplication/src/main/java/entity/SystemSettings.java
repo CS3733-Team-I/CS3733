@@ -50,4 +50,8 @@ public class SystemSettings {
     public SearchAlgorithm getAlgorithm() {
         return algorithm;
     }
+
+    public Preferences getPrefs() {
+        return prefs;
+    }
 }
