@@ -15,6 +15,7 @@ import utility.Request.Language;
 import utility.Node.NodeFloor;
 import utility.Request.RequestType;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class RequestSubmitterController extends ScreenController {
@@ -122,7 +123,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
 
     @Override
     public void onMapNodeClicked(Node n) {

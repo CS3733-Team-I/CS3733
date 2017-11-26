@@ -18,6 +18,7 @@ import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.Node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -68,7 +69,6 @@ public class MainWindowController {
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
-            //NullPointerExceptions thrown by line below
             public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
                 switch (newValue.getText()) { // TODO make this more modular/language independent
                     case "Map":
@@ -127,7 +127,6 @@ public class MainWindowController {
 
     //checks permissions of user and adjusts visible tabs and screens
     public void checkPermissions() {
-        System.out.println(l.getPermission());
         switch (l.getPermission()) {
             case NONEMPLOYEE:
                 switchButton.setText("Staff Login");
@@ -267,8 +266,8 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        controllers.get(currentScreen).onMapLocationClicked(e, location);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
