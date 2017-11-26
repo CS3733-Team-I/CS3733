@@ -1,9 +1,6 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import database.objects.Edge;
 import database.objects.Node;
@@ -15,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
@@ -23,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import utility.Display.Node.NodeDisplay;
@@ -54,7 +53,9 @@ public class MapBuilderController extends ScreenController {
     private Tab nodeTab;
     private String nodeDialogString;
     @FXML
-    private AnchorPane nodeDialogAnchor;
+    private JFXDialogLayout nodeDialogLayout;
+    @FXML
+    private StackPane SPnodeDialog;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
@@ -718,36 +719,56 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    private void SaveNode() {
+    private void SaveNode(ActionEvent event) {
         for(database.objects.Node newNode : observableNewNodes) {
             if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
                 MapEntity.getInstance().addNode(newNode);
                 nodeDialogString += "Node ID: " + newNode.getNodeID() + " was successfully saved.\n";
-                mapController.observableHighlightededNewNodes.clear();
-                observableNewNodes.clear();
             }
             else { //duplicate node ID found
                 nodeDialogString += "Node ID: " + newNode.getNodeID() + "Duplicate ID found, not saved\n";
+                loadDialog(event);
+                nodeDialogString = "";
+                return;
             }
         }
+        mapController.observableHighlightededNewNodes.clear();
+        observableNewNodes.clear();
 
         //clear new node list
         for(database.objects.Node changedNode : observableChangedNodes) {
             if(MapEntity.getInstance().getNode(changedNode.getNodeID()) != null) {
                 MapEntity.getInstance().editNode(changedNode);
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" was successfully edited.\n";
-                observableChangedNodes.clear();
             }
             else {
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
+                loadDialog(event);
+                nodeDialogString = "";
+                return;
             }
         }
-        System.out.println(nodeDialogString);
+        observableChangedNodes.clear();
+        loadDialog(event);
+        nodeDialogString = "";
     }
 
 //TODO
     @FXML
     private void loadDialog(ActionEvent event) {
 
+        nodeDialogLayout.setHeading(new Text("System Information"));
+        nodeDialogLayout.setBody(new Text(nodeDialogString));
+        JFXDialog nodeDialog = new JFXDialog(SPnodeDialog, nodeDialogLayout, JFXDialog.DialogTransition.CENTER);
+        JFXButton btnodeDialog= new JFXButton("OK");
+        btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                nodeDialog.close();
+            }
+        });
+        nodeDialogLayout.setActions(btnodeDialog);
+
+        nodeDialog.show();
     }
 }
