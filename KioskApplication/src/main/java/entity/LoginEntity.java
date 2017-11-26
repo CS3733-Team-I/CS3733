@@ -112,6 +112,8 @@ public class LoginEntity {
                 String loginID = loginName + System.currentTimeMillis();
                 Employee newEmployee=new Employee(loginID, loginName, password, permission, serviceAbility,false);
                 logins.put(loginName,newEmployee);
+                dbC.addEmployee(newEmployee.getLoginID(),newEmployee.getLoginName(),newEmployee.getPassword(password),
+                        newEmployee.getPermission(),newEmployee.getServiceAbility());
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their login
                 return true;
             }
@@ -153,14 +155,14 @@ public class LoginEntity {
     }
 
     // For changing your username
-    public boolean updateUserName(String newLoginName, String newPassword){
+    public boolean updateUserName(String newLoginName, String password){
         //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
         Employee currUser = logins.get(this.loginName);
         //checks if the current user name is already in active use
         boolean updated = !logins.containsKey(newLoginName);
         if(updated){
             //tries to update the current user's password
-            currUser.updatePassword(newLoginName, newPassword);
+            currUser.updatePassword(newLoginName, password);
         }
         if(updated){
             //updates internal hashmap
@@ -169,7 +171,7 @@ public class LoginEntity {
             //updates current userName
             loginName=newLoginName;
             //relays updated information to database
-            dbC.updateEmployee(currUser.getLoginID(),currUser.getLoginName(),newPassword,
+            dbC.updateEmployee(currUser.getLoginID(),currUser.getLoginName(),password,
                     currUser.getPermission(),currUser.getServiceAbility());
         }
         return updated;
@@ -177,7 +179,7 @@ public class LoginEntity {
 
     // For checking log in credentials
     // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
-    public KioskPermission validate(String loginName, String password){
+    public KioskPermission logIn(String loginName, String password){
         if(logins.containsKey(loginName)){
             if (logins.get(loginName).validatePassword(password)){
                 this.loginName = loginName;
@@ -194,7 +196,7 @@ public class LoginEntity {
     }
 
     /**
-     * Helper method for validate, while it is technically identical in function to logOut(),
+     * Helper method for logIn, while it is technically identical in function to logOut(),
      * it doesn't make sense for logOut() to be called when nobody is logged in
      */
     private void validationFail(){

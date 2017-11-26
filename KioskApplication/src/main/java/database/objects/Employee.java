@@ -23,15 +23,10 @@ public class Employee {
         else {
             this.password = encryptPassword(password);
         }
-        switch (permission){
-            // Upping idiot resistance: in case someone tries putting NONEMPOLYEE in
-            case NONEMPLOYEE:
-                this.permission=KioskPermission.EMPLOYEE;
-                break;
-            default:
-                this.permission = permission;
-                break;
+        if(permission==KioskPermission.NONEMPLOYEE){
+            permission=KioskPermission.EMPLOYEE;
         }
+        this.permission=permission;
         this.serviceAbility = serviceAbility;
     }
 
@@ -60,7 +55,7 @@ public class Employee {
         else return password;
     }
 
-    // Method to validate passwords
+    // Method to logIn passwords
     public boolean validatePassword(String password){
         return (this.password.equals(encryptPassword(password)));
     }
