@@ -14,18 +14,24 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import utility.Display.Node.NodeDisplay;
 import utility.Node.NodeBuilding;
 import utility.Node.NodeFloor;
 import utility.Node.NodeType;
 import utility.Node.TeamAssigned;
+
+import javax.swing.*;
 
 public class MapBuilderController extends ScreenController {
 
@@ -45,6 +51,9 @@ public class MapBuilderController extends ScreenController {
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     @FXML
     private Tab nodeTab;
+    private String nodeDialogString;
+    @FXML
+    private AnchorPane nodeDialogAnchor;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
@@ -237,6 +246,9 @@ public class MapBuilderController extends ScreenController {
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                 }
+                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
+                    setNodeAllDisable();
+                }
             }
         });
         observableChangedNodes.addListener(new ListChangeListener<Node>() {
@@ -254,6 +266,12 @@ public class MapBuilderController extends ScreenController {
                         return;
                     }
                 }
+                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
+                    btNodeSave.setDisable(true);
+                }
+                else {
+                    btNodeSave.setDisable(false);
+                }
             }
         });
         observableNewNodes.addListener(new ListChangeListener<Node>() {
@@ -267,6 +285,15 @@ public class MapBuilderController extends ScreenController {
                     else if(c.wasAdded()) {
                         updateNodeDisplay(NodeDisplay.NEW);
                     }
+                }
+                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
+                    btNodeSave.setDisable(true);
+                }
+                else {
+                    btNodeSave.setDisable(false);
+                }
+                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
+                    setNodeAllDisable();
                 }
             }
         });
@@ -292,8 +319,13 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        //deselect node on one mouse click
+        if(e.getClickCount() == 1) {
+            mapController.observableHighlightededSelectedNodes.clear();
+            observableSelectedNodes.clear();
+        }
         //detects double-click events
-        if(e.getClickCount() == 2)
+        else if(e.getClickCount() == 2)
         {
             //remove selected nodes, if any
             mapController.observableHighlightededSelectedNodes.clear();
@@ -326,12 +358,12 @@ public class MapBuilderController extends ScreenController {
             //remove unsaved new node, if any
             mapController.observableHighlightededNewNodes.clear();
             observableNewNodes.clear();
-            //System.out.println("TESTING");
-            //System.out.println("Is it empty? " + mapController.observableHighlightededSelectedNodes.isEmpty());
+
             if(!mapController.observableHighlightededSelectedNodes.isEmpty()){
                 mapController.observableHighlightededSelectedNodes.clear();
             }
             mapController.observableHighlightededSelectedNodes.add(node);
+
             if(!observableSelectedNodes.isEmpty()) {
                 observableSelectedNodes.clear();
             }
@@ -549,7 +581,6 @@ public class MapBuilderController extends ScreenController {
         //turn off advanced options
         //TODO change save, undo, redo disable/renable condition
         tbNodeAdvanced.setDisable(false);
-        btNodeSave.setDisable(false);
         btNodeUndo.setDisable(false);
         btNodeRedo.setDisable(false);
         btNodeDelete.setDisable(false);
@@ -564,7 +595,6 @@ public class MapBuilderController extends ScreenController {
         tbNodeAdvanced.setSelected(false);
         tbNodeAdvanced.setDisable(true);
         //disable node operation buttons
-        btNodeSave.setDisable(true);
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
@@ -596,19 +626,36 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
-    public void SaveNode() {
+    @FXML
+    private void SaveNode() {
         for(database.objects.Node newNode : observableNewNodes) {
             if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
                 MapEntity.getInstance().addNode(newNode);
-                System.out.println("Adding node " + nodeID.getText());
+                nodeDialogString += "Node ID: " + nodeID + " was successfully saved.\n";
             }
             else { //duplicate node ID found
-
+                nodeDialogString += "Node ID: " + nodeID + "Duplicate ID found, not saved\n";
             }
         }
+        mapController.observableHighlightededNewNodes.clear();
+        observableNewNodes.clear();
+
         //clear new node list
         for(database.objects.Node changedNode : observableChangedNodes) {
-
+            if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
+                MapEntity.getInstance().editNode(changedNode);
+                nodeDialogString += "Node ID "+changedNode.getNodeID()+" was successfully edited.\n";
+            }
+            else {
+                nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
+            }
         }
+        System.out.println(nodeDialogString);
+    }
+
+//TODO
+    @FXML
+    private void loadDialog(ActionEvent event) {
+
     }
 }

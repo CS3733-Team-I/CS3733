@@ -110,8 +110,12 @@ public class MapController {
                     case NORMAL:
                         nodeO.setFill(Color.GRAY);
                         break;
+                    case SELECTEDANDCHANGED:
+                        nodeO.setFill(Color.PURPLE);
+                        break;
                     case NEW:
                         nodeO.setFill(Color.YELLOW);
+                        break;
                 }
                 nodesEdgesPane.getChildren().add(nodeO);
                 return;
@@ -381,7 +385,7 @@ public class MapController {
                             Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
                             Node node2 = mapEntity.getNode(addedDatabaseEdge.getNode2ID());
                             Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-                            edgeView.setStroke(Color.PURPLE);
+                            edgeView.setStroke(Color.GREY);
                             edgeView.setStrokeWidth(10);
                             edgeView.setMouseTransparent(false);
                             edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(addedDatabaseEdge));
@@ -468,12 +472,22 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            HighlightNode(deseletedNode, NodeDisplay.NORMAL);
+                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
+                                HighlightNode(deseletedNode, NodeDisplay.NORMAL);
+                            }
+                            else {
+                                HighlightNode(deseletedNode, NodeDisplay.CHANGED);
+                            }
                         }
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node selectedNode : c.getAddedSubList()) {
-                            HighlightNode(selectedNode, NodeDisplay.SELECTED);
+                            if(observableHighlightededChangedNodes.contains(selectedNode)){
+                                HighlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            }
+                            else {
+                                HighlightNode(selectedNode, NodeDisplay.SELECTED);
+                            }
                         }
                     }
                 }
@@ -486,7 +500,12 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasAdded()){
                         for(database.objects.Node changedNode : c.getAddedSubList()) {
-                            HighlightNode(changedNode, NodeDisplay.CHANGED);
+                            if(observableHighlightededSelectedNodes.contains(changedNode)) {
+                                HighlightNode(changedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            }
+                            else {
+                                HighlightNode(changedNode, NodeDisplay.CHANGED);
+                            }
                         }
                     }
                     else if(c.wasRemoved()) {

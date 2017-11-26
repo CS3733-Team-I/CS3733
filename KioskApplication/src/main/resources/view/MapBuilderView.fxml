@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDialogLayout?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
@@ -40,10 +41,12 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -51,8 +54,8 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <JFXToggleButton fx:id="tbNodeAdvanced" text="Advanced" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="6" />
-                              <TextFlow fx:id="tfNodeInfo" prefHeight="114.0" prefWidth="170.0" textAlignment="CENTER" GridPane.columnSpan="6" GridPane.rowIndex="12" GridPane.rowSpan="2">
+                              <JFXToggleButton fx:id="tbNodeAdvanced" text="Advanced" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="5" />
+                              <TextFlow fx:id="tfNodeInfo" prefHeight="114.0" prefWidth="170.0" textAlignment="CENTER" GridPane.columnSpan="6" GridPane.rowIndex="11" GridPane.rowSpan="2">
                                  <children>
                                     <VBox prefHeight="137.0" prefWidth="320.0">
                                        <children>
@@ -70,7 +73,7 @@
                                     </VBox>
                                  </children>
                               </TextFlow>
-                              <GridPane fx:id="nodeAdvanced" prefHeight="148.0" prefWidth="369.0" GridPane.columnSpan="6" GridPane.rowIndex="7" GridPane.rowSpan="4">
+                              <GridPane fx:id="nodeAdvanced" prefHeight="68.0" prefWidth="320.0" GridPane.columnSpan="6" GridPane.rowIndex="6" GridPane.rowSpan="4">
                                 <columnConstraints>
                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -98,13 +101,13 @@
                                     <JFXTextField fx:id="nodeID" prefHeight="27.0" prefWidth="95.0" text="Node ID" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
-                              <JFXComboBox fx:id="CBnodeType" prefHeight="27.0" prefWidth="188.0" promptText="Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                              <JFXComboBox fx:id="CBnodeTeamAssigned" prefHeight="27.0" prefWidth="207.0" promptText="Team Assigned" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
-                              <JFXComboBox fx:id="CBnodeBuilding" prefHeight="27.0" prefWidth="195.0" promptText="Building" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                              <JFXTextField fx:id="sName" text="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                              <JFXTextField fx:id="lName" text="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-                              <JFXToggleButton fx:id="tbNodeInstruction" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="11" />
-                              <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00589F;" GridPane.columnSpan="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <JFXComboBox fx:id="CBnodeType" prefHeight="27.0" prefWidth="188.0" promptText="Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                              <JFXComboBox fx:id="CBnodeTeamAssigned" prefHeight="27.0" prefWidth="207.0" promptText="Team Assigned" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                              <JFXComboBox fx:id="CBnodeBuilding" prefHeight="27.0" prefWidth="195.0" promptText="Building" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="sName" text="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="lName" text="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" />
+                              <JFXToggleButton fx:id="tbNodeInstruction" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="10" />
+                              <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00589F;" GridPane.columnSpan="6" GridPane.halignment="CENTER" GridPane.rowIndex="15" GridPane.valignment="CENTER">
                                  <buttons>
                                     <JFXButton fx:id="btNodeSave" buttonType="RAISED" onAction="#SaveNode" text="Save" textFill="WHITE" />
                                     <JFXButton fx:id="btNodeUndo" buttonType="RAISED" text="Undo" textFill="WHITE" />
@@ -112,6 +115,10 @@
                                     <JFXButton fx:id="btNodeDelete" buttonType="RAISED" prefWidth="84.0" text="Delete" textFill="WHITE" />
                                  </buttons>
                               </ButtonBar>
+                              <AnchorPane fx:id="nodeDialogAnchor" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" prefWidth="320.0" GridPane.columnSpan="6" GridPane.rowIndex="13" GridPane.rowSpan="2">
+                                 <children>
+                                    <JFXDialogLayout layoutX="-137.0" prefHeight="60.0" prefWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children></AnchorPane>
                            </children>
                         </GridPane>
                      </children>
