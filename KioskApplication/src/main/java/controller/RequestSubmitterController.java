@@ -1,10 +1,9 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import database.objects.Request;
+import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -18,18 +17,11 @@ import utility.Request.RequestType;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class RequestSubmitterController extends ScreenController {
 
-    public RequestSubmitterController(MainWindowController parent, MapController map) {
-        super(parent, map);
-        dbController = DatabaseController.getInstance();
-    }
-
     @FXML private JFXTabPane requestTypeTabs;
 
-    /*language related*/
     @FXML private Tab interpreterTab;
     @FXML private JFXComboBox langMenu;
     /*food related*/
@@ -40,16 +32,22 @@ public class RequestSubmitterController extends ScreenController {
     /*janitor related*/
     @FXML private Tab janitorTab;
 
-
     @FXML private JFXButton btnSubmit;
+
     @FXML private JFXButton btnCancel;
     @FXML private JFXTextField txtLocation;
     @FXML private JFXDatePicker datePicker;
     @FXML private JFXTimePicker timePicker;
-
     RequestType currentRequestType = RequestType.INTERPRETER;
 
-    DatabaseController dbController;
+    LoginEntity l;
+    RequestEntity r;
+
+    public RequestSubmitterController(MainWindowController parent, MapController map) {
+        super(parent, map);
+        l = LoginEntity.getInstance();
+        r = RequestEntity.getInstance();
+    }
 
     @FXML
     public void initialize() {
@@ -88,7 +86,7 @@ public class RequestSubmitterController extends ScreenController {
                 System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
-                currentRequestType = RequestType.SERUITUY;
+                currentRequestType = RequestType.SECURITY;
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
@@ -100,45 +98,15 @@ public class RequestSubmitterController extends ScreenController {
         getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
     }
 
+    // adds the request. TODO: make this generic and able to process any and all requests
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        Node nodeLocation = dbController.getNode(location);
+        String assigner = l.getUserName();
         String notes = "";
-
-        Language language = Language.NONE;
-        String languageSelected = langMenu.getValue().toString();
-        switch (languageSelected){
-            case "Spanish":
-                language = Language.SPANISH;
-                break;
-            case "Mandarin":
-                language = Language.CHINESE;
-                break;
-            case "German":
-                language = Language.GERMAN;
-                break;
-        }
-
-
-        //Finds current admin that is logged in
-        //currently a dummy email
-        String adminEmail = "boss@hospital.com"; //TODO implement something new for parent.curr_admin_email
-
-        LinkedList<Request> allRequests = RequestEntity.getInstance().getAllRequests();
-
-
-        System.out.println("location: " + nodeLocation.getLongName() + ". language: " + languageSelected + ". Admin Email: " + adminEmail);
-
-        //node ID, employee, notes, language
-        RequestEntity.getInstance().submitInterpreterRequest(nodeLocation.getNodeID(), adminEmail, notes, language);
-
-        //Adds the Interpreter request to the database
-//        DatabaseController.addRequest(interpID,nodeLocation.getNodeID(), adminEmail);
-//        DatabaseController.addIntepreterRequest(language, interpID, interpID);
-        System.out.println(dbController.getAllInterpreterRequests());
-
-        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
+        Language language = Language.valueOf(langMenu.getValue().toString());
+        r.submitInterpreterRequest(location, assigner, notes, language);
+        System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
     }
 
     @FXML
@@ -151,7 +119,6 @@ public class RequestSubmitterController extends ScreenController {
         if (contentView == null) {
             contentView = loadView("/view/RequestSubmitterView.fxml");
         }
-
         return contentView;
     }
 
