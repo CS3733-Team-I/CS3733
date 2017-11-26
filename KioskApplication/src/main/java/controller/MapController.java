@@ -145,26 +145,7 @@ public class MapController {
     }
 
     protected void drawEdgesOnMap(List<Edge> edges) {
-        MapEntity mapEntity = MapEntity.getInstance();
-        nodesEdgesPane.setPickOnBounds(false);
-        for (Edge e : edges) {
-            Node node1 = mapEntity.getNode(e.getNode1ID());
-            Node node2 = mapEntity.getNode(e.getNode2ID());
-
-            // TODO(jerry) make this more modular, maybe into an FXML file??
-            // TODO(leo) keep this as it is, or it can NOT properly interact with other map modules
-            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-            edgeView.setStroke(Color.PURPLE);
-            edgeView.setStrokeWidth(10);
-            edgeView.setMouseTransparent(false);
-            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
-            edgeView.setPickOnBounds(false);
-            edgeView.setAccessibleText(e.getEdgeID());
-
-            edgeObjectList.add(edgeView);
-            nodesEdgesPane.getChildren().add(edgeView);
-        }
-        //this.nodesEdgesPane.getChildren().add(nodesEdgesPane);
+        DatabaseEdgeObjectList.addAll(edges);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -342,10 +323,7 @@ public class MapController {
                     drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(floorSelector.getValue()));
                 }
                 else {
-                    for (javafx.scene.Node n: edgeObjectList) {
-                        nodesEdgesPane.getChildren().remove(n);
-                    }
-                    edgeObjectList.clear();
+                    DatabaseEdgeObjectList.clear();
                 }
             }
         });
@@ -366,7 +344,7 @@ public class MapController {
                             }
                         }
                     }
-                    if(c.wasAdded()) {
+                    else if(c.wasAdded()) {
                         for(database.objects.Node addedDatabaseNode : c.getAddedSubList()) {
                             Circle nodeView = new Circle(addedDatabaseNode.getXcoord(), addedDatabaseNode.getYcoord(), 14, Color.GRAY);
                             nodeView.setStroke(Color.BLACK);
@@ -376,6 +354,40 @@ public class MapController {
                             nodeView.setPickOnBounds(false);
                             nodeView.setAccessibleText(addedDatabaseNode.getNodeID());
                             nodeObjectList.add(nodeView);
+                        }
+                    }
+                }
+            }
+        });
+        DatabaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
+            @Override
+            public void onChanged(Change<? extends Edge> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Edge removedDatabaseEdge : c.getRemoved()) {
+                            Iterator<Line> edgeObjectIterator = edgeObjectList.iterator();
+                            while (edgeObjectIterator.hasNext()) {
+                                Line line = edgeObjectIterator.next();
+                                if (removedDatabaseEdge.getEdgeID().equals(line.getAccessibleText())) {
+                                    edgeObjectIterator.remove();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(database.objects.Edge addedDatabaseEdge : c.getAddedSubList()) {
+                            MapEntity mapEntity = MapEntity.getInstance();
+                            Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
+                            Node node2 = mapEntity.getNode(addedDatabaseEdge.getNode2ID());
+                            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
+                            edgeView.setStroke(Color.PURPLE);
+                            edgeView.setStrokeWidth(10);
+                            edgeView.setMouseTransparent(false);
+                            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(addedDatabaseEdge));
+                            edgeView.setPickOnBounds(false);
+                            edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
+                            edgeObjectList.add(edgeView);
                         }
                     }
                 }
@@ -399,11 +411,22 @@ public class MapController {
                 }
             }
         });
-        //TODO
+
         edgeObjectList.addListener(new ListChangeListener<Line>() {
             @Override
             public void onChanged(Change<? extends Line> c) {
-
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(Line removedLine : c.getRemoved()) {
+                            nodesEdgesPane.getChildren().remove(removedLine);
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(Line addedLine : c.getAddedSubList()) {
+                            nodesEdgesPane.getChildren().add(addedLine);
+                        }
+                    }
+                }
             }
         });
 
