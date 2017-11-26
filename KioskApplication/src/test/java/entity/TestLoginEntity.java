@@ -20,8 +20,8 @@ public class TestLoginEntity {
     public void setup(){
         db = DatabaseController.getTestInstance();
         l = LoginEntity.getTestInstance();
-        l.addLogin("boss@hospital.com", "123",SUPER_USER, RequestType.GENERAL);
-        l.addLogin("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("boss@hospital.com", "123",SUPER_USER, RequestType.GENERAL);
+        l.addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
     }
 
     @After
@@ -38,44 +38,44 @@ public class TestLoginEntity {
     @Test
     public void testInitialPermission(){
         assertEquals(KioskPermission.SUPER_USER,l.getPermission());
-        assertEquals("",l.getLoginName());
+        assertEquals("",l.getUserName());
     }
 
     @Test
     public void testValidatePermissionToAdmin(){
         l.logIn("hgskhgjh","sghvnjdkhgr");
         assertEquals(KioskPermission.SUPER_USER,l.logIn("boss@hospital.com","123"));
-        assertEquals("boss@hospital.com",l.getLoginName());
+        assertEquals("boss@hospital.com",l.getUserName());
     }
 
     @Test
     public void testValidatePermissionEmployee(){
         assertEquals(KioskPermission.EMPLOYEE, l.logIn("emp@hospital.com","12"));
-        assertEquals("emp@hospital.com",l.getLoginName());
+        assertEquals("emp@hospital.com",l.getUserName());
     }
 
     @Test
     public void testValidatePermissionToNonEmployee(){
         assertEquals(KioskPermission.NONEMPLOYEE, l.logIn("nonemp@hospital.com","1"));
-        assertEquals("",l.getLoginName());
+        assertEquals("",l.getUserName());
     }
 
     @Test
     public void testInvalidAdminPassword(){
         assertEquals(KioskPermission.NONEMPLOYEE,l.logIn("boss@hospital.com","12"));
-        assertEquals("",l.getLoginName());
+        assertEquals("",l.getUserName());
     }
 
     @Test
     public void testInvalidEmployeePassword(){
         assertEquals(KioskPermission.NONEMPLOYEE,l.logIn("emp@hospital.com","123"));
-        assertEquals("",l.getLoginName());
+        assertEquals("",l.getUserName());
     }
 
     //Employees should not delete the admin login
     @Test
     public void testDeleteLoginEmployeeDeleteAdmin(){
-        l.addLogin("admin","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","345",ADMIN,RequestType.GENERAL);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("admin");
         assertEquals(KioskPermission.ADMIN,l.logIn("admin","345"));
@@ -86,7 +86,7 @@ public class TestLoginEntity {
     //Employees should not delete the employee login
     @Test
     public void testDeleteLoginEmployeeDeleteEmployee(){
-        l.addLogin("employee","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","456",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("employee");
         assertEquals(KioskPermission.EMPLOYEE,l.logIn("employee","456"));
@@ -97,7 +97,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the admin login
     @Test
     public void testDeleteLoginNonemployeeDeleteAdmin(){
-        l.addLogin("admin","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","345",ADMIN,RequestType.GENERAL);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("admin");
         assertEquals(KioskPermission.ADMIN,l.logIn("admin","345"));
@@ -108,7 +108,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the employee login
     @Test
     public void testDeleteLoginNonemployeeDeleteEmployee(){
-        l.addLogin("employee","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","456",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("employee");
         assertEquals(KioskPermission.EMPLOYEE,l.logIn("employee","456"));
@@ -120,20 +120,20 @@ public class TestLoginEntity {
     @Test
     public void testAddLoginEmployee(){
         l.logIn("emp@hospital.com","12");
-        l.addLogin("test","pass",EMPLOYEE,RequestType.GENERAL);
+        l.addUser("test","pass",EMPLOYEE,RequestType.GENERAL);
         assertEquals(KioskPermission.NONEMPLOYEE,l.logIn("test","pass"));
     }
 
     @Test
     public void testAddLoginNonemployee(){
         l.logIn("emp@otherhospital.com","1");
-        l.addLogin("test","pass",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("test","pass",EMPLOYEE,RequestType.INTERPRETER);
         assertEquals(KioskPermission.NONEMPLOYEE,l.logIn("test","pass"));
     }
 
     @Test
     public void testUpdatePassword(){
-        l.addLogin("employee","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","456",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("employee","456");
         l.updatePassword("789","456");
         assertEquals(EMPLOYEE,l.logIn("employee","789"));
@@ -143,10 +143,10 @@ public class TestLoginEntity {
 
     @Test
     public void testUpdateUserName(){
-        l.addLogin("employee","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","456",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("employee","456");
         l.updateUserName("emp1","456");
-        assertEquals("emp1",l.getLoginName());
+        assertEquals("emp1",l.getUserName());
         becomeSuperUser();
         l.deleteLogin("emp1");
     }

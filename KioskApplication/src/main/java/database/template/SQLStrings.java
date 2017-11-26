@@ -87,7 +87,7 @@ public class SQLStrings {
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
             " loginID Varchar(63) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
-            " loginName Varchar(50) NOT NULL,"+
+            " userName Varchar(50) NOT NULL,"+
             // not sure how I want to store passwords
             " password Varchar(70) NOT NULL,"+
             " permission INT NOT NULL,"+
@@ -98,7 +98,7 @@ public class SQLStrings {
 
     public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?,?)";
     // this seems insecure AF
-    public static final String EMPLOYEE_UPDATE = "update t_employee set loginName=?, password=?, permission=?, serviceAbility=? where loginID=?";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set userName=?, password=?, permission=?, serviceAbility=? where loginID=?";
     // Included a get method for standardization purposes
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

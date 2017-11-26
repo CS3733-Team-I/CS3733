@@ -1,6 +1,5 @@
 package database;
 
-import database.DatabaseController;
 import database.objects.*;
 import utility.KioskPermission;
 import utility.Node.NodeBuilding;
@@ -232,7 +231,7 @@ public class DatabaseControllerTests {
     @Test
     public void testAddEmployee(){
         dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        assertEquals("Name",dbController.getEmployee("ID").getLoginName());
+        assertEquals("Name",dbController.getEmployee("ID").getUserName());
     }
 
     @Test
@@ -247,7 +246,7 @@ public class DatabaseControllerTests {
         dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         dbController.updateEmployee("ID","NewName","NewPassword", KioskPermission.ADMIN, RequestType.GENERAL);
         Employee updatedEmployee=dbController.getEmployee("ID");
-        assertEquals("NewName",updatedEmployee.getLoginName());
+        assertEquals("NewName",updatedEmployee.getUserName());
         assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
         assertEquals(RequestType.GENERAL,updatedEmployee.getServiceAbility());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));

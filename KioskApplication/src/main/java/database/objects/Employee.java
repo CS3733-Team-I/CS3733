@@ -5,17 +5,16 @@ import utility.Request.RequestType;
 
 public class Employee {
     private String loginID;
-    private String loginName;
-    // TODO make this somehow encrypted
+    private String userName;
     private String password;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
     // Constructor for passwords
-    public Employee(String loginID, String loginName, String password,
+    public Employee(String loginID, String userName, String password,
                     KioskPermission permission, RequestType serviceAbility, boolean passwordAlreadyEncrypted){
         this.loginID = loginID;
-        this.loginName = loginName;
+        this.userName = userName;
         // this is for frontend vs backend use
         if(passwordAlreadyEncrypted){
             this.password = password;
@@ -34,8 +33,8 @@ public class Employee {
         return loginID;
     }
 
-    public String getLoginName() {
-        return loginName;
+    public String getUserName() {
+        return userName;
     }
 
     public KioskPermission getPermission() {
@@ -70,7 +69,7 @@ public class Employee {
             char o = (char) a;
             encPassword=encPassword+o;
         }
-        return encPassword.toString();
+        return encPassword;
     }
 
     // method to update passwords
@@ -83,10 +82,10 @@ public class Employee {
     }
 
     // for updating the user name
-    public boolean updateUserName(String newLoginName, String password){
+    public boolean updateUserName(String newUserName, String password){
         boolean updated = validatePassword(password);
         if (updated){
-            this.loginName=newLoginName;
+            this.userName =newUserName;
         }
         return updated;
     }

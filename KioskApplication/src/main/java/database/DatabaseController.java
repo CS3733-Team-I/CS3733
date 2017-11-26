@@ -264,11 +264,11 @@ public class DatabaseController {
      */
 
     // adds an employee to the database
-    public int addEmployee(String loginID, String loginName, String password, KioskPermission permission, RequestType serviceAbility){
+    public int addEmployee(String loginID, String userName, String password, KioskPermission permission, RequestType serviceAbility){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT);
             pstmt.setString(1,loginID);
-            pstmt.setString(2,loginName);
+            pstmt.setString(2,userName);
             pstmt.setString(3,password);
             pstmt.setInt(4,permission.ordinal());
             pstmt.setInt(5,serviceAbility.ordinal());
@@ -282,11 +282,11 @@ public class DatabaseController {
     }
 
     // updates all stored information on the employee except their loginID
-    public int updateEmployee(String loginID, String loginName, String password, KioskPermission permission, RequestType serviceAbility){
+    public int updateEmployee(String loginID, String userName, String password, KioskPermission permission, RequestType serviceAbility){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
             pstmt.setString(5,loginID);
-            pstmt.setString(1,loginName);
+            pstmt.setString(1,userName);
             pstmt.setString(2,password);
             pstmt.setInt(3,permission.ordinal());
             pstmt.setInt(4,serviceAbility.ordinal());
@@ -323,7 +323,7 @@ public class DatabaseController {
             if(rs.next()){
                 employee = new Employee(
                         loginID,
-                        rs.getString("loginName"),
+                        rs.getString("userName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")],
@@ -349,7 +349,7 @@ public class DatabaseController {
                 //for completed InterpreterRequests
                 employee = new Employee(
                         rs.getString("loginID"),
-                        rs.getString("loginName"),
+                        rs.getString("userName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")],

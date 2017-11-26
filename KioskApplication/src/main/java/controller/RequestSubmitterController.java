@@ -1,10 +1,8 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import database.objects.Request;
 import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
@@ -18,7 +16,6 @@ import utility.Node.NodeFloor;
 import utility.Request.RequestType;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -104,7 +101,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        String assigner = l.getLoginName();
+        String assigner = l.getUserName();
         String notes = "";
         Language language = Language.valueOf(langMenu.getValue().toString());
         r.submitInterpreterRequest(location, assigner, notes, language);
