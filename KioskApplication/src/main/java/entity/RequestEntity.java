@@ -32,6 +32,7 @@ public class RequestEntity {
 
     protected RequestEntity(boolean test) {
         interpreterRequests=new HashMap<>();
+        securityRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getTestInstance();
@@ -65,6 +66,18 @@ public class RequestEntity {
             //adds new InterpreterRequests
             else{
                 this.interpreterRequests.put(rID,iR);
+            }
+        }
+        LinkedList<SecurityRequest> securityRequests = dbController.getAllSecurityRequests();
+        for(SecurityRequest sR: securityRequests) {
+            String rID = sR.getRequestID();
+            //updates the entire hashmap when called
+            if (this.securityRequests.containsKey(rID)) {
+                this.securityRequests.replace(rID, sR);
+            }
+            //adds new SecurityRequests
+            else{
+                this.securityRequests.put(rID, sR);
             }
         }
     }
@@ -291,4 +304,15 @@ public class RequestEntity {
         //TODO: figure out how to make update request a generic method
         dbController.updateSecurityRequest(oldReq);
     }
+
+    /**
+     * Tracking information
+     * what we want:
+     * Time from IN_PROGRESS to COMPLETE for requests
+     * Heatmap of request locations
+     * Statistics on interpreter request languages
+     * Statistics on all requests (how many of each type were made
+     * Statistics on food ordered for stocking purposes
+     * common IT request problems
+     */
 }
