@@ -144,4 +144,7 @@ public class Node {
     public void setNodeID(String nodeID) {
         this.nodeID = nodeID;
     }
+    public boolean checkXYcoor(String xyConcatenation){
+        return (xyConcatenation.equals(Integer.toString(xcoord)+ Integer.toString(ycoord)));
+    }
 }

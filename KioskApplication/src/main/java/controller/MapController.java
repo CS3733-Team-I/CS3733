@@ -103,7 +103,7 @@ public class MapController {
     public void HighlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
             System.out.println("1. enters HighlightNode, NodeID: " + targetNode.getNodeID());
-            if(nodeO.getAccessibleText().equals(Integer.toString(targetNode.getXcoord()) + Integer.toString(targetNode.getYcoord()))) {
+            if(targetNode.checkXYcoor(nodeO.getAccessibleText())) {
                 System.out.println("2. HighlightNode: if == true");
                 nodesEdgesPane.getChildren().remove(nodeO);
                 switch (nodeDisplay) {
