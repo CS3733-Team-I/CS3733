@@ -4,6 +4,7 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
@@ -23,7 +24,7 @@ public class TestRequestEntity {
     private InterpreterRequest presetIR;
 
     @Before
-    public void setup(){
+    public void setup() throws DatabaseException {
         db = DatabaseController.getInstance();
         r = RequestEntity.getTestInstance();
 
@@ -46,7 +47,7 @@ public class TestRequestEntity {
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() throws DatabaseException {
         //deletes request
         r.deleteRequest(presetIR.getRequestID());
         //removes node

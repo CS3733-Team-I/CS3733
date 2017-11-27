@@ -4,6 +4,7 @@ import controller.MapController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import org.junit.After;
 import org.junit.Assert;
@@ -52,13 +53,7 @@ public class CsvLoadingTests {
 
     @Before
     @After
-    public void removeAllFromDB() {
-        List<Node> nodes = MapEntity.getInstance().getAllNodes();
-        for (Node node : nodes) {
-            MapEntity.getInstance().removeNode(node.getNodeID());
-
-            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
-            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge.getEdgeID());
-        }
+    public void cleanup() throws DatabaseException {
+        MapEntity.getInstance().removeAll();
     }
 }

@@ -3,6 +3,7 @@ package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
@@ -25,7 +26,7 @@ public class TestPathfinderNode {
     private LinkedList<Edge> path;
 
     @Before
-    public void setup() {
+    public void setup() throws DatabaseException {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Build map
         DatabaseController.getInstance();

@@ -11,4 +11,8 @@ public class DatabaseException extends Exception {
     public String toString() {
         return "Database Error: " + type.toString();
     }
+
+    public DatabaseExceptionType getType() {
+        return type;
+    }
 }

@@ -54,7 +54,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseAddNode() {
+    public void TestDatabaseAddNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                              NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                              "Test node", "TN1", "I");
@@ -64,7 +64,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseEditNode() {
+    public void TestDatabaseEditNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -87,12 +87,12 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testDatabaseGetInvalidNode() {
+    public void testDatabaseGetInvalidNode() throws DatabaseException {
         assertEquals(null, dbController.getNode("randomid1238712"));
     }
 
     @Test
-    public void TestDatabaseRemoveNode() {
+    public void TestDatabaseRemoveNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -105,7 +105,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseAddEdge() {
+    public void TestDatabaseAddEdge() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
                 "Test node 1", "TN1", "I");
@@ -125,7 +125,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseRemoveEdge() {
+    public void TestDatabaseRemoveEdge() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
                 "Test node 1", "TN1", "I");
@@ -145,7 +145,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseRemoveEdgeParent() {
+    public void TestDatabaseRemoveEdgeParent() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
                 "Test node 1", "TN1", "I");
@@ -165,7 +165,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testAddInterpreterRequest(){
+    public void testAddInterpreterRequest() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -176,7 +176,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testUpdateInterpreterRequest(){
+    public void testUpdateInterpreterRequest() throws DatabaseException {
         Node node1 = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -205,7 +205,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testDeleteInterpreterRequest(){
+    public void testDeleteInterpreterRequest() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -220,7 +220,7 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testRemoveInterpreterRequestAssociatedNode(){
+    public void testRemoveInterpreterRequestAssociatedNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");

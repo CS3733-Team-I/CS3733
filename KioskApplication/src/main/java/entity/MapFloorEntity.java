@@ -30,31 +30,15 @@ public class MapFloorEntity implements IMapEntity {
     }
 
     @Override
-    public void addNode(Node n) {
-        try {
-            dbController.addNode(n);
-            nodes.put(n.getNodeID(), n);
-        } catch (DatabaseException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Node Error");
-            alert.setHeaderText("Error adding node");
-            alert.setContentText(ex.toString());
-            alert.showAndWait();
-        }
+    public void addNode(Node n) throws DatabaseException {
+        dbController.addNode(n);
+        nodes.put(n.getNodeID(), n);
     }
 
     @Override
-    public void editNode(Node n) {
-        try {
-            dbController.updateNode(n);
-            nodes.put(n.getNodeID(), n);
-        } catch (DatabaseException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Node Error");
-            alert.setHeaderText("Error updating node");
-            alert.setContentText(ex.toString());
-            alert.showAndWait();
-        }
+    public void editNode(Node n) throws DatabaseException {
+        dbController.updateNode(n);
+        nodes.put(n.getNodeID(), n);
     }
 
     @Override
@@ -102,6 +86,13 @@ public class MapFloorEntity implements IMapEntity {
             alert.setHeaderText("Error removing node");
             alert.setContentText(ex.toString());
             alert.showAndWait();
+        }
+    }
+
+    @Override
+    public void removeAll() throws DatabaseException {
+        for (Node node : getAllNodes()) {
+            removeNode(node);
         }
     }
 }

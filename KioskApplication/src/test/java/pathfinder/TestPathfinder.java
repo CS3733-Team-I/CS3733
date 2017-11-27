@@ -2,6 +2,7 @@ package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import org.junit.After;
@@ -29,7 +30,7 @@ public class TestPathfinder {
     private static MapEntity map;
 
     @BeforeClass //Build map for testing all algorithms
-    public static void setup() {
+    public static void setup() throws DatabaseException {
 
         DatabaseController.getInstance();
         map = MapEntity.getInstance();
@@ -354,13 +355,13 @@ public class TestPathfinder {
 
     @Before
     @After
-    public void removeAllFromDB() {
+    public void removeAllFromDB() throws DatabaseException {
         List<Node> nodes = MapEntity.getInstance().getAllNodes();
         for (Node node : nodes) {
-            MapEntity.getInstance().removeNode(node.getNodeID());
+            MapEntity.getInstance().removeNode(node);
 
             ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
-            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge.getEdgeID());
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
         }
     }
 }

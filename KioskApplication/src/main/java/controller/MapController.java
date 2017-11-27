@@ -201,11 +201,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    /**
-     * This method's visibility should be keep private and only used in MapController's listener
-     * For switching bwtween floors, either in this class or sidebar controller classes,
-     * call "mapController.floorSelector.setValue(your floor)"
-     */
+
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {

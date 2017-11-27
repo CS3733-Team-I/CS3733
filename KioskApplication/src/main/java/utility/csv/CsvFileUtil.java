@@ -3,7 +3,11 @@ package utility.csv;
 import com.csvreader.CsvReader;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
+import database.utility.DatabaseExceptionType;
 import entity.MapEntity;
+import javafx.scene.control.Alert;
+import org.apache.derby.iapi.db.Database;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -154,14 +158,26 @@ public class CsvFileUtil {
 
                 Node node = new Node(id, xcoord, ycoord, nodeFloor, nodeBuilding, nodeType, longName, shortName, teamAssigned);
 
-                // TODO implement proper exception throwing from MapEntity
-                // Attempt to add node to map. If that fails, two situations could exit:
-                // 1) Node exists in map, in which case we need to edit it instead of updating it
-                // 2) Something else went terribly wrong
                 try {
                     map.addNode(node);
-                } catch (Exception e) {
-                    map.editNode(node);
+                } catch (DatabaseException e) {
+                    if (e.getType() == DatabaseExceptionType.ID_ALREADY_EXISTS || e.getType() == DatabaseExceptionType.DUPLICATE_ENTRY) {
+                        try {
+                            map.editNode(node);
+                        } catch (DatabaseException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error editing node to DB");
+                            alert.setHeaderText("Error occurred while editing node read from CSV.");
+                            alert.setContentText(e.toString());
+                            alert.showAndWait();
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error adding node to DB");
+                        alert.setHeaderText("Error occurred while adding node to database from CSV.");
+                        alert.setContentText(e.toString());
+                        alert.showAndWait();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -267,14 +283,26 @@ public class CsvFileUtil {
 
                 Edge edge = new Edge(id, firstNodeID, secondNodeID);
 
-                // TODO implement proper exception throwing from MapEntity
-                // Attempt to add edge to map. If that fails, two situations could exit:
-                // 1) Edge exists in map, in which case we need to edit it instead of updating it
-                // 2) Something else went terribly wrong
                 try {
                     map.addEdge(edge);
-                } catch (Exception e) {
-                    map.editEdge(edge);
+                } catch (DatabaseException e) {
+                    if (e.getType() == DatabaseExceptionType.ID_ALREADY_EXISTS || e.getType() == DatabaseExceptionType.DUPLICATE_ENTRY) {
+                        try {
+                            map.editEdge(edge);
+                        } catch (DatabaseException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error editing edge to DB");
+                            alert.setHeaderText("Error occurred while editing edge read from CSV.");
+                            alert.setContentText(e.toString());
+                            alert.showAndWait();
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error adding edge to DB");
+                        alert.setHeaderText("Error occurred while adding edge to database from CSV.");
+                        alert.setContentText(e.toString());
+                        alert.showAndWait();
+                    }
                 }
             }
         } catch (IOException e) {
