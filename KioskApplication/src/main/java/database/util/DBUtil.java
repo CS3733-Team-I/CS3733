@@ -52,10 +52,10 @@ public class DBUtil {
         PreparedStatement pstmt3 = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
         pstmt3.execute();
         PreparedStatement pstmt4 = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
-                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES);
+                WITH_SHARED_REQUEST_ATTRIBUTES);
         pstmt4.execute();
         PreparedStatement pstmt5 = conn.prepareStatement(CREATE_SECURITY_TABLE+
-                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_SECURITY_ATTRIBUTES);
+                WITH_SHARED_REQUEST_ATTRIBUTES);
         pstmt5.execute();
     }
 

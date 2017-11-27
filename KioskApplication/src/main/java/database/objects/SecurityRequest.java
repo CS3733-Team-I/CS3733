@@ -9,16 +9,18 @@ public class SecurityRequest extends Request {
     private int priority;
 
     //for new Security Requests
-    public SecurityRequest(String nodeID, String assigner, String note, int priority) {
+    /*public SecurityRequest(String nodeID, String assigner, String note, int priority) {
         super(nodeID, assigner, note);
         this.priority = priority;
         this.requestID = "Sec" + this.requestID;
-    }
+    }*/
 
 
     //for retrieving Security Requests
-    public SecurityRequest(String requestID, String nodeID, String assignee, String note, Timestamp submittedTime, Timestamp completedTime, RequestProgressStatus status, int priority) {
-        super(requestID, nodeID, assignee, note, submittedTime, completedTime, status);
+    public SecurityRequest(String requestID, String nodeID, String assignee, String completer, String note,
+                           Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
+                           RequestProgressStatus status, int priority) {
+        super(requestID, nodeID, assignee, completer, note, submittedTime, startedTime, completedTime, status);
         this.priority = priority;
     }
 

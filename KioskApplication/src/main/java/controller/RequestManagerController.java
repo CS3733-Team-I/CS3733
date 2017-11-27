@@ -1,10 +1,10 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDrawer;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
+import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.event.ActionEvent;
@@ -27,6 +27,8 @@ import java.util.LinkedList;
 public class RequestManagerController extends ScreenController {
 
 
+    LoginEntity l;
+
     RequestEntity r;
 
     @FXML
@@ -41,7 +43,7 @@ public class RequestManagerController extends ScreenController {
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
         r = RequestEntity.getInstance();
-
+        l = LoginEntity.getInstance();
     }
 
     @FXML
@@ -125,7 +127,7 @@ public class RequestManagerController extends ScreenController {
                 inProgressRequests();
                 break;
             case TO_DO:
-                request.inProgress();
+                request.markInProgress(l.getUserName());
                 newRequests();
                 break;
         }
