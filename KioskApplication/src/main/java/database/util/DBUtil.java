@@ -43,29 +43,24 @@ public class DBUtil {
     }
 
     public static void createTables(Connection conn) throws SQLException {
-        String schema = CREATE_SCHEMA;
-
-        String sql1 = CREATE_NODE_TABLE;
-
-        String sql2 = CREATE_EDGE_TABLE;
-
-        String sql3 = CREATE_INTERPRETER_TABLE+WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES;
-
-        PreparedStatement pstmt0 = conn.prepareStatement(schema);
+        PreparedStatement pstmt0 = conn.prepareStatement(CREATE_SCHEMA);
         pstmt0.execute();
-        PreparedStatement pstmt1 = conn.prepareStatement(sql1);
+        PreparedStatement pstmt1 = conn.prepareStatement(CREATE_NODE_TABLE);
         pstmt1.execute();
-        PreparedStatement pstmt2 = conn.prepareStatement(sql2);
+        PreparedStatement pstmt2 = conn.prepareStatement(CREATE_EDGE_TABLE);
         pstmt2.execute();
-        PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+        PreparedStatement pstmt3 = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES);
         pstmt3.execute();
+        PreparedStatement pstmt4 = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
+        pstmt4.execute();
     }
 
     public static void dropAllTables(Connection conn) {
         String drop1 = DROP_EDGE_TABLE;
         String drop2 = DROP_INTERPRETER_TABLE;
-        String drop3 = DROP_REQUEST_TABLE;
-        String drop4 = DROP_NODE_TABLE;
+        String drop3 = DROP_NODE_TABLE;
+        String drop4 = DROP_EMPLOYEE_TABLE;
 
         PreparedStatement preparedStatement1 = null;
         try {
