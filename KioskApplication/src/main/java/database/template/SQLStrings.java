@@ -25,9 +25,11 @@ public class SQLStrings {
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
                     " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
                     " REFERENCES t_nodes ON DELETE CASCADE," +
-                    " assigner VARCHAR(50) NOT NULL," +
+                    " assigner VARCHAR(63) NOT NULL REFERENCES t_employee on DELETE CASCADE," +
                     " note CLOB(280)," +
+                    " completer VARCHAR(63) NOT NULL,"+
                     " submittedTime TIMESTAMP NOT NULL," +
+                    " startedTime TIMESTAMP NOT NULL,"+
                     " completedTime TIMESTAMP NOT NULL," +
                     " status INT NOT NULL";
 
