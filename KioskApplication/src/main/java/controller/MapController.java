@@ -257,7 +257,7 @@ public class MapController {
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
 
-        miniMapController.NavigationRecZoom(scaleValue);
+        miniMapController.setViewportZoom(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {
