@@ -2,19 +2,17 @@ package controller;
 
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
-import entity.AlgorithmSetting;
+import entity.SystemSettings;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import pathfinder.A_star;
-import pathfinder.BreadthFirst;
-import pathfinder.DepthFirst;
-import pathfinder.Dijkstra;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tab;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import utility.csv.CsvFileUtil;
 import utility.node.NodeFloor;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class SettingsController extends ScreenController {
@@ -25,7 +23,6 @@ public class SettingsController extends ScreenController {
     @FXML private Tab pathfindingTab;
     @FXML private Tab aboutTab;
 
-    @FXML private Label searchAlgorithmLabel;
     @FXML private RadioButton astarButton;
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
@@ -38,37 +35,26 @@ public class SettingsController extends ScreenController {
     }
 
     public void initialize() throws IOException{
+        SystemSettings systemSettings = SystemSettings.getInstance();
         astarButton.setToggleGroup(searchAlgToggleGroup);
-        astarButton.setUserData("Astar");
+        astarButton.setUserData("A*");
         dijkstraButton.setToggleGroup(searchAlgToggleGroup);
         dijkstraButton.setUserData("Dijkstra");
         bfsButton.setToggleGroup(searchAlgToggleGroup);
         bfsButton.setUserData("BFS");
         dfsButton.setToggleGroup(searchAlgToggleGroup);
         dfsButton.setUserData("DFS");
+        //Load saved selection; select appropriate radio button.
+        for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
+            if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
+                searchAlgToggleGroup.selectToggle(toggle);
+        }
     }
 
     @FXML
     void onSearchAlgorithmSelected(){
-        AlgorithmSetting algorithmSetting = AlgorithmSetting.getInstance();
-        switch(searchAlgToggleGroup.getSelectedToggle().getUserData().toString()){
-            case "Astar":
-                algorithmSetting.changeAlgorithm(new A_star());
-                break;
-            case "Dijkstra":
-                algorithmSetting.changeAlgorithm(new Dijkstra());
-                break;
-            case "BFS":
-                algorithmSetting.changeAlgorithm(new BreadthFirst());
-                break;
-            case "DFS":
-                algorithmSetting.changeAlgorithm(new DepthFirst());
-                break;
-            default:
-                break;
-        }
-        searchAlgorithmLabel.setText("Search Algorithm: " + searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
-
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        systemSettings.setAlgorithm(searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
     @FXML

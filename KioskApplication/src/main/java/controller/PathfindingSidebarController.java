@@ -2,7 +2,7 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
-import entity.AlgorithmSetting;
+import entity.SystemSettings;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -28,7 +28,6 @@ public class PathfindingSidebarController extends ScreenController {
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
-
         currentNodes = new LinkedList<>();
     }
 
@@ -56,7 +55,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btGeneratePathPressed() throws IOException {
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 Path path = pathfinder.generatePath(currentNodes);
                 getMapController().drawPath(path);
