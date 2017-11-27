@@ -28,6 +28,15 @@ public class TestEmployee {
     }
 
     @Test
+    public void testSubmitEncrypted(){
+        Employee testEmp = new Employee("Test","TestEmp","abcde",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp2 = new Employee(testEmp.getLoginID(),testEmp.getUserName(),testEmp.getPassword("abcde"),
+                testEmp.getPermission(),testEmp.getServiceAbility(),true);
+        assertTrue(testEmp2.validatePassword("abcde"));
+    }
+
+    @Test
     public void testUpdatePassword(){
         Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
