@@ -1,8 +1,11 @@
 package controller;
 
 import com.jfoenix.controls.*;
+import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.Request;
+import entity.MapEntity;
 import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
@@ -17,8 +20,13 @@ import utility.Request.RequestType;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class RequestSubmitterController extends ScreenController {
+
+//    public RequestSubmitterController(MainWindowController parent, MapController map) {
+//        super(parent, map);
+//    }
 
     @FXML private JFXTabPane requestTypeTabs;
 
@@ -102,9 +110,10 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
+        Node nodeLocation = MapEntity.getInstance().getNode(location);
         String assigner = l.getUserName();
         String notes = "";
-        Language language = Language.valueOf(langMenu.getValue().toString());
+        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
     }

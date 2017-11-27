@@ -7,22 +7,16 @@ import java.sql.Timestamp;
 //Class object that creates a 'request' which stores the information of a request
 //This object can then be passed to the database as well as to the active requests list
 public abstract class Request {
-    //Format for requestID: type, nodeID, time, assigner
+    //Format for requestID: type, time, NodeID >36 characters
     protected String requestID;
     private String nodeID;
-    private Timestamp submittedTime;
     private String assigner;
     private String note;
     private RequestProgressStatus status;
+    private Timestamp submittedTime;
     private Timestamp completedTime;
 
-
-    /*public Request(Node location, String assigner, int requestID) {
-        this.location = location;
-        this.assigner = assigner;
-        this.requestID = requestID;
-    }*/
-    //Use this to generate new requests
+    //Use this to generate new requests don't put in a nodeID larger than 10
     public Request(String nodeID, String assigner, String note) {
         long t = System.currentTimeMillis();
         this.nodeID=nodeID;

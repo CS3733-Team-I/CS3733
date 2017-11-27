@@ -20,17 +20,26 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws SQLException {
-        return getConnection(DBURL);
+        return getConnection(DBURL+DBCREATE);
     }
 
     public static Connection getTestConnection() throws SQLException {
-        return getConnection(DBTESTURL);
+        try {
+            return getConnection(DBTESTURL + DBCREATE);
+        } catch (SQLException e){
+            return getConnection(DBTESTURL);
+        }
     }
 
     public static void closeConnection(Connection con) throws SQLException {
         if(con != null){
             con.close();
         }
+    }
+
+    public static Connection closeTestConnection() throws SQLException{
+        DriverManager.getConnection(DBTESTURL+DBSHUTDOWN);
+        return null;
     }
 
     public static void createTables(Connection conn) throws SQLException {
@@ -53,17 +62,9 @@ public class DBUtil {
         String drop3 = DROP_NODE_TABLE;
         String drop4 = DROP_EMPLOYEE_TABLE;
 
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = conn.prepareStatement(drop1);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         PreparedStatement preparedStatement1 = null;
         try {
-            preparedStatement1 = conn.prepareStatement(drop2);
+            preparedStatement1 = conn.prepareStatement(drop1);
             preparedStatement1.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,18 +72,27 @@ public class DBUtil {
 
         PreparedStatement preparedStatement2 = null;
         try {
-            preparedStatement2 = conn.prepareStatement(drop3);
+            preparedStatement2 = conn.prepareStatement(drop2);
             preparedStatement2.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        PreparedStatement preparedStatement3  = null;
+        PreparedStatement preparedStatement3 = null;
         try {
-            preparedStatement3 = conn.prepareStatement(drop4);
+            preparedStatement3 = conn.prepareStatement(drop3);
             preparedStatement3.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        PreparedStatement preparedStatement4 = null;
+        try {
+            preparedStatement4 = conn.prepareStatement(drop4);
+            preparedStatement4.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
