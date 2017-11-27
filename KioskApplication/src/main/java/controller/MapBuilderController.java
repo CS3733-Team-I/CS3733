@@ -199,24 +199,30 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends NodeType> observable, NodeType oldValue, NodeType newValue) {
                 nodeType = newValue;
-                updateNodeID();
+
                 if(!CBnodeType.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
-                        System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
+                        //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
                         observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
-                        System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
+                        //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
+                        updateNodeID();
+                        return;
                     }
                     for(database.objects.Node changedTypeNode : observableSelectedNodes) {
                         if(observableChangedNodes.contains(changedTypeNode)) {
+                            System.out.println("update changes in changed node");
                             for(database.objects.Node changingNode : observableChangedNodes) {
                                 if(changingNode.getNodeID() == changedTypeNode.getNodeID()) {
                                     changingNode.setNodeType(CBnodeType.getValue());
+                                    updateNodeID();
                                 }
                             }
                         }
                         else {
+                            System.out.println("");
                             changedTypeNode.setNodeType(CBnodeType.getValue());
                             observableChangedNodes.add(changedTypeNode); //current selected node is changed
+                            updateNodeID();
                         }
                     }
                 }
@@ -226,22 +232,25 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends NodeBuilding> observable, NodeBuilding oldValue, NodeBuilding newValue) {
                 nodeBuilding = newValue;
-                updateNodeID();
                 if(!CBnodeBuilding.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setBuilding(CBnodeBuilding.getValue());
+                        updateNodeID();
+                        return;
                     }
                     for(database.objects.Node changedBuildingNode : observableSelectedNodes) {
                         if(observableChangedNodes.contains(changedBuildingNode)) {
                             for(database.objects.Node changingNode : observableChangedNodes) {
                                 if(changingNode.getNodeID() ==changedBuildingNode.getNodeID()) {
                                     changingNode.setBuilding(CBnodeBuilding.getValue());
+                                    updateNodeID();
                                 }
                             }
                         }
                         else {
                             changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
                             observableChangedNodes.add(changedBuildingNode);
+                            updateNodeID();
                         }
                     }
                 }
@@ -251,22 +260,25 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends TeamAssigned> observable, TeamAssigned oldValue, TeamAssigned newValue) {
                 nodeTeamAssigned = newValue;
-                updateNodeID();
                 if(!CBnodeTeamAssigned.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                        updateNodeID();
+                        return;
                     }
                     for(database.objects.Node changedTeamNode : observableSelectedNodes) {
                         if(observableChangedNodes.contains(changedTeamNode)) {
                             for(database.objects.Node changingNode : observableChangedNodes) {
                                 if(changingNode.getNodeID() == changedTeamNode.getNodeID()) {
                                     changingNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                                    updateNodeID();
                                 }
                             }
                         }
                         else {
                             changedTeamNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
                             observableChangedNodes.add(changedTeamNode);
+                            updateNodeID();
                         }
                     }
                 }
@@ -324,9 +336,9 @@ public class MapBuilderController extends ScreenController {
         nodeID.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("1. Begin Updating node ID");
+                //System.out.println("1. Begin Updating node ID");
                 if(!nodeID.isDisabled()) {
-                    System.out.println("2. Actually Updating node ID");
+                    //System.out.println("2. Actually Updating node ID");
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setNodeID(nodeID.getText());
                     }
@@ -469,12 +481,14 @@ public class MapBuilderController extends ScreenController {
             return;
         }
         else {
+            System.out.println("selected new node");
             //remove unsaved new node, if any
             mapController.isNodeAdded = false;
             mapController.observableHighlightededNewNodes.clear();
             observableNewNodes.clear();
 
             if(!mapController.observableHighlightededSelectedNodes.isEmpty()){
+                System.out.println("clearing selected node");
                 mapController.observableHighlightededSelectedNodes.clear();
             }
             mapController.observableHighlightededSelectedNodes.add(node);
@@ -747,8 +761,8 @@ public class MapBuilderController extends ScreenController {
             }
             else if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
                 try {
-                    System.out.println("In saving NodeType: " + newNode.getNodeType());
-                    System.out.println("In saving NodeID: " + newNode.getNodeID());
+                    //System.out.println("In saving NodeType: " + newNode.getNodeType());
+                    //System.out.println("In saving NodeID: " + newNode.getNodeID());
                     MapEntity.getInstance().addNode(newNode);
                     nodeDialogString += "Node ID: " + newNode.getNodeID() + " saved.\n";
                 } catch (DatabaseException ex) {
@@ -789,7 +803,6 @@ public class MapBuilderController extends ScreenController {
                     nodeDialogString += "ERROR: Node " + changedNode.getNodeID() + " was not edited to database.\n";
                 }
             } else {
-                //This shoulded
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
                 System.out.println(nodeDialogString);
                 loadDialog(event);

@@ -102,7 +102,9 @@ public class MapController {
     //TODO put this into nodeobjectlist permuted
     public void HighlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == targetNode.getNodeID()) {
+            System.out.println("1. enters HighlightNode, NodeID: " + targetNode.getNodeID());
+            if(nodeO.getAccessibleText().equals(Integer.toString(targetNode.getXcoord()) + Integer.toString(targetNode.getYcoord()))) {
+                System.out.println("2. HighlightNode: if == true");
                 nodesEdgesPane.getChildren().remove(nodeO);
                 switch (nodeDisplay) {
                     case SELECTED:
@@ -356,7 +358,7 @@ public class MapController {
                             nodeView.setMouseTransparent(false);
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
-                            nodeView.setAccessibleText(addedDatabaseNode.getNodeID());
+                            nodeView.setAccessibleText(Integer.toString(addedDatabaseNode.getXcoord()) + Integer.toString(addedDatabaseNode.getYcoord()));
                             nodeObjectList.add(nodeView);
                         }
                     }
@@ -468,14 +470,20 @@ public class MapController {
         observableHighlightededSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
+                for(database.objects.Node selectedNode : observableHighlightededSelectedNodes) {
+                    System.out.println("selected Node: " + selectedNode.getNodeID());
+                }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            System.out.println("Removing node from Selected Node");
                             if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
+                                System.out.println("Removing node from Selected Node: NORMAL");
                                 HighlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
+                                System.out.println("Removing node from Selected Node: CHANGED");
                                 HighlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
@@ -483,6 +491,7 @@ public class MapController {
                     else if(c.wasAdded()) {
                         for(database.objects.Node selectedNode : c.getAddedSubList()) {
                             if(observableHighlightededChangedNodes.contains(selectedNode)){
+                                System.out.println("Adding node to changed node: SELECTEDANDCHANGED");
                                 HighlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
                             }
                             else {
@@ -497,6 +506,9 @@ public class MapController {
         observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
+                for(database.objects.Node changedNode : observableHighlightededChangedNodes) {
+                    System.out.println("selected Node: " + changedNode.getNodeID());
+                }
                 while(c.next()) {
                     if(c.wasAdded()){
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
@@ -524,7 +536,9 @@ public class MapController {
         observableHighlightededNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                //remove unsaved new nodes
+                for(database.objects.Node newNode : observableHighlightededNewNodes) {
+                    System.out.println("selected Node: " + newNode.getNodeID());
+                }
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNewNode : c.getRemoved()) {
