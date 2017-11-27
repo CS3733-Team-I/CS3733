@@ -68,6 +68,8 @@ public class MapController {
 
     private Group zoomGroup;
 
+    protected boolean isNodeAdded;
+
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
@@ -77,6 +79,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        isNodeAdded = false;
 
         DatabaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
         DatabaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
@@ -528,13 +531,15 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNewNode : c.getRemoved()) {
-                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null) {//the node was saved to database
+                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null && isNodeAdded) {//the node was saved to database
                                 HighlightNode(deseletedNewNode, NodeDisplay.NORMAL);
                             }
-                            else {
+                            else { //no node was added
                                 undrawNodeOnMap(deseletedNewNode);
                             }
                         }
+                        showNodesBox.setSelected(false);
+                        showNodesBox.setSelected(true);
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node newNode : c.getAddedSubList()) {

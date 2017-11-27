@@ -418,6 +418,7 @@ public class MapBuilderController extends ScreenController {
 
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
                     mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
+            mapController.isNodeAdded = false;
             mapController.observableHighlightededNewNodes.clear();
             mapController.observableHighlightededNewNodes.add(newNode);
             observableNewNodes.clear();
@@ -429,6 +430,7 @@ public class MapBuilderController extends ScreenController {
     public void onMapNodeClicked(database.objects.Node node) {
 
         if(observableNewNodes.contains(node)) {
+            mapController.isNodeAdded = false;
             mapController.observableHighlightededNewNodes.clear();
             observableNewNodes.clear();
             return;
@@ -438,6 +440,7 @@ public class MapBuilderController extends ScreenController {
         }
         else {
             //remove unsaved new node, if any
+            mapController.isNodeAdded = false;
             mapController.observableHighlightededNewNodes.clear();
             observableNewNodes.clear();
 
@@ -464,6 +467,8 @@ public class MapBuilderController extends ScreenController {
         //TODO make this into a method
         mapController.observableHighlightededSelectedNodes.clear();
         observableSelectedNodes.clear();
+
+        mapController.isNodeAdded = false;
         mapController.observableHighlightededNewNodes.clear();
         observableNewNodes.clear();
 
@@ -760,6 +765,7 @@ public class MapBuilderController extends ScreenController {
         }
 
         //clear new node list
+        mapController.isNodeAdded = true;
         mapController.observableHighlightededNewNodes.clear();
         observableNewNodes.clear();
 
