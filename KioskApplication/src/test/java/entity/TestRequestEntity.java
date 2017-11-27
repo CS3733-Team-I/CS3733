@@ -4,6 +4,7 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.objects.SecurityRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
@@ -23,6 +24,7 @@ public class TestRequestEntity {
     private Node n1,n2,n3,n4;
     private Edge e1,e2,e3;
     private InterpreterRequest presetIR;
+//    private SecurityRequest presetsR;
 
     @Before
     public void setup(){
@@ -43,14 +45,18 @@ public class TestRequestEntity {
         db.addNode(n3);
 
         String pIR = r.submitInterpreterRequest("NODE3","Hank","Is Chinese or Japanese",Language.CHINESE);
+//        String pIR2 = r.submitSecurityRequest("NODE1","Hank","Is Chinese or Japanese",1);
 
         presetIR = r.getInterpreterRequest(pIR);
+//        presetsR = r.getSecurityRequest(pIR2);
+
     }
 
     @After
     public void cleanUp(){
         //deletes request
         r.deleteRequest(presetIR.getRequestID());
+//        r.deleteRequest(presetsR.getRequestID());
         //removes node
         db.removeNode(n1);
         db.removeNode(n2);
@@ -129,4 +135,10 @@ public class TestRequestEntity {
         assertEquals(iR1.getLanguage(),iR2.getLanguage());
         r.deleteRequest(iR2.getRequestID());
     }
+
+//    @Test
+//    public void testinterpreterChecker(){
+//        assertEquals("Security",r.checkRequestType(presetsR.getRequestID()));
+//        assertEquals("Interpreter",r.checkRequestType(presetIR.getRequestID()));
+//    }
 }

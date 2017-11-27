@@ -305,6 +305,25 @@ public class RequestEntity {
         dbController.updateSecurityRequest(oldReq);
     }
 
+    public String checkRequestType(String requestID){
+        String type;
+        if(this.interpreterRequests.containsKey(requestID)){
+            type= "Interpreter";
+        }else{ //if is contained in security
+            type= "Security";
+        }
+//        else if(this.foodRequests.containsKey(requestID)){
+//            return "Food";
+//        }else if(this.janitorRequests.containsKey(requestID)){
+//            return "Janitor";
+//        }else if(this.securityRequests.containsKey(requestID)){
+//            return "Security";
+//        }else if(this.securityRequests.containsKey(requestID)){
+//            return "Security";
+//        }
+        return type;
+    }
+
     /**
      * Tracking information
      * what we want:

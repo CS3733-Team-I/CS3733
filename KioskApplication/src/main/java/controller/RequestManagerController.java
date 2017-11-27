@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDrawer;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Request;
@@ -81,19 +82,8 @@ public class RequestManagerController extends ScreenController {
                 String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
                 requestTextField.setEditable(false);
                 Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
-                String requestType = requests.get(i).getRequestID().substring(0,3);
-                Label typeOfRequest;
-                switch (requestType){
-                    case "Int":
-                        typeOfRequest = new Label("Type: Interpreter");
-                        break;
-                    case "Sec":
-                        typeOfRequest = new Label("Type: Security");
-                        break;
-                    default:
-                        typeOfRequest = new Label("Type: Generic");
-                        break;
-                }
+//                String requestType = requests.get(i).getRequestID().substring(0,3);
+                Label typeOfRequest = new Label(r.checkRequestType(id));
 
                 Label locationOfRequest = new Label(location);
                 JFXButton selectID = new JFXButton(buttonName);
@@ -104,7 +94,12 @@ public class RequestManagerController extends ScreenController {
                 });
                 selectID.setStyle("-fx-background-color: #DFB951;");
 
-                activeRequests.getChildren().addAll(requestTextField,requestID,typeOfRequest,locationOfRequest,selectID,spacer);
+                activeRequests.getChildren().add(requestTextField);
+                activeRequests.getChildren().add(requestID);
+                activeRequests.getChildren().add(typeOfRequest);
+                activeRequests.getChildren().add(locationOfRequest);
+                activeRequests.getChildren().add(selectID);
+                activeRequests.getChildren().add(spacer);
             }
         }
     }
@@ -112,7 +107,13 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void onCompletePressed(String ID){
 //        String ID = txtID.getText();
-        Request request = r.getInterpreterRequest(ID);
+        Request request;
+        if(r.checkRequestType(ID).equals("Interpreter")){
+            request = r.getInterpreterRequest(ID);
+        }else{
+            request = r.getSecurityRequest(ID);
+        }
+
         RequestProgressStatus status = request.getStatus();
         switch (status){
             case DONE:
