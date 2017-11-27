@@ -24,9 +24,9 @@ import java.util.LinkedList;
 
 public class RequestSubmitterController extends ScreenController {
 
-    public RequestSubmitterController(MainWindowController parent, MapController map) {
-        super(parent, map);
-    }
+//    public RequestSubmitterController(MainWindowController parent, MapController map) {
+//        super(parent, map);
+//    }
 
     @FXML private JFXTabPane requestTypeTabs;
 
@@ -113,7 +113,7 @@ public class RequestSubmitterController extends ScreenController {
         Node nodeLocation = MapEntity.getInstance().getNode(location);
         String assigner = l.getUserName();
         String notes = "";
-        Language language = Language.valueOf(langMenu.getValue().toString());
+        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
     }
