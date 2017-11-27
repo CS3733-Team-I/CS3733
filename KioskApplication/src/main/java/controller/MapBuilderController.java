@@ -19,7 +19,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -30,8 +29,6 @@ import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
-
-import javax.swing.*;
 
 public class MapBuilderController extends ScreenController {
 
@@ -334,12 +331,12 @@ public class MapBuilderController extends ScreenController {
                 while(c.next()) {
                     if(c.wasAdded()) {
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
-                            mapController.observableHighlightededChangedNodes.add(addedChangedNode);
+                            mapController.observableHighlightedChangedNodes.add(addedChangedNode);
                         }
                     }
                     if(c.wasRemoved()) {
                         for(database.objects.Node removedChangedNode : c.getRemoved()) {
-                            mapController.observableHighlightededChangedNodes.remove(removedChangedNode);
+                            mapController.observableHighlightedChangedNodes.remove(removedChangedNode);
                         }
                     }
                 }
@@ -397,14 +394,14 @@ public class MapBuilderController extends ScreenController {
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         //deselect node on one mouse click
         if(e.getClickCount() == 1) {
-            mapController.observableHighlightededSelectedNodes.clear();
+            mapController.observableHighlightedSelectedNodes.clear();
             observableSelectedNodes.clear();
         }
         //detects double-click events
         else if(e.getClickCount() == 2)
         {
             //remove selected nodes, if any
-            mapController.observableHighlightededSelectedNodes.clear();
+            mapController.observableHighlightedSelectedNodes.clear();
             observableSelectedNodes.clear();
 
             //update Node ID
@@ -412,8 +409,8 @@ public class MapBuilderController extends ScreenController {
 
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
                     mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
-            mapController.observableHighlightededNewNodes.clear();
-            mapController.observableHighlightededNewNodes.add(newNode);
+            mapController.observableHighlightedNewNodes.clear();
+            mapController.observableHighlightedNewNodes.add(newNode);
             observableNewNodes.clear();
             observableNewNodes.add(newNode);
         }
@@ -423,7 +420,7 @@ public class MapBuilderController extends ScreenController {
     public void onMapNodeClicked(database.objects.Node node) {
 
         if(observableNewNodes.contains(node)) {
-            mapController.observableHighlightededNewNodes.clear();
+            mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
             return;
         }
@@ -432,13 +429,13 @@ public class MapBuilderController extends ScreenController {
         }
         else {
             //remove unsaved new node, if any
-            mapController.observableHighlightededNewNodes.clear();
+            mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
 
-            if(!mapController.observableHighlightededSelectedNodes.isEmpty()){
-                mapController.observableHighlightededSelectedNodes.clear();
+            if(!mapController.observableHighlightedSelectedNodes.isEmpty()){
+                mapController.observableHighlightedSelectedNodes.clear();
             }
-            mapController.observableHighlightededSelectedNodes.add(node);
+            mapController.observableHighlightedSelectedNodes.add(node);
 
             if(!observableSelectedNodes.isEmpty()) {
                 observableSelectedNodes.clear();
@@ -456,9 +453,9 @@ public class MapBuilderController extends ScreenController {
     public void onMapEdgeClicked(database.objects.Edge edge) {
         //remove changes on nodes
         //TODO make this into a method
-        mapController.observableHighlightededSelectedNodes.clear();
+        mapController.observableHighlightedSelectedNodes.clear();
         observableSelectedNodes.clear();
-        mapController.observableHighlightededNewNodes.clear();
+        mapController.observableHighlightedNewNodes.clear();
         observableNewNodes.clear();
 
         observableSelectedEdges.clear();
@@ -701,7 +698,7 @@ public class MapBuilderController extends ScreenController {
                 return;
             }
         }
-        mapController.observableHighlightededNewNodes.clear();
+        mapController.observableHighlightedNewNodes.clear();
         observableNewNodes.clear();
 
         //clear new node list

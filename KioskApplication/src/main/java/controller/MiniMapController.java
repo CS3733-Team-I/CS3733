@@ -74,11 +74,6 @@ public class MiniMapController {
         /**
          * Handles drag event on navigation rectangle
          */
-        navigationRec.setMouseTransparent(true);
-        miniMapView.setOnMouseDragged(event -> {
-            navigationRec.setX(event.getX() - navigationRec.getWidth()/2);
-            navigationRec.setY(event.getY() - navigationRec.getHeight()/2);
-        });
     }
 
     void switchFloor(Image floorImage) {
@@ -134,7 +129,7 @@ public class MiniMapController {
     }
 
     @FXML
-    protected void onMouseClicked(MouseEvent event) {
+    protected void changePositionEvent(MouseEvent event) {
         navigationRec.setX(event.getX()-navigationRec.getWidth()/2);
         navigationRec.setY(event.getY()-navigationRec.getHeight()/2);
     }
