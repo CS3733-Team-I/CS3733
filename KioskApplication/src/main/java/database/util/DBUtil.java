@@ -49,11 +49,14 @@ public class DBUtil {
         pstmt1.execute();
         PreparedStatement pstmt2 = conn.prepareStatement(CREATE_EDGE_TABLE);
         pstmt2.execute();
-        PreparedStatement pstmt3 = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
-                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES);
+        PreparedStatement pstmt3 = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
         pstmt3.execute();
-        PreparedStatement pstmt4 = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
+        PreparedStatement pstmt4 = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_INTERPRETER_ATTRIBUTES);
         pstmt4.execute();
+        PreparedStatement pstmt5 = conn.prepareStatement(CREATE_SECURITY_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES+WITH_SECURITY_ATTRIBUTES);
+        pstmt5.execute();
     }
 
     public static void dropAllTables(Connection conn) {
@@ -61,6 +64,7 @@ public class DBUtil {
         String drop2 = DROP_INTERPRETER_TABLE;
         String drop3 = DROP_NODE_TABLE;
         String drop4 = DROP_EMPLOYEE_TABLE;
+        String dropSecReq = DROP_SECURITY_TABLE;
 
         PreparedStatement preparedStatement1 = null;
         try {
@@ -94,5 +98,12 @@ public class DBUtil {
             e.printStackTrace();
         }
 
+        PreparedStatement preparedStatement5 = null;
+        try {
+            preparedStatement5 = conn.prepareStatement(dropSecReq);
+            preparedStatement5.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

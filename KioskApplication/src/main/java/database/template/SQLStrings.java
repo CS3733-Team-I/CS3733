@@ -23,7 +23,6 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-                    "( requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
                     " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
                     " REFERENCES t_nodes ON DELETE CASCADE," +
                     " assigner VARCHAR(50) NOT NULL," +
@@ -32,42 +31,16 @@ public class SQLStrings {
                     " completedTime TIMESTAMP NOT NULL," +
                     " status INT NOT NULL";
 
-    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters";
+    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,";
 
     public static final String WITH_INTERPRETER_ATTRIBUTES = ", language INT NOT NULL)";
 
-    public static final String YCREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
-            //Base attributes
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE," +
-            " assigner VARCHAR(50) NOT NULL," +
-            " note CLOB(256)," +
-            " submittedTime TIMESTAMP NOT NULL," +
-            " completedTime TIMESTAMP NOT NULL," +
-            " status INT NOT NULL," +
-            //Unique request attributes
-            " language INT NOT NULL" +
-            ")";
 
-
-    public static final String CREATE_SECURITY_TABLE = "create table t_security";
+    public static final String CREATE_SECURITY_TABLE = "create table t_security("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,";
 
     public static final String WITH_SECURITY_ATTRIBUTES = ", priority INT NOT NULL)";
-
-    public static final String YCREATE_SECURITY_TABLE = "create table t_security(" +
-            //Base attributes
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY," +
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE," +
-            " assigner VARCHAR(50) NOT NULL," +
-            " note CLOB(256)," +
-            " submittedTime TIMESTAMP NOT NULL," +
-            " completedTime TIMESTAMP NOT NULL," +
-            " status INT NOT NULL," +
-            //Unique request attributes
-            " security INT NOT NULL" +
-            ")";
 
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
