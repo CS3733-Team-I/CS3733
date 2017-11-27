@@ -46,6 +46,11 @@ public class Pathfinder {
 
         NodeFloor floor = startNode.getFloor();
 
+            //check if the node is valid.  If not, throw an exception.
+            // if end node is not defined then throw exception for not valid
+            if (endNode == null || endNode.getNodeID() == null)
+                throw new PathfinderException("No defined end node, please define valid end location");
+
         //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
         //node as the start node.  Assemble the lists of edges from each into a single path.
         boolean isFirst = true;
@@ -54,11 +59,6 @@ public class Pathfinder {
                 isFirst = false;
                 continue;
             }
-
-            //check if the node is valid.  If not, throw an exception.
-            // if end node is not defined then throw exception for not valid
-            if (endNode == null || endNode.getNodeID() == null)
-                throw new PathfinderException("No defined end node, please define valid end location");
 
             //Now, find the path from the previous waypoint to this one.
             pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
