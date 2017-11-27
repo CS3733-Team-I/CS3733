@@ -68,9 +68,7 @@ public class PathfindingSidebarController extends ScreenController {
                 getMapController().drawPath(path);
             }
             catch(PathfinderException exception){
-               // TextBuilder.create().text("This is a text sample").build();
-                exceptionText.setText("ERROR!"+ exception.getMessage());
-               // System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+                exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
 
