@@ -73,7 +73,15 @@
                                       <FXCollections fx:factory="observableArrayList">
                                           <String fx:value="Spanish" />
                                           <String fx:value="German" />
-                                          <String fx:value="Mandarin" />
+                                          <String fx:value="Chinese" />
+                                          <String fx:value="French" />
+                                          <String fx:value="Tagalog" />
+                                          <String fx:value="Vietnamese" />
+                                          <String fx:value="Korean" />
+                                          <String fx:value="Arabic" />
+                                          <String fx:value="Russian" />
+                                          <String fx:value="Italian" />
+                                          <String fx:value="Portuguese" />
                                       </FXCollections>
                                   </items>
                                   <GridPane.margin>

@@ -70,9 +70,10 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(RequestProgressStatus status, String buttonName){
-//        r.readAllFromDatabase();    //Do qw need this???
+        r.readAllFromDatabase();    //Do qw need this???
         activeRequests.getChildren().clear();
         LinkedList<Request> requests = r.getStatusRequests(status);
+        Label spacer = new Label("");
         if(requests.isEmpty()){
             Label emptyList = new Label("No Requests");
             activeRequests.getChildren().add(emptyList);
@@ -106,25 +107,9 @@ public class RequestManagerController extends ScreenController {
                 });
                 selectID.setStyle("-fx-background-color: #DFB951;");
 
-                activeRequests.getChildren().addAll(requestTextField,requestID,typeOfRequest,locationOfRequest,selectID);
-//                activeRequests.getChildren().add(requestID);
-//                activeRequests.getChildren().add(typeOfRequest);
-//                activeRequests.getChildren().add(locationOfRequest);
-//                activeRequests.getChildren().add(selectID);
+                activeRequests.getChildren().addAll(requestTextField,requestID,typeOfRequest,locationOfRequest,selectID,spacer);
             }
         }
-    }
-
-    @FXML
-    void selectIDPressed(String id){
-        txtID.setText(id);
-    }
-
-    @FXML
-    void onBackPressed() throws IOException {
-        System.out.println("Cancel Pressed\n");
-
-        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
     }
 
     @FXML

@@ -32,11 +32,13 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXComboBox priorityMenu;
     @FXML private Tab interpreterTab;
     @FXML private JFXComboBox langMenu;
+    @FXML private JFXTextArea intNotesArea;
     /*food related*/
     @FXML private Tab foodTab;
     @FXML private JFXComboBox foodMenu;
     /*security related*/
     @FXML private Tab securityTab;
+    @FXML private JFXTextArea secNoteField;
     /*janitor related*/
     @FXML private Tab janitorTab;
 
@@ -111,7 +113,7 @@ public class RequestSubmitterController extends ScreenController {
     public void addIntRequest() throws IOException {
         String location = intLocation.getText();
         String assigner = l.getUserName();
-        String notes = "";
+        String notes = intNotesArea.getText();
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
@@ -126,7 +128,7 @@ public class RequestSubmitterController extends ScreenController {
     public void addSecRequest()throws IOException {
         String location = secLocationField.getText();
         String assigner = l.getUserName();
-        String notes = "";
+        String notes = secNoteField.getText();
         int priority = 0;
         priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
