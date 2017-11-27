@@ -3,8 +3,9 @@ package entity;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import database.utility.DatabaseException;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.*;
 
@@ -31,19 +32,44 @@ public class MapEntity implements IMapEntity {
         return MapEntitySingleton._instance;
     }
 
-    // TODO do this somewhere else, and be more smart about our database access
-    public void readAllFromDatabase() {
+
+    /**
+     * Clears the cached nodes/edges and then adds all the existing nodes and edges from the  database.
+     */
+    public void readAllFromDatabase() throws DatabaseException {
+        // TODO do this somewhere else, and be more smart about our database access
+        // Clear our current data
+        this.floors.clear();
+        this.edges.clear();
+
         ArrayList<Node> nodes = dbController.getAllNodes();
-        for (Node node : nodes)
-            addNode(node);
+
+        // Sort nodes by floor
+        HashMap<NodeFloor, ArrayList<Node>> nodesPerFloor = new HashMap<>();
+        for (Node node : nodes) {
+            if (!nodesPerFloor.containsKey(node.getFloor()))
+                nodesPerFloor.put(node.getFloor(), new ArrayList<>());
+
+            nodesPerFloor.get(node.getFloor()).add(node);
+        }
+
+        // Insert nodes into floor entities
+        for (NodeFloor floor : nodesPerFloor.keySet()) {
+            if(!floorExists(floor)) addFloor(floor);
+
+            MapFloorEntity floorEntity = floors.get(floor);
+            for (Node node : nodesPerFloor.get(floor)) {
+                floorEntity.insertNode(node);
+            }
+        }
 
         ArrayList<Edge> edges = dbController.getAllEdges();
         for (Edge edge : edges)
-            addEdge(edge);
+            this.edges.put(edge.getEdgeID(), edge);
     }
 
     @Override
-    public void addNode(Node n) {
+    public void addNode(Node n) throws DatabaseException {
         NodeFloor f = n.getFloor();
         if(!floorExists(f)) addFloor(f);
 
@@ -51,7 +77,7 @@ public class MapEntity implements IMapEntity {
     }
 
     @Override
-    public void editNode(Node n) {
+    public void editNode(Node n) throws DatabaseException {
         NodeFloor f = n.getFloor();
         if(floorExists(f)) {
             floors.get(f).editNode(n);
@@ -87,8 +113,13 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
-    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
-        return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) {
+        try {
+            return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+        } catch (DatabaseException e) {
+            e.printStackTrace(); // TODO implement handling of DB exception
+            return 0;
+        }
     }
 
     // TODO this is an expensive function, should probably rewrite
@@ -110,31 +141,41 @@ public class MapEntity implements IMapEntity {
 
 
     @Override
-    public void removeNode(String s) {
-        Node n = getNode(s);
-        List<Edge> edges = getEdges(n);
+    public void removeNode(Node node) throws DatabaseException {
+        List<Edge> edges = getEdges(node);
         for (Edge edge : edges) {
-            removeEdge(edge.getEdgeID());
+            removeEdge(edge);
         }
 
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
-            if (floorEntity.getNode(s) != null)
-                floorEntity.removeNode(s);
+            if (floorEntity.getNode(node.getNodeID()) != null)
+                floorEntity.removeNode(node);
         }
     }
 
-    public void addEdge(Edge e) {
-        edges.put(e.getEdgeID(),e);
+    @Override
+    public void removeAll() throws DatabaseException {
+        List<Node> nodes = getAllNodes();
+        for (Node node : nodes) {
+            removeNode(node);
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
+    }
+
+    public void addEdge(Edge e) throws DatabaseException {
         dbController.addEdge(e);
-    }
-
-    public void editEdge(Edge e) {
         edges.put(e.getEdgeID(), e);
-        dbController.updateEdge(e);
     }
 
-    public Edge getEdge(String s) {
+    public void editEdge(Edge e) throws DatabaseException {
+        dbController.updateEdge(e);
+        edges.put(e.getEdgeID(), e);
+    }
+
+    public Edge getEdge(String s) throws DatabaseException {
         // Load edge from local data
         Edge edge = edges.get(s);
 
@@ -148,10 +189,9 @@ public class MapEntity implements IMapEntity {
         return edge;
     }
 
-    // TODO pass edge as param instead of string
-    public void removeEdge(String s) {
-        edges.remove(s);
-        dbController.removeEdge(new Edge(s, "", ""));
+    public void removeEdge(Edge edge) throws DatabaseException {
+        dbController.removeEdge(edge);
+        edges.remove(edge.getEdgeID());
     }
 
     public ArrayList<Edge> getEdges(Node n) {

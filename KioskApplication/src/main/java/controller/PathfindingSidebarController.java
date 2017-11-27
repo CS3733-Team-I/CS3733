@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;

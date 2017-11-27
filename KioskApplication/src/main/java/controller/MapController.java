@@ -27,8 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import utility.node.NodeFloor;
 import utility.Display.Node.NodeDisplay;
-import utility.Node.NodeFloor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +57,7 @@ public class MapController {
 
 
     //list of showing nodes or edges
+    //protected  javafx.scene.node heightLightedNode;
     private ObservableList<database.objects.Node> DatabaseNodeObjectList;
     private ObservableList<database.objects.Edge> DatabaseEdgeObjectList;
     private ObservableList<Circle> nodeObjectList;
@@ -203,11 +204,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    /**
-     * This method's visibility should be keep private and only used in MapController's listener
-     * For switching bwtween floors, either in this class or sidebar controller classes,
-     * call "mapController.floorSelector.setValue(your floor)"
-     */
+
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {

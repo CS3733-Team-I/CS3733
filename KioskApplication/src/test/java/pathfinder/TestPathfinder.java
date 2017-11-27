@@ -2,15 +2,20 @@ package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
 import org.junit.Test;
-import utility.Node.NodeType;
+import utility.node.NodeType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -25,9 +30,9 @@ public class TestPathfinder {
     private static MapEntity map;
 
     @BeforeClass //Build map for testing all algorithms
-    public static void setup() {
+    public static void setup() throws DatabaseException {
 
-        DatabaseController.getTestInstance();
+        DatabaseController.getInstance();
         map = MapEntity.getInstance();
 
         /* New Map Structure
@@ -348,5 +353,15 @@ public class TestPathfinder {
     }
      */
 
-    //TODO tests
+    @Before
+    @After
+    public void removeAllFromDB() throws DatabaseException {
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node);
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
+    }
 }

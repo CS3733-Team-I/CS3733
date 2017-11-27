@@ -3,7 +3,7 @@ package employee;
 import database.objects.Employee;
 import org.junit.Test;
 import utility.KioskPermission;
-import utility.Request.RequestType;
+import utility.request.RequestType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

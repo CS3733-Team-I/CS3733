@@ -1,19 +1,10 @@
 package requests;
 
 
-import database.DatabaseController;
-import database.objects.Edge;
-import database.objects.Node;
 import database.objects.InterpreterRequest;
-import entity.MapEntity;
-import org.apache.derby.catalog.types.SynonymAliasInfo;
-import utility.Request.Language;
-import org.junit.Before;
+import utility.request.Language;
 import org.junit.Test;
-import utility.Request.RequestProgressStatus;
-
-import java.sql.Timestamp;
-import java.util.concurrent.TimeUnit;
+import utility.request.RequestProgressStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

@@ -16,8 +16,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import utility.DragResizeMod;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import static controller.MapController.DEFAULT_HVALUE;
 import static controller.MapController.DEFAULT_VVALUE;

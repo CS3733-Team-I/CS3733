@@ -7,6 +7,13 @@
  * Background: #FFFFFF
  */
 
+/* BUTTON STYLES */
+
+.jfx-button {
+    -fx-background-color: #00589F;
+    -fx-text-fill: white;
+}
+
 /* TAB PANE STYLES */
 
 .jfx-tab-pane .headers-region {
