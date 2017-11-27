@@ -15,7 +15,7 @@ public class TestMapFloorEntity {
 
     public TestMapFloorEntity() {
         DatabaseController.getInstance();
-        m = new MapFloorEntity();
+        m = new MapFloorEntity(NodeFloor.LOWERLEVEL_1);
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
     }
 
