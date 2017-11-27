@@ -389,6 +389,10 @@ public class MapController {
                             edgeView.setPickOnBounds(false);
                             edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
                             edgeObjectList.add(edgeView);
+                            if(mapEntity.getEdgesOnFloor(getCurrentFloor()).contains(addedDatabaseEdge))
+                                edgeView.setOpacity(0.95);
+                            else
+                                edgeView.setOpacity(0.2);
                         }
                     }
                 }
