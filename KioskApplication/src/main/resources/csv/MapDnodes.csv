@@ -7,7 +7,7 @@ DREST00102,4125,625,2,15 Francis,REST,Restroom B elevator Floor 2,Restroom B,Tea
 DREST00202,3895,695,2,15 Francis,REST,Restroom C elevator Floor 2,Restroom C,Team D
 DREST00302,3635,830,2,15 Francis,REST,Restroom C-D elevator Floor 2,Restroom C-D,Team D
 DREST00402,3525,850,2,15 Francis,REST,Restroom D elevator Floor 2,Restroom D,Team D
-DINFO00102,3210,630,2,15 Francis,INFO,15 Francis Security Desk Floor 2,Information Desk,Team D
+DINFO00102,4210,630,2,15 Francis,INFO,15 Francis Security Desk Floor 2,Information Desk,Team D
 DINFO00202,3490,825,2,15 Francis,INFO,Security Desk Thorn Floor 2,Security Desk,Team D
 DDEPT00102,4330,700,2,15 Francis,DEPT,Chest Diseases Floor 2,Chest Diseases,Team D
 DDEPT00202,4240,730,2,15 Francis,DEPT,Thoracic Surgery Clinic Floor 2,Thoracic Surgery Clinic,Team D

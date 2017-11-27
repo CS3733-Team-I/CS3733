@@ -4,7 +4,7 @@ import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import database.objects.Edge;
 import database.objects.Node;
-import database.util.CSVFileUtil;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,11 +24,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 import utility.Display.Node.NodeDisplay;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
-import utility.Node.TeamAssigned;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
+import utility.node.TeamAssigned;
 
 import javax.swing.*;
 
@@ -481,59 +482,17 @@ public class MapBuilderController extends ScreenController {
      * Handles Database Related operations
      */
     @FXML
-    void onReadClicked() {
-        // TODO implement this better
-        // Load nodes
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapAnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapBnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapCnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapDnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapEnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapFnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapGnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapHnodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapInodes.csv"));
-        CSVFileUtil.readNodesCSV(getClass().getResourceAsStream("/csv/MapWnodes.csv"));
-
-        // Load edges
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapAedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapBedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapCedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapDedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapEedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapFedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapGedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapHedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapIedges.csv"));
-        CSVFileUtil.readEdgesCSV(getClass().getResourceAsStream("/csv/MapWedges.csv"));
-
-        MapEntity.getInstance().readAllFromDatabase();
-
-        getMapController().reloadDisplay();
-    }
-
-    @FXML
-    void onSaveClicked() {
-        // TODO Implement SaveCSV with different team letters
-        /*
-        try {
-            URI mapINodes = new URI(getClass().getResource("/csv/MapInodes.csv").toString());
-            CSVFileUtil.writeNodesCSV(mapINodes.getPath(), false);
-
-            URI mapWNodes = new URI(getClass().getResource("/csv/MapWnodes.csv").toString());
-            CSVFileUtil.writeNodesCSV(mapWNodes.getPath(), true);
-
-            URI mapIEdges = new URI(getClass().getResource("/csv/MapIedges.csv").toString());
-            CSVFileUtil.writeEdgesCSV(mapIEdges.getPath(), false);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }*/
+    private void onbtInfoClicked() {
+        if (tfNodeInfo.isVisible()) {
+            tfNodeInfo.setVisible(false);
+        } else {
+            tfNodeInfo.setVisible(true);
+        }
     }
 
     /**
      * Handles Node Related operations
      */
-
 
 //TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeDisplay nodeDisplay) {
@@ -664,6 +623,7 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.setValue(NodeType.TEMP);
         CBnodeTeamAssigned.setValue(TeamAssigned.I);
     }
+
     private void setNodeFieldEnable() {
         CBnodeType.setDisable(false);
         CBnodeBuilding.setDisable(false);
@@ -722,10 +682,19 @@ public class MapBuilderController extends ScreenController {
     private void SaveNode(ActionEvent event) {
         for(database.objects.Node newNode : observableNewNodes) {
             if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
-                MapEntity.getInstance().addNode(newNode);
-                nodeDialogString += "Node ID: " + newNode.getNodeID() + " was successfully saved.\n";
-            }
-            else { //duplicate node ID found
+                try {
+                    MapEntity.getInstance().addNode(newNode);
+                    nodeDialogString += "Node ID: " + newNode.getNodeID() + " was successfully saved.\n";
+                } catch (DatabaseException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error adding node to DB");
+                    alert.setHeaderText("Error occurred while adding node to database.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
+
+                    nodeDialogString += "ERROR: Node " + newNode.getNodeID() + " was not added to database.\n";
+                }
+            }  else { //duplicate node ID found
                 nodeDialogString += "Node ID: " + newNode.getNodeID() + "Duplicate ID found, not saved\n";
                 loadDialog(event);
                 nodeDialogString = "";
@@ -738,10 +707,19 @@ public class MapBuilderController extends ScreenController {
         //clear new node list
         for(database.objects.Node changedNode : observableChangedNodes) {
             if(MapEntity.getInstance().getNode(changedNode.getNodeID()) != null) {
-                MapEntity.getInstance().editNode(changedNode);
-                nodeDialogString += "Node ID "+changedNode.getNodeID()+" was successfully edited.\n";
-            }
-            else {
+                try {
+                    MapEntity.getInstance().editNode(changedNode);
+                    nodeDialogString += "Node ID " + changedNode.getNodeID() + " was successfully edited.\n";
+                } catch (DatabaseException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error editing node in DB");
+                    alert.setHeaderText("Error occurred while updating a node in the database.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
+
+                    nodeDialogString += "ERROR: Node " + changedNode.getNodeID() + " was not edited to database.\n";
+                }
+            } else {
                 nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
                 loadDialog(event);
                 nodeDialogString = "";

@@ -4,17 +4,14 @@ import database.connection.Connector;
 import database.objects.Edge;
 import database.objects.Employee;
 import database.objects.Node;
-import database.template.SQLStrings;
-import database.util.DBUtil;
+import database.utility.*;
 import database.objects.InterpreterRequest;
-import utility.KioskPermission;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
-import utility.Request.Language;
-import utility.Request.RequestProgressStatus;
-import utility.Request.RequestType;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
-import javax.xml.crypto.Data;
+import utility.KioskPermission;
+import utility.request.RequestType;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,20 +22,11 @@ import java.util.LinkedList;
 import static database.template.SQLStrings.*;
 
 
-//Node and Edge objects should only be made here
+//node and Edge objects should only be made here
 public class DatabaseController {
+    private Connection instanceConnection = null;
 
-    private  Connection instanceConnection = null;
-
-    protected DatabaseController() {
-        try {
-            instanceConnection = DBUtil.getConnection();
-
-            DBUtil.createTables(instanceConnection);
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public static boolean isTestRunning = false;
 
     protected DatabaseController(boolean test) {
         try {
@@ -55,145 +43,148 @@ public class DatabaseController {
         }
     }
 
+    private static class SingletonHelper {
+        private static final DatabaseController instance = new DatabaseController(false);
+        private static final DatabaseController testInstance = new DatabaseController(true);
+    }
+
+    public static DatabaseController getInstance() {
+        return (isTestRunning ? SingletonHelper.instance : SingletonHelper.testInstance);
+    }
+
     //returns null if node does not exist
-    public  Node getNode(String id) {
+    public Node getNode(String id) throws DatabaseException {
         try {
             return Connector.selectNode(instanceConnection, id);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
-
-        return null;
     }
 
-    public  ArrayList<Node> getAllNodes() {
+    public ArrayList<Node> getAllNodes() throws DatabaseException {
         try{
             return Connector.selectAllNodes(instanceConnection);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
-        return null;
     }
 
-    public  int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) throws DatabaseException {
         int result = 0;
         try{
             return Connector.selectCountNodeType(instanceConnection,nodeType, floor, teamAssigned);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
-        return result;
     }
 
-    public  boolean removeNode(Node node) {
+    public boolean removeNode(Node node) throws DatabaseException {
         try {
             Connector.deleteNode(instanceConnection, node);
 
             return true;
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseNodeException(node, DatabaseExceptionType.INVALID_ENTRY);
         }
-
-        return false;
     }
 
-    public  int addNode(Node node) {
+    public int addNode(Node node) throws DatabaseException {
         try {
             return Connector.insertNode(instanceConnection, node);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+            DatabaseExceptionType type;
+            if (e.getSQLState() != "23505") {
+                type = DatabaseExceptionType.DUPLICATE_ENTRY;
+            } else {
                 e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
             }
+            throw new DatabaseNodeException(node, type);
         }
-        return 0;
     }
 
-    public  int updateNode(Node node) {
+    public  int updateNode(Node node) throws DatabaseException {
         try {
             return Connector.updateNode(instanceConnection, node);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+            DatabaseExceptionType type;
+            if (e.getSQLState() != "23505") {
+                type = DatabaseExceptionType.ID_ALREADY_EXISTS;
+            } else {
                 e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
             }
+            throw new DatabaseNodeException(node, type);
         }
-        return 0;
     }
 
-    public  Edge getEdge(String edgeID) {
+    public  Edge getEdge(String edgeID) throws DatabaseException {
         try {
             return Connector.selectEdge(instanceConnection, edgeID);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
-        return null;
     }
 
-    public  boolean removeEdge(Edge edge) {
+    public  boolean removeEdge(Edge edge) throws DatabaseException {
         try {
             Connector.deleteEdge(instanceConnection, edge);
-
             return true;
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
+            e.printStackTrace();
 
-        return false;
+            throw new DatabaseEdgeException(edge, DatabaseExceptionType.INVALID_ENTRY);
+        }
     }
 
-    public int addEdge(Edge edge) {
+    public int addEdge(Edge edge) throws DatabaseException {
         try {
             return Connector.insertEdge(instanceConnection, edge);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+            if (e.getSQLState() == "23503") {
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.INVALID_ENTRY);
+            } else if(e.getSQLState() != "23505") {
                 e.printStackTrace();
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.DUPLICATE_ENTRY);
+            } else {
+                e.printStackTrace();
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.MISC_ERROR);
             }
         }
-        return 0;
     }
 
-    public int updateEdge(Edge edge) {
+    public int updateEdge(Edge edge) throws DatabaseException {
         try{
             return Connector.updateEdge(instanceConnection, edge);
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+            if (e.getSQLState() == "23503") {
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.INVALID_ENTRY);
+            } else if(e.getSQLState() != "23505") {
                 e.printStackTrace();
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.DUPLICATE_ENTRY);
+            } else {
+                e.printStackTrace();
+                throw new DatabaseEdgeException(edge, DatabaseExceptionType.MISC_ERROR);
             }
         }
-
-        return 0;
     }
 
-    public  ArrayList<Edge> getAllEdges() {
+    public  ArrayList<Edge> getAllEdges() throws DatabaseException {
         try{
             return Connector.selectAllEdges(instanceConnection);
         } catch(SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
-        return null;
     }
 
-    public static DatabaseController getInstance() {
-        return SingletonHelper.instance;
-    }
-
-    public static DatabaseController getTestInstance() {
-        return SingletonHelper.testInstance;
-    }
-
-
-
+    // TODO add exceptions for these methods
     public int addInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.insertInterpreter(instanceConnection, iR);
@@ -252,11 +243,6 @@ public class DatabaseController {
 
     public void deleteTestTables() {
         DBUtil.dropAllTables(instanceConnection);
-    }
-
-    private static class SingletonHelper {
-        private static final DatabaseController instance = new DatabaseController();
-        private static final DatabaseController testInstance = new DatabaseController(true);
     }
 
     /**

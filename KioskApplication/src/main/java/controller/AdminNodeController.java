@@ -2,19 +2,16 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import utility.ApplicationScreen;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class AdminNodeController extends ScreenController {
@@ -134,27 +131,43 @@ public class AdminNodeController extends ScreenController {
             NodeType type = getNodeType();
 
             if(isAdd) {
-                System.out.println("Adding node?");
-                // Ensure there is no existing node with that ID
-                if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
-                    //create new node
-                    Node node1 = new Node(nodeID.getText(), (int) Double.parseDouble(xcoord.getText()), (int) Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
-                    // Add Node
-                    MapEntity.getInstance().addNode(node1);
-                    System.out.println("Adding node " + nodeID.getText());
-                    resetScreen();
+                try {
+                    System.out.println("Adding node?");
+                    // Ensure there is no existing node with that ID
+                    if (MapEntity.getInstance().getNode(nodeID.getText()) == null) {
+                        //create new node
+                        Node node1 = new Node(nodeID.getText(), (int) Double.parseDouble(xcoord.getText()), (int) Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
+                        // Add node
+                        MapEntity.getInstance().addNode(node1);
+                        System.out.println("Adding node " + nodeID.getText());
+                        resetScreen();
+                    }
+                } catch (DatabaseException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error adding node to DB");
+                    alert.setHeaderText("Error occurred while adding node to database.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
                 }
             }else{
-                System.out.println("Editing node?");
-                // Find the existing node with that ID
-                if(MapEntity.getInstance().getNode(nodeID.getText()) != null) {
-                    System.out.println("Editing node " + nodeID.getText());
-                    // Create Node
-                    Node node1 = new Node(nodeID.getText(), (int)Double.parseDouble(xcoord.getText()), (int)Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
-                    // Update Node
-                    MapEntity.getInstance().editNode(node1);
-                    System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
-                    resetScreen();
+                try {
+                    System.out.println("Editing node?");
+                    // Find the existing node with that ID
+                    if (MapEntity.getInstance().getNode(nodeID.getText()) != null) {
+                        System.out.println("Editing node " + nodeID.getText());
+                        // Create node
+                        Node node1 = new Node(nodeID.getText(), (int) Double.parseDouble(xcoord.getText()), (int) Double.parseDouble(ycoord.getText()), floor, building, type, lname.getText(), sname.getText(), convertToDBTeam(teamAssignedChoiceBox.getValue().toString()));
+                        // Update node
+                        MapEntity.getInstance().editNode(node1);
+                        System.out.println("Updated row(s) with nodeID: " + nodeID.getText());
+                        resetScreen();
+                    }
+                } catch (DatabaseException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error editing node in DB");
+                    alert.setHeaderText("Error occurred while editing node.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
                 }
             }
         }
@@ -332,7 +345,7 @@ public class AdminNodeController extends ScreenController {
     @FXML
     void deleteNode() throws IOException {
         if(nodeID.getText().equals("") || nodeID.getText() == null){ // If no node selected
-            System.out.println("No Node Selected");
+            System.out.println("No node Selected");
         }
         else{
             System.out.println("Delete node: " + nodeID.getText());
@@ -342,17 +355,28 @@ public class AdminNodeController extends ScreenController {
             if(delN != null) {
                 // Delete node
                 boolean isSuccess = true;
-                MapEntity.getInstance().removeNode(delN.getNodeID());
+                try {
+                    MapEntity.getInstance().removeNode(delN);
+                } catch (DatabaseException ex) {
+                    isSuccess = false;
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error removing node from DB");
+                    alert.setHeaderText("Error occurred while removing node from database.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
+
+                }
 
                 if (isSuccess) { // If successfully deleted
-                    System.out.println("Node " + nodeID.getText() + " Deleted");
+                    System.out.println("node " + nodeID.getText() + " Deleted");
                     resetScreen();
                 }
                 else  // If DB failed to delete
                     System.out.println("Failed to remove node: " + nodeID.getText());
             }
             else { // If not, notify user
-                System.out.println("Node " + nodeID.getText() + " is not in the database");
+                System.out.println("node " + nodeID.getText() + " is not in the database");
             }
         }
     }

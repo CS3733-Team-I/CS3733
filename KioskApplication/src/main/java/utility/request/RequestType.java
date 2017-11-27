@@ -1,4 +1,4 @@
-package utility.Request;
+package utility.request;
 
 public enum RequestType {
     GENERAL,

@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void viewRequests() throws IOException {
-        System.out.println("Request Manager Pressed\n");
+        System.out.println("request Manager Pressed\n");
 
         getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }
@@ -53,7 +53,8 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getAssigner());
-            String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
+            // TODO don't use the database here use the request entity
+            String location = ""; //dbController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");

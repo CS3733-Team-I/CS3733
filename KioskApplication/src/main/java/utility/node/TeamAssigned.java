@@ -1,4 +1,4 @@
-package utility.Node;
+package utility.node;
 
 public enum TeamAssigned {
     A,
