@@ -438,14 +438,20 @@ public class MapController {
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecX((double)newValue/scrollPane.getHmax());
+                double value = newValue.doubleValue() / scrollPane.getHmax();
+                if (Double.isNaN(value)) value = 0.0;
+
+                miniMapController.setNavigationRecX(value);
             }
         });
 
         scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
+                double value = newValue.doubleValue() / scrollPane.getVmax();
+                if (Double.isNaN(value)) value = 0.0;
+
+                miniMapController.setNavigationRecY(value);
             }
         });
 
@@ -453,7 +459,7 @@ public class MapController {
         container.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setViewportWidth((double)newValue);
+                miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
                 calculateMinZoom();
             }
@@ -462,7 +468,7 @@ public class MapController {
         container.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setViewportHeight((double)newValue);
+                miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
                 calculateMinZoom();
             }
