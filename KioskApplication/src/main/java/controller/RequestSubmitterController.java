@@ -24,9 +24,6 @@ import java.util.LinkedList;
 
 public class RequestSubmitterController extends ScreenController {
 
-//    public RequestSubmitterController(MainWindowController parent, MapController map) {
-//        super(parent, map);
-//    }
 
     @FXML private JFXTabPane requestTypeTabs;
 
@@ -113,7 +110,6 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addIntRequest() throws IOException {
         String location = intLocation.getText();
-        Node nodeLocation = MapEntity.getInstance().getNode(location);
         String assigner = l.getUserName();
         String notes = "";
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
@@ -129,19 +125,13 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addSecRequest()throws IOException {
         String location = secLocationField.getText();
-        Node nodeLocation = MapEntity.getInstance().getNode(location);
+        String assigner = l.getUserName();
         String notes = "";
-
         int priority = 0;
         priority = Integer.parseInt(priorityMenu.getValue().toString());
-
-
-        System.out.println("location: " + nodeLocation.getLongName() + ". priority: " + priority + ". Admin Email: " + adminEmail);
-
+        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
         //node ID, employee, notes, priority
-        RequestEntity.getInstance().submitSecurityRequest(nodeLocation.getNodeID(), adminEmail, notes, priority);
-
-//        getParent().switchToScreen(ApplicationScreen.MAP_BUILDER);
+        r.submitSecurityRequest(location, assigner, notes, priority);
     }
 
     @FXML
