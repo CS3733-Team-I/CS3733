@@ -32,7 +32,7 @@ public class RequestEntity {
         interpreterRequests=new HashMap<>();
 
         if(test){
-            dbController = DatabaseController.getTestInstance();
+            dbController = DatabaseController.getInstance();
         }
         else {
             dbController = DatabaseController.getInstance();

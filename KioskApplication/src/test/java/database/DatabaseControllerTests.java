@@ -4,6 +4,8 @@ import database.objects.Edge;
 import database.objects.Employee;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import org.junit.Before;
+import org.junit.runner.JUnitCore;
 import utility.KioskPermission;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,9 +30,10 @@ public class DatabaseControllerTests {
     private DatabaseController dbController;
 
     public DatabaseControllerTests() {
-        dbController = DatabaseController.getTestInstance();
+        dbController = DatabaseController.getInstance();
     }
 
+    @Before
     @After
     public void removeAllFromDB() {
         List<Node> nodes = dbController.getAllNodes();

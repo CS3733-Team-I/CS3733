@@ -1,13 +1,18 @@
 package database;
 
+import controller.MapController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import entity.MapEntity;
 import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import utility.csv.CsvFileUtil;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CsvLoadingTests {
@@ -41,17 +46,19 @@ public class CsvLoadingTests {
         CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapHedges.csv").toURI().getPath());
         CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapIedges.csv").toURI().getPath());
         CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapWedges.csv").toURI().getPath());
+
+        Assert.assertTrue(true); // If we get here we're good!
     }
 
+    @Before
     @After
     public void removeAllFromDB() {
-        List<Node> nodes = dbController.getAllNodes();
-        for (Node node : nodes) dbController.removeNode(node);
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node.getNodeID());
 
-        List<Edge> edges = dbController.getAllEdges();
-        for (Edge edge : edges) dbController.removeEdge(edge);
-
-        List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
-        for (InterpreterRequest iR: interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge.getEdgeID());
+        }
     }
 }

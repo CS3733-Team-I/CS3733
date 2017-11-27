@@ -28,7 +28,7 @@ public class TestPathfinderNode {
     public void setup() {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Build map
-        DatabaseController.getTestInstance();
+        DatabaseController.getInstance();
 
         map = MapEntity.getInstance();
 

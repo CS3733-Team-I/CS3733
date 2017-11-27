@@ -25,18 +25,9 @@ import static database.template.SQLStrings.*;
 
 //node and Edge objects should only be made here
 public class DatabaseController {
+    private Connection instanceConnection = null;
 
-    private  Connection instanceConnection = null;
-
-    protected DatabaseController() {
-        try {
-            instanceConnection = DBUtil.getConnection();
-
-            DBUtil.createTables(instanceConnection);
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public static boolean isTestRunning = false;
 
     protected DatabaseController(boolean test) {
         try {
@@ -51,6 +42,15 @@ public class DatabaseController {
         } catch(SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static class SingletonHelper {
+        private static final DatabaseController instance = new DatabaseController(false);
+        private static final DatabaseController testInstance = new DatabaseController(true);
+    }
+
+    public static DatabaseController getInstance() {
+        return (isTestRunning ? SingletonHelper.instance : SingletonHelper.testInstance);
     }
 
     //returns null if node does not exist
@@ -185,16 +185,6 @@ public class DatabaseController {
         return null;
     }
 
-    public static DatabaseController getInstance() {
-        return SingletonHelper.instance;
-    }
-
-    public static DatabaseController getTestInstance() {
-        return SingletonHelper.testInstance;
-    }
-
-
-
     public int addInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.insertInterpreter(instanceConnection, iR);
@@ -253,11 +243,6 @@ public class DatabaseController {
 
     public void deleteTestTables() {
         DBUtil.dropAllTables(instanceConnection);
-    }
-
-    private static class SingletonHelper {
-        private static final DatabaseController instance = new DatabaseController();
-        private static final DatabaseController testInstance = new DatabaseController(true);
     }
 
     /**

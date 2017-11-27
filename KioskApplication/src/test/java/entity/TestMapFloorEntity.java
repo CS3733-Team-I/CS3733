@@ -13,7 +13,7 @@ public class TestMapFloorEntity {
     private Node n1;
 
     public TestMapFloorEntity() {
-        DatabaseController.getTestInstance();
+        DatabaseController.getInstance();
         m = new MapFloorEntity();
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
     }

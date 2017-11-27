@@ -44,8 +44,7 @@ public class CsvFileUtil {
         }
     }
 
-    public static void readNodesCSV(String path) {
-        MapEntity map = MapEntity.getInstance();
+    public static void readNodesCSV(String path, MapEntity map) {
         CsvReader reader = null;
 
         try {
@@ -85,7 +84,7 @@ public class CsvFileUtil {
                     case "L1":
                         nodeFloor = NodeFloor.LOWERLEVEL_1;
                         break;
-                    case "0":
+                    case "G":
                         nodeFloor = NodeFloor.GROUND;
                         break;
                     case "1":
@@ -174,6 +173,11 @@ public class CsvFileUtil {
         }
     }
 
+    public static void readNodesCSV(String path) {
+        MapEntity map = MapEntity.getInstance();
+        readNodesCSV(path, map);
+    }
+
     public static void writeNodesCSV(String path, boolean global) {
         // TODO implement this
         /*
@@ -238,8 +242,7 @@ public class CsvFileUtil {
             }*/
     }
 
-    public static void readEdgesCSV(String path) {
-        MapEntity map = MapEntity.getInstance();
+    public static void readEdgesCSV(String path, MapEntity map) {
         CsvReader reader = null;
 
         try {
@@ -281,6 +284,11 @@ public class CsvFileUtil {
         } finally {
             if (reader != null) reader.close();
         }
+    }
+
+    public static void readEdgesCSV(String path) {
+        MapEntity map = MapEntity.getInstance();
+        readEdgesCSV(path, map);
     }
 
     public static void writeEdgesCSV(String path, boolean global) {

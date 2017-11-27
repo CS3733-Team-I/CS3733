@@ -21,7 +21,7 @@ public class TestMapEntity {
 
     @Before
     public void setup() {
-        DatabaseController.getTestInstance();
+        DatabaseController.getInstance();
         m = MapEntity.getInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);

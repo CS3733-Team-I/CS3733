@@ -24,7 +24,7 @@ public class TestRequestEntity {
 
     @Before
     public void setup(){
-        db=DatabaseController.getTestInstance();
+        db = DatabaseController.getInstance();
         r = RequestEntity.getTestInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);

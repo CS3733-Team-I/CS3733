@@ -18,7 +18,7 @@ public class TestLoginEntity {
 
     @Before
     public void setup(){
-        db = DatabaseController.getTestInstance();
+        db = DatabaseController.getInstance();
         l = LoginEntity.getTestInstance();
         l.addUser("boss@hospital.com", "123",SUPER_USER, RequestType.GENERAL);
         l.addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);

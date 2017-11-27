@@ -43,7 +43,7 @@ public class LoginEntity {
         if (test){
             // so tests can add and remove logins as needed
             permission = SUPER_USER;
-            dbC = DatabaseController.getTestInstance();
+            dbC = DatabaseController.getInstance();
         }
         else {
             // remove once we have a better way to initialize things
@@ -130,7 +130,7 @@ public class LoginEntity {
      */
     public boolean deleteLogin(String userName){
         // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
-        if(logins.containsKey(userName)&&(userName!=this.userName ||dbC.equals(DatabaseController.getTestInstance()))) {
+        if(logins.containsKey(userName)&&(userName!=this.userName ||dbC.equals(DatabaseController.getInstance()))) {
             Employee delEmp = logins.get(userName);
             // checks to see if the current user permissions are higher than the one they are deleting
             if(delEmp.getPermission().ordinal()<this.permission.ordinal()||this.permission==SUPER_USER) {
