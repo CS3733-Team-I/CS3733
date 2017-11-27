@@ -105,8 +105,8 @@
                               <JFXComboBox fx:id="CBnodeType" prefHeight="27.0" prefWidth="188.0" promptText="Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                               <JFXComboBox fx:id="CBnodeTeamAssigned" prefHeight="27.0" prefWidth="207.0" promptText="Team Assigned" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                               <JFXComboBox fx:id="CBnodeBuilding" prefHeight="27.0" prefWidth="195.0" promptText="Building" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                              <JFXTextField fx:id="sName" text="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-                              <JFXTextField fx:id="lName" text="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" />
+                              <JFXTextField fx:id="sName" promptText="Short Name" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="lName" promptText="Long Name" GridPane.columnIndex="1" GridPane.columnSpan="4" />
                               <JFXToggleButton fx:id="tbNodeInstruction" text="Instructions" toggleColor="#00589f" GridPane.columnSpan="4" GridPane.rowIndex="10" />
                               <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00589F;" GridPane.columnSpan="6" GridPane.halignment="CENTER" GridPane.rowIndex="15" GridPane.valignment="CENTER">
                                  <buttons>
@@ -116,7 +116,7 @@
                                     <JFXButton fx:id="btNodeDelete" buttonType="RAISED" prefWidth="84.0" text="Delete" textFill="WHITE" />
                                  </buttons>
                               </ButtonBar>
-                              <StackPane fx:id="SPnodeDialog" prefHeight="52.0" prefWidth="320.0" GridPane.columnSpan="5" GridPane.rowIndex="13" GridPane.rowSpan="2">
+                              <StackPane fx:id="SPnodeDialog" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="320.0" GridPane.columnSpan="5" GridPane.rowIndex="13" GridPane.rowSpan="2">
                                  <children>
                                     <JFXDialogLayout fx:id="nodeDialogLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="65.0" prefWidth="320.0" />
                                  </children>
