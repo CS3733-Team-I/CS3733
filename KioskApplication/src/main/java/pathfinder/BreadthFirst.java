@@ -60,7 +60,7 @@ public class BreadthFirst implements SearchAlgorithm{
         throw new PathfinderException("No path found");
     }
 
-    LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
         // initalize connected nodes list from current node
         LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
