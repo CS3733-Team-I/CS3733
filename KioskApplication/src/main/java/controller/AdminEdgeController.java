@@ -54,10 +54,10 @@ public class AdminEdgeController extends ScreenController {
             Edge edge2 = new Edge(node2ID.getText()+"_"+node1ID.getText(), node2ID.getText(), node1ID.getText());
 
             if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
-                MapEntity.getInstance().removeEdge(edge.getEdgeID());
+                MapEntity.getInstance().removeEdge(edge);
                 System.out.println("Removed Edge: " + edge.getEdgeID());
             } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
-                MapEntity.getInstance().removeEdge(edge2.getEdgeID());
+                MapEntity.getInstance().removeEdge(edge2);
                 System.out.println("Removed Edge: " + edge2.getEdgeID());
             } else {
                 System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());

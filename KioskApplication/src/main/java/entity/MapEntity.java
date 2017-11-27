@@ -3,6 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
+import javafx.scene.control.Alert;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -31,15 +33,49 @@ public class MapEntity implements IMapEntity {
         return MapEntitySingleton._instance;
     }
 
-    // TODO do this somewhere else, and be more smart about our database access
-    public void readAllFromDatabase() {
-        ArrayList<Node> nodes = dbController.getAllNodes();
-        for (Node node : nodes)
-            addNode(node);
 
-        ArrayList<Edge> edges = dbController.getAllEdges();
-        for (Edge edge : edges)
-            addEdge(edge);
+    /**
+     * Clears the cached nodes/edges and then adds all the existing nodes and edges from the  database.
+     */
+    public void readAllFromDatabase() {
+        // TODO do this somewhere else, and be more smart about our database access
+        try {
+            // Clear our current data
+            this.floors.clear();
+            this.edges.clear();
+
+            ArrayList<Node> nodes = dbController.getAllNodes();
+
+            // Sort nodes by floor
+            HashMap<NodeFloor, ArrayList<Node>> nodesPerFloor = new HashMap<>();
+            for (Node node : nodes) {
+                if (!nodesPerFloor.containsKey(node.getFloor()))
+                    nodesPerFloor.put(node.getFloor(), new ArrayList<>());
+
+                nodesPerFloor.get(node.getFloor()).add(node);
+            }
+
+            // Insert nodes into floor entities
+            for (NodeFloor floor : nodesPerFloor.keySet()) {
+                if(!floorExists(floor)) addFloor(floor);
+
+                MapFloorEntity floorEntity = floors.get(floor);
+                for (Node node : nodesPerFloor.get(floor)) {
+                    floorEntity.insertNode(node);
+                }
+            }
+
+            ArrayList<Edge> edges = dbController.getAllEdges();
+            for (Edge edge : edges)
+                this.edges.put(edge.getEdgeID(), edge);
+
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding from DB");
+            alert.setHeaderText("Error occurred while adding nodes and edges from database.");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     @Override
@@ -87,8 +123,13 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
-    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned){
-        return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) {
+        try {
+            return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+        } catch (DatabaseException e) {
+            e.printStackTrace(); // TODO implement handling of DB exception
+            return 0;
+        }
     }
 
     // TODO this is an expensive function, should probably rewrite
@@ -110,28 +151,43 @@ public class MapEntity implements IMapEntity {
 
 
     @Override
-    public void removeNode(String s) {
-        Node n = getNode(s);
-        List<Edge> edges = getEdges(n);
+    public void removeNode(Node node) {
+        List<Edge> edges = getEdges(node);
         for (Edge edge : edges) {
-            removeEdge(edge.getEdgeID());
+            removeEdge(edge);
         }
 
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
-            if (floorEntity.getNode(s) != null)
-                floorEntity.removeNode(s);
+            if (floorEntity.getNode(node.getNodeID()) != null)
+                floorEntity.removeNode(node);
         }
     }
 
     public void addEdge(Edge e) {
-        edges.put(e.getEdgeID(),e);
-        dbController.addEdge(e);
+        try {
+            dbController.addEdge(e);
+            edges.put(e.getEdgeID(), e);
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Edge Error");
+            alert.setHeaderText("Error adding edge");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     public void editEdge(Edge e) {
-        edges.put(e.getEdgeID(), e);
-        dbController.updateEdge(e);
+        try {
+            dbController.updateEdge(e);
+            edges.put(e.getEdgeID(), e);
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Edge Error");
+            alert.setHeaderText("Error editing edge");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     public Edge getEdge(String s) {
@@ -140,18 +196,33 @@ public class MapEntity implements IMapEntity {
 
         // If edge doesn't exist, attempt to load it from the database
         if (edge == null) {
-            edge = dbController.getEdge(s);
-            // Add edge to local data if found
-            if (edge != null) edges.put(s, edge);
+            try {
+                edge = dbController.getEdge(s);
+                // Add edge to local data if found
+                if (edge != null) edges.put(s, edge);
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Edge Error");
+                alert.setHeaderText("Error getting edge: " + s);
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
+            }
         }
 
         return edge;
     }
 
-    // TODO pass edge as param instead of string
-    public void removeEdge(String s) {
-        dbController.removeEdge(new Edge(s, "", ""));
-        edges.remove(s);
+    public void removeEdge(Edge edge) {
+        try {
+            dbController.removeEdge(edge);
+            edges.remove(edge.toString());
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Edge Error");
+            alert.setHeaderText("Error removing edge");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     public ArrayList<Edge> getEdges(Node n) {

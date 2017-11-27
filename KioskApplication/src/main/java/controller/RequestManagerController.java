@@ -53,7 +53,8 @@ public class RequestManagerController extends ScreenController {
         for (int i = 0; i < requests.size(); i++) {
             String id = requests.get(i).getRequestID();
             TextField requestTextField = new TextField(requests.get(i).getAssigner());
-            String location = dbController.getNode(requests.get(i).getNodeID()).getLongName();
+            // TODO don't use the database here use the request entity
+            String location = ""; //dbController.getNode(requests.get(i).getNodeID()).getLongName();
             requestTextField.setEditable(false);
             Label requestID = new Label("ID: " + id);
             Label typeOfRequest = new Label("Type: Interpreter");

@@ -4,6 +4,7 @@ import database.objects.Edge;
 import database.objects.Employee;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
 import utility.KioskPermission;
@@ -35,17 +36,21 @@ public class DatabaseControllerTests {
 
     @After
     public void removeAllFromDB() {
-        List<Node> nodes = dbController.getAllNodes();
-        for (Node node : nodes) dbController.removeNode(node);
+        try {
+            List<Node> nodes = dbController.getAllNodes();
+            for (Node node : nodes) dbController.removeNode(node);
 
-        List<Edge> edges = dbController.getAllEdges();
-        for (Edge edge : edges) dbController.removeEdge(edge);
+            List<Edge> edges = dbController.getAllEdges();
+            for (Edge edge : edges) dbController.removeEdge(edge);
 
-        List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
-        for (InterpreterRequest iR: interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
+            List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
+            for (InterpreterRequest iR : interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
 
-        List<Employee> employees = dbController.getAllEmployees();
-        for (Employee e: employees) dbController.removeEmployee(e.getLoginID());
+            List<Employee> employees = dbController.getAllEmployees();
+            for (Employee e : employees) dbController.removeEmployee(e.getLoginID());
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -79,6 +84,11 @@ public class DatabaseControllerTests {
 
         Node receivedNode = dbController.getNode(node.getNodeID());
         Assert.assertEquals(receivedNode, node);
+    }
+
+    @Test
+    public void testDatabaseGetInvalidNode() {
+        assertEquals(null, dbController.getNode("randomid1238712"));
     }
 
     @Test

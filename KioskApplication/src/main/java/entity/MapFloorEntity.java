@@ -2,11 +2,13 @@ package entity;
 
 import database.DatabaseController;
 import database.objects.Node;
+import database.utility.DatabaseException;
+import javafx.scene.control.Alert;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class MapFloorEntity implements IMapEntity{
+public class MapFloorEntity implements IMapEntity {
 
     //Key is the nodeID or edgeID
     private HashMap<String, Node> nodes;
@@ -19,16 +21,40 @@ public class MapFloorEntity implements IMapEntity{
         dbController = DatabaseController.getInstance();
     }
 
+    /**
+     * Inserts a node directly into the floor, subverting the database
+     * @param node the node to insert
+     */
+    public void insertNode(Node node) {
+        nodes.put(node.getNodeID(), node);
+    }
+
     @Override
     public void addNode(Node n) {
-        dbController.addNode(n);
-        nodes.put(n.getNodeID(), n);
+        try {
+            dbController.addNode(n);
+            nodes.put(n.getNodeID(), n);
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Node Error");
+            alert.setHeaderText("Error adding node");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     @Override
     public void editNode(Node n) {
-        dbController.updateNode(n);
-        nodes.put(n.getNodeID(), n);
+        try {
+            dbController.updateNode(n);
+            nodes.put(n.getNodeID(), n);
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Node Error");
+            alert.setHeaderText("Error updating node");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 
     @Override
@@ -38,9 +64,17 @@ public class MapFloorEntity implements IMapEntity{
 
         // If edge doesn't exist, attempt to load it from the database
         if (node == null) {
-            node = dbController.getNode(s);
-            // Add edge to local data if found
-            if (node != null) nodes.put(s, node);
+            try {
+                node = dbController.getNode(s);
+                // Add edge to local data if found
+                if (node != null) nodes.put(s, node);
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Node Error");
+                alert.setHeaderText("Error getting node: " + s);
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
+            }
         }
 
         return node;
@@ -58,8 +92,16 @@ public class MapFloorEntity implements IMapEntity{
     }
 
     @Override
-    public void removeNode(String s) {
-        dbController.removeNode(new Node(s));
-        nodes.remove(s);
+    public void removeNode(Node node) {
+        try {
+            dbController.removeNode(node);
+            nodes.remove(node.getNodeID());
+        } catch (DatabaseException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Node Error");
+            alert.setHeaderText("Error removing node");
+            alert.setContentText(ex.toString());
+            alert.showAndWait();
+        }
     }
 }

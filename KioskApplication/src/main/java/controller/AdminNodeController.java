@@ -14,7 +14,6 @@ import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class AdminNodeController extends ScreenController {
@@ -342,7 +341,7 @@ public class AdminNodeController extends ScreenController {
             if(delN != null) {
                 // Delete node
                 boolean isSuccess = true;
-                MapEntity.getInstance().removeNode(delN.getNodeID());
+                MapEntity.getInstance().removeNode(delN);
 
                 if (isSuccess) { // If successfully deleted
                     System.out.println("node " + nodeID.getText() + " Deleted");
