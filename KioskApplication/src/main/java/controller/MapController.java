@@ -343,7 +343,8 @@ public class MapController {
                             Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
                             while (nodeObjectIterator.hasNext()) {
                                 Circle circle = nodeObjectIterator.next();
-                                if (removedDatabaseNode.getNodeID().equals(circle.getAccessibleText())) {
+                                if ((Integer.toString(removedDatabaseNode.getXcoord()) + Integer.toString(removedDatabaseNode.getYcoord())).equals(circle.getAccessibleText())) {
+                                    System.out.println("Removed from map");
                                     nodeObjectIterator.remove();
                                     break;
                                 }
@@ -546,6 +547,7 @@ public class MapController {
                                 HighlightNode(deseletedNewNode, NodeDisplay.NORMAL);
                             }
                             else { //no node was added
+                                System.out.println("undraw on map");
                                 undrawNodeOnMap(deseletedNewNode);
                             }
                         }
