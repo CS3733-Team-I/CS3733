@@ -340,13 +340,17 @@ public class TestPathfinder {
         // System.out.println(testPath2.getEdges().toString());
     }
 
-    /* TODO  write test for exceptions
-     @Test (expected = PathfinderException.class)
+     //TODO  write test for exceptions
+     @Test
     public void testPathfinderException(){
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n2, n8);
+        try{
+        Path path = breadth.generatePath(n02, n08);}
+        catch(PathfinderException e){
+            System.out.println(e.getMessage());
+        }
     }
-     */
+
 
     //TODO tests
 }
