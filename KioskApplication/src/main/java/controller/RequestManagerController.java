@@ -19,6 +19,7 @@ import utility.Request.RequestProgressStatus;
 
 
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -146,7 +147,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) { }
