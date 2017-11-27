@@ -4,13 +4,17 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import org.junit.Test;
 import utility.node.NodeType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -348,5 +352,15 @@ public class TestPathfinder {
     }
      */
 
-    //TODO tests
+    @Before
+    @After
+    public void removeAllFromDB() {
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node.getNodeID());
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge.getEdgeID());
+        }
+    }
 }

@@ -33,7 +33,6 @@ public class DatabaseControllerTests {
         dbController = DatabaseController.getInstance();
     }
 
-    @Before
     @After
     public void removeAllFromDB() {
         List<Node> nodes = dbController.getAllNodes();
@@ -166,7 +165,8 @@ public class DatabaseControllerTests {
         Assert.assertEquals(iR1,dbController.getInterpreterRequest(iR1.getRequestID()));
     }
 
-    @Test public void testUpdateInterpreterRequest(){
+    @Test
+    public void testUpdateInterpreterRequest(){
         Node node1 = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
