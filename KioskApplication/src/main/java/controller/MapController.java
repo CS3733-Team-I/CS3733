@@ -266,15 +266,21 @@ public class MapController {
 
     @FXML
     protected void initialize() {
-
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
 
-        miniMapController = new MiniMapController(parent, this);
-        miniMapPane.getChildren().clear();
-        miniMapPane.getChildren().add(miniMapController.getContentView());
+        miniMapController = new MiniMapController(this);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
+            loader.setController(miniMapController);
+            miniMapPane.getChildren().clear();
+            miniMapPane.getChildren().add(loader.load());
+        } catch (IOException e) {
+            System.err.println("Loading MiniMapView failed.");
+        }
 
         zoomSlider.setMin(0.2);
         zoomSlider.setMax(2.2);
