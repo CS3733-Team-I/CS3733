@@ -25,10 +25,8 @@ import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
 
-    public RequestManagerController(MainWindowController parent, MapController map) {
-        super(parent, map);
 
-    }
+    RequestEntity r;
 
     @FXML
     private VBox activeRequests;
@@ -39,6 +37,12 @@ public class RequestManagerController extends ScreenController {
     @FXML
     private JFXButton completeButton;
 
+    public RequestManagerController(MainWindowController parent, MapController map) {
+        super(parent, map);
+        r = RequestEntity.getInstance();
+
+    }
+
     @FXML
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
@@ -48,61 +52,66 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void newRequests(){
-        completeButton.setText("Assign Selected");
-        showRequests(RequestProgressStatus.TO_DO);
+//        completeButton.setText("Assign Selected");
+        showRequests(RequestProgressStatus.TO_DO, "Assign");
     }
 
     @FXML
     void inProgressRequests(){
-        completeButton.setText("Complete Selected");
-        showRequests(RequestProgressStatus.IN_PROGRESS);
+//        completeButton.setText("Complete Selected");
+        showRequests(RequestProgressStatus.IN_PROGRESS, "Complete");
     }
 
     @FXML
     void doneRequests(){
-        completeButton.setText("Delete Selected");
-        showRequests(RequestProgressStatus.DONE);
+//        completeButton.setText("Delete Selected");
+        showRequests(RequestProgressStatus.DONE, "Delete");
     }
 
     @FXML
-    void showRequests(RequestProgressStatus status){
+    void showRequests(RequestProgressStatus status, String buttonName){
+//        r.readAllFromDatabase();    //Do qw need this???
         activeRequests.getChildren().clear();
-        LinkedList<Request> requests = RequestEntity.getInstance().getStatusRequests(status);
-        for (int i = 0; i < requests.size(); i++) {
-            String id = requests.get(i).getRequestID();
-            TextField requestTextField = new TextField(requests.get(i).getRequestID());
-            String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
-            requestTextField.setEditable(false);
-            Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
-            String requestType = requests.get(i).getRequestID().substring(0,3);
-            Label typeOfRequest;
-            switch (requestType){
-                case "Int":
-                    typeOfRequest = new Label("Type: Interpreter");
-                    break;
-                case "Sec":
-                    typeOfRequest = new Label("Type: Security");
-                    break;
-                default:
-                    typeOfRequest = new Label("Type: Generic");
-                    break;
-            }
-
-            Label locationOfRequest = new Label(location);
-            JFXButton selectID = new JFXButton("Select");
-            selectID.setOnAction(new EventHandler<ActionEvent>() {
-                @Override public void handle(ActionEvent e) {
-                    txtID.setText(id);
+        LinkedList<Request> requests = r.getStatusRequests(status);
+        if(requests.isEmpty()){
+            Label emptyList = new Label("No Requests");
+            activeRequests.getChildren().add(emptyList);
+        }else{
+            for (int i = 0; i < requests.size(); i++) {
+                String id = requests.get(i).getRequestID();
+                TextField requestTextField = new TextField(requests.get(i).getRequestID());
+                String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
+                requestTextField.setEditable(false);
+                Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
+                String requestType = requests.get(i).getRequestID().substring(0,3);
+                Label typeOfRequest;
+                switch (requestType){
+                    case "Int":
+                        typeOfRequest = new Label("Type: Interpreter");
+                        break;
+                    case "Sec":
+                        typeOfRequest = new Label("Type: Security");
+                        break;
+                    default:
+                        typeOfRequest = new Label("Type: Generic");
+                        break;
                 }
-            });
-            selectID.setStyle("-fx-background-color: #DFB951;");
 
-            //TODO find what type of reqeust it is
-            activeRequests.getChildren().add(requestTextField);
-            activeRequests.getChildren().add(requestID);
-            activeRequests.getChildren().add(typeOfRequest);
-            activeRequests.getChildren().add(locationOfRequest);
-            activeRequests.getChildren().add(selectID);
+                Label locationOfRequest = new Label(location);
+                JFXButton selectID = new JFXButton(buttonName);
+                selectID.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override public void handle(ActionEvent e) {
+                        onCompletePressed(id);
+                    }
+                });
+                selectID.setStyle("-fx-background-color: #DFB951;");
+
+                activeRequests.getChildren().addAll(requestTextField,requestID,typeOfRequest,locationOfRequest,selectID);
+//                activeRequests.getChildren().add(requestID);
+//                activeRequests.getChildren().add(typeOfRequest);
+//                activeRequests.getChildren().add(locationOfRequest);
+//                activeRequests.getChildren().add(selectID);
+            }
         }
     }
 
@@ -119,13 +128,13 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
-    void onCompletePressed(){
-        String ID = txtID.getText();
-        Request request = RequestEntity.getInstance().getInterpreterRequest(ID);
+    void onCompletePressed(String ID){
+//        String ID = txtID.getText();
+        Request request = r.getInterpreterRequest(ID);
         RequestProgressStatus status = request.getStatus();
         switch (status){
             case DONE:
-                RequestEntity.getInstance().deleteRequest(ID);
+                r.deleteRequest(ID);
                 doneRequests();
                 break;
             case IN_PROGRESS:
