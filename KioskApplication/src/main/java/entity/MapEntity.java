@@ -90,6 +90,19 @@ public class MapEntity implements IMapEntity {
             Node thisNode = floors.get(floor).getNode(s);
             if (thisNode != null) return thisNode;
         }
+
+        try {
+            Node node = dbController.getNode(s);
+            if (node != null) {
+                NodeFloor f = node.getFloor();
+                if(!floorExists(f)) addFloor(f);
+
+                floors.get(f).insertNode(node);
+            }
+        } catch (DatabaseException ex) {
+            ex.printStackTrace();
+        }
+
         return null;
     }
 
@@ -211,7 +224,7 @@ public class MapEntity implements IMapEntity {
     }
 
     private void addFloor(NodeFloor floor) {
-        floors.put(floor, new MapFloorEntity());
+        floors.put(floor, new MapFloorEntity(floor));
     }
 
     //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
