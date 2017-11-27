@@ -133,6 +133,9 @@ public class MapBuilderController extends ScreenController {
         CBnodeTeamAssigned.setDisable(true);
         lName.setDisable(true);
         sName.setDisable(true);
+        nodeID.setDisable(true);
+        xcoord.setDisable(true);
+        ycoord.setDisable(true);
         tbNodeAdvanced.setSelected(false);
         tbNodeAdvanced.setDisable(true);
         btNodeSave.setDisable(true);
@@ -151,7 +154,6 @@ public class MapBuilderController extends ScreenController {
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
         tbNodeInstruction.setGraphic(infoIconView);
-
 
         nodeID.setEditable(false);
         xcoord.setEditable(false);
@@ -669,6 +671,9 @@ public class MapBuilderController extends ScreenController {
         CBnodeTeamAssigned.setDisable(false);
         lName.setDisable(false);
         sName.setDisable(false);
+        nodeID.setDisable(false);
+        xcoord.setDisable(false);
+        ycoord.setDisable(false);
         //turn off advanced options
         //TODO change save, undo, redo disable/renable condition
         tbNodeAdvanced.setDisable(false);
@@ -682,6 +687,9 @@ public class MapBuilderController extends ScreenController {
         CBnodeTeamAssigned.setDisable(true);
         lName.setDisable(true);
         sName.setDisable(true);
+        nodeID.setDisable(true);
+        xcoord.setDisable(true);
+        ycoord.setDisable(true);
         //turn off advanced options
         tbNodeAdvanced.setSelected(false);
         tbNodeAdvanced.setDisable(true);
