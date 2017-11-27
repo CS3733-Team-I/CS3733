@@ -1,8 +1,9 @@
 package utility.request;
 
 public enum RequestType {
+    GENERAL,
     INTERPRETER,
     FOOD,
-    SERUITUY,
+    SECURITY,
     JANITOR
 }

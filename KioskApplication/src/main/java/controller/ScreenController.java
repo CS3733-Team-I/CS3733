@@ -8,6 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 import utility.node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public abstract class ScreenController {
@@ -44,7 +45,7 @@ public abstract class ScreenController {
         return view;
     }
 
-    public abstract void onMapLocationClicked(Point2D location);
+    public abstract void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location);
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);

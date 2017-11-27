@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
 import utility.node.NodeFloor;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 
@@ -133,7 +134,7 @@ public class AdminEdgeController extends ScreenController {
     public void onMapFloorChanged(NodeFloor floor) { }
 
     @Override
-    public void onMapLocationClicked(Point2D location) {
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         // TODO disable location markers
     }
 

@@ -192,9 +192,7 @@ public class MiniMapController extends ScreenController{
     }
 
     @Override
-    public void onMapLocationClicked(Point2D location) {
-
-    }
+    public void onMapLocationClicked(MouseEvent e, Point2D location) { }
     @Override
     public void onMapNodeClicked(Node node){
 

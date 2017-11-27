@@ -2,15 +2,13 @@ package controller;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import entity.Administrator;
-import entity.AdministratorList;
+import entity.LoginEntity;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import utility.ApplicationScreen;
 import utility.KioskPermission;
 
 import java.io.IOException;
@@ -27,13 +25,12 @@ public class LoginController {
     private AnchorPane loginAnchor;
 
     MainWindowController parent;
-    private AdministratorList AdminList;
+    LoginEntity l;
 
-    //To get login info, construct a new Login Controller
+    //To get employee info, construct a new Login Controller
     public LoginController(MainWindowController parent) {
         this.parent = parent;
-        this.AdminList = new AdministratorList();
-        AdminList.addAdministrator(new Administrator("boss@hospital.com", "123"));
+        l= LoginEntity.getInstance();
     }
 
     @FXML
@@ -67,16 +64,11 @@ public class LoginController {
 
     @FXML
     public void OnLoginClicked() throws IOException {
-
-        if(AdminList.isValidLogin(tfEmail.getText(), pfPassword.getText())) {
-            parent.permission = KioskPermission.ADMIN;
-            // TODO replace this
-            // parent.adminWindow.curr_admin_email = tfEmail.getText(); //set the admin email field in AdminWindowController
+        KioskPermission access = l.logIn(tfEmail.getText(),pfPassword.getText());
+        if(access != KioskPermission.NONEMPLOYEE) {
             resetFields();
             parent.closeLoginPopup();
             parent.checkPermissions();
-            parent.currentScreen = ApplicationScreen.MAP_BUILDER;
-//            parent.lbAdminInfo.setText("Logged in as" + tfEmail.getText());
         }
         else {
             errorMsg.setVisible(true);
@@ -85,13 +77,11 @@ public class LoginController {
 
     @FXML
     public void OnBackClicked () throws IOException {
-        //parent.switchToScreen(ApplicationScreen.PATHFINDING);
-        tfEmail.clear();
-        pfPassword.clear();
         resetFields();
         parent.closeLoginPopup();
     }
 
+    //Helper function for resetting the internals of the employee popup
     private void resetFields(){
         tfEmail.clear();
         pfPassword.clear();

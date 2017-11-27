@@ -9,6 +9,9 @@ import entity.MapEntity;
 import entity.Path;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -25,9 +28,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.node.NodeFloor;
+import utility.Display.Node.NodeDisplay;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,9 +57,15 @@ public class MapController {
 
 
     //list of showing nodes or edges
-    private ArrayList<Circle> nodeObjectList;
-    private ArrayList<Line> edgeObjectList;
     //protected  javafx.scene.node heightLightedNode;
+    private ObservableList<database.objects.Node> DatabaseNodeObjectList;
+    private ObservableList<database.objects.Edge> DatabaseEdgeObjectList;
+    private ObservableList<Circle> nodeObjectList;
+    private ObservableList<Line> edgeObjectList;
+    protected ObservableList<database.objects.Node> observableHighlightededSelectedNodes;
+    protected ObservableList<database.objects.Node> observableHighlightededChangedNodes;
+    protected ObservableList<database.objects.Node> observableHighlightededNewNodes;
+    protected ObservableList<database.objects.Edge> observableHighlightedEdges;
 
     private Group zoomGroup;
 
@@ -67,6 +78,17 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+
+        DatabaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
+        DatabaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
+
+        nodeObjectList = FXCollections.<Circle>observableArrayList();
+        edgeObjectList = FXCollections.<Line>observableArrayList();
+
+        observableHighlightededSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightededChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightededNewNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightedEdges = FXCollections.<database.objects.Edge>observableArrayList();
     }
 
     public void setParent(MainWindowController controller)
@@ -74,25 +96,36 @@ public class MapController {
         parent = controller;
     }
 
-    public void highlightNode(database.objects.Node node) {
+    //TODO put this into nodeobjectlist permuted
+    public void HighlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == node.getNodeID()) {
-
+            if(nodeO.getAccessibleText() == targetNode.getNodeID()) {
                 nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setFill(Color.BLUE);
+                switch (nodeDisplay) {
+                    case SELECTED:
+                        nodeO.setFill(Color.BLUE);
+                        break;
+                    case CHANGED:
+                        nodeO.setFill(Color.RED);
+                        break;
+                    case NORMAL:
+                        nodeO.setFill(Color.GRAY);
+                        break;
+                    case SELECTEDANDCHANGED:
+                        nodeO.setFill(Color.PURPLE);
+                        break;
+                    case NEW:
+                        nodeO.setFill(Color.YELLOW);
+                        break;
+                }
                 nodesEdgesPane.getChildren().add(nodeO);
+                return;
             }
         }
-    }
-
-    public void dehighlightNode(database.objects.Node node) {
-        for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == node.getNodeID()) {
-
-                nodesEdgesPane.getChildren().remove(nodeO);
-                nodeO.setFill(Color.GRAY);
-                nodesEdgesPane.getChildren().add(nodeO);
-            }
+        //in case of a new node
+        if(nodeDisplay == NodeDisplay.NEW) {
+            DatabaseNodeObjectList.add(targetNode);
+            HighlightNode(targetNode, NodeDisplay.NEW);
         }
     }
 
@@ -108,44 +141,16 @@ public class MapController {
         reloadDisplay();
     }
 
-    public void drawNodesOnMap(List<Node> nodes) {
-        for (Node n : nodes) {
-            //use a scene shape so that it can be properly highlighted (more interactive)
-            Circle nodeView = new Circle(n.getXcoord(), n.getYcoord(), 14, Color.GRAY);
-            nodeView.setStroke(Color.BLACK);
-            nodeView.setStrokeWidth(3);
-            nodeView.setMouseTransparent(false);
-            nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(n));
-            nodeView.setPickOnBounds(false);
-            nodeView.setAccessibleText(n.getNodeID());
-
-            nodesEdgesPane.getChildren().add(nodeView);
-            nodeObjectList.add(nodeView);
-
-        }
+    protected void drawNodesOnMap(List<database.objects.Node> nodes) {
+        DatabaseNodeObjectList.addAll(nodes);
     }
 
-    public void drawEdgesOnMap(List<Edge> edges) {
-        MapEntity mapEntity = MapEntity.getInstance();
-        nodesEdgesPane.setPickOnBounds(false);
-        for (Edge e : edges) {
-            Node node1 = mapEntity.getNode(e.getNode1ID());
-            Node node2 = mapEntity.getNode(e.getNode2ID());
+    protected void undrawNodeOnMap(database.objects.Node node) {
+        DatabaseNodeObjectList.remove(node);
+    }
 
-            // TODO(jerry) make this more modular, maybe into an FXML file??
-            // TODO(leo) keep this as it is, or it can NOT properly interact with other map modules
-            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-            edgeView.setStroke(Color.PURPLE);
-            edgeView.setStrokeWidth(10);
-            edgeView.setMouseTransparent(false);
-            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(e));
-            edgeView.setPickOnBounds(false);
-            edgeView.setAccessibleText(e.getEdgeID());
-
-            edgeObjectList.add(edgeView);
-            nodesEdgesPane.getChildren().add(edgeView);
-        }
-        //this.nodesEdgesPane.getChildren().add(nodesEdgesPane);
+    protected void drawEdgesOnMap(List<Edge> edges) {
+        DatabaseEdgeObjectList.addAll(edges);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -269,9 +274,6 @@ public class MapController {
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
-        nodeObjectList = new ArrayList<Circle>();
-        edgeObjectList = new ArrayList<Line>();
-
         floorSelector.getItems().addAll(NodeFloor.values());
 
         miniMapController = new MiniMapController(parent, this);
@@ -306,7 +308,7 @@ public class MapController {
         });
         //checkboxes for showing nodes and edges
         /**
-         * Benefit of using listener instead of calling methods to to prevent the checkbox and display state off-sync
+         * sync UI
          */
         showNodesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -315,10 +317,7 @@ public class MapController {
                     drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue()));
                 }
                 else {
-                    for (javafx.scene.Node n : nodeObjectList) {
-                        nodesEdgesPane.getChildren().remove(n);
-                    }
-                    nodeObjectList.clear();
+                    DatabaseNodeObjectList.clear();
                 }
             }
         });
@@ -329,10 +328,109 @@ public class MapController {
                     drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(floorSelector.getValue()));
                 }
                 else {
-                    for (javafx.scene.Node n: edgeObjectList) {
-                        nodesEdgesPane.getChildren().remove(n);
+                    DatabaseEdgeObjectList.clear();
+                }
+            }
+        });
+
+        DatabaseNodeObjectList.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for (database.objects.Node removedDatabaseNode : c.getRemoved()) {
+                            Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
+                            while (nodeObjectIterator.hasNext()) {
+                                Circle circle = nodeObjectIterator.next();
+                                if (removedDatabaseNode.getNodeID().equals(circle.getAccessibleText())) {
+                                    nodeObjectIterator.remove();
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    edgeObjectList.clear();
+                    else if(c.wasAdded()) {
+                        for(database.objects.Node addedDatabaseNode : c.getAddedSubList()) {
+                            Circle nodeView = new Circle(addedDatabaseNode.getXcoord(), addedDatabaseNode.getYcoord(), 14, Color.GRAY);
+                            nodeView.setStroke(Color.BLACK);
+                            nodeView.setStrokeWidth(3);
+                            nodeView.setMouseTransparent(false);
+                            nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
+                            nodeView.setPickOnBounds(false);
+                            nodeView.setAccessibleText(addedDatabaseNode.getNodeID());
+                            nodeObjectList.add(nodeView);
+                        }
+                    }
+                }
+            }
+        });
+        DatabaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
+            @Override
+            public void onChanged(Change<? extends Edge> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Edge removedDatabaseEdge : c.getRemoved()) {
+                            Iterator<Line> edgeObjectIterator = edgeObjectList.iterator();
+                            while (edgeObjectIterator.hasNext()) {
+                                Line line = edgeObjectIterator.next();
+                                if (removedDatabaseEdge.getEdgeID().equals(line.getAccessibleText())) {
+                                    edgeObjectIterator.remove();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(database.objects.Edge addedDatabaseEdge : c.getAddedSubList()) {
+                            MapEntity mapEntity = MapEntity.getInstance();
+                            Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
+                            Node node2 = mapEntity.getNode(addedDatabaseEdge.getNode2ID());
+                            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
+                            edgeView.setStroke(Color.GREY);
+                            edgeView.setStrokeWidth(10);
+                            edgeView.setMouseTransparent(false);
+                            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(addedDatabaseEdge));
+                            edgeView.setPickOnBounds(false);
+                            edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
+                            edgeObjectList.add(edgeView);
+                        }
+                    }
+                }
+            }
+        });
+        //TODO INTEGRATE THIS LISTENER WITH nodesEdgesPane LISTENER
+        nodeObjectList.addListener(new ListChangeListener<Circle>() {
+            @Override
+            public void onChanged(Change<? extends Circle> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(Circle removedCircle : c.getRemoved()) {
+                            nodesEdgesPane.getChildren().remove(removedCircle);
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(Circle addedCircle : c.getAddedSubList()) {
+                            nodesEdgesPane.getChildren().add(addedCircle);
+                        }
+                    }
+                }
+            }
+        });
+
+        edgeObjectList.addListener(new ListChangeListener<Line>() {
+            @Override
+            public void onChanged(Change<? extends Line> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(Line removedLine : c.getRemoved()) {
+                            nodesEdgesPane.getChildren().remove(removedLine);
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(Line addedLine : c.getAddedSubList()) {
+                            nodesEdgesPane.getChildren().add(addedLine);
+                        }
+                    }
                 }
             }
         });
@@ -365,6 +463,88 @@ public class MapController {
                 miniMapController.setNavigationRecHeight((double)newValue);
             }
         });
+        /**
+         * highlight nodes and edges
+         */
+        observableHighlightededSelectedNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                //revert deselected nodes to normal color
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
+                                HighlightNode(deseletedNode, NodeDisplay.NORMAL);
+                            }
+                            else {
+                                HighlightNode(deseletedNode, NodeDisplay.CHANGED);
+                            }
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(database.objects.Node selectedNode : c.getAddedSubList()) {
+                            if(observableHighlightededChangedNodes.contains(selectedNode)){
+                                HighlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            }
+                            else {
+                                HighlightNode(selectedNode, NodeDisplay.SELECTED);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        //TODO
+        observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                while(c.next()) {
+                    if(c.wasAdded()){
+                        for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
+                            if(observableHighlightededSelectedNodes.contains(addedChangedNode)) {
+                                HighlightNode(addedChangedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            }
+                            else {
+                                HighlightNode(addedChangedNode, NodeDisplay.CHANGED);
+                            }
+                        }
+                    }
+                    else if(c.wasRemoved()) {
+                        for(database.objects.Node removedChangedNode : c.getRemoved()) {
+                            if(observableHighlightededSelectedNodes.contains(removedChangedNode)) {
+                                HighlightNode(removedChangedNode, NodeDisplay.SELECTED);
+                            }
+                            else {
+                                HighlightNode(removedChangedNode, NodeDisplay.NORMAL);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        observableHighlightededNewNodes.addListener(new ListChangeListener<Node>() {
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+                //remove unsaved new nodes
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(database.objects.Node deseletedNewNode : c.getRemoved()) {
+                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null) {//the node was saved to database
+                                HighlightNode(deseletedNewNode, NodeDisplay.NORMAL);
+                            }
+                            else {
+                                undrawNodeOnMap(deseletedNewNode);
+                            }
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(database.objects.Node newNode : c.getAddedSubList()) {
+                            HighlightNode(newNode, NodeDisplay.NEW);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @FXML
@@ -381,10 +561,11 @@ public class MapController {
                     parent.onMapNodeClicked(node);
                     return;
                 }
+
             }
 
             // Otherwise return the x,y coordinates
-            parent.onMapLocationClicked(new Point2D(event.getX(), event.getY()));
+            parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
         }
     }
 

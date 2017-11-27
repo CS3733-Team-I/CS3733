@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Administrator;
+import entity.LoginEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import utility.ApplicationScreen;
 import utility.node.NodeFloor;
 import utility.KioskPermission;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -36,10 +38,9 @@ public class MainWindowController {
     //@FXML Label lbAdminInfo;
     //@FXML JFXDrawer Sidebar;
     //@FXML JFXHamburger SidebarHam;
-    Administrator curr_admin;
 
     //will be changed to refer to LoginEntity once completed
-    KioskPermission permission;
+    LoginEntity l;
 
     ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -49,8 +50,8 @@ public class MainWindowController {
     HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
+        l= LoginEntity.getInstance();
         controllers = new HashMap<>();
-
         mapView = new AnchorPane();
     }
 
@@ -60,8 +61,6 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-
-        permission = KioskPermission.NONEMPLOYEE;
 
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
@@ -128,21 +127,20 @@ public class MainWindowController {
 
     //checks permissions of user and adjusts visible tabs and screens
     public void checkPermissions() {
-        switch (permission) {
+        switch (l.getPermission()) {
             case NONEMPLOYEE:
                 switchButton.setText("Staff Login");
                 //hides all but the Map tab from non logged in users
-                tabPane.getTabs().removeAll(tabMap,tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().removeAll(tabPane.getTabs());//TODO: stop this specific line from throwing NullPointerExceptions
                 tabPane.getTabs().add(tabMap);
-                switchToScreen(ApplicationScreen.PATHFINDING);
-                controllers.get(currentScreen).resetScreen();
-                currentScreen = ApplicationScreen.PATHFINDING;
                 mapController.showEdgesBox.setSelected(false);
                 mapController.showNodesBox.setSelected(false);
                 break;
             case EMPLOYEE:
                 switchButton.setText("Logoff");
                 tabPane.getTabs().add(tabRS);
+                break;
+            case SUPER_USER:
             case ADMIN:
                 switchButton.setText("Logoff");
                 //default to showing all nodes and edges
@@ -190,12 +188,6 @@ public class MainWindowController {
 
             controllers.put(screen, controller);
         }
-
-            /*default:
-                mapController.showEdgesBox.setSelected(false);
-                mapController.showNodesBox.setSelected(false);
-                break;
-                */
 
         contentNode = controller.getContentView();
 
@@ -253,12 +245,12 @@ public class MainWindowController {
 
     @FXML
     public void switchButtonClicked() throws IOException {
-        switch (permission) {
+        switch (l.getPermission()) {
+            case SUPER_USER:
             case ADMIN:
             case EMPLOYEE:
-                this.permission=KioskPermission.NONEMPLOYEE;
+                l.logOut();
                 checkPermissions();
-                //this.lbAdminInfo.setText("");
                 break;
             case NONEMPLOYEE:
                 this.openLoginPopup();
@@ -274,8 +266,8 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+        controllers.get(currentScreen).onMapLocationClicked(e, location);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
