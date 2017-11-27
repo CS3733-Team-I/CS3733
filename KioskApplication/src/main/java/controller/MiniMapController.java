@@ -18,8 +18,15 @@ public class MiniMapController {
     @FXML private AnchorPane navigationPane;
     @FXML private Rectangle navigationRec;
 
+    // Width and Height of the Floor Image (px)
     private double imageWidth;
     private double imageHeight;
+
+    // Width and Height of the Map Viewport (px)
+    private double viewportWidth;
+    private double viewportHeight;
+    private double currentScale = 1.0;
+
     private double RAHRatio; //navigation and main map's anchorpane
     private double RAWRatio; //navigation and main map's anchorpane
     private double recXOffset; //navigation X scrollable region offset
@@ -85,35 +92,49 @@ public class MiniMapController {
         RAHRatio = miniMapView.getFitHeight()/imageHeight;
         RAWRatio = miniMapView.getFitWidth()/imageWidth;
     }
+
     /**
      * Set Navigation Rectangle's position
      * Based on viewable region (scrollpane) coordinates
      */
     void setNavigationRecX(double newHValue) {
+        newHValue = clamp(newHValue, 0, 1.0);
+
         navigationRec.setX((newHValue * miniMapView.getFitWidth())*recXOffset);
     }
 
     void setNavigationRecY(double newVValue) {
+        newVValue = clamp(newVValue, 0, 1.0);
+
         navigationRec.setY((newVValue * miniMapView.getFitHeight())*recYOffset);
     }
+
+    public void setViewportWidth(double width) {
+        viewportWidth = width;
+
+        setNavigationRecWidth(viewportWidth / currentScale);
+    }
+
+    public void setViewportHeight(double height) {
+        viewportHeight = height;
+
+        setNavigationRecHeight(viewportHeight / currentScale);
+    }
+
     /**
      * Set Navigation Rectangle's size according to window resize event
      * Width and Height according to the ratio of map image size and viewable region (anchorpane)
      */
     void setNavigationRecWidth(double newWidthValue) {
-        //For reference, do not remove comments
-//        System.out.println("New Width "+ newWidthValue * RAWRatio);
-//        System.out.println("W"+newWValue);
-//        System.out.println("Hratio"+RAHRatio);
+        newWidthValue = clamp(newWidthValue, 0, imageWidth);
+
         navigationRec.setWidth(newWidthValue * RAWRatio);
         recXOffset = (miniMapView.getFitWidth() - navigationRec.getWidth())/(miniMapView.getFitWidth());
     }
 
     void setNavigationRecHeight(double newHeightValue) {
-        //For reference, do not remove comments
-//        System.out.println("New Height "+ newHeightValue * RAHRatio);
-//        System.out.println("Anchor height"+newWValue);
-//        System.out.println("Wratio"+RAWRatio);
+        newHeightValue = clamp(newHeightValue, 0, imageHeight);
+
         navigationRec.setHeight(newHeightValue * RAHRatio);
         recYOffset = (miniMapView.getFitHeight() - navigationRec.getHeight())/(miniMapView.getFitHeight());
     }
@@ -122,15 +143,20 @@ public class MiniMapController {
      * Set Navigation Rectangle's size according to zoom event
      * Width and Height according to the ratio of map image size and viewable region (zoomgroup)
      */
-    //TODO THIS NEEDS A MULTIPLIER TO MAKE IT MORE ACCURATE
-    void NavigationRecZoom(double scaleValue) {
-        navigationRec.setScaleX(1/scaleValue);
-        navigationRec.setScaleY(1/scaleValue);
+    void NavigationRecZoom(double value) {
+        currentScale = value;
+
+        setNavigationRecWidth(viewportWidth / value);
+        setNavigationRecHeight(viewportHeight / value);
     }
 
     @FXML
     protected void changePositionEvent(MouseEvent event) {
         navigationRec.setX(event.getX()-navigationRec.getWidth()/2);
         navigationRec.setY(event.getY()-navigationRec.getHeight()/2);
+    }
+
+    public double clamp(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
     }
 }

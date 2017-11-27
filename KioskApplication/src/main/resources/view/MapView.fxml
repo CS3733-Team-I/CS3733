@@ -6,7 +6,6 @@
 <?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -19,11 +18,7 @@
          <content>
             <StackPane alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
                <children>
-                  <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/03_thethirdfloor.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesPane" prefHeight="200.0" prefWidth="200.0" />
                   <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
                </children>
@@ -51,7 +46,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="2.2" min="0.2" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="1.2" />
+            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="0.001" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="0.5" />
             <JFXButton buttonType="RAISED" onAction="#zoomOutPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />

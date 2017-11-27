@@ -281,9 +281,6 @@ public class MapController {
             System.err.println("Loading MiniMapView failed.");
         }
 
-        zoomSlider.setMin(0.2);
-        zoomSlider.setMax(2.2);
-        zoomSlider.setValue(1.2);
         zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
@@ -451,18 +448,23 @@ public class MapController {
                 miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
             }
         });
+
         //adjust minimap navigationRec's width:height
         container.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecWidth((double)newValue);
+                miniMapController.setViewportWidth((double)newValue);
+
+                calculateMinZoom();
             }
         });
 
         container.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecHeight((double)newValue);
+                miniMapController.setViewportHeight((double)newValue);
+
+                calculateMinZoom();
             }
         });
         /**
@@ -547,6 +549,16 @@ public class MapController {
                 }
             }
         });
+    }
+
+    private void calculateMinZoom() {
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+
+        zoomSlider.setMin(minScrollValue);
+
+        if (zoomSlider.getValue() < minScrollValue) zoomSlider.setValue(minScrollValue);
     }
 
     @FXML
