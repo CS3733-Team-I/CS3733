@@ -23,6 +23,10 @@ public class TestEmployee {
     public void testGetIncorrectPassword(){
         Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxy",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp2 = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        System.out.println(testEmp.getPassword("abcdefghijklmnoppqrstuvwxy").length());
+        System.out.println(testEmp2.getPassword("abcdefghijklmnoppqrstuvwxyz").length());
         //incorrect password
         assertEquals("123",testEmp.getPassword("123"));
     }

@@ -2,11 +2,13 @@ package database.objects;
 
 import utility.KioskPermission;
 import utility.Request.RequestType;
+import org.springframework.security.crypto.bcrypt.*;
 
 public class Employee {
     private String loginID;
     private String userName;
     private String password;
+    private String salt;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
@@ -56,19 +58,13 @@ public class Employee {
 
     // Method to logIn passwords
     public boolean validatePassword(String password){
-        return (this.password.equals(encryptPassword(password)));
+        return (BCrypt.checkpw(password,this.password));
     }
 
     // Method for encrypting passwords, currently does jack shit LOL
     private String encryptPassword(String password){
-        char[] p = password.toCharArray();
-        String encPassword = "";
-        for (char c: p) {
-            int a = (int)c;
-            a++;
-            char o = (char) a;
-            encPassword=encPassword+o;
-        }
+        String salt = BCrypt.gensalt();
+        String encPassword = BCrypt.hashpw(password, salt);
         return encPassword;
     }
 
