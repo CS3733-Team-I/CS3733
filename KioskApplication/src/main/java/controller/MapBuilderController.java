@@ -663,9 +663,9 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void updateNodeID() {
-        int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+        int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + convertFloor(nodeTeamAssigned.toString()));
         // Set the determined nodeID
-        nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + nodeFloor.toString());
+        nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(nodeFloor.toString()));
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
     }
