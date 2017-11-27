@@ -61,7 +61,7 @@ public class Pathfinder {
                 throw new PathfinderException("No defined end node, please define valid end location");
 
             //Now, find the path from the previous waypoint to this one.
-            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
+            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing

@@ -1,6 +1,7 @@
 import com.sun.javafx.css.StyleManager;
 import database.DatabaseController;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
+        SystemSettings.getInstance();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
         primaryStage.setTitle("Iteration 2");
