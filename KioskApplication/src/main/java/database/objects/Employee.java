@@ -8,7 +8,6 @@ public class Employee {
     private String loginID;
     private String userName;
     private String password;
-    private String salt;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
@@ -22,7 +21,7 @@ public class Employee {
             this.password = password;
         }
         else {
-            this.password = encryptPassword(password);
+            this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         }
         if(permission==KioskPermission.NONEMPLOYEE){
             permission=KioskPermission.EMPLOYEE;
@@ -61,18 +60,11 @@ public class Employee {
         return (BCrypt.checkpw(password,this.password));
     }
 
-    // Method for encrypting passwords, currently does jack shit LOL
-    private String encryptPassword(String password){
-        String salt = BCrypt.gensalt();
-        String encPassword = BCrypt.hashpw(password, salt);
-        return encPassword;
-    }
-
     // method to update passwords
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean valid = validatePassword(oldPassword);
         if(valid){
-            password=encryptPassword(newPassword);
+            password=BCrypt.hashpw(newPassword, BCrypt.gensalt());
         }
         return valid;
     }
