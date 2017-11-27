@@ -250,12 +250,14 @@ public class MapController {
     private void setZoom(double scaleValue) {
         double scrollH = scrollPane.getHvalue();
         double scrollV = scrollPane.getVvalue();
+
         zoomGroup.setScaleX(scaleValue);
         zoomGroup.setScaleY(scaleValue);
+
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
+
         miniMapController.NavigationRecZoom(scaleValue);
-        //System.out.println(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {
@@ -600,7 +602,7 @@ public class MapController {
     protected void zoomOutPressed() {
         //System.out.println("Zoom out clicked");
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal + -0.1);
+        zoomSlider.setValue(sliderVal - 0.1);
     }
 
     @FXML

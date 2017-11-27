@@ -99,15 +99,18 @@ public class MiniMapController {
      */
     void setNavigationRecX(double newHValue) {
         newHValue = clamp(newHValue, 0, 1.0);
-
         double newX = (newHValue * miniMapView.getFitWidth())*recXOffset;
+
+        newX = clamp(newX, 0, miniMapView.getFitWidth() - navigationRec.getWidth());
+
         navigationRec.setX(newX);
     }
 
     void setNavigationRecY(double newVValue) {
         newVValue = clamp(newVValue, 0, 1.0);
-
         double newY = (newVValue * miniMapView.getFitHeight())*recYOffset;
+
+        newY = clamp(newY, 0, miniMapView.getFitHeight() - navigationRec.getHeight());
         navigationRec.setY(newY);
     }
 
