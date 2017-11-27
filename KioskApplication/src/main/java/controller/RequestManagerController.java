@@ -52,19 +52,16 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void newRequests(){
-//        completeButton.setText("Assign Selected");
         showRequests(RequestProgressStatus.TO_DO, "Assign");
     }
 
     @FXML
     void inProgressRequests(){
-//        completeButton.setText("Complete Selected");
         showRequests(RequestProgressStatus.IN_PROGRESS, "Complete");
     }
 
     @FXML
     void doneRequests(){
-//        completeButton.setText("Delete Selected");
         showRequests(RequestProgressStatus.DONE, "Delete");
     }
 
