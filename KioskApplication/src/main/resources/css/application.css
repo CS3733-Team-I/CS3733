@@ -82,3 +82,10 @@
 #transparent {
     -fx-background: transparent;
 }
+
+#minimap-viewport {
+    -fx-stroke-width: 2;
+    -fx-stroke: #00589F;
+
+    -fx-fill: transparent;
+}
