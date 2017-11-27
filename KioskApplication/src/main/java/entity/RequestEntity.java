@@ -127,10 +127,10 @@ public class RequestEntity {
         return iR.getRequestID();
     }
 
-    public String submitSecurityRequest(String nodeID, String employee, String note, int priotiry){
-        SecurityRequest sR = new SecurityRequest(nodeID, employee, note, priotiry);
+    public String submitSecurityRequest(String nodeID, String employee, String note, int priority){
+        SecurityRequest sR = new SecurityRequest(nodeID, employee, note, priority);
         securityRequests.putIfAbsent(sR.getNodeID(),sR);
-        dbController.addSecurityRequest(sR);    //TODO: stopped here finish with adding securityRequests
+        dbController.addSecurityRequest(sR);
         return sR.getRequestID();
     }
 
@@ -278,7 +278,7 @@ public class RequestEntity {
 
     public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
-                                         RequestProgressStatus status, int prority){
+                                         RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
         oldReq.setNodeID(nodeID);
         oldReq.setAssigner(assigner);
@@ -287,7 +287,7 @@ public class RequestEntity {
         oldReq.setCompletedTime(completedTime);
         //not sure if editing the status is needed
         oldReq.setStatus(status);
-        oldReq.setPriority(prority);
+        oldReq.setPriority(priority);
         //TODO: figure out how to make update request a generic method
         dbController.updateSecurityRequest(oldReq);
     }
