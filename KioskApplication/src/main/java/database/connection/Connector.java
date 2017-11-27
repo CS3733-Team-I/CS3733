@@ -155,7 +155,7 @@ public class Connector {
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT+REQUEST_INSERT);
         pstmt.setString(1, iR.getRequestID());
         pstmt.setString(2, iR.getNodeID());
         pstmt.setString(3, iR.getAssigner());
@@ -168,7 +168,7 @@ public class Connector {
     }
 
     public static int updateInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        String sql = INTERPRETER_UPDATE;
+        String sql = INTERPRETER_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, iR.getNodeID());
         pstmt.setString(2, iR.getAssigner());
@@ -195,8 +195,10 @@ public class Connector {
                 requestID,
                 rs.getString("nodeID"),
                 rs.getString("assigner"),
+                rs.getString("completer"),
                 rs.getString("note"),
                 rs.getTimestamp("submittedTime"),
+                rs.getTimestamp("startedTime"),
                 rs.getTimestamp("completedTime"),
                 RequestProgressStatus.values()[rs.getInt("status")],
                 Language.values()[rs.getInt("language")]);
@@ -223,8 +225,10 @@ public class Connector {
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
                     rs.getString("assigner"),
+                    rs.getString("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     Language.values()[rs.getInt("language")]);
@@ -236,20 +240,20 @@ public class Connector {
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertSecurity(Connection conn, SecurityRequest sR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(SECURITY_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(SECURITY_INSERT+REQUEST_INSERT);
         pstmt.setString(1, sR.getRequestID());
-        pstmt.setString(2, sR.getNodeID());
-        pstmt.setString(3, sR.getAssigner());
-        pstmt.setString(4, sR.getNote());
-        pstmt.setTimestamp(5, sR.getSubmittedTime());
-        pstmt.setTimestamp(6, sR.getCompletedTime());
-        pstmt.setInt(7, sR.getStatus().ordinal());
-        pstmt.setInt(8, sR.getPriority());
+        pstmt.setString(3, sR.getNodeID());
+        pstmt.setString(4, sR.getAssigner());
+        pstmt.setString(5, sR.getNote());
+        pstmt.setTimestamp(6, sR.getSubmittedTime());
+        pstmt.setTimestamp(7, sR.getCompletedTime());
+        pstmt.setInt(8, sR.getStatus().ordinal());
+        pstmt.setInt(2, sR.getPriority());
         return pstmt.executeUpdate();
     }
 
     public static int updateSecurity(Connection conn, SecurityRequest sR) throws SQLException {
-        String sql = SECURITY_UPDATE;
+        String sql = SECURITY_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, sR.getNodeID());
         pstmt.setString(2, sR.getAssigner());
@@ -276,8 +280,10 @@ public class Connector {
                     requestID,
                     rs.getString("nodeID"),
                     rs.getString("assigner"),
+                    rs.getString("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     rs.getInt("priority"));
@@ -304,8 +310,10 @@ public class Connector {
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
                     rs.getString("assigner"),
+                    rs.getString("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     rs.getInt("priority"));

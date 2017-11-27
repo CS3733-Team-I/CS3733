@@ -118,7 +118,7 @@ public class RequestSubmitterController extends ScreenController {
         String assigner = l.getUserName();
         String notes = intNotesArea.getText();
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        r.submitInterpreterRequest(location, assigner, notes, language);
+        r.submitInterpreterRequest(location, l.getUserName(), notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
         intLocation.clear();
         intNotesArea.clear();

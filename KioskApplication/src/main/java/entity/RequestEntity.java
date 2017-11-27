@@ -1,5 +1,6 @@
 package entity;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
@@ -120,31 +121,33 @@ public class RequestEntity {
         return toDoRequests;
     }
 
-    private void addInterpreterRequest(InterpreterRequest iR){
-        String rID = iR.getRequestID();
+    public String submitInterpreterRequest(String nodeID, String assignee, String note,
+                                           Language lang){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Int"+currTime;
+        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignee, "", note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         interpreterRequests.put(rID, iR);
-    }
-
-    private void addSecurityRequest(SecurityRequest securityRequest){
-        String rID = securityRequest.getRequestID();
-        securityRequests.put(rID, securityRequest);
-    }
-
-
-    //Each type of Request has its own table in the database
-    //TODO: incorporate search class into application so that nodeID can become location
-    public String submitInterpreterRequest(String nodeID, String employee, String note, Language language){
-        InterpreterRequest iR = new InterpreterRequest(nodeID, employee, note, language);
-        interpreterRequests.putIfAbsent(iR.getRequestID(),iR);
         dbController.addInterpreterRequest(iR);
-        return iR.getRequestID();
+        return rID;
     }
 
-    public String submitSecurityRequest(String nodeID, String employee, String note, int priority){
-        SecurityRequest sR = new SecurityRequest(nodeID, employee, note, priority);
-        securityRequests.putIfAbsent(sR.getNodeID(),sR);
+
+    public String submitSecurityRequest(String nodeID, String assignee, String note,
+                                        int priority){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Sec"+currTime;
+        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignee, "", note,
+                submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
+        securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
-        return sR.getRequestID();
+        return rID;
     }
 
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{

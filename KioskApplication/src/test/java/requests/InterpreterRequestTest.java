@@ -18,49 +18,35 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static utility.Request.RequestProgressStatus.DONE;
+import static utility.Request.RequestProgressStatus.IN_PROGRESS;
+import static utility.Request.RequestProgressStatus.TO_DO;
 
 public class InterpreterRequestTest {
 
     @Test
-    public void testDefaultStatus(){
-        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        assertEquals(RequestProgressStatus.TO_DO,iR1.getStatus());
-    }
-
-    @Test
-    public void testIDGenerationHeader(){
-        InterpreterRequest iR = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        assertEquals("Int",iR.getRequestID().substring(0,3));
-    }
-
-    @Test
-    public void testIDGenerationTimeDifference(){
-        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        try
-        {
-            Thread.sleep(1000);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
-        InterpreterRequest iR2 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        assertNotEquals(iR1.getRequestID(),iR2.getRequestID());
-    }
-
-    @Test
-    public void testIDGenerationSizeLimit(){
-        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        assertEquals(36, iR1.getRequestID().length());
+    public void testMarkInProgress(){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc","nurse","",
+                "note",submittedTime, startedTime, completedTime, TO_DO, Language.ARABIC);
+        assertTrue(iR1.markInProgress("emp"));
+        assertEquals(IN_PROGRESS, iR1.getStatus());
+        assertEquals("emp", iR1.getCompleter());
     }
 
     @Test
     public void testComplete(){
-        InterpreterRequest iR1 = new InterpreterRequest("currentloc","nurse","", Language.ARABIC);
-        long t = iR1.getCompletedTime().getTime();
-        iR1.complete();
-        assertEquals(RequestProgressStatus.DONE,iR1.getStatus());
-        assertTrue(t<iR1.getCompletedTime().getTime());
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc","nurse","",
+                "note",submittedTime, startedTime, completedTime, TO_DO, Language.ARABIC);
+        iR1.markInProgress("emp");
+        assertTrue(iR1.complete());
+        assertEquals(DONE, iR1.getStatus());
     }
-
 }
