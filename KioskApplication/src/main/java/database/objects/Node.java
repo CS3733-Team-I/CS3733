@@ -136,7 +136,12 @@ public class Node {
         this.teamAssigned = teamAssigned;
     }
 
-    public String getNodeID() {
+    public String getNodeID()
+    {
         return nodeID;
+    }
+
+    public void setNodeID(String nodeID) {
+        this.nodeID = nodeID;
     }
 }

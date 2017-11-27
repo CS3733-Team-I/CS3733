@@ -200,7 +200,9 @@ public class MapBuilderController extends ScreenController {
                 updateNodeID();
                 if(!CBnodeType.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
+                        System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
                         observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
+                        System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
                     }
                     for(database.objects.Node changedTypeNode : observableSelectedNodes) {
                         if(observableChangedNodes.contains(changedTypeNode)) {
@@ -312,6 +314,31 @@ public class MapBuilderController extends ScreenController {
                         else {
                             changedSNameNode.setShortName(sName.getText());
                             observableChangedNodes.add(changedSNameNode);
+                        }
+                    }
+                }
+            }
+        });
+        nodeID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("1. Begin Updating node ID");
+                if(!nodeID.isDisabled()) {
+                    System.out.println("2. Actually Updating node ID");
+                    if(!observableNewNodes.isEmpty()) {
+                        observableNewNodes.get(0).setNodeID(nodeID.getText());
+                    }
+                    for(database.objects.Node changedIDNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedIDNode)) {
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedIDNode.getNodeID()) {
+                                    changingNode.setNodeID(nodeID.getText());
+                                }
+                            }
+                        }
+                        else {
+                            changedIDNode.setNodeID(nodeID.getText());
+                            observableChangedNodes.add(changedIDNode);
                         }
                     }
                 }
@@ -706,13 +733,14 @@ public class MapBuilderController extends ScreenController {
             if(newNode.getNodeType() == NodeType.TEMP) { //no type of temp is allowed to save
                 nodeDialogString += "Node Type cannot be TEMP," + "Node ID: " + newNode.getNodeID() + "\n";
                 System.out.println(nodeDialogString);
-                //TODO FIX DIALOG DISPLAY
                 loadDialog(event);
                 nodeDialogString = "";
                 return;
             }
             else if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
                 try {
+                    System.out.println("In saving NodeType: " + newNode.getNodeType());
+                    System.out.println("In saving NodeID: " + newNode.getNodeID());
                     MapEntity.getInstance().addNode(newNode);
                     nodeDialogString += "Node ID: " + newNode.getNodeID() + " saved.\n";
                 } catch (DatabaseException ex) {
