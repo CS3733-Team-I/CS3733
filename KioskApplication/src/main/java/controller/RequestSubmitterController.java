@@ -10,6 +10,7 @@ import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +19,11 @@ import utility.Request.Language;
 import utility.Node.NodeFloor;
 import utility.Request.RequestType;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -117,6 +120,9 @@ public class RequestSubmitterController extends ScreenController {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
+        intLocation.clear();
+        intNotesArea.clear();
+        langMenu.setValue("");
     }
 
     @FXML
@@ -129,11 +135,13 @@ public class RequestSubmitterController extends ScreenController {
         String location = secLocationField.getText();
         String assigner = l.getUserName();
         String notes = secNoteField.getText();
-        int priority = 0;
-        priority = Integer.parseInt(priorityMenu.getValue().toString());
+        int priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
         //node ID, employee, notes, priority
         r.submitSecurityRequest(location, assigner, notes, priority);
+        secLocationField.clear();
+        secNoteField.clear();
+        priorityMenu.setValue("");
     }
 
     @FXML
