@@ -16,17 +16,12 @@ public class BreadthFirst implements SearchAlgorithm{
      * @return LinkedList<Edge> a linked list of edges
      * @throws PathfinderException if there are errors
      */
-    //TODO this does not work yet will work on soon
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{
             MapEntity map = MapEntity.getInstance();
 
             StartNode startingNode = new StartNode(startNode);
             PathfinderNode endingNode = new PathfinderNode(endNode);
-
-        //Next, get a list of all the nodes in the area you want to search (in this case, the whole map).
-        //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
-        //LinkedList<Node> allNodes = map.getAllNodes();
 
         if(startingNode.getNode().getNodeID().equals(endNode.getNodeID())){
             endingNode.setParentNode(startingNode);

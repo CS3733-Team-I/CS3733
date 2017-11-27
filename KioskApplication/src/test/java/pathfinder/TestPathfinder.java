@@ -341,16 +341,12 @@ public class TestPathfinder {
     }
 
      //TODO  write test for exceptions
-     @Test
-    public void testPathfinderException(){
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        try{
-        Path path = breadth.generatePath(n02, n08);}
-        catch(PathfinderException e){
-            System.out.println(e.getMessage());
-        }
+     @Test (expected = PathfinderException.class)
+    public void testPathfinderException() throws PathfinderException{
+        //test that the exception is thrown when there is a path but no connection
+             SearchAlgorithm alg = new BreadthFirst();
+             alg.findPath(n02,n18);
     }
 
-
-    //TODO tests
+    //TODO multable waypoints tests
 }
