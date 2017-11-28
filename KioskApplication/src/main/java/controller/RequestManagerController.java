@@ -218,17 +218,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showReports() throws IOException{
-        RequestTrackingDataController test = new RequestTrackingDataController(this,r.getLanguageFrequency());
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TESTViewInterpreterRequestLangHistogram.fxml"));
-        loader.setController(test);
-        Node view = loader.load();
-        BorderPane histogram = new BorderPane();
-
-        AnchorPane.setTopAnchor(histogram, 0.0);
-        AnchorPane.setLeftAnchor(histogram, 0.0);
-        AnchorPane.setBottomAnchor(histogram, 0.0);
-        AnchorPane.setRightAnchor(histogram, 0.0);
-        histogram.setCenter(view);
+        getParent().openRequestTrackingTable();
     }
 
     @Override

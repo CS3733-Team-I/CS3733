@@ -138,7 +138,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addSecRequest()throws IOException {
         String location = secLocationField.getText();
-        String assigner = l.getUserName();
+        String assigner = l.getUserID();
         String notes = secNoteField.getText();
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);

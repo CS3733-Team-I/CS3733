@@ -395,14 +395,18 @@ public class RequestEntity {
 
     // gives a frequency histogram for interpreter request languages
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
+        dbController.getAllInterpreterRequests();
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
-            LanguageFrequency currLang = new LanguageFrequency(iR.getLanguage());
-            if(freq.contains(currLang)){
-                freq.get(freq.indexOf(currLang)).increment();
-            }
-            else{
-                freq.add(currLang);
+            //search output list
+            for (int i = 0; i < freq.size(); i++) {
+                if(freq.get(i).isLanguage(iR.getLanguage())){
+                    freq.get(i).increment();
+                }
+                else {
+                    freq.add(new LanguageFrequency(iR.getLanguage()));
+                }
+
             }
         }
         return freq;

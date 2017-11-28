@@ -23,8 +23,6 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE," +
             " assigner VARCHAR(63) NOT NULL REFERENCES t_employee on DELETE CASCADE," +
             " completer VARCHAR(63) NOT NULL,"+
             " note CLOB(280)," +
@@ -33,22 +31,25 @@ public class SQLStrings {
             " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL)";
 
-    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?, ?)";
     public static final String REQUEST_UPDATE =
             " nodeID=?," +
             " assigner=?," +
+            " completer=?,"+
             " note=?,"+
             " submittedTime=?,"+
             " startedTime=?,"+
             " completedTime=?,"+
-            " status=?,"+
+            " status=?"+
             " where requestID=?";
 
     public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters("+
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,"+
-            " language INT NOT NULL,";
+            " language INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
+            " REFERENCES t_nodes ON DELETE CASCADE,";
 
-    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?,";
     public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
             " language=?,";
     public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
@@ -57,9 +58,11 @@ public class SQLStrings {
 
     public static final String CREATE_SECURITY_TABLE = "create table t_security("+
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
-            " priority INT NOT NULL,";
+            " priority INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk3" +
+            " REFERENCES t_nodes ON DELETE CASCADE,";
 
-    public static final String SECURITY_INSERT = "insert into t_security values(?, ?,";
+    public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?,";
     public static final String SECURITY_UPDATE = "update t_security set" +
             " priority=?,";
     public static final String SECURITY_SELECT = "select * from t_security where requestID=?";

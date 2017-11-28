@@ -62,9 +62,9 @@ public class DBUtil {
     public static void dropAllTables(Connection conn) {
         String drop1 = DROP_EDGE_TABLE;
         String drop2 = DROP_INTERPRETER_TABLE;
+        String dropSecReq = DROP_SECURITY_TABLE;
         String drop3 = DROP_NODE_TABLE;
         String drop4 = DROP_EMPLOYEE_TABLE;
-        String dropSecReq = DROP_SECURITY_TABLE;
 
         PreparedStatement preparedStatement1 = null;
         try {
@@ -78,6 +78,14 @@ public class DBUtil {
         try {
             preparedStatement2 = conn.prepareStatement(drop2);
             preparedStatement2.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        PreparedStatement preparedStatement5 = null;
+        try {
+            preparedStatement5 = conn.prepareStatement(dropSecReq);
+            preparedStatement5.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -98,12 +106,5 @@ public class DBUtil {
             e.printStackTrace();
         }
 
-        PreparedStatement preparedStatement5 = null;
-        try {
-            preparedStatement5 = conn.prepareStatement(dropSecReq);
-            preparedStatement5.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

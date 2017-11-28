@@ -9,7 +9,7 @@ public class LanguageFrequency {
 
     public LanguageFrequency(Language language){
         this.language=language;
-        this.frequency=0;
+        this.frequency=1;
     }
 
     public void increment(){

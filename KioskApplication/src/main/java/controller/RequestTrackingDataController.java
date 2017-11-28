@@ -6,19 +6,35 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import utility.Request.LanguageFrequency;
 
-import java.util.LinkedList;
-
 public class RequestTrackingDataController {
-    @FXML
-    BarChart LanguageHistogram;
+    @FXML BarChart<String, Integer> langFreqBC;
     RequestEntity r;
+    MainWindowController parent;
 
-    public RequestTrackingDataController(ScreenController parent, LinkedList<LanguageFrequency> lHData){
+    public RequestTrackingDataController(MainWindowController parent){
+        this.parent=parent;
         r=RequestEntity.getInstance();
-        XYChart.Series s = new XYChart.Series();
-        for (LanguageFrequency lF: lHData
-             ) {
+    }
+
+    @FXML
+    public void initialize(){
+    }
+
+    public void refreshTable(){
+        System.out.println("refreshing table");
+        XYChart.Series s = new XYChart.Series<String,Integer>();
+        s.setName("Languages");
+        for (LanguageFrequency lF: r.getLanguageFrequency()) {
             s.getData().add(new XYChart.Data(lF.getLanguage().toString(), lF.getFrequency()));
         }
+        if(langFreqBC.getData().size()!=0) {
+            langFreqBC.getData().clear();
+        }
+        langFreqBC.getData().add(s);
+        System.out.println("done");
+    }
+
+    public void closePanel(){
+        parent.closeRequestTrackingTable();
     }
 }

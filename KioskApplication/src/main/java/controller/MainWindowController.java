@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.Administrator;
 import entity.LoginEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,10 +14,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
-import utility.KioskPermission;
 import utility.Node.NodeFloor;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -27,6 +24,7 @@ public class MainWindowController {
     @FXML AnchorPane contentWindow;
     javafx.scene.Node contentNode;
     @FXML BorderPane loginPopup;
+    @FXML BorderPane histogram;
     @FXML JFXButton switchButton;
 
     @FXML JFXTabPane tabPane;
@@ -104,8 +102,25 @@ public class MainWindowController {
         //hides the popup
         loginPopup.setVisible(false);
 
-        checkPermissions();
 
+        /**
+         * I'm really sorry about making more of a mess here on initialization
+         * There's got to be a cleaner way to initialize everything
+         */
+        RequestTrackingDataController reqTDCont = new RequestTrackingDataController(this);
+        FXMLLoader reqTrackingLoader = new FXMLLoader(getClass().getResource("/view/RequestTrackingDataView.fxml"));
+        reqTrackingLoader.setController(reqTDCont);
+        javafx.scene.Node reqTrackingView = reqTrackingLoader.load();
+        this.histogram = new BorderPane();
+
+        AnchorPane.setTopAnchor(histogram, 0.0);
+        AnchorPane.setLeftAnchor(histogram, 0.0);
+        AnchorPane.setBottomAnchor(histogram, 0.0);
+        AnchorPane.setRightAnchor(histogram, 0.0);
+        histogram.setCenter(reqTrackingView);
+        histogram.setVisible(true);
+
+        checkPermissions();
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
         //Initialize Hamburger
 //        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
@@ -123,6 +138,24 @@ public class MainWindowController {
 //                Sidebar.open();
 //            }
 //        });
+    }
+
+    public void closeRequestTrackingTable(){
+        histogram.setVisible(false);
+        this.switchButton.setDisable(false);
+        this.tabPane.setDisable(false);
+        this.tabRM.setDisable(false);
+        this.contentNode.setDisable(false);
+        this.mapView.setDisable(false);
+    }
+
+    public void openRequestTrackingTable(){
+        histogram.setVisible(true);
+        this.switchButton.setDisable(true);
+        this.tabPane.setDisable(true);
+        this.tabRM.setDisable(true);
+        this.contentNode.setDisable(true);
+        this.mapView.setDisable(true);
     }
 
     //checks permissions of user and adjusts visible tabs and screens
@@ -196,6 +229,7 @@ public class MainWindowController {
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(loginPopup);
         contentWindow.getChildren().add(contentNode);
+        contentWindow.getChildren().add(histogram);
 
         // Fit sidebar to window
         AnchorPane.setTopAnchor(contentNode, 0.0);
@@ -256,6 +290,10 @@ public class MainWindowController {
                 this.openLoginPopup();
                 break;
         }
+    }
+
+    public void displayTrackingData(){
+
     }
 
     public void onMapNodeClicked(Node n) {
