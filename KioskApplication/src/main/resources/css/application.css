@@ -13,12 +13,14 @@
     -fx-color-label-visible: #00589F;
     -fx-background-color: #F0F1EC;
     -fx-background-radius: 0;
+    -fx-font-size: 16;
 }
 
 .request-manager-button-2 {
     -fx-color-label-visible: #00589F;
     -fx-background-color: #DDDED0;
     -fx-background-radius: 0;
+    -fx-font-size: 16;
 }
 
 /* TAB PANE STYLES */

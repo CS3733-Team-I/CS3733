@@ -62,6 +62,26 @@ public abstract class Request {
         }
     }
 
+    //Returns time from TO_DO to IN_PROGRESS
+    public long travelTime(){
+        if(status!=RequestProgressStatus.TO_DO){
+            return (this.startedTime.getTime()-this.submittedTime.getTime());
+        }
+        else{
+            return 0;
+        }
+    }
+
+    //returns time from IN_PROGRESS to DONE
+    public long timeToComplete(){
+        if(status==RequestProgressStatus.DONE){
+            return this.completedTime.getTime()-this.startedTime.getTime();
+        }
+        else{
+            return 0;
+        }
+    }
+
         //Getters for testing
     public String getRequestID() {
         return requestID;
