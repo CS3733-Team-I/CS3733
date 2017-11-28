@@ -43,7 +43,6 @@ public class MapBuilderController extends ScreenController {
      */
     Node heightLightedNode;
     //default, nodeFloor is in sync with main map
-    NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeType nodeType = NodeType.TEMP;
     NodeBuilding nodeBuilding = NodeBuilding.FRANCIS15;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
@@ -94,8 +93,6 @@ public class MapBuilderController extends ScreenController {
     /**
      * Edges related fields
      */
-    private Tab edgeTab;
-    private Tab databaseTab;
 
     /**
      * Selected List
@@ -148,14 +145,13 @@ public class MapBuilderController extends ScreenController {
         nodeAdvanced.setVisible(false);
 
         //update floor based on the floor selector
-        nodeFloor = mapController.getCurrentFloor();
+
 
         //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETELY
         mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
-                nodeFloor = mapController.getCurrentFloor();
-                //updateNodeID();
+                updateNodeID();
                 //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
             }
         });
@@ -416,7 +412,6 @@ public class MapBuilderController extends ScreenController {
         });
 
         //set node fields to default
-        setNodeFieldToDefault();
     }
 
     @Override
@@ -442,11 +437,9 @@ public class MapBuilderController extends ScreenController {
             mapController.observableHighlightedSelectedNodes.clear();
             observableSelectedNodes.clear();
 
-            //update Node ID
-            setNodeFieldToDefault();
-
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
-                    mapController.floorSelector.getValue(), CBnodeBuilding.getValue(), CBnodeType.getValue(), lName.getText(), sName.getText(), CBnodeTeamAssigned.getValue().toString());
+                    mapController.floorSelector.getValue(), NodeBuilding.FRANCIS15, NodeType.TEMP, lName.getText(), sName.getText(), TeamAssigned.I.toString());
+
             mapController.isNodeAdded = false;
             mapController.observableHighlightedNewNodes.clear();
             mapController.observableHighlightedNewNodes.add(newNode);
@@ -468,26 +461,24 @@ public class MapBuilderController extends ScreenController {
             return;
         }
         else {
-            System.out.println("selected new node");
             //remove unsaved new node, if any
             mapController.isNodeAdded = false;
             mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
 
-            if(!mapController.observableHighlightedSelectedNodes.isEmpty()){
-                System.out.println("clearing selected node");
-                mapController.observableHighlightedSelectedNodes.clear();
+            //add new node to selected node list
+            //TODO MAKE THIS AN EXCEPTION
+            if(mapController.observableHighlightedSelectedNodes.size() > 2) {
+                System.out.println("observableHighlightedSelectedNodes size greater than 2, Problematic!");
             }
+            mapController.observableHighlightedSelectedNodes.clear();
             mapController.observableHighlightedSelectedNodes.add(node);
 
-            if(!observableSelectedNodes.isEmpty()) {
-                observableSelectedNodes.clear();
+            if(observableSelectedNodes.size() > 2) {
+                System.out.println("observableSelectedNodes size greater than 2, Problematic!");
             }
+            observableSelectedNodes.clear();
             observableSelectedNodes.add(node);
-
-            //switch to node tab
-            selectionModel.select(0);
-            //fill in node fields in done in observable list listener
         }
 
     }
@@ -505,9 +496,6 @@ public class MapBuilderController extends ScreenController {
 
         observableSelectedEdges.clear();
         observableSelectedEdges.add(edge);
-
-        //switch to edge tab
-        selectionModel.select(1);
     }
 
     @Override
@@ -516,7 +504,7 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0, 350, 0, 0);
+        getMapController().setAnchor(0, 400, 0, 0);
     }
 
 
@@ -602,26 +590,8 @@ public class MapBuilderController extends ScreenController {
                 }
                 break;
         }
+        updateNodeID();
         setNodeFieldEnable();
-    }
-
-    public String getFloorTxt(){
-        switch(nodeFloor.ordinal()){
-            case 0:
-                return ("L2");
-            case 1:
-                return ("L1");
-            case 2:
-                return ("0G");
-            case 3:
-                return ("01");
-            case 4:
-                return ("02");
-            case 5:
-                return ("03");
-            default:
-                return ("00");
-        }
     }
 
     public String convertFloor(String eString){
@@ -654,21 +624,15 @@ public class MapBuilderController extends ScreenController {
 
     private void updateNodeID() {
         if(nodeType == NodeType.ELEV) {
-            String elevTypeCount = MapEntity.getInstance().getElevCount(nodeFloor, "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(nodeFloor.toString()));
+            String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
         }
         else {
-            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(nodeFloor.toString()));
+            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(mapController.floorSelector.getValue().toString()));
         }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
-    }
-
-    private void setNodeFieldToDefault() {
-        CBnodeBuilding.setValue(NodeBuilding.FRANCIS15);
-        CBnodeType.setValue(NodeType.TEMP);
-        CBnodeTeamAssigned.setValue(TeamAssigned.I);
     }
 
     private void setNodeFieldEnable() {
