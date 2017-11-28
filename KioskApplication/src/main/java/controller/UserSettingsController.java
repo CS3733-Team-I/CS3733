@@ -37,6 +37,8 @@ public class UserSettingsController {
 
     @FXML private BorderPane userEditorPane;
 
+    Employee selectedEmployee;
+
     @FXML
     void initialize() {
         userEditorPane.setVisible(false);
@@ -71,9 +73,11 @@ public class UserSettingsController {
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
-        usersList.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
+        usersList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             editUserButton.setDisable(false);
             deleteUserButton.setDisable(false);
+
+            selectedEmployee = newValue.getValue();
         });
 
         refreshUsers();
