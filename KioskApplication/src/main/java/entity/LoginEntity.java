@@ -51,7 +51,7 @@ public class LoginEntity {
             readAllFromDatabase();
             if(dbC.getAllEmployees().size()==0) {
                 // if there are no employees in the database, start as a super user
-                permission = ADMIN;
+                permission = SUPER_USER;
             }
             else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
