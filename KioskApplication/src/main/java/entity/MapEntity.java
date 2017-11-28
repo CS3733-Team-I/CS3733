@@ -135,6 +135,19 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+    public String getElevCount(NodeFloor floor, String teamAssigned){
+        int count = 0;
+        try{
+            count = dbController.getNodeTypeCount(NodeType.ELEV, floor, teamAssigned);
+            if(count <= 26) {
+                return "00" + (count + "A");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "EXC";
+    }
+
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
         ArrayList<Edge> edgesOnFloor = new ArrayList<>();

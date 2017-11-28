@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import utility.Display.Node.NodeDisplay;
+import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
@@ -102,8 +102,9 @@ public class MapController {
     public void highlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
             System.out.println("1. enters HighlightNode, NodeID: " + targetNode.getNodeID());
-            if(targetNode.checkXYcoor(nodeO.getAccessibleText())) {
-                System.out.println("2. HighlightNode: if == true");
+            if(targetNode.getXyz().equals((nodeO.getAccessibleText()))) {
+
+                System.out.println("HighlightNode: ");
                 nodesEdgesPane.getChildren().remove(nodeO);
                 switch (nodeDisplay) {
                     case SELECTED:
@@ -364,7 +365,7 @@ public class MapController {
                             nodeView.setMouseTransparent(false);
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
-                            nodeView.setAccessibleText(Integer.toString(addedDatabaseNode.getXcoord()) + Integer.toString(addedDatabaseNode.getYcoord()));
+                            nodeView.setAccessibleText(Integer.toString(addedDatabaseNode.getXcoord()) + Integer.toString(addedDatabaseNode.getYcoord()) + addedDatabaseNode.getFloor().toString());
                             nodeObjectList.add(nodeView);
                         }
                     }

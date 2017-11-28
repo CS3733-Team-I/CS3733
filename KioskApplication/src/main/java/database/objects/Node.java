@@ -1,10 +1,12 @@
 package database.objects;
 
+import javafx.beans.Observable;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
 public class Node {
+
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -14,6 +16,7 @@ public class Node {
     private String longName;
     private String shortName;
     private String teamAssigned;
+    private static String xyz;
 
     public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
                 String longName, String shortName, String teamAssigned) {
@@ -26,6 +29,7 @@ public class Node {
         this.longName = longName;
         this.shortName = shortName;
         this.teamAssigned = teamAssigned;
+        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     public Node(String nodeID) {
@@ -38,6 +42,7 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
+        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     public Node(String nodeID, NodeFloor floor) {
@@ -50,6 +55,7 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
+        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     @Override
@@ -144,7 +150,7 @@ public class Node {
     public void setNodeID(String nodeID) {
         this.nodeID = nodeID;
     }
-    public boolean checkXYcoor(String xyConcatenation){
-        return (xyConcatenation.equals(Integer.toString(xcoord)+ Integer.toString(ycoord)));
+    public String getXyz() {
+        return xyz;
     }
 }

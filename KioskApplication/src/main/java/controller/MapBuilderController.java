@@ -24,7 +24,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import utility.Display.Node.NodeDisplay;
+import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -126,27 +126,12 @@ public class MapBuilderController extends ScreenController {
         sNameValidator.setMessage("Short Name Required");
 
         //disable all fields
-        CBnodeType.setDisable(true);
-        CBnodeBuilding.setDisable(true);
-        CBnodeTeamAssigned.setDisable(true);
-        lName.setDisable(true);
-        sName.setDisable(true);
-        nodeID.setDisable(true);
-        xcoord.setDisable(true);
-        ycoord.setDisable(true);
-        tbNodeAdvanced.setSelected(false);
-        tbNodeAdvanced.setDisable(true);
-        btNodeSave.setDisable(true);
-        btNodeUndo.setDisable(true);
-        btNodeRedo.setDisable(true);
-        btNodeDelete.setDisable(true);
+        setNodeAllDisable();
 
         //add items into the combobox
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
-        CBElevType.getItems().addAll("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
-        CBElevType.setVisible(false);
 
         Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
         ImageView infoIconView = new ImageView(infoIcon);
@@ -229,37 +214,7 @@ public class MapBuilderController extends ScreenController {
                 }
             }
         });
-        CBElevType.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!CBnodeType.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        observableNewNodes.get(0).setNodeType(CBElevType.getValue());
-                        //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedTypeNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedTypeNode)) {
-                            System.out.println("update changes in changed node");
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getNodeID() == changedTypeNode.getNodeID()) {
-                                    changingNode.setNodeType(CBnodeType.getValue());
-                                    updateNodeID();
-                                }
-                            }
-                        }
-                        else {
-                            System.out.println("");
-                            changedTypeNode.setNodeType(CBnodeType.getValue());
-                            observableChangedNodes.add(changedTypeNode); //current selected node is changed
-                            updateNodeID();
-                        }
-                    }
-                }
-            }
-        });
+
         CBnodeBuilding.valueProperty().addListener(new ChangeListener<NodeBuilding>() {
             @Override
             public void changed(ObservableValue<? extends NodeBuilding> observable, NodeBuilding oldValue, NodeBuilding newValue) {
@@ -698,9 +653,14 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void updateNodeID() {
-        int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + convertFloor(nodeTeamAssigned.toString()));
-        // Set the determined nodeID
-        nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(nodeFloor.toString()));
+        if(nodeType == NodeType.ELEV) {
+            String elevTypeCount = MapEntity.getInstance().getElevCount(nodeFloor, "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(nodeFloor.toString()));
+        }
+        else {
+            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(nodeFloor.toString()));
+        }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
     }
@@ -715,6 +675,7 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.setDisable(false);
         CBnodeBuilding.setDisable(false);
         CBnodeTeamAssigned.setDisable(false);
+        CBElevType.setDisable(false);
         lName.setDisable(false);
         sName.setDisable(false);
         nodeID.setDisable(false);
@@ -731,6 +692,7 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.setDisable(true);
         CBnodeBuilding.setDisable(true);
         CBnodeTeamAssigned.setDisable(true);
+        CBElevType.setDisable(true);
         lName.setDisable(true);
         sName.setDisable(true);
         nodeID.setDisable(true);
@@ -821,7 +783,6 @@ public class MapBuilderController extends ScreenController {
         observableNewNodes.clear();
 
         for(database.objects.Node changedNode : observableChangedNodes) {
-            if(MapEntity.getInstance().getNode(changedNode.getNodeID()) != null) {
                 try {
                     MapEntity.getInstance().editNode(changedNode);
                     nodeDialogString += "Node ID " + changedNode.getNodeID() + " edited.\n";
@@ -834,13 +795,6 @@ public class MapBuilderController extends ScreenController {
 
                     nodeDialogString += "ERROR: Node " + changedNode.getNodeID() + " was not edited to database.\n";
                 }
-            } else {
-                nodeDialogString += "Node ID "+changedNode.getNodeID()+" not found.\n";
-                System.out.println(nodeDialogString);
-                loadDialog(event);
-                nodeDialogString = "";
-                return;
-            }
         }
         observableChangedNodes.clear();
         System.out.println(nodeDialogString);

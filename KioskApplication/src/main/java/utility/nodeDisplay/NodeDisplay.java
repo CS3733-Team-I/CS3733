@@ -1,4 +1,4 @@
-package utility.Display.Node;
+package utility.nodeDisplay;
 
 public enum NodeDisplay {
     NORMAL,
