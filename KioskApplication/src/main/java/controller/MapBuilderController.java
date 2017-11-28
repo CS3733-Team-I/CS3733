@@ -59,6 +59,7 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
+    @FXML private JFXComboBox<String> CBElevType;
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
     @FXML
@@ -144,6 +145,8 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
+        CBElevType.getItems().addAll("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+        CBElevType.setVisible(false);
 
         Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
         ImageView infoIconView = new ImageView(infoIcon);
@@ -155,6 +158,7 @@ public class MapBuilderController extends ScreenController {
         nodeID.setEditable(false);
         xcoord.setEditable(false);
         ycoord.setEditable(false);
+
         tfNodeInfo.setVisible(false);
         nodeAdvanced.setVisible(false);
 
@@ -201,6 +205,37 @@ public class MapBuilderController extends ScreenController {
                     if(!observableNewNodes.isEmpty()) {
                         //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
                         observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
+                        //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
+                        updateNodeID();
+                        return;
+                    }
+                    for(database.objects.Node changedTypeNode : observableSelectedNodes) {
+                        if(observableChangedNodes.contains(changedTypeNode)) {
+                            System.out.println("update changes in changed node");
+                            for(database.objects.Node changingNode : observableChangedNodes) {
+                                if(changingNode.getNodeID() == changedTypeNode.getNodeID()) {
+                                    changingNode.setNodeType(CBnodeType.getValue());
+                                    updateNodeID();
+                                }
+                            }
+                        }
+                        else {
+                            System.out.println("");
+                            changedTypeNode.setNodeType(CBnodeType.getValue());
+                            observableChangedNodes.add(changedTypeNode); //current selected node is changed
+                            updateNodeID();
+                        }
+                    }
+                }
+            }
+        });
+        CBElevType.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!CBnodeType.isDisable()) {
+                    if(!observableNewNodes.isEmpty()) {
+                        //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
+                        observableNewNodes.get(0).setNodeType(CBElevType.getValue());
                         //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
                         updateNodeID();
                         return;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXDialogLayout?>
 <?import com.jfoenix.controls.JFXTabPane?>
@@ -17,7 +18,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane prefHeight="600.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <JFXTabPane fx:id="builderTabPane" layoutX="95.0" layoutY="169.0" prefHeight="600.0" prefWidth="200.0" side="LEFT" stylesheets="@../css/requestSubmitterSubTab.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -120,6 +120,11 @@
                                     <JFXDialogLayout fx:id="nodeDialogLayout" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="65.0" prefWidth="320.0" />
                                  </children>
                               </StackPane>
+                              <JFXComboBox fx:id="CBElevType" prefHeight="27.0" prefWidth="45.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </JFXComboBox>
                            </children>
                         </GridPane>
                      </children>
