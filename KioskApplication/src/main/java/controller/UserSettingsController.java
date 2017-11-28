@@ -4,19 +4,17 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
-import database.objects.Request;
 import database.objects.Employee;
 import entity.LoginEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import utility.KioskPermission;
-import utility.node.NodeType;
-import utility.request.RequestType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import utility.KioskPermission;
+import utility.request.RequestType;
 
 import java.util.ArrayList;
 
@@ -35,20 +33,15 @@ public class UserSettingsController {
     @FXML private Label userDialogLabel;
 
     @FXML private JFXTreeTableView<Employee> usersList;
-    @FXML private GridPane userEditorPane;
+    private final TreeItem<Employee> root = new TreeItem<>();
+
+    @FXML private BorderPane userEditorPane;
 
     @FXML
     void initialize() {
         userEditorPane.setVisible(false);
 
-        ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
-
-        final TreeItem<Employee> root = new TreeItem<>();
         root.setExpanded(true);
-
-        logins.stream().forEach((employee) -> {
-            root.getChildren().add(new TreeItem<>(employee));
-        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setPrefWidth(150);
@@ -75,10 +68,20 @@ public class UserSettingsController {
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
+        refreshUsers();
+
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
         typeSelect.getItems().addAll(RequestType.values());
+    }
 
+    private void refreshUsers() {
+        root.getChildren().clear();
+
+        ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
+        logins.stream().forEach((employee) -> {
+            root.getChildren().add(new TreeItem<>(employee));
+        });
     }
 
     @FXML
