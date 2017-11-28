@@ -26,6 +26,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
+                         <JFXButton fx:id="setkiosklocation"  buttonType="RAISED" layoutX="40.0" layoutY="600.0" prefHeight="20.0" prefWidth="200.0" text="Set as Default Kiosk Location" textFill="#1e1915"/>
                         <GridPane alignment="CENTER" prefHeight="600.0" prefWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

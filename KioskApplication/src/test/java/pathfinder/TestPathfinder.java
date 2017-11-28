@@ -413,7 +413,6 @@ public class TestPathfinder {
         // System.out.println(testPath2.getEdges().toString());
     }
 
-     //TODO  write test for exceptions
      @Test (expected = PathfinderException.class)
     public void testPathfinderException() throws PathfinderException{
         //test that the exception is thrown when there is a path but no connection
