@@ -85,6 +85,7 @@ public class UserSettingsController {
     void onAddPressed(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(false);
+        userEditorPane.setVisible(true);
         userActionButton.setText("Add");
         userDialogLabel.setText("Add User");
 
@@ -94,6 +95,7 @@ public class UserSettingsController {
     void onDeletePressed(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(false);
+        userEditorPane.setVisible(true);
         userActionButton.setText("Delete");
         userDialogLabel.setText("Delete User");
 
@@ -103,6 +105,7 @@ public class UserSettingsController {
     void onEditPressed(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(false);
+        userEditorPane.setVisible(true);
         userActionButton.setText("Edit");
         userDialogLabel.setText("Edit User");
 
@@ -112,6 +115,7 @@ public class UserSettingsController {
     void onUserCancel(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(true);
+        userEditorPane.setVisible(false);
 
     }
 
@@ -119,17 +123,25 @@ public class UserSettingsController {
     void onUserSave(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(true);
+        userEditorPane.setVisible(false);
 
         // Add/edit/delete from database
+
         // Check that all fields are filled in
         if (usernameBox.getText() != null && passwordBox.getText() != null && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
+            // Add
+            if (userActionButton.getText().equals("Add")) {
 
-            // Check for already existing username
+                // Add user
+                if (LoginEntity.getInstance().addUser(usernameBox.getText(), passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
 
-            System.out.println("User: " + usernameBox.getText());
-            System.out.println("Pass: " + passwordBox.getText());
-            System.out.println("Permission: " + permissionSelect.getValue().toString());
-            System.out.println("Type: " + typeSelect.getValue().toString());
+                    System.out.println("Adding user ... ");
+                    System.out.println("User: " + usernameBox.getText());
+                    System.out.println("Pass: " + passwordBox.getText());
+                    System.out.println("Permission: " + permissionSelect.getValue().toString());
+                    System.out.println("Type: " + typeSelect.getValue().toString());
+                }
+            }
         }
 
     }
