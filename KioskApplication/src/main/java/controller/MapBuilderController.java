@@ -14,7 +14,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
@@ -31,6 +29,8 @@ import utility.node.NodeType;
 import utility.node.TeamAssigned;
 
 import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapBuilderController extends ScreenController {
 
@@ -55,9 +55,7 @@ public class MapBuilderController extends ScreenController {
     private Tab nodeTab;
     private String nodeDialogString;
     @FXML
-    private JFXDialogLayout nodeDialogLayout;
-    @FXML
-    private StackPane SPnodeDialog;
+    private StackPane mapBuilderStackPane;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
@@ -65,8 +63,6 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXTextField sName;
     @FXML
     private JFXButton btNodeInstruction;
-    @FXML
-    private TextFlow tfNodeInfo;
     @FXML
     private GridPane Advance;
     @FXML
@@ -489,19 +485,6 @@ public class MapBuilderController extends ScreenController {
         getMapController().setAnchor(0, 450, 0, 0);
     }
 
-
-    /**
-     * Handles Database Related operations
-     */
-    @FXML
-    private void onbtInfoClicked() {
-        if (tfNodeInfo.isVisible()) {
-            tfNodeInfo.setVisible(false);
-        } else {
-            tfNodeInfo.setVisible(true);
-        }
-    }
-
     /**
      * Handles Node Related operations
      */
@@ -693,7 +676,7 @@ public class MapBuilderController extends ScreenController {
 
         for(database.objects.Node newNode : observableNewNodes) {
             if(newNode.getNodeType() == NodeType.TEMP) { //no type of temp is allowed to save
-                nodeDialogString += "Node Type cannot be TEMP," + "Node ID: " + newNode.getNodeID() + "\n";
+                nodeDialogString +=  "Node ID: " + newNode.getNodeID() + "\n" + "Node Type cannot be TEMP.\n\n";
                 System.out.println(nodeDialogString);
                 loadDialog(event);
                 nodeDialogString = "";
@@ -704,7 +687,7 @@ public class MapBuilderController extends ScreenController {
                     //System.out.println("In saving NodeType: " + newNode.getNodeType());
                     //System.out.println("In saving NodeID: " + newNode.getNodeID());
                     MapEntity.getInstance().addNode(newNode);
-                    nodeDialogString += "Node ID: " + newNode.getNodeID() + " saved.\n";
+                    nodeDialogString += "Node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error adding node to DB");
@@ -712,10 +695,10 @@ public class MapBuilderController extends ScreenController {
                     alert.setContentText(ex.toString());
                     alert.showAndWait();
 
-                    nodeDialogString += "ERROR: Node " + newNode.getNodeID() + " was not added to database.\n";
+                    nodeDialogString += "ERROR: Node " + newNode.getNodeID() + " was not added to database.\n\n";
                 }
             }  else { //duplicate node ID found
-                nodeDialogString += "Node ID: " + newNode.getNodeID() + "Duplicate ID found\n";
+                nodeDialogString += "Node ID: " + newNode.getNodeID() + "\n" + "Duplicate ID found\n\n";
                 System.out.println(nodeDialogString);
                 loadDialog(event);
                 nodeDialogString = "";
@@ -731,7 +714,7 @@ public class MapBuilderController extends ScreenController {
         for(database.objects.Node changedNode : observableChangedNodes) {
                 try {
                     MapEntity.getInstance().editNode(changedNode);
-                    nodeDialogString += "Node ID " + changedNode.getNodeID() + " edited.\n";
+                    nodeDialogString += "Node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error editing node in DB");
@@ -753,14 +736,21 @@ public class MapBuilderController extends ScreenController {
     private void loadDialog(ActionEvent event) {
 
         //TODO FIND A BETTER PLACE TO PUT THE DIALOG
+        JFXDialogLayout nodeDialogLayout = new JFXDialogLayout();
         nodeDialogLayout.setHeading(new Text("System Information"));
         nodeDialogLayout.setBody(new Text(nodeDialogString));
-        JFXDialog nodeDialog = new JFXDialog(SPnodeDialog, nodeDialogLayout, JFXDialog.DialogTransition.CENTER);
+        JFXDialog nodeDialog = new JFXDialog(mapBuilderStackPane, nodeDialogLayout, JFXDialog.DialogTransition.CENTER);
         JFXButton btnodeDialog= new JFXButton("OK");
         btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 nodeDialog.close();
+                mapBuilderStackPane.setMaxWidth(USE_PREF_SIZE);
+                mapBuilderStackPane.setMinWidth(USE_PREF_SIZE);
+                mapBuilderStackPane.setMaxHeight(USE_PREF_SIZE);
+                mapBuilderStackPane.setMinHeight(USE_PREF_SIZE);
+                mapBuilderStackPane.getChildren().remove(nodeDialog);
+                mapBuilderStackPane.getChildren().remove(nodeDialogLayout);
             }
         });
         nodeDialogLayout.setActions(btnodeDialog);
@@ -769,8 +759,36 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    private void OnInstructionPressed() {
-//        JFXDialog dialog = new JFXDialog()
+    private void OnInstructionPressed(ActionEvent event) {
+        btNodeInstruction.setDisable(true);
+        JFXDialogLayout helpDlo = new JFXDialogLayout();
+        helpDlo.setHeading(new Text("Help"));
+        helpDlo.setBody(new Text("Click on a existing node to edit it.\n" +
+                                 "Double click on the map to create a\n" +
+                                 "new node. Click on a unsaved new node\n" +
+                                 "again to remove it.\n\n" +
+                                 "When a node is selected, click an empty\n" +
+                                 "spot in map to deselect. Edit their\n" +
+                                 "information and click on confirm to save."));
+        JFXDialog helpD = new JFXDialog(mapBuilderStackPane, helpDlo, JFXDialog.DialogTransition.CENTER);
+
+
+        JFXButton button = new JFXButton("Okay");
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                helpD.close();
+                btNodeInstruction.setDisable(false);
+                mapBuilderStackPane.setMaxWidth(USE_PREF_SIZE);
+                mapBuilderStackPane.setMinWidth(USE_PREF_SIZE);
+                mapBuilderStackPane.setMaxHeight(USE_PREF_SIZE);
+                mapBuilderStackPane.setMinHeight(USE_PREF_SIZE);
+                mapBuilderStackPane.getChildren().remove(helpD);
+                mapBuilderStackPane.getChildren().remove(helpDlo);
+            }
+        });
+        helpDlo.setActions(button);
+        helpD.show();
     }
 
     @FXML
