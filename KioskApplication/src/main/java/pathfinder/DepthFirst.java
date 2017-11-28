@@ -49,7 +49,7 @@ public class DepthFirst implements SearchAlgorithm{
         if(startingNode.equals(endingNode)) return returnList;
 
         //add self to list of visited nodes
-        visitedNodes.add(startingNode);
+        if(!visitedNodes.contains(startingNode)) visitedNodes.add(startingNode);
 
         //throw an exception if there is no where else to go
         if(!isOpenConnectedNode(startingNode,visitedNodes)) {
@@ -70,7 +70,9 @@ public class DepthFirst implements SearchAlgorithm{
                     return returnList;
                 } catch (DeadEndException e) {
                     //System.out.println("Ran into a dead end at node " + e.getMessage());
-                    visitedNodes.addAll(e.getVisitedNodes());
+                    for(Node visitedNode : e.getVisitedNodes()) {
+                        if(!visitedNodes.contains(visitedNode)) visitedNodes.add(visitedNode);
+                    }
                 }
             }
         }

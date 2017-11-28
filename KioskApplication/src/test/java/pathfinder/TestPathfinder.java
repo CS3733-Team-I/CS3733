@@ -302,20 +302,42 @@ public class TestPathfinder {
         */
     }
 
-    /*
+
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
         if(path.size() == 0) {
             if(startNode.equals(endNode)) return true;
             return false;
         }
 
-        for(int i = 0; i < path.size(); i++);
-        {
+        for(int i = 0; i < path.size(); i++) {
+            if(i==1) { //first edge should contain the start node
+                if(!path.get(i).getNode1ID().equals(startNode.getNodeID()) && !path.get(i).getNode1ID().equals(startNode.getNodeID()))
+                    return false;
+            }
+            else if(i==path.size()-1) { //last edge should contain the end node
+                if(!path.get(i).getNode1ID().equals(endNode.getNodeID()) && !path.get(i).getNode2ID().equals(endNode.getNodeID()))
+                    return false;
+            }
+            else { // should contain a node in the previous edge and in the next edge
+                //pseudocode for logic
 
+                // i.node1 connects to previous (i.node2 connects to next)
+                // (i.node1 == i-1.node1 || i.node1 == i-1.node2) &&
+                // (i.node2 == i+1.node1 || i.node2 == i+1.node2)
+
+                //otherwise i.node2 connects to previous (i.node1 connects to next)
+                // (i.node2 == i-1.node1 || i.node2 == i-1.node2) &&
+                // (i.node1 == i+1.node1 || i.node1 == i+1.node2)
+
+                //overall logic statement:
+                // ((i.node1 == i-1.node1 || i.node1 == i-1.node2) && (i.node2 == i+1.node1 || i.node2 == i+1.node2)) ||
+                // ((i.node2 == i-1.node1 || i.node2 == i-1.node2) && (i.node1 == i+1.node1 || i.node1 == i+1.node2))
+
+
+            }
         }
         return false;
     }
-    */
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1DF() throws PathfinderException{
