@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -19,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="685.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane prefHeight="685.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -89,17 +81,17 @@
                                           <Insets top="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <JFXCheckBox selected="true" text="Food" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                    <JFXCheckBox selected="true" text="Janitor" GridPane.rowIndex="2">
+                                    <JFXCheckBox fx:id="foodFilter" selected="true" text="Food" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                    <JFXCheckBox fx:id="janitorFilter" selected="true" text="Janitor" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets />
                                        </GridPane.margin>
                                     </JFXCheckBox>
-                                    <JFXCheckBox selected="true" text="Security" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                                    <JFXCheckBox selected="true" text="Interpreter" GridPane.rowIndex="4" />
-                                    <JFXCheckBox selected="true" text="Maintenance" GridPane.rowIndex="5" />
-                                    <JFXCheckBox selected="true" text="IT Help" GridPane.rowIndex="6" />
-                                    <JFXCheckBox selected="true" text="Transportation" GridPane.rowIndex="7" />
+                                    <JFXCheckBox fx:id="securityFilter" selected="true" text="Security" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                                    <JFXCheckBox fx:id="interpreterFilter" selected="true" text="Interpreter" GridPane.rowIndex="4" />
+                                    <JFXCheckBox fx:id="maintenanceFilter" selected="true" text="Maintenance" GridPane.rowIndex="5" />
+                                    <JFXCheckBox fx:id="itFilter" selected="true" text="IT Help" GridPane.rowIndex="6" />
+                                    <JFXCheckBox fx:id="transportationFilter" selected="true" text="Transportation" GridPane.rowIndex="7" />
                                     <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
                                     <JFXButton buttonType="RAISED" onAction="#submitRequest" style="-fx-background-color: green;" text="Create New" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
                                        <opaqueInsets>

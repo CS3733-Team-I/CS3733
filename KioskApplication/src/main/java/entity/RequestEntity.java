@@ -5,6 +5,7 @@ import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import database.objects.SecurityRequest;
+import sun.awt.image.ImageWatched;
 import utility.Request.Language;
 import utility.Request.LanguageFrequency;
 import utility.Request.RequestProgressStatus;
@@ -94,13 +95,34 @@ public class RequestEntity {
         return allRequests;
     }
 
+    public LinkedList<Request> getAllinterpters(){
+        LinkedList<Request> intRequests = new LinkedList<>();
+        for(InterpreterRequest iR: interpreterRequests.values()){
+            intRequests.add(iR);
+        }
+        return intRequests;
+    }
+
+    public LinkedList<Request> getAllSecurity(){
+        LinkedList<Request> secRequests = new LinkedList<>();
+        for(SecurityRequest sR: securityRequests.values()){
+            secRequests.add(sR);
+        }
+        return secRequests;
+    }
+
     /**
      * Methods for all request types
      */
 
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
-        LinkedList<Request> displayedRequests = new LinkedList<>();
         LinkedList<Request> requests = getAllRequests();
+        LinkedList<Request> displayedRequests = filterByStatus(requests, status);
+        return displayedRequests;
+    }
+
+    public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
+        LinkedList<Request> displayedRequests = new LinkedList<>();
         for (int i = 0; i < requests.size(); i++) {
             switch (status){
                 case TO_DO:

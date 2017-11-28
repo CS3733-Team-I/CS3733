@@ -1,24 +1,19 @@
 package controller;
 
 import com.jfoenix.controls.JFXButton;
-import database.DatabaseController;
+import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -26,10 +21,8 @@ import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
 import utility.Request.RequestProgressStatus;
+import utility.Request.RequestType;
 
-
-
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -39,6 +32,7 @@ public class RequestManagerController extends ScreenController {
     LoginEntity l;
 
     RequestEntity r;
+    int currentView; // 1 is unopened, 2 is inProgress, 3 is completed. Temporary
 
     @FXML
     private VBox activeRequests;
@@ -48,11 +42,21 @@ public class RequestManagerController extends ScreenController {
     private TextField txtID;
     @FXML
     private JFXButton completeButton;
+    //filter buttons
+    @FXML private JFXCheckBox foodFilter;
+    @FXML private JFXCheckBox janitorFilter;
+    @FXML private JFXCheckBox securityFilter;
+    @FXML private JFXCheckBox interpreterFilter;
+    @FXML private JFXCheckBox maintenanceFilter;
+    @FXML private JFXCheckBox itFilter;
+    @FXML private JFXCheckBox transportationFilter;
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
+        currentView = 1;
+
     }
 
     @FXML
@@ -64,36 +68,55 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void newRequests(){
-        showRequests(RequestProgressStatus.TO_DO, "Assign");
+        LinkedList<Request> allRequests = filterRequests();
+        showRequests(RequestProgressStatus.TO_DO, "Assign", allRequests);
     }
 
     @FXML
     void inProgressRequests(){
-        showRequests(RequestProgressStatus.IN_PROGRESS, "Complete");
+        LinkedList<Request> allRequests = filterRequests();
+        showRequests(RequestProgressStatus.IN_PROGRESS, "Complete", allRequests);
     }
 
     @FXML
     void doneRequests(){
-        showRequests(RequestProgressStatus.DONE, "Delete");
+        LinkedList<Request> allRequests = filterRequests();
+        showRequests(RequestProgressStatus.DONE, "Delete", allRequests);
     }
 
     @FXML
-    void showRequests(RequestProgressStatus status, String buttonName){
+    LinkedList<Request> filterRequests() {
+        LinkedList<Request> allRequests = new LinkedList<Request>();
+        if (securityFilter.isSelected()) {
+            for (Request sR : r.getAllSecurity()) {
+                allRequests.add(sR);
+            }
+        }
+        if (interpreterFilter.isSelected()) {
+            for (Request iR : r.getAllinterpters()) {
+                allRequests.add(iR);
+            }
+        }
+        return allRequests;
+    }
+
+    @FXML
+    void showRequests(RequestProgressStatus status, String buttonName, LinkedList<Request> allRequests){
 //        r.readAllFromDatabase();    //Do we need this???
         activeRequests.getChildren().clear();
-        LinkedList<Request> requests = r.getStatusRequests(status);
 
-        if(requests.isEmpty()){
+        if(allRequests.isEmpty() || r.filterByStatus(allRequests,status).isEmpty()){
             Label emptyList = new Label("No Requests");
             activeRequests.getChildren().add(emptyList);
         }else{
+
+            LinkedList<Request> requests = r.filterByStatus(allRequests,status);
             for (int i = 0; i < requests.size(); i++) {
                 String id = requests.get(i).getRequestID();
                 TextField requestTextField = new TextField(requests.get(i).getRequestID());
                 String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
                 requestTextField.setEditable(false);
                 Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
-//                String requestType = requests.get(i).getRequestID().substring(0,3);
                 Label typeOfRequest = new Label(r.checkRequestType(id).toString());
                 Label locationOfRequest = new Label(location);
                 Label spacer = new Label("");
@@ -120,7 +143,7 @@ public class RequestManagerController extends ScreenController {
     void onCompletePressed(String ID){
 //        String ID = txtID.getText();
         Request request;
-        if(r.checkRequestType(ID).equals("Interpreter")){
+        if(r.checkRequestType(ID).equals(RequestType.INTERPRETER)){
             request = r.getInterpreterRequest(ID);
         }else{
             request = r.getSecurityRequest(ID);

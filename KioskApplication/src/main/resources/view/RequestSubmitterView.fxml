@@ -39,6 +39,11 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
+                              <JFXTextField fx:id="intLocation" editable="false" promptText="Location" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </JFXTextField>
                               <JFXDatePicker fx:id="datePicker" defaultColor="#259ceb" prefHeight="27.0" prefWidth="200.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets left="10.0" />
@@ -47,27 +52,11 @@
                                     <Insets left="5.0" />
                                  </GridPane.margin>
                               </JFXDatePicker>
-                              <JFXTextField fx:id="intLocation" editable="false" promptText="Location" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <JFXTimePicker fx:id="timePicker" defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
+                                    <Insets left="5.0" />
                                  </GridPane.margin>
-                              </JFXTextField>
-                              <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#intClear" style="-fx-background-color: pink;" text="Clear" GridPane.rowIndex="5">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </JFXButton>
-                              <JFXButton fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addIntRequest" style="-fx-background-color: lightgreen;" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </JFXButton>
+                              </JFXTimePicker>
                               <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="3" GridPane.rowIndex="3">
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">
@@ -88,16 +77,27 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
-                              <JFXTimePicker fx:id="timePicker" defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" />
-                                 </GridPane.margin>
-                              </JFXTimePicker>
                               <JFXTextArea fx:id="intNotesArea" promptText="Notes" style="-fx-background-color: #FFFFFF;" GridPane.columnSpan="3" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets bottom="10.0" left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXTextArea>
+                              <JFXButton fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addIntRequest" style="-fx-background-color: lightgreen;" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </GridPane.margin>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </JFXButton>
+                              <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#intClear" style="-fx-background-color: pink;" text="Clear" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </GridPane.margin>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </JFXButton>
                            </children>
                         </GridPane>
                      </children>
@@ -146,6 +146,11 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXComboBox>
+                              <JFXTextArea fx:id="secNoteField" promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </GridPane.margin>
+                              </JFXTextArea>
                               <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addSecRequest" style="-fx-background-color: lightgreen;" text="Submit" GridPane.columnIndex="2" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -154,11 +159,6 @@
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin></JFXButton>
-                              <JFXTextArea fx:id="secNoteField" promptText="Notes" style="-fx-background-color: white;" GridPane.columnSpan="3" GridPane.rowIndex="4">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin>
-                              </JFXTextArea>
                            </children>
                         </GridPane>
                      </children></AnchorPane>
