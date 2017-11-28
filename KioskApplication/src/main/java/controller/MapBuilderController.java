@@ -547,7 +547,8 @@ public class MapBuilderController extends ScreenController {
 
                     lName.setText(observableNewNodes.get(0).getLongName());
                     sName.setText(observableNewNodes.get(0).getShortName());
-                    nodeID.setText(observableNewNodes.get(0).getNodeID());
+                    //nodeID.setText(observableNewNodes.get(0).getNodeID());
+                    updateNodeID();
                 }
                 else {
                     //TODO make this an exception
