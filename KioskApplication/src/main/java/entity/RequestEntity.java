@@ -362,6 +362,38 @@ public class RequestEntity {
         dbController.updateSecurityRequest(oldReq);
     }
 
+//    public Request getRequest(String requestID){
+//        RequestType type = checkRequestType(requestID);
+//        switch (type){
+//            case INTERPRETER:
+//                System.out.println("Getting InterpreterRequest");
+//                if(interpreterRequests.containsKey(requestID)) {
+//                    return interpreterRequests.get(requestID);
+//                }
+//                else {
+//                    readAllFromDatabase();
+//                    if (interpreterRequests.containsKey(requestID)) {
+//                        return interpreterRequests.get(requestID);
+//                    }
+//                }
+//                break;
+//            case SECURITY:
+//                System.out.println("Getting Security Request");
+//                if(securityRequests.containsKey(requestID)) {
+//                    return securityRequests.get(requestID);
+//                }
+//                else{
+//                    readAllFromDatabase();
+//                    if(securityRequests.containsKey(requestID)){
+//                        return securityRequests.get(requestID);
+//                    }
+//                }
+//                break;
+//            default:
+//                throw new NullPointerException("Unable to find Request in database");
+//        }
+//    }
+
     /**
      * Tracking information
      * what we want:

@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.Node.NodeFloor;
 import utility.Request.RequestProgressStatus;
 import utility.Request.RequestType;
@@ -119,21 +120,70 @@ public class RequestManagerController extends ScreenController {
                 Label locationOfRequest = new Label(location);
                 Label spacer = new Label("");
 
-                JFXButton selectID = new JFXButton(buttonName);
-                selectID.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override public void handle(ActionEvent e) {
-                        onCompletePressed(id);
-                    }
-                });
-                selectID.setStyle("-fx-background-color: #DFB951;");
-
                 activeRequests.getChildren().add(requestTextField);
                 activeRequests.getChildren().add(requestID);
                 activeRequests.getChildren().add(typeOfRequest);
                 activeRequests.getChildren().add(locationOfRequest);
-                activeRequests.getChildren().add(selectID);
+
+                if(!status.equals(RequestProgressStatus.TO_DO)){
+                    String completer;
+                    if(r.checkRequestType(id).equals(RequestType.INTERPRETER)){
+                        completer = r.getInterpreterRequest(id).getCompleter();
+                    }else{
+                        completer = r.getSecurityRequest(id).getCompleter();
+                    }
+                    Label completerLabel = new Label("Completed by: "+completer);
+                    activeRequests.getChildren().add(completerLabel);
+                }
+                addButton(status,buttonName,id);
                 activeRequests.getChildren().add(spacer);
             }
+        }
+    }
+
+    @FXML
+    void addButton(RequestProgressStatus status, String buttonName, String id){
+        KioskPermission permission = l.getPermission();
+        switch (permission){
+            case EMPLOYEE:
+                if(!status.equals(RequestProgressStatus.DONE)){
+                    JFXButton reqButton = new JFXButton(buttonName);
+                    reqButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent e) {
+                            onCompletePressed(id);
+                        }
+                    });
+                    reqButton.setStyle("-fx-background-color: #DFB951;");
+                    activeRequests.getChildren().add(reqButton);
+
+                }
+                break;
+            case ADMIN: case SUPER_USER:
+                if(!status.equals(RequestProgressStatus.DONE)) {
+                    JFXButton reqButton = new JFXButton("Cancel");
+                    reqButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.deleteRequest(id);
+                            if(status.equals(RequestProgressStatus.TO_DO)){
+                                newRequests();
+                            }else{
+                                inProgressRequests();
+                            }
+                        }
+                    });
+                    reqButton.setStyle("-fx-background-color: #DFB951;");
+                    activeRequests.getChildren().add(reqButton);
+                }else{
+                    JFXButton reqButton = new JFXButton(buttonName);
+                    reqButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override public void handle(ActionEvent e) {
+                            onCompletePressed(id);
+                        }
+                    });
+                    reqButton.setStyle("-fx-background-color: #DFB951;");
+                    activeRequests.getChildren().add(reqButton);
+                }
         }
     }
 

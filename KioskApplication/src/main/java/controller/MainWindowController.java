@@ -138,7 +138,7 @@ public class MainWindowController {
                 break;
             case EMPLOYEE:
                 switchButton.setText("Logoff");
-                tabPane.getTabs().add(tabRS);
+                tabPane.getTabs().addAll(tabRM, tabRS);
                 break;
             case SUPER_USER:
             case ADMIN:
