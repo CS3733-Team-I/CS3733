@@ -147,7 +147,7 @@ public class MapBuilderController extends ScreenController {
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
-        setkiosklocation.setDisable(false);
+        setkiosklocation.setDisable(true);
         //add items into the combobox
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
@@ -639,6 +639,7 @@ public class MapBuilderController extends ScreenController {
         btNodeUndo.setDisable(false);
         btNodeRedo.setDisable(false);
         btNodeDelete.setDisable(false);
+        setkiosklocation.setDisable(false);
     }
     private void setNodeAllDisable() {
         CBnodeType.setDisable(true);
@@ -653,6 +654,7 @@ public class MapBuilderController extends ScreenController {
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
+        setkiosklocation.setDisable(true);
     }
 
 
@@ -754,9 +756,9 @@ public class MapBuilderController extends ScreenController {
         nodeDialog.show();
     }
 
-    @FXML
+  /*  @FXML
     private void kioskLocation(ActionEvent event){
         // do nothing right now
-        SystemSettings.getInstance().setDefaultnode(heightLightedNode);
-    }
+
+    }*/
 }

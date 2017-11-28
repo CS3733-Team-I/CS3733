@@ -41,7 +41,7 @@ public class Pathfinder {
             startNode = SystemSettings.getInstance().getDefaultnode();
             if (startNode == null)
                 throw new PathfinderException("No default start location. \n Please see an administrator.");
-            waypoints.removeFirst();
+            waypoints.addLast(waypoints.removeFirst());
             waypoints.addFirst(startNode);
             //System.out.println("Invalid or no start node; using default starting position.");
         }
