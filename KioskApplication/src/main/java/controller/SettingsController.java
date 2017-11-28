@@ -55,10 +55,15 @@ public class SettingsController extends ScreenController {
                 searchAlgToggleGroup.selectToggle(toggle);
         }
 
-        // Add Users Settings Screen
+        // Add Employee Settings Screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeSettingsView.fxml"));
         loader.setRoot(employeesPane);
         loader.load();
+
+        // Add Users Settings Screen
+        FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
+        loader2.setRoot(userPane);
+        loader2.load();
     }
 
     @FXML
