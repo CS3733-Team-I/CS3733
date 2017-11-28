@@ -6,13 +6,16 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
@@ -88,6 +91,8 @@ public class MapBuilderController extends ScreenController {
     private JFXButton btNodeRedo;
     @FXML
     private JFXButton btNodeDelete;
+    @FXML
+    private JFXButton setkiosklocation;
     /**
      * Edges related fields
      */
@@ -142,7 +147,7 @@ public class MapBuilderController extends ScreenController {
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
-
+        setkiosklocation.setDisable(false);
         //add items into the combobox
         CBnodeType.getItems().addAll(NodeType.values());
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
@@ -377,6 +382,7 @@ public class MapBuilderController extends ScreenController {
             }
         });
 
+       // setkiosklocation
         //set node fields to default
         setNodeFieldToDefault();
     }
@@ -747,4 +753,7 @@ public class MapBuilderController extends ScreenController {
 
         nodeDialog.show();
     }
+
+   // @FXML
+    //private void
 }

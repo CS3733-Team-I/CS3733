@@ -1,5 +1,6 @@
 package entity;
 
+import database.objects.Node;
 import pathfinder.*;
 
 import java.util.prefs.Preferences;
@@ -7,6 +8,7 @@ import java.util.prefs.Preferences;
 public class SystemSettings {
     private Preferences prefs;
     private SearchAlgorithm algorithm;
+    private Node defaultnode;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -16,7 +18,8 @@ public class SystemSettings {
     private SystemSettings() {
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-                                                                                //if not set, default to A*
+        defaultnode = null;
+        //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
 
@@ -53,5 +56,13 @@ public class SystemSettings {
 
     public Preferences getPrefs() {
         return prefs;
+    }
+
+    public void setDefaultnode(Node defaultnode){
+        this.defaultnode = defaultnode;
+    }
+
+    public Node getDefaultnode() {
+        return defaultnode;
     }
 }
