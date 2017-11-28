@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import utility.Display.Node.NodeDisplay;
+import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
@@ -68,6 +68,8 @@ public class MapController {
 
     private Group zoomGroup;
 
+    protected boolean isNodeAdded;
+
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
@@ -77,6 +79,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        isNodeAdded = false;
 
         databaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
         databaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
@@ -98,7 +101,7 @@ public class MapController {
     //TODO put this into nodeobjectlist permuted
     public void highlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
-            if(nodeO.getAccessibleText() == targetNode.getNodeID()) {
+            if(targetNode.getXyz().equals((nodeO.getAccessibleText()))) {
                 nodesEdgesPane.getChildren().remove(nodeO);
                 switch (nodeDisplay) {
                     case SELECTED:
@@ -180,10 +183,6 @@ public class MapController {
             // put the pin and set it's info
             MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
 
-            /*Offsets, don't remove*/
-            // double pinW = wayPointObject.getBoundsInLocal().getWidth();
-            // double pinH = wayPointObject.getBoundsInLocal().getHeight();
-
             // TODO magic numbers
             wayPointObject.setTranslateX(location.getX() - 24);
             wayPointObject.setTranslateY(location.getY() - 60);
@@ -194,8 +193,6 @@ public class MapController {
             waypoints.add(wayPointObject);
             waypointPane.getChildren().add(wayPointObject);
 
-            // System.out.println("should be at "+ (event.getX() - (pinW / 2)) + " " + (event.getY() - (pinH / 2)));
-            // System.out.println("actually at "+ wayPointObject.getLayoutX() + " " + wayPointObject.getLayoutX());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -303,7 +300,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                reloadDisplay();
+                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges
@@ -343,7 +340,7 @@ public class MapController {
                             Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
                             while (nodeObjectIterator.hasNext()) {
                                 Circle circle = nodeObjectIterator.next();
-                                if (removedDatabaseNode.getNodeID().equals(circle.getAccessibleText())) {
+                                if (removedDatabaseNode.getXyz().equals(circle.getAccessibleText())) {
                                     nodeObjectIterator.remove();
                                     break;
                                 }
@@ -358,7 +355,7 @@ public class MapController {
                             nodeView.setMouseTransparent(false);
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
-                            nodeView.setAccessibleText(addedDatabaseNode.getNodeID());
+                            nodeView.setAccessibleText(addedDatabaseNode.getXyz());
                             nodeObjectList.add(nodeView);
                         }
                     }
@@ -481,14 +478,21 @@ public class MapController {
         observableHighlightedSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
+                for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
+                    System.out.println("selected Node: " + selectedNode.getNodeID());
+                }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            System.out.println("Removing node from Selected Node");
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
+                                //System.out.println("Removing node from Selected Node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
+                                highlightNode(deseletedNode, NodeDisplay.CHANGED);
+                                //System.out.println("Removing node from Selected Node: CHANGED");
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
@@ -510,6 +514,9 @@ public class MapController {
         observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
+                for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
+                    System.out.println("Changed Node: " + changedNode.getNodeID());
+                }
                 while(c.next()) {
                     if(c.wasAdded()){
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
@@ -537,17 +544,22 @@ public class MapController {
         observableHighlightedNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                //remove unsaved new nodes
+                for(database.objects.Node newNode : observableHighlightedNewNodes) {
+                    System.out.println("New Node: " + newNode.getNodeID());
+                }
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNewNode : c.getRemoved()) {
-                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null) {//the node was saved to database
+                            if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null && isNodeAdded) {//the node was saved to database
                                 highlightNode(deseletedNewNode, NodeDisplay.NORMAL);
                             }
-                            else {
+                            else { //no node was added
+                                System.out.println("undraw on map");
                                 undrawNodeOnMap(deseletedNewNode);
                             }
                         }
+                        showNodesBox.setSelected(false);
+                        showNodesBox.setSelected(true);
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node newNode : c.getAddedSubList()) {

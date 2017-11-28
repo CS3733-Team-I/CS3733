@@ -126,14 +126,54 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
-    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) {
+    public String getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned, String temp) {
         try {
-            return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+            if(nodeType != NodeType.ELEV) {
+                return String.valueOf(dbController.getNodeTypeCount(nodeType, floor, teamAssigned));
+            }else{
+                return generateElevName(floor, teamAssigned, temp);
+            }
         } catch (DatabaseException e) {
             e.printStackTrace(); // TODO implement handling of DB exception
-            return 0;
         }
+        return "";
     }
+
+    public String generateElevName(NodeFloor floor, String teamAssigned, String changedListElevName){
+        String alphList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String result = "EXC";
+        try{
+            String temp = dbController.getAllElevName(floor, teamAssigned) + changedListElevName;
+            int count = temp.length();
+            int number = 0;
+            if(count > 26){return "EXC";}
+            else {
+                for(int i=0; i<count; i++){
+                    if(alphList.indexOf(temp.charAt(i)) != -1){
+                        number = alphList.indexOf(temp.charAt(i));
+                        alphList = alphList.substring(0, number) + alphList.substring(number+1, alphList.length());
+                    }
+                }
+                result = alphList.charAt(0) + "";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getAllElevName(NodeFloor floor, String teamAssigned){
+        String result = "";
+        try {
+            result = dbController.getAllElevName(floor, teamAssigned);
+            return result;
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
 
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
