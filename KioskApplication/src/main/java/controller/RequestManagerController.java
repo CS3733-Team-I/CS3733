@@ -32,7 +32,6 @@ public class RequestManagerController extends ScreenController {
     LoginEntity l;
 
     RequestEntity r;
-    int currentView; // 1 is unopened, 2 is inProgress, 3 is completed. Temporary
 
     @FXML
     private VBox activeRequests;
@@ -55,7 +54,6 @@ public class RequestManagerController extends ScreenController {
         super(parent, map);
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
-        currentView = 1;
 
     }
 
