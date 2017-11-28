@@ -56,7 +56,7 @@ public class SettingsController extends ScreenController {
         }
 
         // Add Users Settings Screen
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeSettingsView.fxml"));
         loader.setRoot(employeesPane);
         loader.load();
     }
