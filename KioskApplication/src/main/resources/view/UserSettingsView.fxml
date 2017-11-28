@@ -22,7 +22,7 @@
       <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" text="Add User" AnchorPane.leftAnchor="440.0" AnchorPane.topAnchor="65.0" />
       <JFXButton fx:id="deleteUserButton" layoutX="440.0" layoutY="115.0" onAction="#onDeletePressed" text="Delete User" />
       <JFXButton fx:id="editUserButton" layoutX="440.0" layoutY="90.0" onAction="#onEditPressed" text="Edit User" />
-      <GridPane layoutX="564.0" layoutY="58.0" prefHeight="280.0" prefWidth="412.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+      <GridPane fx:id="userEditorPane" layoutX="564.0" layoutY="58.0" prefHeight="280.0" prefWidth="412.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

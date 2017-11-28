@@ -1,9 +1,10 @@
 package database.objects;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
-public class Employee {
+public class Employee extends RecursiveTreeObject<Employee> {
     private String loginID;
     private String userName;
     private String password;

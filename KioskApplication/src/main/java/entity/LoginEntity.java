@@ -5,6 +5,7 @@ import database.objects.Employee;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -44,14 +45,14 @@ public class LoginEntity {
             // so tests can add and remove logins as needed
             permission = SUPER_USER;
             dbC = DatabaseController.getInstance();
-        }
-        else {
+        } else {
             // remove once we have a better way to initialize things
             permission = SUPER_USER;
             dbC = DatabaseController.getInstance();
             // TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
-            addUser("boss@hospital.com", "123",ADMIN,RequestType.GENERAL);
-            addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
+            addUser("boss@hospital.com", "123",ADMIN, RequestType.GENERAL);
+            addUser("emp@hospital.com", "12",EMPLOYEE, RequestType.INTERPRETER);
+            addUser("root", "abcdefg", SUPER_USER, RequestType.GENERAL);
             // initial employee state, we don't want anyone to restart the application and gain access to admin powers
             permission = NONEMPLOYEE;
         }
@@ -72,6 +73,19 @@ public class LoginEntity {
             // the employee hashmap is linked to usernames because of their uniqueness and ease of accessing
             this.logins.putIfAbsent(emp.getUserName(),emp);
         }
+    }
+
+    /**
+     * Gets all the login info from the entity, only allowed if currently a super user.
+     */
+    public ArrayList<Employee> getAllLogins() {
+        // Return the logins if we're a super user
+        if (getPermission().equals(KioskPermission.SUPER_USER)) {
+            return new ArrayList<>(logins.values());
+        }
+
+        // Otherwise return an empty list
+        return new ArrayList<>();
     }
 
     /**
