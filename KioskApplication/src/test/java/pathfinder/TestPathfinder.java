@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,12 +29,7 @@ public class TestPathfinder {
                  e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
-    @Before //Build map for testing all algorithms
-    public void setup() throws DatabaseException {
-        DatabaseController.getInstance();
-        map = MapEntity.getInstance();
-        this.removeAllFromDB();
-        /* New Map Structure
+    /* New Map Structure
            Double lines are twice as long
 
               X   10    20    30    40    50    60    70    80
@@ -53,6 +49,13 @@ public class TestPathfinder {
            70                 n22 - n23
 
         */
+
+    @Before //Build map for testing all algorithms
+    public void setup() throws DatabaseException {
+        DatabaseController.getInstance();
+        map = MapEntity.getInstance();
+        this.removeAllFromDB();
+
 
         n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
         n02 = new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
@@ -144,9 +147,9 @@ public class TestPathfinder {
 
         Path testPath = new Path(testPathWaypoints, testPathEdges);
 
-        System.out.println(path1.getEdges().toString());
-        System.out.println(path1.getEdges().size());
-        System.out.println(testPath.getEdges().toString());
+        //System.out.println(path1.getEdges().toString());
+        //System.out.println(path1.getEdges().size());
+        //System.out.println(testPath.getEdges().toString());
 
         assertTrue(path1.equals(testPath));
     }
@@ -258,18 +261,63 @@ public class TestPathfinder {
 
         //Test an actual path
         path = alg.findPath(n01,n02);
-        //assertEquals(path.size(),1);
-        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+        assertEquals(path.size(),1);
+        assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
 
         //Test another actual path
         path = alg.findPath(n01,n03);
-        //assertEquals(path.size(),2);
-        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+        assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
+        for(Edge e : path) {
+            System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+        }
+        System.out.println("\n");
         //assertEquals(path.get(1),map.getConnectingEdge(n02,n03));
 
+        //More paths!
+        path = alg.findPath(n01,n17);
+
+        for(Edge e : path) {
+            System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+        }
+
+        /*
+        System.out.println("Start test all");
+        // Try to test every possible path
+        for(Node n1 : map.getAllNodes()) {
+            for(Node n2 : map.getAllNodes()) {
+                try {
+                    path = alg.findPath(n1,n2);
+                    System.out.println("Start: " + n1.getNodeID() + " End: " + n2.getNodeID());
+                    for(Edge e : path) {
+                        System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+                    }
+                    System.out.println("\n");
+                }
+                catch(PathfinderException e) {
+                    System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
+                }
+            }
+        }
+        System.out.println("End test all");
+        */
     }
 
-    @Test(expected = DeadEndException.class) //test that the exception is thrown when there is no path or connection
+    /*
+    private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
+        if(path.size() == 0) {
+            if(startNode.equals(endNode)) return true;
+            return false;
+        }
+
+        for(int i = 0; i < path.size(); i++);
+        {
+
+        }
+        return false;
+    }
+    */
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
         alg.findPath(n18,n19);
