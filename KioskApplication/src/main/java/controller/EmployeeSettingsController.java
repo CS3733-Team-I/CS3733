@@ -36,13 +36,12 @@ public class EmployeeSettingsController {
     private final TreeItem<Employee> root = new TreeItem<>();
 
     @FXML private BorderPane userEditorPane;
+    @FXML private BorderPane deletePane;
 
     Employee selectedEmployee;
 
     @FXML
     void initialize() {
-        userEditorPane.setVisible(false);
-
         root.setExpanded(true);
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
@@ -105,19 +104,25 @@ public class EmployeeSettingsController {
         // Adjust visability
         usersList.setVisible(false);
         userEditorPane.setVisible(true);
+        deletePane.setVisible(false);
         userActionButton.setText("Add");
         userDialogLabel.setText("Add User");
-
     }
 
     @FXML
     void onDeletePressed(ActionEvent event) {
         // Adjust visability
         usersList.setVisible(false);
-        userEditorPane.setVisible(true);
-        userActionButton.setText("Delete");
-        userDialogLabel.setText("Delete User");
+        userEditorPane.setVisible(false);
+        deletePane.setVisible(true);
+    }
 
+    @FXML
+    void deleteSelectedUser(ActionEvent even) {
+        // Adjust visability
+        usersList.setVisible(true);
+        userEditorPane.setVisible(false);
+        deletePane.setVisible(false);
     }
 
     @FXML
@@ -127,7 +132,6 @@ public class EmployeeSettingsController {
         userEditorPane.setVisible(true);
         userActionButton.setText("Edit");
         userDialogLabel.setText("Edit User");
-
     }
 
     @FXML
@@ -135,7 +139,7 @@ public class EmployeeSettingsController {
         // Adjust visability
         usersList.setVisible(true);
         userEditorPane.setVisible(false);
-
+        deletePane.setVisible(false);
     }
 
     @FXML
@@ -143,6 +147,7 @@ public class EmployeeSettingsController {
         // Adjust visability
         usersList.setVisible(true);
         userEditorPane.setVisible(false);
+        deletePane.setVisible(false);
 
         // Add/edit/delete from database
 
