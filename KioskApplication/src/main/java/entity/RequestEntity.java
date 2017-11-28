@@ -5,14 +5,10 @@ import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import database.objects.SecurityRequest;
-import sun.awt.image.ImageWatched;
-import utility.Request.Language;
-import utility.Request.LanguageFrequency;
-import utility.Request.RequestProgressStatus;
-import utility.Request.RequestType;
+import utility.Request.*;
 
-import java.security.Security;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -432,16 +428,17 @@ public class RequestEntity {
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
             //search output list
+            boolean languagePresent=false;
             for (int i = 0; i < freq.size(); i++) {
                 if(freq.get(i).isLanguage(iR.getLanguage())){
                     freq.get(i).increment();
+                    languagePresent = true;
+                    break;
                 }
-                else {
-                    freq.add(new LanguageFrequency(iR.getLanguage()));
-                }
-
             }
+            if(!languagePresent) freq.add(new LanguageFrequency(iR.getLanguage(),1));
         }
+        Collections.sort(freq, new SortByFrequency());
         return freq;
     }
 }
