@@ -1,6 +1,7 @@
 package database;
 
 import database.objects.*;
+import org.junit.Before;
 import utility.KioskPermission;
 import utility.Node.NodeBuilding;
 import utility.Node.NodeFloor;
@@ -26,6 +27,13 @@ public class DatabaseControllerTests {
 
     public DatabaseControllerTests() {
         dbController = DatabaseController.getTestInstance();
+    }
+
+    @Before
+    public void setup(){
+        dbController.addEmployee("testInterpreter","testInt","123",
+                KioskPermission.EMPLOYEE,RequestType.INTERPRETER);
+        dbController.addEmployee("boss","boss@hospital.com","123",KioskPermission.ADMIN,RequestType.GENERAL);
     }
 
     @After
@@ -149,14 +157,16 @@ public class DatabaseControllerTests {
         Assert.assertTrue(receivedEdge == null);
     }
 
-    /*
     @Test
     public void testAddInterpreterRequest(){
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
         dbController.addNode(node);
-        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        long currTime = System.currentTimeMillis();
+        InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR1);
         Assert.assertEquals(iR1,dbController.getInterpreterRequest(iR1.getRequestID()));
     }
@@ -223,7 +233,7 @@ public class DatabaseControllerTests {
         dbController.removeNode(node);
         InterpreterRequest recievedIR = dbController.getInterpreterRequest(iR.getRequestID());
         Assert.assertTrue(recievedIR==null);
-    }*/
+    }
 
     /**
      * Tests for employee information

@@ -18,19 +18,6 @@ public abstract class Request {
     private Timestamp startedTime;
     private Timestamp completedTime;
 
-    //Use this to generate new requests don't put in a nodeID larger than 10
-    /*public Request(String nodeID, String assigner, String note) {
-        long t = System.currentTimeMillis();
-        this.nodeID=nodeID;
-        this.submittedTime=new Timestamp(t);
-        this.assigner=assigner;
-        this.note=note;
-        this.status=RequestProgressStatus.TO_DO;
-        //TODO: make completed timestamp less hacky, implement a null design pattern possibly
-        this.completedTime=new Timestamp(t-1);
-        this.requestID=submittedTime.toString()+nodeID;
-    }*/
-
     //Use to retrieve requests
     public Request(String requestID, String nodeID, String assigner,String completer, String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime, RequestProgressStatus status){
         this.requestID=requestID;

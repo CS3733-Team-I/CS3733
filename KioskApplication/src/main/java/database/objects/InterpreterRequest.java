@@ -9,11 +9,10 @@ import java.sql.Timestamp;
 public class InterpreterRequest extends Request {
     private Language language;
 
-    //for retrieving iRs
-    public InterpreterRequest(String requestID, String nodeID, String assignee, String completer,
+    public InterpreterRequest(String requestID, String nodeID, String assigner, String completer,
                               String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
                               RequestProgressStatus status, Language language) {
-        super(requestID, nodeID, assignee, completer, note, submittedTime, startedTime, completedTime, status);
+        super(requestID, nodeID, assigner, completer, note, submittedTime, startedTime, completedTime, status);
         this.language = language;
     }
 

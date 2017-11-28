@@ -8,9 +8,11 @@ import database.objects.SecurityRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+import utility.KioskPermission;
 import utility.Request.Language;
 import utility.Node.NodeFloor;
 import utility.Request.RequestProgressStatus;
+import utility.Request.RequestType;
 
 import java.sql.Timestamp;
 
@@ -50,6 +52,7 @@ public class TestRequestEntity {
         presetIR = r.getInterpreterRequest(pIR);
 //        presetsR = r.getSecurityRequest(pIR2);
 
+        db.addEmployee("boss","boss@hospital.com","123", KioskPermission.ADMIN, RequestType.GENERAL);
     }
 
     @After
@@ -65,7 +68,10 @@ public class TestRequestEntity {
 
     @Test
     public void testGetNonexistentInterpreterRequest(){
-        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        long currTime = System.currentTimeMillis();
+        InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         try{
             r.getInterpreterRequest(iR1.getRequestID());
             fail("Expected to not find the request in the database");
@@ -121,9 +127,13 @@ public class TestRequestEntity {
         //adds interpreter request to database and hashmap
         String testIRID = r.submitInterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
         //Interpreter Request to be modified
-        InterpreterRequest iR1 = new InterpreterRequest("NODE2","emp@hospital.com", "Says name is Wilson Wong", Language.CHINESE);
+        long currTime = System.currentTimeMillis();
+        InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         //modifying interpreter request
-        r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssigner(), iR1.getNote(), iR1.getSubmittedTime(), iR1.getCompletedTime(), iR1.getStatus(), iR1.getLanguage());
+        r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssigner(), iR1.getNote(), iR1.getSubmittedTime(),
+                iR1.getCompletedTime(), iR1.getStatus(), iR1.getLanguage());
         InterpreterRequest iR2 = r.getInterpreterRequest(testIRID);
         assertEquals(testIRID,iR2.getRequestID());
         assertEquals(iR1.getNodeID(),iR2.getNodeID());

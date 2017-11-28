@@ -90,7 +90,7 @@ public class RequestManagerController extends ScreenController {
                 requestTextField.setEditable(false);
                 Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
 //                String requestType = requests.get(i).getRequestID().substring(0,3);
-                Label typeOfRequest = new Label(r.checkRequestType(id));
+                Label typeOfRequest = new Label(r.checkRequestType(id).toString());
                 Label locationOfRequest = new Label(location);
                 Label spacer = new Label("");
 
