@@ -252,7 +252,7 @@ public class TestPathfinder {
         SearchAlgorithm alg = new DepthFirst();
 
         LinkedList<Edge> path;
-
+        /*
         //Should return an empty list if you are at the end node
         path = alg.findPath(n01,n01);
         assertTrue(path.size() == 0);
@@ -279,29 +279,33 @@ public class TestPathfinder {
         for(Edge e : path) {
             System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
         }
-
-        /*
+        */
+        ///*
         System.out.println("Start test all");
         // Try to test every possible path
         for(Node n1 : map.getAllNodes()) {
             for(Node n2 : map.getAllNodes()) {
                 try {
                     path = alg.findPath(n1,n2);
-                    System.out.println("Start: " + n1.getNodeID() + " End: " + n2.getNodeID());
-                    for(Edge e : path) {
-                        System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+
+                    if(!isValidPath(n1,n2,path)) {
+                        System.out.println("Not Valid Path\nStart: " + n1.getNodeID() + " End: " + n2.getNodeID());
+                        for (Edge e : path) {
+                            System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+                        }
+                        System.out.println("\n");
                     }
-                    System.out.println("\n");
                 }
                 catch(PathfinderException e) {
-                    System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
+                    //Don't print an error if it's node 18 or 19 cause they don't connect to anything and the error should be thrown
+                    if(n1.getNodeID().equals("NODE18") || n1.getNodeID().equals("NODE19") || n2.getNodeID().equals("NODE18") || n2.getNodeID().equals("NODE19")) {/*do nothing*/}
+                    else System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
                 }
             }
         }
         System.out.println("End test all");
-        */
+        //*/
     }
-
 
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
         if(path.size() == 0) {
@@ -309,8 +313,15 @@ public class TestPathfinder {
             return false;
         }
 
+        if(path.size() == 1) {
+            if((path.get(0).getNode1ID().equals(startNode.getNodeID())) && (path.get(0).getNode2ID().equals(endNode.getNodeID())) ||
+               (path.get(0).getNode2ID().equals(startNode.getNodeID())) && (path.get(0).getNode1ID().equals(endNode.getNodeID())))
+                return true;
+            return false;
+        }
+
         for(int i = 0; i < path.size(); i++) {
-            if(i==1) { //first edge should contain the start node
+            if(i==0) { //first edge should contain the start node
                 if(!path.get(i).getNode1ID().equals(startNode.getNodeID()) && !path.get(i).getNode1ID().equals(startNode.getNodeID()))
                     return false;
             }
@@ -333,8 +344,13 @@ public class TestPathfinder {
                 // ((i.node1 == i-1.node1 || i.node1 == i-1.node2) && (i.node2 == i+1.node1 || i.node2 == i+1.node2)) ||
                 // ((i.node2 == i-1.node1 || i.node2 == i-1.node2) && (i.node1 == i+1.node1 || i.node1 == i+1.node2))
 
-
+                if( ( ( (path.get(i).getNode1ID().equals(path.get(i-1).getNode1ID())) || (path.get(i).getNode1ID().equals(path.get(i-1).getNode2ID())) ) && ( (path.get(i).getNode2ID().equals(path.get(i+1).getNode1ID())) || (path.get(i).getNode2ID().equals(path.get(i+1).getNode2ID())) ) ) ||
+                    ( ( (path.get(i).getNode2ID().equals(path.get(i-1).getNode1ID())) || (path.get(i).getNode2ID().equals(path.get(i-1).getNode2ID())) ) && ( (path.get(i).getNode1ID().equals(path.get(i+1).getNode1ID())) || (path.get(i).getNode1ID().equals(path.get(i+1).getNode2ID())) ) )
+                  ) {
+                    return true;
+                }
             }
+            return false;
         }
         return false;
     }
