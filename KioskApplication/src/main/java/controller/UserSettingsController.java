@@ -4,19 +4,17 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
-import database.objects.Request;
 import database.objects.Employee;
 import entity.LoginEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import utility.KioskPermission;
-import utility.node.NodeType;
-import utility.request.RequestType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import utility.KioskPermission;
+import utility.request.RequestType;
 
 import java.util.ArrayList;
 
@@ -37,7 +35,7 @@ public class UserSettingsController {
     @FXML private JFXTreeTableView<Employee> usersList;
     private final TreeItem<Employee> root = new TreeItem<>();
 
-    @FXML private GridPane userEditorPane;
+    @FXML private BorderPane userEditorPane;
 
     @FXML
     void initialize() {

@@ -24,9 +24,9 @@
       <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" text="Add User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="65.0" />
       <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" text="Delete User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="95.0" />
       <JFXButton fx:id="editUserButton" layoutX="516.0" layoutY="120.0" onAction="#onEditPressed" text="Edit User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="125.0" />
-      <BorderPane prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+      <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
-            <GridPane fx:id="userEditorPane" prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
