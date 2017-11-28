@@ -7,11 +7,16 @@ import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
@@ -70,10 +75,10 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(RequestProgressStatus status, String buttonName){
-        r.readAllFromDatabase();    //Do qw need this???
+//        r.readAllFromDatabase();    //Do we need this???
         activeRequests.getChildren().clear();
         LinkedList<Request> requests = r.getStatusRequests(status);
-        Label spacer = new Label("");
+
         if(requests.isEmpty()){
             Label emptyList = new Label("No Requests");
             activeRequests.getChildren().add(emptyList);
@@ -86,8 +91,9 @@ public class RequestManagerController extends ScreenController {
                 Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
 //                String requestType = requests.get(i).getRequestID().substring(0,3);
                 Label typeOfRequest = new Label(r.checkRequestType(id));
-
                 Label locationOfRequest = new Label(location);
+                Label spacer = new Label("");
+
                 JFXButton selectID = new JFXButton(buttonName);
                 selectID.setOnAction(new EventHandler<ActionEvent>() {
                     @Override public void handle(ActionEvent e) {

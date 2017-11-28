@@ -84,9 +84,10 @@
                                           <Insets />
                                        </opaqueInsets>
                                        <GridPane.margin>
-                                          <Insets right="5.0" />
+                                          <Insets />
                                        </GridPane.margin>
                                     </JFXButton>
+                                    <JFXButton buttonType="RAISED" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
@@ -100,7 +101,7 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <VBox fx:id="activeRequests" layoutX="108.0" layoutY="98.0" prefHeight="667.0" prefWidth="255.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <VBox fx:id="activeRequests" layoutX="108.0" layoutY="98.0" prefHeight="683.0" prefWidth="255.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </items>
