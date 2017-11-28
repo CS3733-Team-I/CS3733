@@ -4,12 +4,14 @@ import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
 import utility.csv.CsvFileUtil;
 import utility.node.NodeFloor;
 
@@ -27,6 +29,8 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
+
+    @FXML private AnchorPane usersPane;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
 
@@ -49,6 +53,11 @@ public class SettingsController extends ScreenController {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
                 searchAlgToggleGroup.selectToggle(toggle);
         }
+
+        // Add Users Settings Screen
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
+        loader.setRoot(usersPane);
+        loader.load();
     }
 
     @FXML
