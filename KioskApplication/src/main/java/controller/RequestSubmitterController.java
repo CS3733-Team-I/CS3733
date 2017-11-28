@@ -15,7 +15,6 @@ import utility.request.Language;
 import utility.node.NodeFloor;
 import utility.request.RequestType;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class RequestSubmitterController extends ScreenController {
@@ -102,7 +101,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException {
         String location = txtLocation.getText();
-        String assigner = l.getUserName();
+        String assigner = l.getUsername();
         String notes = "";
         Language language = Language.valueOf(langMenu.getValue().toString());
         r.submitInterpreterRequest(location, assigner, notes, language);

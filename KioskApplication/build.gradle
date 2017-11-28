@@ -26,7 +26,7 @@ dependencies {
             [group: 'org.apache.derby', name: 'derbyclient', version: '10.11.1.1'],
             [group: 'org.apache.derby', name: 'derbytools', version: '10.11.1.1'],
             [group: 'com.jfoenix', name: 'jfoenix', version: '1.10.0'],
-            'org.springframework.security:spring-security-web:5.0.0.RC1',
+            [group: 'org.springframework.security', name:'spring-security-web' ,version:'5.0.0.RC1'],
             [group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0']
     )
     testCompile(
@@ -34,6 +34,6 @@ dependencies {
             [group: 'org.apache.derby', name: 'derby', version: '10.11.1.1'],
             [group: 'org.apache.derby', name: 'derbyclient', version: '10.11.1.1'],
             [group: 'org.apache.derby', name: 'derbytools', version: '10.11.1.1'],
-            'org.springframework.security:spring-security-web:5.0.0.RC1'
+            [group: 'org.springframework.security', name:'spring-security-web' ,version:'5.0.0.RC1']
     )
 }

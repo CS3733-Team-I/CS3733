@@ -1,10 +1,11 @@
 package database.objects;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
-public class Employee {
+public class Employee extends RecursiveTreeObject<Employee> {
     private String loginID;
     private String userName;
     private String password;
@@ -57,7 +58,7 @@ public class Employee {
 
     // Method to logIn passwords
     public boolean validatePassword(String password){
-        return (BCrypt.checkpw(password,this.password));
+        return (BCrypt.checkpw(password, this.password));
     }
 
     // method to update passwords
