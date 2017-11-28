@@ -112,6 +112,7 @@ public class EmployeeSettingsController {
         deletePane.setVisible(false);
         userActionButton.setText("Add");
         userDialogLabel.setText("Add User");
+        errLabel.setText("");
     }
 
     @FXML
@@ -165,6 +166,7 @@ public class EmployeeSettingsController {
                 userEditorPane.setVisible(false);
                 deletePane.setVisible(false);
                 errLabel.setText("User Added");
+                resetScreen();
             }
         }
         else{
@@ -182,5 +184,12 @@ public class EmployeeSettingsController {
                 errLabel.setText("User Type Select Required");
             }
         }
+    }
+
+    void resetScreen(){
+        usernameBox.setText("");
+        passwordBox.setText("");
+        permissionSelect.setValue(null);
+        typeSelect.setValue(null);
     }
 }
