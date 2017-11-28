@@ -58,7 +58,7 @@
                      <graphic>
                         <ImageView fx:id="errorIcon" fitHeight="86.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/icons/informationIcon.png" />
+                              <Image url="@../images/icons/alert.png" />
                            </image>
                         </ImageView>
                      </graphic>

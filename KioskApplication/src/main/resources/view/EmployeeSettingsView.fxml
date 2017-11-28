@@ -91,5 +91,6 @@
             </GridPane>
          </center>
       </BorderPane>
+      <Label fx:id="errLabel" alignment="TOP_LEFT" layoutX="520.0" layoutY="370.0" prefHeight="95.0" prefWidth="78.0" wrapText="true" />
    </children>
 </fx:root>

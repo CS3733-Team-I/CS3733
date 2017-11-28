@@ -10,36 +10,31 @@ import javafx.scene.layout.BorderPane;
 
 public class UserSettingsController {
 
-    @FXML
-    private JFXTreeTableView<?> usersList;
-
-    @FXML
-    private BorderPane userEditorPane;
-
-    @FXML
-    private JFXTextField usernameBox;
-
-    @FXML
-    private JFXTextField passwordBoxOld;
-
-    @FXML
-    private JFXButton saveButton;
-
-    @FXML
-    private Label userDialogLabel;
-
-    @FXML
-    private JFXTextField passwordBoxNew;
+    @FXML private JFXTreeTableView<?> usersList;
+    @FXML private BorderPane userEditorPane;
+    @FXML private JFXTextField usernameBox;
+    @FXML private JFXTextField passwordBoxOld;
+    @FXML private JFXButton saveButton;
+    @FXML private Label userDialogLabel;
+    @FXML private Label errLabel;
+    @FXML private JFXTextField passwordBoxNew;
 
     @FXML
     void initialize(){
         usernameBox.setText(LoginEntity.getInstance().getUsername());
+        errLabel.setText("");
     }
 
     @FXML
     void onUserSave() {
-        if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
-            System.out.println("Password Changed!");
+        if(passwordBoxOld.getText() == null || passwordBoxOld.getText().equals("")){
+            errLabel.setText("Old Password Required");
+        }
+        else if(passwordBoxNew.getText() == null || passwordBoxNew.getText().equals("")){
+            errLabel.setText("New Password Required");
+        }
+        else if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
+            errLabel.setText("Password Changed!");
         }
     }
 

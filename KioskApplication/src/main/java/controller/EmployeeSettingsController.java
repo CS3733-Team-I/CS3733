@@ -25,6 +25,7 @@ public class EmployeeSettingsController {
 
     @FXML private BorderPane userEditorPane;
     @FXML private Label userDialogLabel;
+    @FXML private Label errLabel;
     @FXML private JFXTextField usernameBox;
     @FXML private JFXTextField passwordBox;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
@@ -84,6 +85,7 @@ public class EmployeeSettingsController {
 
         refreshUsers();
 
+        errLabel.setText("");
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
         permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE); // Except NONEMPLOYEE
@@ -146,13 +148,9 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserSave(ActionEvent event) {
-        // Adjust visability
-        usersList.setVisible(true);
-        userEditorPane.setVisible(false);
-        deletePane.setVisible(false);
 
         // Check that all fields are filled in
-        if (usernameBox.getText() != null && passwordBox.getText() != null && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
+        if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             // Add user
             if (LoginEntity.getInstance().addUser(usernameBox.getText(), passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
                 System.out.println("Adding user ... ");
@@ -162,6 +160,26 @@ public class EmployeeSettingsController {
                 System.out.println("Type: " + typeSelect.getValue().toString());
 
                 refreshUsers();
+                // Adjust visability
+                usersList.setVisible(true);
+                userEditorPane.setVisible(false);
+                deletePane.setVisible(false);
+                errLabel.setText("User Added");
+            }
+        }
+        else{
+            if(usernameBox.getText().equals("")){
+                System.out.println("USER ERROR");
+                errLabel.setText("Username Required");
+            }
+            else if(passwordBox.getText().equals("")){
+                errLabel.setText("Password Required");
+            }
+            else if(permissionSelect.getValue() == null){
+                errLabel.setText("Permission Selection Required");
+            }
+            else if(typeSelect.getValue() == null){
+                errLabel.setText("User Type Select Required");
             }
         }
     }

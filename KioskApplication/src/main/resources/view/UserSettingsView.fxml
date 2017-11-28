@@ -45,6 +45,7 @@
                      </font>
                   </Label>
                   <JFXTextField fx:id="passwordBoxNew" labelFloat="true" promptText="New Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <Label fx:id="errLabel" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                </children>
                <BorderPane.margin>
                   <Insets left="150.0" right="150.0" />
