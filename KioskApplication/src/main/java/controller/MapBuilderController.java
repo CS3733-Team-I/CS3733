@@ -626,16 +626,18 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void updateNodeID() {
-        if(nodeType == NodeType.ELEV) {
+        /*if(nodeType == NodeType.ELEV) {
             String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
         }
         else {
-            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(mapController.floorSelector.getValue().toString()));
+            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + nodeTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
         }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
-        // TODO implement this
+        // TODO implement this*/
+        String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
+        nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + nodeTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
     }
 
     private void setNodeFieldEnable() {

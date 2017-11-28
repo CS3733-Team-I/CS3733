@@ -126,13 +126,17 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
-    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) {
+    public String getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) {
         try {
-            return dbController.getNodeTypeCount(nodeType, floor, teamAssigned);
+            if(nodeType != NodeType.ELEV) {
+                return String.valueOf(dbController.getNodeTypeCount(nodeType, floor, teamAssigned));
+            }else{
+                return generateElevName(floor, teamAssigned);
+            }
         } catch (DatabaseException e) {
             e.printStackTrace(); // TODO implement handling of DB exception
-            return 0;
         }
+        return "";
     }
 
     public String generateElevName(NodeFloor floor, String teamAssigned){
