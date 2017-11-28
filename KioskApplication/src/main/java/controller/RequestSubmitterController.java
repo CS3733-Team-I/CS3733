@@ -115,10 +115,13 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addIntRequest() throws IOException {
         String location = intLocation.getText();
-        String assigner = l.getUserName();
+        String assigner = l.getUserID();
         String notes = intNotesArea.getText();
+        if (notes==null){
+            notes="";
+        }
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        r.submitInterpreterRequest(location, l.getUserName(), notes, language);
+        r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
         intLocation.clear();
         intNotesArea.clear();
@@ -127,7 +130,9 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     public void intClear() {
-
+        intLocation.clear();
+        intNotesArea.clear();
+        langMenu.setValue("");
     }
 
     @FXML

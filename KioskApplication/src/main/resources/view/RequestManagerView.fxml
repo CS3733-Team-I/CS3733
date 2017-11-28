@@ -43,11 +43,13 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
                                     <JFXButton alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#newRequests" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Unopened Requests" wrapText="true" />
                                     <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#inProgressRequests" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="In Progress Requests" wrapText="true" GridPane.rowIndex="1" />
                                     <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#doneRequests" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Completed Requests" wrapText="true" GridPane.rowIndex="2" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#refreshRequests" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="Refresh" wrapText="true" GridPane.rowIndex="3" />
                                  </children>
                               </GridPane>
                            </children>
