@@ -30,7 +30,8 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
 
-    @FXML private AnchorPane usersPane;
+    @FXML private AnchorPane userPane;
+    @FXML private AnchorPane employeesPane;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
 
@@ -56,7 +57,7 @@ public class SettingsController extends ScreenController {
 
         // Add Users Settings Screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
-        loader.setRoot(usersPane);
+        loader.setRoot(employeesPane);
         loader.load();
     }
 
