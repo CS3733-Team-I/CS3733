@@ -134,7 +134,6 @@ public class MapBuilderController extends ScreenController {
 
         Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
         ImageView infoIconView = new ImageView(infoIcon);
-        infoIconView.setRotate(90);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
         btNodeInstruction.setGraphic(infoIconView);
