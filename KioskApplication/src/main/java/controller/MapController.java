@@ -350,7 +350,6 @@ public class MapController {
                             while (nodeObjectIterator.hasNext()) {
                                 Circle circle = nodeObjectIterator.next();
                                 if ((Integer.toString(removedDatabaseNode.getXcoord()) + Integer.toString(removedDatabaseNode.getYcoord())).equals(circle.getAccessibleText())) {
-                                    System.out.println("Removed from map");
                                     nodeObjectIterator.remove();
                                     break;
                                 }
@@ -366,9 +365,6 @@ public class MapController {
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
                             nodeView.setAccessibleText(addedDatabaseNode.getXyz());
-                            System.out.println("Node Databse: NodeID: " + addedDatabaseNode.getNodeID());
-                            System.out.println("Node View: accessibleText: " + nodeView.getAccessibleText());
-                            System.out.println("Node Databse: getXyz: " + addedDatabaseNode.getXyz());
                             nodeObjectList.add(nodeView);
                         }
                     }

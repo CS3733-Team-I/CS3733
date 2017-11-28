@@ -140,7 +140,7 @@ public class MapEntity implements IMapEntity {
         try{
             count = dbController.getNodeTypeCount(NodeType.ELEV, floor, teamAssigned);
             if(count <= 26) {
-                return "00" + (count + "A");
+                return "OO" + (count + "A");
             }
         } catch (Exception e){
             e.printStackTrace();
