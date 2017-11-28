@@ -174,6 +174,11 @@ public class RequestManagerController extends ScreenController {
         return contentView;
     }
 
+    @FXML
+    public void refreshRequests() throws IOException {
+        r.readAllFromDatabase();
+    }
+
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
 
