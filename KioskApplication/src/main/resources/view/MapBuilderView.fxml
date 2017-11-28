@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchor" prefHeight="700.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox layoutX="-13.0" prefHeight="600.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -54,65 +55,68 @@
                   <Insets />
                </opaqueInsets>
             </VBox>
-            <StackPane fx:id="mapBuilderStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="370.0">
+            <StackPane fx:id="mapBuilderStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="370.0">
                <children>
-                  <GridPane prefHeight="523.0" prefWidth="374.0">
+                  <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="370.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" maxWidth="222.0" minWidth="10.0" prefWidth="186.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="222.0" minWidth="10.0" prefWidth="186.0" />
+                        <ColumnConstraints hgrow="ALWAYS" maxWidth="293.0" minWidth="10.0" prefWidth="188.0" />
                         <ColumnConstraints hgrow="ALWAYS" maxWidth="293.0" minWidth="10.0" prefWidth="188.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints maxHeight="364.0" minHeight="10.0" prefHeight="300.0" vgrow="ALWAYS" />
-                        <RowConstraints maxHeight="364.0" minHeight="10.0" prefHeight="300.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="364.0" minHeight="10.0" prefHeight="195.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="424.0" minHeight="10.0" prefHeight="51.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="364.0" minHeight="10.0" prefHeight="128.0" vgrow="ALWAYS" />
                         <RowConstraints maxHeight="424.0" minHeight="10.0" prefHeight="301.0" vgrow="ALWAYS" />
-                        <RowConstraints maxHeight="424.0" minHeight="10.0" prefHeight="301.0" vgrow="ALWAYS" />
+                        <RowConstraints />
                      </rowConstraints>
                      <children>
-                        <VBox prefWidth="133.0">
+                        <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="120.0" GridPane.columnIndex="1">
                            <children>
-                              <JFXTextField fx:id="lName" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Long Name">
+                              <JFXTextField fx:id="lName" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="80.0" promptText="Long Name">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets right="30.0" />
+                                    <Insets bottom="2.0" top="2.0" />
                                  </VBox.margin>
                               </JFXTextField>
-                              <JFXTextField fx:id="sName" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" promptText="Short Name">
+                              <JFXTextField fx:id="sName" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="80.0" promptText="Short Name">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets right="30.0" />
+                                    <Insets bottom="2.0" top="2.0" />
                                  </VBox.margin>
                               </JFXTextField>
-                              <JFXComboBox fx:id="CBnodeBuilding" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Building">
+                              <JFXComboBox fx:id="CBnodeBuilding" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="120.0" promptText="Building">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets />
+                                    <Insets bottom="2.0" top="2.0" />
                                  </VBox.margin>
                               </JFXComboBox>
-                              <JFXComboBox fx:id="CBnodeType" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Type">
+                              <JFXComboBox fx:id="CBnodeType" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="80.0" promptText="Type">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets />
+                                    <Insets bottom="2.0" top="2.0" />
                                  </VBox.margin>
                               </JFXComboBox>
-                              <JFXComboBox fx:id="CBnodeTeamAssigned" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="133.0" promptText="Team">
+                              <JFXComboBox fx:id="CBnodeTeamAssigned" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="80.0" promptText="Team">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                                  <VBox.margin>
-                                    <Insets />
+                                    <Insets bottom="2.0" top="2.0" />
                                  </VBox.margin>
                               </JFXComboBox>
                            </children>
                         </VBox>
-                        <GridPane fx:id="Advance" prefHeight="287.0" prefWidth="245.0" GridPane.columnIndex="1">
+                        <GridPane fx:id="Advance" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="141.0" prefWidth="189.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.valignment="CENTER">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -123,19 +127,19 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label fx:id="lbNodeID" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #00589F;" text="Node ID" textFill="WHITE">
+                              <Label fx:id="lbNodeID" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="55.0" style="-fx-background-color: #00589F;" text="Node ID" textFill="WHITE">
                                  <GridPane.margin>
-                                    <Insets left="10.0" />
+                                    <Insets left="40.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label fx:id="lbYcoor" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #00589F;" text="Y coordinate" textFill="WHITE" GridPane.rowIndex="2">
+                              <Label fx:id="lbYcoor" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="55.0" style="-fx-background-color: #00589F;" text="Y coord" textFill="WHITE" GridPane.rowIndex="2">
                                  <GridPane.margin>
-                                    <Insets left="10.0" />
+                                    <Insets left="40.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label fx:id="lbXcoor" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="160.0" style="-fx-background-color: #00589F;" text="X coordinate" textFill="WHITE" GridPane.rowIndex="1">
+                              <Label fx:id="lbXcoor" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="55.0" style="-fx-background-color: #00589F;" text="X coord" textFill="WHITE" GridPane.rowIndex="1">
                                  <GridPane.margin>
-                                    <Insets left="10.0" />
+                                    <Insets left="40.0" />
                                  </GridPane.margin>
                               </Label>
                               <JFXTextField fx:id="nodeID" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Long Name" text="Node ID" GridPane.columnIndex="1">
@@ -154,8 +158,53 @@
                                  </padding>
                               </JFXTextField>
                            </children>
+                           <GridPane.margin>
+                              <Insets bottom="50.0" />
+                           </GridPane.margin>
                         </GridPane>
+                        <JFXListView fx:id="lvConnectedNodes" editable="true" onMouseClicked="#showPopup" prefHeight="464.0" prefWidth="370.0" stylesheets="@../css/listView.css" verticalGap="10.0" GridPane.columnSpan="4" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+                        <Label alignment="CENTER" prefHeight="32.0" prefWidth="139.0" style="-fx-background-color: #00589F;" text="Connected Nodes" textFill="WHITE" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin></Label>
+                        <VBox prefWidth="133.0">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #00589F;" text="Long Name" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" left="4.0" top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #00589F;" text="Short Name" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" left="4.0" top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #00589F;" text="Building" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" left="4.0" top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #00589F;" text="Type" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" left="4.0" top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #00589F;" text="Team" textFill="WHITE">
+                                 <VBox.margin>
+                                    <Insets bottom="2.0" left="4.0" top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <JFXButton fx:id="btExpand" buttonType="RAISED" onAction="#onExpandPressed" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #00589F;" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="40.0" />
+                           </GridPane.margin>
+                        </JFXButton>
                      </children>
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
                   </GridPane>
                </children>
             </StackPane>

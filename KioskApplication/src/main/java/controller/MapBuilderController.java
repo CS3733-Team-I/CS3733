@@ -14,12 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import utility.nodeDisplay.NodeDisplay;
@@ -91,11 +93,16 @@ public class MapBuilderController extends ScreenController {
     /**
      * Edges related fields
      */
+    @FXML
+    private JFXListView<Label> lvConnectedNodes;
+    @FXML
+    private JFXButton btExpand;
+    @FXML
+    JFXPopup popup;
 
     /**
-     * Selected List
+     * Observer lists
      */
-
     private ObservableList<database.objects.Node> observableSelectedNodes;
     private ObservableList<database.objects.Node> observableChangedNodes;
     private ObservableList<database.objects.Node> observableNewNodes;
@@ -135,7 +142,30 @@ public class MapBuilderController extends ScreenController {
         ImageView infoIconView = new ImageView(infoIcon);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
+
+        Image deleteIcon = new Image(getClass().getResource("/images/icons/delete.png").toString());
+        ImageView deleteIconView = new ImageView(deleteIcon);
+        deleteIconView.setFitHeight(24);
+        deleteIconView.setFitWidth(24);
+
+        Image goIcon = new Image(getClass().getResource("/images/icons/go.png").toString());
+        ImageView goIconView = new ImageView(goIcon);
+        goIconView.setFitHeight(24);
+        goIconView.setFitWidth(24);
+
+        Image expandIcon = new Image(getClass().getResource("/images/icons/expand.png").toString());
+        ImageView expandIconView = new ImageView(expandIcon);
+        expandIconView.setFitHeight(24);
+        expandIconView.setFitWidth(24);
+
+        Image plusIcon = new Image(getClass().getResource("/images/icons/plus.png").toString());
+        ImageView plusIconView = new ImageView(plusIcon);
+        plusIconView.setFitHeight(24);
+        plusIconView.setFitWidth(24);
+
+
         btNodeInstruction.setGraphic(infoIconView);
+        btExpand.setGraphic(expandIconView);
 
         nodeID.setEditable(false);
         xcoord.setEditable(false);
@@ -323,9 +353,20 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
+                        System.out.println("Remove all items");
+                        lvConnectedNodes.getItems().clear();
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                     else if(c.wasAdded()) {
+                        //get the connected Node
+                        System.out.println("HERE");
+                        for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
+                            Label connection = new Label(connectedNode.getLongName());
+                            connection.setAlignment(Pos.CENTER);
+                            connection.setGraphic(plusIconView);
+
+                            lvConnectedNodes.getItems().add(connection);
+                        }
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                 }
@@ -457,6 +498,7 @@ public class MapBuilderController extends ScreenController {
             observableSelectedNodes.add(node);
         }
 
+        initPopup();
     }
 
     @Override
@@ -511,6 +553,7 @@ public class MapBuilderController extends ScreenController {
                             sName.setText(targetNode.getShortName());
 
                             nodeID.setText(targetNode.getNodeID());
+
                             setNodeFieldEnable();
                             return;
                         }
@@ -800,5 +843,69 @@ public class MapBuilderController extends ScreenController {
         else {
             Advance.setVisible(true);
         }
+    }
+
+    @FXML
+    private void onExpandPressed() {
+        if(!lvConnectedNodes.isExpanded()) {
+            lvConnectedNodes.setExpanded(true);
+            lvConnectedNodes.depthProperty().set(1);
+        }
+        else {
+            lvConnectedNodes.setExpanded(false);
+            lvConnectedNodes.depthProperty().set(0);
+        }
+    }
+
+    @FXML
+    private void showPopup(MouseEvent event) {
+        popup.show(lvConnectedNodes, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
+    }
+
+    private void initPopup() {
+
+        Image goIcon = new Image(getClass().getResource("/images/icons/go.png").toString());
+        ImageView goIconView = new ImageView(goIcon);
+        goIconView.setFitHeight(24);
+        goIconView.setFitWidth(24);
+
+        Image deleteIcon = new Image(getClass().getResource("/images/icons/delete.png").toString());
+        ImageView deleteIconView = new ImageView(deleteIcon);
+        deleteIconView.setFitHeight(24);
+        deleteIconView.setFitWidth(24);
+
+        Image backIcon = new Image(getClass().getResource("/images/icons/back.png").toString());
+        ImageView backIconView = new ImageView(backIcon);
+        backIconView.setFitHeight(24);
+        backIconView.setFitWidth(24);
+
+        JFXButton btGoToNode = new JFXButton("", goIconView);
+        btGoToNode.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
+        btDeleteConnection.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        JFXButton btBack = new JFXButton("", backIconView);
+        btBack.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popup.hide();
+            }
+        });
+
+        btGoToNode.setStyle("-fx-background-color: #000000");
+        btDeleteConnection.setStyle("-fx-background-color: #d32a04");
+        btBack.setStyle("-fx-background-color: #999999");
+
+        VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
+        popup = new JFXPopup(vBox);
     }
 }
