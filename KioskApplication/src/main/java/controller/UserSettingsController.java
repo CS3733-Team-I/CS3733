@@ -29,17 +29,27 @@ public class UserSettingsController {
     private Label userDialogLabel;
 
     @FXML
+    private Label errLabel;
+
+    @FXML
     private JFXTextField passwordBoxNew;
 
     @FXML
     void initialize(){
         usernameBox.setText(LoginEntity.getInstance().getUserName());
+        errLabel.setText("");
     }
 
     @FXML
     void onUserSave() {
-        if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
-            System.out.println("Password Changed!");
+        if(passwordBoxOld.getText() == null || passwordBoxOld.getText().equals("")){
+            errLabel.setText("Old Password Required");
+        }
+        else if(passwordBoxNew.getText() == null || passwordBoxNew.getText().equals("")){
+            errLabel.setText("New Password Required");
+        }
+        else if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
+            errLabel.setText("Password Changed!");
         }
     }
 
