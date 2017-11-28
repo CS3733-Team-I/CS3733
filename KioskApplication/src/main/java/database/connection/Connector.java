@@ -139,18 +139,32 @@ public class Connector {
     }
 
 
-    public static int selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, String teamAssigned) throws SQLException{
-        int result = 0;
-        PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
-        pstmt.setInt(1, nodeType.ordinal());
-        pstmt.setInt(2, floor.ordinal());
-        pstmt.setString(3, teamAssigned);
-        ResultSet rs = pstmt.executeQuery();
-        if(rs.next()){
-            result = rs.getInt("countNode");
+    // change
+    public static String selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, String teamAssigned) throws SQLException{
+        String result = "";
+        if(nodeType != NodeType.ELEV) {
+            int temp = 0;
+            PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
+            pstmt.setInt(1, nodeType.ordinal());
+            pstmt.setInt(2, floor.ordinal());
+            pstmt.setString(3, teamAssigned);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                result = String.valueOf(rs.getInt("countNode"));
+            }
+        }else{
+            PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_NODETYPE_SELECT);
+            pstmt.setInt(1, nodeType.ordinal());
+            pstmt.setInt(2, floor.ordinal());
+            pstmt.setString(3, teamAssigned);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                result = result + rs.getString("nodeID").charAt(7);
+            }
         }
         return result;
     }
+
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {

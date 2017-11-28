@@ -135,18 +135,30 @@ public class MapEntity implements IMapEntity {
         }
     }
 
-    public String getElevCount(NodeFloor floor, String teamAssigned){
-        int count = 0;
+    public String generateElevName(NodeFloor floor, String teamAssigned){
+        String alphList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String result = "EXC";
         try{
-            count = dbController.getNodeTypeCount(NodeType.ELEV, floor, teamAssigned);
-            if(count <= 26) {
-                return "00" + (count + "A");
+            String temp = dbController.getAllElevName(floor, teamAssigned);
+            int count = temp.length();
+            int number = 0;
+            if(count > 26){return "EXC";}
+            else {
+                for(int i=0; i<count; i++){
+                    if(alphList.indexOf(temp.charAt(i)) != -1){
+                        number = alphList.indexOf(temp.charAt(i));
+                        alphList.replace(alphList.charAt(number)+"", "");
+                    }
+                }
+                result = "OO" + alphList.charAt(0);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return "EXC";
+        return result;
     }
+
+
 
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
