@@ -37,6 +37,9 @@ public class MapBuilderController extends ScreenController {
     /**
      * General
      */
+    @FXML
+    private TabPane builderTabPane;
+    SingleSelectionModel<Tab> selectionModel;
     /**
      * Nodes related fields
      */
