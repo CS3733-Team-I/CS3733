@@ -138,7 +138,8 @@ public class MainWindowController {
                 break;
             case EMPLOYEE:
                 switchButton.setText("Logoff");
-                tabPane.getTabs().add(tabRS);
+                tabPane.getTabs().removeAll(tabPane.getTabs());
+                tabPane.getTabs().addAll(tabMap,tabRS);
                 break;
             case SUPER_USER:
             case ADMIN:
@@ -147,7 +148,8 @@ public class MainWindowController {
                 mapController.showEdgesBox.setSelected(true);
                 mapController.showNodesBox.setSelected(true);
                 //shows all but the Map tab for logged in Users
-                tabPane.getTabs().addAll(tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().removeAll(tabPane.getTabs());
+                tabPane.getTabs().addAll(tabMap,tabMB, tabRM, tabRS, tabSettings);
                 break;
         }
     }
