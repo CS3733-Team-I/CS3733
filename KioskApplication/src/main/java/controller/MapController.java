@@ -365,7 +365,10 @@ public class MapController {
                             nodeView.setMouseTransparent(false);
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
-                            nodeView.setAccessibleText(Integer.toString(addedDatabaseNode.getXcoord()) + Integer.toString(addedDatabaseNode.getYcoord()) + addedDatabaseNode.getFloor().toString());
+                            nodeView.setAccessibleText(addedDatabaseNode.getXyz());
+                            System.out.println("Node Databse: NodeID: " + addedDatabaseNode.getNodeID());
+                            System.out.println("Node View: accessibleText: " + nodeView.getAccessibleText());
+                            System.out.println("Node Databse: getXyz: " + addedDatabaseNode.getXyz());
                             nodeObjectList.add(nodeView);
                         }
                     }

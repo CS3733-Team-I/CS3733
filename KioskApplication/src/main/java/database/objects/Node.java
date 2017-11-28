@@ -16,7 +16,6 @@ public class Node {
     private String longName;
     private String shortName;
     private String teamAssigned;
-    private static String xyz;
 
     public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
                 String longName, String shortName, String teamAssigned) {
@@ -29,7 +28,6 @@ public class Node {
         this.longName = longName;
         this.shortName = shortName;
         this.teamAssigned = teamAssigned;
-        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     public Node(String nodeID) {
@@ -42,7 +40,6 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
-        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     public Node(String nodeID, NodeFloor floor) {
@@ -55,7 +52,6 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
-        this.xyz = Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 
     @Override
@@ -151,6 +147,6 @@ public class Node {
         this.nodeID = nodeID;
     }
     public String getXyz() {
-        return xyz;
+        return Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 }
