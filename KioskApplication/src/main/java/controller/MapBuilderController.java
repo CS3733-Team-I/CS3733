@@ -569,7 +569,6 @@ public class MapBuilderController extends ScreenController {
                 }
                 break;
         }
-        updateNodeID();
         setNodeFieldEnable();
     }
 
@@ -607,8 +606,9 @@ public class MapBuilderController extends ScreenController {
 //            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
 //        }
 //        else {
+        //System.out.println("");
             int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + nodeFloor.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(nodeFloor.toString()));
 //        }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this

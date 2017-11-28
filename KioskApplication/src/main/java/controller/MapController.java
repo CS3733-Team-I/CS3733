@@ -487,12 +487,12 @@ public class MapController {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
                             System.out.println("Removing node from Selected Node");
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                System.out.println("Removing node from Selected Node: NORMAL");
+                                //System.out.println("Removing node from Selected Node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
-                                System.out.println("Removing node from Selected Node: CHANGED");
+                                //System.out.println("Removing node from Selected Node: CHANGED");
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
