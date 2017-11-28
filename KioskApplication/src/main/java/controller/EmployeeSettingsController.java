@@ -22,21 +22,20 @@ public class EmployeeSettingsController {
 
     @FXML private JFXButton addUserButton;
     @FXML private JFXButton deleteUserButton;
-    @FXML private JFXButton editUserButton;
 
+    @FXML private BorderPane userEditorPane;
+    @FXML private Label userDialogLabel;
     @FXML private JFXTextField usernameBox;
     @FXML private JFXTextField passwordBox;
-
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> typeSelect;
     @FXML private JFXButton userActionButton;
-    @FXML private Label userDialogLabel;
+
+    @FXML private BorderPane deletePane;
+    @FXML private Label deleteText;
 
     @FXML private JFXTreeTableView<Employee> usersList;
     private final TreeItem<Employee> root = new TreeItem<>();
-
-    @FXML private BorderPane userEditorPane;
-    @FXML private BorderPane deletePane;
 
     Employee selectedEmployee;
 
@@ -73,31 +72,34 @@ public class EmployeeSettingsController {
         usersList.setShowRoot(false);
 
         usersList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            editUserButton.setDisable(false);
-            deleteUserButton.setDisable(false);
-
-            selectedEmployee = newValue.getValue();
+            if (newValue != null) {
+                LoginEntity e = LoginEntity.getInstance();
+                // Don't allow deletion if the selected user is self
+                if (!newValue.getValue().getUserName().equals(e.getUserName())) {
+                    deleteUserButton.setDisable(false);
+                    selectedEmployee = newValue.getValue();
+                }
+            }
         });
 
         refreshUsers();
 
-        // disable buttons on default
-        editUserButton.setDisable(true);
-        deleteUserButton.setDisable(true);
-
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
-        permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE);    // Except NONEMPLOYEE
+        permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE); // Except NONEMPLOYEE
         typeSelect.getItems().addAll(RequestType.values());
     }
 
     private void refreshUsers() {
         root.getChildren().clear();
+        selectedEmployee = null;
 
         ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
         logins.stream().forEach((employee) -> {
             root.getChildren().add(new TreeItem<>(employee));
         });
+
+        deleteUserButton.setDisable(true);
     }
 
     @FXML
@@ -112,6 +114,9 @@ public class EmployeeSettingsController {
 
     @FXML
     void onDeletePressed(ActionEvent event) {
+        // Set delete text
+        deleteText.setText("Delete " + selectedEmployee.getUserName() + "?");
+
         // Adjust visability
         usersList.setVisible(false);
         userEditorPane.setVisible(false);
@@ -120,19 +125,15 @@ public class EmployeeSettingsController {
 
     @FXML
     void deleteSelectedUser(ActionEvent even) {
+        // Delete user
+        LoginEntity.getInstance().deleteLogin(selectedEmployee.getUserName());
+
+        refreshUsers();
+
         // Adjust visability
         usersList.setVisible(true);
         userEditorPane.setVisible(false);
         deletePane.setVisible(false);
-    }
-
-    @FXML
-    void onEditPressed(ActionEvent event) {
-        // Adjust visability
-        usersList.setVisible(false);
-        userEditorPane.setVisible(true);
-        userActionButton.setText("Edit");
-        userDialogLabel.setText("Edit User");
     }
 
     @FXML
@@ -150,24 +151,18 @@ public class EmployeeSettingsController {
         userEditorPane.setVisible(false);
         deletePane.setVisible(false);
 
-        // Add/edit/delete from database
-
         // Check that all fields are filled in
         if (usernameBox.getText() != null && passwordBox.getText() != null && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
-            // Add
-            if (userActionButton.getText().equals("Add")) {
+            // Add user
+            if (LoginEntity.getInstance().addUser(usernameBox.getText(), passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
+                System.out.println("Adding user ... ");
+                System.out.println("User: " + usernameBox.getText());
+                System.out.println("Pass: " + passwordBox.getText());
+                System.out.println("Permission: " + permissionSelect.getValue().toString());
+                System.out.println("Type: " + typeSelect.getValue().toString());
 
-                // Add user
-                if (LoginEntity.getInstance().addUser(usernameBox.getText(), passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
-
-                    System.out.println("Adding user ... ");
-                    System.out.println("User: " + usernameBox.getText());
-                    System.out.println("Pass: " + passwordBox.getText());
-                    System.out.println("Permission: " + permissionSelect.getValue().toString());
-                    System.out.println("Type: " + typeSelect.getValue().toString());
-                }
+                refreshUsers();
             }
         }
-
     }
 }

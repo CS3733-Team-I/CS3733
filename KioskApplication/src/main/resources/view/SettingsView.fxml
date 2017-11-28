@@ -16,51 +16,12 @@
          <tabs>
             <Tab fx:id="aboutTab" text="About">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane fx:id="s" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
             <Tab fx:id="displayTab" text="Display">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
-            <Tab fx:id="databaseTab" text="Database">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox layoutX="428.0" layoutY="280.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-                           <children>
-                              <Label prefHeight="30.0" prefWidth="217.0" text="Database">
-                                 <font>
-                                    <Font size="25.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="30.0" prefWidth="217.0" text="Saving &amp; Loading">
-                                 <font>
-                                    <Font size="25.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets right="5.0" />
-                                 </padding>
-                              </Label>
-                              <JFXButton buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
-                              <JFXButton buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
-                           </children>
-                        </VBox>
-                     </children></AnchorPane>
-              </content>
-            </Tab>
-            <Tab text="User">
-               <content>
-                  <AnchorPane fx:id="userPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-            <Tab text="Employees">
-              <content>
-                <AnchorPane fx:id="employeesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
             <Tab fx:id="pathfindingTab" text="Pathfinding">
@@ -100,6 +61,45 @@
                      </children>
                   </AnchorPane>
                </content>
+            </Tab>
+            <Tab fx:id="userTab" text="User">
+               <content>
+                  <AnchorPane fx:id="userPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+            <Tab fx:id="databaseTab" text="Database">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="428.0" layoutY="280.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                           <children>
+                              <Label prefHeight="30.0" prefWidth="217.0" text="Database">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="30.0" prefWidth="217.0" text="Saving &amp; Loading">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
+                              </Label>
+                              <JFXButton buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
+                              <JFXButton buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
+                           </children>
+                        </VBox>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab fx:id="employeesTab" text="Employees">
+              <content>
+                <AnchorPane fx:id="employeesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
             </Tab>
          </tabs>
       </JFXTabPane>

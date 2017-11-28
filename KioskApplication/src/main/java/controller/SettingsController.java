@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
+import entity.LoginEntity;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,10 +21,15 @@ import java.io.IOException;
 public class SettingsController extends ScreenController {
 
     @FXML private JFXTabPane settingTabPane;
-    @FXML private Tab databaseTab;
+
+    @FXML private Tab aboutTab;
     @FXML private Tab displayTab;
     @FXML private Tab pathfindingTab;
-    @FXML private Tab aboutTab;
+    @FXML private Tab userTab;
+
+    @FXML private Tab databaseTab;
+    @FXML private Tab employeesTab;
+
 
     @FXML private RadioButton astarButton;
     @FXML private RadioButton dijkstraButton;
@@ -64,6 +70,24 @@ public class SettingsController extends ScreenController {
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
         loader2.setRoot(userPane);
         loader2.load();
+    }
+
+    public void checkPermissions() {
+        switch (LoginEntity.getInstance().getPermission()) {
+            case NONEMPLOYEE:
+                settingTabPane.getTabs().clear();
+                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab);
+                break;
+            case EMPLOYEE:
+                settingTabPane.getTabs().clear();
+                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab);
+                break;
+            case SUPER_USER:
+            case ADMIN:
+                settingTabPane.getTabs().clear();
+                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab, employeesTab);
+                break;
+        }
     }
 
     @FXML
