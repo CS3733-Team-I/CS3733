@@ -65,6 +65,15 @@ public class LoginEntity {
         return userName;
     }
 
+    public String getUserID(){
+        if(permission==NONEMPLOYEE) {
+            return "";
+        }
+        else{
+            return logins.get(userName).getLoginID();
+        }
+    }
+
     // Adds every employee from the database to the logins hashmap
     private void readAllFromDatabase(){
         LinkedList<Employee> employees = dbC.getAllEmployees();

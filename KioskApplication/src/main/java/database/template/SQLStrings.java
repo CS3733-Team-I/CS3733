@@ -33,7 +33,7 @@ public class SQLStrings {
             " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL)";
 
-    public static final String REQUEST_INSERT = "?,?,?,?,?,?,?,?,?)";
+    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String REQUEST_UPDATE =
             " nodeID=?," +
             " assigner=?," +
@@ -48,7 +48,7 @@ public class SQLStrings {
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,"+
             " language INT NOT NULL,";
 
-    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?,?,";
+    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
             " language=?,";
     public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
@@ -59,7 +59,7 @@ public class SQLStrings {
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
             " priority INT NOT NULL,";
 
-    public static final String SECURITY_INSERT = "insert into t_security values(?,?,";
+    public static final String SECURITY_INSERT = "insert into t_security values(?, ?,";
     public static final String SECURITY_UPDATE = "update t_security set" +
             " priority=?,";
     public static final String SECURITY_SELECT = "select * from t_security where requestID=?";

@@ -155,15 +155,17 @@ public class Connector {
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT+REQUEST_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT);
         pstmt.setString(1, iR.getRequestID());
-        pstmt.setString(2, iR.getNodeID());
-        pstmt.setString(3, iR.getAssigner());
-        pstmt.setString(4, iR.getNote());
-        pstmt.setTimestamp(5, iR.getSubmittedTime());
-        pstmt.setTimestamp(6, iR.getCompletedTime());
-        pstmt.setInt(7, iR.getStatus().ordinal());
-        pstmt.setInt(8, iR.getLanguage().ordinal());
+        pstmt.setInt(2, iR.getLanguage().ordinal());
+        pstmt.setString(3, iR.getNodeID());
+        pstmt.setString(4, iR.getAssigner());
+        pstmt.setString(5, iR.getCompleter());
+        pstmt.setString(6, iR.getNote());
+        pstmt.setTimestamp(7, iR.getSubmittedTime());
+        pstmt.setTimestamp(8, iR.getStartedTime());
+        pstmt.setTimestamp(9, iR.getCompletedTime());
+        pstmt.setInt(10, iR.getStatus().ordinal());
         return pstmt.executeUpdate();
     }
 
