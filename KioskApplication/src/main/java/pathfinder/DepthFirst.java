@@ -21,7 +21,12 @@ public class DepthFirst implements SearchAlgorithm{
         //Make a list of visited nodes to prevent loops
         LinkedList<Node> visitedNodes = new LinkedList<>();
 
-        return findPath(startingNode, endingNode, visitedNodes);
+        try {
+            return findPath(startingNode, endingNode, visitedNodes);
+        }
+        catch (DeadEndException e) {
+            throw new PathfinderException(e.getMessage() + " " + e.getVisitedNodes());
+        }
     }
 
     /**
@@ -69,7 +74,7 @@ public class DepthFirst implements SearchAlgorithm{
                 }
             }
         }
-        throw new PathfinderException(startingNode.getNodeID() + ". Got to the end of the DF search");
+        throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
     }
 
     private boolean isOpenConnectedNode(Node node, LinkedList<Node> visitedNodes) {
