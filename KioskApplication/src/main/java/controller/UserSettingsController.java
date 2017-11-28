@@ -44,13 +44,15 @@ public class UserSettingsController {
         root.setExpanded(true);
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
-        usernameColumn.setPrefWidth(150);
+        usernameColumn.setResizable(false);
+        usernameColumn.setPrefWidth(175);
         usernameColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getUserName())
         );
 
         TreeTableColumn<Employee, String> permissionColumn = new TreeTableColumn<>("Permission");
+        permissionColumn.setResizable(false);
         permissionColumn.setPrefWidth(150);
         permissionColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
@@ -58,7 +60,8 @@ public class UserSettingsController {
         );
 
         TreeTableColumn<Employee, String> serviceColumn = new TreeTableColumn<>("Service Availability");
-        serviceColumn.setPrefWidth(190);
+        serviceColumn.setResizable(false);
+        serviceColumn.setPrefWidth(175);
         serviceColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getServiceAbility().toString())
@@ -68,7 +71,16 @@ public class UserSettingsController {
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
+        usersList.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
+            editUserButton.setDisable(false);
+            deleteUserButton.setDisable(false);
+        });
+
         refreshUsers();
+
+        // disable buttons on default
+        editUserButton.setDisable(true);
+        deleteUserButton.setDisable(true);
 
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
