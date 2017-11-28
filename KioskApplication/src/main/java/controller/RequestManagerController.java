@@ -55,13 +55,11 @@ public class RequestManagerController extends ScreenController {
         super(parent, map);
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
-
     }
 
     @FXML
     void viewRequests() throws IOException {
         System.out.println("Request Manager Pressed\n");
-
         getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }
 
@@ -85,6 +83,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     LinkedList<Request> filterRequests() {
+        r.readAllFromDatabase();
         LinkedList<Request> allRequests = new LinkedList<Request>();
         if (securityFilter.isSelected()) {
             for (Request sR : r.getAllSecurity()) {
@@ -101,14 +100,12 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(RequestProgressStatus status, String buttonName, LinkedList<Request> allRequests){
-//        r.readAllFromDatabase();    //Do we need this???
         activeRequests.getChildren().clear();
 
         if(allRequests.isEmpty() || r.filterByStatus(allRequests,status).isEmpty()){
             Label emptyList = new Label("No Requests");
             activeRequests.getChildren().add(emptyList);
         }else{
-
             LinkedList<Request> requests = r.filterByStatus(allRequests,status);
             for (int i = 0; i < requests.size(); i++) {
                 String id = requests.get(i).getRequestID();
@@ -155,7 +152,6 @@ public class RequestManagerController extends ScreenController {
                     });
                     reqButton.setStyle("-fx-background-color: #DFB951;");
                     activeRequests.getChildren().add(reqButton);
-
                 }
                 break;
             case ADMIN: case SUPER_USER:
@@ -189,7 +185,6 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void onCompletePressed(String ID){
-//        String ID = txtID.getText();
         Request request;
         if(r.checkRequestType(ID).equals(RequestType.INTERPRETER)){
             request = r.getInterpreterRequest(ID);
