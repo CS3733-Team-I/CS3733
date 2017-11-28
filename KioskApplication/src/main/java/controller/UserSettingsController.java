@@ -50,7 +50,16 @@ public class UserSettingsController {
         }
         else if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
             errLabel.setText("Password Changed!");
+            passwordBoxOld.setText("");
+            passwordBoxNew.setText("");
         }
+    }
+
+    void resetScreen() {
+        usernameBox.setText("");
+        passwordBoxOld.setText("");
+        passwordBoxNew.setText("");
+        errLabel.setText("");
     }
 
 }
