@@ -12,12 +12,16 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.Node.NodeFloor;
@@ -144,6 +148,21 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void submitRequest(){
         getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
+    }
+
+    @FXML
+    void showReports() throws IOException{
+        RequestTrackingDataController test = new RequestTrackingDataController(this,r.getLanguageFrequency());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TESTViewInterpreterRequestLangHistogram.fxml"));
+        loader.setController(test);
+        Node view = loader.load();
+        BorderPane histogram = new BorderPane();
+
+        AnchorPane.setTopAnchor(histogram, 0.0);
+        AnchorPane.setLeftAnchor(histogram, 0.0);
+        AnchorPane.setBottomAnchor(histogram, 0.0);
+        AnchorPane.setRightAnchor(histogram, 0.0);
+        histogram.setCenter(view);
     }
 
     @Override

@@ -6,6 +6,7 @@ import database.objects.InterpreterRequest;
 import database.objects.Request;
 import database.objects.SecurityRequest;
 import utility.Request.Language;
+import utility.Request.LanguageFrequency;
 import utility.Request.RequestProgressStatus;
 import utility.Request.RequestType;
 
@@ -371,7 +372,7 @@ public class RequestEntity {
         }
     }
 
-    // gives a frequency histogram
+    // gives a frequency histogram for interpreter request languages
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
@@ -384,44 +385,5 @@ public class RequestEntity {
             }
         }
         return freq;
-    }
-
-    //pairing for languages and their frequency
-    public class LanguageFrequency{
-        Language language;
-        int frequency;
-
-        public LanguageFrequency(Language language){
-            this.language=language;
-            this.frequency=0;
-        }
-
-        public void increment(){
-            this.frequency=frequency+1;
-        }
-
-        public boolean isLanguage(Language language){
-            return this.language ==language;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if(obj==null) return false;
-            if(obj.getClass() == this.getClass()){
-                LanguageFrequency other = (LanguageFrequency)obj;
-                return other.language==this.language;
-            }
-            else {
-                return false;
-            }
-        }
-
-        public Language getLanguage() {
-            return language;
-        }
-
-        public int getFrequency() {
-            return frequency;
-        }
     }
 }
