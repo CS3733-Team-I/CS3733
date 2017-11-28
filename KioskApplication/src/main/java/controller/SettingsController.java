@@ -73,7 +73,7 @@ public class SettingsController extends ScreenController {
     }
 
     public void checkPermissions() {
-        switch (LoginEntity.getInstance().getPermission()) {
+        switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
                 settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab);

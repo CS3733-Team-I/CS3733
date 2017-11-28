@@ -72,13 +72,23 @@ public class DatabaseController {
     }
 
     public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) throws DatabaseException {
-        int result = 0;
         try{
-            return Connector.selectCountNodeType(instanceConnection,nodeType, floor, teamAssigned);
+            return Integer.parseInt(Connector.selectCountNodeType(instanceConnection,nodeType, floor, teamAssigned));
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
+    }
+
+    public String getAllElevName(NodeFloor floor, String teamAssigned) throws DatabaseException{
+        String result = "";
+        try{
+            result = Connector.selectCountNodeType(instanceConnection, NodeType.ELEV, floor, teamAssigned);
+            return result;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "EXC";
     }
 
     public boolean removeNode(Node node) throws DatabaseException {

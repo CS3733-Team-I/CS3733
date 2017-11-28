@@ -3,6 +3,7 @@ package database.objects;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
+import org.springframework.security.crypto.bcrypt.*;
 
 public class Employee extends RecursiveTreeObject<Employee> {
     private String loginID;
@@ -21,7 +22,7 @@ public class Employee extends RecursiveTreeObject<Employee> {
             this.password = password;
         }
         else {
-            this.password = encryptPassword(password);
+            this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         }
         if(permission==KioskPermission.NONEMPLOYEE){
             permission=KioskPermission.EMPLOYEE;
@@ -57,27 +58,14 @@ public class Employee extends RecursiveTreeObject<Employee> {
 
     // Method to logIn passwords
     public boolean validatePassword(String password){
-        return (this.password.equals(encryptPassword(password)));
-    }
-
-    // Method for encrypting passwords, currently does jack shit LOL
-    private String encryptPassword(String password){
-        char[] p = password.toCharArray();
-        String encPassword = "";
-        for (char c: p) {
-            int a = (int)c;
-            a++;
-            char o = (char) a;
-            encPassword=encPassword+o;
-        }
-        return encPassword;
+        return (BCrypt.checkpw(password, this.password));
     }
 
     // method to update passwords
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean valid = validatePassword(oldPassword);
         if(valid){
-            password=encryptPassword(newPassword);
+            password=BCrypt.hashpw(newPassword, BCrypt.gensalt());
         }
         return valid;
     }

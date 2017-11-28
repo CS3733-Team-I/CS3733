@@ -33,7 +33,7 @@ public class UserSettingsController {
 
     @FXML
     void initialize(){
-        usernameBox.setText(LoginEntity.getInstance().getUserName());
+        usernameBox.setText(LoginEntity.getInstance().getUsername());
     }
 
     @FXML

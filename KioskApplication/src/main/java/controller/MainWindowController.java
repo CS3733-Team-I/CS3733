@@ -4,10 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.Administrator;
 import entity.LoginEntity;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -16,41 +13,35 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
 import utility.node.NodeFloor;
-import utility.KioskPermission;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class MainWindowController {
 
-    @FXML AnchorPane contentWindow;
-    javafx.scene.Node contentNode;
-    @FXML BorderPane loginPopup;
-    @FXML JFXButton switchButton;
+    @FXML private AnchorPane contentWindow;
+          private javafx.scene.Node contentNode;
+    @FXML private BorderPane loginPopup;
+    @FXML private JFXButton switchButton;
 
-    @FXML JFXTabPane tabPane;
-    @FXML Tab tabMap;
-    @FXML Tab tabMB;
-    @FXML Tab tabRS;
-    @FXML Tab tabRM;
-    @FXML Tab tabSettings;
-    //@FXML Label lbAdminInfo;
-    //@FXML JFXDrawer Sidebar;
-    //@FXML JFXHamburger SidebarHam;
+    @FXML private JFXTabPane tabPane;
+    @FXML private Tab tabMap;
+    @FXML private Tab tabMB;
+    @FXML private Tab tabRS;
+    @FXML private Tab tabRM;
+    @FXML private Tab tabSettings;
 
-    //will be changed to refer to LoginEntity once completed
-    LoginEntity l;
+    private LoginEntity loginEntity;
 
-    ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
+    private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
-    AnchorPane mapView;
-    MapController mapController;
+    private AnchorPane mapView;
+    private MapController mapController;
 
-    HashMap<ApplicationScreen, ScreenController> controllers;
+    private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
-        l= LoginEntity.getInstance();
+        loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
     }
@@ -67,26 +58,24 @@ public class MainWindowController {
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
 
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab oldValue, Tab newValue) {
-                switch (newValue.getText()) { // TODO make this more modular/language independent
-                    case "Map":
-                        switchToScreen(ApplicationScreen.PATHFINDING);
-                        break;
-                    case "Map Builder":
-                        switchToScreen(ApplicationScreen.MAP_BUILDER);
-                        break;
-                    case "Request Manager":
-                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
-                        break;
-                    case "Request Submit":
-                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
-                        break;
-                    case "Settings":
-                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
-                        break;
-                }
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) return;
+            switch (newValue.getText()) { // TODO make this more modular/language independent
+                case "Map":
+                    switchToScreen(ApplicationScreen.PATHFINDING);
+                    break;
+                case "Map Builder":
+                    switchToScreen(ApplicationScreen.MAP_BUILDER);
+                    break;
+                case "Request Manager":
+                    switchToScreen(ApplicationScreen.REQUEST_MANAGER);
+                    break;
+                case "Request Submit":
+                    switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
+                    break;
+                case "Settings":
+                    switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+                    break;
             }
         });
 
@@ -105,29 +94,11 @@ public class MainWindowController {
         loginPopup.setVisible(false);
 
         checkPermissions();
-
-        //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
-        //Initialize Hamburger
-//        HamburgerBackArrowBasicTransition BATransition = new HamburgerBackArrowBasicTransition(SidebarHam);
-//        BATransition.setRate(-1);
-//        SidebarHam.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
-//            BATransition.setRate(BATransition.getRate()*-1);
-//            BATransition.play();
-//
-//            if(Sidebar.isShown()) {
-//                System.out.println("HERE1");
-//                Sidebar.close();
-//            }
-//            else {
-//                System.out.println("HERE2");
-//                Sidebar.open();
-//            }
-//        });
     }
 
     //checks permissions of user and adjusts visible tabs and screens
-    public void checkPermissions() {
-        switch (l.getPermission()) {
+    void checkPermissions() {
+        switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
                 switchButton.setText("Staff Login");
 
@@ -160,7 +131,7 @@ public class MainWindowController {
         }
     }
 
-    public void switchToScreen(ApplicationScreen screen) {
+    void switchToScreen(ApplicationScreen screen) {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
@@ -216,7 +187,7 @@ public class MainWindowController {
         this.currentScreen = screen;
     }
 
-    protected void closeLoginPopup(){
+    void closeLoginPopup(){
         this.loginPopup.setVisible(false);
         this.switchButton.setDisable(false);
         this.tabPane.setDisable(false);
@@ -233,31 +204,15 @@ public class MainWindowController {
         this.tabMap.setDisable(true);
         this.contentNode.setDisable(true);
         this.mapView.setDisable(true);
-
-        /*//TODO: make this slide in transition code work
-        double screenWidth=contentWindow.getWidth();
-        javafx.scene.shape.Path path = new javafx.scene.shape.Path();
-        path.getElements().add(new MoveTo(-200,0));
-        path.getElements().add(new LineTo( 0, 0));
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(500));
-        contentWindow.getChildren().add(path);
-        pathTransition.setPath(path);
-        pathTransition.setNode(loginContainer.getCenter());
-        pathTransition.setOrientation(PathTransition.OrientationType.NONE);
-        pathTransition.setCycleCount(1);
-        pathTransition.play();
-        System.out.println(loginController.getLoginAnchorHeight());
-        System.out.println(loginController.getLoginAnchorWidth());*/
     }
 
     @FXML
     public void switchButtonClicked() throws IOException {
-        switch (l.getPermission()) {
+        switch (loginEntity.getCurrentPermission()) {
             case SUPER_USER:
             case ADMIN:
             case EMPLOYEE:
-                l.logOut();
+                loginEntity.logOut();
                 checkPermissions();
                 break;
             case NONEMPLOYEE:
@@ -279,9 +234,6 @@ public class MainWindowController {
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
-//        System.out.println("controller: " + controllers);
-//        System.out.println("currentScreen: " + currentScreen);
-//        System.out.println("selectedFloor: "+ selectedFloor);
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 }
