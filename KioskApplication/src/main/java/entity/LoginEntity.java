@@ -47,13 +47,16 @@ public class LoginEntity {
         }
         else {
             // remove once we have a better way to initialize things
-            permission = SUPER_USER;
             dbC = DatabaseController.getInstance();
-            // TODO: remove this backdoor once a more secure method of initially tracking admin logins is developed
-            addUser("boss@hospital.com", "123",ADMIN,RequestType.GENERAL);
-            addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);
-            // initial employee state, we don't want anyone to restart the application and gain access to admin powers
-            permission = NONEMPLOYEE;
+            readAllFromDatabase();
+            if(dbC.getAllEmployees().size()==0) {
+                // if there are no employees in the database, start as a super user
+                permission = SUPER_USER;
+            }
+            else {
+                // initial employee state, we don't want anyone to restart the application and gain access to admin powers
+                permission = EMPLOYEE;
+            }
         }
     }
 
