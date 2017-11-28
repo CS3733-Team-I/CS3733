@@ -31,20 +31,15 @@ public class UserSettingsController {
     @FXML private Label userDialogLabel;
 
     @FXML private JFXTreeTableView<Employee> usersList;
+    private final TreeItem<Employee> root = new TreeItem<>();
+
     @FXML private GridPane userEditorPane;
 
     @FXML
     void initialize() {
         userEditorPane.setVisible(false);
 
-        ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
-
-        final TreeItem<Employee> root = new TreeItem<>();
         root.setExpanded(true);
-
-        logins.stream().forEach((employee) -> {
-            root.getChildren().add(new TreeItem<>(employee));
-        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setPrefWidth(150);
@@ -70,6 +65,17 @@ public class UserSettingsController {
         usersList.getColumns().setAll(usernameColumn, permissionColumn, serviceColumn);
         usersList.setRoot(root);
         usersList.setShowRoot(false);
+
+        refreshUsers();
+    }
+
+    private void refreshUsers() {
+        root.getChildren().clear();
+
+        ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
+        logins.stream().forEach((employee) -> {
+            root.getChildren().add(new TreeItem<>(employee));
+        });
     }
 
     @FXML

@@ -4,8 +4,10 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -13,41 +15,48 @@
 
 <fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserSettingsController">
    <children>
-      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" prefHeight="400.0" prefWidth="412.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
+      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
       <Label layoutX="61.0" layoutY="51.0" prefHeight="30.0" prefWidth="217.0" text="Users" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" text="Add User" AnchorPane.leftAnchor="440.0" AnchorPane.topAnchor="65.0" />
-      <JFXButton fx:id="deleteUserButton" layoutX="440.0" layoutY="115.0" onAction="#onDeletePressed" text="Delete User" />
-      <JFXButton fx:id="editUserButton" layoutX="440.0" layoutY="90.0" onAction="#onEditPressed" text="Edit User" />
-      <GridPane fx:id="userEditorPane" layoutX="564.0" layoutY="58.0" prefHeight="280.0" prefWidth="412.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
-         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <JFXTextField fx:id="usernameBox" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <JFXTextField fx:id="passwordBox" labelFloat="true" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-            <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" promptText="Permissions" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <JFXComboBox fx:id="typeSelect" promptText="Request Availablity" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-            <JFXButton fx:id="userActionButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="5" />
-            <JFXButton onAction="#onUserCancel" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label fx:id="userDialogLabel" prefHeight="30.0" text="Add User" GridPane.columnSpan="2">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-         </children>
-      </GridPane>
+      <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" text="Add User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="65.0" />
+      <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" text="Delete User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="95.0" />
+      <JFXButton fx:id="editUserButton" layoutX="516.0" layoutY="120.0" onAction="#onEditPressed" text="Edit User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="125.0" />
+      <BorderPane prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+         <center>
+            <GridPane fx:id="userEditorPane" prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <JFXTextField fx:id="usernameBox" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="passwordBox" labelFloat="true" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                  <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" promptText="Permissions" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <JFXComboBox fx:id="typeSelect" promptText="Request Availablity" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <JFXButton fx:id="userActionButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="5" />
+                  <JFXButton onAction="#onUserCancel" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="userDialogLabel" prefHeight="30.0" text="Add User" GridPane.columnSpan="2">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+               </children>
+               <BorderPane.margin>
+                  <Insets left="150.0" right="150.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </center>
+      </BorderPane>
    </children>
 </fx:root>
