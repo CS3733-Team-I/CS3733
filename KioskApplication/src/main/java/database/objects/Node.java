@@ -1,8 +1,8 @@
 package database.objects;
 
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 public class Node {
     private String nodeID;

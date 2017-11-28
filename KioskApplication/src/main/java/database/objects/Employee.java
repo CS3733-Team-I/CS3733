@@ -1,7 +1,7 @@
 package database.objects;
 
 import utility.KioskPermission;
-import utility.Request.RequestType;
+import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
 public class Employee {

@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utility.KioskPermission;
-import utility.Request.RequestType;
+import utility.request.RequestType;
 
 import static org.junit.Assert.assertEquals;
 import static utility.KioskPermission.ADMIN;
@@ -18,7 +18,7 @@ public class TestLoginEntity {
 
     @Before
     public void setup(){
-        db = DatabaseController.getTestInstance();
+        db = DatabaseController.getInstance();
         l = LoginEntity.getTestInstance();
         l.addUser("boss@hospital.com", "123",SUPER_USER, RequestType.GENERAL);
         l.addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);

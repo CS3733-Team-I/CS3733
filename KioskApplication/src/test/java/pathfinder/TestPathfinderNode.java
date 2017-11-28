@@ -3,14 +3,11 @@ package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
-import pathfinder.A_star;
-import pathfinder.Pathfinder;
-import pathfinder.PathfinderNode;
-import pathfinder.StartNode;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,10 +26,10 @@ public class TestPathfinderNode {
     private LinkedList<Edge> path;
 
     @Before
-    public void setup() {
+    public void setup() throws DatabaseException {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Build map
-        DatabaseController.getTestInstance();
+        DatabaseController.getInstance();
 
         map = MapEntity.getInstance();
 

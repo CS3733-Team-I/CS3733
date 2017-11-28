@@ -1,16 +1,22 @@
 package database;
 
-import database.objects.*;
+import database.objects.Edge;
+import database.objects.Employee;
+import database.objects.InterpreterRequest;
+import database.objects.Node;
+import database.utility.DatabaseException;
+import org.junit.Before;
+import org.junit.runner.JUnitCore;
 import utility.KioskPermission;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-import utility.Request.Language;
-import utility.Request.RequestProgressStatus;
-import utility.Request.RequestType;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
+import utility.request.Language;
+import utility.request.RequestProgressStatus;
+import utility.request.RequestType;
 
 import java.sql.Timestamp;
 import java.util.LinkedList;
@@ -25,39 +31,43 @@ public class DatabaseControllerTests {
     private DatabaseController dbController;
 
     public DatabaseControllerTests() {
-        dbController = DatabaseController.getTestInstance();
+        dbController = DatabaseController.getInstance();
     }
 
     @After
     public void removeAllFromDB() {
-        List<Node> nodes = dbController.getAllNodes();
-        for (Node node : nodes) dbController.removeNode(node);
+        try {
+            List<Node> nodes = dbController.getAllNodes();
+            for (Node node : nodes) dbController.removeNode(node);
 
-        List<Edge> edges = dbController.getAllEdges();
-        for (Edge edge : edges) dbController.removeEdge(edge);
+            List<Edge> edges = dbController.getAllEdges();
+            for (Edge edge : edges) dbController.removeEdge(edge);
 
-        List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
-        for (InterpreterRequest iR: interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
+            List<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
+            for (InterpreterRequest iR : interpreterRequests) dbController.deleteInterpreterRequest(iR.getRequestID());
 
-        List<Employee> employees = dbController.getAllEmployees();
-        for (Employee e: employees) dbController.removeEmployee(e.getLoginID());
+            List<Employee> employees = dbController.getAllEmployees();
+            for (Employee e : employees) dbController.removeEmployee(e.getLoginID());
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void TestDatabaseAddNode() {
+    public void TestDatabaseAddNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                              NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                             "Test Node", "TN1", "I");
+                             "Test node", "TN1", "I");
         dbController.addNode(node);
         Node receivedNode  = dbController.getNode(node.getNodeID());
         Assert.assertEquals(receivedNode, node);
     }
 
     @Test
-    public void TestDatabaseEditNode() {
+    public void TestDatabaseEditNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         dbController.addNode(node);
 
         // Change node parameters
@@ -77,10 +87,15 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseRemoveNode() {
+    public void testDatabaseGetInvalidNode() throws DatabaseException {
+        assertEquals(null, dbController.getNode("randomid1238712"));
+    }
+
+    @Test
+    public void TestDatabaseRemoveNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         dbController.addNode(node);
 
         dbController.removeNode(node);
@@ -90,13 +105,13 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseAddEdge() {
+    public void TestDatabaseAddEdge() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
-                "Test Node 1", "TN1", "I");
+                "Test node 1", "TN1", "I");
         Node node2 = new Node("NODE2", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node 2", "TN2", "I");
+                "Test node 2", "TN2", "I");
 
         dbController.addNode(node1);
         dbController.addNode(node2);
@@ -110,13 +125,13 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseRemoveEdge() {
+    public void TestDatabaseRemoveEdge() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
-                "Test Node 1", "TN1", "I");
+                "Test node 1", "TN1", "I");
         Node node2 = new Node("NODE2", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node 2", "TN2", "I");
+                "Test node 2", "TN2", "I");
 
         dbController.addNode(node1);
         dbController.addNode(node2);
@@ -130,13 +145,13 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void TestDatabaseRemoveEdgeParent() {
+    public void TestDatabaseRemoveEdgeParent() throws DatabaseException {
         Node node1 = new Node("NODE1", 243, 633,
                 NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.RETL,
-                "Test Node 1", "TN1", "I");
+                "Test node 1", "TN1", "I");
         Node node2 = new Node("NODE2", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node 2", "TN2", "I");
+                "Test node 2", "TN2", "I");
 
         dbController.addNode(node1);
         dbController.addNode(node2);
@@ -150,23 +165,24 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testAddInterpreterRequest(){
+    public void testAddInterpreterRequest() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         dbController.addNode(node);
         InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
         dbController.addInterpreterRequest(iR1);
         Assert.assertEquals(iR1,dbController.getInterpreterRequest(iR1.getRequestID()));
     }
 
-    @Test public void testUpdateInterpreterRequest(){
+    @Test
+    public void testUpdateInterpreterRequest() throws DatabaseException {
         Node node1 = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         Node node2 = new Node("NODE2", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node 2", "TN2", "I");
+                "Test node 2", "TN2", "I");
         dbController.addNode(node1);
         dbController.addNode(node2);
         long t1 = System.currentTimeMillis();
@@ -189,10 +205,10 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testDeleteInterpreterRequest(){
+    public void testDeleteInterpreterRequest() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1","boss@hospital.com", " ", new Timestamp(t1), new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
@@ -204,15 +220,15 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testRemoveInterpreterRequestAssociatedNode(){
+    public void testRemoveInterpreterRequestAssociatedNode() throws DatabaseException {
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
-                "Test Node", "TN1", "I");
+                "Test node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1","boss@hospital.com", " ", new Timestamp(t1), new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
-        //deletes Node
+        //deletes node
         dbController.removeNode(node);
         InterpreterRequest recievedIR = dbController.getInterpreterRequest(iR.getRequestID());
         Assert.assertTrue(recievedIR==null);

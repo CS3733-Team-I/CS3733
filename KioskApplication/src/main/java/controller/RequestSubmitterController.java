@@ -11,9 +11,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
-import utility.Request.Language;
-import utility.Node.NodeFloor;
-import utility.Request.RequestType;
+import utility.request.Language;
+import utility.node.NodeFloor;
+import utility.request.RequestType;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
