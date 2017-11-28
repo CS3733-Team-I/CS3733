@@ -14,9 +14,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
-import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -30,20 +30,20 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
 
+import java.io.IOException;
+
 public class MapBuilderController extends ScreenController {
 
     /**
      * General
      */
-    @FXML
-    private TabPane builderTabPane;
-    SingleSelectionModel<Tab> selectionModel;
     /**
      * Nodes related fields
      */
     Node heightLightedNode;
     //default, nodeFloor is in sync with main map
     NodeType nodeType = NodeType.TEMP;
+    NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeBuilding nodeBuilding = NodeBuilding.FRANCIS15;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
@@ -61,13 +61,11 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
     @FXML
-    private JFXToggleButton tbNodeInstruction;
+    private JFXButton btNodeInstruction;
     @FXML
     private TextFlow tfNodeInfo;
     @FXML
-    private JFXToggleButton tbNodeAdvanced;
-    @FXML
-    private GridPane nodeAdvanced;
+    private GridPane Advance;
     @FXML
     private TextField xcoord;
     @FXML
@@ -89,6 +87,8 @@ public class MapBuilderController extends ScreenController {
     private JFXButton btNodeRedo;
     @FXML
     private JFXButton btNodeDelete;
+    @FXML
+    private JFXButton btAdvance;
     /**
      * Edges related fields
      */
@@ -111,8 +111,10 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    public void initialize() {
-        selectionModel = builderTabPane.getSelectionModel();
+    public void initialize() throws IOException{
+
+        Advance.setVisible(false);
+
         /**
          * Node Input put validators
          */
@@ -122,6 +124,7 @@ public class MapBuilderController extends ScreenController {
         sNameValidator.setMessage("Short Name Required");
 
         //disable all fields
+        btNodeSave.setDisable(true);
         setNodeAllDisable();
 
         //add items into the combobox
@@ -134,46 +137,22 @@ public class MapBuilderController extends ScreenController {
         infoIconView.setRotate(90);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
-        tbNodeInstruction.setGraphic(infoIconView);
+        btNodeInstruction.setGraphic(infoIconView);
 
         nodeID.setEditable(false);
         xcoord.setEditable(false);
         ycoord.setEditable(false);
 
-        tfNodeInfo.setVisible(false);
-        nodeAdvanced.setVisible(false);
-
         //update floor based on the floor selector
-
+        nodeFloor = mapController.getCurrentFloor();
 
         //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETELY
         mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
+                nodeFloor = mapController.getCurrentFloor();
                 updateNodeID();
                 //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
-            }
-        });
-        tbNodeAdvanced.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(nodeAdvanced.isVisible()) {
-                    nodeAdvanced.setVisible(false);
-                }
-                else {
-                    nodeAdvanced.setVisible(true);
-                }
-            }
-        });
-        tbNodeInstruction.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (tfNodeInfo.isVisible()) {
-                    tfNodeInfo.setVisible(false);
-                } else {
-                    tfNodeInfo.setVisible(true);
-                }
-
             }
         });
         CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
@@ -499,15 +478,13 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-        System.out.println("floor changed");
-
         mapController.showEdgesBox.setSelected(false);
         mapController.showNodesBox.setSelected(false);
     }
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0, 400, 0, 0);
+        getMapController().setAnchor(0, 450, 0, 0);
     }
 
 
@@ -626,14 +603,14 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void updateNodeID() {
-        if(nodeType == NodeType.ELEV) {
-            String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
-        }
-        else {
-            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + convertFloor(mapController.floorSelector.getValue().toString()));
-        }
+//        if(nodeType == NodeType.ELEV) {
+//            String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
+//            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
+//        }
+//        else {
+            int nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCount) + nodeFloor.toString());
+//        }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
     }
@@ -649,7 +626,7 @@ public class MapBuilderController extends ScreenController {
         ycoord.setDisable(false);
         //turn off advanced options
         //TODO change save, undo, redo disable/renable condition
-        tbNodeAdvanced.setDisable(false);
+        btAdvance.setDisable(false);
         btNodeUndo.setDisable(false);
         btNodeRedo.setDisable(false);
         btNodeDelete.setDisable(false);
@@ -664,9 +641,9 @@ public class MapBuilderController extends ScreenController {
         xcoord.setDisable(true);
         ycoord.setDisable(true);
         //turn off advanced options
-        tbNodeAdvanced.setSelected(false);
-        tbNodeAdvanced.setDisable(true);
+        btAdvance.setDisable(true);
         //disable node operation buttons
+
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
@@ -767,7 +744,7 @@ public class MapBuilderController extends ScreenController {
         nodeDialogString = "";
     }
 
-//TODO
+
     @FXML
     private void loadDialog(ActionEvent event) {
 
@@ -785,5 +762,20 @@ public class MapBuilderController extends ScreenController {
         nodeDialogLayout.setActions(btnodeDialog);
 
         nodeDialog.show();
+    }
+
+    @FXML
+    private void OnInstructionPressed() {
+//        JFXDialog dialog = new JFXDialog()
+    }
+
+    @FXML
+    private void onAdvancePressed() {
+        if(Advance.isVisible()) {
+            Advance.setVisible(false);
+        }
+        else {
+            Advance.setVisible(true);
+        }
     }
 }
