@@ -754,6 +754,9 @@ public class MapBuilderController extends ScreenController {
         nodeDialog.show();
     }
 
-   // @FXML
-    //private void
+    @FXML
+    private void kioskLocation(ActionEvent event){
+        // do nothing right now
+        SystemSettings.getInstance().setDefaultnode(heightLightedNode);
+    }
 }
