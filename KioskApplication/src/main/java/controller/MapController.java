@@ -300,7 +300,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                reloadDisplay();
+                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges

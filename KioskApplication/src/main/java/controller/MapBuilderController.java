@@ -58,7 +58,6 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
-    @FXML private JFXComboBox<String> CBElevType;
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
     @FXML
@@ -500,6 +499,10 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
+        System.out.println("floor changed");
+
+        mapController.showEdgesBox.setSelected(false);
+        mapController.showNodesBox.setSelected(false);
     }
 
     @Override
@@ -639,7 +642,6 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.setDisable(false);
         CBnodeBuilding.setDisable(false);
         CBnodeTeamAssigned.setDisable(false);
-        CBElevType.setDisable(false);
         lName.setDisable(false);
         sName.setDisable(false);
         nodeID.setDisable(false);
@@ -656,7 +658,6 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.setDisable(true);
         CBnodeBuilding.setDisable(true);
         CBnodeTeamAssigned.setDisable(true);
-        CBElevType.setDisable(true);
         lName.setDisable(true);
         sName.setDisable(true);
         nodeID.setDisable(true);
