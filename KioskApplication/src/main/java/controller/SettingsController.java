@@ -70,6 +70,8 @@ public class SettingsController extends ScreenController {
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
         loader2.setRoot(userPane);
         loader2.load();
+
+        checkPermissions();
     }
 
     public void checkPermissions() {
@@ -132,6 +134,9 @@ public class SettingsController extends ScreenController {
         if (contentView == null) {
             contentView = loadView("/view/SettingsView.fxml");
         }
+
+        checkPermissions();
+
         return contentView;
     }
 

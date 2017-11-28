@@ -55,7 +55,7 @@ public class LoginEntity {
                 // if there are no employees in the database, start as a super user
                 currentPermission = SUPER_USER;
             } else {
-                // otherwise be set default to non employee
+                // initial employee state, we don't want anyone to restart the application and gain access to admin powers
                 currentPermission = NONEMPLOYEE;
             }
         }
@@ -199,10 +199,12 @@ public class LoginEntity {
             if (logins.get(userName).validatePassword(password)){
                 this.username = userName;
                 currentPermission = logins.get(userName).getPermission();
-            } else {
+            }
+            else {
                 validationFail();
             }
-        } else {
+        }
+        else {
             validationFail();
         }
         return currentPermission;
