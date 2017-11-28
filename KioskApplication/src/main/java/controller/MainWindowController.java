@@ -130,24 +130,32 @@ public class MainWindowController {
         switch (l.getPermission()) {
             case NONEMPLOYEE:
                 switchButton.setText("Staff Login");
+
                 //hides all but the Map tab from non logged in users
-                tabPane.getTabs().removeAll(tabPane.getTabs());//TODO: stop this specific line from throwing NullPointerExceptions
+                tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
+
                 mapController.showEdgesBox.setSelected(false);
                 mapController.showNodesBox.setSelected(false);
                 break;
+
             case EMPLOYEE:
                 switchButton.setText("Logoff");
-                tabPane.getTabs().add(tabRS);
+
+                tabPane.getTabs().clear();
+                tabPane.getTabs().addAll(tabMap, tabRS);
                 break;
+
             case SUPER_USER:
             case ADMIN:
                 switchButton.setText("Logoff");
+
                 //default to showing all nodes and edges
                 mapController.showEdgesBox.setSelected(true);
                 mapController.showNodesBox.setSelected(true);
-                //shows all but the Map tab for logged in Users
-                tabPane.getTabs().addAll(tabMB, tabRM, tabRS, tabSettings);
+
+                tabPane.getTabs().clear();
+                tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
                 break;
         }
     }

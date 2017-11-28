@@ -74,16 +74,11 @@ public class SettingsController extends ScreenController {
 
     public void checkPermissions() {
         switch (LoginEntity.getInstance().getPermission()) {
-            case NONEMPLOYEE:
-                settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab);
-                break;
-            case EMPLOYEE:
+            case ADMIN:
                 settingTabPane.getTabs().clear();
                 settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab);
                 break;
             case SUPER_USER:
-            case ADMIN:
                 settingTabPane.getTabs().clear();
                 settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab, employeesTab);
                 break;
