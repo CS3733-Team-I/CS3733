@@ -564,7 +564,8 @@ public class MapBuilderController extends ScreenController {
 
                     lName.setText(observableNewNodes.get(0).getLongName());
                     sName.setText(observableNewNodes.get(0).getShortName());
-                    nodeID.setText(observableNewNodes.get(0).getNodeID());
+                    //nodeID.setText(observableNewNodes.get(0).getNodeID());
+                    updateNodeID();
                 }
                 else {
                     //TODO make this an exception
@@ -603,20 +604,38 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
+    int trackElev = 0;
     private void updateNodeID() {
-//        if(nodeType == NodeType.ELEV) {
-//            String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
-//            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
-//        }
-//        else {
+        if(nodeType == NodeType.ELEV) {
+            /*String elevTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
+            trackElev++;*/
+            String result = elevNameInChangedList();
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
+        }
+        else {
         //System.out.println("");
             int nodeTypeCountPrepared = 0;
-            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
             nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + observableChangedNodes.size();
+            System.out.println("we have selected" + observableSelectedNodes.get(0).getNodeID());
+
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
-//        }
+        }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
+    }
+
+    private String elevNameInChangedList(){
+
+        String result = "";
+        for(int i=0; i<observableChangedNodes.size(); i++){
+            if(observableChangedNodes.get(i).getNodeType() == NodeType.ELEV){
+                result += observableChangedNodes.get(i).getNodeID().charAt(7);
+            }
+        }
+        String preparedName = MapEntity.getInstance().generateElevName(nodeFloor, "Team" + nodeTeamAssigned.toString(), result);
+        return preparedName;
     }
 
     private void setNodeFieldEnable() {
