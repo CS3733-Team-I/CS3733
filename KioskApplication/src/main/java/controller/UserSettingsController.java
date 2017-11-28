@@ -84,6 +84,7 @@ public class UserSettingsController {
 
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
+        permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE);    // Except NONEMPLOYEE
         typeSelect.getItems().addAll(RequestType.values());
     }
 
