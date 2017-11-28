@@ -2,9 +2,8 @@ package pathfinder;
 
 import database.objects.Edge;
 import database.objects.Node;
-import entity.MapEntity;
 import entity.Path;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.util.*;
 
@@ -60,7 +59,7 @@ public class Pathfinder {
 
 
             //Now, find the path from the previous waypoint to this one.
-            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));   //Add this section to the rest of the path.
+            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
@@ -75,8 +74,8 @@ public class Pathfinder {
      * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
      * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
      * a list first.
-     * @param startNode Node that the algorithm should start at
-     * @param endNode Node that the algorithm should end at
+     * @param startNode node that the algorithm should start at
+     * @param endNode node that the algorithm should end at
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
     public Path generatePath(Node startNode, Node endNode) throws PathfinderException{

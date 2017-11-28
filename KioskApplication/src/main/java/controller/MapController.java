@@ -28,10 +28,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.Display.Node.NodeDisplay;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,13 +56,14 @@ public class MapController {
 
 
     //list of showing nodes or edges
-    private ObservableList<database.objects.Node> DatabaseNodeObjectList;
-    private ObservableList<database.objects.Edge> DatabaseEdgeObjectList;
+    //protected  javafx.scene.node heightLightedNode;
+    private ObservableList<database.objects.Node> databaseNodeObjectList;
+    private ObservableList<database.objects.Edge> databaseEdgeObjectList;
     private ObservableList<Circle> nodeObjectList;
     private ObservableList<Line> edgeObjectList;
-    protected ObservableList<database.objects.Node> observableHighlightededSelectedNodes;
-    protected ObservableList<database.objects.Node> observableHighlightededChangedNodes;
-    protected ObservableList<database.objects.Node> observableHighlightededNewNodes;
+    protected ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
+    protected ObservableList<database.objects.Node> observableHighlightedChangedNodes;
+    protected ObservableList<database.objects.Node> observableHighlightedNewNodes;
     protected ObservableList<database.objects.Edge> observableHighlightedEdges;
 
     private Group zoomGroup;
@@ -78,15 +78,15 @@ public class MapController {
     public MapController() {
         waypoints = new LinkedList<>();
 
-        DatabaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
-        DatabaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
+        databaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
+        databaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
 
         nodeObjectList = FXCollections.<Circle>observableArrayList();
         edgeObjectList = FXCollections.<Line>observableArrayList();
 
-        observableHighlightededSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableHighlightededChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableHighlightededNewNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightedSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightedChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
+        observableHighlightedNewNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightedEdges = FXCollections.<database.objects.Edge>observableArrayList();
     }
 
@@ -96,7 +96,7 @@ public class MapController {
     }
 
     //TODO put this into nodeobjectlist permuted
-    public void HighlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
+    public void highlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for(Circle nodeO : nodeObjectList) {
             if(nodeO.getAccessibleText() == targetNode.getNodeID()) {
                 nodesEdgesPane.getChildren().remove(nodeO);
@@ -123,8 +123,8 @@ public class MapController {
         }
         //in case of a new node
         if(nodeDisplay == NodeDisplay.NEW) {
-            DatabaseNodeObjectList.add(targetNode);
-            HighlightNode(targetNode, NodeDisplay.NEW);
+            databaseNodeObjectList.add(targetNode);
+            highlightNode(targetNode, NodeDisplay.NEW);
         }
     }
 
@@ -143,15 +143,15 @@ public class MapController {
     }
 
     protected void drawNodesOnMap(List<database.objects.Node> nodes) {
-        DatabaseNodeObjectList.addAll(nodes);
+        databaseNodeObjectList.addAll(nodes);
     }
 
     protected void undrawNodeOnMap(database.objects.Node node) {
-        DatabaseNodeObjectList.remove(node);
+        databaseNodeObjectList.remove(node);
     }
 
     protected void drawEdgesOnMap(List<Edge> edges) {
-        DatabaseEdgeObjectList.addAll(edges);
+        databaseEdgeObjectList.addAll(edges);
     }
 
     public void mapEdgeClicked(Edge e) {
@@ -202,11 +202,7 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    /**
-     * This method's visibility should be keep private and only used in MapController's listener
-     * For switching bwtween floors, either in this class or sidebar controller classes,
-     * call "mapController.floorSelector.setValue(your floor)"
-     */
+
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {
@@ -253,15 +249,17 @@ public class MapController {
         }
     }
 
-    private void zoom(double scaleValue) {
+    private void setZoom(double scaleValue) {
         double scrollH = scrollPane.getHvalue();
         double scrollV = scrollPane.getVvalue();
+
         zoomGroup.setScaleX(scaleValue);
         zoomGroup.setScaleY(scaleValue);
+
         scrollPane.setHvalue(scrollH);
         scrollPane.setVvalue(scrollV);
-        miniMapController.NavigationRecZoom(scaleValue);
-        //System.out.println(scaleValue);
+
+        miniMapController.setViewportZoom(scaleValue);
     }
 
     public void setFloorSelectorPosition(Point2D position) {
@@ -271,20 +269,23 @@ public class MapController {
 
     @FXML
     protected void initialize() {
-
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
 
-        miniMapController = new MiniMapController(parent, this);
-        miniMapPane.getChildren().clear();
-        miniMapPane.getChildren().add(miniMapController.getContentView());
+        miniMapController = new MiniMapController(this);
 
-        zoomSlider.setMin(0.2);
-        zoomSlider.setMax(2.2);
-        zoomSlider.setValue(1.2);
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
+            loader.setController(miniMapController);
+            miniMapPane.getChildren().clear();
+            miniMapPane.getChildren().add(loader.load());
+        } catch (IOException e) {
+            System.err.println("Loading MiniMapView failed.");
+        }
+
+        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
         Group contentGroup = new Group();
@@ -318,10 +319,11 @@ public class MapController {
                     drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue()));
                 }
                 else {
-                    DatabaseNodeObjectList.clear();
+                    databaseNodeObjectList.clear();
                 }
             }
         });
+
         showEdgesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -329,12 +331,12 @@ public class MapController {
                     drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(floorSelector.getValue()));
                 }
                 else {
-                    DatabaseEdgeObjectList.clear();
+                    databaseEdgeObjectList.clear();
                 }
             }
         });
 
-        DatabaseNodeObjectList.addListener(new ListChangeListener<Node>() {
+        databaseNodeObjectList.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
@@ -365,7 +367,7 @@ public class MapController {
                 }
             }
         });
-        DatabaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
+        databaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
             @Override
             public void onChanged(Change<? extends Edge> c) {
                 while(c.next()) {
@@ -440,55 +442,66 @@ public class MapController {
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecX((double)newValue/scrollPane.getHmax());
+                double value = newValue.doubleValue() / scrollPane.getHmax();
+                if (Double.isNaN(value)) value = 0.0;
+
+                miniMapController.setNavigationRecX(value);
             }
         });
 
         scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecY((double)newValue/scrollPane.getVmax());
+                double value = newValue.doubleValue() / scrollPane.getVmax();
+                if (Double.isNaN(value)) value = 0.0;
+
+                miniMapController.setNavigationRecY(value);
             }
         });
+
         //adjust minimap navigationRec's width:height
         container.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecWidth((double)newValue);
+                miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
+
+                calculateMinZoom();
             }
         });
 
         container.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setNavigationRecHeight((double)newValue);
+                miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
+
+                calculateMinZoom();
             }
         });
         /**
          * highlight nodes and edges
          */
-        observableHighlightededSelectedNodes.addListener(new ListChangeListener<Node>() {
+        observableHighlightedSelectedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            if(!observableHighlightededChangedNodes.contains(deseletedNode)) {
-                                HighlightNode(deseletedNode, NodeDisplay.NORMAL);
+                            if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
+                                highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
-                                HighlightNode(deseletedNode, NodeDisplay.CHANGED);
+                                highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node selectedNode : c.getAddedSubList()) {
-                            if(observableHighlightededChangedNodes.contains(selectedNode)){
-                                HighlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            if(observableHighlightedChangedNodes.contains(selectedNode)){
+                                highlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
                             }
                             else {
-                                HighlightNode(selectedNode, NodeDisplay.SELECTED);
+                                highlightNode(selectedNode, NodeDisplay.SELECTED);
                             }
                         }
                     }
@@ -496,34 +509,34 @@ public class MapController {
             }
         });
         //TODO
-        observableHighlightededChangedNodes.addListener(new ListChangeListener<Node>() {
+        observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasAdded()){
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
-                            if(observableHighlightededSelectedNodes.contains(addedChangedNode)) {
-                                HighlightNode(addedChangedNode, NodeDisplay.SELECTEDANDCHANGED);
+                            if(observableHighlightedSelectedNodes.contains(addedChangedNode)) {
+                                highlightNode(addedChangedNode, NodeDisplay.SELECTEDANDCHANGED);
                             }
                             else {
-                                HighlightNode(addedChangedNode, NodeDisplay.CHANGED);
+                                highlightNode(addedChangedNode, NodeDisplay.CHANGED);
                             }
                         }
                     }
                     else if(c.wasRemoved()) {
                         for(database.objects.Node removedChangedNode : c.getRemoved()) {
-                            if(observableHighlightededSelectedNodes.contains(removedChangedNode)) {
-                                HighlightNode(removedChangedNode, NodeDisplay.SELECTED);
+                            if(observableHighlightedSelectedNodes.contains(removedChangedNode)) {
+                                highlightNode(removedChangedNode, NodeDisplay.SELECTED);
                             }
                             else {
-                                HighlightNode(removedChangedNode, NodeDisplay.NORMAL);
+                                highlightNode(removedChangedNode, NodeDisplay.NORMAL);
                             }
                         }
                     }
                 }
             }
         });
-        observableHighlightededNewNodes.addListener(new ListChangeListener<Node>() {
+        observableHighlightedNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 //remove unsaved new nodes
@@ -531,7 +544,7 @@ public class MapController {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNewNode : c.getRemoved()) {
                             if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null) {//the node was saved to database
-                                HighlightNode(deseletedNewNode, NodeDisplay.NORMAL);
+                                highlightNode(deseletedNewNode, NodeDisplay.NORMAL);
                             }
                             else {
                                 undrawNodeOnMap(deseletedNewNode);
@@ -540,12 +553,22 @@ public class MapController {
                     }
                     else if(c.wasAdded()) {
                         for(database.objects.Node newNode : c.getAddedSubList()) {
-                            HighlightNode(newNode, NodeDisplay.NEW);
+                            highlightNode(newNode, NodeDisplay.NEW);
                         }
                     }
                 }
             }
         });
+    }
+
+    private void calculateMinZoom() {
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+
+        zoomSlider.setMin(minScrollValue);
+
+        if (zoomSlider.getValue() < minScrollValue) zoomSlider.setValue(minScrollValue);
     }
 
     @FXML
@@ -581,7 +604,7 @@ public class MapController {
     protected void zoomOutPressed() {
         //System.out.println("Zoom out clicked");
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal + -0.1);
+        zoomSlider.setValue(sliderVal - 0.1);
     }
 
     @FXML

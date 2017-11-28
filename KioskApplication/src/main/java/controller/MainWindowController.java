@@ -15,8 +15,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
+import utility.node.NodeFloor;
 import utility.KioskPermission;
-import utility.Node.NodeFloor;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -77,10 +77,10 @@ public class MainWindowController {
                     case "Map Builder":
                         switchToScreen(ApplicationScreen.MAP_BUILDER);
                         break;
-                    case "Request Manager":
+                    case "request Manager":
                         switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                         break;
-                    case "Request Submit":
+                    case "request Submit":
                         switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                         break;
                     case "Settings":

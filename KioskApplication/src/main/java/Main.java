@@ -1,18 +1,24 @@
 import com.sun.javafx.css.StyleManager;
 import database.DatabaseController;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utility.csv.CsvFileUtil;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
+        if (MapEntity.getInstance().getAllNodes().size() == 0)
+            CsvFileUtil.readAllCSVs();
+
+        SystemSettings.getInstance();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
         primaryStage.setTitle("Iteration 2");

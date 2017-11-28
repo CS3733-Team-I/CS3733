@@ -1,9 +1,8 @@
 package controller;
 
-import com.jfoenix.controls.JFXCheckBox;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.AlgorithmSetting;
+import entity.SystemSettings;
 import entity.Path;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -15,7 +14,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBuilder;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -32,7 +31,6 @@ public class PathfindingSidebarController extends ScreenController {
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
-
         currentNodes = new LinkedList<>();
     }
 
@@ -62,7 +60,7 @@ public class PathfindingSidebarController extends ScreenController {
     void btGeneratePathPressed() throws IOException {
         exceptionText.setText("");
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder(AlgorithmSetting.getInstance().getAlgorithm());
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 Path path = pathfinder.generatePath(currentNodes);
                 getMapController().drawPath(path);

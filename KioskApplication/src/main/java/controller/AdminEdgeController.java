@@ -2,14 +2,16 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import utility.ApplicationScreen;
-import utility.Node.NodeFloor;
+import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -47,39 +49,54 @@ public class AdminEdgeController extends ScreenController {
     }
 
     @FXML
-    void onSubmitClicked() throws IOException{
+    void onSubmitClicked() throws IOException {
         if (isDelete) {
-            // Delete edge
-            Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
-            Edge edge2 = new Edge(node2ID.getText()+"_"+node1ID.getText(), node2ID.getText(), node1ID.getText());
+            try {
+                // Delete edge
+                Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
+                Edge edge2 = new Edge(node2ID.getText() + "_" + node1ID.getText(), node2ID.getText(), node1ID.getText());
 
-            if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
-                MapEntity.getInstance().removeEdge(edge.getEdgeID());
-                System.out.println("Removed Edge: " + edge.getEdgeID());
-            } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
-                MapEntity.getInstance().removeEdge(edge2.getEdgeID());
-                System.out.println("Removed Edge: " + edge2.getEdgeID());
-            } else {
-                System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());
-            }
-            //After Delete
-            isDelete = false;
-            submitButton.setText("Add");
-            resetScreen();
-        }
-        else {
-            // ADD EDGE
-            // Create Edge
-            Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
-            // Check to see if the edge Exists (!!bidirectional!!)
-            if (MapEntity.getInstance().getEdge(node1ID.getText() + "_" + node2ID.getText()) == null && MapEntity.getInstance().getEdge(node2ID.getText() + "_" + node1ID.getText()) == null) {
-                // If not then add edge
-                MapEntity.getInstance().addEdge(edge);
-                System.out.println("Added Edge: " + edge.getEdgeID());
+                if (MapEntity.getInstance().getEdge(edge.getEdgeID()) != null) { // Check for edge version 1
+                    MapEntity.getInstance().removeEdge(edge);
+                    System.out.println("Removed Edge: " + edge.getEdgeID());
+                } else if (MapEntity.getInstance().getEdge(edge2.getEdgeID()) != null) { // Check for edge verson 2
+                    MapEntity.getInstance().removeEdge(edge2);
+                    System.out.println("Removed Edge: " + edge2.getEdgeID());
+                } else {
+                    System.out.println("Edge doesn't exist in the database: " + edge.getEdgeID() + ", " + edge2.getEdgeID());
+                }
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error deleting edge from DB");
+                alert.setHeaderText("Error occurred while deleting edge from database.");
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
+            } finally {
+                //After Delete
+                isDelete = false;
+                submitButton.setText("Add");
                 resetScreen();
-            } else {
-                System.out.println("Edge already in the database: " + edge.getEdgeID());
+            }
+        } else {
+            try {
+                // Create Edge
+                Edge edge = new Edge(edgeID.getText(), node1ID.getText(), node2ID.getText());
+                // Check to see if the edge Exists (!!bidirectional!!)
+                if (MapEntity.getInstance().getEdge(node1ID.getText() + "_" + node2ID.getText()) == null && MapEntity.getInstance().getEdge(node2ID.getText() + "_" + node1ID.getText()) == null) {
+                    // If not then add edge
+                    MapEntity.getInstance().addEdge(edge);
+                    System.out.println("Added Edge: " + edge.getEdgeID());
+                    resetScreen();
+                } else {
+                    System.out.println("Edge already in the database: " + edge.getEdgeID());
 
+                }
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error adding edge from DB");
+                alert.setHeaderText("Error occurred while adding edge to database.");
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
             }
         }
     }

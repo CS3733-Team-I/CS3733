@@ -2,15 +2,19 @@ package pathfinder;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
-import org.junit.BeforeClass;
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
+import org.junit.After;
+import org.junit.Before;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
 import org.junit.Test;
-import utility.Node.NodeType;
+import utility.node.NodeType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -24,12 +28,11 @@ public class TestPathfinder {
                  e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
-    @BeforeClass //Build map for testing all algorithms
-    public static void setup() {
-
-        DatabaseController.getTestInstance();
+    @Before //Build map for testing all algorithms
+    public void setup() throws DatabaseException {
+        DatabaseController.getInstance();
         map = MapEntity.getInstance();
-
+        this.removeAllFromDB();
         /* New Map Structure
            Double lines are twice as long
 
@@ -317,7 +320,7 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testBreathFirstSearchtestpathequality() {
+    public void testBreathFirstSearchTestPathEquality() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
         try {
@@ -348,5 +351,15 @@ public class TestPathfinder {
              alg.findPath(n02,n18);
     }
 
-    //TODO multable waypoints tests
+    @After
+    public void removeAllFromDB() throws DatabaseException {
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node);
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
+    }
+    //TODO multiple waypoints tests
 }

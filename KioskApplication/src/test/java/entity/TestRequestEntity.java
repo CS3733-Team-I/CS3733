@@ -4,14 +4,13 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
-import utility.Request.Language;
-import utility.Node.NodeFloor;
-import utility.Request.RequestProgressStatus;
-
-import java.sql.Timestamp;
+import utility.request.Language;
+import utility.node.NodeFloor;
+import utility.request.RequestProgressStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -25,8 +24,8 @@ public class TestRequestEntity {
     private InterpreterRequest presetIR;
 
     @Before
-    public void setup(){
-        db=DatabaseController.getTestInstance();
+    public void setup() throws DatabaseException {
+        db = DatabaseController.getInstance();
         r = RequestEntity.getTestInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);
@@ -48,7 +47,7 @@ public class TestRequestEntity {
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() throws DatabaseException {
         //deletes request
         r.deleteRequest(presetIR.getRequestID());
         //removes node
@@ -114,7 +113,7 @@ public class TestRequestEntity {
     public void testUpdateRequest(){
         //adds interpreter request to database and hashmap
         String testIRID = r.submitInterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
-        //Interpreter Request to be modified
+        //Interpreter request to be modified
         InterpreterRequest iR1 = new InterpreterRequest("NODE2","emp@hospital.com", "Says name is Wilson Wong", Language.CHINESE);
         //modifying interpreter request
         r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssigner(), iR1.getNote(), iR1.getSubmittedTime(), iR1.getCompletedTime(), iR1.getStatus(), iR1.getLanguage());
