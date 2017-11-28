@@ -18,7 +18,7 @@ import utility.request.RequestType;
 
 import java.util.ArrayList;
 
-public class UserSettingsController {
+public class EmployeeSettingsController {
 
     @FXML private JFXButton addUserButton;
     @FXML private JFXButton deleteUserButton;

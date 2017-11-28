@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserSettingsController">
+<fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeSettingsController">
    <children>
       <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
       <Label layoutX="61.0" layoutY="51.0" prefHeight="30.0" prefWidth="217.0" text="Users" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
