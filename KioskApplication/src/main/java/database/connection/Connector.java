@@ -155,7 +155,7 @@ public class Connector {
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT+REQUEST_INSERT);
         pstmt.setString(1, iR.getRequestID());
         pstmt.setInt(2, iR.getLanguage().ordinal());
         pstmt.setString(3, iR.getNodeID());
@@ -172,15 +172,17 @@ public class Connector {
     public static int updateInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
         String sql = INTERPRETER_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, iR.getNodeID());
-        pstmt.setString(2, iR.getAssigner());
-        pstmt.setString(3, iR.getNote());
-        pstmt.setTimestamp(4, iR.getSubmittedTime());
-        pstmt.setTimestamp(5, iR.getCompletedTime());
-        pstmt.setInt(6, iR.getStatus().ordinal());
-        pstmt.setInt(7, iR.getLanguage().ordinal());
+        pstmt.setInt(1, iR.getLanguage().ordinal());
+        pstmt.setString(2, iR.getNodeID());
+        pstmt.setString(3, iR.getAssigner());
+        pstmt.setString(4, iR.getCompleter());
+        pstmt.setString(5, iR.getNote());
+        pstmt.setTimestamp(6, iR.getSubmittedTime());
+        pstmt.setTimestamp(7, iR.getStartedTime());
+        pstmt.setTimestamp(8, iR.getCompletedTime());
+        pstmt.setInt(9, iR.getStatus().ordinal());
         //search parameter below
-        pstmt.setString(8, iR.getRequestID());
+        pstmt.setString(10, iR.getRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -244,28 +246,32 @@ public class Connector {
     public static int insertSecurity(Connection conn, SecurityRequest sR) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(SECURITY_INSERT+REQUEST_INSERT);
         pstmt.setString(1, sR.getRequestID());
+        pstmt.setInt(2, sR.getPriority());
         pstmt.setString(3, sR.getNodeID());
         pstmt.setString(4, sR.getAssigner());
-        pstmt.setString(5, sR.getNote());
-        pstmt.setTimestamp(6, sR.getSubmittedTime());
-        pstmt.setTimestamp(7, sR.getCompletedTime());
-        pstmt.setInt(8, sR.getStatus().ordinal());
-        pstmt.setInt(2, sR.getPriority());
+        pstmt.setString(5, sR.getCompleter());
+        pstmt.setString(6, sR.getNote());
+        pstmt.setTimestamp(7, sR.getSubmittedTime());
+        pstmt.setTimestamp(8, sR.getStartedTime());
+        pstmt.setTimestamp(9, sR.getCompletedTime());
+        pstmt.setInt(10, sR.getStatus().ordinal());
         return pstmt.executeUpdate();
     }
 
     public static int updateSecurity(Connection conn, SecurityRequest sR) throws SQLException {
         String sql = SECURITY_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, sR.getNodeID());
-        pstmt.setString(2, sR.getAssigner());
-        pstmt.setString(3, sR.getNote());
-        pstmt.setTimestamp(4, sR.getSubmittedTime());
-        pstmt.setTimestamp(5, sR.getCompletedTime());
-        pstmt.setInt(6, sR.getStatus().ordinal());
-        pstmt.setInt(7, sR.getPriority());
+        pstmt.setInt(1, sR.getPriority());
+        pstmt.setString(2, sR.getNodeID());
+        pstmt.setString(3, sR.getAssigner());
+        pstmt.setString(4, sR.getCompleter());
+        pstmt.setString(5, sR.getNote());
+        pstmt.setTimestamp(6, sR.getSubmittedTime());
+        pstmt.setTimestamp(7, sR.getStartedTime());
+        pstmt.setTimestamp(8, sR.getCompletedTime());
+        pstmt.setInt(9, sR.getStatus().ordinal());
         //search parameter below
-        pstmt.setString(8, sR.getRequestID());
+        pstmt.setString(10, sR.getRequestID());
         return pstmt.executeUpdate();
     }
 

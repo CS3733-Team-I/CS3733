@@ -108,7 +108,7 @@ public class MainWindowController {
          * There's got to be a cleaner way to initialize everything
          */
         RequestTrackingDataController reqTDCont = new RequestTrackingDataController(this);
-        FXMLLoader reqTrackingLoader = new FXMLLoader(getClass().getResource("/view/RequestTrackingData.fxml"));
+        FXMLLoader reqTrackingLoader = new FXMLLoader(getClass().getResource("/view/RequestTrackingDataView.fxml"));
         reqTrackingLoader.setController(reqTDCont);
         javafx.scene.Node reqTrackingView = reqTrackingLoader.load();
         this.histogram = new BorderPane();
@@ -118,7 +118,7 @@ public class MainWindowController {
         AnchorPane.setBottomAnchor(histogram, 0.0);
         AnchorPane.setRightAnchor(histogram, 0.0);
         histogram.setCenter(reqTrackingView);
-        histogram.setVisible(false);
+        histogram.setVisible(true);
 
         checkPermissions();
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE

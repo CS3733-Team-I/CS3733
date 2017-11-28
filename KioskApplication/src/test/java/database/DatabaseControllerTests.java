@@ -49,6 +49,9 @@ public class DatabaseControllerTests {
 
         List<Employee> employees = dbController.getAllEmployees();
         for (Employee e: employees) dbController.removeEmployee(e.getLoginID());
+
+        List<SecurityRequest> sRs = dbController.getAllSecurityRequests();
+        for (SecurityRequest sR: sRs) dbController.deleteSecurityRequest(sR.getRequestID());
     }
 
     @Test
@@ -157,21 +160,25 @@ public class DatabaseControllerTests {
         Assert.assertTrue(receivedEdge == null);
     }
 
+    /**
+     * InterpreterRequest Tests
+     */
+
     @Test
-    public void testAddInterpreterRequest(){
+    public void interpreterRequestAddTest(){
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
         dbController.addNode(node);
         long currTime = System.currentTimeMillis();
         InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                "boss", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
                 new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR1);
         Assert.assertEquals(iR1,dbController.getInterpreterRequest(iR1.getRequestID()));
     }
 
-    @Test public void testUpdateInterpreterRequest(){
+    @Test public void interpreterRequestUpdateTest(){
         Node node1 = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
@@ -182,14 +189,14 @@ public class DatabaseControllerTests {
         dbController.addNode(node2);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         long t2 = System.currentTimeMillis()+2;
 
         //updates InterpreterRequest values
         iR.setNodeID("NODE2");
-        iR.setAssigner("emp@hospital.com");
+        iR.setAssigner("testInterpreter");
         iR.setNote("Professor Wong");
         iR.setSubmittedTime(new Timestamp(t2));
         iR.setCompletedTime(new Timestamp(t2-1));
@@ -202,14 +209,14 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testDeleteInterpreterRequest(){
+    public void interpreterRequestDeleteTest(){
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes iR
@@ -219,19 +226,101 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testRemoveInterpreterRequestAssociatedNode(){
+    public void interpreterRequestRemoveAssociatedNodeTest(){
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test Node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes Node
         dbController.removeNode(node);
         InterpreterRequest recievedIR = dbController.getInterpreterRequest(iR.getRequestID());
+        Assert.assertTrue(recievedIR==null);
+    }
+
+    /**
+     * SecurityRequest Tests
+     */
+
+    @Test
+    public void testAddSecurityRequest(){
+        Node node = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node", "TN1", "I");
+        dbController.addNode(node);
+        long currTime = System.currentTimeMillis();
+        SecurityRequest iR1 = new SecurityRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                new Timestamp(currTime-1), RequestProgressStatus.TO_DO, 3);
+        dbController.addSecurityRequest(iR1);
+        Assert.assertEquals(iR1,dbController.getSecurityRequest(iR1.getRequestID()));
+    }
+
+    @Test public void testUpdateSecurityRequest(){
+        Node node1 = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node 2", "TN2", "I");
+        dbController.addNode(node1);
+        dbController.addNode(node2);
+        long t1 = System.currentTimeMillis();
+        SecurityRequest iR = new SecurityRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, 3);
+        dbController.addSecurityRequest(iR);
+        long t2 = System.currentTimeMillis()+2;
+
+        //updates SecurityRequest values
+        iR.setNodeID("NODE2");
+        iR.setAssigner("testInterpreter");
+        iR.setNote("Professor Wong");
+        iR.setSubmittedTime(new Timestamp(t2));
+        iR.setCompletedTime(new Timestamp(t2-1));
+        iR.setStatus(RequestProgressStatus.IN_PROGRESS);
+        iR.setPriority(4);
+
+        dbController.updateSecurityRequest(iR);
+        SecurityRequest recievedIR = dbController.getSecurityRequest(iR.getRequestID());
+        Assert.assertEquals(iR, recievedIR);
+    }
+
+    @Test
+    public void testDeleteSecurityRequest(){
+        Node node = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node", "TN1", "I");
+        dbController.addNode(node);
+        long t1 = System.currentTimeMillis();
+        SecurityRequest iR = new SecurityRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, 3);
+        dbController.addSecurityRequest(iR);
+        //deletes iR
+        dbController.deleteSecurityRequest(iR.getRequestID());
+        SecurityRequest recievedIR = dbController.getSecurityRequest(iR.getRequestID());
+        Assert.assertTrue(recievedIR==null);
+    }
+
+    @Test
+    public void testRemoveSecurityRequestAssociatedNode(){
+        Node node = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test Node", "TN1", "I");
+        dbController.addNode(node);
+        long t1 = System.currentTimeMillis();
+        SecurityRequest iR = new SecurityRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss","", " ", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, 3);
+        dbController.addSecurityRequest(iR);
+        //deletes Node
+        dbController.removeNode(node);
+        SecurityRequest recievedIR = dbController.getSecurityRequest(iR.getRequestID());
         Assert.assertTrue(recievedIR==null);
     }
 
@@ -274,7 +363,7 @@ public class DatabaseControllerTests {
         dbController.addEmployee("ID1","Name1","password1", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         dbController.addEmployee("ID2","Name2","password2", KioskPermission.ADMIN, RequestType.GENERAL);
         LinkedList<Employee> employees = dbController.getAllEmployees();
-        assertEquals("ID1",employees.get(0).getLoginID());
-        assertEquals("ID2",employees.get(1).getLoginID());
+        assertEquals("ID1",employees.get(employees.size()-2).getLoginID());
+        assertEquals("ID2",employees.get(employees.size()-1).getLoginID());
     }
 }
