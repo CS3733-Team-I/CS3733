@@ -284,6 +284,12 @@ public class RequestManagerController extends ScreenController {
             contentView = loadView("/view/RequestManagerView.fxml");
         }
 
+        try {
+            refreshRequests();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return contentView;
     }
 
