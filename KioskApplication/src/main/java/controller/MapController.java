@@ -149,7 +149,14 @@ public class MapController {
     }
 
     protected void undrawNodeOnMap(database.objects.Node node) {
-        databaseNodeObjectList.remove(node);
+        Iterator<database.objects.Node> undrawNodeObjectIterator = databaseNodeObjectList.iterator();
+        while (undrawNodeObjectIterator.hasNext()) {
+            database.objects.Node undrawnNode = undrawNodeObjectIterator.next();
+            if (undrawnNode.getXyz().equals(node.getXyz())) {
+                undrawNodeObjectIterator.remove();
+                break;
+            }
+        }
     }
 
     protected void drawEdgesOnMap(List<Edge> edges) {
