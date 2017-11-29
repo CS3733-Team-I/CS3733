@@ -377,8 +377,6 @@ public class TestPathfinder {
         System.out.println(path.getDirections());
     }
 
-    //TODO
-
     //Other methods
 
     //Helper method to check if a path is valid

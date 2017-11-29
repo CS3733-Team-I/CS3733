@@ -56,8 +56,8 @@ public class Path {
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(waypoints.getFirst());
 
-        for(int i = 0; i<edges.size(); i++) {
-            nodes.add(getOtherNode(edges.get(i),nodes.getLast()));
+        for(Edge e : edges) {
+            nodes.add(getOtherNode(e,nodes.getLast()));
         }
         return nodes;
     }
