@@ -273,7 +273,6 @@ public class RequestManagerController extends ScreenController {
         System.out.println("Complete Pressed \n");
     }
 
-
     @FXML
     void showReports() throws IOException{
         getParent().openRequestTrackingTable();
@@ -307,6 +306,6 @@ public class RequestManagerController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0,400,0,0);
+        getMapController().setAnchor(0,500,0,0);
     }
 }
