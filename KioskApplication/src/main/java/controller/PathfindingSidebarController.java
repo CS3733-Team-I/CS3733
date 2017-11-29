@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBuilder;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
@@ -23,6 +25,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
     @FXML private VBox waypointListVbox;
+    @FXML private Label exceptionText;
 
     LinkedList<Node> currentNodes;
 
@@ -42,18 +45,20 @@ public class PathfindingSidebarController extends ScreenController {
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointListVbox.setPickOnBounds(false);
+        exceptionText.setText("");
     }
 
     @FXML
     void onResetPressed() {
         currentNodes.clear();
         waypointListVbox.getChildren().clear();
-
+        exceptionText.setText("");
         getMapController().clearMap();
     }
 
     @FXML
     void btGeneratePathPressed() throws IOException {
+        exceptionText.setText("");
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
@@ -61,7 +66,7 @@ public class PathfindingSidebarController extends ScreenController {
                 getMapController().drawPath(path);
             }
             catch(PathfinderException exception){
-                System.out.println(exception.getMessage()); //TODO: print to UI instead of console
+                exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
 
@@ -74,6 +79,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btClearPathPressed() throws IOException {
         getMapController().clearMap();
+        exceptionText.setText("");
     }
 
     @Override

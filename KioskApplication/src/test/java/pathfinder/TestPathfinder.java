@@ -7,7 +7,6 @@ import entity.MapEntity;
 import entity.Path;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,32 +29,32 @@ public class TestPathfinder {
                  e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
-    @BeforeClass //Build map for testing all algorithms
-    public static void setup() throws DatabaseException {
+    /* New Map Structure
 
+          X   10    20    30    40    50    60    70    80
+       Y
+       10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
+                     |           |
+       20           n08 - n09   n10 - - - - n15
+                     |           |        /
+       30           n11 - n12 - n13 - n14 - n16
+                           |
+       40                 n17
+
+       50                 n18   n19
+
+       60                 n20 - n21
+                           |     |
+       70                 n22 - n23
+
+    */
+
+    @Before //Build map for testing all algorithms
+    public void setup() throws DatabaseException {
         DatabaseController.getInstance();
         map = MapEntity.getInstance();
+        this.removeAllFromDB();
 
-        /* New Map Structure
-           Double lines are twice as long
-
-              X   10    20    30    40    50    60    70    80
-           Y
-           10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
-                         |           |
-           20           n08 - n09   n10 - - - - n15
-                         |           |        /
-           30           n11 - n12 - n13 - n14 - n16
-                               |
-           40                 n17
-
-           50                 n18   n19
-
-           60                 n20 - n21
-                               |     |
-           70                 n22 - n23
-
-        */
 
         n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
         n02 = new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
@@ -146,9 +146,9 @@ public class TestPathfinder {
 
         Path testPath = new Path(testPathWaypoints, testPathEdges);
 
-        System.out.println(path1.getEdges().toString());
-        System.out.println(path1.getEdges().size());
-        System.out.println(testPath.getEdges().toString());
+        //System.out.println(path1.getEdges().toString());
+        //System.out.println(path1.getEdges().size());
+        //System.out.println(testPath.getEdges().toString());
 
         assertTrue(path1.equals(testPath));
     }
@@ -238,40 +238,25 @@ public class TestPathfinder {
     public void testHeuristicAstar(){
     }
 
-    @Test //TODO
+    @Test //Test the FindPath method by testing all possible paths
     public void testFindPathAstar(){
+
+        SearchAlgorithm alg = new A_star();
+
+        testFindPath(alg);
     }
 
     //Depth first algorithm tests
 
-    //TODO tests
-    @Test
+    @Test //Test the FindPath method by testing all possible paths
     public void testFindPathDF() throws PathfinderException{
 
         SearchAlgorithm alg = new DepthFirst();
 
-        LinkedList<Edge> path;
-
-        //Should return an empty list if you are at the end node
-        path = alg.findPath(n01,n01);
-        assertTrue(path.size() == 0);
-
-
-
-        //Test an actual path
-        path = alg.findPath(n01,n02);
-        //assertEquals(path.size(),1);
-        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
-
-        //Test another actual path
-        path = alg.findPath(n01,n03);
-        //assertEquals(path.size(),2);
-        //assertEquals(path.get(0),map.getConnectingEdge(n01,n02));
-        //assertEquals(path.get(1),map.getConnectingEdge(n02,n03));
-
+        testFindPath(alg);
     }
 
-    @Test(expected = DeadEndException.class) //test that the exception is thrown when there is no path or connection
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
         alg.findPath(n18,n19);
@@ -284,6 +269,13 @@ public class TestPathfinder {
     }
 
     //Breadth first algorithm tests
+
+    @Test
+    public void testFindPathBF() {
+        SearchAlgorithm alg = new BreadthFirst();
+
+        testFindPath(alg);
+    }
 
     @Test
     public void testBreathFirstSearch() {
@@ -322,7 +314,7 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testBreathFirstSearchtestpathequality() {
+    public void testBreathFirstSearchTestPathEquality() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
         try {
@@ -345,15 +337,26 @@ public class TestPathfinder {
         // System.out.println(testPath2.getEdges().toString());
     }
 
-    /* TODO  write test for exceptions
-     @Test (expected = PathfinderException.class)
-    public void testPathfinderException(){
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = breadth.generatePath(n2, n8);
-    }
-     */
+    //Dijkstra's algorithm tests
 
-    @Before
+    @Test
+    public void testFindPathD() {
+        SearchAlgorithm alg = new Dijkstra();
+
+        testFindPath(alg);
+    }
+
+    //Test exceptions
+
+    @Test (expected = PathfinderException.class)
+    public void testPathfinderException() throws PathfinderException{
+        //test that the exception is thrown when there is a path but no connection
+             SearchAlgorithm alg = new BreadthFirst();
+             alg.findPath(n02,n18);
+    }
+
+    //Other methods
+
     @After
     public void removeAllFromDB() throws DatabaseException {
         List<Node> nodes = MapEntity.getInstance().getAllNodes();
@@ -362,6 +365,94 @@ public class TestPathfinder {
 
             ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
             for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
+    }
+
+    //TODO multiple waypoints tests
+
+    //Helper method to check if a path is valid
+    private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
+        if(path.size() == 0) {
+            return (startNode.getNodeID().equals(endNode.getNodeID()));
+        }
+
+        if(path.size() == 1) {
+            return((path.get(0).getNode1ID().equals(startNode.getNodeID())) && (path.get(0).getNode2ID().equals(endNode.getNodeID())) ||
+                    (path.get(0).getNode2ID().equals(startNode.getNodeID())) && (path.get(0).getNode1ID().equals(endNode.getNodeID())));
+        }
+
+        if(path.size() == 2) {
+            //first edge should contain the start node
+            if(!path.get(0).getNode1ID().equals(startNode.getNodeID()) && !path.get(0).getNode2ID().equals(startNode.getNodeID()))
+                return false;
+            //last edge should contain the end node
+            if(!path.get(1).getNode1ID().equals(endNode.getNodeID()) && !path.get(1).getNode2ID().equals(endNode.getNodeID()))
+                return false;
+            //make sure the paths are connected
+            return path.get(0).isConnectedTo(path.get(1));
+        }
+
+        for(int i = 0; i < path.size(); i++) {
+            if(i==0) { //first edge should contain the start node
+                if(!path.get(i).getNode1ID().equals(startNode.getNodeID()) && !path.get(i).getNode2ID().equals(startNode.getNodeID()))
+                    return false;
+            }
+            else if(i==path.size()-1) { //last edge should contain the end node
+                if(!path.get(i).getNode1ID().equals(endNode.getNodeID()) && !path.get(i).getNode2ID().equals(endNode.getNodeID()))
+                    return false;
+            }
+            else { // should contain a node in the previous edge and in the next edge
+                return path.get(i).isConnectedTo(path.get(i - 1)) && path.get(1).isConnectedTo(path.get(i + 1));
+            }
+        }
+        return false;
+    }
+
+    //Helper method to test generating every possible path
+    private void testFindPath(SearchAlgorithm alg) {
+
+        LinkedList<Edge> path;
+
+        // Try to test every possible path
+        for(Node n1 : map.getAllNodes()) {
+            for(Node n2 : map.getAllNodes()) {
+                try {
+                    path = alg.findPath(n1,n2);
+
+                    if(!isValidPath(n1,n2,path)) {
+                        System.out.println("Not Valid Path\nStart: " + n1.getNodeID() + " End: " + n2.getNodeID());
+                        for (Edge e : path) {
+                            System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+                        }
+                        System.out.println("\n");
+                    }
+                    assertTrue(isValidPath(n1,n2,path));
+                }
+                catch(PathfinderException e) {
+                    //Don't print an error if it's node 18 or 19 cause they don't connect to anything and the error should be thrown
+                    if(n1.getNodeID().equals("NODE18") || n1.getNodeID().equals("NODE19") || n2.getNodeID().equals("NODE18") || n2.getNodeID().equals("NODE19")) {
+                        assertTrue(true);
+                    }
+                    //Don't print an error if it's going across map sections cause the error should be thrown
+                    else if(n1.getNodeID().equals("NODE20") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE21") && !(n2.getNodeID().equals("NODE20") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE22") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE20") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE23") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE20")) ||
+
+                            n2.getNodeID().equals("NODE20") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE21") && !(n1.getNodeID().equals("NODE20") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE22") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE20") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE23") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE20"))
+                            ) {
+                        assertTrue(true);
+                    }
+                    //Otherwise print the error
+                    else {
+                        System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
+                        assertTrue(false);
+                    }
+                }
+            }
         }
     }
 }

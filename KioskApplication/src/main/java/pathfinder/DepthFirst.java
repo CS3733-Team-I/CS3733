@@ -21,7 +21,12 @@ public class DepthFirst implements SearchAlgorithm{
         //Make a list of visited nodes to prevent loops
         LinkedList<Node> visitedNodes = new LinkedList<>();
 
-        return findPath(startingNode, endingNode, visitedNodes);
+        try {
+            return findPath(startingNode, endingNode, visitedNodes);
+        }
+        catch (DeadEndException e) {
+            throw new PathfinderException(e.getMessage() + " " + e.getVisitedNodes());
+        }
     }
 
     /**
@@ -44,7 +49,7 @@ public class DepthFirst implements SearchAlgorithm{
         if(startingNode.equals(endingNode)) return returnList;
 
         //add self to list of visited nodes
-        visitedNodes.add(startingNode);
+        if(!visitedNodes.contains(startingNode)) visitedNodes.add(startingNode);
 
         //throw an exception if there is no where else to go
         if(!isOpenConnectedNode(startingNode,visitedNodes)) {
@@ -65,11 +70,13 @@ public class DepthFirst implements SearchAlgorithm{
                     return returnList;
                 } catch (DeadEndException e) {
                     //System.out.println("Ran into a dead end at node " + e.getMessage());
-                    visitedNodes.addAll(e.getVisitedNodes());
+                    for(Node visitedNode : e.getVisitedNodes()) {
+                        if(!visitedNodes.contains(visitedNode)) visitedNodes.add(visitedNode);
+                    }
                 }
             }
         }
-        throw new PathfinderException(startingNode.getNodeID() + ". Got to the end of the DF search");
+        throw new DeadEndException(startingNode.getNodeID(), visitedNodes);
     }
 
     private boolean isOpenConnectedNode(Node node, LinkedList<Node> visitedNodes) {
