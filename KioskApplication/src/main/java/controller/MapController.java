@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
@@ -280,7 +281,7 @@ public class MapController {
     }
 
     @FXML
-    protected void initialize() {
+    protected void initialize(){
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
@@ -389,7 +390,7 @@ public class MapController {
                                         content.putString(nodeView.getAccessibleText());
                                         db.setContent(content);
 
-                                        nodeView.setStyle("-fx-background-color: #0c9f00");
+                                        nodeView.setFill(Color.GREEN);
                                         event.consume();
                                     }
                                 });
@@ -397,6 +398,12 @@ public class MapController {
                                     @Override
                                     public void handle(DragEvent event) {
                                         nodeView.setFill(Color.GRAY);
+                                        //selected the source node if no node is selected
+                                        try{
+                                            onMapClicked(new MouseEvent(MouseEvent.MOUSE_CLICKED, nodeView.getCenterX(),
+                                                    nodeView.getCenterY(), 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+                                                    true, true, true, true, true, true, null));
+                                        }catch(IOException ex){}
                                         event.consume();
                                     }
                                 });
@@ -413,7 +420,10 @@ public class MapController {
                                     @Override
                                     public void handle(DragEvent event) {
                                         if(event.getDragboard().hasString()) {
-                                            nodeView.setStyle("-fx-background-color: #4E9F42");
+                                            if(event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
+                                                return;
+                                            }
+                                            nodeView.setFill(Color.DARKGREEN);
                                         }
                                         event.consume();
                                     }
@@ -421,12 +431,23 @@ public class MapController {
                                 nodeView.setOnDragExited(new EventHandler<DragEvent>() {
                                     @Override
                                     public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            if(event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
+                                                return;
+                                            }
+                                        }
                                         nodeView.setFill(Color.GRAY);
                                         event.consume();
                                     }
                                 });
+                                nodeView.setOnDragDropped(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        parent.controllers.get(ApplicationScreen.MAP_BUILDER).addConnectionByNodes(nodeView.getAccessibleText(), event.getDragboard().getString());
+                                        event.consume();
+                                    }
+                                });
                             }
-
                             nodeObjectList.add(nodeView);
                         }
                     }

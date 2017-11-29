@@ -49,6 +49,8 @@ public abstract class ScreenController {
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
+    //TODO temporary: to be changed
+    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2){}
 
     public void onScreenChanged() {}
     public abstract void resetScreen();

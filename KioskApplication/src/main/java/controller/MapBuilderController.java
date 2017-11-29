@@ -503,6 +503,7 @@ public class MapBuilderController extends ScreenController {
                 event.consume();
             }
         });
+        initPopup();
     }
 
     @Override
@@ -554,7 +555,6 @@ public class MapBuilderController extends ScreenController {
         else {
             updateSelectedNode(node);
         }
-        initPopup();
     }
 
     @Override
@@ -1124,6 +1124,49 @@ public class MapBuilderController extends ScreenController {
 
     }
 
+    @Override
+    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2) {
+        for (database.objects.Node connectingNode1 : getInstance().getAllNodes()) {
+            if (nodeXyz1.equals(connectingNode1.getXyz())) {
+                for (database.objects.Node connectingNode2 : getInstance().getAllNodes()) {
+                    if (nodeXyz2.equals(connectingNode2.getXyz())) {
+                        try{
+                            if (MapEntity.getInstance().getEdge(connectingNode1.getNodeID() + "_" + connectingNode2.getNodeID()) != null ||
+                                    MapEntity.getInstance().getEdge(connectingNode2.getNodeID() + "_" + connectingNode1.getNodeID()) != null) {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Error creating connection ");
+                                alert.setHeaderText("Connection already exit");
+                                alert.setContentText("Connection between these two nodes already exist");
+                                alert.showAndWait();
+                                return;
+                            }
+                        }catch(DatabaseException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error creating connection ");
+                            alert.setHeaderText("Error occurred while looking for nodes in the database.");
+                            alert.setContentText(ex.toString());
+                            alert.showAndWait();
+                        }
+                        //add the new edge
+                        Edge edge = new Edge((connectingNode1.getNodeID()+"_"+connectingNode2.getNodeID()), connectingNode1.getNodeID(), connectingNode2.getNodeID());
+                        try{
+                            getInstance().addEdge(edge);
+                        }catch (DatabaseException ex) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error creating connection ");
+                            alert.setHeaderText("Error occurred while putting edge in the database.");
+                            alert.setContentText(ex.toString());
+                            alert.showAndWait();
+                        }
+                        //refresh edges display
+                        mapController.showEdgesBox.setSelected(false);
+                        mapController.showEdgesBox.setSelected(true);
+                    }
+                }
+            }
+        }
+    }
+
     @FXML
     private void addConnection(String nodeXyz) {
         if(!observableNewNodes.isEmpty()) {
@@ -1154,7 +1197,7 @@ public class MapBuilderController extends ScreenController {
                         alert.showAndWait();
                     }
                     //add the new edge
-                    Edge edge = new Edge((connectingNode.getNodeID()+observableSelectedNodes.get(0).getNodeID()), connectingNode.getNodeID(), observableSelectedNodes.get(0).getNodeID());
+                    Edge edge = new Edge((connectingNode.getNodeID()+ "_" +observableSelectedNodes.get(0).getNodeID()), connectingNode.getNodeID(), observableSelectedNodes.get(0).getNodeID());
                     try{
                         getInstance().addEdge(edge);
                     }catch (DatabaseException ex) {
