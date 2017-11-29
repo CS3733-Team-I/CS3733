@@ -103,7 +103,7 @@ public class Dijkstra implements SearchAlgorithm {
                     int newCost = foundNode.calculatePreviousCost(lowestCost);
                     //If we have, then set the node we just got here from to the new parent and recalculate costs.
                     if(newCost < foundNode.getPreviousCost()){
-                        this.calculateCosts(foundNode, lowestCost, endNode, newCost);
+                        this.updateParent(foundNode, lowestCost, endNode, newCost);
                     }
                 }
             }
@@ -127,7 +127,14 @@ public class Dijkstra implements SearchAlgorithm {
         node.setPreviousCost(previousCost);
     }
 
-    void calculateCosts(PathfinderNode node, PathfinderNode newParent, PathfinderNode endNode, int newCost){
+    /**
+     * Calculates cost associated with a new parent for a given node and sets that parent.
+     * @param node
+     * @param newParent the node being set as the new parent for node.
+     * @param endNode   the last node in the path.
+     * @param newCost
+     */
+    void updateParent(PathfinderNode node, PathfinderNode newParent, PathfinderNode endNode, int newCost){
         node.setParentNode(newParent);
         node.setPreviousCost(newCost);
         node.recalculateCosts();

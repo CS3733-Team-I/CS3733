@@ -1,13 +1,5 @@
 package pathfinder;
 
-import database.objects.Edge;
-import database.objects.Node;
-import entity.MapEntity;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
 public class A_star extends Dijkstra {
     /**
      * Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
@@ -23,8 +15,14 @@ public class A_star extends Dijkstra {
         node.setTotalCost(node.getPreviousCost() + heuristic(node, endNode));
     }
 
+    /**
+     * @param node
+     * @param newParent the node being set as the new parent for node.
+     * @param endNode   the last node in the path.
+     * @param newCost
+     */
     @Override
-    void calculateCosts(PathfinderNode node, PathfinderNode newParent, PathfinderNode endNode, int newCost){
+    void updateParent(PathfinderNode node, PathfinderNode newParent, PathfinderNode endNode, int newCost){
         node.setParentNode(newParent);
         node.setPreviousCost(newCost);
         node.setTotalCost(newCost + heuristic(node, endNode));
