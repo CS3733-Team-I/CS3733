@@ -25,7 +25,13 @@ public class Path {
         return edges;
     }
 
-    public LinkedList<String> getDirections() {
+    public String getDirections() {
+        String returnStr = "";
+        for(String s : directions) returnStr += s;
+        return returnStr;
+    }
+
+    public LinkedList<String> getDirectionsList() {
         return directions;
     }
 
@@ -34,6 +40,34 @@ public class Path {
     }
 
     private void generateDirections() {
-        directions.add("Start at " + waypoints.get(0).getLongName());
+        directions = new LinkedList<>();
+        LinkedList<Node> nodes = getListOfNodes();
+        directions.add("Start at " + nodes.getFirst().getLongName() + "\n");
+        for(int i = 0; i < nodes.size(); i++) {
+            if(i!=0 && i!=nodes.size()-1)
+                directions.add("Go to " + nodes.get(i).getLongName()+ "\n");
+        }
+
+        directions.add("End at " + nodes.getLast().getLongName());
+    }
+
+    private LinkedList<Node> getListOfNodes() {
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(waypoints.getFirst());
+
+        for(int i = 0; i<edges.size(); i++) {
+            nodes.add(getOtherNode(edges.get(i),nodes.getLast()));
+        }
+        return nodes;
+    }
+
+    private Node getOtherNode(Edge e, Node n) {
+
+        MapEntity map = MapEntity.getInstance();
+
+        if(e.getNode1ID().equals(n.getNodeID())) return map.getNode(e.getNode2ID());
+        if(e.getNode2ID().equals(n.getNodeID())) return map.getNode(e.getNode1ID());
+        return null;
     }
 }

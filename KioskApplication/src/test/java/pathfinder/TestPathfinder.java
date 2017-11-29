@@ -369,7 +369,13 @@ public class TestPathfinder {
     //Test text directions
 
     @Test
-    public void 
+    public void testGenerateDirections() throws PathfinderException{
+        pathfinder = new Pathfinder();
+
+        Path path = pathfinder.generatePath(n01,n07);
+
+        System.out.println(path.getDirections());
+    }
 
     //TODO
 
