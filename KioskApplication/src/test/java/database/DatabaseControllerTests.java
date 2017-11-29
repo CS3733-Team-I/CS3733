@@ -170,9 +170,12 @@ public class DatabaseControllerTests {
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
         dbController.addNode(node);
-        InterpreterRequest iR1 = new InterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
-        dbController.addInterpreterRequest(iR1);
-        Assert.assertEquals(iR1,dbController.getInterpreterRequest(iR1.getRequestID()));
+        long t1 = System.currentTimeMillis();
+        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
+        dbController.addInterpreterRequest(iR);
+        Assert.assertEquals(iR,dbController.getInterpreterRequest(iR.getRequestID()));
     }
 
     @Test
@@ -186,7 +189,9 @@ public class DatabaseControllerTests {
         dbController.addNode(node1);
         dbController.addNode(node2);
         long t1 = System.currentTimeMillis();
-        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1","boss@hospital.com", " ", new Timestamp(t1), new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
+        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         long t2 = System.currentTimeMillis()+2;
 
@@ -211,8 +216,9 @@ public class DatabaseControllerTests {
                 "Test node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
-        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1","boss@hospital.com", " ",
-                new Timestamp(t1), new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
+        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes iR
         dbController.deleteInterpreterRequest(iR.getRequestID());
@@ -227,7 +233,10 @@ public class DatabaseControllerTests {
                 "Test node", "TN1", "I");
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
-        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1","boss@hospital.com", " ", new Timestamp(t1), new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
+
+        InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
+                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes node
         dbController.removeNode(node);
