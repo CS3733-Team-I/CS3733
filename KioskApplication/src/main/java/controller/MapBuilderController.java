@@ -647,8 +647,6 @@ public class MapBuilderController extends ScreenController {
                 nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
 
             }
-
-
         }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
