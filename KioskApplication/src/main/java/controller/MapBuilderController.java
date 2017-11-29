@@ -22,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import utility.nodeDisplay.NodeDisplay;
@@ -31,6 +32,7 @@ import utility.node.NodeType;
 import utility.node.TeamAssigned;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
@@ -933,6 +935,8 @@ public class MapBuilderController extends ScreenController {
         btBack.setStyle("-fx-background-color: #999999;" +
                 "-fx-backgound-raidus: 0");
 
+
+
         VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
         popup = new JFXPopup(vBox);
     }
@@ -956,5 +960,43 @@ public class MapBuilderController extends ScreenController {
         }
         observableSelectedNodes.clear();
         observableSelectedNodes.add(selectedNode);
+    }
+    @FXML
+    private void onDeleteClicked(ActionEvent e) {
+        if(!observableNewNodes.isEmpty()) {
+            mapController.isNodeAdded = false;
+            mapController.observableHighlightedNewNodes.clear();
+            observableNewNodes.clear();
+        }
+
+        else if(!observableSelectedNodes.isEmpty()) {
+
+            //remove this node from map builder changed list
+            Iterator<database.objects.Node> builderNodeObjectIterator = observableChangedNodes.iterator();
+            while (builderNodeObjectIterator.hasNext()) {
+                database.objects.Node deletedNode = builderNodeObjectIterator.next();
+                if (deletedNode.getXyz().equals(observableChangedNodes.get(0).getXyz())) {
+                    builderNodeObjectIterator.remove();
+                    break;
+                }
+            }
+            //remove this node from map controller changed list
+            Iterator<database.objects.Node> mapNodeObjectIterator = mapController.observableHighlightedChangedNodes.iterator();
+            while (mapNodeObjectIterator.hasNext()) {
+                database.objects.Node deletedNode = mapNodeObjectIterator.next();
+                if (deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
+                    mapNodeObjectIterator.remove();
+                    break;
+                }
+            }
+            //remove this node from map controller drawn list
+            mapController.undrawNodeOnMap(observableSelectedNodes.get(0));
+
+
+
+            //remove this selected node
+            mapController.observableHighlightedSelectedNodes.clear();
+            observableSelectedNodes.clear();
+        }
     }
 }
