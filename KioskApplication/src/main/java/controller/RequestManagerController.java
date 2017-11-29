@@ -87,21 +87,6 @@ public class RequestManagerController extends ScreenController {
                     janitorFilter.setSelected(true);
                     break;
             }
-        }else{
-            foodFilter.setSelected(true);
-            foodFilter.setDisable(false);
-            janitorFilter.setSelected(true);
-            janitorFilter.setDisable(false);
-            securityFilter.setSelected(true);
-            securityFilter.setDisable(false);
-            interpreterFilter.setSelected(true);
-            interpreterFilter.setDisable(false);
-            maintenanceFilter.setSelected(true);
-            maintenanceFilter.setDisable(false);
-            itFilter.setSelected(true);
-            itFilter.setDisable(false);
-            transportationFilter.setSelected(true);
-            transportationFilter.setDisable(false);
         }
     }
 
