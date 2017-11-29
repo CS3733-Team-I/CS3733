@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXPopup;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
@@ -57,8 +58,8 @@ public class MapController {
 
     //list of showing nodes or edges
     //protected  javafx.scene.node heightLightedNode;
-    private ObservableList<database.objects.Node> databaseNodeObjectList;
-    private ObservableList<database.objects.Edge> databaseEdgeObjectList;
+    protected ObservableList<database.objects.Node> databaseNodeObjectList;
+    protected ObservableList<database.objects.Edge> databaseEdgeObjectList;
     private ObservableList<Circle> nodeObjectList;
     private ObservableList<Line> edgeObjectList;
     protected ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
@@ -72,7 +73,7 @@ public class MapController {
 
     private LinkedList<MenuButton> waypoints;
 
-    private MainWindowController parent = null;
+    protected MainWindowController parent = null;
 
     protected static double DEFAULT_HVALUE = 0.52;
     protected static double DEFAULT_VVALUE = 0.3;
@@ -485,9 +486,9 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            System.out.println("Removing node from Selected Node");
+
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected Node: NORMAL");
+                                System.out.println("Removing node from Selected Node TO NORMAL "+ deseletedNode.getXyz());
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
