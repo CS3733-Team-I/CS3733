@@ -5,13 +5,16 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
+import org.junit.After;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,9 +33,8 @@ public class TestPathfinderNode {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //Build map
         DatabaseController.getInstance();
-
         map = MapEntity.getInstance();
-
+        this.removeAllFromDB();
 
         n1  = new Node("NODE1A",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
         n2  = new Node("NODE2A",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE1_LN","NODE1_SN","I");
@@ -134,5 +136,16 @@ public class TestPathfinderNode {
     public void testBuildPath() {
         assertEquals(path.get(0), e1);
         assertEquals(path.get(1), e2);
+    }
+
+    @After
+    public void removeAllFromDB() throws DatabaseException {
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node);
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
     }
 }
