@@ -66,7 +66,6 @@ public class PathfindingSidebarController extends ScreenController {
                 Path path = pathfinder.generatePath(currentNodes);
                 waypointListVbox.getChildren().clear();
                 LinkedList<String> dirs = path.getDirectionsList();
-                System.out.println(path.getDirections());
                 for(String s : dirs) {
                     Label l = new Label(s);
                     l.setTextFill(Color.BLACK);
