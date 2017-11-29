@@ -10,38 +10,23 @@ public abstract class Request {
     //Format for requestID: type, nodeID, time, assigner
     protected String requestID;
     private String nodeID;
-    private Timestamp submittedTime;
     private String assigner;
+    private String completer;
     private String note;
     private RequestProgressStatus status;
+    private Timestamp submittedTime;
+    private Timestamp startedTime;
     private Timestamp completedTime;
 
-
-    /*public request(node location, String assigner, int requestID) {
-        this.location = location;
-        this.assigner = assigner;
-        this.requestID = requestID;
-    }*/
-    //Use this to generate new requests
-    public Request(String nodeID, String assigner, String note) {
-        long t = System.currentTimeMillis();
-        this.nodeID=nodeID;
-        this.submittedTime=new Timestamp(t);
-        this.assigner=assigner;
-        this.note=note;
-        this.status=RequestProgressStatus.TO_DO;
-        //TODO: make completed timestamp less hacky, implement a null design pattern possibly
-        this.completedTime=new Timestamp(t-1);
-        this.requestID=submittedTime.toString()+nodeID;
-    }
-
     //Use to retrieve requests
-    public Request(String requestID, String nodeID, String assigner, String note, Timestamp submittedTime, Timestamp completedTime, RequestProgressStatus status){
+    public Request(String requestID, String nodeID, String assigner,String completer, String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime, RequestProgressStatus status){
         this.requestID=requestID;
         this.nodeID=nodeID;
         this.assigner=assigner;
+        this.completer=completer;
         this.note=note;
         this.submittedTime=submittedTime;
+        this.startedTime=startedTime;
         this.completedTime=completedTime;
         this.status=status;
     }
@@ -54,32 +39,80 @@ public abstract class Request {
         this.note=newNote;
     }
 
-    public void inProgress(){
-        this.status=RequestProgressStatus.IN_PROGRESS;
+    public boolean markInProgress(String completer){
+        if(this.status==RequestProgressStatus.TO_DO){
+            this.completer=completer;
+            this.status=RequestProgressStatus.IN_PROGRESS;
+            this.startedTime=new Timestamp(System.currentTimeMillis());
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void complete(){
-        this.status=RequestProgressStatus.DONE;
-        this.completedTime=new Timestamp(System.currentTimeMillis());
+    public boolean complete(){
+        if (this.status==RequestProgressStatus.IN_PROGRESS){
+            this.status=RequestProgressStatus.DONE;
+            this.completedTime=new Timestamp(System.currentTimeMillis());
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    //Returns time from TO_DO to IN_PROGRESS
+    public long travelTime(){
+        if(status!=RequestProgressStatus.TO_DO){
+            return (this.startedTime.getTime()-this.submittedTime.getTime());
+        }
+        else{
+            return 0;
+        }
+    }
+
+    //returns time from IN_PROGRESS to DONE
+    public long timeToComplete(){
+        if(status==RequestProgressStatus.DONE){
+            return this.completedTime.getTime()-this.startedTime.getTime();
+        }
+        else{
+            return 0;
+        }
     }
 
         //Getters for testing
     public String getRequestID() {
         return requestID;
     }
+
     public String getNodeID(){return this.nodeID;}
+
     public String getAssigner(){
         return this.assigner;
     }
+
+    public String getCompleter() {
+        return completer;
+    }
+
     public String getNote() {
         return note;
     }
+
     public Timestamp getSubmittedTime() {
         return submittedTime;
     }
+
+    public Timestamp getStartedTime() {
+        return startedTime;
+    }
+
     public Timestamp getCompletedTime() {
         return completedTime;
     }
+
     public RequestProgressStatus getStatus() {
         return status;
     }

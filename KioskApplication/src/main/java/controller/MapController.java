@@ -491,20 +491,20 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    System.out.println("selected Node: " + selectedNode.getNodeID());
+                    System.out.println("selected node: " + selectedNode.getNodeID());
                 }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            System.out.println("Removing node from Selected Node");
+                            System.out.println("Removing node from Selected node");
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected Node: NORMAL");
+                                //System.out.println("Removing node from Selected node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
-                                //System.out.println("Removing node from Selected Node: CHANGED");
+                                //System.out.println("Removing node from Selected node: CHANGED");
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
@@ -527,7 +527,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    System.out.println("Changed Node: " + changedNode.getNodeID());
+                    System.out.println("Changed node: " + changedNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasAdded()){
@@ -557,7 +557,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node newNode : observableHighlightedNewNodes) {
-                    System.out.println("New Node: " + newNode.getNodeID());
+                    System.out.println("New node: " + newNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasRemoved()) {
