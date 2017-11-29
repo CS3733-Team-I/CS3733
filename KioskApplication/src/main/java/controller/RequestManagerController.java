@@ -213,10 +213,10 @@ public class RequestManagerController extends ScreenController {
                 break;
             case TO_DO:
                 request.markInProgress(l.getUserID());
+                System.out.println(request.getStatus());
                 newRequests();
                 break;
         }
-        txtID.clear();
         System.out.println("Complete Pressed \n");
     }
 
