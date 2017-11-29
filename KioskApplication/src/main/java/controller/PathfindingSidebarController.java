@@ -2,6 +2,7 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import entity.MapEntity;
 import entity.SystemSettings;
 import entity.Path;
 import javafx.fxml.FXML;
@@ -28,15 +29,11 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private VBox waypointListVbox;
     @FXML private Label exceptionText;
 
-    LinkedList<Node> currentNodes;
+    private LinkedList<Node> currentNodes;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
-    }
-
-    public void setPathfinderalg(int pathfinderalg){
-
     }
 
     @FXML
@@ -63,7 +60,7 @@ public class PathfindingSidebarController extends ScreenController {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
-                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().setPath(pathfinder.generatePath(currentNodes));
                 waypointListVbox.getChildren().clear();
                 LinkedList<String> dirs = path.getDirectionsList();
                 for(String s : dirs) {
@@ -71,7 +68,7 @@ public class PathfindingSidebarController extends ScreenController {
                     l.setTextFill(Color.BLACK);
                     waypointListVbox.getChildren().add(l);
                 }
-                getMapController().drawPath(path);
+                getMapController().drawPath();
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
@@ -86,6 +83,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btClearPathPressed() throws IOException {
         getMapController().clearMap();
+        getMapController().setPath(null);
         exceptionText.setText("");
     }
 
@@ -123,7 +121,6 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-
     }
 
     @Override

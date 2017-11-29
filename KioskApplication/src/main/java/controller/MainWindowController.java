@@ -21,7 +21,10 @@ public class MainWindowController {
 
     @FXML private AnchorPane contentWindow;
           private javafx.scene.Node contentNode;
+          private LoginController loginController;
     @FXML private BorderPane loginPopup;
+          private RequestTrackingDataController reqTrackController;
+    @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
 
     @FXML private JFXTabPane tabPane;
@@ -79,21 +82,44 @@ public class MainWindowController {
             }
         });
 
-        LoginController loginController = new LoginController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
-        loader.setController(loginController);
-        javafx.scene.Node view = loader.load();
-
-        this.loginPopup = new BorderPane();
-        AnchorPane.setTopAnchor(loginPopup, 0.0);
-        AnchorPane.setLeftAnchor(loginPopup, 0.0);
-        AnchorPane.setBottomAnchor(loginPopup, 0.0);
-        AnchorPane.setRightAnchor(loginPopup, 0.0);
-        loginPopup.setRight(view);
-        //hides the popup
-        loginPopup.setVisible(false);
+        initializeLoginPopup();
+        initializeTrackingTable();
 
         checkPermissions();
+    }
+
+    private void initializeTrackingTable() throws IOException{
+        reqTrackController = new RequestTrackingDataController(this);
+        FXMLLoader reqTrackingLoader = new FXMLLoader(getClass().getResource("/view/RequestTrackingDataView.fxml"));
+        reqTrackingLoader.setController(reqTrackController);
+        javafx.scene.Node reqTrackingView = reqTrackingLoader.load();
+        this.histogram = new BorderPane();
+
+        AnchorPane.setTopAnchor(histogram, 0.0);
+        AnchorPane.setLeftAnchor(histogram, 0.0);
+        AnchorPane.setBottomAnchor(histogram, 0.0);
+        AnchorPane.setRightAnchor(histogram, 0.0);
+        histogram.setCenter(reqTrackingView);
+        histogram.setVisible(false);
+    }
+
+    public void closeRequestTrackingTable(){
+        histogram.setVisible(false);
+        this.switchButton.setDisable(false);
+        this.tabPane.setDisable(false);
+        this.tabRM.setDisable(false);
+        this.contentNode.setDisable(false);
+        this.mapView.setDisable(false);
+    }
+
+    public void openRequestTrackingTable(){
+        reqTrackController.disableCancelButton(false);
+        histogram.setVisible(true);
+        this.switchButton.setDisable(true);
+        this.tabPane.setDisable(true);
+        this.tabRM.setDisable(true);
+        this.contentNode.setDisable(true);
+        this.mapView.setDisable(true);
     }
 
     //checks permissions of user and adjusts visible tabs and screens
@@ -175,6 +201,7 @@ public class MainWindowController {
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(loginPopup);
         contentWindow.getChildren().add(contentNode);
+        contentWindow.getChildren().add(histogram);
 
         // Fit sidebar to window
         AnchorPane.setTopAnchor(contentNode, 0.0);
@@ -185,6 +212,23 @@ public class MainWindowController {
         controller.resetScreen();
 
         this.currentScreen = screen;
+    }
+
+    private void initializeLoginPopup() throws IOException{
+        loginController = new LoginController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
+        loader.setController(loginController);
+        javafx.scene.Node view = loader.load();
+
+        this.loginPopup = new BorderPane();
+        AnchorPane.setTopAnchor(loginPopup, 0.0);
+        AnchorPane.setLeftAnchor(loginPopup, 0.0);
+        AnchorPane.setBottomAnchor(loginPopup, 0.0);
+        AnchorPane.setRightAnchor(loginPopup, 0.0);
+        loginPopup.setRight(view);
+        //hides the popup
+        loginPopup.setVisible(false);
+        loginController.disableCancelButton(true);
     }
 
     void closeLoginPopup(){
@@ -198,6 +242,7 @@ public class MainWindowController {
 
     @FXML
     private void openLoginPopup() throws IOException{
+        loginController.disableCancelButton(false);
         this.loginPopup.setVisible(true);
         this.switchButton.setDisable(true);
         this.tabPane.setDisable(true);
@@ -219,6 +264,10 @@ public class MainWindowController {
                 this.openLoginPopup();
                 break;
         }
+    }
+
+    public void displayTrackingData(){
+
     }
 
     public void onMapNodeClicked(Node n) {
