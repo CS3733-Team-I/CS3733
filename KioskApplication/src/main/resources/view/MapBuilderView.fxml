@@ -155,6 +155,7 @@
                               </JFXTextField>
                            </children>
                         </GridPane>
+                        <JFXButton fx:id="setkiosklocation" onAction="#setKioskDefaultLocation" prefHeight="25.0" prefWidth="185.0" style="-fx-background-color: #00589F;" text="Set as Default Kisok Location " textFill="WHITE" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>

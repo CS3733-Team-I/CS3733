@@ -7,6 +7,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -90,6 +91,8 @@ public class MapBuilderController extends ScreenController {
     private JFXButton btNodeDelete;
     @FXML
     private JFXButton btAdvance;
+    @FXML
+    private JFXButton setkiosklocation;
     /**
      * Edges related fields
      */
@@ -126,6 +129,7 @@ public class MapBuilderController extends ScreenController {
 
         //disable all fields
         btNodeSave.setDisable(true);
+        setkiosklocation.setDisable(true);
         setNodeAllDisable();
 
         //add items into the combobox
@@ -433,6 +437,7 @@ public class MapBuilderController extends ScreenController {
             mapController.isNodeAdded = false;
             mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
+           // setkiosklocation.setDisable(false);
             return;
         }
         else if(observableSelectedNodes.contains(node)) {
@@ -657,6 +662,7 @@ public class MapBuilderController extends ScreenController {
         btNodeUndo.setDisable(false);
         btNodeRedo.setDisable(false);
         btNodeDelete.setDisable(false);
+        setkiosklocation.setDisable(false);
     }
     private void setNodeAllDisable() {
         CBnodeType.setDisable(true);
@@ -670,7 +676,7 @@ public class MapBuilderController extends ScreenController {
         //turn off advanced options
         btAdvance.setDisable(true);
         //disable node operation buttons
-
+        setkiosklocation.setDisable(true);
         btNodeUndo.setDisable(true);
         btNodeRedo.setDisable(true);
         btNodeDelete.setDisable(true);
@@ -839,5 +845,10 @@ public class MapBuilderController extends ScreenController {
         else {
             Advance.setVisible(true);
         }
+    }
+
+    @FXML
+    private void setKioskDefaultLocation(ActionEvent event){
+        SystemSettings.getInstance().setDefaultnode(observableSelectedNodes.get(0).getNodeID());
     }
 }
