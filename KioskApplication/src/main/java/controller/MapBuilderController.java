@@ -33,7 +33,9 @@ import utility.node.TeamAssigned;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
+import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapBuilderController extends ScreenController {
@@ -358,7 +360,7 @@ public class MapBuilderController extends ScreenController {
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                     else if(c.wasAdded()) {
-                        for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
+                        for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
                             Label connection = new Label(connectedNode.getLongName());
                             connection.setAccessibleText(connectedNode.getXyz());
                             connection.setAlignment(Pos.CENTER);
@@ -622,7 +624,7 @@ public class MapBuilderController extends ScreenController {
         else {
         //System.out.println("");
             int nodeTypeCountPrepared = 0;
-            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
+            String nodeTypeCount = getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
             nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
 
@@ -649,7 +651,7 @@ public class MapBuilderController extends ScreenController {
                 result += observableChangedNodes.get(i).getNodeID().charAt(7);
             }
         }
-        String preparedName = MapEntity.getInstance().generateElevName(nodeFloor, "Team" + nodeTeamAssigned.toString(), result);
+        String preparedName = getInstance().generateElevName(nodeFloor, "Team" + nodeTeamAssigned.toString(), result);
         return preparedName;
     }
 
@@ -742,11 +744,11 @@ public class MapBuilderController extends ScreenController {
                 nodeDialogString = "";
                 return;
             }
-            else if (MapEntity.getInstance().getNode(newNode.getNodeID()) == null) {
+            else if (getInstance().getNode(newNode.getNodeID()) == null) {
                 try {
                     //System.out.println("In saving NodeType: " + newNode.getNodeType());
                     //System.out.println("In saving NodeID: " + newNode.getNodeID());
-                    MapEntity.getInstance().addNode(newNode);
+                    getInstance().addNode(newNode);
                     nodeDialogString += "Node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -773,7 +775,7 @@ public class MapBuilderController extends ScreenController {
 
         for(database.objects.Node changedNode : observableChangedNodes) {
                 try {
-                    MapEntity.getInstance().editNode(changedNode);
+                    getInstance().editNode(changedNode);
                     nodeDialogString += "Node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -877,7 +879,7 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void showPopup(MouseEvent event) {
-        popup.show(lvConnectedNodes, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
+        popup.show(lvConnectedNodes, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
     }
 
     private void initPopup() {
@@ -992,8 +994,21 @@ public class MapBuilderController extends ScreenController {
             //remove this node from map controller drawn list
             mapController.undrawNodeOnMap(observableSelectedNodes.get(0));
 
-
-
+            for(database.objects.Node deletedNode : MapEntity.getInstance().getAllNodes()) {
+                if(deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
+                    try{
+                        MapEntity.getInstance().removeNode(observableSelectedNodes.get(0));
+                    }catch (DatabaseException databseException) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error deleting node in DB");
+                        alert.setHeaderText("Error occurred while updating a node in the database.");
+                        alert.setContentText(databseException.toString());
+                        alert.showAndWait();
+                    }
+                }
+            }
+            mapController.showEdgesBox.setSelected(false);
+            mapController.showEdgesBox.setSelected(true);
             //remove this selected node
             mapController.observableHighlightedSelectedNodes.clear();
             observableSelectedNodes.clear();
