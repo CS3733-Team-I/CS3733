@@ -4,6 +4,9 @@ import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import database.objects.SecurityRequest;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart;
 import utility.request.Language;
 import utility.request.LanguageFrequency;
 import utility.request.RequestProgressStatus;
@@ -410,5 +413,14 @@ public class RequestEntity {
         }
         Collections.sort(freq, new SortByFrequency());
         return freq;
+    }
+
+    //returns a hashmap of Strings and integers for a pie chart
+    public ObservableList<PieChart.Data> getRequestDistribution(){
+        ObservableList<PieChart.Data> reqs =
+                FXCollections.observableArrayList(
+                        new PieChart.Data(RequestType.INTERPRETER.toString(),interpreterRequests.size()),
+                        new PieChart.Data(RequestType.SECURITY.toString(),securityRequests.size()));
+        return reqs;
     }
 }
