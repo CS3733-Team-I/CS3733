@@ -487,7 +487,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    System.out.println("selected Node: " + selectedNode.getNodeID());
+                    //System.out.println("selected Node: " + selectedNode.getNodeID());
                 }
                 //revert deselected nodes to normal color
                 while(c.next()) {
@@ -495,7 +495,6 @@ public class MapController {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
 
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                System.out.println("Removing node from Selected Node TO NORMAL "+ deseletedNode.getXyz());
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
@@ -626,5 +625,12 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
+    }
+
+    protected void refresh() {
+        showEdgesBox.setSelected(false);
+        showEdgesBox.setSelected(true);
+        showNodesBox.setSelected(false);
+        showNodesBox.setSelected(true);
     }
 }
