@@ -23,6 +23,11 @@
     -fx-font-size: 16;
 }
 
+.cancel-button {
+    -fx-background-radius: 0;
+    -fx-background-color: #efefef;
+}
+
 /* TAB PANE STYLES */
 
 .jfx-tab-pane .headers-region {

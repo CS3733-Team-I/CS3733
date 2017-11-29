@@ -55,6 +55,7 @@ public class RequestManagerController extends ScreenController {
         super(parent, map);
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
+        r.readAllFromDatabase();
     }
 
     @FXML

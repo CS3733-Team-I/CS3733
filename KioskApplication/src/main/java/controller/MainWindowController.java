@@ -118,7 +118,7 @@ public class MainWindowController {
         AnchorPane.setBottomAnchor(histogram, 0.0);
         AnchorPane.setRightAnchor(histogram, 0.0);
         histogram.setCenter(reqTrackingView);
-        histogram.setVisible(true);
+        histogram.setVisible(false);
 
         checkPermissions();
         //TODO FOR FUTURE REFERENCE, DO NOT REMOVE
