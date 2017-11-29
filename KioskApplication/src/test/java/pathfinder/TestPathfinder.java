@@ -280,7 +280,7 @@ public class TestPathfinder {
             System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
         }
         */
-        ///*
+        /*
         System.out.println("Start test all");
         // Try to test every possible path
         for(Node n1 : map.getAllNodes()) {
@@ -298,18 +298,28 @@ public class TestPathfinder {
                 }
                 catch(PathfinderException e) {
                     //Don't print an error if it's node 18 or 19 cause they don't connect to anything and the error should be thrown
-                    if(n1.getNodeID().equals("NODE18") || n1.getNodeID().equals("NODE19") || n2.getNodeID().equals("NODE18") || n2.getNodeID().equals("NODE19")) {/*do nothing*/}
+                    if(n1.getNodeID().equals("NODE18") || n1.getNodeID().equals("NODE19") || n2.getNodeID().equals("NODE18") || n2.getNodeID().equals("NODE19")) {}
                     else System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
                 }
             }
         }
         System.out.println("End test all");
-        //*/
+        */
+
+        //6, 17
+        path = alg.findPath(n06,n17);
+        if(!isValidPath(n06,n17,path)) {
+            System.out.println("Not Valid Path\nStart: " + n06.getNodeID() + " End: " + n17.getNodeID());
+            for (Edge e : path) {
+                System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
+            }
+            System.out.println("\n");
+        }
     }
 
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
         if(path.size() == 0) {
-            if(startNode.equals(endNode)) return true;
+            if(startNode.getNodeID().equals(endNode.getNodeID())) return true;
             return false;
         }
 
@@ -330,30 +340,14 @@ public class TestPathfinder {
                     return false;
             }
             else { // should contain a node in the previous edge and in the next edge
-                //pseudocode for logic
-
-                // i.node1 connects to previous (i.node2 connects to next)
-                // (i.node1 == i-1.node1 || i.node1 == i-1.node2) &&
-                // (i.node2 == i+1.node1 || i.node2 == i+1.node2)
-
-                //otherwise i.node2 connects to previous (i.node1 connects to next)
-                // (i.node2 == i-1.node1 || i.node2 == i-1.node2) &&
-                // (i.node1 == i+1.node1 || i.node1 == i+1.node2)
-
-                //overall logic statement:
-                // ((i.node1 == i-1.node1 || i.node1 == i-1.node2) && (i.node2 == i+1.node1 || i.node2 == i+1.node2)) ||
-                // ((i.node2 == i-1.node1 || i.node2 == i-1.node2) && (i.node1 == i+1.node1 || i.node1 == i+1.node2))
-
-                if( ( ( (path.get(i).getNode1ID().equals(path.get(i-1).getNode1ID())) || (path.get(i).getNode1ID().equals(path.get(i-1).getNode2ID())) ) && ( (path.get(i).getNode2ID().equals(path.get(i+1).getNode1ID())) || (path.get(i).getNode2ID().equals(path.get(i+1).getNode2ID())) ) ) ||
-                    ( ( (path.get(i).getNode2ID().equals(path.get(i-1).getNode1ID())) || (path.get(i).getNode2ID().equals(path.get(i-1).getNode2ID())) ) && ( (path.get(i).getNode1ID().equals(path.get(i+1).getNode1ID())) || (path.get(i).getNode1ID().equals(path.get(i+1).getNode2ID())) ) )
-                  ) {
-                    return true;
-                }
+                return path.get(i).isConnectedTo(path.get(i - 1)) && path.get(1).isConnectedTo(path.get(i + 1));
             }
-            return false;
         }
         return false;
     }
+
+
+
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1DF() throws PathfinderException{

@@ -46,4 +46,10 @@ public class Edge {
         this.node2ID = node2;
     }
 
+    public boolean isConnectedTo(Edge e) {
+        return this.node1ID.equals(e.getNode1ID())  ||
+                this.node1ID.equals(e.getNode2ID()) ||
+                this.node2ID.equals(e.getNode1ID()) ||
+                this.node2ID.equals(e.getNode2ID());
+    }
 }
