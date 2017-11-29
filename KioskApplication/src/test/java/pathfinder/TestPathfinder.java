@@ -372,7 +372,7 @@ public class TestPathfinder {
     public void testGenerateDirections() throws PathfinderException{
         pathfinder = new Pathfinder();
 
-        Path path = pathfinder.generatePath(n01,n07);
+        Path path = pathfinder.generatePath(n01,n17);
 
         System.out.println(path.getDirections());
     }
