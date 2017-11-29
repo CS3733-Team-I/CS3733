@@ -62,11 +62,13 @@ public class PathfindingSidebarController extends ScreenController {
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
                 waypointListVbox.getChildren().clear();
-                LinkedList<String> dirs = getMapController().getPath().getDirectionsList();
-                for(String s : dirs) {
-                    Label l = new Label(s);
-                    l.setTextFill(Color.BLACK);
-                    waypointListVbox.getChildren().add(l);
+                LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
+                for(LinkedList<String> directionSegment: directionsList) {
+                    for (String s : directionSegment) {
+                        Label l = new Label(s);
+                        l.setTextFill(Color.BLACK);
+                        waypointListVbox.getChildren().add(l);
+                    }
                 }
                 getMapController().drawPath();
             }
