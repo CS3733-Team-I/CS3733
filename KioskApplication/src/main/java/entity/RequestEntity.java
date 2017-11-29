@@ -140,8 +140,6 @@ public class RequestEntity {
                     }
                     break;
             }
-
-
         }
         return displayedRequests;
     }

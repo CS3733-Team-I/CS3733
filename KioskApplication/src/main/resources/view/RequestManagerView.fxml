@@ -72,7 +72,6 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
                                     <Label focusTraversable="false" text="Filter By:" GridPane.halignment="CENTER" GridPane.valignment="TOP">
@@ -95,14 +94,6 @@
                                     <JFXCheckBox fx:id="itFilter" selected="true" text="IT Help" GridPane.rowIndex="6" />
                                     <JFXCheckBox fx:id="transportationFilter" selected="true" text="Transportation" GridPane.rowIndex="7" />
                                     <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
-                                    <JFXButton buttonType="RAISED" onAction="#submitRequest" style="-fx-background-color: green;" text="Create New" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <GridPane.margin>
-                                          <Insets />
-                                       </GridPane.margin>
-                                    </JFXButton>
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
