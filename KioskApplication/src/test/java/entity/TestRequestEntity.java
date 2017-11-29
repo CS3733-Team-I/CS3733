@@ -4,16 +4,18 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
 import utility.KioskPermission;
-import utility.Request.*;
-import utility.Node.NodeFloor;
 
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedList;
+
+import utility.request.*;
+import utility.node.NodeFloor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -25,11 +27,10 @@ public class TestRequestEntity {
     private Node n1,n2,n3,n4;
     private Edge e1,e2,e3;
     private InterpreterRequest presetIR;
-//    private SecurityRequest presetsR;
 
     @Before
-    public void setup(){
-        db=DatabaseController.getTestInstance();
+    public void setup() throws DatabaseException {
+        db = DatabaseController.getInstance();
         r = RequestEntity.getTestInstance();
 
         n1 = new Node("NODE1", NodeFloor.GROUND);
@@ -45,20 +46,15 @@ public class TestRequestEntity {
         db.addNode(n2);
         db.addNode(n3);
 
-//        String pIR2 = r.submitSecurityRequest("NODE1","Hank","Is Chinese or Japanese",1);
-
-//        presetsR = r.getSecurityRequest(pIR2);
-
         db.addEmployee("hank","boss@hospital.com","123", KioskPermission.ADMIN, RequestType.GENERAL);
         String pIR = r.submitInterpreterRequest("NODE3","hank","Is Chinese or Japanese",Language.CHINESE);
         presetIR = r.getInterpreterRequest(pIR);
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() throws DatabaseException {
         //deletes request
         r.deleteRequest(presetIR.getRequestID());
-//        r.deleteRequest(presetsR.getRequestID());
         //removes node
         db.removeNode(n1);
         db.removeNode(n2);
@@ -127,7 +123,7 @@ public class TestRequestEntity {
     public void testUpdateRequest(){
         //adds interpreter request to database and hashmap
         String testIRID = r.submitInterpreterRequest("NODE1","hank", " ", Language.ARABIC);
-        //Interpreter Request to be modified
+        //Interpreter request to be modified
         long currTime = System.currentTimeMillis();
         InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
                 "hank", "", "", new Timestamp(currTime), new Timestamp(currTime-1),

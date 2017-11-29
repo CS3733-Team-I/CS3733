@@ -1,15 +1,14 @@
 package entity;
 
-//import com.sun.xml.internal.bind.v2.TODO;
 import database.DatabaseController;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import database.objects.SecurityRequest;
-import utility.Request.Language;
-import utility.Request.LanguageFrequency;
-import utility.Request.RequestProgressStatus;
-import utility.Request.RequestType;
-import utility.Request.*;
+import utility.request.Language;
+import utility.request.LanguageFrequency;
+import utility.request.RequestProgressStatus;
+import utility.request.RequestType;
+import utility.request.*;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -35,7 +34,7 @@ public class RequestEntity {
         securityRequests=new HashMap<>();
 
         if(test){
-            dbController = DatabaseController.getTestInstance();
+            dbController = DatabaseController.getInstance();
         }
         else {
             dbController = DatabaseController.getInstance();
@@ -331,7 +330,7 @@ public class RequestEntity {
     }
 
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
-        System.out.println("Getting Security Request");
+        System.out.println("Getting Security request");
         if(securityRequests.containsKey(requestID)) {
             return securityRequests.get(requestID);
         }

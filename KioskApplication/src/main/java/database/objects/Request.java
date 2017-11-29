@@ -1,13 +1,13 @@
 package database.objects;
 
-import utility.Request.RequestProgressStatus;
+import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 
 //Class object that creates a 'request' which stores the information of a request
 //This object can then be passed to the database as well as to the active requests list
 public abstract class Request {
-    //Format for requestID: type, time, NodeID >36 characters
+    //Format for requestID: type, nodeID, time, assigner
     protected String requestID;
     private String nodeID;
     private String assigner;

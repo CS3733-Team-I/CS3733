@@ -1,10 +1,12 @@
 package database.objects;
 
-import utility.Node.NodeBuilding;
-import utility.Node.NodeFloor;
-import utility.Node.NodeType;
+import javafx.beans.Observable;
+import utility.node.NodeBuilding;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 public class Node {
+
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -136,7 +138,15 @@ public class Node {
         this.teamAssigned = teamAssigned;
     }
 
-    public String getNodeID() {
+    public String getNodeID()
+    {
         return nodeID;
+    }
+
+    public void setNodeID(String nodeID) {
+        this.nodeID = nodeID;
+    }
+    public String getXyz() {
+        return Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
     }
 }

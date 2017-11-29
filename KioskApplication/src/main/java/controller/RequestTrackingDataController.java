@@ -5,7 +5,7 @@ import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import utility.Request.LanguageFrequency;
+import utility.request.LanguageFrequency;
 
 public class RequestTrackingDataController {
     @FXML BarChart<String, Integer> langFreqBC;

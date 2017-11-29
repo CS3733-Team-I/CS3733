@@ -3,8 +3,8 @@ AHALL0090G,1524,2726,G,BTM,HALL,Hall,Hall,Team A
 AHALL01001,1605,2568,1,BTM,HALL,Hall,Hall,Team A
 AHALL0070G,1712,2647,G,BTM,HALL,Hall,Hall,Team A
 AHALL0050G,1713,2558,G,BTM,HALL,Hall,Hall,Team A
-AREST00101,1556,2604,1,BTM,REST,"Restroom, S elevator, 1st floor",Restroom,Team A
-AREST00103,1552,2854,3,BTM,REST,"Restroom, BTM conference center, 3rd floor",Restroom,Team A
+AREST00101,1556,2604,1,BTM,REST,Restroom; S elevator; 1st floor,Restroom,Team A
+AREST00103,1552,2854,3,BTM,REST,Restroom; BTM conference center; 3rd floor,Restroom,Team A
 AHALL002L2,1698,2776,L2,BTM,HALL,Hallway Intersection,Hall,Team A
 AELEV00S0G,1523,2763,G,BTM,ELEV,Elevator S G,Elevator S G,Team A
 ADEPT0020G,1552,2843,G,BTM,DEPT,Infusion Waiting Area ,Infusion Waiting Area,Team A
@@ -17,7 +17,7 @@ AELEV00S01,1534,2777,1,BTM,ELEV,Elevator S 01,Elevator S 1,Team A
 ADEPT00101,1401,2628,1,BTM,DEPT,Neuroscience Waiting Room,Neuro Waiting Room,Team A
 ADEPT00102,1395,2674,2,BTM,DEPT,Orthopedics and Rhemutalogy,Orthopedics and Rhemutalogy,Team A
 ADEPT00301,986,2852,1,BTM,DEPT,CART Waiting,CART Waiting,Team A
-AELEV00S03,1539,2773,3,BTM,ELEV,"Elevator S, Floor 3",Elevator S 3,Team A
+AELEV00S03,1539,2773,3,BTM,ELEV,Elevator S; Floor 3,Elevator S 3,Team A
 AHALL0140G,1599,2727,G,BTM,HALL,Hall,Hall,Team A
 AELEV00S02,1532,2777,2,BTM,ELEV,Elevator S 02,Elevator S 2,Team A
 AHALL00602,1683,2543,2,BTM,HALL,Hall,Hall,Team A
@@ -45,7 +45,7 @@ AHALL003L2,1701,2734,L2,BTM,HALL,Hall,Hall,Team A
 ADEPT0010G,1530,2495,G,BTM,DEPT,Neuro Testing Waiting Area ,Neuro Wating Area,Team A
 AHALL001L2,1627,2782,L2,BTM,HALL,Hallway to Elevator,Hall,Team A
 ASTAI00101,1642,2596,1,BTM,STAI,Cafe Stairs,Cafe Staris,Team A
-ASTAI00102,1650,2602,2,BTM,STAI,"Stairs, Floor 2",Stairs Floor 2,Team A
+ASTAI00102,1650,2602,2,BTM,STAI,Stairs; Floor 2,Stairs Floor 2,Team A
 ALABS00103,1611,2678,3,BTM,LABS,Innovation Hub,Innovation Hub,Team A
 AHALL0020G,1623,2531,G,BTM,HALL,Hall,Hall,Team A
 AEXIT001L2,1696,2788,L2,BTM,EXIT,Parking Garage L2,Parking Garage L2,Team A

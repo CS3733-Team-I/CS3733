@@ -26,7 +26,7 @@ public class BreadthFirst implements SearchAlgorithm{
 
         //Next, get a list of all the nodes in the area you want to search (in this case, the whole map).
         //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
-        //LinkedList<Node> allNodes = map.getAllNodes();
+        //LinkedList<node> allNodes = map.getAllNodes();
 
         if(startingNode.getNode().getNodeID().equals(endNode.getNodeID())){
             endingNode.setParentNode(startingNode);

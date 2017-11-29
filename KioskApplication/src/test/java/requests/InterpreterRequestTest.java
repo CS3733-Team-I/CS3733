@@ -1,26 +1,16 @@
 package requests;
 
 
-import database.DatabaseController;
-import database.objects.Edge;
-import database.objects.Node;
 import database.objects.InterpreterRequest;
-import entity.MapEntity;
-import org.apache.derby.catalog.types.SynonymAliasInfo;
-import utility.Request.Language;
-import org.junit.Before;
+import utility.request.Language;
 import org.junit.Test;
-import utility.Request.RequestProgressStatus;
-
-import java.sql.Timestamp;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static utility.Request.RequestProgressStatus.DONE;
-import static utility.Request.RequestProgressStatus.IN_PROGRESS;
-import static utility.Request.RequestProgressStatus.TO_DO;
+import static utility.request.RequestProgressStatus.DONE;
+import static utility.request.RequestProgressStatus.IN_PROGRESS;
+import static utility.request.RequestProgressStatus.TO_DO;
 
 public class InterpreterRequestTest {
 

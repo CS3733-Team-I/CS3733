@@ -7,6 +7,13 @@
  * Background: #FFFFFF
  */
 
+/* BUTTON STYLES */
+
+.jfx-button {
+    -fx-background-color: #00589F;
+    -fx-text-fill: white;
+}
+
 /* REQUEST MANAGER BUTTON STYLES */
 
 .request-manager-button-1 {
@@ -95,4 +102,26 @@
 
 #transparent {
     -fx-background: transparent;
+}
+
+#minimap-viewport {
+    -fx-stroke-width: 2;
+    -fx-stroke: #00589F;
+
+    -fx-fill: transparent;
+}
+
+#confirm-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: black;
+}
+
+#delete-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+}
+
+#cancel-button {
+    -fx-background-color: #DDDED0;
+    -fx-text-fill: black;
 }

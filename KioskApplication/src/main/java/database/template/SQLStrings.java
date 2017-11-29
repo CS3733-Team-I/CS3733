@@ -9,8 +9,8 @@ public class SQLStrings {
             "  floor int NOT NULL," +
             "  building int NOT NULL," +
             "  nodeType int NOT NULL," +
-            "  longName VARCHAR(100) NOT NULL," +
-            "  shortName VARCHAR(25) NOT NULL," +
+            "  longName VARCHAR(255) NOT NULL," +
+            "  shortName VARCHAR(255) NOT NULL," +
             "  teamAssigned VARCHAR(6) NOT NULL" +
             ")";
 
@@ -88,13 +88,14 @@ public class SQLStrings {
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
+    public static final String NODE_NODETYPE_SELECT = "Select nodeID from T_nodes where nodeType=? and floor=? and teamAssigned=?";
 
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
             " loginID Varchar(63) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
             " userName Varchar(50) NOT NULL,"+
             // not sure how I want to store passwords
-            " password Varchar(70) NOT NULL,"+
+            " password Varchar(60) NOT NULL,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
             ")";

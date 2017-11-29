@@ -19,10 +19,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
+import utility.node.NodeFloor;
 import utility.KioskPermission;
-import utility.Node.NodeFloor;
-import utility.Request.RequestProgressStatus;
-import utility.Request.RequestType;
+import utility.request.RequestProgressStatus;
+import utility.request.RequestType;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -60,7 +60,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void viewRequests() throws IOException {
-        System.out.println("Request Manager Pressed\n");
+        System.out.println("request Manager Pressed\n");
         getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
     }
 
@@ -141,7 +141,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void addButton(RequestProgressStatus status, String buttonName, String id){
-        KioskPermission permission = l.getPermission();
+        KioskPermission permission = l.getCurrentPermission();
         switch (permission){
             case EMPLOYEE:
                 if(!status.equals(RequestProgressStatus.DONE)){
@@ -204,7 +204,7 @@ public class RequestManagerController extends ScreenController {
                 inProgressRequests();
                 break;
             case TO_DO:
-                request.markInProgress(l.getUserName());
+                request.markInProgress(l.getUserID());
                 newRequests();
                 break;
         }
