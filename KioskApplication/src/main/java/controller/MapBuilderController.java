@@ -352,14 +352,13 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
-                        System.out.println("Remove all items");
                         lvConnectedNodes.getItems().clear();
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                     else if(c.wasAdded()) {
                         for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
                             Label connection = new Label(connectedNode.getLongName());
-                            connection.setAccessibleText(observableSelectedNodes.get(0).getXyz());
+                            connection.setAccessibleText(connectedNode.getXyz());
                             connection.setAlignment(Pos.CENTER);
                             lvConnectedNodes.getItems().add(connection);
                         }
@@ -474,26 +473,8 @@ public class MapBuilderController extends ScreenController {
             return;
         }
         else {
-            //remove unsaved new node, if any
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
-            observableNewNodes.clear();
-
-            //add new node to selected node list
-            //TODO MAKE THIS AN EXCEPTION
-            if(mapController.observableHighlightedSelectedNodes.size() > 2) {
-                System.out.println("observableHighlightedSelectedNodes size greater than 2, Problematic!");
-            }
-            mapController.observableHighlightedSelectedNodes.clear();
-            mapController.observableHighlightedSelectedNodes.add(node);
-
-            if(observableSelectedNodes.size() > 2) {
-                System.out.println("observableSelectedNodes size greater than 2, Problematic!");
-            }
-            observableSelectedNodes.clear();
-            observableSelectedNodes.add(node);
+            updateSelectedNode(node);
         }
-
         initPopup();
     }
 
@@ -595,7 +576,6 @@ public class MapBuilderController extends ScreenController {
                 }
                 break;
         }
-        System.out.println("THIS SHOULD HAPPEN!\n");
         setNodeFieldEnable();
     }
 
@@ -920,10 +900,13 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void handle(ActionEvent event) {
                 for(database.objects.Node selectedNode : mapController.databaseNodeObjectList) {
-                    Text selectedText = new Text(lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText());
+                    String selectedText = lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText();
+                    System.out.println("Comparing " + selectedText + " with " + selectedNode.getXyz());
                     if(selectedNode.getXyz().equals(selectedText)) {
-                        System.out.println("HERE");
-                        mapController.parent.onMapNodeClicked(selectedNode);
+                        System.out.println("if return true");
+                        updateSelectedNode(selectedNode);
+                        popup.hide();
+                        return;
                     }
                 }
             }
@@ -952,5 +935,26 @@ public class MapBuilderController extends ScreenController {
 
         VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
         popup = new JFXPopup(vBox);
+    }
+
+    private void updateSelectedNode(database.objects.Node selectedNode) {
+        //remove unsaved new node, if any
+        mapController.isNodeAdded = false;
+        mapController.observableHighlightedNewNodes.clear();
+        observableNewNodes.clear();
+
+        //add new node to selected node list
+        //TODO MAKE THIS AN EXCEPTION
+        if(mapController.observableHighlightedSelectedNodes.size() > 2) {
+            System.out.println("observableHighlightedSelectedNodes size greater than 2, Problematic!");
+        }
+        mapController.observableHighlightedSelectedNodes.clear();
+        mapController.observableHighlightedSelectedNodes.add(selectedNode);
+
+        if(observableSelectedNodes.size() > 2) {
+            System.out.println("observableSelectedNodes size greater than 2, Problematic!");
+        }
+        observableSelectedNodes.clear();
+        observableSelectedNodes.add(selectedNode);
     }
 }

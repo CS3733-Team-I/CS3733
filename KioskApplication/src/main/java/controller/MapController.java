@@ -486,9 +486,9 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            System.out.println("Removing node from Selected Node");
+
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected Node: NORMAL");
+                                System.out.println("Removing node from Selected Node TO NORMAL "+ deseletedNode.getXyz());
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
