@@ -27,7 +27,7 @@ public class Path {
 
     public String getDirections() {
         String returnStr = "";
-        for(String s : directions) returnStr += s;
+        for(String s : directions) returnStr += s + "\n";
         return returnStr;
     }
 
@@ -42,10 +42,10 @@ public class Path {
     private void generateDirections() {
         directions = new LinkedList<>();
         LinkedList<Node> nodes = getListOfNodes();
-        directions.add("Start at " + nodes.getFirst().getLongName() + "\n");
+        directions.add("Start at " + nodes.getFirst().getLongName());
         for(int i = 0; i < nodes.size(); i++) {
             if(i!=0 && i!=nodes.size()-1)
-                directions.add("Go to " + nodes.get(i).getLongName()+ "\n");
+                directions.add("Go to " + nodes.get(i).getLongName());
         }
 
         directions.add("End at " + nodes.getLast().getLongName());
