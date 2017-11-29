@@ -2,21 +2,20 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXListView;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.node.NodeFloor;
@@ -33,9 +32,8 @@ public class RequestManagerController extends ScreenController {
     LoginEntity l;
 
     RequestEntity r;
-
     @FXML
-    private VBox activeRequests;
+    private JFXListView<VBox> activeRequests;
     @FXML
     private Label totalRequests;
     @FXML
@@ -101,27 +99,31 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(RequestProgressStatus status, String buttonName, LinkedList<Request> allRequests){
-        activeRequests.getChildren().clear();
+        activeRequests.setItems(null);
+        ObservableList<VBox> vBoxes = FXCollections.observableArrayList();
 
         if(allRequests.isEmpty() || r.filterByStatus(allRequests,status).isEmpty()){
             Label emptyList = new Label("No Requests");
-            activeRequests.getChildren().add(emptyList);
+            VBox vBox = new VBox();
+            vBox.getChildren().add(emptyList);
+            ObservableList<VBox> items = FXCollections.observableArrayList (vBox);
+            activeRequests.setItems(items);
         }else{
             LinkedList<Request> requests = r.filterByStatus(allRequests,status);
             for (int i = 0; i < requests.size(); i++) {
+                VBox vbox = new VBox();
                 String id = requests.get(i).getRequestID();
                 TextField requestTextField = new TextField(requests.get(i).getRequestID());
                 String location = MapEntity.getInstance().getNode(requests.get(i).getNodeID()).getLongName();
                 requestTextField.setEditable(false);
-                Label requestID = new Label("Employee: " + requests.get(i).getAssigner());
+                Label employee = new Label("Employee: " + requests.get(i).getAssigner()); //Some reason this returns more than needed
                 Label typeOfRequest = new Label(r.checkRequestType(id).toString());
                 Label locationOfRequest = new Label(location);
-                Label spacer = new Label("");
 
-                activeRequests.getChildren().add(requestTextField);
-                activeRequests.getChildren().add(requestID);
-                activeRequests.getChildren().add(typeOfRequest);
-                activeRequests.getChildren().add(locationOfRequest);
+                vbox.getChildren().add(requestTextField);
+                vbox.getChildren().add(employee);
+                vbox.getChildren().add(typeOfRequest);
+                vbox.getChildren().add(locationOfRequest);
 
                 if(!status.equals(RequestProgressStatus.TO_DO)){
                     String completer;
@@ -131,33 +133,36 @@ public class RequestManagerController extends ScreenController {
                         completer = r.getSecurityRequest(id).getCompleter();
                     }
                     Label completerLabel = new Label("Completed by: "+completer);
-                    activeRequests.getChildren().add(completerLabel);
+                    vbox.getChildren().add(completerLabel);
                 }
-                addButton(status,buttonName,id);
-                activeRequests.getChildren().add(spacer);
+                vbox.getChildren().add(addButton(status,buttonName,id));
+                vBoxes.add(vbox);
             }
+            activeRequests.setItems(vBoxes);
         }
     }
 
     @FXML
-    void addButton(RequestProgressStatus status, String buttonName, String id){
-        KioskPermission permission = l.getCurrentPermission();
+    JFXButton addButton(RequestProgressStatus status, String buttonName, String id){
+        KioskPermission permission = l.getPermission();
+        JFXButton reqButton = new JFXButton();
         switch (permission){
             case EMPLOYEE:
                 if(!status.equals(RequestProgressStatus.DONE)){
-                    JFXButton reqButton = new JFXButton(buttonName);
+                    reqButton = new JFXButton(buttonName);
                     reqButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override public void handle(ActionEvent e) {
                             onCompletePressed(id);
                         }
                     });
                     reqButton.setStyle("-fx-background-color: #DFB951;");
-                    activeRequests.getChildren().add(reqButton);
+//                    activeRequests.getChildren().add(reqButton);
+//                    return reqButton;
                 }
                 break;
             case ADMIN: case SUPER_USER:
                 if(!status.equals(RequestProgressStatus.DONE)) {
-                    JFXButton reqButton = new JFXButton("Cancel");
+                    reqButton = new JFXButton("Cancel");
                     reqButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
@@ -170,18 +175,21 @@ public class RequestManagerController extends ScreenController {
                         }
                     });
                     reqButton.setStyle("-fx-background-color: #DFB951;");
-                    activeRequests.getChildren().add(reqButton);
+//                    activeRequests.getChildren().add(reqButton);
+//                    return reqButton;
                 }else{
-                    JFXButton reqButton = new JFXButton(buttonName);
+                    reqButton = new JFXButton(buttonName);
                     reqButton.setOnAction(new EventHandler<ActionEvent>() {
                         @Override public void handle(ActionEvent e) {
                             onCompletePressed(id);
                         }
                     });
                     reqButton.setStyle("-fx-background-color: #DFB951;");
-                    activeRequests.getChildren().add(reqButton);
+//                    activeRequests.getChildren().add(reqButton);
+                    return reqButton;
                 }
         }
+        return reqButton;
     }
 
     @FXML
