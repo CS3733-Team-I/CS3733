@@ -2,7 +2,6 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -16,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -26,22 +24,20 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import utility.ResourceManager;
-import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
+import utility.nodeDisplay.NodeDisplay;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
-
 
 import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;

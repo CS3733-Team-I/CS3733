@@ -3,24 +3,17 @@ package controller;
 import com.jfoenix.controls.JFXListView;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.MapEntity;
 import entity.SystemSettings;
-import entity.Path;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBuilder;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
-import sun.awt.image.ImageWatched;
 import utility.node.NodeFloor;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -54,6 +47,7 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes.clear();
         waypointList.getItems().clear();
         exceptionText.setText("");
+        getMapController().setPath(null);
         getMapController().clearMap();
     }
 
