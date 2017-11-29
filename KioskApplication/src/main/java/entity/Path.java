@@ -45,10 +45,31 @@ public class Path {
         directions.add("Start at " + nodes.getFirst().getLongName());
         for(int i = 0; i < nodes.size(); i++) {
             if(i!=0 && i!=nodes.size()-1)
-                directions.add("Go to " + nodes.get(i).getLongName());
+                directions.add(findDirectionInstructions(nodes.get(i), nodes.get(i-1), nodes.get(i+1))+ nodes.get(i).getLongName());
         }
 
         directions.add("End at " + nodes.getLast().getLongName());
+    }
+
+    private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
+
+        double prevAngle = getAngleBetweenNodes(prevNode, thisNode);
+        double nextAngle = getAngleBetweenNodes(thisNode, nextNode);
+
+        double angleDif = nextAngle - prevAngle;
+
+        if(angleDif == 0) return "Go straight at ";
+        if(angleDif > 0) return "Turn right at ";
+        if(angleDif < 0) return "Turn left at ";
+
+        return "Go to ";
+    }
+
+    private double getAngleBetweenNodes(Node n1, Node n2) {
+        double dx = n2.getXcoord() - n1.getXcoord();
+        double dy = n2.getYcoord() - n1.getYcoord();
+
+        return Math.atan2(dy,dx);
     }
 
     private LinkedList<Node> getListOfNodes() {
