@@ -5,6 +5,7 @@ import database.objects.Employee;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -168,6 +169,9 @@ public class LoginEntity {
     }
 
     public RequestType getServiceAbility(String userName) {
+        if(currentPermission==SUPER_USER) {
+            return RequestType.GENERAL;
+        }
         if(logins.get(userName).getPermission().equals(KioskPermission.EMPLOYEE)){
             Employee employee = logins.get(userName);
             return employee.getServiceAbility();
