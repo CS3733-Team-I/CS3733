@@ -347,6 +347,24 @@ public class MapBuilderController extends ScreenController {
                             changedIDNode.setNodeID(nodeID.getText());
                             observableChangedNodes.add(changedIDNode);
                         }
+                        //reflect node ID changes in mapEntity also in edges
+                        for(database.objects.Node node : MapEntity.getInstance().getAllNodes()) {
+                            if(node.getXyz().equals(changedIDNode.getXyz())) {
+                                System.out.println("will check edges" + node.getNodeID());
+                                for(database.objects.Edge edge : MapEntity.getInstance().getEdges(node)) {
+                                    System.out.println("checking edges" + node.getNodeID());
+                                    if(edge.getNode1ID().equals(node.getNodeID())) {
+                                        edge.setNode1ID(nodeID.getText());
+                                    }
+                                    if(edge.getNode2ID().equals(node.getNodeID())) {
+                                        edge.setNode2ID(nodeID.getText());
+                                    }
+                                    System.out.println("NEW edge connecting " + edge.getNode1ID() + ":" + edge.getNode2ID());
+                                }
+                                node.setNodeID(nodeID.getText());
+                                System.out.println("NEW node ID " + node.getNodeID());
+                            }
+                        }
                     }
                 }
             }
@@ -808,7 +826,7 @@ public class MapBuilderController extends ScreenController {
 
         //TODO FIND A BETTER PLACE TO PUT THE DIALOG
         JFXDialogLayout nodeDialogLayout = new JFXDialogLayout();
-        nodeDialogLayout.setHeading(new Text("System Information"));
+        nodeDialogLayout.setHeading(new Text(""));
         nodeDialogLayout.setBody(new Text(nodeDialogString));
         JFXDialog nodeDialog = new JFXDialog(mapBuilderStackPane, nodeDialogLayout, JFXDialog.DialogTransition.CENTER);
         JFXButton btnodeDialog= new JFXButton("OK");
@@ -888,7 +906,7 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void showPopup(MouseEvent event) {
-        popup.show(lvConnectedNodes, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
+        popup.show(lvConnectedNodes, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(), event.getY());
     }
 
     private void initPopup() {
@@ -1022,5 +1040,10 @@ public class MapBuilderController extends ScreenController {
             mapController.observableHighlightedSelectedNodes.clear();
             observableSelectedNodes.clear();
         }
+    }
+
+    @FXML
+    private void deleteConnection(ActionEvent e, database.objects.Node targetNode) {
+        database.objects.Edge deletingEdge = MapEntity.getInstance().getConnectingEdge(targetNode, observableSelectedNodes.get(0));
     }
 }

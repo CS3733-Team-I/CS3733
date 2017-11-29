@@ -523,7 +523,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    System.out.println("Changed Node: " + changedNode.getNodeID());
+                    //System.out.println("Changed Node: " + changedNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasAdded()){
@@ -603,9 +603,7 @@ public class MapController {
                     parent.onMapNodeClicked(node);
                     return;
                 }
-
             }
-
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
         }

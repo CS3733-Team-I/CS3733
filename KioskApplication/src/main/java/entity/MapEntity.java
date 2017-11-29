@@ -107,8 +107,6 @@ public class MapEntity implements IMapEntity {
         return null;
     }
 
-
-
     @Override
     public LinkedList<Node> getAllNodes() {
         LinkedList<Node> allNodes = new LinkedList<>();
