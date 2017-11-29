@@ -336,7 +336,6 @@ public class MapBuilderController extends ScreenController {
         nodeID.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                System.out.println("1. Begin Updating node ID");
                 if(!nodeID.isDisabled()) {
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setNodeID(nodeID.getText());
@@ -357,11 +356,14 @@ public class MapBuilderController extends ScreenController {
                         for(database.objects.Node node : MapEntity.getInstance().getAllNodes()) {
                             if(node.getXyz().equals(changedIDNode.getXyz())) {
 
-                                for(database.objects.Edge edge : MapEntity.getInstance().getEdges(node)) {
-                                    if(edge.getNode1ID().equals(node.getNodeID())) {
+                                for(database.objects.Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
+
+                                    System.out.println("3. Begin Updating edge ID");
+
+                                    if(edge.getNode1ID().equals(oldValue)) {
                                         edge.setNode1ID(nodeID.getText());
                                     }
-                                    if(edge.getNode2ID().equals(node.getNodeID())) {
+                                    if(edge.getNode2ID().equals(oldValue)) {
                                         edge.setNode2ID(nodeID.getText());
                                     }
                                     System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
@@ -951,6 +953,7 @@ public class MapBuilderController extends ScreenController {
                     if(targetNode.getXyz().equals(targetText)) {
                         deleteConnection(event, targetNode);
                         popup.hide();
+                        return;
                     }
                 }
             }
@@ -1051,7 +1054,6 @@ public class MapBuilderController extends ScreenController {
     private void deleteConnection(ActionEvent e, database.objects.Node targetNode) {
         database.objects.Edge deletingEdge = MapEntity.getInstance().getConnectingEdge(targetNode, observableSelectedNodes.get(0));
         try{
-            System.out.println("deleting EdgeID: "+ deletingEdge.getEdgeID() +";" +"connecting"+ deletingEdge.getNode1ID() + " : " + deletingEdge.getNode2ID());
             MapEntity.getInstance().removeEdge(deletingEdge);
         }catch (DatabaseException databaseException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

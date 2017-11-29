@@ -386,7 +386,7 @@ public class MapController {
                             }
                         }
                     }
-                    else if(c.wasAdded()) {
+                    else {
                         for(database.objects.Edge addedDatabaseEdge : c.getAddedSubList()) {
                             MapEntity mapEntity = MapEntity.getInstance();
                             Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
