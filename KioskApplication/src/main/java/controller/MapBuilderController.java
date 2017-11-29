@@ -114,6 +114,13 @@ public class MapBuilderController extends ScreenController {
     @FXML
     JFXPopup popup;
 
+    private ImageView ivLOWERLEVEL_2;
+    private ImageView ivLOWERLEVEL_1;
+    private ImageView ivGROUND;
+    private ImageView ivFIRST;
+    private ImageView ivSECOND;
+    private ImageView ivTHIRD;
+
     /**
      * Observer lists
      */
@@ -132,6 +139,14 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() throws IOException{
+
+
+        ivFIRST = floorImage(NodeFloor.FIRST);
+        ivSECOND = floorImage(NodeFloor.SECOND);
+        ivTHIRD = floorImage(NodeFloor.THIRD);
+        ivLOWERLEVEL_1 = floorImage(NodeFloor.LOWERLEVEL_1);
+        ivLOWERLEVEL_2 = floorImage(NodeFloor.LOWERLEVEL_2);
+        ivGROUND = floorImage(NodeFloor.GROUND);
 
         Advance.setVisible(false);
 
@@ -510,6 +525,36 @@ public class MapBuilderController extends ScreenController {
             }
         });
         initPopup();
+    }
+
+    private ImageView floorImage(NodeFloor floor) {
+        String floorImageURL = "";
+        switch (floor) {
+            case LOWERLEVEL_2:
+                floorImageURL = "/images/00_thelowerlevel2.png";
+                break;
+            case LOWERLEVEL_1:
+                floorImageURL = "/images/00_thelowerlevel1.png";
+                break;
+            case GROUND:
+                floorImageURL = "/images/00_thegroundfloor.png";
+                break;
+            case FIRST:
+                floorImageURL = "/images/01_thefirstfloor.png";
+                break;
+            case SECOND:
+                floorImageURL = "/images/02_thesecondfloor.png";
+                break;
+            case THIRD:
+                floorImageURL = "/images/03_thethirdfloor.png";
+                break;
+        }
+
+        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        ImageView floorView = new ImageView(floorImage);
+        floorView.setFitHeight(100);
+        floorView.setFitWidth(100);
+        return floorView;
     }
 
     @Override
@@ -999,6 +1044,7 @@ public class MapBuilderController extends ScreenController {
         backIconView.setFitWidth(24);
 
         JFXButton btGoToNode = new JFXButton("", goIconView);
+        btGoToNode.setTooltip(new Tooltip("Go To Node"));
         btGoToNode.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1012,6 +1058,7 @@ public class MapBuilderController extends ScreenController {
             }
         });
         JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
+        btGoToNode.setTooltip(new Tooltip("Delete Connection"));
         btDeleteConnection.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1026,6 +1073,7 @@ public class MapBuilderController extends ScreenController {
             }
         });
         JFXButton btBack = new JFXButton("", backIconView);
+        btGoToNode.setTooltip(new Tooltip("Back"));
         btBack.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1247,5 +1295,16 @@ public class MapBuilderController extends ScreenController {
     @Override
     public boolean isNewNodeEmpty() {
         return observableNewNodes.isEmpty();
+    }
+
+    @Override
+    public void showFloors() {
+        JFXDialogLayout floorDialoglo = new JFXDialogLayout();
+        floorDialoglo.setHeading(new Text("Select a floor"));
+        JFXDialog Dialog = new JFXDialog(mapBuilderStackPane, floorDialoglo, JFXDialog.DialogTransition.CENTER);
+        HBox floorHBox = new HBox(ivFIRST, ivSECOND, ivTHIRD, ivLOWERLEVEL_1, ivLOWERLEVEL_2, ivGROUND);
+        floorDialoglo.setActions(Dialog);
+
+        Dialog.show();
     }
 }

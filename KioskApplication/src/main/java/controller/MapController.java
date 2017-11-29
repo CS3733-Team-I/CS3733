@@ -1,9 +1,6 @@
 package controller;
 
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.*;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -22,10 +19,12 @@ import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -36,6 +35,7 @@ import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,9 +57,9 @@ public class MapController {
     @FXML protected JFXCheckBox showEdgesBox;
 
     @FXML public AnchorPane miniMapPane;
+
     MiniMapController miniMapController;
     private Path path = null;
-
 
     //list of showing nodes or edges
     //protected  javafx.scene.node heightLightedNode;
@@ -286,10 +286,14 @@ public class MapController {
 
     @FXML
     protected void initialize(){
+//        floors.setVisible(false);
+
+
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
+
 
         miniMapController = new MiniMapController(this);
 
@@ -383,6 +387,19 @@ public class MapController {
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
                             nodeView.setAccessibleText(addedDatabaseNode.getXyz());
+                            nodeView.setAccessibleHelp(addedDatabaseNode.getNodeType().toString());
+                            if(parent.getCreateTabName().equals("Map Builder")) {
+                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName()+"\n\nConnections:\n");
+                                for(Node connectingNode : MapEntity.getInstance().getConnectedNodes(addedDatabaseNode)) {
+                                    nodeInfo.setText(nodeInfo.getText()+connectingNode.getLongName()+"\n");
+                                }
+                                Tooltip.install(nodeView, nodeInfo);
+                            }
+                            else {
+                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName());
+                                Tooltip.install(nodeView, nodeInfo);
+                            }
+
 
                             //additional action when on map builder window
                             if(parent.getCreateTabName().equals("Map Builder")) {
@@ -398,6 +415,9 @@ public class MapController {
                                             event.consume();
                                             return;
                                         }
+                                        if(nodeView.getAccessibleHelp().equals("ELEV")) {
+                                            parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
+                                        }
                                         Dragboard db = nodeView.startDragAndDrop(TransferMode.ANY);
                                         ClipboardContent content = new ClipboardContent();
                                         content.putString(nodeView.getAccessibleText());
@@ -410,6 +430,7 @@ public class MapController {
                                 nodeView.setOnDragDone(new EventHandler<DragEvent>() {
                                     @Override
                                     public void handle(DragEvent event) {
+//                                        floors.setVisible(false);
                                         nodeView.setFill(Color.GRAY);
                                         //selected the source node if no node is selected
                                         try{
