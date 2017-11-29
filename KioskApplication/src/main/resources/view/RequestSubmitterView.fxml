@@ -44,19 +44,6 @@
                                     <Insets left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </JFXTextField>
-                              <JFXDatePicker fx:id="datePicker" defaultColor="#259ceb" prefHeight="27.0" prefWidth="200.0" promptText="Select Date" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                                 <opaqueInsets>
-                                    <Insets left="10.0" />
-                                 </opaqueInsets>
-                                 <GridPane.margin>
-                                    <Insets left="5.0" />
-                                 </GridPane.margin>
-                              </JFXDatePicker>
-                              <JFXTimePicker fx:id="timePicker" defaultColor="#259ceb" prefWidth="200.0" promptText="Select Time" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" />
-                                 </GridPane.margin>
-                              </JFXTimePicker>
                               <JFXComboBox fx:id="langMenu" maxWidth="1.7976931348623157E308" promptText="Select Language" GridPane.columnSpan="3" GridPane.rowIndex="3">
                                   <items>
                                       <FXCollections fx:factory="observableArrayList">

@@ -208,11 +208,11 @@ public class RequestManagerController extends ScreenController {
                 doneRequests();
                 break;
             case IN_PROGRESS:
-                request.complete();
+                r.completeRequest(request.getRequestID());
                 inProgressRequests();
                 break;
             case TO_DO:
-                request.markInProgress(l.getUserID());
+                r.markInProgress(l.getUserID(),request.getRequestID());
                 System.out.println(request.getStatus());
                 newRequests();
                 break;
@@ -220,10 +220,6 @@ public class RequestManagerController extends ScreenController {
         System.out.println("Complete Pressed \n");
     }
 
-    @FXML
-    void submitRequest(){
-        getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
-    }
 
     @FXML
     void showReports() throws IOException{
