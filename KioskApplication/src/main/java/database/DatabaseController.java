@@ -91,6 +91,16 @@ public class DatabaseController {
         return "EXC";
     }
 
+    public String selectNodeName(int xcoord, int ycoord, NodeFloor floor, NodeType nodeType) throws DatabaseException{
+        String result = "";
+        try {
+            result = Connector.selectNodeID(instanceConnection, xcoord, ycoord, floor, nodeType);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public boolean removeNode(Node node) throws DatabaseException {
         try {
             Connector.deleteNode(instanceConnection, node);

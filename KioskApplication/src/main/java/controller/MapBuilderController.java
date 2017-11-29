@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+
 import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
@@ -620,13 +621,21 @@ public class MapBuilderController extends ScreenController {
             trackElev++;*/
             String result = elevNameInChangedList();
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
+
         }
         else {
         //System.out.println("");
             int nodeTypeCountPrepared = 0;
-            String nodeTypeCount = getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
-            nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
+            if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
+                String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
+                nodeID.setText(nodeIDtemp);
+            }else{
+                String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
+                nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
+                nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
+
+            }
+
 
         }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
@@ -636,7 +645,7 @@ public class MapBuilderController extends ScreenController {
     public int countChangedList(NodeType nodeType){
         int result=0;
         for(int i= 0; i<observableChangedNodes.size(); i++){
-            if(observableChangedNodes.get(i).getNodeType() == nodeType){
+            if(observableChangedNodes.get(i).getNodeType() == nodeType && MapEntity.getInstance().selectNodeID(observableChangedNodes.get(i).getXcoord(), observableChangedNodes.get(i).getYcoord(), observableChangedNodes.get(i).getFloor(), observableChangedNodes.get(i).getNodeType()).equals("")){
                 result++;
             }
         }
