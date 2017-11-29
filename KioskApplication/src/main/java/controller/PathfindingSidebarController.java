@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXListView;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -26,7 +27,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
-    @FXML private VBox waypointList;
+    @FXML private JFXListView waypointList;
 
     @FXML private Label exceptionText;
 
@@ -50,7 +51,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void onResetPressed() {
         currentNodes.clear();
-        waypointList.getChildren().clear();
+        waypointList.getItems().clear();
         exceptionText.setText("");
         getMapController().clearMap();
     }
@@ -62,13 +63,13 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
-                waypointList.getChildren().clear();
+                waypointList.getItems().clear();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
                     for (String direction : directionSegment) {
                         Label label = new Label(direction);
                         label.setTextFill(Color.BLACK);
-                        waypointList.getChildren().add(label);
+                        waypointList.getItems().add(label);
                     }
                 }
                 getMapController().drawPath();
@@ -111,7 +112,7 @@ public class PathfindingSidebarController extends ScreenController {
 
             Label nodeNameLabel = new Label(node.getNodeID());
             nodeNameLabel.setTextFill(Color.BLACK);
-            waypointList.getChildren().add(nodeNameLabel);
+            waypointList.getItems().add(nodeNameLabel);
 
             getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()));
         }
