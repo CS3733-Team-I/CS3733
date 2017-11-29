@@ -63,6 +63,7 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 Path path = pathfinder.generatePath(currentNodes);
+                System.out.println(path.getDirections());
                 getMapController().drawPath(path);
             }
             catch(PathfinderException exception){
