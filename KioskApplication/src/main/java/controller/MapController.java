@@ -138,8 +138,10 @@ public class MapController {
     }
 
     public void clearMap() {
-        waypointPane.getChildren().clear();
-        waypoints.clear();
+        this.waypointPane.getChildren().clear();
+        this.nodeObjectList.clear();
+        this.edgeObjectList.clear();
+        this.waypoints.clear();
 
         reloadDisplay();
     }

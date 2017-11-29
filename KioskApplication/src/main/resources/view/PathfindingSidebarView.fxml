@@ -10,6 +10,7 @@
 <AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="10.0" layoutY="268.0" prefHeight="30.0" prefWidth="125.0" text="Current Waypoints:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="268.0" />
+      <Label fx:id="exceptionText" layoutX="5.0" layoutY="200.0" prefHeight="50.0" prefWidth="300.0" text="" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="200.0"/>
       <JFXButton fx:id="btnSubmit" layoutX="220.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #2196f3;" text="Search" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <opaqueInsets>
             <Insets />

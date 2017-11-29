@@ -3,6 +3,7 @@ package pathfinder;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
+import entity.SystemSettings;
 import utility.node.NodeFloor;
 
 import java.util.*;
@@ -36,15 +37,20 @@ public class Pathfinder {
         //Check to see if the start node is valid; if not, use a default starting position.
         //TODO: the default should be set to a real node at an actual location on the map.
         //TODO talk to ui about admin control of start node
-        if (startNode == null || startNode.getNodeID() == null){
-            startNode = new Node("Node1", NodeFloor.THIRD);
-            waypoints.removeFirst();
+        if (waypoints.size() == 1){
+            startNode = SystemSettings.getInstance().getDefaultnode();
+            if (startNode == null)
+                throw new PathfinderException("No default start location. \n Please see an administrator.");
+            waypoints.addLast(waypoints.removeFirst());
             waypoints.addFirst(startNode);
-            System.out.println("Invalid or no start node; using default starting position.");
+            //System.out.println("Invalid or no start node; using default starting position.");
         }
+        //check if the node is valid.  If not, throw an exception.
+        // if end node is not defined then throw exception for not valid
+
+         //   throw new PathfinderException("No defined end node, \n please define valid end location");
 
         NodeFloor floor = startNode.getFloor();
-
         //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
         //node as the start node.  Assemble the lists of edges from each into a single path.
         boolean isFirst = true;
@@ -54,10 +60,6 @@ public class Pathfinder {
                 continue;
             }
 
-            //check if the node is valid.  If not, throw an exception.
-            // if end node is not defined then throw exception for not valid
-            if (endNode == null || endNode.getNodeID() == null)
-                throw new PathfinderException("No defined end node, please define valid end location");
 
             //Now, find the path from the previous waypoint to this one.
             pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.

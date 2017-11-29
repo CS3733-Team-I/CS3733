@@ -70,7 +70,7 @@ public class MapFloorEntity implements IMapEntity {
             nodes.remove(node.getNodeID());
         } catch (DatabaseException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Node Error");
+            alert.setTitle("node Error");
             alert.setHeaderText("Error removing node");
             alert.setContentText(ex.toString());
             alert.showAndWait();

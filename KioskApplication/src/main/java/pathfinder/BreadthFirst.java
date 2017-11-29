@@ -16,7 +16,6 @@ public class BreadthFirst implements SearchAlgorithm{
      * @return LinkedList<Edge> a linked list of edges
      * @throws PathfinderException if there are errors
      */
-    //TODO this does not work yet will work on soon
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{
             MapEntity map = MapEntity.getInstance();
@@ -24,14 +23,9 @@ public class BreadthFirst implements SearchAlgorithm{
             StartNode startingNode = new StartNode(startNode);
             PathfinderNode endingNode = new PathfinderNode(endNode);
 
-        //Next, get a list of all the nodes in the area you want to search (in this case, the whole map).
-        //TODO: if only handling paths on single floor, only need to read in nodes for that floor.
-        //LinkedList<node> allNodes = map.getAllNodes();
+        if(startingNode.getNode().getNodeID().equals(endNode.getNodeID()))
+            return startingNode.buildPath();
 
-        if(startingNode.getNode().getNodeID().equals(endNode.getNodeID())){
-            endingNode.setParentNode(startingNode);
-            return endingNode.buildPath();
-        }
         // make linked list for queue and explored
         LinkedList<PathfinderNode> queue = new LinkedList<>();
         ArrayList<PathfinderNode> explored = new ArrayList<>();
@@ -60,7 +54,7 @@ public class BreadthFirst implements SearchAlgorithm{
         throw new PathfinderException("No path found");
     }
 
-    LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
         // initalize connected nodes list from current node
         LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
