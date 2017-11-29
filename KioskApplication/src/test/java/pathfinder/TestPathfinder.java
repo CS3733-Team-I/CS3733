@@ -118,6 +118,17 @@ public class TestPathfinder {
         map.addEdge(e21); map.addEdge(e22);
     }
 
+    @After //remove things from database
+    public void removeAllFromDB() throws DatabaseException {
+        List<Node> nodes = MapEntity.getInstance().getAllNodes();
+        for (Node node : nodes) {
+            MapEntity.getInstance().removeNode(node);
+
+            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
+            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+        }
+    }
+
     //A-star algorithm tests
 
     @Test //Tests the best path from node n01 to n07
@@ -355,20 +366,18 @@ public class TestPathfinder {
              alg.findPath(n02,n18);
     }
 
-    //Other methods
+    //Test text directions
 
-    @After
-    public void removeAllFromDB() throws DatabaseException {
-        List<Node> nodes = MapEntity.getInstance().getAllNodes();
-        for (Node node : nodes) {
-            MapEntity.getInstance().removeNode(node);
+    @Test
+    public void testGenerateDirections() throws PathfinderException{
+        pathfinder = new Pathfinder();
 
-            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
-            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
-        }
+        Path path = pathfinder.generatePath(n01,n17);
+
+        System.out.println(path.getDirections());
     }
 
-    //TODO multiple waypoints tests
+    //Other methods
 
     //Helper method to check if a path is valid
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {

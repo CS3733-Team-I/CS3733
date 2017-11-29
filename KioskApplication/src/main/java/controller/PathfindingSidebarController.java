@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBuilder;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
+import sun.awt.image.ImageWatched;
 import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
@@ -60,12 +61,21 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
+                waypointListVbox.getChildren().clear();
+                LinkedList<String> dirs = getMapController().getPath().getDirectionsList();
+                for(String s : dirs) {
+                    Label l = new Label(s);
+                    l.setTextFill(Color.BLACK);
+                    waypointListVbox.getChildren().add(l);
+                }
                 getMapController().drawPath();
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
-            waypointListVbox.getChildren().clear();
+
+
+
             currentNodes.clear();
         }
     }
