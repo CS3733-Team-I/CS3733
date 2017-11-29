@@ -1,8 +1,6 @@
 package controller;
 
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.*;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -12,26 +10,32 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,13 +57,14 @@ public class MapController {
     @FXML protected JFXCheckBox showEdgesBox;
 
     @FXML public AnchorPane miniMapPane;
-    MiniMapController miniMapController;
 
+    MiniMapController miniMapController;
+    private Path path = null;
 
     //list of showing nodes or edges
     //protected  javafx.scene.node heightLightedNode;
-    private ObservableList<database.objects.Node> databaseNodeObjectList;
-    private ObservableList<database.objects.Edge> databaseEdgeObjectList;
+    protected ObservableList<database.objects.Node> databaseNodeObjectList;
+    protected ObservableList<database.objects.Edge> databaseEdgeObjectList;
     private ObservableList<Circle> nodeObjectList;
     private ObservableList<Line> edgeObjectList;
     protected ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
@@ -73,7 +78,7 @@ public class MapController {
 
     private LinkedList<MenuButton> waypoints;
 
-    private MainWindowController parent = null;
+    protected MainWindowController parent = null;
 
     protected static double DEFAULT_HVALUE = 0.52;
     protected static double DEFAULT_VVALUE = 0.3;
@@ -151,7 +156,14 @@ public class MapController {
     }
 
     protected void undrawNodeOnMap(database.objects.Node node) {
-        databaseNodeObjectList.remove(node);
+        Iterator<database.objects.Node> undrawNodeObjectIterator = databaseNodeObjectList.iterator();
+        while (undrawNodeObjectIterator.hasNext()) {
+            database.objects.Node undrawnNode = undrawNodeObjectIterator.next();
+            if (undrawnNode.getXyz().equals(node.getXyz())) {
+                undrawNodeObjectIterator.remove();
+                break;
+            }
+        }
     }
 
     protected void drawEdgesOnMap(List<Edge> edges) {
@@ -170,15 +182,16 @@ public class MapController {
         }
     }
 
-    public void drawPath(Path path) {
+    public void drawPath() {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        drawEdgesOnMap(path.getEdges());
-        drawNodesOnMap(path.getWaypoints());
+        for(LinkedList<Edge> segment: this.path.getEdges())
+        drawEdgesOnMap(segment);
+        drawNodesOnMap(this.path.getWaypoints());
     }
 
     public void addWaypoint(Point2D location) {
@@ -230,11 +243,17 @@ public class MapController {
         mapView.setFitHeight(floorImage.getHeight());
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
-
+        if(this.path != null) {
+            clearMap();
+            for(LinkedList<Edge> segment: this.path.getEdges())
+                drawEdgesOnMap(segment);
+            drawNodesOnMap(this.path.getWaypoints());
+        }
         miniMapController.switchFloor(floorImageURL);
     }
 
     public NodeFloor getCurrentFloor() {
+        System.out.println(floorSelector.getValue());
         return floorSelector.getValue();
     }
 
@@ -266,11 +285,15 @@ public class MapController {
     }
 
     @FXML
-    protected void initialize() {
+    protected void initialize(){
+//        floors.setVisible(false);
+
+
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
+
 
         miniMapController = new MiniMapController(this);
 
@@ -303,7 +326,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
+                reloadDisplay(); //don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges
@@ -331,6 +354,11 @@ public class MapController {
                 else {
                     databaseEdgeObjectList.clear();
                 }
+                //edges always drawn under nodes
+                if(showNodesBox.isSelected()) {
+                    showNodesBox.setSelected(false);
+                    showNodesBox.setSelected(true);
+                }
             }
         });
 
@@ -350,7 +378,7 @@ public class MapController {
                             }
                         }
                     }
-                    else if(c.wasAdded()) {
+                    else {
                         for(database.objects.Node addedDatabaseNode : c.getAddedSubList()) {
                             Circle nodeView = new Circle(addedDatabaseNode.getXcoord(), addedDatabaseNode.getYcoord(), 14, Color.GRAY);
                             nodeView.setStroke(Color.BLACK);
@@ -359,6 +387,101 @@ public class MapController {
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
                             nodeView.setAccessibleText(addedDatabaseNode.getXyz());
+                            nodeView.setAccessibleHelp(addedDatabaseNode.getNodeType().toString());
+                            if(parent.getCreateTabName().equals("Map Builder")) {
+                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName()+"\n\nConnections:\n");
+                                for(Node connectingNode : MapEntity.getInstance().getConnectedNodes(addedDatabaseNode)) {
+                                    nodeInfo.setText(nodeInfo.getText()+connectingNode.getLongName()+"\n");
+                                }
+                                Tooltip.install(nodeView, nodeInfo);
+                            }
+                            else {
+                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName());
+                                Tooltip.install(nodeView, nodeInfo);
+                            }
+
+
+                            //additional action when on map builder window
+                            if(parent.getCreateTabName().equals("Map Builder")) {
+                                nodeView.setOnDragDetected(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        if(!parent.controllers.get(ApplicationScreen.MAP_BUILDER).isNewNodeEmpty()) {
+                                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                                            alert.setTitle("Error creating connection");
+                                            alert.setHeaderText("Save new node before creating connections");
+                                            alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
+                                            alert.showAndWait();
+                                            event.consume();
+                                            return;
+                                        }
+                                        if(nodeView.getAccessibleHelp().equals("ELEV")) {
+                                            parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
+                                        }
+                                        Dragboard db = nodeView.startDragAndDrop(TransferMode.ANY);
+                                        ClipboardContent content = new ClipboardContent();
+                                        content.putString(nodeView.getAccessibleText());
+                                        db.setContent(content);
+
+                                        nodeView.setFill(Color.GREEN);
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragDone(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+//                                        floors.setVisible(false);
+                                        nodeView.setFill(Color.GRAY);
+                                        //selected the source node if no node is selected
+                                        try{
+                                            onMapClicked(new MouseEvent(MouseEvent.MOUSE_CLICKED, nodeView.getCenterX(),
+                                                    nodeView.getCenterY(), 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+                                                    true, true, true, true, true, true, null));
+                                        }catch(IOException ex){}
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragOver(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            event.acceptTransferModes(TransferMode.LINK);
+                                        }
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragEntered(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            if(event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
+                                                return;
+                                            }
+                                            nodeView.setFill(Color.DARKGREEN);
+                                        }
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragExited(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            if(event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
+                                                return;
+                                            }
+                                        }
+                                        nodeView.setFill(Color.GRAY);
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragDropped(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        parent.controllers.get(ApplicationScreen.MAP_BUILDER).addConnectionByNodes(nodeView.getAccessibleText(), event.getDragboard().getString());
+                                        event.consume();
+                                    }
+                                });
+                            }
                             nodeObjectList.add(nodeView);
                         }
                     }
@@ -381,7 +504,7 @@ public class MapController {
                             }
                         }
                     }
-                    else if(c.wasAdded()) {
+                    else {
                         for(database.objects.Edge addedDatabaseEdge : c.getAddedSubList()) {
                             MapEntity mapEntity = MapEntity.getInstance();
                             Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
@@ -394,6 +517,10 @@ public class MapController {
                             edgeView.setPickOnBounds(false);
                             edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
                             edgeObjectList.add(edgeView);
+                            if(mapEntity.getEdgesOnFloor(getCurrentFloor()).contains(addedDatabaseEdge))
+                                edgeView.setOpacity(0.95);
+                            else
+                                edgeView.setOpacity(0.2);
                         }
                     }
                 }
@@ -482,20 +609,21 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    System.out.println("selected node: " + selectedNode.getNodeID());
+                    //System.out.println("selected node: " + selectedNode.getNodeID());
                 }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
                             System.out.println("Removing node from Selected node");
+
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected node: NORMAL");
+                                //System.out.println("Removing node from Selected Node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
-                                //System.out.println("Removing node from Selected node: CHANGED");
+                                //System.out.println("Removing node from Selected Node: CHANGED");
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
@@ -513,12 +641,11 @@ public class MapController {
                 }
             }
         });
-        //TODO
         observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    System.out.println("Changed node: " + changedNode.getNodeID());
+                    //System.out.println("Changed node: " + changedNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasAdded()){
@@ -548,7 +675,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node newNode : observableHighlightedNewNodes) {
-                    System.out.println("New node: " + newNode.getNodeID());
+                    System.out.println("New Node: " + newNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasRemoved()) {
@@ -598,9 +725,7 @@ public class MapController {
                     parent.onMapNodeClicked(node);
                     return;
                 }
-
             }
-
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
         }
@@ -625,4 +750,21 @@ public class MapController {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }
+
+    protected void refresh() {
+        showEdgesBox.setSelected(false);
+        showEdgesBox.setSelected(true);
+        showNodesBox.setSelected(false);
+        showNodesBox.setSelected(true);
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
+    }
+
+    protected void map_builder(){}
 }

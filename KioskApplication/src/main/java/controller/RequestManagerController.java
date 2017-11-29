@@ -57,6 +57,56 @@ public class RequestManagerController extends ScreenController {
     }
 
     @FXML
+    public void setup(){
+        RequestType employeeType = l.getServiceAbility(l.getUsername());
+        if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
+            foodFilter.setSelected(false);
+            foodFilter.setDisable(true);
+            janitorFilter.setSelected(false);
+            janitorFilter.setDisable(true);
+            securityFilter.setSelected(false);
+            securityFilter.setDisable(true);
+            interpreterFilter.setSelected(false);
+            interpreterFilter.setDisable(true);
+            maintenanceFilter.setSelected(false);
+            maintenanceFilter.setDisable(true);
+            itFilter.setSelected(false);
+            itFilter.setDisable(true);
+            transportationFilter.setSelected(false);
+            transportationFilter.setDisable(true);
+            switch (employeeType){
+                case FOOD:
+                    foodFilter.setSelected(true);
+                    break;
+                case SECURITY:
+                    securityFilter.setSelected(true);
+                    break;
+                case INTERPRETER:
+                    interpreterFilter.setSelected(true);
+                    break;
+                case JANITOR:
+                    janitorFilter.setSelected(true);
+                    break;
+            }
+        }else{
+            foodFilter.setSelected(true);
+            foodFilter.setDisable(false);
+            janitorFilter.setSelected(true);
+            janitorFilter.setDisable(false);
+            securityFilter.setSelected(true);
+            securityFilter.setDisable(false);
+            interpreterFilter.setSelected(true);
+            interpreterFilter.setDisable(false);
+            maintenanceFilter.setSelected(true);
+            maintenanceFilter.setDisable(false);
+            itFilter.setSelected(true);
+            itFilter.setDisable(false);
+            transportationFilter.setSelected(true);
+            transportationFilter.setDisable(false);
+        }
+    }
+
+    @FXML
     void viewRequests() throws IOException {
         System.out.println("request Manager Pressed\n");
         getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
@@ -64,18 +114,21 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void newRequests(){
+        setup();
         LinkedList<Request> allRequests = filterRequests();
         showRequests(RequestProgressStatus.TO_DO, "Assign", allRequests);
     }
 
     @FXML
     void inProgressRequests(){
+        setup();
         LinkedList<Request> allRequests = filterRequests();
         showRequests(RequestProgressStatus.IN_PROGRESS, "Complete", allRequests);
     }
 
     @FXML
     void doneRequests(){
+        setup();
         LinkedList<Request> allRequests = filterRequests();
         showRequests(RequestProgressStatus.DONE, "Delete", allRequests);
     }
@@ -208,15 +261,15 @@ public class RequestManagerController extends ScreenController {
                 doneRequests();
                 break;
             case IN_PROGRESS:
-                request.complete();
+                r.completeRequest(request.getRequestID());
                 inProgressRequests();
                 break;
             case TO_DO:
-                request.markInProgress(l.getUserID());
+                r.markInProgress(l.getUserID(),request.getRequestID());
+                System.out.println(request.getStatus());
                 newRequests();
                 break;
         }
-        txtID.clear();
         System.out.println("Complete Pressed \n");
     }
 

@@ -167,6 +167,15 @@ public class LoginEntity {
         return false;
     }
 
+    public RequestType getServiceAbility(String userName) {
+        if(logins.get(userName).getPermission().equals(KioskPermission.EMPLOYEE)){
+            Employee employee = logins.get(userName);
+            return employee.getServiceAbility();
+        }else{
+            return RequestType.GENERAL;
+        }
+    }
+
     // Method for users to update only their passwords, and no one else's
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean updated = false;

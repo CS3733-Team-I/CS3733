@@ -31,14 +31,12 @@ public class Pathfinder {
      */
     public Path generatePath(LinkedList<Node> waypoints) throws PathfinderException{
 
-        LinkedList<Edge> pathEdges = new LinkedList<>();
+        LinkedList<LinkedList<Edge>> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
 
         //Check to see if the start node is valid; if not, use a default starting position.
-        //TODO: the default should be set to a real node at an actual location on the map.
-        //TODO talk to ui about admin control of start node
         if (waypoints.size() == 1){
-            startNode = SystemSettings.getInstance().getDefaultnode();
+            startNode = SystemSettings.getInstance().getDefaultnode();  //TODO: behavior for if default start node is deleted
             if (startNode == null)
                 throw new PathfinderException("No default start location. \n Please see an administrator.");
             waypoints.addLast(waypoints.removeFirst());
@@ -62,7 +60,7 @@ public class Pathfinder {
 
 
             //Now, find the path from the previous waypoint to this one.
-            pathEdges.addAll(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
+            pathEdges.add(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
