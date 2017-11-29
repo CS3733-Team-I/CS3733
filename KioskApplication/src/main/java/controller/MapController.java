@@ -54,6 +54,7 @@ public class MapController {
 
     @FXML public AnchorPane miniMapPane;
     MiniMapController miniMapController;
+    private Path path = null;
 
 
     //list of showing nodes or edges
@@ -170,15 +171,15 @@ public class MapController {
         }
     }
 
-    public void drawPath(Path path) {
+    public void drawPath() {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        drawEdgesOnMap(path.getEdges());
-        drawNodesOnMap(path.getWaypoints());
+        drawEdgesOnMap(this.path.getEdges());
+        drawNodesOnMap(this.path.getWaypoints());
     }
 
     public void addWaypoint(Point2D location) {
@@ -230,7 +231,11 @@ public class MapController {
         mapView.setFitHeight(floorImage.getHeight());
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
-
+        if(this.path != null) {
+            clearMap();
+            drawEdgesOnMap(this.path.getEdges());
+            drawNodesOnMap(this.path.getWaypoints());
+        }
         miniMapController.switchFloor(floorImageURL);
     }
 
@@ -303,7 +308,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
+                reloadDisplay(); //don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges
@@ -394,6 +399,10 @@ public class MapController {
                             edgeView.setPickOnBounds(false);
                             edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
                             edgeObjectList.add(edgeView);
+                            if(mapEntity.getEdgesOnFloor(getCurrentFloor()).contains(addedDatabaseEdge))
+                                edgeView.setOpacity(0.95);
+                            else
+                                edgeView.setOpacity(0.2);
                         }
                     }
                 }
@@ -482,20 +491,20 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    System.out.println("selected Node: " + selectedNode.getNodeID());
+                    System.out.println("selected node: " + selectedNode.getNodeID());
                 }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
-                            System.out.println("Removing node from Selected Node");
+                            System.out.println("Removing node from Selected node");
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected Node: NORMAL");
+                                //System.out.println("Removing node from Selected node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
-                                //System.out.println("Removing node from Selected Node: CHANGED");
+                                //System.out.println("Removing node from Selected node: CHANGED");
                                 highlightNode(deseletedNode, NodeDisplay.CHANGED);
                             }
                         }
@@ -518,7 +527,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    System.out.println("Changed Node: " + changedNode.getNodeID());
+                    System.out.println("Changed node: " + changedNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasAdded()){
@@ -548,7 +557,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node newNode : observableHighlightedNewNodes) {
-                    System.out.println("New Node: " + newNode.getNodeID());
+                    System.out.println("New node: " + newNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasRemoved()) {
@@ -624,5 +633,13 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 }

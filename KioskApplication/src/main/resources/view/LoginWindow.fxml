@@ -68,7 +68,7 @@
                         <Font name="Lucida Sans Regular" size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" cancelButton="true" maxWidth="1.7976931348623157E308" onAction="#OnBackClicked" prefHeight="46.0" prefWidth="195.0" ripplerFill="RED" style="-fx-background-radius: 0; -fx-background-color: #efefef; -fx-text-fill: black;" text="Cancel" textAlignment="CENTER" GridPane.rowIndex="4">
+                  <JFXButton fx:id="cancelButton" alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#OnBackClicked" prefHeight="46.0" prefWidth="195.0" ripplerFill="RED" style="-fx-background-radius: 0; -fx-background-color: #efefef;" text="Cancel" textAlignment="CENTER" GridPane.rowIndex="4">
                      <font>
                         <Font name="Lucida Sans Regular" size="14.0" />
                      </font>
