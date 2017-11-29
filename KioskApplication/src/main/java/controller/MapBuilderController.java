@@ -1068,4 +1068,6 @@ public class MapBuilderController extends ScreenController {
         updateSelectedNode(observableSelectedNodes.get(0));
         mapController.refresh();
     }
+
+
 }
