@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXListView;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -35,7 +36,7 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
 
     @FXML
-    private VBox activeRequests;
+    private JFXListView activeRequests;
     @FXML
     private Label totalRequests;
     @FXML
@@ -101,11 +102,11 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     void showRequests(RequestProgressStatus status, String buttonName, LinkedList<Request> allRequests){
-        activeRequests.getChildren().clear();
+        activeRequests.setItems(null);
 
         if(allRequests.isEmpty() || r.filterByStatus(allRequests,status).isEmpty()){
             Label emptyList = new Label("No Requests");
-            activeRequests.getChildren().add(emptyList);
+            activeRequests.setCellFactory(emptyList);
         }else{
             LinkedList<Request> requests = r.filterByStatus(allRequests,status);
             for (int i = 0; i < requests.size(); i++) {
