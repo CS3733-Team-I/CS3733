@@ -849,7 +849,6 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void setKioskDefaultLocation(ActionEvent event){
-
-        SystemSettings.getInstance().setDefaultnode(observableSelectedNodes.get(0));
+        SystemSettings.getInstance().setDefaultnode(observableSelectedNodes.get(0).getNodeID());
     }
 }

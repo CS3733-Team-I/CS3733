@@ -18,7 +18,7 @@ public class SystemSettings {
     private SystemSettings() {
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-        this.defaultnode = null;
+        this.setDefaultnode(this.prefs.get("defaultNode","IDEPT00403"));
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
@@ -58,8 +58,15 @@ public class SystemSettings {
         return prefs;
     }
 
-    public void setDefaultnode(Node defaultnode){
-        this.defaultnode = defaultnode;
+    public void setDefaultnode(String defaultnodeID){
+        MapEntity map = MapEntity.getInstance();
+        for(Node node:map.getAllNodes()){
+            if(defaultnodeID.equals(node.getNodeID())) {
+                this.defaultnode = node;
+                this.prefs.put("defaultNode", node.getNodeID());
+                return;
+            }
+        }
     }
 
     public Node getDefaultnode() {
