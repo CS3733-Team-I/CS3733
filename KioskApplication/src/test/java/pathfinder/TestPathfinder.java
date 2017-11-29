@@ -280,7 +280,6 @@ public class TestPathfinder {
             System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
         }
         */
-        /*
         System.out.println("Start test all");
         // Try to test every possible path
         for(Node n1 : map.getAllNodes()) {
@@ -299,22 +298,23 @@ public class TestPathfinder {
                 catch(PathfinderException e) {
                     //Don't print an error if it's node 18 or 19 cause they don't connect to anything and the error should be thrown
                     if(n1.getNodeID().equals("NODE18") || n1.getNodeID().equals("NODE19") || n2.getNodeID().equals("NODE18") || n2.getNodeID().equals("NODE19")) {}
+                    //Don't print an error if it's going across map sections cause the error should be thrown
+                    else if(n1.getNodeID().equals("NODE20") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE21") && !(n2.getNodeID().equals("NODE20") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE22") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE20") || n2.getNodeID().equals("NODE23")) ||
+                            n1.getNodeID().equals("NODE23") && !(n2.getNodeID().equals("NODE21") || n2.getNodeID().equals("NODE22") || n2.getNodeID().equals("NODE20")) ||
+
+                            n2.getNodeID().equals("NODE20") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE21") && !(n1.getNodeID().equals("NODE20") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE22") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE20") || n1.getNodeID().equals("NODE23")) ||
+                            n2.getNodeID().equals("NODE23") && !(n1.getNodeID().equals("NODE21") || n1.getNodeID().equals("NODE22") || n1.getNodeID().equals("NODE20"))
+                            ) {}
+                    //Otherwise print the error
                     else System.out.println("ERROR. Start: " + n1.getNodeID() + " End: " + n2.getNodeID() + "\n");
                 }
             }
         }
         System.out.println("End test all");
-        */
-
-        //6, 17
-        path = alg.findPath(n06,n17);
-        if(!isValidPath(n06,n17,path)) {
-            System.out.println("Not Valid Path\nStart: " + n06.getNodeID() + " End: " + n17.getNodeID());
-            for (Edge e : path) {
-                System.out.print(e.getNode1ID() + "-" + e.getNode2ID() + " ");
-            }
-            System.out.println("\n");
-        }
     }
 
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
@@ -330,9 +330,17 @@ public class TestPathfinder {
             return false;
         }
 
+        if(path.size() == 2) {
+            if(!path.get(0).getNode1ID().equals(startNode.getNodeID()) && !path.get(0).getNode2ID().equals(startNode.getNodeID()))
+                return false;
+            if(!path.get(1).getNode1ID().equals(endNode.getNodeID()) && !path.get(1).getNode2ID().equals(endNode.getNodeID()))
+                return false;
+            return path.get(0).isConnectedTo(path.get(1));
+        }
+
         for(int i = 0; i < path.size(); i++) {
             if(i==0) { //first edge should contain the start node
-                if(!path.get(i).getNode1ID().equals(startNode.getNodeID()) && !path.get(i).getNode1ID().equals(startNode.getNodeID()))
+                if(!path.get(i).getNode1ID().equals(startNode.getNodeID()) && !path.get(i).getNode2ID().equals(startNode.getNodeID()))
                     return false;
             }
             else if(i==path.size()-1) { //last edge should contain the end node
