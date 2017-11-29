@@ -2,7 +2,6 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -29,13 +28,12 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
 import utility.ResourceManager;
-import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
+import utility.nodeDisplay.NodeDisplay;
 
 import javax.xml.crypto.Data;
 import java.io.IOException;
