@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserSettingsController">
+   <children>
+      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
+      <Label layoutX="61.0" layoutY="51.0" prefHeight="30.0" prefWidth="217.0" text="User" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+         <center>
+            <GridPane prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <JFXTextField fx:id="usernameBox" editable="false" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="passwordBoxOld" labelFloat="true" promptText="Old Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                  <JFXButton fx:id="saveButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="4" />
+                  <Label fx:id="userDialogLabel" prefHeight="30.0" text="User Info" GridPane.columnSpan="2">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <JFXTextField fx:id="passwordBoxNew" labelFloat="true" promptText="New Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <Label fx:id="errLabel" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+               </children>
+               <BorderPane.margin>
+                  <Insets left="150.0" right="150.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </center>
+      </BorderPane>
+   </children>
+</fx:root>
