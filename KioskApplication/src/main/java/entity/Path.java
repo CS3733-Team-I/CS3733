@@ -10,10 +10,10 @@ import java.util.List;
 
 public class Path {
     private LinkedList<Node> waypoints;
-    private LinkedList<Edge> edges;
-    private LinkedList<String> directions;
+    private LinkedList<LinkedList<Edge>> edges;
+    private LinkedList<LinkedList<String>> directions;
 
-    public Path(List<Node> waypoints, List<Edge> edges) {
+    public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
         this.edges = new LinkedList<>(edges);
         generateDirections();
@@ -23,17 +23,20 @@ public class Path {
         return waypoints;
     }
 
-    public LinkedList<Edge> getEdges() {
+    public LinkedList<LinkedList<Edge>> getEdges() {
         return edges;
     }
 
     public String getDirections() {
         String returnStr = "";
-        for(String s : directions) returnStr += s + "\n";
+        for(LinkedList<String> segment: directions) {
+            for (String s : segment)
+                returnStr += s + "\n";
+        }
         return returnStr;
     }
 
-    public LinkedList<String> getDirectionsList() {
+    public LinkedList<LinkedList<String>> getDirectionsList() {
         return directions;
     }
 
@@ -43,14 +46,19 @@ public class Path {
 
     private void generateDirections() {
         directions = new LinkedList<>();
-        LinkedList<Node> nodes = getListOfNodes();
-        directions.add("Start at " + nodes.getFirst().getLongName());
-        for(int i = 0; i < nodes.size(); i++) {
-            if(i!=0 && i!=nodes.size()-1)
-                directions.add(findDirectionInstructions(nodes.get(i), nodes.get(i-1), nodes.get(i+1)));
-        }
+        int segmentIndex = 0;
+        for(LinkedList<Edge> edgeSegment: edges) {
+            LinkedList<String> directionSegment = new LinkedList<>();
+            LinkedList<Node> nodes = getListOfNodes(edgeSegment, this.waypoints.get(segmentIndex++));
+            directionSegment.add("Start at " + nodes.getFirst().getLongName());
+            for (int i = 0; i < nodes.size(); i++) {
+                if (i != 0 && i != nodes.size() - 1)
+                    directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
+            }
 
-        directions.add("End at " + nodes.getLast().getLongName());
+            directionSegment.add("End at " + nodes.getLast().getLongName());
+            directions.add(directionSegment);
+        }
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
@@ -84,12 +92,12 @@ public class Path {
         return Math.atan2(dy,dx);
     }
 
-    private LinkedList<Node> getListOfNodes() {
+    private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
 
         LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(waypoints.getFirst());
+        nodes.add(segmentStart);
 
-        for(Edge e : edges) {
+        for(Edge e : segment) {
             nodes.add(getOtherNode(e,nodes.getLast()));
         }
         return nodes;
@@ -99,8 +107,11 @@ public class Path {
 
         MapEntity map = MapEntity.getInstance();
 
-        if(e.getNode1ID().equals(n.getNodeID())) return map.getNode(e.getNode2ID());
-        if(e.getNode2ID().equals(n.getNodeID())) return map.getNode(e.getNode1ID());
-        return null;
+        if(e.getNode1ID().equals(n.getNodeID()))
+            return map.getNode(e.getNode2ID());
+        else if(e.getNode2ID().equals(n.getNodeID()))
+            return map.getNode(e.getNode1ID());
+        else
+            return null;
     }
 }

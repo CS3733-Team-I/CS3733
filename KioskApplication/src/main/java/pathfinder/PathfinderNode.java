@@ -3,6 +3,7 @@ package pathfinder;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import utility.node.NodeType;
 
 import java.util.LinkedList;
 
@@ -33,15 +34,29 @@ public class PathfinderNode {
 
     //Calculates the cost to reach this node and the estimated total cost from here to the end.
     public int calculatePreviousCost(PathfinderNode potentialParent){
-        //Assuming all edges are straight lines, the cost of the edge from the parent node should be the straight-line
-        //distance between the two.
-        int xDistance = Math.abs(this.node.getXcoord() - potentialParent.getNode().getXcoord());
-        int yDistance = Math.abs(this.node.getYcoord() - potentialParent.getNode().getYcoord());
-        //Calculate distance with Pythagorean theorem
-        int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-        //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
-        //node to here.
-        return(straightLineDistance + potentialParent.getPreviousCost());
+        //If the two nodes are both stairs or elevators and are on different floors, the edge between them represents
+        //a staircase or an elevator shaft, respectively.  In either case, assign a cost to approximate the difficulty
+        //of taking a staircase or an elevator up or down a single floor (same weight whether up or down).
+        if(this.node.getNodeType().equals(NodeType.STAI) &&
+           potentialParent.getNode().getNodeType().equals(NodeType.STAI) &&
+           !this.node.getFloor().equals(potentialParent.getNode().getFloor()))
+            return(100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
+        else if(this.node.getNodeType().equals(NodeType.ELEV) &&
+                potentialParent.getNode().getNodeType().equals(NodeType.ELEV) &&
+                !this.node.getFloor().equals(potentialParent.getNode().getFloor()))
+            return(100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
+        //Otherwise, estimate the cost as normal.
+        else {
+            //Assuming all edges are straight lines, the cost of the edge from the parent node should be the
+            // straight-line distance between the two.
+            int xDistance = Math.abs(this.node.getXcoord() - potentialParent.getNode().getXcoord());
+            int yDistance = Math.abs(this.node.getYcoord() - potentialParent.getNode().getYcoord());
+            //Calculate distance with Pythagorean theorem
+            int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+            //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
+            //node to here.
+            return (straightLineDistance + potentialParent.getPreviousCost());
+        }
     }
 
     public Node getNode() {
