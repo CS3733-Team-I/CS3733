@@ -28,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
@@ -54,6 +55,7 @@ public class MapController {
 
     @FXML public AnchorPane miniMapPane;
     MiniMapController miniMapController;
+    private Path path = null;
 
 
     //list of showing nodes or edges
@@ -138,8 +140,10 @@ public class MapController {
     }
 
     public void clearMap() {
-        waypointPane.getChildren().clear();
-        waypoints.clear();
+        this.waypointPane.getChildren().clear();
+        this.nodeObjectList.clear();
+        this.edgeObjectList.clear();
+        this.waypoints.clear();
 
         reloadDisplay();
     }
@@ -175,15 +179,15 @@ public class MapController {
         }
     }
 
-    public void drawPath(Path path) {
+    public void drawPath() {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        drawEdgesOnMap(path.getEdges());
-        drawNodesOnMap(path.getWaypoints());
+        drawEdgesOnMap(this.path.getEdges());
+        drawNodesOnMap(this.path.getWaypoints());
     }
 
     public void addWaypoint(Point2D location) {
@@ -210,33 +214,37 @@ public class MapController {
         String floorImageURL = "";
         switch (floor) {
             case LOWERLEVEL_2:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel2.png").toString();
+                floorImageURL = "/images/00_thelowerlevel2.png";
                 break;
             case LOWERLEVEL_1:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel1.png").toString();
+                floorImageURL = "/images/00_thelowerlevel1.png";
                 break;
             case GROUND:
-                floorImageURL = getClass().getResource("/images/00_thegroundfloor.png").toString();
+                floorImageURL = "/images/00_thegroundfloor.png";
                 break;
             case FIRST:
-                floorImageURL = getClass().getResource("/images/01_thefirstfloor.png").toString();
+                floorImageURL = "/images/01_thefirstfloor.png";
                 break;
             case SECOND:
-                floorImageURL = getClass().getResource("/images/02_thesecondfloor.png").toString();
+                floorImageURL = "/images/02_thesecondfloor.png";
                 break;
             case THIRD:
-                floorImageURL = getClass().getResource("/images/03_thethirdfloor.png").toString();
+                floorImageURL = "/images/03_thethirdfloor.png";
                 break;
         }
 
-        Image floorImage = new Image(floorImageURL);
+        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
-
-        miniMapController.switchFloor(floorImage);
+        if(this.path != null) {
+            clearMap();
+            drawEdgesOnMap(this.path.getEdges());
+            drawNodesOnMap(this.path.getWaypoints());
+        }
+        miniMapController.switchFloor(floorImageURL);
     }
 
     public NodeFloor getCurrentFloor() {
@@ -308,7 +316,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
+                reloadDisplay(); //don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges
@@ -399,6 +407,10 @@ public class MapController {
                             edgeView.setPickOnBounds(false);
                             edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
                             edgeObjectList.add(edgeView);
+                            if(mapEntity.getEdgesOnFloor(getCurrentFloor()).contains(addedDatabaseEdge))
+                                edgeView.setOpacity(0.95);
+                            else
+                                edgeView.setOpacity(0.2);
                         }
                     }
                 }
@@ -487,14 +499,16 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    //System.out.println("selected Node: " + selectedNode.getNodeID());
+                    //System.out.println("selected node: " + selectedNode.getNodeID());
                 }
                 //revert deselected nodes to normal color
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(database.objects.Node deseletedNode : c.getRemoved()) {
+                            System.out.println("Removing node from Selected node");
 
                             if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
+                                //System.out.println("Removing node from Selected Node: NORMAL");
                                 highlightNode(deseletedNode, NodeDisplay.NORMAL);
                             }
                             else {
@@ -521,7 +535,7 @@ public class MapController {
             @Override
             public void onChanged(Change<? extends Node> c) {
                 for(database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    //System.out.println("Changed Node: " + changedNode.getNodeID());
+                    //System.out.println("Changed node: " + changedNode.getNodeID());
                 }
                 while(c.next()) {
                     if(c.wasAdded()){
@@ -632,5 +646,13 @@ public class MapController {
         showEdgesBox.setSelected(true);
         showNodesBox.setSelected(false);
         showNodesBox.setSelected(true);
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 }

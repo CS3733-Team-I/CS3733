@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import utility.ResourceManager;
 
 import static controller.MapController.DEFAULT_HVALUE;
 import static controller.MapController.DEFAULT_VVALUE;
@@ -78,9 +79,10 @@ public class MiniMapController {
 
     /**
      * Set the current floor by passing an image
-     * @param floorImage the image of the new floor
+     * @param floorImagePath the image of the new floor
      */
-    void switchFloor(Image floorImage) {
+    void switchFloor(String floorImagePath) {
+        Image floorImage = ResourceManager.getInstance().getImage(floorImagePath);
         miniMapView.setImage(floorImage);
 
         imageWidth = floorImage.getWidth();

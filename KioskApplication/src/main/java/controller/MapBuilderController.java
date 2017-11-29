@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -25,6 +26,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
@@ -127,7 +129,7 @@ public class MapBuilderController extends ScreenController {
         Advance.setVisible(false);
 
         /**
-         * Node Input put validators
+         * node Input put validators
          */
         lName.getValidators().add(lNameValidator);
         sName.getValidators().add(sNameValidator);
@@ -143,7 +145,7 @@ public class MapBuilderController extends ScreenController {
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
 
-        Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
+        Image infoIcon = ResourceManager.getInstance().getImage("/images/icons/informationIcon.png");
         ImageView infoIconView = new ImageView(infoIcon);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
@@ -534,7 +536,7 @@ public class MapBuilderController extends ScreenController {
     }
 
     /**
-     * Handles Node Related operations
+     * Handles node Related operations
      */
 
 //TODO REFACTOR THIS USING "CHANGE"
@@ -772,7 +774,7 @@ public class MapBuilderController extends ScreenController {
 
         for(database.objects.Node newNode : observableNewNodes) {
             if(newNode.getNodeType() == NodeType.TEMP) { //no type of temp is allowed to save
-                nodeDialogString +=  "Node ID: " + newNode.getNodeID() + "\n" + "Node Type cannot be TEMP.\n\n";
+                nodeDialogString +=  "node ID: " + newNode.getNodeID() + "\n" + "node Type cannot be TEMP.\n\n";
                 System.out.println(nodeDialogString);
                 loadDialog(event);
                 nodeDialogString = "";
@@ -781,7 +783,7 @@ public class MapBuilderController extends ScreenController {
             else if (getInstance().getNode(newNode.getNodeID()) == null) {
                 try {
                     getInstance().addNode(newNode);
-                    nodeDialogString += "Node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
+                    nodeDialogString += "node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error adding node to DB");
@@ -789,10 +791,10 @@ public class MapBuilderController extends ScreenController {
                     alert.setContentText(ex.toString());
                     alert.showAndWait();
 
-                    nodeDialogString += "ERROR: Node " + newNode.getNodeID() + " was not added to database.\n\n";
+                    nodeDialogString += "ERROR: node " + newNode.getNodeID() + " was not added to database.\n\n";
                 }
             }  else { //duplicate node ID found
-                nodeDialogString += "Node ID: " + newNode.getNodeID() + "\n" + "Duplicate ID found\n\n";
+                nodeDialogString += "node ID: " + newNode.getNodeID() + "\n" + "Duplicate ID found\n\n";
                 System.out.println(nodeDialogString);
                 loadDialog(event);
                 nodeDialogString = "";
@@ -808,7 +810,7 @@ public class MapBuilderController extends ScreenController {
         for(database.objects.Node changedNode : observableChangedNodes) {
                 try {
                     getInstance().editNode(changedNode);
-                    nodeDialogString += "Node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
+                    nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error editing node in DB");
@@ -816,7 +818,7 @@ public class MapBuilderController extends ScreenController {
                     alert.setContentText(ex.toString());
                     alert.showAndWait();
 
-                    nodeDialogString += "ERROR: Node " + changedNode.getNodeID() + " was not edited to database.\n";
+                    nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
                 }
         }
         observableChangedNodes.clear();

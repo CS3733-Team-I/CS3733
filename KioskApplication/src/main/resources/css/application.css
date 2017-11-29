@@ -14,6 +14,27 @@
     -fx-text-fill: white;
 }
 
+/* REQUEST MANAGER BUTTON STYLES */
+
+.request-manager-button-1 {
+    -fx-color-label-visible: #00589F;
+    -fx-background-color: #F0F1EC;
+    -fx-background-radius: 0;
+    -fx-font-size: 16;
+}
+
+.request-manager-button-2 {
+    -fx-color-label-visible: #00589F;
+    -fx-background-color: #DDDED0;
+    -fx-background-radius: 0;
+    -fx-font-size: 16;
+}
+
+.cancel-button {
+    -fx-background-radius: 0;
+    -fx-background-color: #efefef;
+}
+
 /* TAB PANE STYLES */
 
 .jfx-tab-pane .headers-region {
@@ -88,4 +109,19 @@
     -fx-stroke: #00589F;
 
     -fx-fill: transparent;
+}
+
+#confirm-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: black;
+}
+
+#delete-button {
+    -fx-background-color: #ff5252;
+    -fx-text-fill: white;
+}
+
+#cancel-button {
+    -fx-background-color: #DDDED0;
+    -fx-text-fill: black;
 }

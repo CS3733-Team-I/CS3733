@@ -4,6 +4,7 @@ package database.connection;
 
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.SecurityRequest;
 import database.template.SQLStrings;
 import database.objects.InterpreterRequest;
 import utility.node.NodeBuilding;
@@ -185,30 +186,34 @@ public class Connector {
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(INTERPRETER_INSERT+REQUEST_INSERT);
         pstmt.setString(1, iR.getRequestID());
-        pstmt.setString(2, iR.getNodeID());
-        pstmt.setString(3, iR.getAssigner());
-        pstmt.setString(4, iR.getNote());
-        pstmt.setTimestamp(5, iR.getSubmittedTime());
-        pstmt.setTimestamp(6, iR.getCompletedTime());
-        pstmt.setInt(7, iR.getStatus().ordinal());
-        pstmt.setInt(8, iR.getLanguage().ordinal());
+        pstmt.setInt(2, iR.getLanguage().ordinal());
+        pstmt.setString(3, iR.getNodeID());
+        pstmt.setString(4, iR.getAssigner());
+        pstmt.setString(5, iR.getCompleter());
+        pstmt.setString(6, iR.getNote());
+        pstmt.setTimestamp(7, iR.getSubmittedTime());
+        pstmt.setTimestamp(8, iR.getStartedTime());
+        pstmt.setTimestamp(9, iR.getCompletedTime());
+        pstmt.setInt(10, iR.getStatus().ordinal());
         return pstmt.executeUpdate();
     }
 
     public static int updateInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {
-        String sql = INTERPRETER_UPDATE;
+        String sql = INTERPRETER_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, iR.getNodeID());
-        pstmt.setString(2, iR.getAssigner());
-        pstmt.setString(3, iR.getNote());
-        pstmt.setTimestamp(4, iR.getSubmittedTime());
-        pstmt.setTimestamp(5, iR.getCompletedTime());
-        pstmt.setInt(6, iR.getStatus().ordinal());
-        pstmt.setInt(7, iR.getLanguage().ordinal());
+        pstmt.setInt(1, iR.getLanguage().ordinal());
+        pstmt.setString(2, iR.getNodeID());
+        pstmt.setString(3, iR.getAssigner());
+        pstmt.setString(4, iR.getCompleter());
+        pstmt.setString(5, iR.getNote());
+        pstmt.setTimestamp(6, iR.getSubmittedTime());
+        pstmt.setTimestamp(7, iR.getStartedTime());
+        pstmt.setTimestamp(8, iR.getCompletedTime());
+        pstmt.setInt(9, iR.getStatus().ordinal());
         //search parameter below
-        pstmt.setString(8, iR.getRequestID());
+        pstmt.setString(10, iR.getRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -225,8 +230,10 @@ public class Connector {
                 requestID,
                 rs.getString("nodeID"),
                 rs.getString("assigner"),
+                rs.getString("completer"),
                 rs.getString("note"),
                 rs.getTimestamp("submittedTime"),
+                rs.getTimestamp("startedTime"),
                 rs.getTimestamp("completedTime"),
                 RequestProgressStatus.values()[rs.getInt("status")],
                 Language.values()[rs.getInt("language")]);
@@ -253,8 +260,10 @@ public class Connector {
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
                     rs.getString("assigner"),
+                    rs.getString("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     Language.values()[rs.getInt("language")]);
@@ -262,6 +271,95 @@ public class Connector {
             interpreterRequests.add(interpreterRequest);
         }
         return interpreterRequests;
+    }
+
+    /**TODO: make request database access as generic as possible to reduce workload**/
+    public static int insertSecurity(Connection conn, SecurityRequest sR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(SECURITY_INSERT+REQUEST_INSERT);
+        pstmt.setString(1, sR.getRequestID());
+        pstmt.setInt(2, sR.getPriority());
+        pstmt.setString(3, sR.getNodeID());
+        pstmt.setString(4, sR.getAssigner());
+        pstmt.setString(5, sR.getCompleter());
+        pstmt.setString(6, sR.getNote());
+        pstmt.setTimestamp(7, sR.getSubmittedTime());
+        pstmt.setTimestamp(8, sR.getStartedTime());
+        pstmt.setTimestamp(9, sR.getCompletedTime());
+        pstmt.setInt(10, sR.getStatus().ordinal());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateSecurity(Connection conn, SecurityRequest sR) throws SQLException {
+        String sql = SECURITY_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, sR.getPriority());
+        pstmt.setString(2, sR.getNodeID());
+        pstmt.setString(3, sR.getAssigner());
+        pstmt.setString(4, sR.getCompleter());
+        pstmt.setString(5, sR.getNote());
+        pstmt.setTimestamp(6, sR.getSubmittedTime());
+        pstmt.setTimestamp(7, sR.getStartedTime());
+        pstmt.setTimestamp(8, sR.getCompletedTime());
+        pstmt.setInt(9, sR.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(10, sR.getRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static SecurityRequest selectSecurity(Connection conn, String requestID) throws SQLException {
+        String sql = SECURITY_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        SecurityRequest securityRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            //for completed InterpreterRequests
+            securityRequest = new SecurityRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getString("assigner"),
+                    rs.getString("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority"));
+        }
+        return securityRequest;
+    }
+
+    public static boolean deleteSecurity(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(SECURITY_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<SecurityRequest> selectAllSecurity(Connection conn) throws SQLException {
+        String sql = SECURITY_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<SecurityRequest> securityRequests = new LinkedList<>();
+        while(rs.next()) {
+            SecurityRequest securityRequest = null;
+            //for completed InterpreterRequests
+            securityRequest = new SecurityRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getString("assigner"),
+                    rs.getString("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority"));
+
+            securityRequests.add(securityRequest);
+        }
+        return securityRequests;
     }
 
 }

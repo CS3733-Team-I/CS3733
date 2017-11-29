@@ -23,38 +23,56 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-                    "( requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
-                    " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-                    " REFERENCES t_nodes ON DELETE CASCADE," +
-                    " assigner VARCHAR(50) NOT NULL," +
-                    " note CLOB(280)," +
-                    " submittedTime TIMESTAMP NOT NULL," +
-                    " completedTime TIMESTAMP NOT NULL," +
-                    " status INT NOT NULL";
-
-    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters";
-
-    public static final String WITH_INTERPRETER_ATTRIBUTES = ", language INT NOT NULL)";
-
-    public static final String YCREATE_INTERPRETERS_TABLE = "create table t_interpreters(" +
-            //Base attributes
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY," +
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE," +
-            " assigner VARCHAR(50) NOT NULL," +
-            " note CLOB(256)," +
+            " assigner VARCHAR(63) NOT NULL REFERENCES t_employee on DELETE CASCADE," +
+            " completer VARCHAR(63) NOT NULL,"+
+            " note CLOB(280)," +
             " submittedTime TIMESTAMP NOT NULL," +
+            " startedTime TIMESTAMP NOT NULL,"+
             " completedTime TIMESTAMP NOT NULL," +
-            " status INT NOT NULL," +
-            //Unique request attributes
-            " language INT NOT NULL" +
-            ")";
+            " status INT NOT NULL)";
 
+    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?, ?)";
+    public static final String REQUEST_UPDATE =
+            " nodeID=?," +
+            " assigner=?," +
+            " completer=?,"+
+            " note=?,"+
+            " submittedTime=?,"+
+            " startedTime=?,"+
+            " completedTime=?,"+
+            " status=?"+
+            " where requestID=?";
+
+    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,"+
+            " language INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
+            " REFERENCES t_nodes ON DELETE CASCADE,";
+
+    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?,";
+    public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
+            " language=?,";
+    public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
+    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
+    public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
+
+    public static final String CREATE_SECURITY_TABLE = "create table t_security("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
+            " priority INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk3" +
+            " REFERENCES t_nodes ON DELETE CASCADE,";
+
+    public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?,";
+    public static final String SECURITY_UPDATE = "update t_security set" +
+            " priority=?,";
+    public static final String SECURITY_SELECT = "select * from t_security where requestID=?";
+    public static final String SECURITY_DELETE = "DELETE FROM t_security WHERE requestID = ?";
+    public static final String SECURITY_SELECT_ALL = "select * from t_security";
 
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
-    public static final String DROP_REQUEST_TABLE = "DROP TABLE t_requests";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
+    public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
@@ -72,25 +90,12 @@ public class SQLStrings {
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
     public static final String NODE_NODETYPE_SELECT = "Select nodeID from T_nodes where xcoord=? and ycoord=? and floor=? and nodeType=?";
 
-    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?, ?, ?, ?, ?, ?)";
-    public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
-            " nodeID=?," +
-            " assigner=?," +
-            " note=?,"+
-            " submittedTime=?,"+
-            " completedTime=?,"+
-            " status=?,"+
-            " language=?"+
-            " where requestID=?";
-    public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
-    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
-    public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
             " loginID Varchar(63) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
             " userName Varchar(50) NOT NULL,"+
             // not sure how I want to store passwords
-            " password Varchar(70) NOT NULL,"+
+            " password Varchar(60) NOT NULL,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
             ")";
