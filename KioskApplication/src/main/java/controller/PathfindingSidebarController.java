@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -26,7 +27,7 @@ import java.util.LinkedList;
 public class PathfindingSidebarController extends ScreenController {
 
     @FXML private AnchorPane container;
-    @FXML private AnchorPane waypointsContainer;
+    @FXML private GridPane waypointsContainer;
     @FXML private JFXListView waypointList;
 
     @FXML private Label exceptionText;
