@@ -209,20 +209,23 @@ public class TestPathfinder {
             e.printStackTrace();
         }
 
-        LinkedList<Edge> testPathSegment = new LinkedList<>();
-        testPathSegment.add(map.getConnectingEdge(n01,n02));
-        testPathSegment.add(map.getConnectingEdge(n02,n08));
-        testPathSegment.add(map.getConnectingEdge(n08,n11));
-        testPathSegment.add(map.getConnectingEdge(n11,n12));
-        testPathSegment.add(map.getConnectingEdge(n12,n13));
-        testPathSegment.add(map.getConnectingEdge(n13,n10));
-        testPathSegment.add(map.getConnectingEdge(n10,n04));
-        testPathSegment.add(map.getConnectingEdge(n04,n05));
-        testPathSegment.add(map.getConnectingEdge(n05,n06));
-        testPathSegment.add(map.getConnectingEdge(n06,n07));
+        LinkedList<Edge> testPathSegment1 = new LinkedList<>();
+        testPathSegment1.add(map.getConnectingEdge(n01,n02));
+        testPathSegment1.add(map.getConnectingEdge(n02,n08));
+        testPathSegment1.add(map.getConnectingEdge(n08,n11));
+        testPathSegment1.add(map.getConnectingEdge(n11,n12));
+
+        LinkedList<Edge> testPathSegment2 = new LinkedList<>();
+        testPathSegment2.add(map.getConnectingEdge(n12,n13));
+        testPathSegment2.add(map.getConnectingEdge(n13,n10));
+        testPathSegment2.add(map.getConnectingEdge(n10,n04));
+        testPathSegment2.add(map.getConnectingEdge(n04,n05));
+        testPathSegment2.add(map.getConnectingEdge(n05,n06));
+        testPathSegment2.add(map.getConnectingEdge(n06,n07));
 
         LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment);
+        testPathEdges.add(testPathSegment1);
+        testPathEdges.add(testPathSegment2);
 
         Path testMultipath = new Path(nodes, testPathEdges);
 
@@ -287,7 +290,7 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testBreathFirstSearch() {
+    public void testBreadthFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
         try {
@@ -295,14 +298,17 @@ public class TestPathfinder {
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
-        LinkedList<Edge> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(e01);
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+        testPath2Segment.add(e01);
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
 
         assertTrue(path.getEdges().equals(testPath2Edges));
     }
 
     @Test
-    public void testBreathFirstSearch1() {
+    public void testBreadthFirstSearch1() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
         try {
@@ -327,7 +333,7 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testBreathFirstSearchTestPathEquality() {
+    public void testBreadthFirstSearchTestPathEquality() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
         try {
