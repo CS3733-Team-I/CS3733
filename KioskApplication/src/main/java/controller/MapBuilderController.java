@@ -215,7 +215,9 @@ public class MapBuilderController extends ScreenController {
                             System.out.println("");
                             changedTypeNode.setNodeType(CBnodeType.getValue());
                             updateNodeID();
-                            observableChangedNodes.add(changedTypeNode); //current selected node is changed
+                            if(!observableChangedNodes.contains(changedTypeNode)){
+                                observableChangedNodes.add(changedTypeNode);
+                            } //current selected node is changed
                         }
                     }
                 }
@@ -244,7 +246,9 @@ public class MapBuilderController extends ScreenController {
                         else {
                             changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
                             updateNodeID();
-                            observableChangedNodes.add(changedBuildingNode);
+                            if(!observableChangedNodes.contains(changedBuildingNode)){
+                                observableChangedNodes.add(changedBuildingNode);
+                            }
 
                         }
                     }
@@ -273,7 +277,9 @@ public class MapBuilderController extends ScreenController {
                         else {
                             changedTeamNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
                             updateNodeID();
-                            observableChangedNodes.add(changedTeamNode);
+                            if(!observableChangedNodes.contains(changedTeamNode)){
+                                observableChangedNodes.add(changedTeamNode);
+                            }
 
                         }
                     }
@@ -637,6 +643,7 @@ public class MapBuilderController extends ScreenController {
 
                 System.out.println("data base: " + nodeTypeCount);
                 System.out.println("changeList: " + countChangedList(nodeType));
+                System.out.println(observableChangedNodes);
                 nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
 
             }
