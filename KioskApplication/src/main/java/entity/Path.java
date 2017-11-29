@@ -2,6 +2,8 @@ package entity;
 
 import database.objects.Edge;
 import database.objects.Node;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,6 +60,9 @@ public class Path {
 
         double angleDif = nextAngle - prevAngle;
 
+        if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
+            return "Take the elevator to " + nextNode.getFloor().toString() + " ";
+        }
         if(angleDif == 0) return "Go straight at ";
         if(angleDif > 0) return "Turn right at ";
         if(angleDif < 0) return "Turn left at ";
