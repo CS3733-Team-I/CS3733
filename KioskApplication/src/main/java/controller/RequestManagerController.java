@@ -144,7 +144,7 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     JFXButton addButton(RequestProgressStatus status, String buttonName, String id){
-        KioskPermission permission = l.getPermission();
+        KioskPermission permission = l.getCurrentPermission();
         JFXButton reqButton = new JFXButton();
         switch (permission){
             case EMPLOYEE:
