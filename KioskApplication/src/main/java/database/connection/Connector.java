@@ -149,6 +149,7 @@ public class Connector {
             pstmt.setInt(1, nodeType.ordinal());
             pstmt.setInt(2, floor.ordinal());
             pstmt.setString(3, "Team " + teamAssigned.name());
+            System.out.println(teamAssigned.name());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 result = String.valueOf(rs.getInt("countNode"));
