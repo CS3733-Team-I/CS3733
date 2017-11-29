@@ -26,7 +26,8 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
-    @FXML private VBox waypointListVbox;
+    @FXML private VBox waypointList;
+
     @FXML private Label exceptionText;
 
     private LinkedList<Node> currentNodes;
@@ -42,14 +43,14 @@ public class PathfindingSidebarController extends ScreenController {
         mapController.floorSelector.setValue(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
-        waypointListVbox.setPickOnBounds(false);
+        waypointList.setPickOnBounds(false);
         exceptionText.setText("");
     }
 
     @FXML
     void onResetPressed() {
         currentNodes.clear();
-        waypointListVbox.getChildren().clear();
+        waypointList.getChildren().clear();
         exceptionText.setText("");
         getMapController().clearMap();
     }
@@ -61,13 +62,13 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
-                waypointListVbox.getChildren().clear();
+                waypointList.getChildren().clear();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
-                    for (String s : directionSegment) {
-                        Label l = new Label(s);
-                        l.setTextFill(Color.BLACK);
-                        waypointListVbox.getChildren().add(l);
+                    for (String direction : directionSegment) {
+                        Label label = new Label(direction);
+                        label.setTextFill(Color.BLACK);
+                        waypointList.getChildren().add(label);
                     }
                 }
                 getMapController().drawPath();
@@ -110,7 +111,7 @@ public class PathfindingSidebarController extends ScreenController {
 
             Label nodeNameLabel = new Label(node.getNodeID());
             nodeNameLabel.setTextFill(Color.BLACK);
-            waypointListVbox.getChildren().add(nodeNameLabel);
+            waypointList.getChildren().add(nodeNameLabel);
 
             getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()));
         }

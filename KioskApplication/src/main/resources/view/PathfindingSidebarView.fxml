@@ -24,7 +24,7 @@
          <content>
             <AnchorPane fx:id="waypointsContainer" prefHeight="300.0" prefWidth="275.0">
                <children>
-                  <VBox id="transparent" fx:id="waypointListVbox" centerShape="false" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <VBox id="transparent" fx:id="waypointList" centerShape="false" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
                <padding>
                   <Insets left="5.0" top="5.0" />
