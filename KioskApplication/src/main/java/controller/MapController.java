@@ -54,6 +54,7 @@ public class MapController {
 
     @FXML public AnchorPane miniMapPane;
     MiniMapController miniMapController;
+    private Path path = null;
 
 
     //list of showing nodes or edges
@@ -170,15 +171,15 @@ public class MapController {
         }
     }
 
-    public void drawPath(Path path) {
+    public void drawPath() {
         MapEntity mapEntity = MapEntity.getInstance();
 
         // Change to floor of the starting node
-        floorSelector.setValue(path.getWaypoints().get(0).getFloor());
+        floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        drawEdgesOnMap(path.getEdges());
-        drawNodesOnMap(path.getWaypoints());
+        drawEdgesOnMap(this.path.getEdges());
+        drawNodesOnMap(this.path.getWaypoints());
     }
 
     public void addWaypoint(Point2D location) {
@@ -230,7 +231,11 @@ public class MapController {
         mapView.setFitHeight(floorImage.getHeight());
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
-
+        if(this.path != null) {
+            clearMap();
+            drawEdgesOnMap(this.path.getEdges());
+            drawNodesOnMap(this.path.getWaypoints());
+        }
         miniMapController.switchFloor(floorImageURL);
     }
 
@@ -303,7 +308,7 @@ public class MapController {
 
                 parent.onMapFloorChanged(newValue);
 
-                //reloadDisplay(); don't reload display here, let specfic screen Controller handles actions on switching between floors
+                reloadDisplay(); //don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
         //checkboxes for showing nodes and edges
@@ -628,5 +633,13 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 }
