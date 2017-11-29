@@ -21,7 +21,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -33,6 +36,7 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
@@ -454,7 +458,51 @@ public class MapBuilderController extends ScreenController {
             }
         });
 
-        //set node fields to default
+        //let list view accept node dragging
+        lvConnectedNodes.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if(event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                }
+
+                event.consume();
+            }
+        });
+        lvConnectedNodes.setOnDragEntered(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if(event.getDragboard().hasString()) {
+                    lvConnectedNodes.setStyle("-fx-background-color: #4e9f42");
+                }
+                event.consume();
+            }
+        });
+        lvConnectedNodes.setOnDragExited(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                lvConnectedNodes.setStyle("-fx-background-color: IVORY");
+                event.consume();
+            }
+        });
+        lvConnectedNodes.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    success = true;
+                }
+                /* let the source know whether the string was successfully
+                 * transferred and used */
+                event.setDropCompleted(success);
+
+                //add connection between nodes
+                addConnection(db.getString());
+
+                event.consume();
+            }
+        });
     }
 
     @Override
@@ -625,6 +673,10 @@ public class MapBuilderController extends ScreenController {
         }
         return "";
     }
+
+//    public String convertToFloorEnumString(enumString) {
+//        switch ()
+//    }
 
     private String formatInt(int nodeTypeCount) {
         if (nodeTypeCount + 1 < 10) {
@@ -1065,9 +1117,66 @@ public class MapBuilderController extends ScreenController {
             alert.showAndWait();
         }
 
+        //refresh edges display
+        mapController.showEdgesBox.setSelected(false);
+        mapController.showEdgesBox.setSelected(true);
         updateSelectedNode(observableSelectedNodes.get(0));
-        mapController.refresh();
+
     }
 
-
+    @FXML
+    private void addConnection(String nodeXyz) {
+        if(!observableNewNodes.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error creating connection");
+            alert.setHeaderText("Save new node before creating connections");
+            alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
+            alert.showAndWait();
+        }
+        else if(!observableSelectedNodes.isEmpty()) {
+            for(database.objects.Node connectingNode : getInstance().getAllNodes()) {
+                if(nodeXyz.equals(connectingNode.getXyz())) {
+                    try{
+                        if (MapEntity.getInstance().getEdge(connectingNode.getNodeID() + "_" + observableSelectedNodes.get(0).getNodeID()) != null ||
+                                MapEntity.getInstance().getEdge(observableSelectedNodes.get(0).getNodeID() + "_" + connectingNode.getNodeID()) != null) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error creating connection");
+                            alert.setHeaderText("Connection already exit");
+                            alert.setContentText("Connection between these two nodes already exist");
+                            alert.showAndWait();
+                            return;
+                        }
+                    }catch(DatabaseException ex) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error creating connection");
+                        alert.setHeaderText("Error occurred while looking for nodes in the database.");
+                        alert.setContentText(ex.toString());
+                        alert.showAndWait();
+                    }
+                    //add the new edge
+                    Edge edge = new Edge((connectingNode.getNodeID()+observableSelectedNodes.get(0).getNodeID()), connectingNode.getNodeID(), observableSelectedNodes.get(0).getNodeID());
+                    try{
+                        getInstance().addEdge(edge);
+                    }catch (DatabaseException ex) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error creating connection");
+                        alert.setHeaderText("Error occurred while putting edge in the database.");
+                        alert.setContentText(ex.toString());
+                        alert.showAndWait();
+                    }
+                    //refresh edges display
+                    mapController.showEdgesBox.setSelected(false);
+                    mapController.showEdgesBox.setSelected(true);
+                    updateSelectedNode(observableSelectedNodes.get(0));
+                }
+            }
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Creating connection");
+            alert.setHeaderText("Create connection between nodes");
+            alert.setContentText("Select a node from the map before creating connections");
+            alert.showAndWait();
+        }
+    }
 }

@@ -13,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -22,7 +23,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -344,6 +345,11 @@ public class MapController {
                 else {
                     databaseEdgeObjectList.clear();
                 }
+                //edges always drawn under nodes
+                if(showNodesBox.isSelected()) {
+                    showNodesBox.setSelected(false);
+                    showNodesBox.setSelected(true);
+                }
             }
         });
 
@@ -363,7 +369,7 @@ public class MapController {
                             }
                         }
                     }
-                    else if(c.wasAdded()) {
+                    else {
                         for(database.objects.Node addedDatabaseNode : c.getAddedSubList()) {
                             Circle nodeView = new Circle(addedDatabaseNode.getXcoord(), addedDatabaseNode.getYcoord(), 14, Color.GRAY);
                             nodeView.setStroke(Color.BLACK);
@@ -372,6 +378,55 @@ public class MapController {
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
                             nodeView.setAccessibleText(addedDatabaseNode.getXyz());
+
+                            //additional action when on map builder window
+                            if(parent.getCreateTabName().equals("Map Builder")) {
+                                nodeView.setOnDragDetected(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        Dragboard db = nodeView.startDragAndDrop(TransferMode.ANY);
+                                        ClipboardContent content = new ClipboardContent();
+                                        content.putString(nodeView.getAccessibleText());
+                                        db.setContent(content);
+
+                                        nodeView.setStyle("-fx-background-color: #0c9f00");
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragDone(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        nodeView.setFill(Color.GRAY);
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragOver(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            event.acceptTransferModes(TransferMode.LINK);
+                                        }
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragEntered(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        if(event.getDragboard().hasString()) {
+                                            nodeView.setStyle("-fx-background-color: #4E9F42");
+                                        }
+                                        event.consume();
+                                    }
+                                });
+                                nodeView.setOnDragExited(new EventHandler<DragEvent>() {
+                                    @Override
+                                    public void handle(DragEvent event) {
+                                        nodeView.setFill(Color.GRAY);
+                                        event.consume();
+                                    }
+                                });
+                            }
+
                             nodeObjectList.add(nodeView);
                         }
                     }
@@ -655,4 +710,6 @@ public class MapController {
     public void setPath(Path path) {
         this.path = path;
     }
+
+    protected void map_builder(){}
 }
