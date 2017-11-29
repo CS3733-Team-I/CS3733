@@ -17,6 +17,7 @@
 /* REQUEST MANAGER BUTTON STYLES */
 
 .request-manager-button-1 {
+    -fx-text-fill: black;
     -fx-color-label-visible: #00589F;
     -fx-background-color: #F0F1EC;
     -fx-background-radius: 0;
@@ -24,6 +25,7 @@
 }
 
 .request-manager-button-2 {
+    -fx-text-fill: black;
     -fx-color-label-visible: #00589F;
     -fx-background-color: #DDDED0;
     -fx-background-radius: 0;
@@ -31,6 +33,7 @@
 }
 
 .cancel-button {
+    -fx-text-fill: black;
     -fx-background-radius: 0;
     -fx-background-color: #efefef;
 }

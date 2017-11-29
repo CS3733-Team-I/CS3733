@@ -1,10 +1,12 @@
 package controller;
 
+import com.jfoenix.controls.JFXListView;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import utility.node.NodeFloor;
 
@@ -49,6 +51,12 @@ public abstract class ScreenController {
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
+    //TODO temporary: to be changed Override by Map Builder
+    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2){}
+    public boolean isNewNodeEmpty() {
+        return true;
+    }
+    public void showFloors() {}
 
     public void onScreenChanged() {}
     public abstract void resetScreen();

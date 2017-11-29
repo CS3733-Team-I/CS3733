@@ -62,7 +62,7 @@ public class AdminNodeController extends ScreenController {
         }
     }
 
-    @FXML
+/*    @FXML
     void updateNodeID() {
         System.out.println("updateNodeID");
         if(!floorChoiceBox.getValue().equals(null) && !floorChoiceBox.getValue().equals("--select--")
@@ -78,7 +78,7 @@ public class AdminNodeController extends ScreenController {
             // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
             // TODO implement this
         }
-    }
+    }*/
 
     private String formatInt(int nodeTypeCount) {
         if (nodeTypeCount + 1 < 10) {
@@ -319,7 +319,7 @@ public class AdminNodeController extends ScreenController {
     public void onMapFloorChanged(NodeFloor floor) {
         if(isAdd) {
             floorChoiceBox.setValue(getFloorTxt());
-            updateNodeID();
+            //updateNodeID();
         }
     }
 
