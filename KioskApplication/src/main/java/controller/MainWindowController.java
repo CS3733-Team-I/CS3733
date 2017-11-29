@@ -27,7 +27,7 @@ public class MainWindowController {
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
 
-    @FXML private JFXTabPane tabPane;
+    @FXML protected JFXTabPane tabPane;
     @FXML private Tab tabMap;
     @FXML private Tab tabMB;
     @FXML private Tab tabRS;
@@ -41,7 +41,7 @@ public class MainWindowController {
     private AnchorPane mapView;
     private MapController mapController;
 
-    private HashMap<ApplicationScreen, ScreenController> controllers;
+    protected HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();
@@ -284,5 +284,9 @@ public class MainWindowController {
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
+    }
+
+    protected String getCreateTabName() {
+        return tabPane.getSelectionModel().getSelectedItem().getText();
     }
 }
