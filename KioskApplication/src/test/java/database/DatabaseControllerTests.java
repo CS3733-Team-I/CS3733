@@ -31,6 +31,15 @@ public class DatabaseControllerTests {
         dbController = DatabaseController.getInstance();
     }
 
+    @Before
+    public void statrtup(){
+        dbController.addEmployee("boss@hospital.com","test","password",KioskPermission.EMPLOYEE,
+                RequestType.GENERAL);
+
+        dbController.addEmployee("emp@hospital.com","test","password",KioskPermission.EMPLOYEE,
+                RequestType.GENERAL);
+    }
+
     @After
     public void removeAllFromDB() {
         try {
@@ -269,8 +278,14 @@ public class DatabaseControllerTests {
 
     @Test
     public void testUpdateEmployee(){
-        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.updateEmployee("ID","NewName","NewPassword", KioskPermission.ADMIN, RequestType.GENERAL);
+        Employee testEmp = new Employee("ID","Name","password", KioskPermission.EMPLOYEE,
+                RequestType.INTERPRETER,false);
+        dbController.addEmployee(testEmp.getLoginID(),testEmp.getUserName(),testEmp.getPassword("password"),
+                testEmp.getPermission(), testEmp.getServiceAbility());
+        testEmp.updateUserName("NewName","password");
+        testEmp.updatePassword("NewPassword","password");
+        dbController.updateEmployee("ID",testEmp.getUserName(),testEmp.getPassword("NewPassword"),
+                KioskPermission.ADMIN, RequestType.GENERAL);
         Employee updatedEmployee=dbController.getEmployee("ID");
         assertEquals("NewName",updatedEmployee.getUserName());
         assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
@@ -283,7 +298,7 @@ public class DatabaseControllerTests {
         dbController.addEmployee("ID1","Name1","password1", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         dbController.addEmployee("ID2","Name2","password2", KioskPermission.ADMIN, RequestType.GENERAL);
         LinkedList<Employee> employees = dbController.getAllEmployees();
-        assertEquals("ID1",employees.get(0).getLoginID());
-        assertEquals("ID2",employees.get(1).getLoginID());
+        assertEquals("ID1",employees.get(employees.size()-2).getLoginID());
+        assertEquals("ID2",employees.get(employees.size()-1).getLoginID());
     }
 }
