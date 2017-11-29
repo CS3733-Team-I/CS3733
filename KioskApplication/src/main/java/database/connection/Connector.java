@@ -166,6 +166,20 @@ public class Connector {
         return result;
     }
 
+    public static String selectNodeID(Connection conn, int xcoord, int ycoord, NodeFloor nodeFloor, NodeType nodeType) throws SQLException{
+        String result = "";
+        PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_NODETYPE_SELECT);
+        pstmt.setInt(1, xcoord);
+        pstmt.setInt(2, ycoord);
+        pstmt.setInt(3, nodeFloor.ordinal());
+        pstmt.setInt(4, nodeType.ordinal());
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()){
+            result = rs.getString("nodeID");
+        }
+        return result;
+    }
+
 
     /**TODO: make request database access as generic as possible to reduce workload**/
     public static int insertInterpreter(Connection conn, InterpreterRequest iR) throws SQLException {

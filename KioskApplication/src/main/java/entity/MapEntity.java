@@ -4,6 +4,7 @@ import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
+import javafx.scene.layout.Pane;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -167,6 +168,16 @@ public class MapEntity implements IMapEntity {
         try {
             result = dbController.getAllElevName(floor, teamAssigned);
             return result;
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String selectNodeID(int xcoord, int ycoord, NodeFloor floor, NodeType nodeType){
+        String result = "";
+        try {
+            result = dbController.selectNodeName(xcoord, ycoord, floor, nodeType);
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
