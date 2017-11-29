@@ -270,7 +270,7 @@ public class MapBuilderController extends ScreenController {
                 nodeTeamAssigned = newValue;
                 if(!CBnodeTeamAssigned.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                        observableNewNodes.get(0).setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
                         updateNodeID();
                         return;
                     }
@@ -278,13 +278,13 @@ public class MapBuilderController extends ScreenController {
                         if(observableChangedNodes.contains(changedTeamNode)) {
                             for(database.objects.Node changingNode : observableChangedNodes) {
                                 if(changingNode.getXyz().equals(changedTeamNode.getXyz())) {
-                                    changingNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                                    changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
                                     updateNodeID();
                                 }
                             }
                         }
                         else {
-                            changedTeamNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
+                            changedTeamNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
                             updateNodeID();
                             if(!observableChangedNodes.contains(changedTeamNode)){
                                 observableChangedNodes.add(changedTeamNode);
@@ -534,7 +534,7 @@ public class MapBuilderController extends ScreenController {
             observableSelectedNodes.clear();
 
             database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
-                    mapController.floorSelector.getValue(), NodeBuilding.FRANCIS15, NodeType.TEMP, lName.getText(), sName.getText(), TeamAssigned.I.toString());
+                    mapController.floorSelector.getValue(), NodeBuilding.FRANCIS15, NodeType.TEMP, lName.getText(), sName.getText(), "Team " + TeamAssigned.I.toString());
 
             mapController.isNodeAdded = false;
             mapController.observableHighlightedNewNodes.clear();
@@ -671,11 +671,12 @@ public class MapBuilderController extends ScreenController {
             case "FIRST":
                 return "01";
             case "LOWERLEVEL_2":
-                return "L1";
-            case "LOWERLEVEL_1":
                 return "L2";
+            case "LOWERLEVEL_1":
+                return "L1";
+            default:
+                return "03";
         }
-        return "";
     }
 
 //    public String convertToFloorEnumString(enumString) {
@@ -702,7 +703,7 @@ public class MapBuilderController extends ScreenController {
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
             trackElev++;*/
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString1()));
 
         }
         else {
@@ -714,8 +715,8 @@ public class MapBuilderController extends ScreenController {
             }else{
                 String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, nodeTeamAssigned, "");
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
-
-                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
+                System.out.println(convertFloor(nodeFloor.toString1()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString1()));
 
             }
         }

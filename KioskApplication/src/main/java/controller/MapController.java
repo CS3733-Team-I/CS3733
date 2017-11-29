@@ -252,6 +252,7 @@ public class MapController {
     }
 
     public NodeFloor getCurrentFloor() {
+        System.out.println(floorSelector.getValue());
         return floorSelector.getValue();
     }
 
