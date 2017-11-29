@@ -630,20 +630,57 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
+
     private void updateNodeID() {
-//        if(nodeType == NodeType.ELEV) {
-//            String elevTypeCount = MapEntity.getInstance().getElevCount(mapController.floorSelector.getValue(), "Team " + nodeTeamAssigned.toString());
-//            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + elevTypeCount + convertFloor(mapController.floorSelector.getValue().toString()));
-//        }
-//        else {
+        System.out.println(observableSelectedNodes.get(0).getNodeID());
+        if(nodeType == NodeType.ELEV) {
+            /*String elevTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
+            trackElev++;*/
+            String result = elevNameInChangedList();
+            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
+        }
+        else {
         //System.out.println("");
             int nodeTypeCountPrepared = 0;
-            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
-            nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + observableChangedNodes.size();
+            String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
+            nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
-//        }
+
+        }
         // Check to see if nodeID already exists, if so find a open number between 1 and the nodeTypeCount
         // TODO implement this
+    }
+
+    public int countChangedList(NodeType nodeType){
+        int result=0;
+        for(int i= 0; i<observableChangedNodes.size(); i++){
+            if(observableChangedNodes.get(i).getNodeType() == nodeType){
+                result++;
+            }
+        }
+        return result;
+    }
+    
+    private String elevNameInChangedList(){
+
+        String result = "";
+        for(int i=0; i<observableChangedNodes.size(); i++){
+            if(observableChangedNodes.get(i).getNodeType() == NodeType.ELEV){
+                result += observableChangedNodes.get(i).getNodeID().charAt(7);
+            }
+        }
+        String preparedName = MapEntity.getInstance().generateElevName(nodeFloor, "Team" + nodeTeamAssigned.toString(), result);
+        return preparedName;
+    }
+
+    public boolean checkExist(){
+        for(int i=0; i<observableChangedNodes.size(); i++) {
+            if (observableSelectedNodes.get(0).getNodeType() == observableChangedNodes.get(i).getNodeType() && observableSelectedNodes.get(0).getXyz() == observableChangedNodes.get(i).getXyz()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setNodeFieldEnable() {

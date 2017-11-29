@@ -81,8 +81,10 @@ public class DatabaseController {
     }
 
     public String getAllElevName(NodeFloor floor, String teamAssigned) throws DatabaseException{
+        String result = "";
         try{
-            return Connector.selectCountNodeType(instanceConnection, NodeType.ELEV, floor, teamAssigned);
+            result = Connector.selectCountNodeType(instanceConnection, NodeType.ELEV, floor, teamAssigned);
+            return result;
         }catch(Exception e){
             e.printStackTrace();
         }

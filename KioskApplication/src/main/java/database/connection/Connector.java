@@ -161,6 +161,7 @@ public class Connector {
             while(rs.next()){
                 result = result + rs.getString("nodeID").charAt(7);
             }
+            System.out.println(result);
         }
         return result;
     }
