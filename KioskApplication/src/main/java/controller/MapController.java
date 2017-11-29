@@ -518,7 +518,6 @@ public class MapController {
                 }
             }
         });
-        //TODO
         observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
