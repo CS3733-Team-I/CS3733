@@ -367,27 +367,28 @@ public class TestPathfinder {
             for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
         }
     }
+
     //TODO multiple waypoints tests
 
     //Helper method to check if a path is valid
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
         if(path.size() == 0) {
-            if(startNode.getNodeID().equals(endNode.getNodeID())) return true;
-            return false;
+            return (startNode.getNodeID().equals(endNode.getNodeID()));
         }
 
         if(path.size() == 1) {
-            if((path.get(0).getNode1ID().equals(startNode.getNodeID())) && (path.get(0).getNode2ID().equals(endNode.getNodeID())) ||
-                    (path.get(0).getNode2ID().equals(startNode.getNodeID())) && (path.get(0).getNode1ID().equals(endNode.getNodeID())))
-                return true;
-            return false;
+            return((path.get(0).getNode1ID().equals(startNode.getNodeID())) && (path.get(0).getNode2ID().equals(endNode.getNodeID())) ||
+                    (path.get(0).getNode2ID().equals(startNode.getNodeID())) && (path.get(0).getNode1ID().equals(endNode.getNodeID())));
         }
 
         if(path.size() == 2) {
+            //first edge should contain the start node
             if(!path.get(0).getNode1ID().equals(startNode.getNodeID()) && !path.get(0).getNode2ID().equals(startNode.getNodeID()))
                 return false;
+            //last edge should contain the end node
             if(!path.get(1).getNode1ID().equals(endNode.getNodeID()) && !path.get(1).getNode2ID().equals(endNode.getNodeID()))
                 return false;
+            //make sure the paths are connected
             return path.get(0).isConnectedTo(path.get(1));
         }
 

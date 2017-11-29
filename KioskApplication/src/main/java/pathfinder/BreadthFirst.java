@@ -27,6 +27,7 @@ public class BreadthFirst implements SearchAlgorithm{
             endingNode.setParentNode(startingNode);
             return endingNode.buildPath();
         }
+
         // make linked list for queue and explored
         LinkedList<PathfinderNode> queue = new LinkedList<>();
         ArrayList<PathfinderNode> explored = new ArrayList<>();
