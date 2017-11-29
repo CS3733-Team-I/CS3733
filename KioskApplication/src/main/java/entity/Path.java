@@ -8,9 +8,9 @@ import java.util.List;
 
 public class Path {
     private LinkedList<Node> waypoints;
-    private LinkedList<Edge> edges;
+    private LinkedList<LinkedList<Edge>> edges;
 
-    public Path(List<Node> waypoints, List<Edge> edges) {
+    public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
         this.edges = new LinkedList<>(edges);
     }
@@ -19,7 +19,7 @@ public class Path {
         return waypoints;
     }
 
-    public LinkedList<Edge> getEdges() {
+    public LinkedList<LinkedList<Edge>> getEdges() {
         return edges;
     }
 

@@ -178,7 +178,8 @@ public class MapController {
         floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        drawEdgesOnMap(this.path.getEdges());
+        for(LinkedList<Edge> segment: this.path.getEdges())
+        drawEdgesOnMap(segment);
         drawNodesOnMap(this.path.getWaypoints());
     }
 
@@ -233,7 +234,8 @@ public class MapController {
         //System.out.println("Image Height: " + floorImage.getHeight());
         if(this.path != null) {
             clearMap();
-            drawEdgesOnMap(this.path.getEdges());
+            for(LinkedList<Edge> segment: this.path.getEdges())
+                drawEdgesOnMap(segment);
             drawNodesOnMap(this.path.getWaypoints());
         }
         miniMapController.switchFloor(floorImageURL);
