@@ -599,6 +599,7 @@ public class MapBuilderController extends ScreenController {
                 }
                 break;
         }
+        System.out.println("THIS SHOULD HAPPEN!\n");
         setNodeFieldEnable();
     }
 
@@ -632,7 +633,7 @@ public class MapBuilderController extends ScreenController {
 
 
     private void updateNodeID() {
-        System.out.println(observableSelectedNodes.get(0).getNodeID());
+        //System.out.println(observableSelectedNodes.get(0).getNodeID());
         if(nodeType == NodeType.ELEV) {
             /*String elevTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
