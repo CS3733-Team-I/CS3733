@@ -10,6 +10,7 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 
 import utility.KioskPermission;
+import utility.node.TeamAssigned;
 import utility.request.RequestType;
 
 import java.sql.Connection;
@@ -71,7 +72,7 @@ public class DatabaseController {
         }
     }
 
-    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned) throws DatabaseException {
+    public int getNodeTypeCount(NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned) throws DatabaseException {
         try{
             return Integer.parseInt(Connector.selectCountNodeType(instanceConnection,nodeType, floor, teamAssigned));
         } catch (SQLException e) {
@@ -80,7 +81,7 @@ public class DatabaseController {
         }
     }
 
-    public String getAllElevName(NodeFloor floor, String teamAssigned) throws DatabaseException{
+    public String getAllElevName(NodeFloor floor, TeamAssigned teamAssigned) throws DatabaseException{
         String result = "";
         try{
             result = Connector.selectCountNodeType(instanceConnection, NodeType.ELEV, floor, teamAssigned);

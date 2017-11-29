@@ -7,6 +7,7 @@ import database.utility.DatabaseException;
 import javafx.scene.layout.Pane;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.node.TeamAssigned;
 
 import java.util.*;
 
@@ -127,7 +128,7 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
-    public String getNodeTypeCount(NodeType nodeType, NodeFloor floor, String teamAssigned, String temp) {
+    public String getNodeTypeCount(NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned, String temp) {
         try {
             if(nodeType != NodeType.ELEV) {
                 return String.valueOf(dbController.getNodeTypeCount(nodeType, floor, teamAssigned));
@@ -140,7 +141,7 @@ public class MapEntity implements IMapEntity {
         return "";
     }
 
-    public String generateElevName(NodeFloor floor, String teamAssigned, String changedListElevName){
+    public String generateElevName(NodeFloor floor, TeamAssigned teamAssigned, String changedListElevName){
         String alphList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String result = "EXC";
         try{
@@ -163,7 +164,7 @@ public class MapEntity implements IMapEntity {
         return result;
     }
 
-    public String getAllElevName(NodeFloor floor, String teamAssigned){
+    public String getAllElevName(NodeFloor floor, TeamAssigned teamAssigned){
         String result = "";
         try {
             result = dbController.getAllElevName(floor, teamAssigned);

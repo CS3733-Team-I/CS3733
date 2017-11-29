@@ -9,6 +9,7 @@ import database.objects.InterpreterRequest;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.node.TeamAssigned;
 import utility.request.Language;
 import utility.request.RequestProgressStatus;
 
@@ -140,14 +141,14 @@ public class Connector {
 
 
     // change
-    public static String selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, String teamAssigned) throws SQLException{
+    public static String selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned) throws SQLException{
         String result = "";
         if(nodeType != NodeType.ELEV) {
             int temp = 0;
             PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
             pstmt.setInt(1, nodeType.ordinal());
             pstmt.setInt(2, floor.ordinal());
-            pstmt.setString(3, teamAssigned);
+            pstmt.setString(3, "Team " + teamAssigned.name());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 result = String.valueOf(rs.getInt("countNode"));
@@ -156,7 +157,7 @@ public class Connector {
             PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_NODETYPE_SELECT);
             pstmt.setInt(1, nodeType.ordinal());
             pstmt.setInt(2, floor.ordinal());
-            pstmt.setString(3, teamAssigned);
+            pstmt.setString(3, "Team " + teamAssigned.name());
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 result = result + rs.getString("nodeID").charAt(7);
