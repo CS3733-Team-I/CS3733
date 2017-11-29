@@ -2,6 +2,8 @@ package entity;
 
 import database.objects.Edge;
 import database.objects.Node;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class Path {
         directions.add("Start at " + nodes.getFirst().getLongName());
         for(int i = 0; i < nodes.size(); i++) {
             if(i!=0 && i!=nodes.size()-1)
-                directions.add(findDirectionInstructions(nodes.get(i), nodes.get(i-1), nodes.get(i+1))+ nodes.get(i).getLongName());
+                directions.add(findDirectionInstructions(nodes.get(i), nodes.get(i-1), nodes.get(i+1)));
         }
 
         directions.add("End at " + nodes.getLast().getLongName());
@@ -53,14 +55,24 @@ public class Path {
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
 
+        if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
+            return "Take the elevator to " + nextNode.getFloor().toString() + " ";
+        }
+        else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
+            return "Take the stairs to " + nextNode.getFloor().toString() + " ";
+        }
+
         double prevAngle = getAngleBetweenNodes(prevNode, thisNode);
         double nextAngle = getAngleBetweenNodes(thisNode, nextNode);
 
         double angleDif = nextAngle - prevAngle;
+        double straightAngle = Math.PI/6;
 
-        if(angleDif == 0) return "Go straight at ";
-        if(angleDif > 0) return "Turn right at ";
-        if(angleDif < 0) return "Turn left at ";
+        String longName = "";
+
+        if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
+        else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
+        else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
         return "Go to ";
     }
