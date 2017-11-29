@@ -1,12 +1,16 @@
 package controller;
 
 import com.jfoenix.controls.*;
+import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
+import database.objects.Request;
+import entity.MapEntity;
 import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,19 +20,28 @@ import utility.request.Language;
 import utility.node.NodeFloor;
 import utility.request.RequestType;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class RequestSubmitterController extends ScreenController {
 
     @FXML private JFXTabPane requestTypeTabs;
 
+    @FXML private JFXTextField intLocation;
+    @FXML private JFXTextField secLocationField;
+    @FXML private JFXComboBox priorityMenu;
     @FXML private Tab interpreterTab;
     @FXML private JFXComboBox langMenu;
+    @FXML private JFXTextArea intNotesArea;
     /*food related*/
     @FXML private Tab foodTab;
     @FXML private JFXComboBox foodMenu;
     /*security related*/
     @FXML private Tab securityTab;
+    @FXML private JFXTextArea secNoteField;
     /*janitor related*/
     @FXML private Tab janitorTab;
 
@@ -100,17 +113,45 @@ public class RequestSubmitterController extends ScreenController {
 
     // adds the request. TODO: make this generic and able to process any and all requests
     @FXML
-    public void addRequest() throws IOException {
-        String location = txtLocation.getText();
-        String assigner = l.getUsername();
-        String notes = "";
-        Language language = Language.valueOf(langMenu.getValue().toString());
+    public void addIntRequest() throws IOException {
+        String location = intLocation.getText();
+        String assigner = l.getUserID();
+        String notes = intNotesArea.getText();
+        if (notes==null){
+            notes="";
+        }
+        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
+        intLocation.clear();
+        intNotesArea.clear();
+        langMenu.setValue("");
     }
 
     @FXML
-    public void onCancelPressed() {
+    public void intClear() {
+        intLocation.clear();
+        intNotesArea.clear();
+        langMenu.setValue("");
+    }
+
+    @FXML
+    public void addSecRequest()throws IOException {
+        String location = secLocationField.getText();
+        String assigner = l.getUserID();
+        String notes = secNoteField.getText();
+        int priority = Integer.parseInt(priorityMenu.getValue().toString());
+        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
+        //node ID, employee, notes, priority
+        r.submitSecurityRequest(location, assigner, notes, priority);
+        secLocationField.clear();
+        secNoteField.clear();
+        priorityMenu.setValue("");
+    }
+
+    @FXML
+    public void clearSecPressed(){
+        secLocationField.setText("");
 
     }
 
@@ -127,7 +168,20 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node n) {
-        txtLocation.setText(n.getNodeID());
+        switch (currentRequestType){
+            case INTERPRETER:
+                intLocation.setText(n.getNodeID());
+                break;
+            case SECURITY:
+                secLocationField.setText(n.getNodeID());
+                break;
+            case FOOD:
+                System.out.println("map clicked in Food tab");
+                break;
+            case JANITOR:
+                System.out.println("map clicked in Janitor tab");
+                break;
+        }
     }
 
     @Override
