@@ -646,7 +646,7 @@ public class MapBuilderController extends ScreenController {
             nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
             trackElev++;*/
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString()));
 
         }
         else {
@@ -656,13 +656,13 @@ public class MapBuilderController extends ScreenController {
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
                 nodeID.setText(nodeIDtemp);
             }else{
-                String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
+                String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, nodeTeamAssigned, "");
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
 
                 System.out.println("data base: " + nodeTypeCount);
                 System.out.println("changeList: " + countChangedList(nodeType));
                 System.out.println(observableChangedNodes);
-                nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
 
             }
 
@@ -690,7 +690,7 @@ public class MapBuilderController extends ScreenController {
                 result += observableChangedNodes.get(i).getNodeID().charAt(7);
             }
         }
-        String preparedName = getInstance().generateElevName(nodeFloor, "Team" + nodeTeamAssigned.toString(), result);
+        String preparedName = getInstance().generateElevName(nodeFloor, nodeTeamAssigned, result);
         return preparedName;
     }
 
@@ -762,6 +762,8 @@ public class MapBuilderController extends ScreenController {
                 return TeamAssigned.I;
         }
     }
+
+
 
     @FXML
     private void SaveNode(ActionEvent event) {
