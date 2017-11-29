@@ -2,6 +2,7 @@ package controller;
 
 import database.objects.Edge;
 import database.objects.Node;
+import entity.MapEntity;
 import entity.SystemSettings;
 import entity.Path;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBuilder;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
+import sun.awt.image.ImageWatched;
 import utility.node.NodeFloor;
 
 import java.awt.event.MouseEvent;
@@ -27,15 +29,11 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private VBox waypointListVbox;
     @FXML private Label exceptionText;
 
-    LinkedList<Node> currentNodes;
+    private LinkedList<Node> currentNodes;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
-    }
-
-    public void setPathfinderalg(int pathfinderalg){
-
     }
 
     @FXML
@@ -62,15 +60,21 @@ public class PathfindingSidebarController extends ScreenController {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
-                Path path = pathfinder.generatePath(currentNodes);
-                getMapController().drawPath(path);
+                getMapController().setPath(pathfinder.generatePath(currentNodes));
+                waypointListVbox.getChildren().clear();
+                LinkedList<String> dirs = getMapController().getPath().getDirectionsList();
+                for(String s : dirs) {
+                    Label l = new Label(s);
+                    l.setTextFill(Color.BLACK);
+                    waypointListVbox.getChildren().add(l);
+                }
+                getMapController().drawPath();
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
 
-            waypointListVbox.getChildren().clear();
 
             currentNodes.clear();
         }
@@ -79,6 +83,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btClearPathPressed() throws IOException {
         getMapController().clearMap();
+        getMapController().setPath(null);
         exceptionText.setText("");
     }
 
@@ -116,7 +121,6 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-
     }
 
     @Override

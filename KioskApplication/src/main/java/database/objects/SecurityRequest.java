@@ -1,19 +1,17 @@
 package database.objects;
 
-import utility.request.Language;
 import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 
-//Adds the field language
-public class InterpreterRequest extends Request {
-    private Language language;
+public class SecurityRequest extends Request {
+    private int priority;
 
-    public InterpreterRequest(String requestID, String nodeID, String assigner, String completer,
-                              String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                              RequestProgressStatus status, Language language) {
+    public SecurityRequest(String requestID, String nodeID, String assigner, String completer, String note,
+                           Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
+                           RequestProgressStatus status, int priority) {
         super(requestID, nodeID, assigner, completer, note, submittedTime, startedTime, completedTime, status);
-        this.language = language;
+        this.priority = priority;
     }
 
     @Override
@@ -21,7 +19,7 @@ public class InterpreterRequest extends Request {
         if(obj==null) return false;
 
         if(obj.getClass() == this.getClass()){
-            InterpreterRequest other = (InterpreterRequest)obj;
+            SecurityRequest other = (SecurityRequest) obj;
             return(this.requestID.equals(other.getRequestID())) &&
                     this.getNodeID().equals(other.getNodeID())&&
                     this.getAssigner().equals(other.getAssigner())&&
@@ -29,7 +27,7 @@ public class InterpreterRequest extends Request {
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&
                     this.getStatus()==other.getStatus()&&
-                    this.language==other.getLanguage();
+                    this.priority==other.getPriority();
         }
         else{
             return false;
@@ -37,11 +35,12 @@ public class InterpreterRequest extends Request {
     }
 
     //Getters for testing
-    public Language getLanguage() {
-        return this.language;
+
+    public int getPriority() {
+        return priority;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }
