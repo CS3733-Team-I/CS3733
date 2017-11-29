@@ -214,8 +214,10 @@ public class MapBuilderController extends ScreenController {
                         else {
                             System.out.println("");
                             changedTypeNode.setNodeType(CBnodeType.getValue());
-                            observableChangedNodes.add(changedTypeNode); //current selected node is changed
                             updateNodeID();
+                            if(!observableChangedNodes.contains(changedTypeNode)){
+                                observableChangedNodes.add(changedTypeNode);
+                            } //current selected node is changed
                         }
                     }
                 }
@@ -243,8 +245,11 @@ public class MapBuilderController extends ScreenController {
                         }
                         else {
                             changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
-                            observableChangedNodes.add(changedBuildingNode);
                             updateNodeID();
+                            if(!observableChangedNodes.contains(changedBuildingNode)){
+                                observableChangedNodes.add(changedBuildingNode);
+                            }
+
                         }
                     }
                 }
@@ -271,8 +276,11 @@ public class MapBuilderController extends ScreenController {
                         }
                         else {
                             changedTeamNode.setTeamAssigned(CBnodeTeamAssigned.getValue().toString());
-                            observableChangedNodes.add(changedTeamNode);
                             updateNodeID();
+                            if(!observableChangedNodes.contains(changedTeamNode)){
+                                observableChangedNodes.add(changedTeamNode);
+                            }
+
                         }
                     }
                 }
@@ -649,8 +657,12 @@ public class MapBuilderController extends ScreenController {
                 nodeID.setText(nodeIDtemp);
             }else{
                 String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString(), "");
-                nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
-                nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(nodeTypeCountPrepared-1) + convertFloor(nodeFloor.toString()));
+                //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
+
+                System.out.println("data base: " + nodeTypeCount);
+                System.out.println("changeList: " + countChangedList(nodeType));
+                System.out.println(observableChangedNodes);
+                nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString()));
 
             }
 
