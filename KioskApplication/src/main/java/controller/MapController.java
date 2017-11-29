@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -388,6 +389,15 @@ public class MapController {
                                 nodeView.setOnDragDetected(new EventHandler<MouseEvent>() {
                                     @Override
                                     public void handle(MouseEvent event) {
+                                        if(!parent.controllers.get(ApplicationScreen.MAP_BUILDER).isNewNodeEmpty()) {
+                                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                                            alert.setTitle("Error creating connection");
+                                            alert.setHeaderText("Save new node before creating connections");
+                                            alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
+                                            alert.showAndWait();
+                                            event.consume();
+                                            return;
+                                        }
                                         Dragboard db = nodeView.startDragAndDrop(TransferMode.ANY);
                                         ClipboardContent content = new ClipboardContent();
                                         content.putString(nodeView.getAccessibleText());

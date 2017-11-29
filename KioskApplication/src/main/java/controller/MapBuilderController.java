@@ -119,7 +119,7 @@ public class MapBuilderController extends ScreenController {
      */
     private ObservableList<database.objects.Node> observableSelectedNodes;
     private ObservableList<database.objects.Node> observableChangedNodes;
-    private ObservableList<database.objects.Node> observableNewNodes;
+    protected ObservableList<database.objects.Node> observableNewNodes;
     private ObservableList<database.objects.Edge> observableSelectedEdges;
 
     MapBuilderController(MainWindowController parent, MapController map) {
@@ -301,6 +301,7 @@ public class MapBuilderController extends ScreenController {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
                 if(!lName.isDisable()) {
+                    lName.resetValidation();
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setLongName(lName.getText());
                     }
@@ -324,6 +325,7 @@ public class MapBuilderController extends ScreenController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(!sName.isDisable()) {
+                    sName.resetValidation();
                     if(!observableNewNodes.isEmpty()) {
                         observableNewNodes.get(0).setShortName(sName.getText());
                     }
@@ -1137,6 +1139,14 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void addConnectionByNodes(String nodeXyz1, String nodeXyz2) {
+        if(!observableNewNodes.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error creating connection ");
+            alert.setHeaderText("Save new node before creating connections");
+            alert.setContentText("Press save button to save any new node before connecting it with other nodes.");
+            alert.showAndWait();
+            return;
+        }
         for (database.objects.Node connectingNode1 : getInstance().getAllNodes()) {
             if (nodeXyz1.equals(connectingNode1.getXyz())) {
                 for (database.objects.Node connectingNode2 : getInstance().getAllNodes()) {
@@ -1186,6 +1196,7 @@ public class MapBuilderController extends ScreenController {
             alert.setHeaderText("Save new node before creating connections");
             alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
             alert.showAndWait();
+            return;
         }
         else if(!observableSelectedNodes.isEmpty()) {
             for(database.objects.Node connectingNode : getInstance().getAllNodes()) {
@@ -1232,5 +1243,9 @@ public class MapBuilderController extends ScreenController {
             alert.setContentText("Select a node from the map before creating connections");
             alert.showAndWait();
         }
+    }
+    @Override
+    public boolean isNewNodeEmpty() {
+        return observableNewNodes.isEmpty();
     }
 }
