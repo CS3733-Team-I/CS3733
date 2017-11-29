@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
@@ -202,33 +203,33 @@ public class MapController {
         String floorImageURL = "";
         switch (floor) {
             case LOWERLEVEL_2:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel2.png").toString();
+                floorImageURL = "/images/00_thelowerlevel2.png";
                 break;
             case LOWERLEVEL_1:
-                floorImageURL = getClass().getResource("/images/00_thelowerlevel1.png").toString();
+                floorImageURL = "/images/00_thelowerlevel1.png";
                 break;
             case GROUND:
-                floorImageURL = getClass().getResource("/images/00_thegroundfloor.png").toString();
+                floorImageURL = "/images/00_thegroundfloor.png";
                 break;
             case FIRST:
-                floorImageURL = getClass().getResource("/images/01_thefirstfloor.png").toString();
+                floorImageURL = "/images/01_thefirstfloor.png";
                 break;
             case SECOND:
-                floorImageURL = getClass().getResource("/images/02_thesecondfloor.png").toString();
+                floorImageURL = "/images/02_thesecondfloor.png";
                 break;
             case THIRD:
-                floorImageURL = getClass().getResource("/images/03_thethirdfloor.png").toString();
+                floorImageURL = "/images/03_thethirdfloor.png";
                 break;
         }
 
-        Image floorImage = new Image(floorImageURL);
+        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
 
-        miniMapController.switchFloor(floorImage);
+        miniMapController.switchFloor(floorImageURL);
     }
 
     public NodeFloor getCurrentFloor() {
