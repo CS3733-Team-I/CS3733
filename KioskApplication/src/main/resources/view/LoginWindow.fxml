@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
@@ -9,6 +14,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+
 <AnchorPane fx:id="loginAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="472.0" style="-fx-background-color: white; -fx-border-width: 5; -fx-border-radius: 5; -fx-border-color: #efefef; -fx-background-radius: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane prefHeight="318.0" prefWidth="347.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -64,7 +70,7 @@
                         <Font name="Lucida Sans Regular" size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" cancelButton="true" maxWidth="1.7976931348623157E308" onAction="#OnBackClicked" prefHeight="46.0" prefWidth="195.0" ripplerFill="RED" style="-fx-background-radius: 0; -fx-background-color: #efefef;" text="Cancel" textAlignment="CENTER" GridPane.rowIndex="4">
+                  <JFXButton fx:id="cancelButton" alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#OnBackClicked" prefHeight="46.0" prefWidth="195.0" ripplerFill="RED" style="-fx-background-radius: 0; -fx-background-color: #efefef;" text="Cancel" textAlignment="CENTER" GridPane.rowIndex="4">
                      <font>
                         <Font name="Lucida Sans Regular" size="14.0" />
                      </font>

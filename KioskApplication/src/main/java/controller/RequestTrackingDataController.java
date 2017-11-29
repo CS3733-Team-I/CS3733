@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -8,6 +9,7 @@ import utility.Request.LanguageFrequency;
 
 public class RequestTrackingDataController {
     @FXML BarChart<String, Integer> langFreqBC;
+    @FXML JFXButton cancelButton;
     RequestEntity r;
     MainWindowController parent;
 
@@ -36,6 +38,11 @@ public class RequestTrackingDataController {
     }
 
     public void closePanel(){
+        disableCancelButton(true);
         parent.closeRequestTrackingTable();
+    }
+
+    public void disableCancelButton(boolean disabled){
+        cancelButton.setCancelButton(!disabled);
     }
 }

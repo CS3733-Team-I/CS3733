@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import entity.LoginEntity;
@@ -15,6 +16,8 @@ import java.io.IOException;
 
 public class LoginController {
 
+    @FXML
+    private JFXButton cancelButton;
     @FXML
     private JFXTextField tfEmail;
     @FXML
@@ -78,6 +81,7 @@ public class LoginController {
     @FXML
     public void OnBackClicked () throws IOException {
         resetFields();
+        disableCancelButton(true);
         parent.closeLoginPopup();
     }
 
@@ -88,11 +92,7 @@ public class LoginController {
         errorMsg.setVisible(false);
     }
 
-    public double getLoginAnchorWidth() {
-        return loginAnchor.getWidth();
-    }
-
-    public double getLoginAnchorHeight() {
-        return loginAnchor.getHeight();
+    public void disableCancelButton(boolean disabled){
+        cancelButton.setCancelButton(!disabled);
     }
 }
