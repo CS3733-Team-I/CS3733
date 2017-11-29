@@ -58,8 +58,8 @@ public class MapController {
 
     //list of showing nodes or edges
     //protected  javafx.scene.node heightLightedNode;
-    private ObservableList<database.objects.Node> databaseNodeObjectList;
-    private ObservableList<database.objects.Edge> databaseEdgeObjectList;
+    protected ObservableList<database.objects.Node> databaseNodeObjectList;
+    protected ObservableList<database.objects.Edge> databaseEdgeObjectList;
     private ObservableList<Circle> nodeObjectList;
     private ObservableList<Line> edgeObjectList;
     protected ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
@@ -73,7 +73,7 @@ public class MapController {
 
     private LinkedList<MenuButton> waypoints;
 
-    private MainWindowController parent = null;
+    protected MainWindowController parent = null;
 
     protected static double DEFAULT_HVALUE = 0.52;
     protected static double DEFAULT_VVALUE = 0.3;

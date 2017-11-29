@@ -280,7 +280,6 @@ public class MapBuilderController extends ScreenController {
 
                 if(!lName.isDisable()) {
                     if(!observableNewNodes.isEmpty()) {
-                        //System.out.println("HERE NEW LNAME");
                         observableNewNodes.get(0).setLongName(lName.getText());
                     }
                     for(database.objects.Node changedLNameNode : observableSelectedNodes) {
@@ -358,13 +357,10 @@ public class MapBuilderController extends ScreenController {
                         updateNodeDisplay(NodeDisplay.SELECTED);
                     }
                     else if(c.wasAdded()) {
-                        //get the connected Node
-                        System.out.println("HERE");
                         for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
                             Label connection = new Label(connectedNode.getLongName());
+                            connection.setAccessibleText(observableSelectedNodes.get(0).getXyz());
                             connection.setAlignment(Pos.CENTER);
-                            connection.setGraphic(plusIconView);
-
                             lvConnectedNodes.getItems().add(connection);
                         }
                         updateNodeDisplay(NodeDisplay.SELECTED);
@@ -876,9 +872,11 @@ public class MapBuilderController extends ScreenController {
     @FXML
     private void onAdvancePressed() {
         if(Advance.isVisible()) {
+            btAdvance.setStyle("-fx-background-color: #00589F");
             Advance.setVisible(false);
         }
         else {
+            btAdvance.setStyle("-fx-background-color: #0090AD");
             Advance.setVisible(true);
         }
     }
@@ -921,7 +919,13 @@ public class MapBuilderController extends ScreenController {
         btGoToNode.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                for(database.objects.Node selectedNode : mapController.databaseNodeObjectList) {
+                    Text selectedText = new Text(lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText());
+                    if(selectedNode.getXyz().equals(selectedText)) {
+                        System.out.println("HERE");
+                        mapController.parent.onMapNodeClicked(selectedNode);
+                    }
+                }
             }
         });
         JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
@@ -939,9 +943,12 @@ public class MapBuilderController extends ScreenController {
             }
         });
 
-        btGoToNode.setStyle("-fx-background-color: #000000");
-        btDeleteConnection.setStyle("-fx-background-color: #d32a04");
-        btBack.setStyle("-fx-background-color: #999999");
+        btGoToNode.setStyle("-fx-background-color: #000000;" +
+                "-fx-backgound-raidus: 0");
+        btDeleteConnection.setStyle("-fx-background-color: #d32a04;" +
+                "-fx-backgound-raidus: 0");
+        btBack.setStyle("-fx-background-color: #999999;" +
+                "-fx-backgound-raidus: 0");
 
         VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
         popup = new JFXPopup(vBox);
