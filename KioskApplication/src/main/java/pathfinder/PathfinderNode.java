@@ -40,11 +40,11 @@ public class PathfinderNode {
         if(this.node.getNodeType().equals(NodeType.STAI) &&
            potentialParent.getNode().getNodeType().equals(NodeType.STAI) &&
            !this.node.getFloor().equals(potentialParent.getNode().getFloor()))
-            return 100; //TODO: add some kind of scaling/constant rather than an arbitrary number
+            return(100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
         else if(this.node.getNodeType().equals(NodeType.ELEV) &&
                 potentialParent.getNode().getNodeType().equals(NodeType.ELEV) &&
                 !this.node.getFloor().equals(potentialParent.getNode().getFloor()))
-            return 100; //TODO: add some kind of scaling/constant rather than an arbitrary number
+            return(100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
         //Otherwise, estimate the cost as normal.
         else {
             //Assuming all edges are straight lines, the cost of the edge from the parent node should be the
