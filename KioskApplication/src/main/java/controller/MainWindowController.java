@@ -70,10 +70,10 @@ public class MainWindowController {
                 case "Map Builder":
                     switchToScreen(ApplicationScreen.MAP_BUILDER);
                     break;
-                case "request Manager":
+                case "Request Manager":
                     switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                     break;
-                case "request Submit":
+                case "Request Submit":
                     switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                     break;
                 case "Settings":
