@@ -229,7 +229,7 @@ public class MapController {
         //System.out.println("Image Width: " + floorImage.getWidth());
         //System.out.println("Image Height: " + floorImage.getHeight());
 
-        miniMapController.switchFloor(floorImage);
+        miniMapController.switchFloor(floorImageURL);
     }
 
     public NodeFloor getCurrentFloor() {

@@ -11,6 +11,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ApplicationScreen;
+import utility.ResourceManager;
 import utility.request.Language;
 import utility.node.NodeFloor;
 import utility.request.RequestType;
@@ -50,28 +51,28 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     public void initialize() {
-        Image interpreterIcon = new Image(getClass().getResource("/images/icons/interpreterIcon.png").toString());
+        Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
         ImageView interpreterIconView = new ImageView(interpreterIcon);
         interpreterIconView.setRotate(90);
         interpreterIconView.setFitHeight(24);
         interpreterIconView.setFitWidth(24);
         interpreterTab.setGraphic(interpreterIconView);
 
-        Image foodIcon = new Image(getClass().getResource("/images/icons/foodIcon.png").toString());
+        Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIcon.png");
         ImageView foodIconView = new ImageView(foodIcon);
         foodIconView.setRotate(90);
         foodIconView.setFitHeight(24);
         foodIconView.setFitWidth(24);
         foodTab.setGraphic(foodIconView);
 
-        Image securityIcon = new Image(getClass().getResource("/images/icons/securityIcon.png").toString());
+        Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIcon.png");
         ImageView securityIconView = new ImageView(securityIcon);
         securityIconView.setRotate(90);
         securityIconView.setFitHeight(24);
         securityIconView.setFitWidth(24);
         securityTab.setGraphic(securityIconView);
 
-        Image janitorIcon = new Image(getClass().getResource("/images/icons/janitor.png").toString());
+        Image janitorIcon = ResourceManager.getInstance().getImage("/images/icons/janitor.png");
         ImageView janitorIconView = new ImageView(janitorIcon);
         janitorIconView.setRotate(90);
         janitorIconView.setFitHeight(24);

@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -22,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
+import utility.ResourceManager;
 import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
@@ -131,7 +133,7 @@ public class MapBuilderController extends ScreenController {
         CBnodeTeamAssigned.getItems().addAll(TeamAssigned.values());
         CBnodeBuilding.getItems().addAll(NodeBuilding.values());
 
-        Image infoIcon = new Image(getClass().getResource("/images/icons/informationIcon.png").toString());
+        Image infoIcon = ResourceManager.getInstance().getImage("/images/icons/informationIcon.png");
         ImageView infoIconView = new ImageView(infoIcon);
         infoIconView.setFitHeight(24);
         infoIconView.setFitWidth(24);
