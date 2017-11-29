@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -94,6 +95,8 @@
                                     <JFXCheckBox fx:id="itFilter" selected="true" text="IT Help" GridPane.rowIndex="6" />
                                     <JFXCheckBox fx:id="transportationFilter" selected="true" text="Transportation" GridPane.rowIndex="7" />
                                     <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                                    <HBox fx:id="row8" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="8" />
+                                    <HBox fx:id="row9" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="9" />
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
