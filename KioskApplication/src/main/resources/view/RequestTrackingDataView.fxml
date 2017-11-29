@@ -48,6 +48,6 @@
             </Tab>
          </tabs>
       </JFXTabPane>
-      <JFXButton cancelButton="true" layoutX="522.0" layoutY="365.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#closePanel" prefHeight="35.0" prefWidth="108.0" ripplerFill="RED" styleClass="cancel-button" stylesheets="@../css/application.css" text="Close" />
+      <JFXButton fx:id="cancelButton" cancelButton="true" layoutX="522.0" layoutY="365.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#closePanel" prefHeight="35.0" prefWidth="108.0" ripplerFill="RED" styleClass="cancel-button" stylesheets="@../css/application.css" text="Close" />
    </children>
 </AnchorPane>
