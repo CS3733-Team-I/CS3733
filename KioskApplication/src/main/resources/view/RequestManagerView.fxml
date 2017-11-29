@@ -110,7 +110,7 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="300.0" GridPane.columnIndex="1">
                <children>
-                  <JFXListView fx:id="activeRequests" prefHeight="685.0" prefWidth="300.0" />
+                  <JFXListView fx:id="activeRequests" onMouseClicked="#displayInfo" prefHeight="685.0" prefWidth="300.0" />
                </children>
             </AnchorPane>
          </children>

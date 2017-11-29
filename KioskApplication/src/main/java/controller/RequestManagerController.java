@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
+import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,7 +16,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
@@ -234,6 +237,25 @@ public class RequestManagerController extends ScreenController {
             requestids.add(id);
         }
         activeRequests.setItems(requestids);
+    }
+
+    public void initializePopup(String requestID){
+        Request request = r.getRequest(requestID);
+        Label id = new Label(requestID);
+        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+        Label employee = new Label("Employee: ");
+        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
+        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+        Label locationOfRequest = new Label(location);
+        VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest);
+        popup = new JFXPopup(vbox);
+    }
+
+    @FXML
+    public void displayInfo(MouseEvent event){
+        String requestID = activeRequests.getSelectionModel().getSelectedItem();
+        initializePopup(requestID);
+        popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
     }
 
     @FXML
