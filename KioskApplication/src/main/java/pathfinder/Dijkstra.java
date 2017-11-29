@@ -103,25 +103,17 @@ public class Dijkstra implements SearchAlgorithm {
                     int newCost = foundNode.calculatePreviousCost(lowestCost);
                     //If we have, then set the node we just got here from to the new parent and recalculate costs.
                     if(newCost < foundNode.getPreviousCost()){
-                        foundNode.setParentNode(lowestCost);
-                        foundNode.setPreviousCost(newCost);
-                        foundNode.recalculateCosts();
+                        this.calculateCosts(foundNode, lowestCost, endNode, newCost);
                     }
                 }
             }
         }
 
         PathfinderNode lastNode = lowestCost;
-
         LinkedList<Edge> pathEdges = lastNode.buildPath();
-
-        // handler for no path found
-        if(pathEdges == null)
-            throw new PathfinderException("No path found.");
         // return generated path of nodes
         return pathEdges;
     }
-
 
     /**
      * Set parent node and calculate cost attributes in preparation for adding the node to the frontier.
@@ -133,5 +125,11 @@ public class Dijkstra implements SearchAlgorithm {
         node.setParentNode(parent);
         int previousCost = node.calculatePreviousCost(parent);
         node.setPreviousCost(previousCost);
+    }
+
+    void calculateCosts(PathfinderNode node, PathfinderNode newParent, PathfinderNode endNode, int newCost){
+        node.setParentNode(newParent);
+        node.setPreviousCost(newCost);
+        node.recalculateCosts();
     }
 }
