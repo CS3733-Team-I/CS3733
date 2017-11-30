@@ -101,6 +101,30 @@ public class LoginEntity {
         return new ArrayList<>();
     }
 
+    public ArrayList<String> getAllUserNames(){
+        ArrayList<Employee> employees = new ArrayList<>(logins.values());
+        ArrayList<String> userNames = new ArrayList<String>();
+        for(Employee employee: employees){
+            userNames.add(employee.getLoginID());
+        }
+        return userNames;
+    }
+
+    public ArrayList<String> getAllEmployeeType(RequestType type){
+        ArrayList<Employee> employees = new ArrayList<>(logins.values());
+        ArrayList<String> userNames = new ArrayList<String>();
+        if(type.equals(RequestType.GENERAL)){
+            userNames = getAllUserNames();
+        }else{
+            for(Employee employee: employees){
+                if(employee.getServiceAbility().equals(type)){
+                    userNames.add(employee.getLoginID());
+                }
+            }
+        }
+        return userNames;
+    }
+
     /**
      * This method should only allow Admins and Super Users to add new logins,
      * New logins can't be added if:

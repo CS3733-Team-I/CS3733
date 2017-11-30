@@ -143,6 +143,8 @@ public class RequestEntity {
                     }
                     break;
             }
+
+
         }
         return displayedRequests;
     }
@@ -259,6 +261,16 @@ public class RequestEntity {
         else{
             System.out.println("Invalid requestID");
         }
+    }
+
+    public Request getRequest(String requestID){
+        Request request;
+        if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
+            request = getInterpreterRequest(requestID);
+        }else{
+            request = getSecurityRequest(requestID);
+        }
+        return request;
     }
 
 
