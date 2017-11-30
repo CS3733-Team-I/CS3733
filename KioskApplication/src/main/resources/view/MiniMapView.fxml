@@ -8,5 +8,6 @@
    <children>
       <ImageView fx:id="miniMapView" fitHeight="136.0" fitWidth="200.0" onMouseClicked="#changePositionEvent" onMouseDragged="#changePositionEvent" pickOnBounds="true" />
       <Rectangle id="minimap-viewport" fx:id="viewportRect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="27.4" mouseTransparent="true" smooth="false" stroke="#00589f" strokeType="INSIDE" strokeWidth="2.0" width="39.2" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="136.0" mouseTransparent="true" stroke="BLACK" strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

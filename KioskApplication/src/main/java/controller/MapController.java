@@ -65,8 +65,10 @@ public class MapController {
     //protected  javafx.scene.node heightLightedNode;
     protected ObservableList<database.objects.Node> databaseNodeObjectList;
     protected ObservableList<database.objects.Edge> databaseEdgeObjectList;
+
     private ObservableList<Circle> nodeObjectList;
     private ObservableList<Line> edgeObjectList;
+
     protected ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
     protected ObservableList<database.objects.Node> observableHighlightedChangedNodes;
     protected ObservableList<database.objects.Node> observableHighlightedNewNodes;
@@ -146,6 +148,8 @@ public class MapController {
         this.waypointPane.getChildren().clear();
         this.nodeObjectList.clear();
         this.edgeObjectList.clear();
+        this.databaseNodeObjectList.clear();
+        this.databaseEdgeObjectList.clear();
         this.waypoints.clear();
 
         reloadDisplay();
@@ -189,8 +193,10 @@ public class MapController {
         floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
         clearMap();
-        for(LinkedList<Edge> segment: this.path.getEdges())
-        drawEdgesOnMap(segment);
+        for(LinkedList<Edge> segment: this.path.getEdges()) {
+            drawEdgesOnMap(segment);
+        }
+
         drawNodesOnMap(this.path.getWaypoints());
     }
 
@@ -329,6 +335,7 @@ public class MapController {
                 reloadDisplay(); //don't reload display here, let specfic screen Controller handles actions on switching between floors
             }
         });
+
         //checkboxes for showing nodes and edges
         /**
          * sync UI
@@ -488,6 +495,7 @@ public class MapController {
                 }
             }
         });
+
         databaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
             @Override
             public void onChanged(Change<? extends Edge> c) {
@@ -526,6 +534,7 @@ public class MapController {
                 }
             }
         });
+
         //TODO INTEGRATE THIS LISTENER WITH nodesEdgesPane LISTENER
         nodeObjectList.addListener(new ListChangeListener<Circle>() {
             @Override
@@ -602,6 +611,7 @@ public class MapController {
                 calculateMinZoom();
             }
         });
+
         /**
          * highlight nodes and edges
          */
@@ -641,6 +651,7 @@ public class MapController {
                 }
             }
         });
+
         observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
@@ -671,6 +682,7 @@ public class MapController {
                 }
             }
         });
+
         observableHighlightedNewNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
@@ -765,6 +777,4 @@ public class MapController {
     public void setPath(Path path) {
         this.path = path;
     }
-
-    protected void map_builder(){}
 }
