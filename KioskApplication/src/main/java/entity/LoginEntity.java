@@ -45,15 +45,15 @@ public class LoginEntity {
         logins = new HashMap<>();
         if (test){
             // so tests can add and remove logins as needed
-            currentLogin = new Employee(-1,"firstTimeSetup","root",
-                    SUPER_USER,RequestType.GENERAL,false);
+            currentLogin = new Employee("firstTimeSetup","root",
+                    SUPER_USER,RequestType.GENERAL);
         } else {
             readAllFromDatabase();
 
             if (database.getAllEmployees().size() == 0) {
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee(-1,"firstTimeSetup","root",
-                        SUPER_USER,RequestType.GENERAL,false);
+                currentLogin = new Employee("firstTimeSetup","root",
+                        SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
                 currentLogin = NullEmployee.getInstance();
@@ -130,8 +130,6 @@ public class LoginEntity {
      * 2. the currentPermission is greater than or equal to that of the current user (excluding Super Users)
      * 3. the currentPermission is NONEMPLOYEE
      *
-     * Rules for new IDs, it should be the base username and if that ID is taken, that username+1 or 2 or 3 or...
-     *
      * @param userName
      * @param password
      * @param permission
@@ -140,7 +138,7 @@ public class LoginEntity {
      */
     public boolean addUser(String userName, String password, KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
-        if(currentLogin.getPermission()==NONEMPLOYEE){
+        if(currentLogin.getPermission()==NONEMPLOYEE||permission==NONEMPLOYEE){
             return false;
         }
         // updates the hashmap in case a employee is missing
@@ -154,13 +152,12 @@ public class LoginEntity {
                 currentLogin.getPermission() == SUPER_USER){
             // fitting it into the table
             if(userName.length()<=50){
-                // Autogenerates a permanent employee ID from the name and current timestamp
-                // Fun fact of the day, this code should work until 200ish years from now when the 14th digit gets added
-                // to the Java timestamp, that is if this system or even Java survives that long
-                Employee newEmployee=new Employee(userName, password, permission, serviceAbility,false);
-                logins.put(userName,newEmployee);
-                database.addEmployee(newEmployee.getLoginID(),newEmployee.getUsername(),newEmployee.getPassword(password),
-                        newEmployee.getPermission(),newEmployee.getServiceAbility());
+                //constructs a temporary employee for database insertion
+                Employee tempEmployee=new Employee(userName, password, permission, serviceAbility);
+                database.addEmployee(tempEmployee.getUsername(),tempEmployee.getPassword(password),
+                        tempEmployee.getPermission(),tempEmployee.getServiceAbility());
+                //gets all the employees from the database
+                readAllFromDatabase();
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
             }
@@ -182,7 +179,7 @@ public class LoginEntity {
             AbsEmployee delEmp = logins.get(username);
             // checks to see if the current user permissions are higher than the one they are deleting
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
-                    currentLogin.getPermission() ==SUPER_USER) {
+                    currentLogin.getPermission()==SUPER_USER) {
                 logins.remove(username);
                 database.removeEmployee(delEmp.getLoginID());
                 return true;
@@ -220,15 +217,16 @@ public class LoginEntity {
     public boolean updateUsername(String newUsername, String password){
         boolean updated=false;
         String oldUsername = currentLogin.getUsername();
+        Employee updatedLogin=logins.get(oldUsername);
         //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
         //checks if the current user name is already in active use
         if(!logins.containsKey(newUsername)){
-            updated=currentLogin.updateUsername(newUsername,password);
+            updated=updatedLogin.updateUsername(newUsername,password);
         }
         if(updated){
             //updates internal hashmap
             logins.remove(oldUsername);
-            logins.put(newUsername,currentLogin);
+            logins.put(newUsername,updatedLogin);
             //relays updated information to database
             database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
                     currentLogin.getPassword(password),currentLogin.getPermission(),
@@ -239,6 +237,13 @@ public class LoginEntity {
 
     // For checking log in credentials
     // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
+
+    /**
+     *
+     * @param username
+     * @param password
+     * @return returns true if valid login, and sets the current login as that employee
+     */
     public boolean logIn(String username, String password){
         if(logins.containsKey(username)) {
             if (logins.get(username).validatePassword(password)) {

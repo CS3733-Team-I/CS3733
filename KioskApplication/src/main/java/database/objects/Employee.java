@@ -11,23 +11,36 @@ public class Employee extends AbsEmployee {
     private KioskPermission permission;
     private RequestType serviceAbility;
 
-    public Employee()
+    /**
+     * Constructor for new employees. This is only for the LoginEntity
+     * @param username
+     * @param password is encypted through Bcrypt
+     * @param permission if nonEmployee, it changes to employee
+     * @param serviceAbility
+     */
+    public Employee(String username, String password, KioskPermission permission, RequestType serviceAbility){
+        this.username = username;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        if(permission==KioskPermission.NONEMPLOYEE){
+            this.permission=KioskPermission.EMPLOYEE;
+        }
+        this.permission = permission;
+        this.serviceAbility = serviceAbility;
+    }
 
-    // Constructor for passwords
+    /**
+     * This is for database side use,
+     * @param loginID retrieves it from the database
+     * @param username
+     * @param password
+     * @param permission
+     * @param serviceAbility
+     */
     public Employee(int loginID, String username, String password,
-                    KioskPermission permission, RequestType serviceAbility, boolean passwordAlreadyEncrypted){
+                    KioskPermission permission, RequestType serviceAbility){
         this.loginID = loginID;
         this.username = username;
-        // this is for frontend vs backend use
-        if(passwordAlreadyEncrypted){
-            this.password = password;
-        }
-        else {
-            this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-        }
-        if(permission==KioskPermission.NONEMPLOYEE){
-            permission=KioskPermission.EMPLOYEE;
-        }
+        this.password = password;
         this.permission=permission;
         this.serviceAbility = serviceAbility;
     }
