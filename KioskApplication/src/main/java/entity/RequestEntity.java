@@ -270,6 +270,28 @@ public class RequestEntity {
         return request;
     }
 
+    public void updateRequest(String requestID, String nodeID, String assigner, String note,
+                              Timestamp submittedTime, Timestamp completedTime,
+                              RequestProgressStatus status){
+        Request oldReq = getRequest(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssigner(assigner);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
+        switch (checkRequestType(requestID)){
+            case INTERPRETER:
+                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
+                break;
+            case SECURITY:
+                dbController.updateSecurityRequest((SecurityRequest) oldReq);
+                break;
+        }
+
+    }
+
 
     /**
      * InterpreterRequest methods
@@ -309,15 +331,16 @@ public class RequestEntity {
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
+//        oldReq.setNodeID(nodeID);
+//        oldReq.setAssigner(assigner);
+//        oldReq.setNote(note);
+//        oldReq.setSubmittedTime(submittedTime);
+//        oldReq.setCompletedTime(completedTime);
+//        //not sure if editing the status is needed
+//        oldReq.setStatus(status);
         oldReq.setLanguage(language);
         //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
         dbController.updateInterpreterRequest(oldReq);
     }
 
@@ -359,15 +382,16 @@ public class RequestEntity {
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
+//        oldReq.setNodeID(nodeID);
+//        oldReq.setAssigner(assigner);
+//        oldReq.setNote(note);
+//        oldReq.setSubmittedTime(submittedTime);
+//        oldReq.setCompletedTime(completedTime);
+//        //not sure if editing the status is needed
+//        oldReq.setStatus(status);
         oldReq.setPriority(priority);
         //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
         dbController.updateSecurityRequest(oldReq);
     }
 

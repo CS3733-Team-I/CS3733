@@ -96,7 +96,7 @@ public class RequestSubmitterController extends ScreenController {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
             } else if (newValue == foodTab) {
-                System.out.println("FOOD");
+//                System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SECURITY;
