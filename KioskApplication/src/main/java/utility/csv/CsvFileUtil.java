@@ -35,19 +35,20 @@ public class CsvFileUtil {
         readNodesCSV("/csv/MapBnodes.csv");
         readNodesCSV("/csv/MapCnodes.csv");
         readNodesCSV("/csv/MapDnodes.csv");
-        readNodesCSV("/csv/MapEnodes.csv");
-        readNodesCSV("/csv/MapFnodes.csv");
-        readNodesCSV("/csv/MapGnodes.csv");
+        readNodesCSV("/csv/MapENodes.csv");
+        readNodesCSV("/csv/MapFNodes.csv");
+        readNodesCSV("/csv/MapGNodes.csv");
         readNodesCSV("/csv/MapHnodes.csv");
         readNodesCSV("/csv/MapInodes.csv");
         readNodesCSV("/csv/MapWnodes.csv");
+
         readEdgesCSV("/csv/MapAedges.csv");
         readEdgesCSV("/csv/MapBedges.csv");
         readEdgesCSV("/csv/MapCedges.csv");
         readEdgesCSV("/csv/MapDedges.csv");
-        readEdgesCSV("/csv/MapEedges.csv");
-        readEdgesCSV("/csv/MapFedges.csv");
-        readEdgesCSV("/csv/MapGedges.csv");
+        readEdgesCSV("/csv/MapEEdges.csv");
+        readEdgesCSV("/csv/MapFEdges.csv");
+        readEdgesCSV("/csv/MapGEdges.csv");
         readEdgesCSV("/csv/MapHedges.csv");
         readEdgesCSV("/csv/MapIedges.csv");
         readEdgesCSV("/csv/MapWedges.csv");
@@ -55,7 +56,7 @@ public class CsvFileUtil {
 
     public void readNodesCSV(String path, MapEntity map) {
         CsvReader reader = null;
-        InputStream input = getClass().getResourceAsStream(path);
+        InputStream input = CsvFileUtil.class.getResourceAsStream(path);
         InputStreamReader isr = new InputStreamReader(input);
 
         try {
@@ -275,7 +276,7 @@ public class CsvFileUtil {
 
     public void readEdgesCSV(String path, MapEntity map) {
         CsvReader reader = null;
-        InputStream input = getClass().getResourceAsStream(path);
+        InputStream input = CsvFileUtil.class.getResourceAsStream(path);
         InputStreamReader isr = new InputStreamReader(input);
 
         try {

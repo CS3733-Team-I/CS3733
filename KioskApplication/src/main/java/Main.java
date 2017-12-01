@@ -1,5 +1,3 @@
-import com.sun.javafx.css.StyleManager;
-import database.DatabaseController;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
