@@ -85,18 +85,6 @@ public class RequestEntity {
         }
     }
 
-
-    public LinkedList<Request> getAllRequests(){
-        LinkedList<Request> allRequests = new LinkedList<>();
-        for (InterpreterRequest iR: interpreterRequests.values()){
-            allRequests.add(iR);
-        }
-        for(SecurityRequest sR: securityRequests.values()){
-            allRequests.add(sR);
-        }
-        return allRequests;
-    }
-
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
@@ -116,6 +104,17 @@ public class RequestEntity {
     /**
      * Methods for all request types
      */
+
+    public LinkedList<Request> getAllRequests(){
+        LinkedList<Request> allRequests = new LinkedList<>();
+        for (InterpreterRequest iR: interpreterRequests.values()){
+            allRequests.add(iR);
+        }
+        for(SecurityRequest sR: securityRequests.values()){
+            allRequests.add(sR);
+        }
+        return allRequests;
+    }
 
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
@@ -143,8 +142,6 @@ public class RequestEntity {
                     }
                     break;
             }
-
-
         }
         return displayedRequests;
     }
@@ -169,27 +166,27 @@ public class RequestEntity {
 
     //Generic request deleting method
     public void deleteRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             securityRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
             System.out.println("Deleting SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("Deleting FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Deleting JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
+        else if(requestType.equals("Ins")){ //TODO: change to Enum
             System.out.println("Deleting InsideTransportationRequest");
         }
-        else if(requestType.equals("Out")){
+        else if(requestType.equals("Out")){ //TODO: change to Enum
             System.out.println("Deleting OutsideTransportationRequest");
         }
         else{
@@ -199,31 +196,31 @@ public class RequestEntity {
 
     //Generic request in progress maker
     public void markInProgress(String completer, String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.markInProgress(completer);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.markInProgress(completer);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("In Progress FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("In Progress JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("In Progress InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("In Progress OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("In Progress InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("In Progress OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
@@ -231,33 +228,33 @@ public class RequestEntity {
 
     //Generic request completing method
     public void completeRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.complete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.complete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("Complete FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Complete JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("Complete InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("Complete OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("Complete InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("Complete OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
