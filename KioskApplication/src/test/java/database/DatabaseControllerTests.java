@@ -3,7 +3,6 @@ package database;
 import database.objects.*;
 import database.utility.DatabaseException;
 import org.junit.Before;
-import org.junit.runner.JUnitCore;
 import utility.KioskPermission;
 import org.junit.After;
 import org.junit.Assert;
@@ -266,7 +265,7 @@ public class DatabaseControllerTests {
     @Test
     public void testAddEmployee(){
         dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        assertEquals("Name",dbController.getEmployee("ID").getUserName());
+        assertEquals("Name",dbController.getEmployee("ID").getUsername());
     }
 
     @Test
@@ -280,14 +279,14 @@ public class DatabaseControllerTests {
     public void testUpdateEmployee(){
         Employee testEmp = new Employee("ID","Name","password", KioskPermission.EMPLOYEE,
                 RequestType.INTERPRETER,false);
-        dbController.addEmployee(testEmp.getLoginID(),testEmp.getUserName(),testEmp.getPassword("password"),
+        dbController.addEmployee(testEmp.getLoginID(),testEmp.getUsername(),testEmp.getPassword("password"),
                 testEmp.getPermission(), testEmp.getServiceAbility());
-        testEmp.updateUserName("NewName","password");
+        testEmp.updateUsername("NewName","password");
         testEmp.updatePassword("NewPassword","password");
-        dbController.updateEmployee("ID",testEmp.getUserName(),testEmp.getPassword("NewPassword"),
+        dbController.updateEmployee("ID",testEmp.getUsername(),testEmp.getPassword("NewPassword"),
                 KioskPermission.ADMIN, RequestType.GENERAL);
         Employee updatedEmployee=dbController.getEmployee("ID");
-        assertEquals("NewName",updatedEmployee.getUserName());
+        assertEquals("NewName",updatedEmployee.getUsername());
         assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
         assertEquals(RequestType.GENERAL,updatedEmployee.getServiceAbility());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));

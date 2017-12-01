@@ -145,7 +145,7 @@ public class TestLoginEntity {
     public void testUpdateUserName(){
         l.addUser("employee","456",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("employee","456");
-        l.updateUserName("emp1","456");
+        l.updateUsername("emp1","456");
         assertEquals("emp1",l.getUsername());
         becomeSuperUser();
         l.deleteLogin("emp1");

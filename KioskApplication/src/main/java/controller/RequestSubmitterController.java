@@ -1,16 +1,12 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Node;
-import database.objects.Request;
-import entity.MapEntity;
 import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,11 +16,7 @@ import utility.request.Language;
 import utility.node.NodeFloor;
 import utility.request.RequestType;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -115,7 +107,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addIntRequest() throws IOException {
         String location = intLocation.getText();
-        String assigner = l.getUserID();
+        String assigner = l.getLoginID();
         String notes = intNotesArea.getText();
         if (notes==null){
             notes="";
@@ -138,7 +130,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addSecRequest()throws IOException {
         String location = secLocationField.getText();
-        String assigner = l.getUserID();
+        String assigner = l.getLoginID();
         String notes = secNoteField.getText();
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);

@@ -1,11 +1,12 @@
 package entity;
 
 import database.DatabaseController;
+import database.objects.AbsEmployee;
 import database.objects.Employee;
+import database.objects.NullEmployee;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,11 +20,9 @@ import static utility.KioskPermission.*;
  */
 public class LoginEntity {
     private DatabaseController database;
-    private KioskPermission currentPermission;
-    private String username;
-
-    // TODO: make these less vulnerable
-    private HashMap<String,Employee> logins;
+    // holds all relevant information for the current user
+    private AbsEmployee currentLogin;
+    private HashMap<String,AbsEmployee> logins;
 
     private static LoginEntity instance = null;
 
@@ -44,39 +43,38 @@ public class LoginEntity {
         database = DatabaseController.getInstance();
 
         logins = new HashMap<>();
-        this.username ="";
         if (test){
             // so tests can add and remove logins as needed
-            currentPermission = SUPER_USER;
+            currentLogin = new Employee(-1,"firstTimeSetup","root",
+                    SUPER_USER,RequestType.GENERAL,false);
         } else {
-            // remove once we have a better way to initialize things
             readAllFromDatabase();
 
             if (database.getAllEmployees().size() == 0) {
                 // if there are no employees in the database, start as a super user
-                currentPermission = SUPER_USER;
+                currentLogin = new Employee(-1,"firstTimeSetup","root",
+                        SUPER_USER,RequestType.GENERAL,false);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
-                currentPermission = NONEMPLOYEE;
+                currentLogin = NullEmployee.getInstance();
             }
         }
     }
 
     public KioskPermission getCurrentPermission() {
-        return currentPermission;
+        return currentLogin.getPermission();
     }
 
     public String getUsername() {
-        return username;
+        return currentLogin.getUsername();
     }
 
-    public String getUserID(){
-        if(currentPermission==NONEMPLOYEE) {
-            return "";
-        }
-        else{
-            return logins.get(username).getLoginID();
-        }
+    /**
+     *
+     * @return integer LoginID
+     */
+    public int getLoginID(){
+        return currentLogin.getLoginID();
     }
 
     // Adds every employee from the database to the logins hashmap
@@ -84,7 +82,7 @@ public class LoginEntity {
         LinkedList<Employee> employees = database.getAllEmployees();
         for (Employee emp : employees) {
             // the employee hashmap is linked to usernames because of their uniqueness and ease of accessing
-            this.logins.putIfAbsent(emp.getUserName(),emp);
+            this.logins.putIfAbsent(emp.getUsername(),emp);
         }
     }
 
@@ -116,7 +114,7 @@ public class LoginEntity {
         if(type.equals(RequestType.GENERAL)){
             userNames = getAllUserNames();
         }else{
-            for(Employee employee: employees){
+            for(AbsEmployee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
                     userNames.add(employee.getLoginID());
                 }
@@ -142,7 +140,7 @@ public class LoginEntity {
      */
     public boolean addUser(String userName, String password, KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
-        if(permission==NONEMPLOYEE){
+        if(currentLogin.getPermission()==NONEMPLOYEE){
             return false;
         }
         // updates the hashmap in case a employee is missing
@@ -152,16 +150,16 @@ public class LoginEntity {
             return false;
         }
         // limits creating new logins to subordinates in the KioskPermission hierarchy
-        else if(this.currentPermission.ordinal()>permission.ordinal()||this.currentPermission ==SUPER_USER){
+        else if(currentLogin.getPermission().ordinal()>permission.ordinal()||
+                currentLogin.getPermission() == SUPER_USER){
             // fitting it into the table
             if(userName.length()<=50){
                 // Autogenerates a permanent employee ID from the name and current timestamp
                 // Fun fact of the day, this code should work until 200ish years from now when the 14th digit gets added
                 // to the Java timestamp, that is if this system or even Java survives that long
-                String loginID = userName + System.currentTimeMillis();
-                Employee newEmployee=new Employee(loginID, userName, password, permission, serviceAbility,false);
+                Employee newEmployee=new Employee(userName, password, permission, serviceAbility,false);
                 logins.put(userName,newEmployee);
-                database.addEmployee(newEmployee.getLoginID(),newEmployee.getUserName(),newEmployee.getPassword(password),
+                database.addEmployee(newEmployee.getLoginID(),newEmployee.getUsername(),newEmployee.getPassword(password),
                         newEmployee.getPermission(),newEmployee.getServiceAbility());
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
@@ -175,16 +173,17 @@ public class LoginEntity {
      * 1. It exists in the hashmap
      * 2. The deleter has higher permissions than the deletee or is a Super User
      * 3. The deleter is not deleting their own employee (unless this is a test case)
-     * @param userName
+     * @param username
      * @return
      */
-    public boolean deleteLogin(String userName){
+    public boolean deleteLogin(String username){
         // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
-        if(logins.containsKey(userName)&&(userName!=this.username || database.equals(DatabaseController.getInstance()))) {
-            Employee delEmp = logins.get(userName);
+        if(logins.containsKey(username)&&(username!=currentLogin.getUsername())) {
+            AbsEmployee delEmp = logins.get(username);
             // checks to see if the current user permissions are higher than the one they are deleting
-            if(delEmp.getPermission().ordinal()<this.currentPermission.ordinal()||this.currentPermission ==SUPER_USER) {
-                logins.remove(userName);
+            if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
+                    currentLogin.getPermission() ==SUPER_USER) {
+                logins.remove(username);
                 database.removeEmployee(delEmp.getLoginID());
                 return true;
             }
@@ -193,7 +192,7 @@ public class LoginEntity {
     }
 
     public RequestType getServiceAbility(String userName) {
-        if(currentPermission==SUPER_USER) {
+        if(currentLogin.getPermission()==SUPER_USER) {
             return RequestType.GENERAL;
         }
         if(logins.get(userName).getPermission().equals(KioskPermission.EMPLOYEE)){
@@ -207,68 +206,53 @@ public class LoginEntity {
     // Method for users to update only their passwords, and no one else's
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean updated = false;
-        if (logins.get(username).updatePassword(newPassword, oldPassword)) {
-            Employee emp = logins.get(username);
-            database.updateEmployee(emp.getLoginID(),emp.getUserName(),emp.getPassword(newPassword),emp.getPermission(),emp.getServiceAbility());
+        if (currentLogin.updatePassword(newPassword, oldPassword)) {
+            database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
+                    currentLogin.getPassword(newPassword),currentLogin.getPermission(),
+                    currentLogin.getServiceAbility());
+            logins.replace(currentLogin.getUsername(),currentLogin);
             updated = true;
         }
         return updated;
     }
 
     // For changing your username
-    public boolean updateUserName(String newUserName, String password){
+    public boolean updateUsername(String newUsername, String password){
+        boolean updated=false;
+        String oldUsername = currentLogin.getUsername();
         //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
-        Employee currUser = logins.get(this.username);
         //checks if the current user name is already in active use
-        boolean updated = !logins.containsKey(newUserName);
-        if(updated){
-            //tries to update the current user's password
-            currUser.updatePassword(newUserName, password);
+        if(!logins.containsKey(newUsername)){
+            updated=currentLogin.updateUsername(newUsername,password);
         }
         if(updated){
             //updates internal hashmap
-            logins.remove(username);
-            logins.put(newUserName,currUser);
-            //updates current username
-            username =newUserName;
+            logins.remove(oldUsername);
+            logins.put(newUsername,currentLogin);
             //relays updated information to database
-            database.updateEmployee(currUser.getLoginID(),currUser.getUserName(),password,
-                    currUser.getPermission(),currUser.getServiceAbility());
+            database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
+                    currentLogin.getPassword(password),currentLogin.getPermission(),
+                    currentLogin.getServiceAbility());
         }
         return updated;
     }
 
     // For checking log in credentials
     // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
-    public KioskPermission logIn(String userName, String password){
-        if(logins.containsKey(userName)){
-            if (logins.get(userName).validatePassword(password)){
-                this.username = userName;
-                currentPermission = logins.get(userName).getPermission();
-            }
-            else {
-                validationFail();
+    public boolean logIn(String username, String password){
+        if(logins.containsKey(username)) {
+            if (logins.get(username).validatePassword(password)) {
+                currentLogin = logins.get(username);
+                return true;
             }
         }
-        else {
-            validationFail();
-        }
-        return currentPermission;
-    }
-
-    /**
-     * Helper method for logIn, while it is technically identical in function to logOut(),
-     * it doesn't make sense for logOut() to be called when nobody is logged in
-     */
-    private void validationFail(){
-        this.username = "";
-        currentPermission = NONEMPLOYEE;
+        //failure state
+        currentLogin=NullEmployee.getInstance();
+        return false;
     }
 
     // Logout method
-    public KioskPermission logOut(){
-        this.username = "";
-        currentPermission = NONEMPLOYEE;
-        return currentPermission;
+    public void logOut(){
+        currentLogin=NullEmployee.getInstance();
     }
 }

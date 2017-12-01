@@ -1,22 +1,23 @@
 package database.objects;
 
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
-public class Employee extends RecursiveTreeObject<Employee> {
-    private String loginID;
-    private String userName;
+public class Employee extends AbsEmployee {
+    private int loginID;
+    private String username;
     private String password;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
+    public Employee()
+
     // Constructor for passwords
-    public Employee(String loginID, String userName, String password,
+    public Employee(int loginID, String username, String password,
                     KioskPermission permission, RequestType serviceAbility, boolean passwordAlreadyEncrypted){
         this.loginID = loginID;
-        this.userName = userName;
+        this.username = username;
         // this is for frontend vs backend use
         if(passwordAlreadyEncrypted){
             this.password = password;
@@ -31,12 +32,12 @@ public class Employee extends RecursiveTreeObject<Employee> {
         this.serviceAbility = serviceAbility;
     }
 
-    public String getLoginID() {
+    public int getLoginID() {
         return loginID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public KioskPermission getPermission() {
@@ -47,21 +48,33 @@ public class Employee extends RecursiveTreeObject<Employee> {
         return serviceAbility;
     }
 
-    // this method requires a password to get the encrypted password
+    /**
+     * To get the password, the correct password must be presented
+     * @param password
+     * @return encrypted password if password is correct or "" otherwise
+     */
     public String getPassword(String password) {
         if (validatePassword(password)){
             return this.password;
         }
-        //I hate this method
-        else return password;
+        else return "";
     }
 
-    // Method to logIn passwords
+    /**
+     *
+     * @param password
+     * @return boolean on the validity of the password
+     */
     public boolean validatePassword(String password){
         return (BCrypt.checkpw(password, this.password));
     }
 
-    // method to update passwords
+    /**
+     *
+     * @param newPassword
+     * @param oldPassword
+     * @return true = Old Password is correct and Password has been updated
+     */
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean valid = validatePassword(oldPassword);
         if(valid){
@@ -70,11 +83,16 @@ public class Employee extends RecursiveTreeObject<Employee> {
         return valid;
     }
 
-    // for updating the user name
-    public boolean updateUserName(String newUserName, String password){
+    /**
+     *
+     * @param newUsername
+     * @param password
+     * @return true = password is correct and username is changed
+     */
+    public boolean updateUsername(String newUsername, String password){
         boolean updated = validatePassword(password);
         if (updated){
-            this.userName =newUserName;
+            this.username =newUsername;
         }
         return updated;
     }

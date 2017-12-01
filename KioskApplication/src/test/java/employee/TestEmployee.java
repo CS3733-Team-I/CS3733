@@ -35,7 +35,7 @@ public class TestEmployee {
     public void testSubmitEncrypted(){
         Employee testEmp = new Employee("Test","TestEmp","abcde",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
-        Employee testEmp2 = new Employee(testEmp.getLoginID(),testEmp.getUserName(),testEmp.getPassword("abcde"),
+        Employee testEmp2 = new Employee(testEmp.getLoginID(),testEmp.getUsername(),testEmp.getPassword("abcde"),
                 testEmp.getPermission(),testEmp.getServiceAbility(),true);
         assertTrue(testEmp2.validatePassword("abcde"));
     }
@@ -53,7 +53,7 @@ public class TestEmployee {
     public void testUpdateUserName(){
         Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
-        testEmp.updateUserName("UpdatedName","abcdefghijklmnoppqrstuvwxyz");
-        assertEquals("UpdatedName",testEmp.getUserName());
+        testEmp.updateUsername("UpdatedName","abcdefghijklmnoppqrstuvwxyz");
+        assertEquals("UpdatedName",testEmp.getUsername());
     }
 }

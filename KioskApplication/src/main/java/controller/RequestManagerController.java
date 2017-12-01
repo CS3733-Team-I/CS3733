@@ -58,7 +58,7 @@ public class RequestManagerController extends ScreenController {
         r.readAllFromDatabase();
     }
 
-    //When an employee is logged in this mehtod checks to see the employee Request Type
+    //When an employee is logged in this method checks to see the employee Request Type
     //it takes that information and filters out the requests to show relevant requests
     @FXML
     public void setup(){
@@ -184,7 +184,7 @@ public class RequestManagerController extends ScreenController {
                             statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent e) {
-                                    r.markInProgress(l.getUserID(),requestID);
+                                    r.markInProgress(l.getLoginID(),requestID);
                                     newRequests();
                                 }
                             });
