@@ -3,7 +3,7 @@ package database.objects;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
-public class NullEmployee extends AbsEmployee {
+public class NullEmployee implements IEmployee {
 
     private static NullEmployee instance = null;
 

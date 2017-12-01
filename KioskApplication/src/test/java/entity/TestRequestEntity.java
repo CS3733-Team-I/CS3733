@@ -99,7 +99,7 @@ public class TestRequestEntity {
         //retrieves interpreter request from the hashmap
         InterpreterRequest iR = r.getInterpreterRequest(testIRID);
         assertEquals("NODE1",iR.getNodeID());
-        assertEquals("hank",iR.getAssigner());
+        assertEquals("hank",iR.getAssignerID());
         assertEquals(" ",iR.getNote());
         assertEquals(Language.ARABIC,iR.getLanguage());
         r.deleteRequest(testIRID);
@@ -129,12 +129,12 @@ public class TestRequestEntity {
                 "hank", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
                 new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         //modifying interpreter request
-        r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssigner(), iR1.getNote(), iR1.getSubmittedTime(),
+        r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssignerID(), iR1.getNote(), iR1.getSubmittedTime(),
                 iR1.getCompletedTime(), iR1.getStatus(), iR1.getLanguage());
         InterpreterRequest iR2 = r.getInterpreterRequest(testIRID);
         assertEquals(testIRID,iR2.getRequestID());
         assertEquals(iR1.getNodeID(),iR2.getNodeID());
-        assertEquals(iR1.getAssigner(),iR2.getAssigner());
+        assertEquals(iR1.getAssignerID(),iR2.getAssignerID());
         assertEquals(iR1.getNote(),iR2.getNote());
         assertEquals(iR1.getSubmittedTime(),iR2.getSubmittedTime());
         assertEquals(iR1.getCompletedTime(),iR2.getCompletedTime());

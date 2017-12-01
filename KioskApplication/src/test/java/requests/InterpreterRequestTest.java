@@ -25,7 +25,7 @@ public class InterpreterRequestTest {
                 "note",submittedTime, startedTime, completedTime, TO_DO, Language.ARABIC);
         assertTrue(iR1.markInProgress("emp"));
         assertEquals(IN_PROGRESS, iR1.getStatus());
-        assertEquals("emp", iR1.getCompleter());
+        assertEquals("emp", iR1.getCompleterID());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.AbsEmployee;
+import database.objects.IEmployee;
 import database.objects.Employee;
 import database.objects.NullEmployee;
 import utility.KioskPermission;
@@ -21,8 +21,8 @@ import static utility.KioskPermission.*;
 public class LoginEntity {
     private DatabaseController database;
     // holds all relevant information for the current user
-    private AbsEmployee currentLogin;
-    private HashMap<String,AbsEmployee> logins;
+    private IEmployee currentLogin;
+    private HashMap<String,Employee> logins;
 
     private static LoginEntity instance = null;
 
@@ -90,20 +90,21 @@ public class LoginEntity {
      * Gets all the login info from the entity, only allowed if currently a super user.
      */
     public ArrayList<Employee> getAllLogins() {
+        ArrayList<Employee> emps = new ArrayList<Employee>();
         // Return the logins if we're a super user
-        if (getCurrentPermission().equals(KioskPermission.SUPER_USER)) {
-            return new ArrayList<>(logins.values());
+        if (getCurrentPermission()==SUPER_USER) {
+            return new ArrayList<Employee>(logins.values());
         }
 
         // Otherwise return an empty list
-        return new ArrayList<>();
+        return emps;
     }
 
     public ArrayList<String> getAllUserNames(){
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<String> userNames = new ArrayList<String>();
         for(Employee employee: employees){
-            userNames.add(employee.getLoginID());
+            userNames.add(employee.getUsername());
         }
         return userNames;
     }
@@ -114,9 +115,9 @@ public class LoginEntity {
         if(type.equals(RequestType.GENERAL)){
             userNames = getAllUserNames();
         }else{
-            for(AbsEmployee employee: employees){
+            for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
-                    userNames.add(employee.getLoginID());
+                    userNames.add(employee.getUsername());
                 }
             }
         }
@@ -156,7 +157,8 @@ public class LoginEntity {
                 Employee tempEmployee=new Employee(userName, password, permission, serviceAbility);
                 database.addEmployee(tempEmployee.getUsername(),tempEmployee.getPassword(password),
                         tempEmployee.getPermission(),tempEmployee.getServiceAbility());
-                //gets all the employees from the database
+                //gets all the employees from the database to add that employee to the hashmap
+                //to also include their ID in the employee
                 readAllFromDatabase();
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
@@ -176,7 +178,7 @@ public class LoginEntity {
     public boolean deleteLogin(String username){
         // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
         if(logins.containsKey(username)&&(username!=currentLogin.getUsername())) {
-            AbsEmployee delEmp = logins.get(username);
+            IEmployee delEmp = logins.get(username);
             // checks to see if the current user permissions are higher than the one they are deleting
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
@@ -188,51 +190,61 @@ public class LoginEntity {
         return false;
     }
 
-    public RequestType getServiceAbility(String userName) {
-        if(currentLogin.getPermission()==SUPER_USER) {
-            return RequestType.GENERAL;
-        }
-        if(logins.get(userName).getPermission().equals(KioskPermission.EMPLOYEE)){
-            Employee employee = logins.get(userName);
-            return employee.getServiceAbility();
-        }else{
-            return RequestType.GENERAL;
-        }
+    /**
+     * only for the current login
+     * @return the RequestType of the current log in
+     */
+    public RequestType getServiceAbility() {
+        return currentLogin.getServiceAbility();
     }
 
     // Method for users to update only their passwords, and no one else's
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean updated = false;
         if (currentLogin.updatePassword(newPassword, oldPassword)) {
-            database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
-                    currentLogin.getPassword(newPassword),currentLogin.getPermission(),
-                    currentLogin.getServiceAbility());
-            logins.replace(currentLogin.getUsername(),currentLogin);
+            updateCurrentLogin(newPassword,currentLogin.getUsername());
             updated = true;
         }
         return updated;
     }
 
-    // For changing your username
+    /**
+     * for updating the current user's username
+     * @param newUsername
+     * @param password
+     * @return
+     */
     public boolean updateUsername(String newUsername, String password){
         boolean updated=false;
         String oldUsername = currentLogin.getUsername();
-        Employee updatedLogin=logins.get(oldUsername);
         //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
         //checks if the current user name is already in active use
         if(!logins.containsKey(newUsername)){
-            updated=updatedLogin.updateUsername(newUsername,password);
+            updated=currentLogin.updateUsername(newUsername,password);
         }
         if(updated){
             //updates internal hashmap
-            logins.remove(oldUsername);
-            logins.put(newUsername,updatedLogin);
-            //relays updated information to database
-            database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
-                    currentLogin.getPassword(password),currentLogin.getPermission(),
-                    currentLogin.getServiceAbility());
+            updateCurrentLogin(password,oldUsername);
         }
         return updated;
+    }
+
+    /**
+     * Helper method for the methods that update the current login
+     * @param oldUsername can also be the current userName
+     * @param password
+     */
+    private void updateCurrentLogin(String password,String oldUsername) {
+        logins.remove(oldUsername);
+        logins.put(currentLogin.getUsername(),
+                //haven't figured out how to safely get things from an interface to the class
+                //so yeah...
+                new Employee(currentLogin.getLoginID(), currentLogin.getUsername(),
+                        currentLogin.getPassword(password), currentLogin.getPermission(),
+                        currentLogin.getServiceAbility()));
+        database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
+                currentLogin.getPassword(password),currentLogin.getPermission(),
+                currentLogin.getServiceAbility());
     }
 
     // For checking log in credentials

@@ -1,10 +1,11 @@
 package database.objects;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
-public class Employee extends AbsEmployee {
+public class Employee extends RecursiveTreeObject<Employee> implements IEmployee {
     private int loginID;
     private String username;
     private String password;

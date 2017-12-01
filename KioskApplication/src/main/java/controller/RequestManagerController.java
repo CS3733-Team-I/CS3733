@@ -62,7 +62,7 @@ public class RequestManagerController extends ScreenController {
     //it takes that information and filters out the requests to show relevant requests
     @FXML
     public void setup(){
-        RequestType employeeType = l.getServiceAbility(l.getUsername());
+        RequestType employeeType = l.getServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
             foodFilter.setDisable(true);
@@ -157,7 +157,7 @@ public class RequestManagerController extends ScreenController {
                             statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent e) {
-                                    r.markInProgress((String) employees.getValue(),requestID);
+                                    r.markInProgress((employees.getValue(),requestID);
                                     newRequests();
                                 }
                             });
@@ -245,7 +245,7 @@ public class RequestManagerController extends ScreenController {
         Label id = new Label(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
         Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
+        Label assigner = new Label(request.getAssignerID()); //Some reason this returns more than needed
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label extraField;

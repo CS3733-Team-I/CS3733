@@ -205,7 +205,7 @@ public class DatabaseControllerTests {
 
         //updates InterpreterRequest values
         iR.setNodeID("NODE2");
-        iR.setAssigner("emp@hospital.com");
+        iR.setAssignerID("emp@hospital.com");
         iR.setNote("Professor Wong");
         iR.setSubmittedTime(new Timestamp(t2));
         iR.setCompletedTime(new Timestamp(t2-1));

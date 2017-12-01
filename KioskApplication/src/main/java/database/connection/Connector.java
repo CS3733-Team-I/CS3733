@@ -190,8 +190,8 @@ public class Connector {
         pstmt.setString(1, iR.getRequestID());
         pstmt.setInt(2, iR.getLanguage().ordinal());
         pstmt.setString(3, iR.getNodeID());
-        pstmt.setString(4, iR.getAssigner());
-        pstmt.setString(5, iR.getCompleter());
+        pstmt.setString(4, iR.getAssignerID());
+        pstmt.setString(5, iR.getCompleterID());
         pstmt.setString(6, iR.getNote());
         pstmt.setTimestamp(7, iR.getSubmittedTime());
         pstmt.setTimestamp(8, iR.getStartedTime());
@@ -205,8 +205,8 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, iR.getLanguage().ordinal());
         pstmt.setString(2, iR.getNodeID());
-        pstmt.setString(3, iR.getAssigner());
-        pstmt.setString(4, iR.getCompleter());
+        pstmt.setString(3, iR.getAssignerID());
+        pstmt.setString(4, iR.getCompleterID());
         pstmt.setString(5, iR.getNote());
         pstmt.setTimestamp(6, iR.getSubmittedTime());
         pstmt.setTimestamp(7, iR.getStartedTime());
@@ -279,8 +279,8 @@ public class Connector {
         pstmt.setString(1, sR.getRequestID());
         pstmt.setInt(2, sR.getPriority());
         pstmt.setString(3, sR.getNodeID());
-        pstmt.setString(4, sR.getAssigner());
-        pstmt.setString(5, sR.getCompleter());
+        pstmt.setString(4, sR.getAssignerID());
+        pstmt.setString(5, sR.getCompleterID());
         pstmt.setString(6, sR.getNote());
         pstmt.setTimestamp(7, sR.getSubmittedTime());
         pstmt.setTimestamp(8, sR.getStartedTime());
@@ -294,8 +294,8 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, sR.getPriority());
         pstmt.setString(2, sR.getNodeID());
-        pstmt.setString(3, sR.getAssigner());
-        pstmt.setString(4, sR.getCompleter());
+        pstmt.setString(3, sR.getAssignerID());
+        pstmt.setString(4, sR.getCompleterID());
         pstmt.setString(5, sR.getNote());
         pstmt.setTimestamp(6, sR.getSubmittedTime());
         pstmt.setTimestamp(7, sR.getStartedTime());

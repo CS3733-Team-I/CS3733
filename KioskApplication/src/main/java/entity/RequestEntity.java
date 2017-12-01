@@ -198,17 +198,17 @@ public class RequestEntity {
     }
 
     //Generic request in progress maker
-    public void markInProgress(String completer, String requestID){
+    public void markInProgress(int completerID, String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.markInProgress(completer);
+            iR.markInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.markInProgress(completer);
+            sR.markInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
@@ -308,12 +308,12 @@ public class RequestEntity {
         }
     }
 
-    public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+    public void updateInterpreterRequest(String requestID, String nodeID, int assignerID, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
         oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
+        oldReq.setAssignerID(assignerID);
         oldReq.setNote(note);
         oldReq.setSubmittedTime(submittedTime);
         oldReq.setCompletedTime(completedTime);
@@ -358,12 +358,12 @@ public class RequestEntity {
         }
     }
 
-    public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
+    public void updateSecurityRequest(String requestID, String nodeID, int assignerID, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
         oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
+        oldReq.setAssignerID(assignerID);
         oldReq.setNote(note);
         oldReq.setSubmittedTime(submittedTime);
         oldReq.setCompletedTime(completedTime);

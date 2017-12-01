@@ -24,7 +24,7 @@ public class InterpreterRequest extends Request {
             InterpreterRequest other = (InterpreterRequest)obj;
             return(this.requestID.equals(other.getRequestID())) &&
                     this.getNodeID().equals(other.getNodeID())&&
-                    this.getAssigner().equals(other.getAssigner())&&
+                    this.getAssignerID().equals(other.getAssignerID())&&
                     this.getNote().equals(other.getNote())&&
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&

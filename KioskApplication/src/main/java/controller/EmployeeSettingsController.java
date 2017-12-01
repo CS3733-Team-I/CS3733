@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
+import database.objects.IEmployee;
 import database.objects.Employee;
 import entity.LoginEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -98,7 +99,7 @@ public class EmployeeSettingsController {
 
         ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
         logins.stream().forEach((employee) -> {
-            root.getChildren().add(new TreeItem<>(employee));
+            root.getChildren().add(new TreeItem<Employee>(employee));
         });
 
         deleteUserButton.setDisable(true);
