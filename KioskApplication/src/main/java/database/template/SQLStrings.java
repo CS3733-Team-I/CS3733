@@ -23,8 +23,8 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " assigner VARCHAR(63) NOT NULL REFERENCES t_employee on DELETE CASCADE," +
-            " completer VARCHAR(63) NOT NULL,"+
+            " assigner INT NOT NULL REFERENCES t_employee on DELETE CASCADE," +
+            " completer INT NOT NULL,"+
             " note CLOB(280)," +
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
@@ -103,7 +103,7 @@ public class SQLStrings {
 
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
-    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?,?)";
+    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?)";
     public static final String EMPLOYEE_UPDATE = "update t_employee set userName=?, password=?, permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

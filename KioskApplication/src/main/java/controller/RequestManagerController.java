@@ -147,7 +147,7 @@ public class RequestManagerController extends ScreenController {
                 if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
                     switch (status){
                         case TO_DO:
-                            ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
+                            ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
                             listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
                             JFXComboBox employees = new JFXComboBox(listOfEmployees);
                             employees.setPromptText("Select Employee");
@@ -157,7 +157,7 @@ public class RequestManagerController extends ScreenController {
                             statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent e) {
-                                    r.markInProgress((employees.getValue(),requestID);
+                                    r.markInProgress((int) employees.getValue(),requestID);
                                     newRequests();
                                 }
                             });
@@ -245,7 +245,7 @@ public class RequestManagerController extends ScreenController {
         Label id = new Label(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
         Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssignerID()); //Some reason this returns more than needed
+        Label assigner = new Label(r.getAssigner(requestID)); //Some reason this returns more than needed
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label extraField;

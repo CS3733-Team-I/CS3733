@@ -273,19 +273,24 @@ public class RequestEntity {
         return request;
     }
 
+    public String getAssigner(String requestID){
+        Request request = getRequest(requestID);
+        return dbController.getEmployee(request.getAssignerID()).getUsername();
+    }
+
 
     /**
      * InterpreterRequest methods
      */
 
-    public String submitInterpreterRequest(String nodeID, String assignee, String note,
+    public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
-        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignee, "", note,
+        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
@@ -328,14 +333,14 @@ public class RequestEntity {
      * SecurityRequest methods
      */
 
-    public String submitSecurityRequest(String nodeID, String assignee, String note,
+    public String submitSecurityRequest(String nodeID, int assignerID, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
-        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignee, "", note,
+        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);

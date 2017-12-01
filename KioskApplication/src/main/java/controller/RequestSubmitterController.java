@@ -107,7 +107,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addIntRequest() throws IOException {
         String location = intLocation.getText();
-        String assigner = l.getLoginID();
+        int assigner = l.getLoginID();
         String notes = intNotesArea.getText();
         if (notes==null){
             notes="";
@@ -130,12 +130,12 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addSecRequest()throws IOException {
         String location = secLocationField.getText();
-        String assigner = l.getLoginID();
+        int assignerID = l.getLoginID();
         String notes = secNoteField.getText();
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
+        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assignerID);
         //node ID, employee, notes, priority
-        r.submitSecurityRequest(location, assigner, notes, priority);
+        r.submitSecurityRequest(location, assignerID, notes, priority);
         secLocationField.clear();
         secNoteField.clear();
         priorityMenu.setValue("");
