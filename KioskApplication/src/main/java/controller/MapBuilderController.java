@@ -109,13 +109,6 @@ public class MapBuilderController extends ScreenController {
     @FXML
     JFXPopup popup;
 
-    private ImageView ivLOWERLEVEL_2;
-    private ImageView ivLOWERLEVEL_1;
-    private ImageView ivGROUND;
-    private ImageView ivFIRST;
-    private ImageView ivSECOND;
-    private ImageView ivTHIRD;
-
     /**
      * Observer lists
      */
@@ -134,15 +127,6 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() throws IOException{
-
-
-        ivFIRST = floorImage(NodeFloor.FIRST);
-        ivSECOND = floorImage(NodeFloor.SECOND);
-        ivTHIRD = floorImage(NodeFloor.THIRD);
-        ivLOWERLEVEL_1 = floorImage(NodeFloor.LOWERLEVEL_1);
-        ivLOWERLEVEL_2 = floorImage(NodeFloor.LOWERLEVEL_2);
-        ivGROUND = floorImage(NodeFloor.GROUND);
-
         Advance.setVisible(false);
 
         /**

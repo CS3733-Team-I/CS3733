@@ -41,7 +41,7 @@ public class MainWindowController {
     private AnchorPane mapView;
     private MapController mapController;
 
-    protected HashMap<ApplicationScreen, ScreenController> controllers;
+    private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();

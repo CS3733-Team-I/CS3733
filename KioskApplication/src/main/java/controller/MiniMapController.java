@@ -10,9 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import utility.ResourceManager;
 
-import static controller.MapController.DEFAULT_HVALUE;
-import static controller.MapController.DEFAULT_VVALUE;
-
 public class MiniMapController {
 
     @FXML public ImageView miniMapView;
@@ -172,8 +169,8 @@ public class MiniMapController {
 
     @FXML
     protected void changePositionEvent(MouseEvent event) {
-        viewportRect.setX(event.getX()- viewportRect.getWidth()/2);
-        viewportRect.setY(event.getY()- viewportRect.getHeight()/2);
+        viewportRect.setX(event.getX() - viewportRect.getWidth()/2);
+        viewportRect.setY(event.getY() - viewportRect.getHeight()/2);
     }
 
     /**
@@ -183,7 +180,7 @@ public class MiniMapController {
      * @param max maximum value
      * @return the larger value between min and the smallest between max and val.
      */
-    public double clamp(double val, double min, double max) {
+    private double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
     }
 }
