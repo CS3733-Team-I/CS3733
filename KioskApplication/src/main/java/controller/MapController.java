@@ -187,8 +187,6 @@ public class MapController {
     }
 
     public void drawPath() {
-        MapEntity mapEntity = MapEntity.getInstance();
-
         // Change to floor of the starting node
         floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
 
@@ -285,11 +283,6 @@ public class MapController {
         miniMapController.setViewportZoom(scaleValue);
     }
 
-    public void setFloorSelectorPosition(Point2D position) {
-        AnchorPane.setTopAnchor(floorSelector, position.getY());
-        AnchorPane.setLeftAnchor(floorSelector, position.getX());
-    }
-
     @FXML
     protected void initialize(){
 //        floors.setVisible(false);
@@ -322,8 +315,6 @@ public class MapController {
         scrollPane.setContent(contentGroup);
 
         //floor changing listeners
-        //TODO Solve the Null pointer issue with another way
-        final boolean offsetBool = false;
         floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
             @Override
             public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {

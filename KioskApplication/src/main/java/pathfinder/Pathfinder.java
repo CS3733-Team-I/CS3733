@@ -48,7 +48,6 @@ public class Pathfinder {
 
          //   throw new PathfinderException("No defined end node, \n please define valid end location");
 
-        NodeFloor floor = startNode.getFloor();
         //Starting with the second node, run the pathfinder algorithm using each node as the end node and the previous
         //node as the start node.  Assemble the lists of edges from each into a single path.
         boolean isFirst = true;

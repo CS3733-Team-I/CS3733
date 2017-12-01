@@ -145,7 +145,6 @@ public class Connector {
     public static String selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned) throws SQLException{
         String result = "";
         if(nodeType != NodeType.ELEV) {
-            int temp = 0;
             PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
             pstmt.setInt(1, nodeType.ordinal());
             pstmt.setInt(2, floor.ordinal());

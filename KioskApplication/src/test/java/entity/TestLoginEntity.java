@@ -14,11 +14,9 @@ import static utility.KioskPermission.SUPER_USER;
 
 public class TestLoginEntity {
     private LoginEntity l;
-    private DatabaseController db;
 
     @Before
     public void setup(){
-        db = DatabaseController.getInstance();
         l = LoginEntity.getTestInstance();
         l.addUser("boss@hospital.com", "123",SUPER_USER, RequestType.GENERAL);
         l.addUser("emp@hospital.com", "12",EMPLOYEE,RequestType.INTERPRETER);

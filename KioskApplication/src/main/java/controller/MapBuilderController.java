@@ -25,7 +25,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -751,7 +750,6 @@ public class MapBuilderController extends ScreenController {
         }
         else {
         //System.out.println("");
-            int nodeTypeCountPrepared = 0;
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
                 nodeID.setText(nodeIDtemp);
@@ -1298,7 +1296,6 @@ public class MapBuilderController extends ScreenController {
         JFXDialogLayout floorDialoglo = new JFXDialogLayout();
         floorDialoglo.setHeading(new Text("Select a floor"));
         JFXDialog Dialog = new JFXDialog(mapBuilderStackPane, floorDialoglo, JFXDialog.DialogTransition.CENTER);
-        HBox floorHBox = new HBox(ivFIRST, ivSECOND, ivTHIRD, ivLOWERLEVEL_1, ivLOWERLEVEL_2, ivGROUND);
         floorDialoglo.setActions(Dialog);
 
         Dialog.show();

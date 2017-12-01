@@ -76,8 +76,6 @@ public class Path {
         double angleDif = nextAngle - prevAngle;
         double straightAngle = Math.PI/6;
 
-        String longName = "";
-
         if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
         else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();

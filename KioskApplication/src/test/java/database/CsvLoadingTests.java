@@ -18,11 +18,7 @@ import java.util.List;
 
 public class CsvLoadingTests {
 
-    DatabaseController dbController;
-
-    public CsvLoadingTests() {
-        dbController = DatabaseController.getInstance();
-    }
+    public CsvLoadingTests() { }
 
     @Test
     public void loadCSVs() throws URISyntaxException{

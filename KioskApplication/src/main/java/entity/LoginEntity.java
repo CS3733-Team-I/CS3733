@@ -25,8 +25,6 @@ public class LoginEntity {
     // TODO: make these less vulnerable
     private HashMap<String,Employee> logins;
 
-    private static LoginEntity instance = null;
-
     public static LoginEntity getInstance(){
         return SingletonHelper.instance;
     }

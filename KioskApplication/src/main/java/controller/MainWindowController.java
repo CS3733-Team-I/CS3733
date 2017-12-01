@@ -266,10 +266,6 @@ public class MainWindowController {
         }
     }
 
-    public void displayTrackingData(){
-
-    }
-
     public void onMapNodeClicked(Node n) {
         controllers.get(currentScreen).onMapNodeClicked(n);
     }
