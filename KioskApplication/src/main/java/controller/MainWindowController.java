@@ -282,7 +282,7 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 
-    protected String getCreateTabName() {
+    protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
     }
 }

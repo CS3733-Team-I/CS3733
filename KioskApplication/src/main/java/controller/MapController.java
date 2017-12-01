@@ -24,7 +24,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -35,7 +34,6 @@ import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -138,7 +136,8 @@ public class MapController {
     }
 
     public void reloadDisplay() {
-
+        setShowNodes(showNodesBox.isSelected());
+        setShowEdges(showEdgesBox.isSelected());
     }
 
     public void clearMap() {
@@ -242,8 +241,7 @@ public class MapController {
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
-        //System.out.println("Image Width: " + floorImage.getWidth());
-        //System.out.println("Image Height: " + floorImage.getHeight());
+
         if (this.path != null) {
             clearMap();
             for (LinkedList<Edge> segment : this.path.getEdges())
@@ -254,7 +252,6 @@ public class MapController {
     }
 
     public NodeFloor getCurrentFloor() {
-        System.out.println(floorSelector.getValue());
         return floorSelector.getValue();
     }
 
@@ -282,14 +279,10 @@ public class MapController {
 
     @FXML
     protected void initialize() {
-//        floors.setVisible(false);
-
-
         nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
-
 
         miniMapController = new MiniMapController(this);
 
@@ -315,33 +308,6 @@ public class MapController {
         /**
          * sync UI
          */
-        showNodesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue()));
-                } else {
-                    databaseNodeObjectList.clear();
-                }
-            }
-        });
-
-        showEdgesBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(floorSelector.getValue()));
-                } else {
-                    databaseEdgeObjectList.clear();
-                }
-                //edges always drawn under nodes
-                if (showNodesBox.isSelected()) {
-                    showNodesBox.setSelected(false);
-                    showNodesBox.setSelected(true);
-                }
-            }
-        });
-
         databaseNodeObjectList.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
@@ -365,9 +331,13 @@ public class MapController {
                             nodeView.setMouseTransparent(false);
                             nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
                             nodeView.setPickOnBounds(false);
+
+                            // TODO find any way to do this better, this is a hack
                             nodeView.setAccessibleText(addedDatabaseNode.getXyz());
                             nodeView.setAccessibleHelp(addedDatabaseNode.getNodeType().toString());
-                            if (parent.getCreateTabName().equals("Map Builder")) {
+
+                            // Show tooltip based on the current tab
+                            if (parent.getCurrentTabName().equals("Map Builder")) {
                                 Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName() + "\n\nConnections:\n");
                                 for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(addedDatabaseNode)) {
                                     nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
@@ -378,11 +348,11 @@ public class MapController {
                                 Tooltip.install(nodeView, nodeInfo);
                             }
 
-                            //additional action when on map builder window
-                            if (parent.getCreateTabName().equals("Map Builder")) {
+                            if (parent.getCurrentTabName().equals("Map Builder")) {
                                 nodeView.setOnDragDetected(new EventHandler<MouseEvent>() {
                                     @Override
                                     public void handle(MouseEvent event) {
+                                        // TODO do this in some different way, parent.controllers cannot be public
                                         if (!parent.controllers.get(ApplicationScreen.MAP_BUILDER).isNewNodeEmpty()) {
                                             Alert alert = new Alert(Alert.AlertType.ERROR);
                                             alert.setTitle("Error creating connection");
@@ -407,10 +377,11 @@ public class MapController {
                                 nodeView.setOnDragDone(new EventHandler<DragEvent>() {
                                     @Override
                                     public void handle(DragEvent event) {
-//                                        floors.setVisible(false);
                                         nodeView.setFill(Color.GRAY);
+
                                         //selected the source node if no node is selected
                                         try {
+                                            // TODO can this just call parent.onMapNodeClicked?
                                             onMapClicked(new MouseEvent(MouseEvent.MOUSE_CLICKED, nodeView.getCenterX(),
                                                     nodeView.getCenterY(), 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
                                                     true, true, true, true, true, true, null));
@@ -592,16 +563,13 @@ public class MapController {
                 //revert deselected nodes to normal color
                 while (c.next()) {
                     if (c.wasRemoved()) {
-                        for (database.objects.Node deseletedNode : c.getRemoved()) {
+                        for (database.objects.Node deselectedNode : c.getRemoved()) {
                             System.out.println("Removing node from Selected node");
 
-                            if (!observableHighlightedChangedNodes.contains(deseletedNode)) {
-                                //System.out.println("Removing node from Selected Node: NORMAL");
-                                highlightNode(deseletedNode, NodeDisplay.NORMAL);
+                            if (!observableHighlightedChangedNodes.contains(deselectedNode)) {
+                                highlightNode(deselectedNode, NodeDisplay.NORMAL);
                             } else {
-                                highlightNode(deseletedNode, NodeDisplay.CHANGED);
-                                //System.out.println("Removing node from Selected Node: CHANGED");
-                                highlightNode(deseletedNode, NodeDisplay.CHANGED);
+                                highlightNode(deselectedNode, NodeDisplay.CHANGED);
                             }
                         }
                     } else if (c.wasAdded()) {
@@ -683,6 +651,22 @@ public class MapController {
         if (zoomSlider.getValue() < minScrollValue) zoomSlider.setValue(minScrollValue);
     }
 
+    public void setShowNodes(boolean show) {
+        if (show) {
+            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(getCurrentFloor()));
+        } else {
+            databaseNodeObjectList.clear();
+        }
+    }
+
+    public void setShowEdges(boolean show) {
+        if (show) {
+            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(getCurrentFloor()));
+        } else {
+            databaseEdgeObjectList.clear();
+        }
+    }
+
     @FXML
     protected void onFloorSelected() {
         NodeFloor floor = floorSelector.getSelectionModel().getSelectedItem();
@@ -733,13 +717,6 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
-    }
-
-    protected void refresh() {
-        showEdgesBox.setSelected(false);
-        showEdgesBox.setSelected(true);
-        showNodesBox.setSelected(false);
-        showNodesBox.setSelected(true);
     }
 
     public Path getPath() {
