@@ -1,0 +1,48 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+CCONF001L1,2255,850,L1,45 Francis,CONF,Anesthesia Conf Floor L1,Conf C001L1,Team C
+CCONF002L1,2665,1043,L1,45 Francis,CONF,Medical Records Conference Room Floor L1,Conf C002L1,Team C
+CCONF003L1,2445,1245,L1,45 Francis,CONF,Abrams Conference Room,Conf C003L1,Team C
+CDEPT002L1,1980,845,L1,Tower,DEPT,Day Surgery Family Waiting Floor L1,Department C002L1,Team C
+CDEPT003L1,1845,845,L1,Tower,DEPT,Day Surgery Family Waiting Exit Floor L1,Department C003L1,Team C
+CDEPT004L1,2310,1043,L1,45 Francis,DEPT,Medical Records Film Library Floor L1,Department C004L1,Team C
+CHALL001L1,1732,925,L1,Tower,HALL,Hallway 1 Floor L1,Hallway C001L1,Team C
+CHALL001L2,2360,855,L2,45 Francis,HALL,Hallway K Elevator Floor L2,Hallway C001L2,Team C
+CHALL002L1,2445,1043,L1,45 Francis,HALL,Hallway 2 Floor L1,Hallway C002L1,Team C
+CHALL002L2,2270,905,L2,45 Francis,HALL,Hallway 2 Floor L2,Hallway C002L2,Team C
+CHALL003L1,2445,1285,L1,45 Francis,HALL,Hallway 3 Floor L1,Hallway C003L1,Team C
+CHALL003L2,2215,905,L2,45 Francis,HALL,Hallway 3 Floor L2,Hallway C003L2,Team C
+CHALL004L1,2770,1070,L1,45 Francis,HALL,Hallway 4 Floor L1,Hallway C004L1,Team C
+CHALL004L2,2130,905,L2,45 Francis,HALL,Hallway 4 Floor L2,Hallway C004L2,Team C
+CHALL005L1,1750,1285,L1,Tower,HALL,Hallway 5 Floor L1,Hallway C005L1,Team C
+CHALL005L2,1745,1280,L2,Tower,HALL,Hallway 5 Floor L2,Hallway C005L2,Team C
+CHALL006L1,2130,1285,L1,Tower,HALL,Hallway 6 Floor L1,Hallway C006L1,Team C
+CHALL006L2,1745,1010,L2,Tower,HALL,Hallway 6 Floor L2,Hallway C006L2,Team C
+CHALL007L1,2130,1045,L1,Tower,HALL,Hallway 7 Floor L1,Hallway C007L1,Team C
+CHALL007L2,1730,1010,L2,Tower,HALL,Hallway 7 Floor L2,Hallway C007L2,Team C
+CHALL008L1,2215,1045,L1,45 Francis,HALL,Hallway 8 Floor L1,Hallway C008L1,Team C
+CHALL008L2,1730,925,L2,Tower,HALL,Hallway 8 Floor L2,Hallway C008L2,Team C
+CHALL009L1,2220,905,L1,45 Francis,HALL,Hallway 9 Floor L1,Hallway C009L1,Team C
+CHALL009L2,1730,850,L2,Tower,HALL,Hallway 9 Floor L2,Hallway C009L2,Team C
+CHALL010L1,2265,905,L1,45 Francis,HALL,Hallway 10 Floor L1,Hallway C010L1,Team C
+CHALL010L2,2130,850,L2,Tower,HALL,Hallway 10 Floor L2,Hallway C010L2,Team C
+CHALL011L1,2360,850,L1,45 Francis,HALL,Hallway 11 Floor L1,Hallway C011L1,Team C
+CHALL012L1,2130,905,L1,45 Francis,HALL,Hallway 12 Floor L1,Hallway C012L1,Team C
+CHALL013L1,2130,845,L1,45 Francis,HALL,Hallway 13 Floor L1,Hallway C013L1,Team C
+CHALL014L1,1845,925,L1,Tower,HALL,Hallway 14 Floor L1,Hallway C014L1,Team C
+CHALL015L1,2300,850,L1,45 Francis,HALL,Hallway 15 Floor L1,Hallway C015L1,Team C
+CLABS001L1,1965,1285,L1,Tower,LABS,Outpatient Fluoroscopy Floor L1,Lab C001L1,Team C
+CLABS001L2,2300,855,L2,45 Francis,LABS,Radiation Oncology T/X Suite Floor L2,Lab C001L2,Team C
+CLABS002L1,1750,1090,L1,Tower,LABS,Pre-Op PACU Floor L1,Lab C002L1,Team C
+CLABS002L2,2215,1280,L2,45 Francis,LABS,Radiation Oncology Floor L2,Lab C002L2,Team C
+CLABS003L1,2290,1285,L1,45 Francis,LABS,Nuclear Medicine Floor L1,Lab C003L1,Team C
+CLABS004L1,2320,1285,L1,45 Francis,LABS,Ultrasound Floor L1,Lab C004L1,Team C
+CLABS005L1,2770,1285,L1,45 Francis,LABS,CSIR MRI Floor L1,Lab C005L1,Team C
+CREST001L1,1732,1020,L1,Tower,REST,Restroom L Elevator Floor L1,Restroom C001L1,Team C
+CREST001L2,2300,885,L2,45 Francis,REST,Restroom K Elevator Floor L2,Restroom C001L2,Team C
+CREST002L1,2065,1285,L1,Tower,REST,Restroom M Elevator Floor L1,Restroom C002L1,Team C
+CREST002L2,1930,1280,L2,45 Francis,REST,Restroom L Elevator Floor L2,Restroom C002L2,Team C
+CREST003L1,2300,880,L1,45 Francis,REST,Restroom K Elevator Floor L1,Restroom C003L1,Team C
+CREST004L1,2770,1160,L1,45 Francis,REST,Restroom H Elevator Floor L1,Restroom C004L1,Team C
+CRETL001L1,2185,905,L1,45 Francis,RETL,Vending Machine 1 L1,Retail C001L1,Team C
+CSERV001L1,2490,1043,L1,45 Francis,SERV,Volunteers Floor L1,Service C001L1,Team C
+CSERV001L2,2015,1280,L2,45 Francis,SERV,Interpreter Services Floor L2,Service C001L2,Team C
