@@ -37,3 +37,13 @@ dependencies {
             [group: 'org.springframework.security', name:'spring-security-web' ,version:'5.0.0.RC1']
     )
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

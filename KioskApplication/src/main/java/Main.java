@@ -16,7 +16,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
         if (MapEntity.getInstance().getAllNodes().size() == 0)
-            CsvFileUtil.readAllCSVs();
+            CsvFileUtil.getInstance().readAllCSVs();
 
         SystemSettings.getInstance();
 

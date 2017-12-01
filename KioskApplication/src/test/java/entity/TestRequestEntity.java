@@ -153,19 +153,20 @@ public class TestRequestEntity {
     public void getLanguageFrequencyTest(){
         String iR1 = r.submitInterpreterRequest("NODE2","hank","",Language.GERMAN);
         String iR2 = r.submitInterpreterRequest("NODE1","hank","",Language.CHINESE);
+        String iR3 = r.submitInterpreterRequest("NODE1","hank","",Language.GERMAN);
         LinkedList<LanguageFrequency> expected = new LinkedList<>();
         expected.add(new LanguageFrequency(Language.CHINESE,2));
         expected.add(new LanguageFrequency(Language.GERMAN,1));
         Collections.sort(expected, new SortByFrequency());
         LinkedList<LanguageFrequency> actual =r.getLanguageFrequency();
-        for (LanguageFrequency lF:actual
-             ) {
-            System.out.println(lF.getLanguage());
-            System.out.println(lF.getFrequency());
+        for (LanguageFrequency languageFrequency : actual) {
+            System.out.println(languageFrequency.getLanguage());
+            System.out.println(languageFrequency.getFrequency());
         }
         assertEquals(expected.get(0).getFrequency(),actual.get(0).getFrequency());
         assertEquals(expected.get(1).getFrequency(),actual.get(1).getFrequency());
         r.deleteRequest(iR1);
         r.deleteRequest(iR2);
+        r.deleteRequest(iR3);
     }
 }

@@ -120,13 +120,7 @@ public class TestPathfinder {
 
     @After //remove things from database
     public void removeAllFromDB() throws DatabaseException {
-        List<Node> nodes = MapEntity.getInstance().getAllNodes();
-        for (Node node : nodes) {
-            MapEntity.getInstance().removeNode(node);
-
-            ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
-            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
-        }
+        MapEntity.getInstance().removeAll();
     }
 
     //A-star algorithm tests
