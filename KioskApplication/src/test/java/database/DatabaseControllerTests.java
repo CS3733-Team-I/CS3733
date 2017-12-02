@@ -32,11 +32,13 @@ public class DatabaseControllerTests {
 
     @Before
     public void statrtup(){
-        dbController.addEmployee("boss@hospital.com","password",KioskPermission.EMPLOYEE,
-                RequestType.GENERAL);
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        dbController.addEmployee(emp1,"password");
 
-        dbController.addEmployee("emp@hospital.com","password",KioskPermission.EMPLOYEE,
-                RequestType.GENERAL);
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        dbController.addEmployee(emp2,"password");
     }
 
     @After
@@ -56,7 +58,6 @@ public class DatabaseControllerTests {
 
         List<Employee> employees = dbController.getAllEmployees();
         for (Employee e : employees) {
-            System.out.println(e.getLoginID());
             dbController.removeEmployee(e.getLoginID());
         }
 
@@ -266,42 +267,47 @@ public class DatabaseControllerTests {
      */
 
     @Test
-    public void testAddEmployee(){
-        dbController.addEmployee("Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+    public void testEmployeeAdd(){
+        Employee testEmp = new Employee("Name","n","t","password",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee(testEmp,"password");
         LinkedList<Employee> emps = dbController.getAllEmployees();
         assertEquals("Name",emps.get(emps.size()-1).getUsername());
     }
 
     @Test
-    public void testRemoveEmployee(){
-        dbController.addEmployee("Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+    public void testEmployeeRemove(){
+        Employee testEmp = new Employee("Name","n","t","password",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee(testEmp,"password");
         LinkedList<Employee> emps = dbController.getAllEmployees();
         dbController.removeEmployee(emps.get(emps.size()-1).getLoginID());
         assertNull(dbController.getEmployee(emps.get(emps.size()-1).getLoginID()));
     }
 
     @Test
-    public void testUpdateEmployee(){
-        Employee testEmp = new Employee("Name","password", KioskPermission.EMPLOYEE,
-                RequestType.INTERPRETER);
-        dbController.addEmployee(testEmp.getUsername(),testEmp.getPassword("password"),
-                testEmp.getPermission(), testEmp.getServiceAbility());
-        testEmp.updateUsername("NewName","password");
-        testEmp.updatePassword("NewPassword","password");
+    public void testEmployeeUpdate(){
+        Employee testEmp = new Employee("Name","n","t","password",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee(testEmp,"password");
         LinkedList<Employee> emps = dbController.getAllEmployees();
-        dbController.updateEmployee(emps.getLast().getLoginID(),testEmp.getUsername(),testEmp.getPassword("NewPassword"),
-                KioskPermission.ADMIN, RequestType.GENERAL);
-        Employee updatedEmployee=dbController.getEmployee(emps.getLast().getLoginID());
+        Employee upEmp = emps.getLast();
+        upEmp.updateUsername("NewName","password");
+        upEmp.updatePassword("NewPassword","password");
+        dbController.updateEmployee(upEmp,"NewPassword");
+        Employee updatedEmployee=dbController.getEmployee(upEmp.getLoginID());
         assertEquals("NewName",updatedEmployee.getUsername());
-        assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
-        assertEquals(RequestType.GENERAL,updatedEmployee.getServiceAbility());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));
     }
 
     @Test
-    public void testGetAllEmployees(){
-        dbController.addEmployee("Name1","password1", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.addEmployee("Name2","password2", KioskPermission.ADMIN, RequestType.GENERAL);
+    public void testEmployeeGetAll(){
+        Employee testEmp1=new Employee("Name1","ln1","fn1","password1",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee(testEmp1,"password1");
+        Employee testEmp2=new Employee("Name2","ln2","fn2","password2",
+                KioskPermission.ADMIN, RequestType.GENERAL);
+        dbController.addEmployee(testEmp2,"password2");
         LinkedList<Employee> employees = dbController.getAllEmployees();
         assertEquals("Name1",employees.get(employees.size()-2).getUsername());
         assertEquals("Name2",employees.get(employees.size()-1).getUsername());

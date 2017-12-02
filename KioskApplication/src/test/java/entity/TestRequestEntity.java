@@ -48,8 +48,12 @@ public class TestRequestEntity {
         db.addNode(n2);
         db.addNode(n3);
 
-        db.addEmployee("boss@hospital.com","123", KioskPermission.ADMIN, RequestType.GENERAL);
-        db.addEmployee("bobby","123", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        Employee testEmp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "123", KioskPermission.ADMIN, RequestType.GENERAL);
+        db.addEmployee(testEmp1,"123");
+        Employee testEmp2 = new Employee("bobby@hospital.com","Bobby","Hill",
+                "123", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        db.addEmployee(testEmp2,"123");
         String pIR = r.submitInterpreterRequest("NODE3",1,"Is Chinese or Japanese",Language.CHINESE);
         presetIR = r.getInterpreterRequest(pIR);
     }

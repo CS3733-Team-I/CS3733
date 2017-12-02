@@ -331,21 +331,20 @@ public class DatabaseController {
 
     /**
      * adds an employee to the database
-     * @param userName
+     * @param employee
      * @param password
-     * @param permission
-     * @param serviceAbility
      * @return their loginID
      */
-    public int addEmployee(String userName, String password, KioskPermission permission,
-                           RequestType serviceAbility){
+    public int addEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT,
                     PreparedStatement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1,userName);
-            pstmt.setString(2,password);
-            pstmt.setInt(3,permission.ordinal());
-            pstmt.setInt(4,serviceAbility.ordinal());
+            pstmt.setString(1,employee.getUsername());
+            pstmt.setString(2,employee.getLastName());
+            pstmt.setString(3,employee.getFirstName());
+            pstmt.setString(4,employee.getPassword(password));
+            pstmt.setInt(5,employee.getPermission().ordinal());
+            pstmt.setInt(6,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -356,15 +355,16 @@ public class DatabaseController {
     }
 
     // updates all stored information on the employee except their loginID
-    public int updateEmployee(int loginID, String userName, String password, KioskPermission permission,
-                              RequestType serviceAbility){
+    public int updateEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
-            pstmt.setInt(5,loginID);
-            pstmt.setString(1,userName);
-            pstmt.setString(2,password);
-            pstmt.setInt(3,permission.ordinal());
-            pstmt.setInt(4,serviceAbility.ordinal());
+            pstmt.setInt(7,employee.getLoginID());
+            pstmt.setString(1,employee.getUsername());
+            pstmt.setString(2,employee.getLastName());
+            pstmt.setString(3,employee.getFirstName());
+            pstmt.setString(4,employee.getPassword(password));
+            pstmt.setInt(5,employee.getPermission().ordinal());
+            pstmt.setInt(6,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -397,8 +397,10 @@ public class DatabaseController {
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 employee = new Employee(
-                        loginID,
+                        rs.getInt("loginID"),
                         rs.getString("username"),
+                        rs.getString("lastName"),
+                        rs.getString("firstName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
@@ -423,6 +425,8 @@ public class DatabaseController {
                 employee = new Employee(
                         rs.getInt("loginID"),
                         rs.getString("username"),
+                        rs.getString("lastName"),
+                        rs.getString("firstName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);

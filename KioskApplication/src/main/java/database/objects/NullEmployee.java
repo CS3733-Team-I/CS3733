@@ -33,6 +33,14 @@ public class NullEmployee implements IEmployee {
         return "";
     }
 
+    public String getFirstName() {
+        return "";
+    }
+
+    public String getLastName() {
+        return "";
+    }
+
     public KioskPermission getPermission() {
         return KioskPermission.NONEMPLOYEE;
     }

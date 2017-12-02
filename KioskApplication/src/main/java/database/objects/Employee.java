@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.*;
 public class Employee extends RecursiveTreeObject<Employee> implements IEmployee {
     private int loginID;
     private String username;
+    private String lastName;
+    private String firstName;
     private String password;
     private KioskPermission permission;
     private RequestType serviceAbility;
@@ -19,8 +21,10 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param permission if nonEmployee, it changes to employee
      * @param serviceAbility
      */
-    public Employee(String username, String password, KioskPermission permission, RequestType serviceAbility){
+    public Employee(String username, String lastName, String firstName, String password, KioskPermission permission, RequestType serviceAbility){
         this.username = username;
+        this.lastName=lastName;
+        this.firstName=firstName;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         if(permission==KioskPermission.NONEMPLOYEE){
             this.permission=KioskPermission.EMPLOYEE;
@@ -33,14 +37,18 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * This is for database side use,
      * @param loginID retrieves it from the database
      * @param username
+     * @param lastName
+     * @param firstName
      * @param password
      * @param permission
      * @param serviceAbility
      */
-    public Employee(int loginID, String username, String password,
+    public Employee(int loginID, String username, String lastName, String firstName, String password,
                     KioskPermission permission, RequestType serviceAbility){
         this.loginID = loginID;
         this.username = username;
+        this.lastName=lastName;
+        this.firstName=firstName;
         this.password = password;
         this.permission=permission;
         this.serviceAbility = serviceAbility;
@@ -52,6 +60,14 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
 
     public String getUsername() {
         return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public KioskPermission getPermission() {

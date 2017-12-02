@@ -45,14 +45,14 @@ public class LoginEntity {
         logins = new HashMap<>();
         if (test){
             // so tests can add and remove logins as needed
-            currentLogin = new Employee("firstTimeSetup","root",
+            currentLogin = new Employee("firstTimeSetup","","","root",
                     SUPER_USER,RequestType.GENERAL);
         } else {
             readAllFromDatabase();
 
             if (database.getAllEmployees().size() == 0) {
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee("firstTimeSetup","root",
+                currentLogin = new Employee("firstTimeSetup","","","root",
                         SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
@@ -141,12 +141,15 @@ public class LoginEntity {
      * 3. the currentPermission is NONEMPLOYEE
      *
      * @param userName
+     * @param lastName
+     * @param firstName
      * @param password
      * @param permission
      * @param serviceAbility
      * @return
      */
-    public boolean addUser(String userName, String password, KioskPermission permission, RequestType serviceAbility){
+    public boolean addUser(String userName, String lastName, String firstName, String password,
+                           KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
         if(currentLogin.getPermission()==NONEMPLOYEE||permission==NONEMPLOYEE){
             return false;
@@ -163,9 +166,9 @@ public class LoginEntity {
             // fitting it into the table
             if(userName.length()<=50){
                 //constructs a temporary employee for database insertion
-                Employee tempEmployee=new Employee(userName, password, permission, serviceAbility);
-                database.addEmployee(tempEmployee.getUsername(),tempEmployee.getPassword(password),
-                        tempEmployee.getPermission(),tempEmployee.getServiceAbility());
+                Employee tempEmployee=new Employee(userName,lastName,firstName, password, permission,
+                        serviceAbility);
+                database.addEmployee(tempEmployee,password);
                 //gets all the employees from the database to add that employee to the hashmap
                 //to also include their ID in the employee
                 readAllFromDatabase();
@@ -245,15 +248,13 @@ public class LoginEntity {
      */
     private void updateCurrentLogin(String password,String oldUsername) {
         logins.remove(oldUsername);
-        logins.put(currentLogin.getUsername(),
+        Employee tempEmp = new Employee(currentLogin.getLoginID(), currentLogin.getLastName(),
+                currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
+                currentLogin.getPermission(), currentLogin.getServiceAbility());
+        logins.put(currentLogin.getUsername(), tempEmp);
                 //haven't figured out how to safely get things from an interface to the class
                 //so yeah...
-                new Employee(currentLogin.getLoginID(), currentLogin.getUsername(),
-                        currentLogin.getPassword(password), currentLogin.getPermission(),
-                        currentLogin.getServiceAbility()));
-        database.updateEmployee(currentLogin.getLoginID(),currentLogin.getUsername(),
-                currentLogin.getPassword(password),currentLogin.getPermission(),
-                currentLogin.getServiceAbility());
+        database.updateEmployee(tempEmp,password);
     }
 
     // For checking log in credentials

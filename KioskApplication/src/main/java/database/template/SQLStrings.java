@@ -92,8 +92,10 @@ public class SQLStrings {
 
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
-            " loginID INT GENERATED ALWAYS AS IDENTITY,"+ //CONSTRAINT t_employee_pk PRIMARY KEY,"+
-            " username Varchar(50) NOT NULL,"+
+            " loginID INT GENERATED ALWAYS AS IDENTITY,"+
+            " username Varchar(255) NOT NULL,"+
+            " lastName Varchar(35) NOT NULL,"+
+            " firstName Varchar(35) NOT NULL,"+
             " password Varchar(60) NOT NULL,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
@@ -102,9 +104,9 @@ public class SQLStrings {
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
     public static final String EMPLOYEE_INSERT = "insert into t_employee"+
-            "(username, password, permission, serviceAbility)"+
-            " values(?, ?, ?, ?)";
-    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, password=?,"+
+            "(username, lastName, firstName, password, permission, serviceAbility)"+
+            " values(?, ?, ?, ?, ?, ?)";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?,"+
             " permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

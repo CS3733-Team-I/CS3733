@@ -21,6 +21,10 @@ public interface IEmployee {
 
     String getUsername();
 
+    String getLastName();
+
+    String getFirstName();
+
     KioskPermission getPermission();
 
     RequestType getServiceAbility();
