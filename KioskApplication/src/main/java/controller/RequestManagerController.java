@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.*;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;

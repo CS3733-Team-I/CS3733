@@ -1,8 +1,9 @@
-package controller;
+package controller.map;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
+import controller.MainWindowController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -47,6 +48,7 @@ public class MapController {
 
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
+    private boolean editMode = false;
 
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
@@ -67,7 +69,13 @@ public class MapController {
         parent = controller;
     }
 
-    public void mapEdgeClicked(Edge e) {
+    public void nodeClicked(Node n) {
+        if (!this.parent.equals(null)) {
+            this.parent.onMapNodeClicked(n);
+        }
+    }
+
+    public void edgeClicked(Edge e) {
         if (!this.parent.equals(null)) {
             this.parent.onMapEdgeClicked(e);
         }
@@ -79,6 +87,14 @@ public class MapController {
 
     public boolean getShowEdgesBox(){
         return this.showEdgesBox.isSelected();
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 
     public void setFloorSelector(NodeFloor floorSelector) {

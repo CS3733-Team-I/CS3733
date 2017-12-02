@@ -1,7 +1,9 @@
-package controller;
+package controller.map;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import controller.MainWindowController;
+import controller.ScreenController;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -33,7 +35,7 @@ import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
-import utility.nodeDisplay.NodeDisplay;
+import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -117,7 +119,7 @@ public class MapBuilderController extends ScreenController {
     protected ObservableList<database.objects.Node> observableNewNodes;
     private ObservableList<database.objects.Edge> observableSelectedEdges;
 
-    MapBuilderController(MainWindowController parent, MapController map) {
+    public MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
         observableSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
@@ -388,7 +390,7 @@ public class MapBuilderController extends ScreenController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         lvConnectedNodes.getItems().clear();
-                        updateNodeDisplay(NodeDisplay.SELECTED);
+                        updateNodeDisplay(NodeSelectionType.SELECTED);
                     }
                     else if(c.wasAdded()) {
                         for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
@@ -397,7 +399,7 @@ public class MapBuilderController extends ScreenController {
                             connection.setAlignment(Pos.CENTER);
                             lvConnectedNodes.getItems().add(connection);
                         }
-                        updateNodeDisplay(NodeDisplay.SELECTED);
+                        updateNodeDisplay(NodeSelectionType.SELECTED);
                     }
                 }
                 if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
@@ -408,7 +410,7 @@ public class MapBuilderController extends ScreenController {
         observableChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeDisplay.CHANGED);//currently do nothing
+                updateNodeDisplay(NodeSelectionType.CHANGED);//currently do nothing
                 while(c.next()) {
                     if(c.wasAdded()) {
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
@@ -434,10 +436,10 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
-                        updateNodeDisplay(NodeDisplay.NEW);
+                        updateNodeDisplay(NodeSelectionType.NEW);
                     }
                     else if(c.wasAdded()) {
-                        updateNodeDisplay(NodeDisplay.NEW);
+                        updateNodeDisplay(NodeSelectionType.NEW);
                     }
                 }
                 if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
@@ -618,9 +620,9 @@ public class MapBuilderController extends ScreenController {
      */
 
 //TODO REFACTOR THIS USING "CHANGE"
-    private void updateNodeDisplay(NodeDisplay nodeDisplay) {
+    private void updateNodeDisplay(NodeSelectionType nodeSelectionType) {
         setNodeAllDisable();
-        switch (nodeDisplay) {
+        switch (nodeSelectionType) {
             case SELECTED:
                 if(observableSelectedNodes.size() == 0) { //no node selected
                     setNodeAllDisable();

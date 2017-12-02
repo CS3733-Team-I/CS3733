@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXListView;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.SystemSettings;

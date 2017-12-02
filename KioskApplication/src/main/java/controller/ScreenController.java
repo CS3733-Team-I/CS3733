@@ -1,16 +1,14 @@
 package controller;
 
-import com.jfoenix.controls.JFXListView;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import utility.node.NodeFloor;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public abstract class ScreenController {

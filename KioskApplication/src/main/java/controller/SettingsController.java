@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXTabPane;
+import controller.map.MapController;
 import database.objects.Edge;
 import entity.LoginEntity;
 import entity.MapEntity;
