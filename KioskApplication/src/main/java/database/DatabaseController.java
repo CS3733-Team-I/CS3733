@@ -345,7 +345,14 @@ public class DatabaseController {
             pstmt.setString(4,employee.getPassword(password));
             pstmt.setInt(5,employee.getPermission().ordinal());
             pstmt.setInt(6,employee.getServiceAbility().ordinal());
-            return pstmt.executeUpdate();
+            pstmt.executeUpdate();
+            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT loginID FROM t_employee"+
+            " where username=?");
+            pstmt2.setString(1,employee.getUsername());
+            ResultSet rs = pstmt2.executeQuery();
+            if(rs.next()){
+                return rs.getInt("loginID");
+            }
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
                 e.printStackTrace();

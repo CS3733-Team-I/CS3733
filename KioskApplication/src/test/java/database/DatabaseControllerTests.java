@@ -270,32 +270,29 @@ public class DatabaseControllerTests {
     public void testEmployeeAdd(){
         Employee testEmp = new Employee("Name","n","t","password",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.addEmployee(testEmp,"password");
-        LinkedList<Employee> emps = dbController.getAllEmployees();
-        assertEquals("Name",emps.get(emps.size()-1).getUsername());
+        int ID = dbController.addEmployee(testEmp,"password");
+        assertEquals("Name",dbController.getEmployee(ID).getUsername());
     }
 
     @Test
     public void testEmployeeRemove(){
         Employee testEmp = new Employee("Name","n","t","password",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.addEmployee(testEmp,"password");
-        LinkedList<Employee> emps = dbController.getAllEmployees();
-        dbController.removeEmployee(emps.get(emps.size()-1).getLoginID());
-        assertNull(dbController.getEmployee(emps.get(emps.size()-1).getLoginID()));
+        int ID = dbController.addEmployee(testEmp,"password");
+        dbController.removeEmployee(ID);
+        assertNull(dbController.getEmployee(ID));
     }
 
     @Test
     public void testEmployeeUpdate(){
         Employee testEmp = new Employee("Name","n","t","password",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.addEmployee(testEmp,"password");
-        LinkedList<Employee> emps = dbController.getAllEmployees();
-        Employee upEmp = emps.getLast();
+        int ID = dbController.addEmployee(testEmp,"password");
+        Employee upEmp = dbController.getEmployee(ID);
         upEmp.updateUsername("NewName","password");
         upEmp.updatePassword("NewPassword","password");
         dbController.updateEmployee(upEmp,"NewPassword");
-        Employee updatedEmployee=dbController.getEmployee(upEmp.getLoginID());
+        Employee updatedEmployee=dbController.getEmployee(ID);
         assertEquals("NewName",updatedEmployee.getUsername());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));
     }

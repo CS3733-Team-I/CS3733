@@ -168,10 +168,8 @@ public class LoginEntity {
                 //constructs a temporary employee for database insertion
                 Employee tempEmployee=new Employee(userName,lastName,firstName, password, permission,
                         serviceAbility);
-                database.addEmployee(tempEmployee,password);
-                //gets all the employees from the database to add that employee to the hashmap
-                //to also include their ID in the employee
-                readAllFromDatabase();
+                int ID = database.addEmployee(tempEmployee,password);
+                logins.put(userName,database.getEmployee(ID));
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
             }
