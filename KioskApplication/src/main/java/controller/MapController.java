@@ -1,49 +1,41 @@
 package controller;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSlider;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import utility.ApplicationScreen;
 import utility.ResourceManager;
-import utility.nodeDisplay.NodeDisplay;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 public class MapController {
     @FXML private AnchorPane container;
+
+    private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
 
+    @FXML private StackPane stackPane;
     @FXML private ImageView mapView;
-    @FXML private AnchorPane nodesEdgesPane;
     @FXML private AnchorPane waypointPane;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
@@ -53,48 +45,42 @@ public class MapController {
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
 
-    @FXML private AnchorPane miniMapPane;
+    private Path currentPath;
+    private NodesEdgesView nodesEdgesView;
 
     private MiniMapController miniMapController;
-    private Path path = null;
-
-    //list of showing nodes or edges
-
-    private Group zoomGroup;
-
-    private boolean isNodeAdded;
+    @FXML private AnchorPane miniMapPane;
 
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
 
-    private final double DEFAULT_HVALUE = 0.52;
-    private final double DEFAULT_VVALUE = 0.3;
-
     public MapController() {
         waypoints = new LinkedList<>();
-        isNodeAdded = false;
     }
 
+    /**
+     * Set the parent MainWindowController for this MapController
+     * @param controller parent MainWindowController
+     */
     public void setParent(MainWindowController controller) {
         parent = controller;
     }
 
-
-
+    /**
+     * Clear the map of waypoints, nodes, and edges
+     */
     public void clearMap() {
         this.waypointPane.getChildren().clear();
-        this.nodeObjectList.clear();
-        this.edgeObjectList.clear();
-        this.databaseNodeObjectList.clear();
-        this.databaseEdgeObjectList.clear();
         this.waypoints.clear();
 
-        reloadDisplay();
+        this.nodesEdgesView.clear();
     }
 
-
-
+    /**
+     * Add a waypoint indicator to the map
+     * @param location waypoint location
+     */
     public void addWaypoint(Point2D location) {
         try {
             // put the pin and set it's info
@@ -115,6 +101,10 @@ public class MapController {
         }
     }
 
+    /**
+     * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
+     * @param floor the floor to load
+     */
     private void loadFloor(NodeFloor floor) {
         String floorImageURL = "";
         switch (floor) {
@@ -143,19 +133,33 @@ public class MapController {
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
 
-        if (this.path != null) {
+        if (this.currentPath != null) {
             clearMap();
-            for (LinkedList<Edge> segment : this.path.getEdges())
-                drawEdgesOnMap(segment);
-            drawNodesOnMap(this.path.getWaypoints());
+
+            for (LinkedList<Edge> segment : this.currentPath.getEdges())
+                nodesEdgesView.drawEdgesOnMap(segment);
+
+            nodesEdgesView.drawNodesOnMap(this.currentPath.getWaypoints());
         }
+
         miniMapController.switchFloor(floorImageURL);
     }
 
+    /**
+     * Gets the current floor the map is viewing
+     * @return the current floor
+     */
     public NodeFloor getCurrentFloor() {
         return floorSelector.getValue();
     }
 
+    /**
+     * Sets the position of the map relative to the sides of the application window.
+     * @param top position relative to top
+     * @param left position relative to left
+     * @param bottom position relative to bottom
+     * @param right position relative to right
+     */
     public void setAnchor(double top, double left, double bottom, double right) {
         if (container != null) {
             AnchorPane.setTopAnchor(container, top);
@@ -165,6 +169,10 @@ public class MapController {
         }
     }
 
+    /**
+     * Sets the current zoom value
+     * @param scaleValue zoom value
+     */
     private void setZoom(double scaleValue) {
         double scrollH = scrollPane.getHvalue();
         double scrollV = scrollPane.getVvalue();
@@ -178,14 +186,20 @@ public class MapController {
         miniMapController.setViewportZoom(scaleValue);
     }
 
+    /**
+     * Initialize the MapController. Called when the FXML file for this is loaded
+     */
     @FXML
     protected void initialize() {
-        nodesEdgesPane.setPickOnBounds(false);
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
 
         miniMapController = new MiniMapController(this);
+
+        nodesEdgesView = new NodesEdgesView(this);
+        nodesEdgesView.setPickOnBounds(false);
+        stackPane.getChildren().add(nodesEdgesView);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
@@ -205,214 +219,7 @@ public class MapController {
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
 
-        //checkboxes for showing nodes and edges
-        /**
-         * sync UI
-         */
-        databaseNodeObjectList.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (database.objects.Node removedDatabaseNode : c.getRemoved()) {
-                            Iterator<Circle> nodeObjectIterator = nodeObjectList.iterator();
-                            while (nodeObjectIterator.hasNext()) {
-                                Circle circle = nodeObjectIterator.next();
-                                if (removedDatabaseNode.getXyz().equals(circle.getAccessibleText())) {
-                                    nodeObjectIterator.remove();
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        for (database.objects.Node addedDatabaseNode : c.getAddedSubList()) {
-                            Circle nodeView = new Circle(addedDatabaseNode.getXcoord(), addedDatabaseNode.getYcoord(), 14, Color.GRAY);
-                            nodeView.setStroke(Color.BLACK);
-                            nodeView.setStrokeWidth(3);
-                            nodeView.setMouseTransparent(false);
-                            nodeView.setOnMouseClicked(mouseEvent -> mapNodeClicked(addedDatabaseNode));
-                            nodeView.setPickOnBounds(false);
-
-                            // TODO find any way to do this better, this is a hack
-                            nodeView.setAccessibleText(addedDatabaseNode.getXyz());
-                            nodeView.setAccessibleHelp(addedDatabaseNode.getNodeType().toString());
-
-                            // Show tooltip based on the current tab
-                            if (parent.getCurrentTabName().equals("Map Builder")) {
-                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName() + "\n\nConnections:\n");
-                                for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(addedDatabaseNode)) {
-                                    nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
-                                }
-                                Tooltip.install(nodeView, nodeInfo);
-                            } else {
-                                Tooltip nodeInfo = new Tooltip(addedDatabaseNode.getLongName());
-                                Tooltip.install(nodeView, nodeInfo);
-                            }
-
-                            if (parent.getCurrentTabName().equals("Map Builder")) {
-                                nodeView.setOnDragDetected(new EventHandler<MouseEvent>() {
-                                    @Override
-                                    public void handle(MouseEvent event) {
-                                        // TODO do this in some different way, parent.controllers cannot be public
-                                        if (!parent.controllers.get(ApplicationScreen.MAP_BUILDER).isNewNodeEmpty()) {
-                                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                                            alert.setTitle("Error creating connection");
-                                            alert.setHeaderText("Save new node before creating connections");
-                                            alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
-                                            alert.showAndWait();
-                                            event.consume();
-                                            return;
-                                        }
-                                        if (nodeView.getAccessibleHelp().equals("ELEV")) {
-                                            parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
-                                        }
-                                        Dragboard db = nodeView.startDragAndDrop(TransferMode.ANY);
-                                        ClipboardContent content = new ClipboardContent();
-                                        content.putString(nodeView.getAccessibleText());
-                                        db.setContent(content);
-
-                                        nodeView.setFill(Color.GREEN);
-                                        event.consume();
-                                    }
-                                });
-                                nodeView.setOnDragDone(new EventHandler<DragEvent>() {
-                                    @Override
-                                    public void handle(DragEvent event) {
-                                        nodeView.setFill(Color.GRAY);
-
-                                        //selected the source node if no node is selected
-                                        try {
-                                            // TODO can this just call parent.onMapNodeClicked?
-                                            onMapClicked(new MouseEvent(MouseEvent.MOUSE_CLICKED, nodeView.getCenterX(),
-                                                    nodeView.getCenterY(), 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
-                                                    true, true, true, true, true, true, null));
-                                        } catch (IOException ex) {
-                                        }
-                                        event.consume();
-                                    }
-                                });
-                                nodeView.setOnDragOver(new EventHandler<DragEvent>() {
-                                    @Override
-                                    public void handle(DragEvent event) {
-                                        if (event.getDragboard().hasString()) {
-                                            event.acceptTransferModes(TransferMode.LINK);
-                                        }
-                                        event.consume();
-                                    }
-                                });
-                                nodeView.setOnDragEntered(new EventHandler<DragEvent>() {
-                                    @Override
-                                    public void handle(DragEvent event) {
-                                        if (event.getDragboard().hasString()) {
-                                            if (event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
-                                                return;
-                                            }
-                                            nodeView.setFill(Color.DARKGREEN);
-                                        }
-                                        event.consume();
-                                    }
-                                });
-                                nodeView.setOnDragExited(new EventHandler<DragEvent>() {
-                                    @Override
-                                    public void handle(DragEvent event) {
-                                        if (event.getDragboard().hasString()) {
-                                            if (event.getDragboard().getString().equals(nodeView.getAccessibleText())) {
-                                                return;
-                                            }
-                                        }
-                                        nodeView.setFill(Color.GRAY);
-                                        event.consume();
-                                    }
-                                });
-                                nodeView.setOnDragDropped(new EventHandler<DragEvent>() {
-                                    @Override
-                                    public void handle(DragEvent event) {
-                                        parent.controllers.get(ApplicationScreen.MAP_BUILDER).addConnectionByNodes(nodeView.getAccessibleText(), event.getDragboard().getString());
-                                        event.consume();
-                                    }
-                                });
-                            }
-                            nodeObjectList.add(nodeView);
-                        }
-                    }
-                }
-            }
-        });
-
-        databaseEdgeObjectList.addListener(new ListChangeListener<Edge>() {
-            @Override
-            public void onChanged(Change<? extends Edge> c) {
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (database.objects.Edge removedDatabaseEdge : c.getRemoved()) {
-                            Iterator<Line> edgeObjectIterator = edgeObjectList.iterator();
-                            while (edgeObjectIterator.hasNext()) {
-                                Line line = edgeObjectIterator.next();
-                                if (removedDatabaseEdge.getEdgeID().equals(line.getAccessibleText())) {
-                                    edgeObjectIterator.remove();
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        for (database.objects.Edge addedDatabaseEdge : c.getAddedSubList()) {
-                            MapEntity mapEntity = MapEntity.getInstance();
-                            Node node1 = mapEntity.getNode(addedDatabaseEdge.getNode1ID());
-                            Node node2 = mapEntity.getNode(addedDatabaseEdge.getNode2ID());
-                            Line edgeView = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-                            edgeView.setStroke(Color.GREY);
-                            edgeView.setStrokeWidth(10);
-                            edgeView.setMouseTransparent(false);
-                            edgeView.setOnMouseClicked(mouseEvent -> mapEdgeClicked(addedDatabaseEdge));
-                            edgeView.setPickOnBounds(false);
-                            edgeView.setAccessibleText(addedDatabaseEdge.getEdgeID());
-                            edgeObjectList.add(edgeView);
-                            if (mapEntity.getEdgesOnFloor(getCurrentFloor()).contains(addedDatabaseEdge))
-                                edgeView.setOpacity(0.95);
-                            else
-                                edgeView.setOpacity(0.2);
-                        }
-                    }
-                }
-            }
-        });
-
-        //TODO INTEGRATE THIS LISTENER WITH nodesEdgesPane LISTENER
-        nodeObjectList.addListener(new ListChangeListener<Circle>() {
-            @Override
-            public void onChanged(Change<? extends Circle> c) {
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (Circle removedCircle : c.getRemoved()) {
-                            nodesEdgesPane.getChildren().remove(removedCircle);
-                        }
-                    } else if (c.wasAdded()) {
-                        for (Circle addedCircle : c.getAddedSubList()) {
-                            nodesEdgesPane.getChildren().add(addedCircle);
-                        }
-                    }
-                }
-            }
-        });
-
-        edgeObjectList.addListener(new ListChangeListener<Line>() {
-            @Override
-            public void onChanged(Change<? extends Line> c) {
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (Line removedLine : c.getRemoved()) {
-                            nodesEdgesPane.getChildren().remove(removedLine);
-                        }
-                    } else if (c.wasAdded()) {
-                        for (Line addedLine : c.getAddedSubList()) {
-                            nodesEdgesPane.getChildren().add(addedLine);
-                        }
-                    }
-                }
-            }
-        });
-
-        //update minimap navigationRec's position
+        // Update MiniMap on scroll
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -433,7 +240,7 @@ public class MapController {
             }
         });
 
-        //adjust minimap navigationRec's width:height
+        // Update MiniMap size when the container gets larger/smaller
         container.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -451,97 +258,11 @@ public class MapController {
                 calculateMinZoom();
             }
         });
-
-        /**
-         * highlight nodes and edges
-         */
-        observableHighlightedSelectedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                for (database.objects.Node selectedNode : observableHighlightedSelectedNodes) {
-                    //System.out.println("selected node: " + selectedNode.getNodeID());
-                }
-                //revert deselected nodes to normal color
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (database.objects.Node deselectedNode : c.getRemoved()) {
-                            System.out.println("Removing node from Selected node");
-
-                            if (!observableHighlightedChangedNodes.contains(deselectedNode)) {
-                                highlightNode(deselectedNode, NodeDisplay.NORMAL);
-                            } else {
-                                highlightNode(deselectedNode, NodeDisplay.CHANGED);
-                            }
-                        }
-                    } else if (c.wasAdded()) {
-                        for (database.objects.Node selectedNode : c.getAddedSubList()) {
-                            if (observableHighlightedChangedNodes.contains(selectedNode)) {
-                                highlightNode(selectedNode, NodeDisplay.SELECTEDANDCHANGED);
-                            } else {
-                                highlightNode(selectedNode, NodeDisplay.SELECTED);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        observableHighlightedChangedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                for (database.objects.Node changedNode : observableHighlightedChangedNodes) {
-                    //System.out.println("Changed node: " + changedNode.getNodeID());
-                }
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        for (database.objects.Node addedChangedNode : c.getAddedSubList()) {
-                            if (observableHighlightedSelectedNodes.contains(addedChangedNode)) {
-                                highlightNode(addedChangedNode, NodeDisplay.SELECTEDANDCHANGED);
-                            } else {
-                                highlightNode(addedChangedNode, NodeDisplay.CHANGED);
-                            }
-                        }
-                    } else if (c.wasRemoved()) {
-                        for (database.objects.Node removedChangedNode : c.getRemoved()) {
-                            if (observableHighlightedSelectedNodes.contains(removedChangedNode)) {
-                                highlightNode(removedChangedNode, NodeDisplay.SELECTED);
-                            } else {
-                                highlightNode(removedChangedNode, NodeDisplay.NORMAL);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        observableHighlightedNewNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                for (database.objects.Node newNode : observableHighlightedNewNodes) {
-                    System.out.println("New Node: " + newNode.getNodeID());
-                }
-                while (c.next()) {
-                    if (c.wasRemoved()) {
-                        for (database.objects.Node deseletedNewNode : c.getRemoved()) {
-                            if (MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null && isNodeAdded) {//the node was saved to database
-                                highlightNode(deseletedNewNode, NodeDisplay.NORMAL);
-                            } else { //no node was added
-                                System.out.println("undraw on map");
-                                undrawNodeOnMap(deseletedNewNode);
-                            }
-                        }
-                        showNodesBox.setSelected(false);
-                        showNodesBox.setSelected(true);
-                    } else if (c.wasAdded()) {
-                        for (database.objects.Node newNode : c.getAddedSubList()) {
-                            highlightNode(newNode, NodeDisplay.NEW);
-                        }
-                    }
-                }
-            }
-        });
     }
 
+    /**
+     * Calculates the minimum zoom value for the scroll bar
+     */
     private void calculateMinZoom() {
         double widthRatio = container.getWidth() / mapView.getFitWidth();
         double heightRatio = container.getHeight() / mapView.getFitHeight();
@@ -552,13 +273,16 @@ public class MapController {
         if (zoomSlider.getValue() < minScrollValue) zoomSlider.setValue(minScrollValue);
     }
 
+    /**
+     * Changes the floor when the floor selector ComboBox is changed.
+     */
     @FXML
     protected void onFloorSelected() {
         NodeFloor floor = floorSelector.getSelectionModel().getSelectedItem();
 
         // Load the image and reload our display based on the new floor
         loadFloor(floor);
-        reloadDisplay();
+        nodesEdgesView.reloadDisplay();
 
         // Notify parent
         parent.onMapFloorChanged(floor);
@@ -600,15 +324,10 @@ public class MapController {
 
     @FXML
     protected void recenterPressed() {
+        final double DEFAULT_HVALUE = 0.52;
+        final double DEFAULT_VVALUE = 0.3;
+
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
-    }
-
-    public Path getPath() {
-        return path;
-    }
-
-    public void setPath(Path path) {
-        this.path = path;
     }
 }
