@@ -83,6 +83,8 @@ public class RequestSubmitterController extends ScreenController {
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
+                notesArea.clear();
+                locationTxt.clear();
                 reqMenu.setItems(null);
                 ObservableList<String> languages = FXCollections.observableArrayList();
                 languages.addAll("Spanish", "Chinese", "French", "Tagalog",
@@ -94,6 +96,8 @@ public class RequestSubmitterController extends ScreenController {
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SECURITY;
+                notesArea.clear();
+                locationTxt.clear();
                 reqMenu.setItems(null);
                 ObservableList<String> priorities = FXCollections.observableArrayList();
                 priorities.addAll("1","2","3","4","5");
