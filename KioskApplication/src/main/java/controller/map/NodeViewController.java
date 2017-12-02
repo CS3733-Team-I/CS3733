@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,7 +14,7 @@ import utility.node.NodeType;
 
 import javax.swing.text.html.ImageView;
 
-public class NodeView {
+public class NodeViewController {
 
     Node node;
     boolean editable;
@@ -24,7 +25,7 @@ public class NodeView {
 
     NodesEdgesView parent;
 
-    public NodeView(NodesEdgesView parent, Node node, boolean editable) {
+    public NodeViewController(NodesEdgesView parent, Node node, boolean editable) {
         this.parent = parent;
         this.node = node;
         this.editable = editable;
@@ -32,6 +33,10 @@ public class NodeView {
 
     @FXML
     private void initialize() {
+        // Set X and Y
+        AnchorPane.setLeftAnchor(container, (double)node.getXcoord());
+        AnchorPane.setTopAnchor(container, (double)node.getYcoord());
+
         // TODO find any way to do this better, this is a hack
         this.container.setAccessibleText(node.getXyz());
         this.container.setAccessibleHelp(node.getNodeType().toString());

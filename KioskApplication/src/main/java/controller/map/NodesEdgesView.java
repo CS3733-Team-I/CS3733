@@ -19,13 +19,16 @@ import java.util.List;
 
 public class NodesEdgesView extends AnchorPane {
     private ObservableList<Node> nodesList;
-    private ObservableList<database.objects.Edge> edgesList;
+    private ObservableList<Edge> edgesList;
 
-    private ObservableList<database.objects.Node> observableHighlightedSelectedNodes;
-    private ObservableList<database.objects.Node> observableHighlightedChangedNodes;
+    private ObservableList<NodeViewController> nodesViewList;
+    private ObservableList<EdgeViewController> edgesViewList;
 
-    private ObservableList<database.objects.Node> observableHighlightedNewNodes;
-    private ObservableList<database.objects.Edge> observableHighlightedEdges;
+    private ObservableList<Node> observableHighlightedSelectedNodes;
+    private ObservableList<Node> observableHighlightedChangedNodes;
+
+    private ObservableList<Node> observableHighlightedNewNodes;
+    private ObservableList<Edge> observableHighlightedEdges;
 
     private AnchorPane nodesView;
     private AnchorPane edgesView;
@@ -38,13 +41,14 @@ public class NodesEdgesView extends AnchorPane {
         nodesView = new AnchorPane();
         edgesView = new AnchorPane();
 
+        this.getChildren().addAll(nodesView, edgesView);
+
         nodesList = FXCollections.observableArrayList();
         edgesList = FXCollections.observableArrayList();
 
         observableHighlightedSelectedNodes = FXCollections.observableArrayList();
         observableHighlightedChangedNodes = FXCollections.observableArrayList();
         observableHighlightedNewNodes = FXCollections.observableArrayList();
-        observableHighlightedEdges = FXCollections.observableArrayList();
 
         this.parent = parent;
         this.currentPath = null;
@@ -108,6 +112,106 @@ public class NodesEdgesView extends AnchorPane {
                 }
             }
         });
+
+        /**
+         * highlight nodes and edges
+         */
+        observableHighlightedSelectedNodes.addListener((ListChangeListener<Node>) c -> {
+            for(Node selectedNode : observableHighlightedSelectedNodes) {
+                //System.out.println("selected node: " + selectedNode.getNodeID());
+            }
+            //revert deselected nodes to normal color
+            while(c.next()) {
+                if(c.wasRemoved()) {
+                    for(Node deseletedNode : c.getRemoved()) {
+                        System.out.println("Removing node from Selected node");
+
+                        if(!observableHighlightedChangedNodes.contains(deseletedNode)) {
+                            //System.out.println("Removing node from Selected Node: NORMAL");
+                            highlightNode(deseletedNode, NodeSelectionType.NORMAL);
+                        }
+                        else {
+                            highlightNode(deseletedNode, NodeSelectionType.CHANGED);
+                            //System.out.println("Removing node from Selected Node: CHANGED");
+                            highlightNode(deseletedNode, NodeSelectionType.CHANGED);
+                        }
+                    }
+                }
+                else if(c.wasAdded()) {
+                    for(Node selectedNode : c.getAddedSubList()) {
+                        if(observableHighlightedChangedNodes.contains(selectedNode)){
+                            highlightNode(selectedNode, NodeSelectionType.SELECTEDANDCHANGED);
+                        }
+                        else {
+                            highlightNode(selectedNode, NodeSelectionType.SELECTED);
+                        }
+                    }
+                }
+            }
+        });
+
+        observableHighlightedChangedNodes.addListener((ListChangeListener<Node>) c -> {
+            for(Node changedNode : observableHighlightedChangedNodes) {
+                //System.out.println("Changed node: " + changedNode.getNodeID());
+            }
+            while(c.next()) {
+                if(c.wasAdded()){
+                    for(Node addedChangedNode : c.getAddedSubList()) {
+                        if(observableHighlightedSelectedNodes.contains(addedChangedNode)) {
+                            highlightNode(addedChangedNode, NodeSelectionType.SELECTEDANDCHANGED);
+                        }
+                        else {
+                            highlightNode(addedChangedNode, NodeSelectionType.CHANGED);
+                        }
+                    }
+                }
+                else if(c.wasRemoved()) {
+                    for(Node removedChangedNode : c.getRemoved()) {
+                        if(observableHighlightedSelectedNodes.contains(removedChangedNode)) {
+                            highlightNode(removedChangedNode, NodeSelectionType.SELECTED);
+                        }
+                        else {
+                            highlightNode(removedChangedNode, NodeSelectionType.NORMAL);
+                        }
+                    }
+                }
+            }
+        });
+
+        observableHighlightedNewNodes.addListener((ListChangeListener<Node>) c -> {
+            for(Node newNode : observableHighlightedNewNodes) {
+                System.out.println("New Node: " + newNode.getNodeID());
+            }
+
+            while(c.next()) {
+                if(c.wasRemoved()) {
+                    for(Node deseletedNewNode : c.getRemoved()) {
+                        if(MapEntity.getInstance().getNode(deseletedNewNode.getNodeID()) != null && isNodeAdded) {//the node was saved to database
+                            highlightNode(deseletedNewNode, NodeSelectionType.NORMAL);
+                        }
+                        else { //no node was added
+                            System.out.println("undraw on map");
+                            undrawNodeOnMap(deseletedNewNode);
+                        }
+                    }
+                    showNodesBox.setSelected(false);
+                    showNodesBox.setSelected(true);
+                }
+                else if(c.wasAdded()) {
+                    for(Node newNode : c.getAddedSubList()) {
+                        highlightNode(newNode, NodeSelectionType.NEW);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Remove all nodes and edges
+     */
+    public void clear() {
+        nodesList.clear();
+        edgesList.clear();
     }
 
     //TODO put this into nodeobjectlist permuted
@@ -144,8 +248,8 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     public void reloadDisplay() {
-        setShowNodes(parent.getShowNodesBox());
-        setShowEdges(parent.getShowEdgesBox());
+        setShowNodes(parent.areNodesVisible());
+        setShowEdges(parent.areEdgesVisible());
     }
 
     protected void drawNodesOnMap(List<Node> nodes) {

@@ -69,23 +69,33 @@ public class MapController {
         parent = controller;
     }
 
-    public void nodeClicked(Node n) {
+    /**
+     * Tell the parent controller that a node was clicked
+     * @param node the clicked node
+     */
+    public void nodeClicked(Node node) {
         if (!this.parent.equals(null)) {
-            this.parent.onMapNodeClicked(n);
+            this.parent.onMapNodeClicked(node);
         }
     }
 
-    public void edgeClicked(Edge e) {
+    /**
+     * Tell the parent controller that an edge was clicked
+     * @param edge the clicked edge
+     */
+    public void edgeClicked(Edge edge) {
         if (!this.parent.equals(null)) {
-            this.parent.onMapEdgeClicked(e);
+            this.parent.onMapEdgeClicked(edge);
         }
     }
 
-    public boolean getShowNodesBox(){
+    public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); }
+    public boolean areNodesVisible(){
         return this.showNodesBox.isSelected();
     }
 
-    public boolean getShowEdgesBox(){
+    public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); }
+    public boolean areEdgesVisible(){
         return this.showEdgesBox.isSelected();
     }
 

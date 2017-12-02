@@ -134,8 +134,8 @@ public class MainWindowController {
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
 
-                mapController.showEdgesBox.setSelected(false);
-                mapController.showNodesBox.setSelected(false);
+                mapController.setNodesVisible(false);
+                mapController.setEdgesVisible(false);
                 break;
 
             case EMPLOYEE:
@@ -150,8 +150,8 @@ public class MainWindowController {
                 switchButton.setText("Logoff");
 
                 //default to showing all nodes and edges
-                mapController.showEdgesBox.setSelected(true);
-                mapController.showNodesBox.setSelected(true);
+                mapController.setNodesVisible(true);
+                mapController.setEdgesVisible(true);
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
