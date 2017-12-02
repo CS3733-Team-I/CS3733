@@ -37,10 +37,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private Tab securityTab;
     /*janitor related*/
     @FXML private Tab janitorTab;
-//
     @FXML private JFXButton btnSubmit;
-//
-//    @FXML private JFXButton btnCancel;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
