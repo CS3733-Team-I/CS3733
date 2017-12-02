@@ -67,6 +67,24 @@ public class MapController {
         parent = controller;
     }
 
+    public void mapEdgeClicked(Edge e) {
+        if (!this.parent.equals(null)) {
+            this.parent.onMapEdgeClicked(e);
+        }
+    }
+
+    public boolean getShowNodesBox(){
+        return this.showNodesBox.isSelected();
+    }
+
+    public boolean getShowEdgesBox(){
+        return this.showEdgesBox.isSelected();
+    }
+
+    public void setFloorSelector(NodeFloor floorSelector) {
+        this.floorSelector.setValue(floorSelector);
+    }
+
     /**
      * Clear the map of waypoints, nodes, and edges
      */

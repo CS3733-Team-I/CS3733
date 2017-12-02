@@ -3,6 +3,7 @@ package controller;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import entity.Path;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.AnchorPane;
@@ -27,7 +28,11 @@ public class NodesEdgesView extends AnchorPane {
     private ObservableList<database.objects.Node> observableHighlightedNewNodes;
     private ObservableList<database.objects.Edge> observableHighlightedEdges;
 
-    public NodesEdgesView() {
+    // Parent
+    MapController p;
+    Path path;
+
+    public NodesEdgesView(MapController parent, Path path) {
         databaseNodeObjectList = FXCollections.<database.objects.Node>observableArrayList();
         databaseEdgeObjectList = FXCollections.<database.objects.Edge>observableArrayList();
 
@@ -38,13 +43,16 @@ public class NodesEdgesView extends AnchorPane {
         observableHighlightedChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightedNewNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableHighlightedEdges = FXCollections.<database.objects.Edge>observableArrayList();
+
+        this.p = parent;
+        this.path = path;
     }
 
     //TODO put this into nodeobjectlist permuted
     public void highlightNode(database.objects.Node targetNode, NodeDisplay nodeDisplay) {
         for (Circle nodeO : nodeObjectList) {
             if (targetNode.getXyz().equals((nodeO.getAccessibleText()))) {
-                nodesEdgesPane.getChildren().remove(nodeO);
+                this.getChildren().remove(nodeO);
                 switch (nodeDisplay) {
                     case SELECTED:
                         nodeO.setFill(Color.BLUE);
@@ -62,7 +70,7 @@ public class NodesEdgesView extends AnchorPane {
                         nodeO.setFill(Color.YELLOW);
                         break;
                 }
-                nodesEdgesPane.getChildren().add(nodeO);
+                this.getChildren().add(nodeO);
                 return;
             }
         }
@@ -74,8 +82,8 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     public void reloadDisplay() {
-        setShowNodes(showNodesBox.isSelected());
-        setShowEdges(showEdgesBox.isSelected());
+        setShowNodes(p.getShowNodesBox());
+        setShowEdges(p.getShowEdgesBox());
     }
 
     protected void drawNodesOnMap(List<Node> nodes) {
@@ -93,27 +101,19 @@ public class NodesEdgesView extends AnchorPane {
         }
     }
 
+    public void mapEdgeClicked(Edge e) {
+        p.mapEdgeClicked(e);
+    }
+
     protected void drawEdgesOnMap(List<Edge> edges) {
         databaseEdgeObjectList.addAll(edges);
     }
 
-    public void mapEdgeClicked(Edge e) {
-        if (!parent.equals(null)) {
-            parent.onMapEdgeClicked(e);
-        }
-    }
-
-    public void mapNodeClicked(Node n) {
-        if (!parent.equals(null)) {
-            parent.onMapNodeClicked(n);
-        }
-    }
-
     public void drawPath() {
         // Change to floor of the starting node
-        floorSelector.setValue(this.path.getWaypoints().get(0).getFloor());
+        p.setFloorSelector(this.path.getWaypoints().get(0).getFloor());
 
-        clearMap();
+        p.clearMap();
         for (LinkedList<Edge> segment : this.path.getEdges()) {
             drawEdgesOnMap(segment);
         }
@@ -123,7 +123,7 @@ public class NodesEdgesView extends AnchorPane {
 
     public void setShowNodes(boolean show) {
         if (show) {
-            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(getCurrentFloor()));
+            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(p.getCurrentFloor()));
         } else {
             databaseNodeObjectList.clear();
         }
@@ -131,7 +131,7 @@ public class NodesEdgesView extends AnchorPane {
 
     public void setShowEdges(boolean show) {
         if (show) {
-            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(getCurrentFloor()));
+            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(p.getCurrentFloor()));
         } else {
             databaseEdgeObjectList.clear();
         }
