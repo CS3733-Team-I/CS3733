@@ -1,9 +1,7 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.InterpreterRequest;
-import database.objects.Request;
-import database.objects.SecurityRequest;
+import database.objects.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -202,13 +200,13 @@ public class RequestEntity {
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.markInProgress(completerID);
+            iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.markInProgress(completerID);
+            sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
@@ -234,14 +232,14 @@ public class RequestEntity {
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.complete();
+            iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.complete();
+            sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
@@ -273,9 +271,15 @@ public class RequestEntity {
         return request;
     }
 
-    public String getAssigner(String requestID){
+    public Employee getAssigner(String requestID){
         Request request = getRequest(requestID);
-        return dbController.getEmployee(request.getAssignerID()).getUsername();
+        return dbController.getEmployee(request.getAssignerID());
+    }
+
+    public IEmployee getCompleter(String requestID){
+        Request request = getRequest(requestID);
+        if(request.getStatus()==RequestProgressStatus.DONE) return dbController.getEmployee(request.getCompleterID());
+        else return NullEmployee.getInstance();
     }
 
 
@@ -391,7 +395,7 @@ public class RequestEntity {
      * common IT request problems
      */
 
-    // gets mean time to complete a request from IN_PROGRESS to DONE
+    // gets mean time to setComplete a request from IN_PROGRESS to DONE
     public void getMeanTimeToComplete(){
         long sum=0;
         int total=0;

@@ -23,8 +23,6 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " assigner INT NOT NULL," +
-            " completer INT NOT NULL,"+
             " note CLOB(280)," +
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
@@ -47,7 +45,9 @@ public class SQLStrings {
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,"+
             " language INT NOT NULL,"+
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE,";
+            " REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_employee_fk,"+
+            " completer INT NOT NULL CONSTRAINT t_employee_fk1,";
 
     public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?,";
     public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
@@ -60,7 +60,9 @@ public class SQLStrings {
             " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
             " priority INT NOT NULL,"+
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk3" +
-            " REFERENCES t_nodes ON DELETE CASCADE,";
+            " REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_employee_fk2,"+
+            " completer INT NOT NULL CONSTRAINT t_employee_fk3,";
 
     public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?,";
     public static final String SECURITY_UPDATE = "update t_security set" +

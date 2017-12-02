@@ -27,14 +27,14 @@ public class LoginEntity {
     private static LoginEntity instance = null;
 
     public static LoginEntity getInstance(){
-        return SingletonHelper.instance;
+        return LoginEntitySingletonHelper.instance;
     }
 
     public static LoginEntity getTestInstance(){
-        return SingletonHelper.testInstance;
+        return LoginEntitySingletonHelper.testInstance;
     }
 
-    private static class SingletonHelper {
+    private static class LoginEntitySingletonHelper {
         private static final LoginEntity instance = new LoginEntity(false);
         private static final LoginEntity testInstance = new LoginEntity(true);
     }

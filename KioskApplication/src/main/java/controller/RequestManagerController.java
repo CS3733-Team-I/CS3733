@@ -130,7 +130,7 @@ public class RequestManagerController extends ScreenController {
         showRequests(status, allRequests);
     }
 
-    //Displays buttons on the sidebar to assign requests, mark as complete, and delete requests
+    //Displays buttons on the sidebar to assign requests, mark as setComplete, and delete requests
     private void buttonSetupt(RequestProgressStatus status) {
         row8.getChildren().clear();
         row9.getChildren().clear();
@@ -163,7 +163,7 @@ public class RequestManagerController extends ScreenController {
                             });
                             row9.getChildren().add(statusUpdater);
                             break;
-                        //Admins and Supers can't complete a request
+                        //Admins and Supers can't setComplete a request
 
                         case DONE:
                             statusUpdater = new JFXButton("Delete");
@@ -245,7 +245,7 @@ public class RequestManagerController extends ScreenController {
         Label id = new Label(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
         Label employee = new Label("Employee: ");
-        Label assigner = new Label(r.getAssigner(requestID)); //Some reason this returns more than needed
+        Label assigner = new Label(r.getAssigner(requestID).getUsername()); //Some reason this returns more than needed
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label extraField;

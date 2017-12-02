@@ -39,7 +39,7 @@ public abstract class Request {
         this.note=newNote;
     }
 
-    public boolean markInProgress(int completerID){
+    public boolean setInProgress(int completerID){
         if(this.status==RequestProgressStatus.TO_DO){
             this.completerID =completerID;
             this.status=RequestProgressStatus.IN_PROGRESS;
@@ -51,7 +51,7 @@ public abstract class Request {
         }
     }
 
-    public boolean complete(){
+    public boolean setComplete(){
         if (this.status==RequestProgressStatus.IN_PROGRESS){
             this.status=RequestProgressStatus.DONE;
             this.completedTime=new Timestamp(System.currentTimeMillis());
