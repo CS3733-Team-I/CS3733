@@ -2,6 +2,7 @@ package entity;
 
 import database.DatabaseController;
 import database.objects.Edge;
+import database.objects.Employee;
 import database.objects.InterpreterRequest;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -13,6 +14,7 @@ import utility.KioskPermission;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import utility.request.*;
 import utility.node.NodeFloor;
@@ -46,8 +48,9 @@ public class TestRequestEntity {
         db.addNode(n2);
         db.addNode(n3);
 
-        db.addEmployee("hank","boss@hospital.com","123", KioskPermission.ADMIN, RequestType.GENERAL);
-        String pIR = r.submitInterpreterRequest("NODE3","hank","Is Chinese or Japanese",Language.CHINESE);
+        db.addEmployee("boss@hospital.com","123", KioskPermission.ADMIN, RequestType.GENERAL);
+        db.addEmployee("bobby","123", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        String pIR = r.submitInterpreterRequest("NODE3",1,"Is Chinese or Japanese",Language.CHINESE);
         presetIR = r.getInterpreterRequest(pIR);
     }
 
@@ -55,6 +58,10 @@ public class TestRequestEntity {
     public void cleanUp() throws DatabaseException {
         //deletes request
         r.deleteRequest(presetIR.getRequestID());
+
+        //cleans all employees
+        List<Employee> employees = db.getAllEmployees();
+        for (Employee e : employees) db.removeEmployee(e.getLoginID());
         //removes node
         db.removeNode(n1);
         db.removeNode(n2);
@@ -65,7 +72,7 @@ public class TestRequestEntity {
     public void testGetNonexistentInterpreterRequest(){
         long currTime = System.currentTimeMillis();
         InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                1, 1, "", new Timestamp(currTime), new Timestamp(currTime-1),
                 new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         try{
             r.getInterpreterRequest(iR1.getRequestID());
@@ -78,7 +85,7 @@ public class TestRequestEntity {
     @Test
     public void testGetDeletedInterpreterRequest(){
         //adds interpreter request to database and hashmap
-        String testIRID = r.submitInterpreterRequest("NODE1","boss@hospital.com", " ", Language.ARABIC);
+        String testIRID = r.submitInterpreterRequest("NODE1",1, " ", Language.ARABIC);
         //retrieves interpreter request from the hashmap
         InterpreterRequest iR = r.getInterpreterRequest(testIRID);
         //removes the request from the database
@@ -95,11 +102,11 @@ public class TestRequestEntity {
     @Test
     public void testGetInterpreterRequest(){
         //adds interpreter request to database and hashmap
-        String testIRID = r.submitInterpreterRequest("NODE1","hank", " ", Language.ARABIC);
+        String testIRID = r.submitInterpreterRequest("NODE1",1, " ", Language.ARABIC);
         //retrieves interpreter request from the hashmap
         InterpreterRequest iR = r.getInterpreterRequest(testIRID);
         assertEquals("NODE1",iR.getNodeID());
-        assertEquals("hank",iR.getAssignerID());
+        assertEquals(1,iR.getAssignerID());
         assertEquals(" ",iR.getNote());
         assertEquals(Language.ARABIC,iR.getLanguage());
         r.deleteRequest(testIRID);
@@ -108,9 +115,9 @@ public class TestRequestEntity {
     @Test
     public void testCompleteRequest(){
         //adds interpreter request to database and hashmap
-        String iR1ID = r.submitInterpreterRequest("NODE1","hank", " ", Language.ARABIC);
+        String iR1ID = r.submitInterpreterRequest("NODE1",1, " ", Language.ARABIC);
         //starts the request
-        r.markInProgress("bobby",iR1ID);
+        r.markInProgress(2,iR1ID);
         //completes request
         r.completeRequest(iR1ID);
         //retrieves completed request
@@ -122,11 +129,11 @@ public class TestRequestEntity {
     @Test
     public void testUpdateRequest(){
         //adds interpreter request to database and hashmap
-        String testIRID = r.submitInterpreterRequest("NODE1","hank", " ", Language.ARABIC);
+        String testIRID = r.submitInterpreterRequest("NODE1",1, " ", Language.ARABIC);
         //Interpreter request to be modified
         long currTime = System.currentTimeMillis();
         InterpreterRequest iR1 = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "hank", "", "", new Timestamp(currTime), new Timestamp(currTime-1),
+                1, 1, "", new Timestamp(currTime), new Timestamp(currTime-1),
                 new Timestamp(currTime-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         //modifying interpreter request
         r.updateInterpreterRequest(testIRID, iR1.getNodeID(), iR1.getAssignerID(), iR1.getNote(), iR1.getSubmittedTime(),
@@ -151,8 +158,8 @@ public class TestRequestEntity {
 
     @Test
     public void getLanguageFrequencyTest(){
-        String iR1 = r.submitInterpreterRequest("NODE2","hank","",Language.GERMAN);
-        String iR2 = r.submitInterpreterRequest("NODE1","hank","",Language.CHINESE);
+        String iR1 = r.submitInterpreterRequest("NODE2",1,"",Language.GERMAN);
+        String iR2 = r.submitInterpreterRequest("NODE1",1,"",Language.CHINESE);
         LinkedList<LanguageFrequency> expected = new LinkedList<>();
         expected.add(new LanguageFrequency(Language.CHINESE,2));
         expected.add(new LanguageFrequency(Language.GERMAN,1));

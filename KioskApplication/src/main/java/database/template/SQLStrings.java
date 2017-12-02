@@ -23,7 +23,7 @@ public class SQLStrings {
             ")";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " assigner INT NOT NULL REFERENCES t_employee on DELETE CASCADE," +
+            " assigner INT NOT NULL," +
             " completer INT NOT NULL,"+
             " note CLOB(280)," +
             " submittedTime TIMESTAMP NOT NULL," +
@@ -92,10 +92,8 @@ public class SQLStrings {
 
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
-            " loginID INT NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY GENERATED ALWAYS AS IDENTITY" +
-            " (START WITH 1, INCREMENT BY 1),"+
-            " userName Varchar(50) NOT NULL,"+
-            // not sure how I want to store passwords
+            " loginID INT GENERATED ALWAYS AS IDENTITY,"+ //CONSTRAINT t_employee_pk PRIMARY KEY,"+
+            " username Varchar(50) NOT NULL,"+
             " password Varchar(60) NOT NULL,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
@@ -103,8 +101,11 @@ public class SQLStrings {
 
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
-    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?)";
-    public static final String EMPLOYEE_UPDATE = "update t_employee set userName=?, password=?, permission=?, serviceAbility=? where loginID=?";
+    public static final String EMPLOYEE_INSERT = "insert into t_employee"+
+            "(username, password, permission, serviceAbility)"+
+            " values(?, ?, ?, ?)";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, password=?,"+
+            " permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";
     public static final String EMPLOYEE_DELETE = "delete from t_employee where loginID=?";

@@ -7,6 +7,7 @@ import database.objects.Node;
 import database.utility.*;
 import database.objects.SecurityRequest;
 import database.objects.InterpreterRequest;
+import org.springframework.security.core.parameters.P;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -339,7 +340,8 @@ public class DatabaseController {
     public int addEmployee(String userName, String password, KioskPermission permission,
                            RequestType serviceAbility){
         try{
-            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT);
+            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT,
+                    PreparedStatement.RETURN_GENERATED_KEYS);
             pstmt.setString(1,userName);
             pstmt.setString(2,password);
             pstmt.setInt(3,permission.ordinal());
@@ -396,7 +398,7 @@ public class DatabaseController {
             if(rs.next()){
                 employee = new Employee(
                         loginID,
-                        rs.getString("userName"),
+                        rs.getString("username"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
@@ -418,10 +420,9 @@ public class DatabaseController {
             LinkedList<Employee> employees = new LinkedList<>();
             while(rs.next()) {
                 Employee employee = null;
-                //for completed InterpreterRequests
                 employee = new Employee(
                         rs.getInt("loginID"),
-                        rs.getString("userName"),
+                        rs.getString("username"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);

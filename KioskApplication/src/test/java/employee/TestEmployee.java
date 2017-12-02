@@ -13,18 +13,18 @@ public class TestEmployee {
 
     @Test
     public void testValidatePassword(){
-        Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxy",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp = new Employee("TestEmp","abcdefghijklmnoppqrstuvwxy",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         assertTrue(testEmp.validatePassword("abcdefghijklmnoppqrstuvwxy"));
     }
 
     //tests if it doesn't return the password when incorrect
     @Test
     public void testGetIncorrectPassword(){
-        Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxy",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
-        Employee testEmp2 = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp = new Employee("TestEmp","abcdefghijklmnoppqrstuvwxy",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        Employee testEmp2 = new Employee("TestEmp","abcdefghijklmnoppqrstuvwxyz",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         System.out.println(testEmp.getPassword("abcdefghijklmnoppqrstuvwxy").length());
         System.out.println(testEmp2.getPassword("abcdefghijklmnoppqrstuvwxyz").length());
         //incorrect password
@@ -33,17 +33,17 @@ public class TestEmployee {
 
     @Test
     public void testSubmitEncrypted(){
-        Employee testEmp = new Employee("Test","TestEmp","abcde",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
-        Employee testEmp2 = new Employee(testEmp.getLoginID(),testEmp.getUsername(),testEmp.getPassword("abcde"),
-                testEmp.getPermission(),testEmp.getServiceAbility(),true);
+        Employee testEmp = new Employee("TestEmp","abcde",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        Employee testEmp2 = new Employee(testEmp.getUsername(),testEmp.getPassword("abcde"),
+                testEmp.getPermission(),testEmp.getServiceAbility());
         assertTrue(testEmp2.validatePassword("abcde"));
     }
 
     @Test
     public void testUpdatePassword(){
-        Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp = new Employee("TestEmp","abcdefghijklmnoppqrstuvwxyz",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         testEmp.updatePassword("abc","abcdefghijklmnoppqrstuvwxyz");
         assertTrue(testEmp.validatePassword("abc"));
         assertFalse(testEmp.validatePassword("abcdefghijklmnoppqrstuvwxyz"));
@@ -51,8 +51,8 @@ public class TestEmployee {
 
     @Test
     public void testUpdateUserName(){
-        Employee testEmp = new Employee("Test","TestEmp","abcdefghijklmnoppqrstuvwxyz",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER,false);
+        Employee testEmp = new Employee("TestEmp","abcdefghijklmnoppqrstuvwxyz",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         testEmp.updateUsername("UpdatedName","abcdefghijklmnoppqrstuvwxyz");
         assertEquals("UpdatedName",testEmp.getUsername());
     }
