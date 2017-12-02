@@ -84,6 +84,10 @@ public class RequestEntity {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Request> getAllRequests(){
         LinkedList<Request> allRequests = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
@@ -95,6 +99,10 @@ public class RequestEntity {
         return allRequests;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
@@ -103,6 +111,10 @@ public class RequestEntity {
         return intRequests;
     }
 
+    /**
+     *
+     * @return List of requests for security
+     */
     public LinkedList<Request> getAllSecurity(){
         LinkedList<Request> secRequests = new LinkedList<>();
         for(SecurityRequest sR: securityRequests.values()){
@@ -111,16 +123,18 @@ public class RequestEntity {
         return secRequests;
     }
 
-    /**
-     * Methods for all request types
-     */
-
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
         LinkedList<Request> displayedRequests = filterByStatus(requests, status);
         return displayedRequests;
     }
 
+    /**
+     *
+     * @param requests
+     * @param status
+     * @return
+     */
     public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
         LinkedList<Request> displayedRequests = new LinkedList<>();
         for (int i = 0; i < requests.size(); i++) {
@@ -147,6 +161,11 @@ public class RequestEntity {
         return displayedRequests;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
     public RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
         if (requestType.equals("Int")) {
@@ -165,7 +184,10 @@ public class RequestEntity {
         }
     }
 
-    //Generic request deleting method
+    /**
+     * Generic request deleting method
+     * @param requestID
+     */
     public void deleteRequest(String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
@@ -195,7 +217,11 @@ public class RequestEntity {
         }
     }
 
-    //Generic request in progress maker
+    /**
+     * Generic request in progress marker
+     * @param completerID
+     * @param requestID
+     */
     public void markInProgress(int completerID, String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
@@ -227,7 +253,10 @@ public class RequestEntity {
         }
     }
 
-    //Generic request completing method
+    /**
+     * Generic request completing method
+     * @param requestID
+     */
     public void completeRequest(String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
@@ -261,6 +290,11 @@ public class RequestEntity {
         }
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
     public Request getRequest(String requestID){
         Request request;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
@@ -271,22 +305,35 @@ public class RequestEntity {
         return request;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
     public Employee getAssigner(String requestID){
         Request request = getRequest(requestID);
         return dbController.getEmployee(request.getAssignerID());
     }
 
+    /**
+     * Gets the completer of a request if it is in progress
+     * @param requestID
+     * @return employee
+     */
     public IEmployee getCompleter(String requestID){
         Request request = getRequest(requestID);
-        if(request.getStatus()==RequestProgressStatus.DONE) return dbController.getEmployee(request.getCompleterID());
+        if(request.getStatus()!=RequestProgressStatus.TO_DO) return dbController.getEmployee(request.getCompleterID());
         else return NullEmployee.getInstance();
     }
 
-
     /**
-     * InterpreterRequest methods
+     * Submits an interpreterRequest
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param lang
+     * @return
      */
-
     public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
@@ -317,6 +364,17 @@ public class RequestEntity {
         }
     }
 
+    /**
+     *
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param language
+     */
     public void updateInterpreterRequest(String requestID, String nodeID, int assignerID, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
@@ -334,9 +392,13 @@ public class RequestEntity {
     }
 
     /**
-     * SecurityRequest methods
+     *
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param priority
+     * @return
      */
-
     public String submitSecurityRequest(String nodeID, int assignerID, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
@@ -351,6 +413,12 @@ public class RequestEntity {
         return rID;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     * @throws NullPointerException
+     */
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
         System.out.println("Getting Security request");
         if(securityRequests.containsKey(requestID)) {
@@ -362,11 +430,22 @@ public class RequestEntity {
                 return securityRequests.get(requestID);
             }
             else{
-                throw new NullPointerException("Unable to find SecurityReqest in database");
+                throw new NullPointerException("Unable to find SecurityRequest in database");
             }
         }
     }
 
+    /**
+     *
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param priority
+     */
     public void updateSecurityRequest(String requestID, String nodeID, int assignerID, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
@@ -384,7 +463,7 @@ public class RequestEntity {
     }
 
 
-    /**
+    /*
      * Tracking information
      * what we want:
      * Time from IN_PROGRESS to COMPLETE for requests
@@ -396,6 +475,10 @@ public class RequestEntity {
      */
 
     // gets mean time to setComplete a request from IN_PROGRESS to DONE
+
+    /**
+     *
+     */
     public void getMeanTimeToComplete(){
         long sum=0;
         int total=0;
@@ -416,7 +499,10 @@ public class RequestEntity {
         }
     }
 
-    // gives a frequency histogram for interpreter request languages
+    /**
+     * gives a frequency histogram for interpreter request languages
+     * @return
+     */
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         dbController.getAllInterpreterRequests();
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
@@ -436,7 +522,10 @@ public class RequestEntity {
         return freq;
     }
 
-    //returns a hashmap of Strings and integers for a pie chart
+    /**
+     *
+     * @return hashmap of Strings and integers for a pie chart of request types
+     */
     public ObservableList<PieChart.Data> getRequestDistribution(){
         ObservableList<PieChart.Data> reqs =
                 FXCollections.observableArrayList(
