@@ -186,7 +186,6 @@ public class MapController {
 
             waypoints.add(wayPointObject);
             waypointPane.getChildren().add(wayPointObject);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -224,14 +223,7 @@ public class MapController {
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
 
-        if (this.currentPath != null) {
-            clearMap();
-
-            for (LinkedList<Edge> segment : this.currentPath.getEdges())
-                nodesEdgesView.drawEdgesOnMap(segment);
-
-            nodesEdgesView.drawNodesOnMap(this.currentPath.getWaypoints());
-        }
+        nodesEdgesView.drawPath();
 
         miniMapController.switchFloor(floorImageURL);
     }
