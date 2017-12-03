@@ -25,6 +25,8 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseControllerTests {
 
     private DatabaseController dbController;
+    private int emp1ID;
+    private int emp2ID;
 
     public DatabaseControllerTests() {
         dbController = DatabaseController.getInstance();
@@ -34,11 +36,11 @@ public class DatabaseControllerTests {
     public void statrtup(){
         Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
                 "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
-        dbController.addEmployee(emp1,"password");
+        emp1ID=dbController.addEmployee(emp1,"password");
 
         Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
                 "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
-        dbController.addEmployee(emp2,"password");
+        emp2ID=dbController.addEmployee(emp2,"password");
     }
 
     @After
@@ -184,7 +186,7 @@ public class DatabaseControllerTests {
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                1, 1,"", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         Assert.assertEquals(iR,dbController.getInterpreterRequest(iR.getRequestID()));
@@ -202,14 +204,14 @@ public class DatabaseControllerTests {
         dbController.addNode(node2);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                1, 1,"", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         long t2 = System.currentTimeMillis()+2;
 
         //updates InterpreterRequest values
         iR.setNodeID("NODE2");
-        iR.setAssignerID(2);
+        iR.setAssignerID(emp2ID);
         iR.setNote("Professor Wong");
         iR.setSubmittedTime(new Timestamp(t2));
         iR.setCompletedTime(new Timestamp(t2-1));
@@ -229,7 +231,7 @@ public class DatabaseControllerTests {
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                1, 1,"", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes iR
@@ -247,7 +249,7 @@ public class DatabaseControllerTests {
         long t1 = System.currentTimeMillis();
 
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                1, 1,"", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes node
