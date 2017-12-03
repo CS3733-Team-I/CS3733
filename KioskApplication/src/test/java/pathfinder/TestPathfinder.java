@@ -537,4 +537,119 @@ public class TestPathfinder {
             }
         }
     }
+    @Test
+    public void testBeamSearchTestPathEquality() {
+        Pathfinder beam = new Pathfinder(new Beam());
+        Path path = null;
+        try {
+            path = beam.generatePath(n02, n02);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+       // testPath2Segment.add(map.getConnectingEdge(n02,n02));
+        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        testPath2Waypoints.add(n02);
+        testPath2Waypoints.add(n02);
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
+
+        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+        assertTrue(path.equals(testPath2));
+        // System.out.println(path2.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+    @Test
+    public void testBeamSearchTestPathEquality2() {
+        Pathfinder beam = new Pathfinder(new Beam());
+        Path path = null;
+        try {
+            path = beam.generatePath(n02, n03);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+        testPath2Segment.add(map.getConnectingEdge(n02,n03));
+      //  testPath2Segment.add(map.getConnectingEdge(n03,n04));
+       // testPath2Segment.add(map.getConnectingEdge(n04,n05));
+        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        testPath2Waypoints.add(n02);
+        testPath2Waypoints.add(n03);
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
+
+        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+        assertTrue(path.equals(testPath2));
+        // System.out.println(path2.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+
+    @Test
+    public void testBeamSearchTestPathEquality3() {
+        Pathfinder beam = new Pathfinder(new Beam());
+        Path path = null;
+        try {
+            path = beam.generatePath(n02, n05);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+        testPath2Segment.add(map.getConnectingEdge(n02,n03));
+        testPath2Segment.add(map.getConnectingEdge(n03,n04));
+        testPath2Segment.add(map.getConnectingEdge(n04,n05));
+        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
+        testPath2Waypoints.add(n02);
+        testPath2Waypoints.add(n05);
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
+
+        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
+
+        assertTrue(path.equals(testPath2));
+        // System.out.println(path2.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
+
+    @Test
+    public void testFindPathBeam() {
+        SearchAlgorithm alg = new Beam();
+
+        testFindPath(alg);
+    }
+
+    @Test
+    public void testFindPathBestFirst(){
+        SearchAlgorithm alg = new BestFirst();
+        testFindPath(alg);
+    }
+
+    @Test
+    public void testBeam1() {
+        Pathfinder beam = new Pathfinder(new Beam());
+        Path path = null;
+        try {
+            path = beam.generatePath(n01, n17);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+        testPath2Segment.add(map.getConnectingEdge(n01,n02));
+        testPath2Segment.add(map.getConnectingEdge(n02,n08));
+        testPath2Segment.add(map.getConnectingEdge(n08,n11));
+        testPath2Segment.add(map.getConnectingEdge(n11,n12));
+        testPath2Segment.add(map.getConnectingEdge(n12,n17));
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
+
+
+        assertTrue(path.getEdges().equals(testPath2Edges));
+        // System.out.println(path.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
+    }
 }
