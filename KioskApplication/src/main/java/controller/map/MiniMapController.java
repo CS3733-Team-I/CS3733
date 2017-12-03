@@ -1,4 +1,4 @@
-package controller;
+package controller.map;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -6,12 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import utility.ResourceManager;
-
-import static controller.MapController.DEFAULT_HVALUE;
-import static controller.MapController.DEFAULT_VVALUE;
 
 public class MiniMapController {
 
@@ -51,28 +47,28 @@ public class MiniMapController {
     @FXML
     protected void initialize() {
         //set navigation rectangle's initial position
-        viewportRect.setWidth(mapController.container.getWidth() * RAWRatio);
-        viewportRect.setHeight(mapController.container.getHeight() * RAHRatio);
+        viewportRect.setWidth(mapController.getWidth() * RAWRatio);
+        viewportRect.setHeight(mapController.getHeight() * RAHRatio);
 
         recXOffset = (miniMapView.getFitWidth() - viewportRect.getWidth())/(miniMapView.getFitWidth());
         recYOffset = (miniMapView.getFitHeight() - viewportRect.getHeight())/(miniMapView.getFitHeight());
 
-        viewportRect.setX((DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
-        viewportRect.setY((DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
+        viewportRect.setX((MapController.DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
+        viewportRect.setY((MapController.DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
 
         // TODO this is bad oo, we should expose a way to add a listener not directly access scrollPane
         // sync navigation rectangle's position with viewable region(scroll pane)
         viewportRect.yProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                mapController.scrollPane.setVvalue((double)newValue * mapController.scrollPane.getVmax()/(miniMapView.getFitHeight()*recYOffset));
+                mapController.setScrollbarY((double)newValue * 1 / (miniMapView.getFitHeight() * recYOffset));
             }
         });
 
         viewportRect.xProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                mapController.scrollPane.setHvalue((double)newValue * mapController.scrollPane.getHmax()/(miniMapView.getFitWidth()*recXOffset));
+                mapController.setScrollbarX((double)newValue * 1 / (miniMapView.getFitWidth() * recXOffset));
             }
         });
     }
@@ -172,8 +168,8 @@ public class MiniMapController {
 
     @FXML
     protected void changePositionEvent(MouseEvent event) {
-        viewportRect.setX(event.getX()- viewportRect.getWidth()/2);
-        viewportRect.setY(event.getY()- viewportRect.getHeight()/2);
+        viewportRect.setX(event.getX() - viewportRect.getWidth()/2);
+        viewportRect.setY(event.getY() - viewportRect.getHeight()/2);
     }
 
     /**
@@ -183,7 +179,7 @@ public class MiniMapController {
      * @param max maximum value
      * @return the larger value between min and the smallest between max and val.
      */
-    public double clamp(double val, double min, double max) {
+    private double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
     }
 }

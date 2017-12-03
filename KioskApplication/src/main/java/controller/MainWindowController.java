@@ -2,6 +2,8 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import controller.map.MapBuilderController;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
@@ -41,7 +43,7 @@ public class MainWindowController {
     private AnchorPane mapView;
     private MapController mapController;
 
-    protected HashMap<ApplicationScreen, ScreenController> controllers;
+    private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();
@@ -132,8 +134,8 @@ public class MainWindowController {
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
 
-                mapController.showEdgesBox.setSelected(false);
-                mapController.showNodesBox.setSelected(false);
+                mapController.setNodesVisible(false);
+                mapController.setEdgesVisible(false);
                 break;
 
             case EMPLOYEE:
@@ -148,8 +150,8 @@ public class MainWindowController {
                 switchButton.setText("Logoff");
 
                 //default to showing all nodes and edges
-                mapController.showEdgesBox.setSelected(true);
-                mapController.showNodesBox.setSelected(true);
+                mapController.setNodesVisible(true);
+                mapController.setEdgesVisible(true);
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
@@ -266,10 +268,6 @@ public class MainWindowController {
         }
     }
 
-    public void displayTrackingData(){
-
-    }
-
     public void onMapNodeClicked(Node n) {
         controllers.get(currentScreen).onMapNodeClicked(n);
     }
@@ -286,7 +284,7 @@ public class MainWindowController {
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 
-    protected String getCreateTabName() {
+    protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
     }
 }

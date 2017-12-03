@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.*;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -312,5 +313,14 @@ public class RequestManagerController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0,500,0,0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(false);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }

@@ -1,6 +1,6 @@
-package utility.nodeDisplay;
+package utility.node;
 
-public enum NodeDisplay {
+public enum NodeSelectionType {
     NORMAL,
     SELECTED,
     CHANGED,

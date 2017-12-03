@@ -322,10 +322,6 @@ public class DatabaseController {
         return new LinkedList<SecurityRequest>();
     }
 
-    public void deleteTestTables() {
-        DBUtil.dropAllTables(instanceConnection);
-    }
-
     /**
      * Employee database management
      */
