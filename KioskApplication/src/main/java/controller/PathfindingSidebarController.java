@@ -89,9 +89,7 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-
-    }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(Node node) {
@@ -122,6 +120,8 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setEditMode(false);
+
         // Set the map size
         getMapController().setAnchor(0, 300, 0, 0);
 

@@ -9,20 +9,15 @@ import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.SystemSettings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -47,7 +42,7 @@ public class MapBuilderController extends ScreenController {
     @FXML private TabPane builderTabPane;
 
     //default, nodeFloor is in sync with main map
-    NodeType nodeType = NodeType.TEMP;
+    NodeType nodeType = NodeType.HALL;
     NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeBuilding nodeBuilding = NodeBuilding.FRANCIS15;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
@@ -435,8 +430,38 @@ public class MapBuilderController extends ScreenController {
         initPopup();
     }
 
+    private ImageView floorImage(NodeFloor floor) {
+        String floorImageURL = "";
+        switch (floor) {
+            case LOWERLEVEL_2:
+                floorImageURL = "/images/00_thelowerlevel2.png";
+                break;
+            case LOWERLEVEL_1:
+                floorImageURL = "/images/00_thelowerlevel1.png";
+                break;
+            case GROUND:
+                floorImageURL = "/images/00_thegroundfloor.png";
+                break;
+            case FIRST:
+                floorImageURL = "/images/01_thefirstfloor.png";
+                break;
+            case SECOND:
+                floorImageURL = "/images/02_thesecondfloor.png";
+                break;
+            case THIRD:
+                floorImageURL = "/images/03_thethirdfloor.png";
+                break;
+        }
+
+        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        ImageView floorView = new ImageView(floorImage);
+        floorView.setFitHeight(100);
+        floorView.setFitWidth(100);
+        return floorView;
+    }
+
     @Override
-    public Node getContentView() {
+    public javafx.scene.Node getContentView() {
         if (contentView == null) {
             contentView = loadView("/view/MapBuilderView.fxml");
         }
@@ -452,9 +477,10 @@ public class MapBuilderController extends ScreenController {
         } else if(event.getClickCount() == 2) {
             observableSelectedNodes.clear();
 
-            Node newNode = new Node("", (int)event.getX(), (int)event.getY(),
-                                    getMapController().getCurrentFloor(), NodeBuilding.FRANCIS15, NodeType.HALL,
-                                    "", "", "Team " + TeamAssigned.I.toString());
+            Node newNode = new Node(nodeID.getText(), (int)event.getX(), (int)event.getY(),
+                                    getMapController().getCurrentFloor(), NodeBuilding.FRANCIS15,
+                                    NodeType.HALL, "", "",
+                                    "Team " + TeamAssigned.I.toString());
 
             observableNewNodes.clear();
             observableNewNodes.add(newNode);
@@ -463,17 +489,13 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) {
-
         if(observableNewNodes.contains(node)) {
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
             return;
         }
         else if(observableSelectedNodes.contains(node)) {
             return;
-        }
-        else {
+        } else {
             updateSelectedNode(node);
         }
     }
@@ -482,11 +504,7 @@ public class MapBuilderController extends ScreenController {
     public void onMapEdgeClicked(database.objects.Edge edge) {
         //remove changes on nodes
         //TODO make this into a method
-        mapController.observableHighlightedSelectedNodes.clear();
         observableSelectedNodes.clear();
-
-        mapController.isNodeAdded = false;
-        mapController.observableHighlightedNewNodes.clear();
         observableNewNodes.clear();
 
         observableSelectedEdges.clear();
@@ -495,12 +513,14 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-        mapController.showEdgesBox.setSelected(false);
-        mapController.showNodesBox.setSelected(false);
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
     }
 
     @Override
     public void resetScreen() {
+
+        getMapController().setEditMode(true);
 
         getMapController().setAnchor(0, 450, 0, 0);
         getMapController().reloadDisplay();
@@ -621,12 +641,9 @@ public class MapBuilderController extends ScreenController {
     private void updateNodeID() {
         //System.out.println(observableSelectedNodes.get(0).getNodeID());
         if(nodeType == NodeType.ELEV) {
-
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString1()));
-
-        }
-        else {
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
+        } else {
         //System.out.println("");
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
@@ -634,8 +651,8 @@ public class MapBuilderController extends ScreenController {
             }else{
                 String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, nodeTeamAssigned, "");
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
-                System.out.println(convertFloor(nodeFloor.toString1()));
-                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString1()));
+                System.out.println(convertFloor(nodeFloor.toLiteralString()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
 
             }
         }
@@ -750,14 +767,7 @@ public class MapBuilderController extends ScreenController {
         }
 
         for(database.objects.Node newNode : observableNewNodes) {
-            if(newNode.getNodeType() == NodeType.TEMP) { //no type of temp is allowed to save
-                nodeDialogString +=  "node ID: " + newNode.getNodeID() + "\n" + "node Type cannot be TEMP.\n\n";
-                System.out.println(nodeDialogString);
-                loadDialog(event);
-                nodeDialogString = "";
-                return;
-            }
-            else if (getInstance().getNode(newNode.getNodeID()) == null) {
+            if (getInstance().getNode(newNode.getNodeID()) == null) {
                 try {
                     getInstance().addNode(newNode);
                     nodeDialogString += "node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
@@ -780,23 +790,21 @@ public class MapBuilderController extends ScreenController {
         }
 
         //clear new node list
-        mapController.isNodeAdded = true;
-        mapController.observableHighlightedNewNodes.clear();
         observableNewNodes.clear();
 
         for(database.objects.Node changedNode : observableChangedNodes) {
-                try {
-                    getInstance().editNode(changedNode);
-                    nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
-                } catch (DatabaseException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error editing node in DB");
-                    alert.setHeaderText("Error occurred while updating a node in the database.");
-                    alert.setContentText(ex.toString());
-                    alert.showAndWait();
+            try {
+                getInstance().editNode(changedNode);
+                nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error editing node in DB");
+                alert.setHeaderText("Error occurred while updating a node in the database.");
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
 
-                    nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
-                }
+                nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
+            }
         }
         observableChangedNodes.clear();
         System.out.println(nodeDialogString);
@@ -807,7 +815,6 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void loadDialog(ActionEvent event) {
-
         //TODO FIND A BETTER PLACE TO PUT THE DIALOG
         JFXDialogLayout nodeDialogLayout = new JFXDialogLayout();
         nodeDialogLayout.setHeading(new Text(""));
@@ -946,34 +953,17 @@ public class MapBuilderController extends ScreenController {
 
     private void updateSelectedNode(database.objects.Node selectedNode) {
         //remove unsaved new node, if any
-        mapController.isNodeAdded = false;
-        mapController.observableHighlightedNewNodes.clear();
         observableNewNodes.clear();
 
-        //add new node to selected node list
-        //TODO MAKE THIS AN EXCEPTION
-        if(mapController.observableHighlightedSelectedNodes.size() > 2) {
-            System.out.println("observableHighlightedSelectedNodes size greater than 2, Problematic!");
-        }
-        mapController.observableHighlightedSelectedNodes.clear();
-        mapController.observableHighlightedSelectedNodes.add(selectedNode);
-
-        if(observableSelectedNodes.size() > 2) {
-            System.out.println("observableSelectedNodes size greater than 2, Problematic!");
-        }
         observableSelectedNodes.clear();
         observableSelectedNodes.add(selectedNode);
     }
+
     @FXML
     private void onDeleteClicked(ActionEvent e) {
         if(!observableNewNodes.isEmpty()) {
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
             observableNewNodes.clear();
-        }
-
-        else if(!observableSelectedNodes.isEmpty()) {
-
+        } else if(!observableSelectedNodes.isEmpty()) {
             //remove this node from map builder changed list
             Iterator<database.objects.Node> builderNodeObjectIterator = observableChangedNodes.iterator();
             while (builderNodeObjectIterator.hasNext()) {
@@ -983,17 +973,9 @@ public class MapBuilderController extends ScreenController {
                     break;
                 }
             }
-            //remove this node from map controller changed list
-            Iterator<database.objects.Node> mapNodeObjectIterator = mapController.observableHighlightedChangedNodes.iterator();
-            while (mapNodeObjectIterator.hasNext()) {
-                database.objects.Node deletedNode = mapNodeObjectIterator.next();
-                if (deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
-                    mapNodeObjectIterator.remove();
-                    break;
-                }
-            }
+
             //remove this node from map controller drawn list
-            mapController.undrawNodeOnMap(observableSelectedNodes.get(0));
+            getMapController().removeNode(observableSelectedNodes.get(0));
 
             for(database.objects.Node deletedNode : MapEntity.getInstance().getAllNodes()) {
                 if(deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
@@ -1008,9 +990,7 @@ public class MapBuilderController extends ScreenController {
                     }
                 }
             }
-            mapController.refresh();
-            //remove this selected node
-            mapController.observableHighlightedSelectedNodes.clear();
+
             observableSelectedNodes.clear();
         }
     }
@@ -1029,10 +1009,11 @@ public class MapBuilderController extends ScreenController {
         }
 
         //refresh edges display
-        mapController.showEdgesBox.setSelected(false);
-        mapController.showEdgesBox.setSelected(true);
-        updateSelectedNode(observableSelectedNodes.get(0));
+        // TODO do this better
+        getMapController().setEdgesVisible(false);
+        getMapController().setEdgesVisible(true);
 
+        updateSelectedNode(observableSelectedNodes.get(0));
     }
 
     @Override
@@ -1078,8 +1059,8 @@ public class MapBuilderController extends ScreenController {
                             alert.showAndWait();
                         }
                         //refresh edges display
-                        mapController.showEdgesBox.setSelected(false);
-                        mapController.showEdgesBox.setSelected(true);
+                        getMapController().setEdgesVisible(false);
+                        getMapController().setEdgesVisible(true);
                     }
                 }
             }
@@ -1128,8 +1109,8 @@ public class MapBuilderController extends ScreenController {
                         alert.showAndWait();
                     }
                     //refresh edges display
-                    mapController.showEdgesBox.setSelected(false);
-                    mapController.showEdgesBox.setSelected(true);
+                    getMapController().setEdgesVisible(false);
+                    getMapController().setEdgesVisible(true);
                     updateSelectedNode(observableSelectedNodes.get(0));
                 }
             }

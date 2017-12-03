@@ -134,13 +134,25 @@ public class NodesEdgesView extends AnchorPane {
         parent.nodeClicked(n);
     }
 
-    protected void drawNodesOnMap(List<Node> nodes) {
-        nodesList.addAll(nodes);
-    }
+    /**
+     * Draw a list of nodes on the map
+     * @param nodes the list of nodes to draw
+     */
+    protected void drawNodesOnMap(List<Node> nodes) { nodesList.addAll(nodes); }
 
+    /**
+     * Draw a list of edges on the map
+     * @param edges the list of edges to draw
+     */
     protected void drawEdgesOnMap(List<Edge> edges) {
         edgesList.addAll(edges);
     }
+
+    /**
+     * Remove a node from the map
+     * @param node the node to remove
+     */
+    protected void removeNode(Node node) { nodesList.remove(node); }
 
     public void drawPath() {
         if (parent.getPath() != null) {

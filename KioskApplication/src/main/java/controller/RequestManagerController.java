@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class RequestManagerController extends ScreenController {
-
-
     LoginEntity l;
 
     RequestEntity r;
@@ -299,7 +297,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) { }
@@ -312,6 +310,8 @@ public class RequestManagerController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setEditMode(false);
+
         getMapController().setAnchor(0,500,0,0);
         getMapController().setPath(null);
         getMapController().reloadDisplay();

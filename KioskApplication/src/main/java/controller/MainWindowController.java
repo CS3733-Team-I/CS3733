@@ -277,7 +277,7 @@ public class MainWindowController {
     }
 
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(e, location);
+        controllers.get(currentScreen).onMapLocationClicked(e);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {

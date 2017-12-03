@@ -157,7 +157,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(Node n) {
@@ -185,6 +185,8 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setEditMode(false);
+
         getMapController().setAnchor(0,235,0,0);
         getMapController().setPath(null);
         getMapController().reloadDisplay();

@@ -28,7 +28,7 @@ public enum NodeFloor {
         }
     }
 
-    public String toString1() {
+    public String toLiteralString() {
         switch(this){
             case LOWERLEVEL_2:
                 return "LOWERLEVEL_2";

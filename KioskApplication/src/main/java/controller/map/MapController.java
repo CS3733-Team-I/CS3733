@@ -28,6 +28,7 @@ import utility.node.NodeFloor;
 import utility.node.NodeSelectionType;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class MapController {
@@ -92,6 +93,24 @@ public class MapController {
         if (!this.parent.equals(null)) {
             this.parent.onMapEdgeClicked(edge);
         }
+    }
+
+    /**
+     * Add a node to the map
+     * @param node the node to add
+     * @param type what selection state it is
+     */
+    public void addNode(Node node, NodeSelectionType type) {
+        nodesEdgesView.drawNodesOnMap(Arrays.asList(node));
+        setNodeSelected(node, type);
+    }
+
+    /**
+     * Remove a node from the map
+     * @param node the node to remove
+     */
+    public void removeNode(Node node) {
+        nodesEdgesView.removeNode(node);
     }
 
     /**
