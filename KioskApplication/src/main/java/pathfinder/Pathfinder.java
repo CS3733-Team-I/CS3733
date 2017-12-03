@@ -70,22 +70,6 @@ public class Pathfinder {
         return(new Path(waypoints, pathEdges));
     }
 
-    //Old method. use the method that takes a LinkedList
-    /**
-     * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
-     * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
-     * a list first.
-     * @param startNode node that the algorithm should start at
-     * @param endNode node that the algorithm should end at
-     * @return A Path object containing the waypoints and a list of edges marking a path between them.
-     */
-    public Path generatePath(Node startNode, Node endNode) throws PathfinderException{
-        LinkedList<Node> waypoints = new LinkedList<>();
-        waypoints.add(startNode);
-        waypoints.add(endNode);
-        return(generatePath(waypoints));
-    }
-
     public SearchAlgorithm getSearchAlgorithm() {
         return searchAlgorithm;
     }
