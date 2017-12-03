@@ -35,8 +35,12 @@ public class MapController {
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
 
+    public static final double DEFAULT_HVALUE = 0.52;
+    public static final double DEFAULT_VVALUE = 0.3;
+
     @FXML private StackPane stackPane;
     @FXML private ImageView mapView;
+    @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane waypointPane;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
@@ -89,6 +93,23 @@ public class MapController {
         }
     }
 
+    /**
+     * Gets the current path
+     * @return the path
+     */
+    public Path getPath() {
+        return currentPath;
+    }
+
+    /**
+     * Set the current path and draw it
+     * @param path the new path
+     */
+    public void setPath(Path path) {
+        this.currentPath = path;
+        nodesEdgesView.drawPath();
+    }
+
     public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); }
     public boolean areNodesVisible(){
         return this.showNodesBox.isSelected();
@@ -102,19 +123,49 @@ public class MapController {
     public boolean isEditMode() {
         return editMode;
     }
-
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
     }
 
     public void setFloorSelector(NodeFloor floorSelector) {
         this.floorSelector.setValue(floorSelector);
+        onFloorSelected();
+    }
+
+    /**
+     * Gets the width of the map
+     * @return the map's width
+     */
+    public double getWidth() {
+        return container.getWidth();
+    }
+
+    /**
+     * Gets the height of the map
+     * @return the map's height
+     */
+    public double getHeight() {
+        return container.getHeight();
+    }
+
+    public void setScrollbarX(double x) {
+        scrollPane.setHvalue(x);
+    }
+
+    public void setScrollbarY(double y) {
+        scrollPane.setVvalue(y);
+    }
+
+    public void reloadDisplay() {
+        nodesEdgesView.reloadDisplay();
     }
 
     /**
      * Clear the map of waypoints, nodes, and edges
      */
     public void clearMap() {
+        this.currentPath = null;
+
         this.waypointPane.getChildren().clear();
         this.waypoints.clear();
 
@@ -243,7 +294,13 @@ public class MapController {
 
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
-        stackPane.getChildren().add(nodesEdgesView);
+
+        AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
+
+        nodesEdgesContainer.getChildren().add(nodesEdgesView);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
@@ -368,9 +425,6 @@ public class MapController {
 
     @FXML
     protected void recenterPressed() {
-        final double DEFAULT_HVALUE = 0.52;
-        final double DEFAULT_VVALUE = 0.3;
-
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }

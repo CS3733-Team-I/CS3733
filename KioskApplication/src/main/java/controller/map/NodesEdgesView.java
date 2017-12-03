@@ -9,13 +9,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import utility.node.NodeSelectionType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,16 +25,24 @@ public class NodesEdgesView extends AnchorPane {
     private AnchorPane nodesView;
     private AnchorPane edgesView;
 
-    // Parent
-    Path currentPath;
     MapController parent;
 
     public NodesEdgesView(MapController parent) {
         nodesView = new AnchorPane();
         nodesViewList = new ArrayList<>();
 
+        AnchorPane.setTopAnchor(nodesView, 0.0);
+        AnchorPane.setLeftAnchor(nodesView, 0.0);
+        AnchorPane.setBottomAnchor(nodesView, 0.0);
+        AnchorPane.setRightAnchor(nodesView, 0.0);
+
         edgesView = new AnchorPane();
         edgesViewList = new ArrayList<>();
+
+        AnchorPane.setTopAnchor(edgesView, 0.0);
+        AnchorPane.setLeftAnchor(edgesView, 0.0);
+        AnchorPane.setBottomAnchor(edgesView, 0.0);
+        AnchorPane.setRightAnchor(edgesView, 0.0);
 
         this.getChildren().addAll(nodesView, edgesView);
 
@@ -46,9 +50,7 @@ public class NodesEdgesView extends AnchorPane {
         edgesList = FXCollections.observableArrayList();
 
         this.parent = parent;
-        this.currentPath = null;
 
-        // TODO handle nodes view and edges view add/remove with listeners
         nodesList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
                 if (listener.wasAdded()) {
@@ -104,6 +106,16 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     /**
+     * Set a NodeView's selection type given a node
+     * @param node the Node that corresponds to a NodeView
+     * @param type the type to set the selection to
+     */
+    public void setNodeSelected(Node node, NodeSelectionType type) {
+        NodeView view = getNodeView(node);
+        if (view != null) view.setSelectionType(type);
+    }
+
+    /**
      * Get an existing EdgeView based on a given Edge
      * @param edge the Edge to search for
      * @return an EdgeView corresponding to edge, or null
@@ -130,13 +142,9 @@ public class NodesEdgesView extends AnchorPane {
         nodesList.clear();
         edgesList.clear();
     }
-    
+
     public void mapNodeClicked(Node n) {
         parent.nodeClicked(n);
-    }
-
-    public void mapEdgeClicked(Edge e) {
-        parent.edgeClicked(e);
     }
 
     protected void drawNodesOnMap(List<Node> nodes) {
@@ -147,32 +155,30 @@ public class NodesEdgesView extends AnchorPane {
         edgesList.addAll(edges);
     }
 
-    public void drawPath(Path path) {
-        currentPath = path;
-
-        parent.setFloorSelector(currentPath.getWaypoints().get(0).getFloor());
-
+    public void drawPath() {
+        parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
         parent.clearMap();
-        for (LinkedList<Edge> segment : currentPath.getEdges()) {
+
+        for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
             drawEdgesOnMap(segment);
         }
 
-        drawNodesOnMap(currentPath.getWaypoints());
+        drawNodesOnMap(parent.getPath().getWaypoints());
     }
 
     public void setShowNodes(boolean show) {
+        nodesList.clear();
+
         if (show) {
             drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
-        } else {
-            nodesList.clear();
         }
     }
 
     public void setShowEdges(boolean show) {
+        edgesList.clear();
+
         if (show) {
             drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
-        } else {
-            edgesList.clear();
         }
     }
 }

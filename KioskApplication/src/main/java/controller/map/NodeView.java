@@ -35,7 +35,10 @@ public class NodeView extends StackPane {
         this.node = node;
         this.selectionType = NodeSelectionType.NORMAL;
         this.editable = editable;
+    }
 
+    @FXML
+    public void initialize() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/NodeView.fxml"));
             loader.setController(this);

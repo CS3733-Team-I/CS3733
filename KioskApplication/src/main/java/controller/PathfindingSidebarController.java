@@ -36,7 +36,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
-        mapController.floorSelector.setValue(NodeFloor.THIRD);
+        mapController.setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
@@ -48,7 +48,6 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes.clear();
         waypointList.getItems().clear();
         exceptionText.setText("");
-        getMapController().setPath(null);
         getMapController().clearMap();
     }
 
@@ -68,13 +67,10 @@ public class PathfindingSidebarController extends ScreenController {
                         waypointList.getItems().add(label);
                     }
                 }
-                getMapController().drawPath();
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
-
-
 
             currentNodes.clear();
         }
@@ -83,7 +79,6 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void btClearPathPressed() throws IOException {
         getMapController().clearMap();
-        getMapController().setPath(null);
         exceptionText.setText("");
     }
 

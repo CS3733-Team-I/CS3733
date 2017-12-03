@@ -12,7 +12,6 @@ import java.io.IOException;
 public class EdgeView extends AnchorPane {
 
     Edge edge;
-    NodesEdgesView parent;
 
     Point2D start, end;
 
@@ -41,10 +40,5 @@ public class EdgeView extends AnchorPane {
 
         AnchorPane.setLeftAnchor(container, start.getX());
         AnchorPane.setTopAnchor(container, start.getY());
-
-        line.setOnMouseClicked(event -> {
-            // Let Parent know it was clicked
-            parent.mapEdgeClicked(edge);
-        });
     }
 }
