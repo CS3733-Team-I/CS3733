@@ -28,15 +28,16 @@ public class TestEmployee {
         System.out.println(testEmp.getPassword("abcdefghijklmnoppqrstuvwxy").length());
         System.out.println(testEmp2.getPassword("abcdefghijklmnoppqrstuvwxyz").length());
         //incorrect password
-        assertEquals("123",testEmp.getPassword("123"));
+        assertEquals("",testEmp.getPassword("123"));
     }
 
     @Test
     public void testSubmitEncrypted(){
         Employee testEmp = new Employee("TestEmp","Wong","Wilson","abcde",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        Employee testEmp2 = new Employee(testEmp.getUsername(),testEmp.getLastName(),testEmp.getFirstName(),testEmp.getPassword("abcde"),
-                testEmp.getPermission(),testEmp.getServiceAbility());
+        Employee testEmp2 = new Employee(1,testEmp.getUsername(),testEmp.getLastName(),
+                testEmp.getFirstName(),testEmp.getPassword("abcde"),testEmp.getPermission(),
+                testEmp.getServiceAbility());
         assertTrue(testEmp2.validatePassword("abcde"));
     }
 

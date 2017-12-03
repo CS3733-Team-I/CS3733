@@ -126,4 +126,12 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
         }
         return updated;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 }

@@ -22,7 +22,7 @@ public class NullEmployee implements IEmployee {
     }
 
     /**
-     * hoping this is a valid null value because no one should have a loginID<0
+     * hno one should have a loginID<1
      * @return -1
      */
     public int getLoginID(){
