@@ -50,6 +50,7 @@ public class PathfindingSidebarController extends ScreenController {
         exceptionText.setText("");
 
         getMapController().setPath(null);
+        getMapController().clearMap();
         getMapController().reloadDisplay();
     }
 
