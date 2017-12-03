@@ -566,6 +566,12 @@ public class TestPathfinder {
     }
 
     @Test
+    public void testFindPathBestFirst(){
+        SearchAlgorithm alg = new BestFirst();
+        testFindPath(alg);
+    }
+
+    @Test
     public void testBeam1() {
         Pathfinder beam = new Pathfinder(new Beam());
         Path path = null;
