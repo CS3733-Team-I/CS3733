@@ -29,12 +29,17 @@ import utility.request.RequestType;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import static utility.request.RequestProgressStatus.DONE;
+import static utility.request.RequestProgressStatus.IN_PROGRESS;
+import static utility.request.RequestProgressStatus.TO_DO;
+
 public class RequestManagerController extends ScreenController {
 
 
     LoginEntity l;
-
     RequestEntity r;
+    RequestProgressStatus currentButton;
+
 //    @FXML private JFXListView<VBox> activeRequests;
 @FXML private JFXListView<String> activeRequests;
     @FXML private Label totalRequests;
@@ -57,6 +62,7 @@ public class RequestManagerController extends ScreenController {
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
         r.readAllFromDatabase();
+        currentButton = TO_DO;
     }
 
     //When an employee is logged in this mehtod checks to see the employee Request Type
@@ -107,26 +113,29 @@ public class RequestManagerController extends ScreenController {
     //unopened request button. Displays all of the new requests
     @FXML
     void newRequests(){
-        buttonAction(RequestProgressStatus.TO_DO);
+        buttonAction(TO_DO);
+        currentButton = TO_DO;
     }
 
     //in Progress request button. Displays all of the current requests
     @FXML
     void inProgressRequests(){
         buttonAction(RequestProgressStatus.IN_PROGRESS);
+        currentButton = IN_PROGRESS;
     }
 
     //Completed request button. Displays all of the finished requests
     @FXML
     void doneRequests(){
         buttonAction(RequestProgressStatus.DONE);
+        currentButton = DONE;
     }
 
     //Generic method that updates list of requests
     @FXML
     void buttonAction(RequestProgressStatus status){
         setup();
-        buttonSetupt(status);
+//        buttonSetupt(status);
         LinkedList<Request> allRequests = filterRequests();
         showRequests(status, allRequests);
     }
@@ -242,26 +251,79 @@ public class RequestManagerController extends ScreenController {
 
     //Creates what goes into the popup when a listview cell is selected
     public void initializePopup(String requestID){
-        Request request = r.getRequest(requestID);
-        Label id = new Label(requestID);
-        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
-        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
-        Label locationOfRequest = new Label(location);
-        Label extraField;
-        RequestType RT = r.checkRequestType(requestID);
-        switch (RT){
-            case INTERPRETER:
-                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
-                extraField = new Label("Language: "+language);
-                break;
-            default: //security
-                int priority = r.getSecurityRequest(requestID).getPriority();
-                extraField = new Label("Priority: "+ priority);
-                break;
+
+        JFXButton more = new JFXButton("More");
+        JFXButton statusUpdater = new JFXButton();
+        JFXButton delete = new JFXButton("Delete");
+
+        ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
+        JFXComboBox employees = new JFXComboBox(listOfEmployees);
+        employees.setPromptText("Select Employee");
+
+
+        if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
+            listOfEmployees.clear();
+            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
+            switch (currentButton){
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress((String) employees.getValue(),requestID);
+                            newRequests();
+                            popup.hide();
+                        }
+                    });
+                    break;
+                //Admins and Supers can't complete a request
+
+                case DONE:
+                    statusUpdater = new JFXButton("Delete");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.deleteRequest(requestID);
+                            doneRequests();
+                            popup.hide();
+                        }
+                    });
+                    break;
+            }
+        }else {
+            listOfEmployees.clear();
+            listOfEmployees.add(l.getUsername());
+            switch (currentButton) {
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign Me");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress(l.getUserID(), requestID);
+                            newRequests();
+                            popup.hide();
+                        }
+                    });
+                    break;
+                case IN_PROGRESS:
+                    statusUpdater = new JFXButton("Completed");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.completeRequest(requestID);
+                            inProgressRequests();
+                            popup.hide();
+                        }
+                    });
+                    break;
+            }
         }
-        VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest, extraField);
+        more.setPrefWidth(200);
+        delete.setPrefWidth(200);
+        statusUpdater.setPrefWidth(200);
+        employees.setPrefWidth(200);
+
+        VBox vbox = new VBox(more,employees,statusUpdater,delete);
 
         popup = new JFXPopup(vbox);
     }

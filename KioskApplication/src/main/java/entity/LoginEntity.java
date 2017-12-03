@@ -103,7 +103,7 @@ public class LoginEntity {
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<String> userNames = new ArrayList<String>();
         for(Employee employee: employees){
-            userNames.add(employee.getLoginID());
+            userNames.add(employee.getUserName());
         }
         return userNames;
     }
@@ -116,7 +116,7 @@ public class LoginEntity {
         }else{
             for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
-                    userNames.add(employee.getLoginID());
+                    userNames.add(employee.getUserName());
                 }
             }
         }
