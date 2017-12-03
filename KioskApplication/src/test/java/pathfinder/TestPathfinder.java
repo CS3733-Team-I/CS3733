@@ -130,9 +130,13 @@ public class TestPathfinder {
 
         pathfinder = new Pathfinder(); //defaults to A-star
 
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n07);
+
         Path path1 = null;
         try {
-            path1 = pathfinder.generatePath(n01, n07);
+            path1 = pathfinder.generatePath(nodes);
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
@@ -167,8 +171,13 @@ public class TestPathfinder {
         pathfinder = new Pathfinder(); //defaults to A-star
 
         Path path1 = null;
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n06);
+
         try {
-            path1 = pathfinder.generatePath(n01, n06);
+            path1 = pathfinder.generatePath(nodes);
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
@@ -298,8 +307,13 @@ public class TestPathfinder {
     public void testBreadthFirstSearch() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n02);
+
         try {
-            path = breadth.generatePath(n01, n02);
+            path = breadth.generatePath(nodes);
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
@@ -316,8 +330,13 @@ public class TestPathfinder {
     public void testBreadthFirstSearch1() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n17);
+
         try {
-            path = breadth.generatePath(n01, n17);
+            path = breadth.generatePath(nodes);
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
@@ -341,8 +360,13 @@ public class TestPathfinder {
     public void testBreadthFirstSearchTestPathEquality() {
         Pathfinder breadth = new Pathfinder(new BreadthFirst());
         Path path = null;
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n02);
+        nodes.add(n05);
+
         try {
-            path = breadth.generatePath(n02, n05);
+            path = breadth.generatePath(nodes);
         } catch (PathfinderException e) {
             e.printStackTrace();
         }
@@ -388,7 +412,11 @@ public class TestPathfinder {
     public void testGenerateDirections() throws PathfinderException{
         pathfinder = new Pathfinder();
 
-        Path path = pathfinder.generatePath(n01,n17);
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n17);
+
+        Path path = pathfinder.generatePath(nodes);
 
         System.out.println(path.getDirections());
     }
