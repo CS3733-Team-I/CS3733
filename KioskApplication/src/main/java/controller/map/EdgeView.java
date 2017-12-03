@@ -2,11 +2,14 @@ package controller.map;
 
 import database.objects.Edge;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
-public class EdgeViewController {
+import java.io.IOException;
+
+public class EdgeView extends AnchorPane {
 
     Edge edge;
     NodesEdgesView parent;
@@ -16,10 +19,19 @@ public class EdgeViewController {
     @FXML AnchorPane container;
     @FXML Line line;
 
-    public EdgeViewController(Edge edge, Point2D start, Point2D end) {
+    public EdgeView(Edge edge, Point2D start, Point2D end) {
         this.edge = edge;
         this.start = start;
         this.end = end;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EdgeView.fxml"));
+            loader.setController(this);
+            loader.setRoot(this);
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

@@ -4,42 +4,57 @@ import database.objects.Node;
 import entity.MapEntity;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import utility.node.NodeSelectionType;
 import utility.node.NodeType;
 
 import javax.swing.text.html.ImageView;
+import java.io.IOException;
 
-public class NodeViewController {
+public class NodeView extends StackPane {
+
+    NodesEdgesView parent;
 
     Node node;
+    NodeSelectionType selectionType;
     boolean editable;
 
     @FXML private StackPane container;
     @FXML private Circle circle;
     @FXML private ImageView imageView;
 
-    NodesEdgesView parent;
-
-    public NodeViewController(NodesEdgesView parent, Node node, boolean editable) {
+    public NodeView(NodesEdgesView parent, Node node, boolean editable) {
         this.parent = parent;
-        this.node = node;
-        this.editable = editable;
-    }
 
-    @FXML
-    private void initialize() {
+        this.node = node;
+        this.selectionType = NodeSelectionType.NORMAL;
+        this.editable = editable;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/NodeView.fxml"));
+            loader.setController(this);
+            loader.setRoot(this);
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        circle.setMouseTransparent(false);
+        circle.setPickOnBounds(false);
+
+        circle.setOnMouseClicked(e -> {
+            parent.mapNodeClicked(node);
+        });
+
         // Set X and Y
         AnchorPane.setLeftAnchor(container, (double)node.getXcoord());
         AnchorPane.setTopAnchor(container, (double)node.getYcoord());
-
-        // TODO find any way to do this better, this is a hack
-        this.container.setAccessibleText(node.getXyz());
-        this.container.setAccessibleHelp(node.getNodeType().toString());
 
         // Show tooltip based on the current tab
         if (this.editable) {
@@ -52,6 +67,39 @@ public class NodeViewController {
             Tooltip nodeInfo = new Tooltip(node.getLongName());
             Tooltip.install(this.container, nodeInfo);
         }
+    }
+
+    /**
+     * Set the selection type of the node and update the view to match
+     * @param type the selection type
+     */
+    public void setSelectionType(NodeSelectionType type) {
+        this.selectionType = type;
+        switch (type) {
+            case SELECTED:
+                circle.setFill(Color.BLUE);
+                break;
+            case CHANGED:
+                circle.setFill(Color.RED);
+                break;
+            case NORMAL:
+                circle.setFill(Color.GRAY);
+                break;
+            case SELECTEDANDCHANGED:
+                circle.setFill(Color.PURPLE);
+                break;
+            case NEW:
+                circle.setFill(Color.YELLOW);
+                break;
+        }
+    }
+
+    /**
+     * Get the current selection type
+     * @return selection type
+     */
+    public NodeSelectionType getSelectionType() {
+        return selectionType;
     }
 
     @FXML
