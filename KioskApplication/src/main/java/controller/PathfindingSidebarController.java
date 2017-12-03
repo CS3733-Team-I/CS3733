@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXListView;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.SystemSettings;
@@ -35,7 +36,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
-        mapController.floorSelector.setValue(NodeFloor.THIRD);
+        getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
@@ -47,8 +48,10 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes.clear();
         waypointList.getItems().clear();
         exceptionText.setText("");
+
         getMapController().setPath(null);
         getMapController().clearMap();
+        getMapController().reloadDisplay();
     }
 
     @FXML
@@ -67,23 +70,13 @@ public class PathfindingSidebarController extends ScreenController {
                         waypointList.getItems().add(label);
                     }
                 }
-                getMapController().drawPath();
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
-
-
             currentNodes.clear();
         }
-    }
-
-    @FXML
-    void btClearPathPressed() throws IOException {
-        getMapController().clearMap();
-        getMapController().setPath(null);
-        exceptionText.setText("");
     }
 
     @Override
@@ -129,10 +122,17 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        // Set the map size
+        getMapController().setAnchor(0, 300, 0, 0);
+
+        // Reset mapcontroller
         onResetPressed();
 
-        getMapController().reloadDisplay();
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
 
-        getMapController().setAnchor(0, 300, 0, 0);
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }
