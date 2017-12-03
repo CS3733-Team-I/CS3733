@@ -94,24 +94,14 @@ public class Path {
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
 
+        MapEntity map = MapEntity.getInstance();
+
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(segmentStart);
 
-        for(Edge e : segment) {
-            nodes.add(getOtherNode(e,nodes.getLast()));
+        for (Edge e : segment) {
+            nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
         }
         return nodes;
-    }
-
-    private Node getOtherNode(Edge e, Node n) {
-
-        MapEntity map = MapEntity.getInstance();
-
-        if(e.getNode1ID().equals(n.getNodeID()))
-            return map.getNode(e.getNode2ID());
-        else if(e.getNode2ID().equals(n.getNodeID()))
-            return map.getNode(e.getNode1ID());
-        else
-            return null;
     }
 }
