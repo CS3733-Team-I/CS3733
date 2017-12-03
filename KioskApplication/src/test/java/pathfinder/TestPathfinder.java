@@ -562,6 +562,31 @@ public class TestPathfinder {
     public void testFindPathBeam() {
         SearchAlgorithm alg = new Beam();
 
-        testFindPath(alg);
+       // testFindPath(alg);
+    }
+
+    @Test
+    public void testBeam1() {
+        Pathfinder beam = new Pathfinder(new Beam());
+        Path path = null;
+        try {
+            path = beam.generatePath(n01, n17);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+        LinkedList<Edge> testPath2Segment = new LinkedList<>();
+        testPath2Segment.add(map.getConnectingEdge(n01,n02));
+        testPath2Segment.add(map.getConnectingEdge(n02,n08));
+        testPath2Segment.add(map.getConnectingEdge(n08,n11));
+        testPath2Segment.add(map.getConnectingEdge(n11,n12));
+        testPath2Segment.add(map.getConnectingEdge(n12,n17));
+
+        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
+        testPath2Edges.add(testPath2Segment);
+
+
+        assertTrue(path.getEdges().equals(testPath2Edges));
+        // System.out.println(path.getEdges().toString());
+        // System.out.println(testPath2.getEdges().toString());
     }
 }

@@ -39,6 +39,8 @@ public class Beam implements SearchAlgorithm {
             // System.out.println("ClosedList :" + closedList);
             set.clear();
             for (PathfinderNode node : beam.values()) {
+                if(node==null)
+                    throw new PathfinderException("null node");
                 for (PathfinderNode neighbor : getAndCheckForConnectedNodes(closedList, node, map)) {
                     if (neighbor.getNode().getNodeID().equals(endingNode.getNode().getNodeID())) {
                         return neighbor.buildPath();
