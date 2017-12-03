@@ -70,8 +70,8 @@ public class Path {
             return "Take the stairs to " + nextNode.getFloor().toString() + " ";
         }
 
-        double prevAngle = getAngleBetweenNodes(prevNode, thisNode);
-        double nextAngle = getAngleBetweenNodes(thisNode, nextNode);
+        double prevAngle = prevNode.getAngleBetweenNodes(thisNode);
+        double nextAngle = thisNode.getAngleBetweenNodes(nextNode);
 
         double angleDif = nextAngle - prevAngle;
         double straightAngle = Math.PI/6;
@@ -83,13 +83,6 @@ public class Path {
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
         return "Go to ";
-    }
-
-    private double getAngleBetweenNodes(Node n1, Node n2) {
-        double dx = n2.getXcoord() - n1.getXcoord();
-        double dy = n2.getYcoord() - n1.getYcoord();
-
-        return Math.atan2(dy,dx);
     }
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
