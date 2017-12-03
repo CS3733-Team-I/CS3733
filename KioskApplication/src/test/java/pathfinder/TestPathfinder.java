@@ -24,20 +24,28 @@ public class TestPathfinder {
 
     private static Pathfinder pathfinder;
     private static Node n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12,
-                 n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23;
+                        n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23,
+                        n24, n25, n26, n27, n28, n29, n30, n31, n32, n33, n34, n35,
+                        n36, n37, n38, n39, n40, n41, n42, n43, n44, n45, n46,
+                        n47, n48, n49, n50, n51, n52, n53, n54, n55, n56, n57, n58,
+                        n59, n60, n61, n62, n63, n64, n65, n66, n67, n68, n69;
     private static Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
                  e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
-    /* New Map Structure
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////             Map              /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-          X   10    20    30    40    50    60    70    80
-       Y
+    /*
+                        NodeFloor.THIRD
+          X   10    20    30    40    50    60    70    80              n01 & n16 are elevators
+       Y                                                                n07 & n17 are stairs
        10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
                      |           |
-       20           n08 - n09   n10 - - - - n15
+       20           n08 - n09   n10 - - - - n11
                      |           |        /
-       30           n11 - n12 - n13 - n14 - n16
+       30           n12 - n13 - n14 - n15 - n16
                            |
        40                 n17
 
@@ -47,7 +55,45 @@ public class TestPathfinder {
                            |     |
        70                 n22 - n23
 
+
+                        NodeFloor.SECOND
+          X   10    20    30    40    50    60    70    80              n24 & n39 are elevators
+       Y                                                                n30 & n40 are stairs
+       10     n24 - n25 - n26 - n27 - - - - n28 - n29 - n30
+                     |           |
+       20           n31 - n32   n33 - - - - n34
+                     |           |        /
+       30           n35 - n36 - n37 - n38 - n39
+                           |
+       40                 n40
+
+       50                 n41   n42
+
+       60                 n43 - n44
+                           |     |
+       70                 n45 - n46
+
+                        NodeFloor.FIRST
+          X   10    20    30    40    50    60    70    80              n47 & n62 are elevators
+       Y                                                                n53 & n63 are stairs
+       10     n47 - n48 - n49 - n50 - - - - n51 - n52 - n53
+                     |           |
+       20           n54 - n55   n56 - - - - n57
+                     |           |        /
+       30           n58 - n59 - n60 - n61 - n62
+                           |
+       40                 n63
+
+       50                 n64   n65
+
+       60                 n66 - n67
+                           |     |
+       70                 n68 - n69
     */
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////     BEFORE/AFTER METHODS     /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Before //Build map for testing all algorithms
     public void setup() throws DatabaseException {
@@ -56,29 +102,77 @@ public class TestPathfinder {
         this.removeAllFromDB();
 
 
-        n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
+        n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "NODE01_LN","NODE01_SN","I");
         n02 = new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
         n03 = new Node("NODE03",30,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
         n04 = new Node("NODE04",40,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
         n05 = new Node("NODE05",60,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
         n06 = new Node("NODE06",70,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
-        n07 = new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
+        n07 = new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "NODE07_LN","NODE07_SN","I");
         n08 = new Node("NODE08",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
         n09 = new Node("NODE09",30,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
         n10 = new Node("NODE10",40,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
-        n11 = new Node("NODE11",20,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
-        n12 = new Node("NODE12",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
-        n13 = new Node("NODE13",40,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
-        n14 = new Node("NODE14",50,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
-        n15 = new Node("NODE15",60,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
-        n16 = new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
-        n17 = new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
+        n11 = new Node("NODE11",60,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
+        n12 = new Node("NODE12",20,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
+        n13 = new Node("NODE13",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
+        n14 = new Node("NODE14",40,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
+        n15 = new Node("NODE15",50,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
+        n16 = new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "NODE16_LN","NODE16_SN","I");
+        n17 = new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "NODE17_LN","NODE17_SN","I");
         n18 = new Node("NODE18",30,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
         n19 = new Node("NODE19",40,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
         n20 = new Node("NODE20",30,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
         n21 = new Node("NODE21",40,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
         n22 = new Node("NODE22",30,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
         n23 = new Node("NODE23",40,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
+
+        n24 = new Node("NODE24",10,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
+        n25 = new Node("NODE25",20,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
+        n26 = new Node("NODE26",30,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
+        n27 = new Node("NODE27",40,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
+        n28 = new Node("NODE28",60,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
+        n29 = new Node("NODE29",70,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
+        n30 = new Node("NODE30",80,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
+        n31 = new Node("NODE31",20,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
+        n32 = new Node("NODE32",30,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
+        n33 = new Node("NODE33",40,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
+        n34 = new Node("NODE34",20,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
+        n35 = new Node("NODE35",30,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
+        n36 = new Node("NODE36",40,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
+        n37 = new Node("NODE37",50,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
+        n38 = new Node("NODE38",60,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
+        n39 = new Node("NODE39",60,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
+        n40 = new Node("NODE40",30,40, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
+        n41 = new Node("NODE41",30,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
+        n42 = new Node("NODE42",40,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
+        n43 = new Node("NODE43",30,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
+        n44 = new Node("NODE44",40,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
+        n45 = new Node("NODE45",30,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
+        n46 = new Node("NODE46",40,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
+
+        n47 = new Node("NODE47",10,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
+        n48 = new Node("NODE48",20,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
+        n49 = new Node("NODE49",30,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
+        n50 = new Node("NODE50",40,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
+        n51 = new Node("NODE51",60,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
+        n52 = new Node("NODE52",70,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
+        n53 = new Node("NODE53",80,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
+        n54 = new Node("NODE54",20,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
+        n55 = new Node("NODE55",30,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
+        n56 = new Node("NODE56",40,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
+        n57 = new Node("NODE57",20,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
+        n58 = new Node("NODE58",30,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
+        n59 = new Node("NODE59",40,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
+        n60 = new Node("NODE60",50,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
+        n61 = new Node("NODE61",60,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
+        n62 = new Node("NODE62",60,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
+        n63 = new Node("NODE63",30,40, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
+        n64 = new Node("NODE64",30,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
+        n65 = new Node("NODE65",40,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
+        n66 = new Node("NODE66",30,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
+        n67 = new Node("NODE67",40,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
+        n68 = new Node("NODE68",30,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
+        n69 = new Node("NODE69",40,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
 
 
         map.addNode(n01); map.addNode(n02); map.addNode(n03); map.addNode(n04); map.addNode(n05);
@@ -123,88 +217,9 @@ public class TestPathfinder {
         MapEntity.getInstance().removeAll();
     }
 
-    //A-star algorithm tests
-
-    @Test //Tests the best path from node n01 to n07
-    public void testPathAstar() {
-
-        pathfinder = new Pathfinder(); //defaults to A-star
-
-        LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n07);
-
-        Path path1 = null;
-        try {
-            path1 = pathfinder.generatePath(nodes);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-
-        LinkedList<Edge> testPathSegment = new LinkedList<>();
-        testPathSegment.add(map.getConnectingEdge(n01,n02));
-        testPathSegment.add(map.getConnectingEdge(n02,n03));
-        testPathSegment.add(map.getConnectingEdge(n03,n04));
-        testPathSegment.add(map.getConnectingEdge(n04,n05));
-        testPathSegment.add(map.getConnectingEdge(n05,n06));
-        testPathSegment.add(map.getConnectingEdge(n06,n07));
-
-        LinkedList<Node> testPathWaypoints = new LinkedList<>();
-        testPathWaypoints.add(n01);
-        testPathWaypoints.add(n07);
-
-        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment);
-
-        Path testPath = new Path(testPathWaypoints, testPathEdges);
-
-        //System.out.println(path1.getEdges().toString());
-        //System.out.println(path1.getEdges().size());
-        //System.out.println(testPath.getEdges().toString());
-
-        assertTrue(path1.equals(testPath));
-    }
-
-    @Test //Tests that a bad path is not used (should not be needed)
-    public void testWrongPathAstar() {
-
-        pathfinder = new Pathfinder(); //defaults to A-star
-
-        Path path1 = null;
-
-        LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n06);
-
-        try {
-            path1 = pathfinder.generatePath(nodes);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-
-        LinkedList<Edge> testPathSegment = new LinkedList<>();
-        testPathSegment.add(map.getConnectingEdge(n01,n02));
-        testPathSegment.add(map.getConnectingEdge(n02,n08));
-        testPathSegment.add(map.getConnectingEdge(n08,n11));
-        testPathSegment.add(map.getConnectingEdge(n11,n12));
-        testPathSegment.add(map.getConnectingEdge(n12,n13));
-        testPathSegment.add(map.getConnectingEdge(n13,n10));
-        testPathSegment.add(map.getConnectingEdge(n10,n04));
-        testPathSegment.add(map.getConnectingEdge(n04,n05));
-        testPathSegment.add(map.getConnectingEdge(n05,n06));
-        testPathSegment.add(map.getConnectingEdge(n06,n07));
-
-        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment);
-
-        LinkedList<Node> testPathWaypoints = new LinkedList<>();
-        testPathWaypoints.add(n01);
-        testPathWaypoints.add(n07);
-
-        Path testPath = new Path(testPathWaypoints, testPathEdges);
-
-        assertFalse(path1.equals(testPath));
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////         A_star Tests         /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test //Tests a path with multiple waypoints
     public void testMultipleWaypointAstar() {
@@ -256,14 +271,6 @@ public class TestPathfinder {
 
     }
 
-    @Test //TODO
-    public void testPrepForFrontierAstar(){
-    }
-
-    @Test //TODO
-    public void testHeuristicAstar(){
-    }
-
     @Test //Test the FindPath method by testing all possible paths
     public void testFindPathAstar(){
 
@@ -272,7 +279,23 @@ public class TestPathfinder {
         testFindPath(alg);
     }
 
-    //Depth first algorithm tests
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testDeadEndException1Astar() throws PathfinderException{
+        SearchAlgorithm alg = new A_star();
+        alg.findPath(n18,n19);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testDeadEndException2Astar() throws PathfinderException{
+        SearchAlgorithm alg = new A_star();
+        alg.findPath(n01,n19);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////       DepthFirst Tests       /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //TODO //Tests a path with multiple waypoints
 
     @Test //Test the FindPath method by testing all possible paths
     public void testFindPathDF() throws PathfinderException{
@@ -294,7 +317,9 @@ public class TestPathfinder {
         alg.findPath(n01,n19);
     }
 
-    //Breadth first algorithm tests
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////      BreadthFirst Tests      /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test
     public void testFindPathBF() {
@@ -388,7 +413,9 @@ public class TestPathfinder {
         // System.out.println(testPath2.getEdges().toString());
     }
 
-    //Dijkstra's algorithm tests
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////        Dijkstra Tests        /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test
     public void testFindPathD() {
@@ -397,7 +424,15 @@ public class TestPathfinder {
         testFindPath(alg);
     }
 
-    //Test exceptions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////          Beam Tests          /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //TODO
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////        Exception Tests       /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test (expected = PathfinderException.class)
     public void testPathfinderException() throws PathfinderException{
@@ -406,7 +441,9 @@ public class TestPathfinder {
              alg.findPath(n02,n18);
     }
 
-    //Test text directions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////     Text Direction Tests     /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test
     public void testGenerateDirections() throws PathfinderException{
@@ -421,7 +458,9 @@ public class TestPathfinder {
         System.out.println(path.getDirections());
     }
 
-    //Other methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////         Other Tests          /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //Helper method to check if a path is valid
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
