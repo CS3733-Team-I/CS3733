@@ -48,7 +48,9 @@ public class PathfindingSidebarController extends ScreenController {
         currentNodes.clear();
         waypointList.getItems().clear();
         exceptionText.setText("");
-        getMapController().clearMap();
+
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
     }
 
     @FXML
@@ -74,13 +76,6 @@ public class PathfindingSidebarController extends ScreenController {
 
             currentNodes.clear();
         }
-    }
-
-    @FXML
-    void btClearPathPressed() throws IOException {
-        getMapController().clearMap();
-        exceptionText.setText("");
-        getMapController().setPath(null);
     }
 
     @Override

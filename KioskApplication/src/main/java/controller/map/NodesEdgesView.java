@@ -28,6 +28,7 @@ public class NodesEdgesView extends AnchorPane {
 
     public NodesEdgesView(MapController parent) {
         nodesView = new AnchorPane();
+        nodesView.setPickOnBounds(false);
         nodeViewsMap = new HashMap<>();
 
         AnchorPane.setTopAnchor(nodesView, 0.0);
@@ -36,6 +37,7 @@ public class NodesEdgesView extends AnchorPane {
         AnchorPane.setRightAnchor(nodesView, 0.0);
 
         edgesView = new AnchorPane();
+        nodesView.setPickOnBounds(false);
         edgeViewsMap = new HashMap<>();
 
         AnchorPane.setTopAnchor(edgesView, 0.0);
@@ -55,6 +57,7 @@ public class NodesEdgesView extends AnchorPane {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
+                        view.setPickOnBounds(false);
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);
                     }
@@ -149,9 +152,6 @@ public class NodesEdgesView extends AnchorPane {
             }
 
             drawNodesOnMap(parent.getPath().getWaypoints());
-        }
-        else{
-            reloadDisplay();
         }
     }
 

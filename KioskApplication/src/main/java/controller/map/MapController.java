@@ -106,6 +106,14 @@ public class MapController {
      * @param path the new path
      */
     public void setPath(Path path) {
+        if (path != null) {
+            this.showNodesBox.setDisable(true);
+            this.showEdgesBox.setDisable(true);
+        } else {
+            this.showNodesBox.setDisable(false);
+            this.showEdgesBox.setDisable(false);
+        }
+
         this.currentPath = path;
         nodesEdgesView.drawPath();
     }
@@ -289,6 +297,7 @@ public class MapController {
         AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
+        nodesEdgesContainer.setMouseTransparent(true);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
