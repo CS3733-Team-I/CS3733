@@ -330,7 +330,7 @@ public class DatabaseController {
     //Employee section
 
     /**
-     * adds an employee to the database
+     * adds an employee to the database currently more expensive because it needs to return the ID as an identifier
      * @param employee
      * @param password
      * @return their loginID

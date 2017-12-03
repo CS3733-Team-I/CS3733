@@ -278,23 +278,17 @@ public class DatabaseControllerTests {
 
     @Test
     public void testEmployeeRemove(){
-        Employee testEmp = new Employee("Name","n","t","password",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        int ID = dbController.addEmployee(testEmp,"password");
-        dbController.removeEmployee(ID);
-        assertNull(dbController.getEmployee(ID));
+        dbController.removeEmployee(emp2ID);
+        assertNull(dbController.getEmployee(emp2ID));
     }
 
     @Test
     public void testEmployeeUpdate(){
-        Employee testEmp = new Employee("Name","n","t","password",
-                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        int ID = dbController.addEmployee(testEmp,"password");
-        Employee upEmp = dbController.getEmployee(ID);
+        Employee upEmp = dbController.getEmployee(emp2ID);
         upEmp.updateUsername("NewName","password");
         upEmp.updatePassword("NewPassword","password");
         dbController.updateEmployee(upEmp,"NewPassword");
-        Employee updatedEmployee=dbController.getEmployee(ID);
+        Employee updatedEmployee=dbController.getEmployee(emp2ID);
         assertEquals("NewName",updatedEmployee.getUsername());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));
     }
