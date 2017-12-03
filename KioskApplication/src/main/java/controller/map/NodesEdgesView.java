@@ -133,6 +133,9 @@ public class NodesEdgesView extends AnchorPane {
     public void reloadDisplay() {
         setShowNodes(parent.areNodesVisible());
         setShowEdges(parent.areEdgesVisible());
+        if(parent.getPath() != null) {
+            drawPath();
+        }
     }
 
     /**

@@ -80,6 +80,7 @@ public class PathfindingSidebarController extends ScreenController {
     void btClearPathPressed() throws IOException {
         getMapController().clearMap();
         exceptionText.setText("");
+        getMapController().setPath(null);
     }
 
     @Override
