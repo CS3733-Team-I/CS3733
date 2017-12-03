@@ -9,7 +9,7 @@ import java.util.*;
 public class Beam implements SearchAlgorithm {
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
-
+       // int beamwidth = 3;
         MapEntity map = MapEntity.getInstance();
 
         StartNode startingNode = new StartNode(startNode);
@@ -22,17 +22,12 @@ public class Beam implements SearchAlgorithm {
           HashMap<String, PathfinderNode> closedList = new HashMap<>();
          HashMap<String, PathfinderNode> beam = new HashMap<>();
          HashMap<String, PathfinderNode> set = new HashMap<>();
-      //  private static final Integer[] heuristic = {1, 0, 1, 1, 2, 1, 1, 2, 2, 1};
 
-   // public static Integer search(Graph G, Integer start, Integer goal, Integer beamWidth) {
-     //   int g = 0;
-     //   int v = G.V();
-    //    int initial = v + 1; // just the symbol of null
-       // int fail = initial + 1;
+         // put start node in closesdlist and beam
         closedList.put(startingNode.getNode().getNodeID(), startingNode);
         beam.put(startingNode.getNode().getNodeID(), startingNode);
 
-        // else go to search
+        // go to search
         // main Loop
         while (beam.size() != 0) {
             // System.out.println("Beam :" + beam);
@@ -49,27 +44,37 @@ public class Beam implements SearchAlgorithm {
                 }
             }
             //System.out.println("Set : " + set);
+            // clear beam
             beam = new HashMap<>();
-            // g = g + 1;
-            while ((set.size() != 0) && (2 > beam.size())) {
+            // go through set and add to beam map
+            while ((set.size() != 0) && (3 > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
+                  // for heristicvalue map
                 for (String key : set.keySet()) {
                      heuristicValue.put(key, set.get(key));
                 }
+                /*
+                if(heuristicValue.size()>4)
+                    beamwidth = 4;
+                else
+                    beamwidth = 3;*/
+                    // get min heristic value
                     String minIndex = compare_hashMap_min(heuristicValue, endingNode);
                     Iterator<String> keys = set.keySet().iterator();
+                    // remove that min value from keys in set
                     while (keys.hasNext()) {
                        String key1 = keys.next();
                         if (key1 == minIndex)
                             keys.remove();
                     }
-
+                    // add to beam and closed list
                     if (!closedList.containsKey(minIndex)) {
                         closedList.put(minIndex, heuristicValue.get(minIndex));
                         beam.put(minIndex, heuristicValue.get(minIndex));
                    }
                 }
             }
+            // no path exists
         throw new PathfinderException("No path exists");
     }
 
@@ -112,20 +117,33 @@ public class Beam implements SearchAlgorithm {
         return holder;
     }
 
+    /**
+     * compares all heristic values in hash map and returns string index of the one with the lowest
+     * @param scores
+     * @param endnode
+     * @return
+     */
     private String compare_hashMap_min(HashMap<String, PathfinderNode> scores, PathfinderNode endnode) {
-        //Collection c = scores.values();
-
+        //if there is only one in the index then that is the lowest
+        // set and return
+        if (scores.size()==1){
+            for (String key: scores.keySet()){
+                return key;
+            }
+        }
+        else{// go through and compare heristic values
         String minIndex = "";
         Set<String> scores_set = scores.keySet();
         Iterator<String> scores_it = scores_set.iterator();
         Integer minvalue = heuristic(scores.get(scores_it.next()),endnode);
-        while(scores_it.hasNext()) {
-            String id = scores_it.next();
-            PathfinderNode value = scores.get(id);
-            if (heuristic(value,endnode) <= minvalue) {
-                minIndex = id;
-            }
+        minIndex = scores_it.next();
+            for (String key: scores.keySet()){
+              //int h =  ;
+            if (heuristic(scores.get(key),endnode) < minvalue)
+                // herestic is lower than minvalue than set that one to minindex
+                minIndex = key;
         }
-        return minIndex;
+        return minIndex;}
+        return "";
     }
 }

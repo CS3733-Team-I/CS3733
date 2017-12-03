@@ -562,7 +562,7 @@ public class TestPathfinder {
     public void testFindPathBeam() {
         SearchAlgorithm alg = new Beam();
 
-       // testFindPath(alg);
+        testFindPath(alg);
     }
 
     @Test
