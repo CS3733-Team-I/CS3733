@@ -54,7 +54,7 @@ public class Beam implements SearchAlgorithm {
             // clear beam
             beam = new HashMap<>();
             // go through set and add to beam map
-            while ((set.size() != 0) && (3 > beam.size())) {
+            while ((set.size() != 0) && (4 > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
                   // for heristicvalue map
                 for (String key : set.keySet()) {
