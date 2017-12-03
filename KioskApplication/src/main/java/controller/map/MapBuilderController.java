@@ -634,7 +634,17 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void resetScreen() {
+
         getMapController().setAnchor(0, 450, 0, 0);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
+
     }
 
     // Handles node Related operations

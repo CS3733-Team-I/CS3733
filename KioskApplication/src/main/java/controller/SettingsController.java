@@ -143,5 +143,14 @@ public class SettingsController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }

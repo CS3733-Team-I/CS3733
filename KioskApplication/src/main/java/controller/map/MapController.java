@@ -109,9 +109,6 @@ public class MapController {
         if (path != null) {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
-        } else {
-            this.showNodesBox.setDisable(false);
-            this.showEdgesBox.setDisable(false);
         }
 
         this.currentPath = path;
@@ -163,6 +160,9 @@ public class MapController {
     }
 
     public void reloadDisplay() {
+        this.showNodesBox.setDisable(false);
+        this.showEdgesBox.setDisable(false);
+
         nodesEdgesView.reloadDisplay();
     }
 
@@ -434,5 +434,9 @@ public class MapController {
     protected void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
+    }
+
+    public void setOptionsBoxVisible(boolean visible) {
+        this.optionsBox.setVisible(visible);
     }
 }

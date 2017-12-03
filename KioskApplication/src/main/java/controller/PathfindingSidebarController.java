@@ -122,10 +122,17 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        // Set the map size
+        getMapController().setAnchor(0, 300, 0, 0);
+
+        // Reset mapcontroller
         onResetPressed();
 
-        getMapController().reloadDisplay();
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
 
-        getMapController().setAnchor(0, 300, 0, 0);
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }
