@@ -16,7 +16,7 @@ public class DepthFirst implements SearchAlgorithm{
      * @throws PathfinderException if there are errors. Uses a DeadEndException to pass up a list of visited nodes to the method that called it
      */
     @Override
-    public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startingNode, Node endingNode, boolean wheelchair) throws PathfinderException {
 
         //Make a list of visited nodes to prevent loops
         LinkedList<Node> visitedNodes = new LinkedList<>();

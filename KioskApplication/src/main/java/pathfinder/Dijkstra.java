@@ -17,7 +17,7 @@ public class Dijkstra implements SearchAlgorithm {
      * @throws PathfinderException if there are errors
      */
     @Override
-    public LinkedList<Edge> findPath(Node startingNode, Node endingNode) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startingNode, Node endingNode, boolean wheelchair) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
         StartNode startNode = new StartNode(startingNode);

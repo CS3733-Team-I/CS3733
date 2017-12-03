@@ -29,7 +29,7 @@ public class Pathfinder {
      * @param waypoints A list of nodes through which the path should pass
      * @return A Path object containing the waypoints and a list of edges marking a path between them.
      */
-    public Path generatePath(LinkedList<Node> waypoints) throws PathfinderException{
+    public Path generatePath(LinkedList<Node> waypoints, boolean wheelchair) throws PathfinderException{
 
         LinkedList<LinkedList<Edge>> pathEdges = new LinkedList<>();
         Node startNode = waypoints.getFirst();
@@ -59,7 +59,7 @@ public class Pathfinder {
 
 
             //Now, find the path from the previous waypoint to this one.
-            pathEdges.add(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
+            pathEdges.add(searchAlgorithm.findPath(startNode, endNode, wheelchair));  //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
@@ -69,21 +69,6 @@ public class Pathfinder {
         return(new Path(waypoints, pathEdges));
     }
 
-    //Old method. use the method that takes a LinkedList
-    /**
-     * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
-     * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
-     * a list first.
-     * @param startNode node that the algorithm should start at
-     * @param endNode node that the algorithm should end at
-     * @return A Path object containing the waypoints and a list of edges marking a path between them.
-     */
-    public Path generatePath(Node startNode, Node endNode) throws PathfinderException{
-        LinkedList<Node> waypoints = new LinkedList<>();
-        waypoints.add(startNode);
-        waypoints.add(endNode);
-        return(generatePath(waypoints));
-    }
 
     public SearchAlgorithm getSearchAlgorithm() {
         return searchAlgorithm;

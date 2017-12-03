@@ -39,8 +39,9 @@ public class PathfinderNode {
         //of taking a staircase or an elevator up or down a single floor (same weight whether up or down).
         if(this.node.getNodeType().equals(NodeType.STAI) &&
            potentialParent.getNode().getNodeType().equals(NodeType.STAI) &&
-           !this.node.getFloor().equals(potentialParent.getNode().getFloor()))
-            return(100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
+           !this.node.getFloor().equals(potentialParent.getNode().getFloor())) {
+            return (100 + potentialParent.getPreviousCost()); //TODO: add some kind of scaling/constant rather than an arbitrary number
+        }
         else if(this.node.getNodeType().equals(NodeType.ELEV) &&
                 potentialParent.getNode().getNodeType().equals(NodeType.ELEV) &&
                 !this.node.getFloor().equals(potentialParent.getNode().getFloor()))

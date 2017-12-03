@@ -17,7 +17,7 @@ public class BreadthFirst implements SearchAlgorithm{
      * @throws PathfinderException if there are errors
      */
     @Override
-    public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{
+    public LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchair)throws PathfinderException{
             MapEntity map = MapEntity.getInstance();
 
             StartNode startingNode = new StartNode(startNode);
