@@ -35,7 +35,8 @@ public class TestPathfinder {
                         e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33,
                         e34, e35, e36, e37, e38, e39, e40, e41, e42, e43, e44,
                         e45, e46, e47, e48, e49, e50, e51, e52, e53, e54, e55,
-                        e56, e57, e58, e59, e60, e61, e62, e63, e64, e65, e66;
+                        e56, e57, e58, e59, e60, e61, e62, e63, e64, e65, e66,
+                        e67, e68, e69, e70, e71, e72, e73, e74, e75, e76;
     private static MapEntity map;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ public class TestPathfinder {
        60                 n43 - n44
                            |     |
        70                 n45 - n46
+
 
                         NodeFloor.FIRST
           X   10    20    30    40    50    60    70    80              n47 & n62 are elevators
@@ -220,54 +222,63 @@ public class TestPathfinder {
         e21 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
         e22 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
         //Edges for F2
-        e23 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
-        e24 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
-        e25 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
-        e26 = new Edge("EDGE04", n04.getNodeID(), n05.getNodeID());
-        e27 = new Edge("EDGE05", n05.getNodeID(), n06.getNodeID());
-        e28 = new Edge("EDGE06", n06.getNodeID(), n07.getNodeID());
-        e29 = new Edge("EDGE07", n02.getNodeID(), n08.getNodeID());
-        e30 = new Edge("EDGE08", n04.getNodeID(), n10.getNodeID());
-        e31 = new Edge("EDGE09", n08.getNodeID(), n09.getNodeID());
-        e32 = new Edge("EDGE10", n10.getNodeID(), n15.getNodeID());
-        e33 = new Edge("EDGE11", n08.getNodeID(), n11.getNodeID());
-        e34 = new Edge("EDGE12", n10.getNodeID(), n13.getNodeID());
-        e35 = new Edge("EDGE13", n15.getNodeID(), n14.getNodeID());
-        e36 = new Edge("EDGE14", n11.getNodeID(), n12.getNodeID());
-        e37 = new Edge("EDGE15", n12.getNodeID(), n13.getNodeID());
-        e38 = new Edge("EDGE16", n13.getNodeID(), n14.getNodeID());
-        e39 = new Edge("EDGE17", n14.getNodeID(), n16.getNodeID());
-        e40 = new Edge("EDGE18", n12.getNodeID(), n17.getNodeID());
-        e41 = new Edge("EDGE19", n20.getNodeID(), n21.getNodeID());
-        e42 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
-        e43 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
-        e44 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
+        e23 = new Edge("EDGE23", n01.getNodeID(), n02.getNodeID());
+        e24 = new Edge("EDGE24", n02.getNodeID(), n03.getNodeID());
+        e25 = new Edge("EDGE25", n03.getNodeID(), n04.getNodeID());
+        e26 = new Edge("EDGE26", n04.getNodeID(), n05.getNodeID());
+        e27 = new Edge("EDGE27", n05.getNodeID(), n06.getNodeID());
+        e28 = new Edge("EDGE28", n06.getNodeID(), n07.getNodeID());
+        e29 = new Edge("EDGE29", n02.getNodeID(), n08.getNodeID());
+        e30 = new Edge("EDGE30", n04.getNodeID(), n10.getNodeID());
+        e31 = new Edge("EDGE31", n08.getNodeID(), n09.getNodeID());
+        e32 = new Edge("EDGE32", n10.getNodeID(), n15.getNodeID());
+        e33 = new Edge("EDGE33", n08.getNodeID(), n11.getNodeID());
+        e34 = new Edge("EDGE34", n10.getNodeID(), n13.getNodeID());
+        e35 = new Edge("EDGE35", n15.getNodeID(), n14.getNodeID());
+        e36 = new Edge("EDGE36", n11.getNodeID(), n12.getNodeID());
+        e37 = new Edge("EDGE37", n12.getNodeID(), n13.getNodeID());
+        e38 = new Edge("EDGE38", n13.getNodeID(), n14.getNodeID());
+        e39 = new Edge("EDGE39", n14.getNodeID(), n16.getNodeID());
+        e40 = new Edge("EDGE40", n12.getNodeID(), n17.getNodeID());
+        e41 = new Edge("EDGE41", n20.getNodeID(), n21.getNodeID());
+        e42 = new Edge("EDGE42", n20.getNodeID(), n22.getNodeID());
+        e43 = new Edge("EDGE43", n21.getNodeID(), n23.getNodeID());
+        e44 = new Edge("EDGE44", n22.getNodeID(), n23.getNodeID());
         //Edges for F1
-        e45 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
-        e46 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
-        e47 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
-        e48 = new Edge("EDGE04", n04.getNodeID(), n05.getNodeID());
-        e49 = new Edge("EDGE05", n05.getNodeID(), n06.getNodeID());
-        e50 = new Edge("EDGE06", n06.getNodeID(), n07.getNodeID());
-        e51 = new Edge("EDGE07", n02.getNodeID(), n08.getNodeID());
-        e52 = new Edge("EDGE08", n04.getNodeID(), n10.getNodeID());
-        e53 = new Edge("EDGE09", n08.getNodeID(), n09.getNodeID());
-        e54 = new Edge("EDGE10", n10.getNodeID(), n15.getNodeID());
-        e55 = new Edge("EDGE11", n08.getNodeID(), n11.getNodeID());
-        e56 = new Edge("EDGE12", n10.getNodeID(), n13.getNodeID());
-        e57 = new Edge("EDGE13", n15.getNodeID(), n14.getNodeID());
-        e58 = new Edge("EDGE14", n11.getNodeID(), n12.getNodeID());
-        e59 = new Edge("EDGE15", n12.getNodeID(), n13.getNodeID());
-        e60 = new Edge("EDGE16", n13.getNodeID(), n14.getNodeID());
-        e61 = new Edge("EDGE17", n14.getNodeID(), n16.getNodeID());
-        e62 = new Edge("EDGE18", n12.getNodeID(), n17.getNodeID());
-        e63 = new Edge("EDGE19", n20.getNodeID(), n21.getNodeID());
-        e64 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
-        e65 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
-        e66 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
+        e45 = new Edge("EDGE45", n01.getNodeID(), n02.getNodeID());
+        e46 = new Edge("EDGE46", n02.getNodeID(), n03.getNodeID());
+        e47 = new Edge("EDGE47", n03.getNodeID(), n04.getNodeID());
+        e48 = new Edge("EDGE48", n04.getNodeID(), n05.getNodeID());
+        e49 = new Edge("EDGE49", n05.getNodeID(), n06.getNodeID());
+        e50 = new Edge("EDGE50", n06.getNodeID(), n07.getNodeID());
+        e51 = new Edge("EDGE51", n02.getNodeID(), n08.getNodeID());
+        e52 = new Edge("EDGE52", n04.getNodeID(), n10.getNodeID());
+        e53 = new Edge("EDGE53", n08.getNodeID(), n09.getNodeID());
+        e54 = new Edge("EDGE54", n10.getNodeID(), n15.getNodeID());
+        e55 = new Edge("EDGE55", n08.getNodeID(), n11.getNodeID());
+        e56 = new Edge("EDGE56", n10.getNodeID(), n13.getNodeID());
+        e57 = new Edge("EDGE57", n15.getNodeID(), n14.getNodeID());
+        e58 = new Edge("EDGE58", n11.getNodeID(), n12.getNodeID());
+        e59 = new Edge("EDGE59", n12.getNodeID(), n13.getNodeID());
+        e60 = new Edge("EDGE60", n13.getNodeID(), n14.getNodeID());
+        e61 = new Edge("EDGE61", n14.getNodeID(), n16.getNodeID());
+        e62 = new Edge("EDGE62", n12.getNodeID(), n17.getNodeID());
+        e63 = new Edge("EDGE63", n20.getNodeID(), n21.getNodeID());
+        e64 = new Edge("EDGE64", n20.getNodeID(), n22.getNodeID());
+        e65 = new Edge("EDGE65", n21.getNodeID(), n23.getNodeID());
+        e66 = new Edge("EDGE66", n22.getNodeID(), n23.getNodeID());
         //Edges for elevators
-
+        e67 = new Edge("EDGE67", n01.getNodeID(), n24.getNodeID());
+        e68 = new Edge("EDGE68", n01.getNodeID(), n47.getNodeID());
+        e69 = new Edge("EDGE69", n24.getNodeID(), n47.getNodeID());
+        e70 = new Edge("EDGE70", n16.getNodeID(), n39.getNodeID());
+        e71 = new Edge("EDGE71", n16.getNodeID(), n62.getNodeID());
+        e72 = new Edge("EDGE72", n39.getNodeID(), n62.getNodeID());
         //Edges for stairs
+        e73 = new Edge("EDGE73", n07.getNodeID(), n30.getNodeID());
+        e74 = new Edge("EDGE74", n30.getNodeID(), n53.getNodeID());
+        e75 = new Edge("EDGE75", n17.getNodeID(), n40.getNodeID());
+        e76 = new Edge("EDGE76", n40.getNodeID(), n63.getNodeID());
 
         //Add all edges to the map
         map.addEdge(e01); map.addEdge(e02); map.addEdge(e03); map.addEdge(e04); map.addEdge(e05);
@@ -285,6 +296,8 @@ public class TestPathfinder {
         map.addEdge(e55); map.addEdge(e56); map.addEdge(e57); map.addEdge(e58); map.addEdge(e59);
         map.addEdge(e60); map.addEdge(e61); map.addEdge(e62); map.addEdge(e63); map.addEdge(e64);
         map.addEdge(e65); map.addEdge(e66);
+        map.addEdge(e67); map.addEdge(e68); map.addEdge(e69); map.addEdge(e70); map.addEdge(e71);
+        map.addEdge(e72); map.addEdge(e73); map.addEdge(e74); map.addEdge(e75); map.addEdge(e76);
     }
 
     @After //remove things from database
