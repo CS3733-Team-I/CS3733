@@ -1,5 +1,3 @@
-import com.sun.javafx.css.StyleManager;
-import database.DatabaseController;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
@@ -16,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
         if (MapEntity.getInstance().getAllNodes().size() == 0)
-            CsvFileUtil.readAllCSVs();
+            CsvFileUtil.getInstance().readAllCSVs();
 
         SystemSettings.getInstance();
 
