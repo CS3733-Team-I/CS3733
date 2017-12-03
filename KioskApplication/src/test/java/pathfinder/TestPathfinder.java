@@ -409,64 +409,13 @@ public class TestPathfinder {
     /////////////////////////////////////////      BreadthFirst Tests      /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Test
+    //TODO //Tests a path with multiple waypoints
+
+    @Test //Test the FindPath method by testing all possible paths
     public void testFindPathBF() {
         SearchAlgorithm alg = new BreadthFirst();
 
         testFindPath(alg);
-    }
-
-    @Test
-    public void testBreadthFirstSearch() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = null;
-
-        LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n02);
-
-        try {
-            path = breadth.generatePath(nodes);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-        LinkedList<Edge> testPath2Segment = new LinkedList<>();
-        testPath2Segment.add(e01);
-
-        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(testPath2Segment);
-
-        assertTrue(path.getEdges().equals(testPath2Edges));
-    }
-
-    @Test
-    public void testBreadthFirstSearch1() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = null;
-
-        LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n17);
-
-        try {
-            path = breadth.generatePath(nodes);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-        LinkedList<Edge> testPath2Segment = new LinkedList<>();
-        testPath2Segment.add(map.getConnectingEdge(n01,n02));
-        testPath2Segment.add(map.getConnectingEdge(n02,n08));
-        testPath2Segment.add(map.getConnectingEdge(n08,n11));
-        testPath2Segment.add(map.getConnectingEdge(n11,n12));
-        testPath2Segment.add(map.getConnectingEdge(n12,n17));
-
-        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(testPath2Segment);
-
-
-        assertTrue(path.getEdges().equals(testPath2Edges));
-        // System.out.println(path.getEdges().toString());
-        // System.out.println(testPath2.getEdges().toString());
     }
 
     @Test
@@ -505,7 +454,7 @@ public class TestPathfinder {
     /////////////////////////////////////////        Dijkstra Tests        /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Test
+    @Test //Test the FindPath method by testing all possible paths
     public void testFindPathD() {
         SearchAlgorithm alg = new Dijkstra();
 
@@ -517,17 +466,6 @@ public class TestPathfinder {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //TODO
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////        Exception Tests       /////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Test (expected = PathfinderException.class)
-    public void testPathfinderException() throws PathfinderException{
-        //test that the exception is thrown when there is a path but no connection
-             SearchAlgorithm alg = new BreadthFirst();
-             alg.findPath(n02,n18);
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////     Text Direction Tests     /////////////////////////////////////////
