@@ -282,7 +282,7 @@ public class TestPathfinder {
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(n01);
         nodes.add(n12);
-        nodes.add(n07);
+        nodes.add(n06);
 
         Path multipath = null;
         try {
@@ -294,16 +294,15 @@ public class TestPathfinder {
         LinkedList<Edge> testPathSegment1 = new LinkedList<>();
         testPathSegment1.add(map.getConnectingEdge(n01,n02));
         testPathSegment1.add(map.getConnectingEdge(n02,n08));
-        testPathSegment1.add(map.getConnectingEdge(n08,n11));
-        testPathSegment1.add(map.getConnectingEdge(n11,n12));
+        testPathSegment1.add(map.getConnectingEdge(n08,n12));
 
         LinkedList<Edge> testPathSegment2 = new LinkedList<>();
         testPathSegment2.add(map.getConnectingEdge(n12,n13));
-        testPathSegment2.add(map.getConnectingEdge(n13,n10));
+        testPathSegment2.add(map.getConnectingEdge(n13,n14));
+        testPathSegment2.add(map.getConnectingEdge(n14,n10));
         testPathSegment2.add(map.getConnectingEdge(n10,n04));
         testPathSegment2.add(map.getConnectingEdge(n04,n05));
         testPathSegment2.add(map.getConnectingEdge(n05,n06));
-        testPathSegment2.add(map.getConnectingEdge(n06,n07));
 
         LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
         testPathEdges.add(testPathSegment1);
