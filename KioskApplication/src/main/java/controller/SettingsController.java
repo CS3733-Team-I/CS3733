@@ -36,6 +36,7 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
+    @FXML private RadioButton beamButton;
 
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
@@ -56,6 +57,8 @@ public class SettingsController extends ScreenController {
         bfsButton.setUserData("BFS");
         dfsButton.setToggleGroup(searchAlgToggleGroup);
         dfsButton.setUserData("DFS");
+        beamButton.setToggleGroup(searchAlgToggleGroup);
+        beamButton.setUserData("Beam");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
