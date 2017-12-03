@@ -4,15 +4,12 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Beam implements SearchAlgorithm {
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
-        //TODO: write algorithm
+
         MapEntity map = MapEntity.getInstance();
 
         StartNode startingNode = new StartNode(startNode);
@@ -53,44 +50,27 @@ public class Beam implements SearchAlgorithm {
             beam = new HashMap<>();
             // g = g + 1;
             while ((set.size() != 0) && (2 > beam.size())) {
-                //  HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
-                for (PathfinderNode key : set.values()) {
-                    // heuristicValue.put(key, set.get(key));
-                    Integer minIndex = heuristic(set.get(key.getNode().getNodeID()), endingNode);
+                  HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
+                for (String key : set.keySet()) {
+                     heuristicValue.put(key, set.get(key));
+                }
+                    String minIndex = compare_hashMap_min(heuristicValue, endingNode);
                     Iterator<String> keys = set.keySet().iterator();
                     while (keys.hasNext()) {
-                        String key1 = keys.next();
-                        if (heuristic(set.get(key1), endingNode) >= minIndex)
+                       String key1 = keys.next();
+                        if (key1 == minIndex)
                             keys.remove();
                     }
 
-                    //if (!closedList.containsKey(key.getNode().getNodeID())) {
-                    //    closedList.put(key.getNode().getNodeID(), set.get(key.getNode().getNodeID()));
-                   //     beam.put(key.getNode(), set.get(minIndex));
-                  //  }
+                    if (!closedList.containsKey(minIndex)) {
+                        closedList.put(minIndex, heuristicValue.get(minIndex));
+                        beam.put(minIndex, heuristicValue.get(minIndex));
+                   }
                 }
             }
-        }
         throw new PathfinderException("No path exists");
-
     }
 
-    /*public static Integer compare_hashMap_min(HashMap<Integer, Integer> scores) {
-        Collection c = scores.values();
-        Integer minvalue = (Integer) Collections.min(c);
-        Integer minIndex = 0;
-        Set<Integer> scores_set = scores.keySet();
-        Iterator<Integer> scores_it = scores_set.iterator();
-        while(scores_it.hasNext()) {
-            Integer id = scores_it.next();
-            Integer value = scores.get(id);
-            if (value == minvalue) {
-                minIndex = id;
-                break;
-            }
-        }
-        return minIndex;
-    }*/
     /**
      * Estimates the distance between two nodes.
      * @param node1 a pathfinding node
@@ -128,5 +108,22 @@ public class Beam implements SearchAlgorithm {
             }
         }
         return holder;
+    }
+
+    private String compare_hashMap_min(HashMap<String, PathfinderNode> scores, PathfinderNode endnode) {
+        //Collection c = scores.values();
+
+        String minIndex = "";
+        Set<String> scores_set = scores.keySet();
+        Iterator<String> scores_it = scores_set.iterator();
+        Integer minvalue = heuristic(scores.get(scores_it.next()),endnode);
+        while(scores_it.hasNext()) {
+            String id = scores_it.next();
+            PathfinderNode value = scores.get(id);
+            if (heuristic(value,endnode) <= minvalue) {
+                minIndex = id;
+            }
+        }
+        return minIndex;
     }
 }

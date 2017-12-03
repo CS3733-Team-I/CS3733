@@ -557,4 +557,11 @@ public class TestPathfinder {
         // System.out.println(path2.getEdges().toString());
         // System.out.println(testPath2.getEdges().toString());
     }
+
+    @Test
+    public void testFindPathBeam() {
+        SearchAlgorithm alg = new Beam();
+
+        testFindPath(alg);
+    }
 }
