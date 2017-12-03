@@ -320,6 +320,19 @@ public class MapController {
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
         scrollPane.setContent(contentGroup);
+        // Thanks ragerdl on https://stackoverflow.com/questions/27461643/javafx-disable-scrolling-by-mousewheel-in-scrollpane
+        scrollPane.addEventFilter(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaY() > 0){
+                    zoomInPressed();
+                }
+                else {
+                    zoomOutPressed();
+                }
+                event.consume();
+            }
+        });
 
         //floor changing listeners
         //TODO Solve the Null pointer issue with another way
