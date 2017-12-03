@@ -150,6 +150,9 @@ public class NodesEdgesView extends AnchorPane {
 
             drawNodesOnMap(parent.getPath().getWaypoints());
         }
+        else{
+            reloadDisplay();
+        }
     }
 
     public void setShowNodes(boolean show) {
