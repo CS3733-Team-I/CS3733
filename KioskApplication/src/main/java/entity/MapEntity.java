@@ -162,17 +162,6 @@ public class MapEntity implements IMapEntity {
         return result;
     }
 
-    public String getAllElevName(NodeFloor floor, TeamAssigned teamAssigned){
-        String result = "";
-        try {
-            result = dbController.getAllElevName(floor, teamAssigned);
-            return result;
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     public String selectNodeID(int xcoord, int ycoord, NodeFloor floor, NodeType nodeType){
         String result = "";
         try {

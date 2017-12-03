@@ -1,16 +1,13 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import database.objects.Request;
-import entity.MapEntity;
 import entity.LoginEntity;
 import entity.RequestEntity;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,11 +17,7 @@ import utility.request.Language;
 import utility.node.NodeFloor;
 import utility.request.RequestType;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -193,5 +186,14 @@ public class RequestSubmitterController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0,235,0,0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(false);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }
