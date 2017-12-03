@@ -25,6 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -91,6 +92,15 @@ public class MapController {
         if (!this.parent.equals(null)) {
             this.parent.onMapEdgeClicked(edge);
         }
+    }
+
+    /**
+     * Tell the NodesEdgesView to highlight a node
+     * @param node the Node to highlight
+     * @param type the type to set the selection to
+     */
+    public void setNodeSelected(Node node, NodeSelectionType type) {
+        nodesEdgesView.setNodeSelected(node, type);
     }
 
     /**

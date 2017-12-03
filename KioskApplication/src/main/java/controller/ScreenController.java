@@ -5,7 +5,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import utility.node.NodeFloor;
 
@@ -45,7 +45,7 @@ public abstract class ScreenController {
         return view;
     }
 
-    public abstract void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location);
+    public abstract void onMapLocationClicked(MouseEvent e);
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);

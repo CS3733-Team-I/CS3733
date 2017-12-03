@@ -100,6 +100,7 @@ public class NodesEdgesView extends AnchorPane {
             }
         });
     }
+
     /**
      * Set a NodeView's selection type given a node
      * @param node the Node that corresponds to a NodeView

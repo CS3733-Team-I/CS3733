@@ -44,45 +44,8 @@ import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapBuilderController extends ScreenController {
-    public MapBuilderController(MainWindowController parent, MapController mapController) {
-        super(parent, mapController);
-    }
+    @FXML private TabPane builderTabPane;
 
-    @Override
-    public javafx.scene.Node getContentView() {
-        return null;
-    }
-
-    @Override
-    public void onMapLocationClicked(MouseEvent e, Point2D location) {
-
-    }
-
-    @Override
-    public void onMapNodeClicked(Node node) {
-
-    }
-
-    @Override
-    public void onMapEdgeClicked(Edge edge) {
-
-    }
-
-    @Override
-    public void onMapFloorChanged(NodeFloor floor) {
-
-    }
-
-    @Override
-    public void resetScreen() {
-
-    }
-/*
-    @FXML
-    private TabPane builderTabPane;
-    SingleSelectionModel<Tab> selectionModel;
-
-    Node heightLightedNode;
     //default, nodeFloor is in sync with main map
     NodeType nodeType = NodeType.TEMP;
     NodeFloor nodeFloor = NodeFloor.THIRD;
@@ -90,65 +53,51 @@ public class MapBuilderController extends ScreenController {
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
     RequiredFieldValidator sNameValidator = new RequiredFieldValidator();
+
     @FXML private Tab nodeTab;
     private String nodeDialogString;
+
     @FXML private StackPane mapBuilderStackPane;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
-    @FXML
-    private JFXButton btNodeInstruction;
-    @FXML
-    private GridPane Advance;
-    @FXML
-    private TextField xcoord;
-    @FXML
-    private TextField ycoord;
-    @FXML
-    private TextField nodeID;
-    @FXML
-    private Label lbXcoor;
-    @FXML
-    private Label lbYcoor;
-    @FXML
-    private Label lbNodeID;
+    @FXML private JFXButton btNodeInstruction;
+    @FXML private GridPane Advance;
+    @FXML private TextField xcoord;
+    @FXML private TextField ycoord;
+    @FXML private TextField nodeID;
+    @FXML private Label lbXcoor;
+    @FXML private Label lbYcoor;
+    @FXML private Label lbNodeID;
 
     //node operation buttons
-    @FXML
-    private JFXButton btNodeSave;
-    @FXML
-    private JFXButton btNodeUndo;
-    @FXML
-    private JFXButton btNodeRedo;
-    @FXML
-    private JFXButton btNodeDelete;
-    @FXML
-    private JFXButton btAdvance;
-    @FXML
-    private JFXButton setkiosklocation;
+    @FXML private JFXButton btNodeSave;
+    @FXML private JFXButton btNodeUndo;
+    @FXML private JFXButton btNodeRedo;
+    @FXML private JFXButton btNodeDelete;
+    @FXML private JFXButton btAdvance;
+    @FXML private JFXButton setkiosklocation;
 
     // Edges related fields
-    @FXML
-    private JFXListView<Label> lvConnectedNodes;
-    @FXML
-    private JFXButton btExpand;
-    @FXML
-    JFXPopup popup;
+    @FXML private JFXListView<Node> lvConnectedNodes;
+    @FXML private JFXButton btExpand;
+    @FXML JFXPopup popup;
 
     // Observer lists
-    private ObservableList<database.objects.Node> observableSelectedNodes;
-    private ObservableList<database.objects.Node> observableChangedNodes;
-    protected ObservableList<database.objects.Node> observableNewNodes;
-    private ObservableList<database.objects.Edge> observableSelectedEdges;
+    private ObservableList<Node> observableSelectedNodes;
+    private ObservableList<Node> observableChangedNodes;
+    protected ObservableList<Node> observableNewNodes;
+    private ObservableList<Edge> observableSelectedEdges;
 
     public MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
-        observableSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableNewNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableSelectedEdges = FXCollections.<database.objects.Edge>observableArrayList();
+
+        observableSelectedNodes = FXCollections.observableArrayList();
+        observableChangedNodes = FXCollections.observableArrayList();
+        observableNewNodes = FXCollections.observableArrayList();
+        observableSelectedEdges = FXCollections.observableArrayList();
     }
 
     @FXML
@@ -196,7 +145,6 @@ public class MapBuilderController extends ScreenController {
         plusIconView.setFitHeight(24);
         plusIconView.setFitWidth(24);
 
-
         btNodeInstruction.setGraphic(infoIconView);
         btExpand.setGraphic(expandIconView);
 
@@ -205,363 +153,290 @@ public class MapBuilderController extends ScreenController {
         ycoord.setEditable(false);
 
         //update floor based on the floor selector
-        nodeFloor = mapController.getCurrentFloor();
+        nodeFloor = getMapController().getCurrentFloor();
 
-        //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETELY
-        mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
-                nodeFloor = mapController.getCurrentFloor();
-                updateNodeID();
-                //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
-            }
-        });
+        CBnodeType.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeType = newValue;
 
-        CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeType> observable, NodeType oldValue, NodeType newValue) {
-                nodeType = newValue;
-
-                if(!CBnodeType.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
-                        //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedTypeNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedTypeNode)) {
-                            System.out.println("update changes in changed node");
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedTypeNode.getXyz())) {
-                                    changingNode.setNodeType(CBnodeType.getValue());
-                                    updateNodeID();
-                                }
+            if(!CBnodeType.isDisable()) {
+                if(!observableNewNodes.isEmpty()) {
+                    //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
+                    observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
+                    //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
+                    updateNodeID();
+                    return;
+                }
+                for(Node changedTypeNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedTypeNode)) {
+                        System.out.println("update changes in changed node");
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedTypeNode.getXyz())) {
+                                changingNode.setNodeType(CBnodeType.getValue());
+                                updateNodeID();
                             }
                         }
-                        else {
-                            changedTypeNode.setNodeType(CBnodeType.getValue());
-                            updateNodeID();
-                            if(!observableChangedNodes.contains(changedTypeNode)){
-                                observableChangedNodes.add(changedTypeNode);
-                            } //current selected node is changed
-                        }
+                    }
+                    else {
+                        changedTypeNode.setNodeType(CBnodeType.getValue());
+                        updateNodeID();
+                        if(!observableChangedNodes.contains(changedTypeNode)){
+                            observableChangedNodes.add(changedTypeNode);
+                        } //current selected node is changed
                     }
                 }
             }
         });
 
-        CBnodeBuilding.valueProperty().addListener(new ChangeListener<NodeBuilding>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeBuilding> observable, NodeBuilding oldValue, NodeBuilding newValue) {
-                nodeBuilding = newValue;
-                if(!CBnodeBuilding.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setBuilding(CBnodeBuilding.getValue());
-                        updateNodeID();
-                        return;
+        CBnodeBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeBuilding = newValue;
+            if(!CBnodeBuilding.isDisable()) {
+                if(!observableNewNodes.isEmpty()) {
+                    observableNewNodes.get(0).setBuilding(CBnodeBuilding.getValue());
+                    updateNodeID();
+                    return;
+                }
+                for(Node changedBuildingNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedBuildingNode)) {
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedBuildingNode.getXyz())) {
+                                changingNode.setBuilding(CBnodeBuilding.getValue());
+                                updateNodeID();
+                            }
+                        }
                     }
-                    for(database.objects.Node changedBuildingNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedBuildingNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedBuildingNode.getXyz())) {
-                                    changingNode.setBuilding(CBnodeBuilding.getValue());
-                                    updateNodeID();
-                                }
-                            }
+                    else {
+                        changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
+                        updateNodeID();
+                        if(!observableChangedNodes.contains(changedBuildingNode)){
+                            observableChangedNodes.add(changedBuildingNode);
                         }
-                        else {
-                            changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
-                            updateNodeID();
-                            if(!observableChangedNodes.contains(changedBuildingNode)){
-                                observableChangedNodes.add(changedBuildingNode);
-                            }
 
-                        }
                     }
                 }
             }
         });
-        CBnodeTeamAssigned.valueProperty().addListener(new ChangeListener<TeamAssigned>() {
-            @Override
-            public void changed(ObservableValue<? extends TeamAssigned> observable, TeamAssigned oldValue, TeamAssigned newValue) {
-                nodeTeamAssigned = newValue;
-                if(!CBnodeTeamAssigned.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedTeamNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedTeamNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedTeamNode.getXyz())) {
-                                    changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                                    updateNodeID();
-                                }
-                            }
-                        }
-                        else {
-                            changedTeamNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                            updateNodeID();
-                            if(!observableChangedNodes.contains(changedTeamNode)){
-                                observableChangedNodes.add(changedTeamNode);
-                            }
 
+        CBnodeTeamAssigned.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeTeamAssigned = newValue;
+            if(!CBnodeTeamAssigned.isDisable()) {
+                if(!observableNewNodes.isEmpty()) {
+                    observableNewNodes.get(0).setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                    updateNodeID();
+                    return;
+                }
+                for(Node changedTeamNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedTeamNode)) {
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedTeamNode.getXyz())) {
+                                changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                                updateNodeID();
+                            }
                         }
+                    }
+                    else {
+                        changedTeamNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                        updateNodeID();
+                        if(!observableChangedNodes.contains(changedTeamNode)){
+                            observableChangedNodes.add(changedTeamNode);
+                        }
+
                     }
                 }
             }
         });
+
         //notify changed node list
-        lName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
-                if(!lName.isDisable()) {
-                    lName.resetValidation();
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setLongName(lName.getText());
-                    }
-                    for(database.objects.Node changedLNameNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedLNameNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedLNameNode.getXyz())) {
-                                    changingNode.setLongName(lName.getText());
-                                }
+        lName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!lName.isDisable()) {
+                lName.resetValidation();
+                if(!observableNewNodes.isEmpty()) {
+                    observableNewNodes.get(0).setLongName(lName.getText());
+                }
+                for(Node changedLNameNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedLNameNode)) {
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedLNameNode.getXyz())) {
+                                changingNode.setLongName(lName.getText());
                             }
                         }
-                        else {
-                            changedLNameNode.setLongName(lName.getText());
-                            observableChangedNodes.add(changedLNameNode);
+                    }
+                    else {
+                        changedLNameNode.setLongName(lName.getText());
+                        observableChangedNodes.add(changedLNameNode);
+                    }
+                }
+            }
+        });
+        sName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!sName.isDisable()) {
+                sName.resetValidation();
+                if(!observableNewNodes.isEmpty()) {
+                    observableNewNodes.get(0).setShortName(sName.getText());
+                }
+                for(Node changedSNameNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedSNameNode)) {
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedSNameNode.getXyz())) {
+                                changingNode.setShortName(sName.getText());
+                            }
+                        }
+                    }
+                    else {
+                        changedSNameNode.setShortName(sName.getText());
+                        observableChangedNodes.add(changedSNameNode);
+                    }
+                }
+            }
+        });
+
+        nodeID.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!nodeID.isDisabled()) {
+                if(!observableNewNodes.isEmpty()) {
+                    observableNewNodes.get(0).setNodeID(nodeID.getText());
+                }
+                for(Node changedIDNode : observableSelectedNodes) {
+                    if(observableChangedNodes.contains(changedIDNode)) {
+                        for(Node changingNode : observableChangedNodes) {
+                            if(changingNode.getXyz().equals(changedIDNode.getXyz())) {
+                                changingNode.setNodeID(nodeID.getText());
+                            }
+                        }
+                    }
+                    else {
+                        changedIDNode.setNodeID(nodeID.getText());
+                        observableChangedNodes.add(changedIDNode);
+                    }
+                    //reflect node ID changes in mapEntity also in edges
+                    for(Node node : MapEntity.getInstance().getAllNodes()) {
+                        if(node.getXyz().equals(changedIDNode.getXyz())) {
+
+                            for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
+
+                                System.out.println("3. Begin Updating edge ID");
+
+                                if(edge.getNode1ID().equals(oldValue)) {
+                                    edge.setNode1ID(nodeID.getText());
+                                }
+                                if(edge.getNode2ID().equals(oldValue)) {
+                                    edge.setNode2ID(nodeID.getText());
+                                }
+                                System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
+                            }
+                            node.setNodeID(nodeID.getText());
                         }
                     }
                 }
             }
         });
-        sName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!sName.isDisable()) {
-                    sName.resetValidation();
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setShortName(sName.getText());
-                    }
-                    for(database.objects.Node changedSNameNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedSNameNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedSNameNode.getXyz())) {
-                                    changingNode.setShortName(sName.getText());
-                                }
-                            }
-                        }
-                        else {
-                            changedSNameNode.setShortName(sName.getText());
-                            observableChangedNodes.add(changedSNameNode);
-                        }
-                    }
-                }
-            }
-        });
-        nodeID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!nodeID.isDisabled()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setNodeID(nodeID.getText());
-                    }
-                    for(database.objects.Node changedIDNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedIDNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedIDNode.getXyz())) {
-                                    changingNode.setNodeID(nodeID.getText());
-                                }
-                            }
-                        }
-                        else {
-                            changedIDNode.setNodeID(nodeID.getText());
-                            observableChangedNodes.add(changedIDNode);
-                        }
-                        //reflect node ID changes in mapEntity also in edges
-                        for(database.objects.Node node : MapEntity.getInstance().getAllNodes()) {
-                            if(node.getXyz().equals(changedIDNode.getXyz())) {
 
-                                for(database.objects.Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
-
-                                    System.out.println("3. Begin Updating edge ID");
-
-                                    if(edge.getNode1ID().equals(oldValue)) {
-                                        edge.setNode1ID(nodeID.getText());
-                                    }
-                                    if(edge.getNode2ID().equals(oldValue)) {
-                                        edge.setNode2ID(nodeID.getText());
-                                    }
-                                    System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
-                                }
-                                node.setNodeID(nodeID.getText());
-                            }
-                        }
-                    }
-                }
-            }
-        });
         //keep track on selected, new, and changed nodes and edges list
-        observableSelectedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        lvConnectedNodes.getItems().clear();
-                        updateNodeDisplay(NodeSelectionType.SELECTED);
-                    }
-                    else if(c.wasAdded()) {
-                        for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
-                            Label connection = new Label(connectedNode.getLongName());
-                            connection.setAccessibleText(connectedNode.getXyz());
-                            connection.setAlignment(Pos.CENTER);
-                            lvConnectedNodes.getItems().add(connection);
-                        }
-                        updateNodeDisplay(NodeSelectionType.SELECTED);
-                    }
+        observableSelectedNodes.addListener((ListChangeListener<Node>) c -> {
+            while(c.next()) {
+                if(c.wasRemoved()) {
+                    lvConnectedNodes.getItems().clear();
+                    updateNodeDisplay(NodeSelectionType.SELECTED);
                 }
-                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
-                    setNodeAllDisable();
+                else if(c.wasAdded()) {
+                    for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
+                        lvConnectedNodes.getItems().add(connectedNode);
+                    }
+                    updateNodeDisplay(NodeSelectionType.SELECTED);
                 }
             }
-        });
-        observableChangedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeSelectionType.CHANGED);//currently do nothing
-                while(c.next()) {
-                    if(c.wasAdded()) {
-                        for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
-                            mapController.observableHighlightedChangedNodes.add(addedChangedNode);
-                        }
-                    }
-                    if(c.wasRemoved()) {
-                        for(database.objects.Node removedChangedNode : c.getRemoved()) {
-                            mapController.observableHighlightedChangedNodes.remove(removedChangedNode);
-                        }
-                    }
-                }
-                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
-                    btNodeSave.setDisable(true);
-                }
-                else {
-                    btNodeSave.setDisable(false);
-                }
-            }
-        });
-        observableNewNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        updateNodeDisplay(NodeSelectionType.NEW);
-                    }
-                    else if(c.wasAdded()) {
-                        updateNodeDisplay(NodeSelectionType.NEW);
-                    }
-                }
-                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
-                    btNodeSave.setDisable(true);
-                }
-                else {
-                    btNodeSave.setDisable(false);
-                }
-                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
-                    setNodeAllDisable();
-                }
-            }
-        });
-        observableSelectedEdges.addListener(new ListChangeListener<Edge>() {
-            @Override
-            public void onChanged(Change<? extends Edge> c) {
-                System.out.println("Edge Change Detected");
+            if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
+                setNodeAllDisable();
             }
         });
 
-        //let list view accept node dragging
-        lvConnectedNodes.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if(event.getDragboard().hasString()) {
-                    event.acceptTransferModes(TransferMode.COPY);
-                }
+        observableChangedNodes.addListener((ListChangeListener<Node>) c -> {
+            updateNodeDisplay(NodeSelectionType.CHANGED); //currently do nothing
 
-                event.consume();
-            }
-        });
-        lvConnectedNodes.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if(event.getDragboard().hasString()) {
-                    lvConnectedNodes.setStyle("-fx-background-color: #4e9f42");
+            while(c.next()) {
+                if(c.wasAdded()) {
+                    for(Node node : c.getAddedSubList()) {
+                        getMapController().setNodeSelected(node, NodeSelectionType.CHANGED);
+                    }
                 }
-                event.consume();
-            }
-        });
-        lvConnectedNodes.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                lvConnectedNodes.setStyle("-fx-background-color: IVORY");
-                event.consume();
-            }
-        });
-        lvConnectedNodes.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    success = true;
+                if(c.wasRemoved()) {
+                    for(Node node : c.getRemoved()) {
+                        getMapController().setNodeSelected(node, NodeSelectionType.NORMAL);
+                    }
                 }
-                // let the source know whether the string was successfully transferred and used
-                event.setDropCompleted(success);
+            }
 
-                //add connection between nodes
-                addConnection(db.getString());
-
-                event.consume();
+            if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
+                btNodeSave.setDisable(true);
+            } else {
+                btNodeSave.setDisable(false);
             }
         });
+
+        observableNewNodes.addListener((ListChangeListener<Node>) c -> {
+            while(c.next()) {
+                if(c.wasRemoved()) {
+                    updateNodeDisplay(NodeSelectionType.NEW);
+                }
+                else if(c.wasAdded()) {
+                    updateNodeDisplay(NodeSelectionType.NEW);
+                }
+            }
+
+            if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
+                btNodeSave.setDisable(true);
+            } else {
+                btNodeSave.setDisable(false);
+            }
+
+            if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
+                setNodeAllDisable();
+            }
+        });
+
+        observableSelectedEdges.addListener((ListChangeListener<Edge>) c -> System.out.println("Edge Change Detected"));
+
+        // Enable nodes to be dragged from the map to the list view in order to
+        // connect nodes that are far apart or on separate floors
+        lvConnectedNodes.setOnDragOver(event -> {
+            if(event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragEntered(event -> {
+            if(event.getDragboard().hasString()) {
+                lvConnectedNodes.setStyle("-fx-background-color: #4e9f42");
+            }
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragExited(event -> {
+            lvConnectedNodes.setStyle("-fx-background-color: IVORY");
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                success = true;
+            }
+
+            // let the source know whether the string was successfully transferred and used
+            event.setDropCompleted(success);
+
+            //add connection between nodes
+            addConnection(db.getString());
+
+            event.consume();
+        });
+
         initPopup();
     }
 
-    private ImageView floorImage(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
-
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
-        ImageView floorView = new ImageView(floorImage);
-        floorView.setFitHeight(100);
-        floorView.setFitWidth(100);
-        return floorView;
-    }
-
     @Override
-    public javafx.scene.Node getContentView() {
+    public Node getContentView() {
         if (contentView == null) {
             contentView = loadView("/view/MapBuilderView.fxml");
         }
@@ -570,25 +445,17 @@ public class MapBuilderController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+    public void onMapLocationClicked(MouseEvent event) {
         //deselect node on one mouse click
-        if(e.getClickCount() == 1) {
-            mapController.observableHighlightedSelectedNodes.clear();
+        if(event.getClickCount() == 1) {
             observableSelectedNodes.clear();
-        }
-        //detects double-click events
-        else if(e.getClickCount() == 2)
-        {
-            //remove selected nodes, if any
-            mapController.observableHighlightedSelectedNodes.clear();
+        } else if(event.getClickCount() == 2) {
             observableSelectedNodes.clear();
 
-            database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
-                    mapController.floorSelector.getValue(), NodeBuilding.FRANCIS15, NodeType.TEMP, lName.getText(), sName.getText(), "Team " + TeamAssigned.I.toString());
+            Node newNode = new Node("", (int)event.getX(), (int)event.getY(),
+                                    getMapController().getCurrentFloor(), NodeBuilding.FRANCIS15, NodeType.HALL,
+                                    "", "", "Team " + TeamAssigned.I.toString());
 
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
-            mapController.observableHighlightedNewNodes.add(newNode);
             observableNewNodes.clear();
             observableNewNodes.add(newNode);
         }
@@ -696,8 +563,9 @@ public class MapBuilderController extends ScreenController {
             case NEW:
                 if(observableNewNodes.size() == 0) { //no node selected
                     setNodeAllDisable();
-                }
-                else if(observableNewNodes.size() == 1){
+                } else if(observableNewNodes.size() == 1) {
+                    lName.setText("");
+                    sName.setText("");
 
                     xcoord.setText(String.valueOf(observableNewNodes.get(0).getXcoord()));
                     ycoord.setText(String.valueOf(observableNewNodes.get(0).getYcoord()));
@@ -706,12 +574,8 @@ public class MapBuilderController extends ScreenController {
                     CBnodeType.setValue(observableNewNodes.get(0).getNodeType());
                     CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
 
-                    lName.setText(observableNewNodes.get(0).getLongName());
-                    sName.setText(observableNewNodes.get(0).getShortName());
-                    //nodeID.setText(observableNewNodes.get(0).getNodeID());
                     updateNodeID();
-                }
-                else {
+                } else {
                     //TODO make this an exception
                     System.out.println("THIS SHOULD NEVER HAPPEN!\n");
                 }
@@ -1035,7 +899,6 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void initPopup() {
-
         Image goIcon = new Image(getClass().getResource("/images/icons/go.png").toString());
         ImageView goIconView = new ImageView(goIcon);
         goIconView.setFitHeight(24);
@@ -1053,50 +916,29 @@ public class MapBuilderController extends ScreenController {
 
         JFXButton btGoToNode = new JFXButton("", goIconView);
         btGoToNode.setTooltip(new Tooltip("Go To Node"));
-        btGoToNode.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                for(database.objects.Node selectedNode : mapController.databaseNodeObjectList) {
-                    String selectedText = lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText();
-                    if(selectedNode.getXyz().equals(selectedText)) {
-                        updateSelectedNode(selectedNode);
-                        popup.hide();
-                    }
-                }
-            }
+        btGoToNode.setOnAction(event -> {
+            Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
+
+            updateSelectedNode(selectedNode);
+            popup.hide();
         });
+
         JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
         btGoToNode.setTooltip(new Tooltip("Delete Connection"));
-        btDeleteConnection.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String targetText = lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText();
-                for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
-                    if(targetNode.getXyz().equals(targetText)) {
-                        deleteConnection(event, targetNode);
-                        popup.hide();
-                        return;
-                    }
-                }
-            }
+        btDeleteConnection.setOnAction(event -> {
+            Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
+
+            deleteConnection(event, selectedNode);
+            popup.hide();
         });
+
         JFXButton btBack = new JFXButton("", backIconView);
         btGoToNode.setTooltip(new Tooltip("Back"));
-        btBack.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                popup.hide();
-            }
-        });
+        btBack.setOnAction(event -> popup.hide());
 
-        btGoToNode.setStyle("-fx-background-color: #000000;" +
-                "-fx-backgound-raidus: 0");
-        btDeleteConnection.setStyle("-fx-background-color: #d32a04;" +
-                "-fx-backgound-raidus: 0");
-        btBack.setStyle("-fx-background-color: #999999;" +
-                "-fx-backgound-raidus: 0");
-
-
+        btGoToNode.setStyle("-fx-background-color: #000000;" + "-fx-backgound-raidus: 0");
+        btDeleteConnection.setStyle("-fx-background-color: #d32a04;" + "-fx-backgound-raidus: 0");
+        btBack.setStyle("-fx-background-color: #999999;" + "-fx-backgound-raidus: 0");
 
         VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
         popup = new JFXPopup(vBox);
@@ -1314,5 +1156,4 @@ public class MapBuilderController extends ScreenController {
 
         Dialog.show();
     }
-    */
 }
