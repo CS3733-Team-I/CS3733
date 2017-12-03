@@ -29,8 +29,9 @@ public class TestPathfinder {
                         n36, n37, n38, n39, n40, n41, n42, n43, n44, n45, n46,
                         n47, n48, n49, n50, n51, n52, n53, n54, n55, n56, n57, n58,
                         n59, n60, n61, n62, n63, n64, n65, n66, n67, n68, n69;
+
     private static Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
-                 e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
+                        e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,7 @@ public class TestPathfinder {
                         NodeFloor.THIRD
           X   10    20    30    40    50    60    70    80              n01 & n16 are elevators
        Y                                                                n07 & n17 are stairs
-       10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
+       10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07             n09 is a bathroom (not handicapped)
                      |           |
        20           n08 - n09   n10 - - - - n11
                      |           |        /
@@ -59,7 +60,7 @@ public class TestPathfinder {
                         NodeFloor.SECOND
           X   10    20    30    40    50    60    70    80              n24 & n39 are elevators
        Y                                                                n30 & n40 are stairs
-       10     n24 - n25 - n26 - n27 - - - - n28 - n29 - n30
+       10     n24 - n25 - n26 - n27 - - - - n28 - n29 - n30             n32 is a bathroom (handicapped)
                      |           |
        20           n31 - n32   n33 - - - - n34
                      |           |        /
@@ -76,7 +77,7 @@ public class TestPathfinder {
                         NodeFloor.FIRST
           X   10    20    30    40    50    60    70    80              n47 & n62 are elevators
        Y                                                                n53 & n63 are stairs
-       10     n47 - n48 - n49 - n50 - - - - n51 - n52 - n53
+       10     n47 - n48 - n49 - n50 - - - - n51 - n52 - n53             n55 is a bathroom (not handicapped)
                      |           |
        20           n54 - n55   n56 - - - - n57
                      |           |        /
@@ -101,87 +102,87 @@ public class TestPathfinder {
         map = MapEntity.getInstance();
         this.removeAllFromDB();
 
-
-        n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "NODE01_LN","NODE01_SN","I");
+        //Nodes for F3
+        n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I");
         n02 = new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
         n03 = new Node("NODE03",30,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
         n04 = new Node("NODE04",40,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
         n05 = new Node("NODE05",60,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
         n06 = new Node("NODE06",70,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
-        n07 = new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "NODE07_LN","NODE07_SN","I");
+        n07 = new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I");
         n08 = new Node("NODE08",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
-        n09 = new Node("NODE09",30,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
+        n09 = new Node("NODE09",30,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped","RR - nHC","I");
         n10 = new Node("NODE10",40,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
         n11 = new Node("NODE11",60,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
         n12 = new Node("NODE12",20,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
         n13 = new Node("NODE13",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
         n14 = new Node("NODE14",40,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
         n15 = new Node("NODE15",50,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
-        n16 = new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "NODE16_LN","NODE16_SN","I");
-        n17 = new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "NODE17_LN","NODE17_SN","I");
+        n16 = new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I");
+        n17 = new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I");
         n18 = new Node("NODE18",30,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
         n19 = new Node("NODE19",40,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
         n20 = new Node("NODE20",30,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
         n21 = new Node("NODE21",40,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
         n22 = new Node("NODE22",30,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
         n23 = new Node("NODE23",40,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
+        //Nodes for F2
+        n24 = new Node("NODE24",10,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I");
+        n25 = new Node("NODE25",20,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE25_LN","NODE25_SN","I");
+        n26 = new Node("NODE26",30,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE26_LN","NODE26_SN","I");
+        n27 = new Node("NODE27",40,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE27_LN","NODE27_SN","I");
+        n28 = new Node("NODE28",60,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE28_LN","NODE28_SN","I");
+        n29 = new Node("NODE29",70,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE29_LN","NODE29_SN","I");
+        n30 = new Node("NODE30",80,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I");
+        n31 = new Node("NODE31",20,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE31_LN","NODE31_SN","I");
+        n32 = new Node("NODE32",30,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Handicapped","RR - HC","I");
+        n33 = new Node("NODE33",40,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE33_LN","NODE33_SN","I");
+        n34 = new Node("NODE34",60,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE34_LN","NODE34_SN","I");
+        n35 = new Node("NODE35",20,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE35_LN","NODE35_SN","I");
+        n36 = new Node("NODE36",30,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE36_LN","NODE36_SN","I");
+        n37 = new Node("NODE37",40,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE37_LN","NODE37_SN","I");
+        n38 = new Node("NODE38",50,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE38_LN","NODE38_SN","I");
+        n39 = new Node("NODE39",60,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I");
+        n40 = new Node("NODE40",30,40, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I");
+        n41 = new Node("NODE41",30,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE41_LN","NODE41_SN","I");
+        n42 = new Node("NODE42",40,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE42_LN","NODE42_SN","I");
+        n43 = new Node("NODE43",30,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE43_LN","NODE43_SN","I");
+        n44 = new Node("NODE44",40,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE44_LN","NODE44_SN","I");
+        n45 = new Node("NODE45",30,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE45_LN","NODE45_SN","I");
+        n46 = new Node("NODE46",40,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE46_LN","NODE46_SN","I");
+        //Nodes for F1
+        n47 = new Node("NODE47",10,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I");
+        n48 = new Node("NODE48",20,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE48_LN","NODE48_SN","I");
+        n49 = new Node("NODE49",30,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE49_LN","NODE49_SN","I");
+        n50 = new Node("NODE50",40,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE50_LN","NODE50_SN","I");
+        n51 = new Node("NODE51",60,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE51_LN","NODE51_SN","I");
+        n52 = new Node("NODE52",70,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE52_LN","NODE52_SN","I");
+        n53 = new Node("NODE53",80,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I");
+        n54 = new Node("NODE54",20,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE54_LN","NODE54_SN","I");
+        n55 = new Node("NODE55",30,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped","RR - nHC","I");
+        n56 = new Node("NODE56",40,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE56_LN","NODE56_SN","I");
+        n57 = new Node("NODE57",60,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE57_LN","NODE57_SN","I");
+        n58 = new Node("NODE58",20,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE58_LN","NODE58_SN","I");
+        n59 = new Node("NODE59",30,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE59_LN","NODE59_SN","I");
+        n60 = new Node("NODE60",40,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE60_LN","NODE60_SN","I");
+        n61 = new Node("NODE61",50,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE61_LN","NODE61_SN","I");
+        n62 = new Node("NODE62",60,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I");
+        n63 = new Node("NODE63",30,40, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I");
+        n64 = new Node("NODE64",30,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE64_LN","NODE64_SN","I");
+        n65 = new Node("NODE65",40,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE65_LN","NODE65_SN","I");
+        n66 = new Node("NODE66",30,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE66_LN","NODE66_SN","I");
+        n67 = new Node("NODE67",40,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE67_LN","NODE67_SN","I");
+        n68 = new Node("NODE68",30,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE68_LN","NODE68_SN","I");
+        n69 = new Node("NODE69",40,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE69_LN","NODE69_SN","I");
 
-        n24 = new Node("NODE24",10,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
-        n25 = new Node("NODE25",20,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
-        n26 = new Node("NODE26",30,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
-        n27 = new Node("NODE27",40,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
-        n28 = new Node("NODE28",60,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
-        n29 = new Node("NODE29",70,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
-        n30 = new Node("NODE30",80,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
-        n31 = new Node("NODE31",20,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
-        n32 = new Node("NODE32",30,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
-        n33 = new Node("NODE33",40,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
-        n34 = new Node("NODE34",20,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
-        n35 = new Node("NODE35",30,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
-        n36 = new Node("NODE36",40,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
-        n37 = new Node("NODE37",50,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
-        n38 = new Node("NODE38",60,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
-        n39 = new Node("NODE39",60,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
-        n40 = new Node("NODE40",30,40, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
-        n41 = new Node("NODE41",30,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
-        n42 = new Node("NODE42",40,50, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
-        n43 = new Node("NODE43",30,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
-        n44 = new Node("NODE44",40,60, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
-        n45 = new Node("NODE45",30,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
-        n46 = new Node("NODE46",40,70, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
-
-        n47 = new Node("NODE47",10,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
-        n48 = new Node("NODE48",20,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
-        n49 = new Node("NODE49",30,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
-        n50 = new Node("NODE50",40,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
-        n51 = new Node("NODE51",60,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
-        n52 = new Node("NODE52",70,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
-        n53 = new Node("NODE53",80,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
-        n54 = new Node("NODE54",20,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
-        n55 = new Node("NODE55",30,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
-        n56 = new Node("NODE56",40,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
-        n57 = new Node("NODE57",20,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
-        n58 = new Node("NODE58",30,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
-        n59 = new Node("NODE59",40,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
-        n60 = new Node("NODE60",50,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
-        n61 = new Node("NODE61",60,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
-        n62 = new Node("NODE62",60,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
-        n63 = new Node("NODE63",30,40, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
-        n64 = new Node("NODE64",30,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
-        n65 = new Node("NODE65",40,50, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
-        n66 = new Node("NODE66",30,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
-        n67 = new Node("NODE67",40,60, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
-        n68 = new Node("NODE68",30,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
-        n69 = new Node("NODE69",40,70, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
-
-
+        //Add all nodes to the map
         map.addNode(n01); map.addNode(n02); map.addNode(n03); map.addNode(n04); map.addNode(n05);
         map.addNode(n06); map.addNode(n07); map.addNode(n08); map.addNode(n09); map.addNode(n10);
         map.addNode(n11); map.addNode(n12); map.addNode(n13); map.addNode(n14); map.addNode(n15);
         map.addNode(n16); map.addNode(n17); map.addNode(n18); map.addNode(n19); map.addNode(n20);
         map.addNode(n21); map.addNode(n22); map.addNode(n23);
 
-
+        //Edges for F3
         e01 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
         e02 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
         e03 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
@@ -204,7 +205,15 @@ public class TestPathfinder {
         e20 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
         e21 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
         e22 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
+        //Edges for F2
 
+        //Edges for F1
+
+        //Edges for elevators
+
+        //Edges for stairs
+
+        //Add all edges to the map
         map.addEdge(e01); map.addEdge(e02); map.addEdge(e03); map.addEdge(e04); map.addEdge(e05);
         map.addEdge(e06); map.addEdge(e07); map.addEdge(e08); map.addEdge(e09); map.addEdge(e10);
         map.addEdge(e11); map.addEdge(e12); map.addEdge(e13); map.addEdge(e14); map.addEdge(e15);
