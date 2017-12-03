@@ -78,6 +78,12 @@ public class NodesEdgesView extends AnchorPane {
                         Node node2 = map.getNode(edge.getNode2ID());
                         EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
                                                            new Point2D(node2.getXcoord(), node2.getYcoord()));
+
+                        if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
+                            view.setOpacity(0.95);
+                        else
+                            view.setOpacity(0.2);
+
                         this.edgeViewsMap.put(edge, view);
                         this.edgesView.getChildren().add(view);
                     }
@@ -130,15 +136,17 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     public void drawPath() {
-        // TODO re-enable auto floor selection for path
-        // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
-        parent.clearMap();
+        if (parent.getPath() != null) {
+            // TODO re-enable auto floor selection for path
+            // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
+            parent.clearMap();
 
-        for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
-            drawEdgesOnMap(segment);
+            for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
+                drawEdgesOnMap(segment);
+            }
+
+            drawNodesOnMap(parent.getPath().getWaypoints());
         }
-
-        drawNodesOnMap(parent.getPath().getWaypoints());
     }
 
     public void setShowNodes(boolean show) {
