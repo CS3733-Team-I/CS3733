@@ -29,8 +29,8 @@
       <JFXComboBox fx:id="floorSelector" onAction="#onFloorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <VBox id="rounded-container" fx:id="opetionsBox" alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="125.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0">
          <children>
-            <JFXCheckBox fx:id="showNodesBox" text="Show Nodes" />
-            <JFXCheckBox fx:id="showEdgesBox" text="Show Edges" />
+            <JFXCheckBox fx:id="showNodesBox" onAction="#onNodeBoxToggled" text="Show Nodes" />
+            <JFXCheckBox fx:id="showEdgesBox" onAction="#onEdgeBoxToggled" text="Show Edges" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

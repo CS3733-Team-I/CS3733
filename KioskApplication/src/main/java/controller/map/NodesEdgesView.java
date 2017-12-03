@@ -44,7 +44,7 @@ public class NodesEdgesView extends AnchorPane {
         AnchorPane.setBottomAnchor(edgesView, 0.0);
         AnchorPane.setRightAnchor(edgesView, 0.0);
 
-        this.getChildren().addAll(nodesView, edgesView);
+        this.getChildren().addAll(edgesView, nodesView);
 
         nodesList = FXCollections.observableArrayList();
         edgesList = FXCollections.observableArrayList();
@@ -156,7 +156,8 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     public void drawPath() {
-        parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
+        // TODO re-enable auto floor selection for path
+        // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
         parent.clearMap();
 
         for (LinkedList<Edge> segment : parent.getPath().getEdges()) {

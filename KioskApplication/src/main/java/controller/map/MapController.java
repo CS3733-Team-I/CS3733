@@ -110,12 +110,10 @@ public class MapController {
         nodesEdgesView.drawPath();
     }
 
-    public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); }
-    public boolean areNodesVisible(){
-        return this.showNodesBox.isSelected();
-    }
+    public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
+    public boolean areNodesVisible(){ return this.showNodesBox.isSelected(); }
 
-    public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); }
+    public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); onEdgeBoxToggled(); }
     public boolean areEdgesVisible(){
         return this.showEdgesBox.isSelected();
     }
@@ -164,8 +162,6 @@ public class MapController {
      * Clear the map of waypoints, nodes, and edges
      */
     public void clearMap() {
-        this.currentPath = null;
-
         this.waypointPane.getChildren().clear();
         this.waypoints.clear();
 
@@ -407,6 +403,16 @@ public class MapController {
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
         }
+    }
+
+    @FXML
+    protected void onNodeBoxToggled() {
+        nodesEdgesView.setShowNodes(showNodesBox.isSelected());
+    }
+
+    @FXML
+    protected void onEdgeBoxToggled() {
+        nodesEdgesView.setShowEdges(showEdgesBox.isSelected());
     }
 
     @FXML

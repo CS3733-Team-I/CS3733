@@ -2,19 +2,17 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import utility.node.NodeSelectionType;
 import utility.node.NodeType;
 
-import javax.swing.text.html.ImageView;
 import java.io.IOException;
 
 public class NodeView extends StackPane {
@@ -35,10 +33,7 @@ public class NodeView extends StackPane {
         this.node = node;
         this.selectionType = NodeSelectionType.NORMAL;
         this.editable = editable;
-    }
 
-    @FXML
-    public void initialize() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/NodeView.fxml"));
             loader.setController(this);
@@ -47,7 +42,10 @@ public class NodeView extends StackPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @FXML
+    public void initialize() {
         circle.setMouseTransparent(false);
         circle.setPickOnBounds(false);
 
@@ -56,8 +54,8 @@ public class NodeView extends StackPane {
         });
 
         // Set X and Y
-        AnchorPane.setLeftAnchor(container, (double)node.getXcoord());
-        AnchorPane.setTopAnchor(container, (double)node.getYcoord());
+        container.setLayoutX(node.getXcoord() - circle.getRadius());
+        container.setLayoutY(node.getYcoord() - circle.getRadius());
 
         // Show tooltip based on the current tab
         if (this.editable) {
