@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -273,14 +274,8 @@ public class MapController {
     }
 
     private void setZoom(double scaleValue) {
-        double scrollH = scrollPane.getHvalue();
-        double scrollV = scrollPane.getVvalue();
-
         zoomGroup.setScaleX(scaleValue);
         zoomGroup.setScaleY(scaleValue);
-
-        scrollPane.setHvalue(scrollH);
-        scrollPane.setVvalue(scrollV);
 
         miniMapController.setViewportZoom(scaleValue);
     }
@@ -324,13 +319,35 @@ public class MapController {
         scrollPane.addEventFilter(ScrollEvent.ANY, new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
-                if (event.getDeltaY() > 0){
-                    zoomInPressed();
-                }
-                else {
-                    zoomOutPressed();
-                }
                 event.consume();
+                System.out.println("X:"+event.getX());
+                System.out.println("Y:"+event.getY());
+                final double zoomFactor = event.getDeltaY() > 0 ? 1.2 : 1 / 1.2;
+                System.out.println(zoomFactor);
+
+                Bounds groupBounds = zoomGroup.getLayoutBounds();
+                final Bounds viewportBounds = scrollPane.getViewportBounds();
+
+
+                double valX = scrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
+                double valY = scrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
+
+                Point2D posInMapView =
+                        new Point2D(event.getX()-container.getWidth()/2,event.getY()-container.getHeight()/2);
+
+                Point2D adjustment = zoomGroup.getLocalToParentTransform().deltaTransform(posInMapView.multiply(zoomFactor - 1));
+
+                System.out.println("X translated:"+posInMapView.getX());
+                System.out.println("Y translated:"+posInMapView.getY());
+
+
+
+                zoomSlider.setValue(zoomSlider.getValue()*zoomFactor);
+                calculateMinZoom();
+                calculateMaxZoom();
+                groupBounds = zoomGroup.getLayoutBounds();
+                scrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
+                scrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
             }
         });
 
@@ -612,6 +629,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
+                calculateMaxZoom();
                 calculateMinZoom();
             }
         });
@@ -621,6 +639,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
+                calculateMaxZoom();
                 calculateMinZoom();
             }
         });
@@ -726,14 +745,30 @@ public class MapController {
         });
     }
 
-    private void calculateMinZoom() {
+    private boolean calculateMinZoom() {
         double widthRatio = container.getWidth() / mapView.getFitWidth();
         double heightRatio = container.getHeight() / mapView.getFitHeight();
         double minScrollValue = Math.max(widthRatio, heightRatio);
 
         zoomSlider.setMin(minScrollValue);
 
-        if (zoomSlider.getValue() < minScrollValue) zoomSlider.setValue(minScrollValue);
+        boolean under = zoomSlider.getValue() < minScrollValue;
+
+        if (under) zoomSlider.setValue(minScrollValue);
+        return under;
+    }
+
+    private boolean calculateMaxZoom(){
+        double widthRatio = mapView.getFitWidth() / container.getWidth();
+        double heightRatio = mapView.getFitHeight() / container.getHeight();
+        double maxScrollValue = 2;//Math.min(widthRatio,heightRatio);
+
+        zoomSlider.setMax(maxScrollValue);
+
+        boolean over = zoomSlider.getValue() > maxScrollValue;
+
+        if (over) zoomSlider.setValue(maxScrollValue);
+        return over;
     }
 
     @FXML
@@ -761,6 +796,11 @@ public class MapController {
         //System.out.println("Zoom in clicked");
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal + 0.1);
+        double scrollH = scrollPane.getHvalue();
+        double scrollV = scrollPane.getVvalue();
+
+        scrollPane.setHvalue(scrollH);
+        scrollPane.setVvalue(scrollV);
     }
 
     @FXML
@@ -768,6 +808,11 @@ public class MapController {
         //System.out.println("Zoom out clicked");
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal - 0.1);
+        double scrollH = scrollPane.getHvalue();
+        double scrollV = scrollPane.getVvalue();
+
+        scrollPane.setHvalue(scrollH);
+        scrollPane.setVvalue(scrollV);
     }
 
     @FXML
