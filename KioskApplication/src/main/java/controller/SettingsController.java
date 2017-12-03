@@ -124,10 +124,6 @@ public class SettingsController extends ScreenController {
         return contentView;
     }
 
-    private void resetPressed() {
-        System.out.println("Reset");
-    }
-
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
