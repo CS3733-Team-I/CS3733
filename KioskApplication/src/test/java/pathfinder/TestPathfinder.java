@@ -31,7 +31,11 @@ public class TestPathfinder {
                         n59, n60, n61, n62, n63, n64, n65, n66, n67, n68, n69;
 
     private static Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
-                        e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
+                        e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22,
+                        e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33,
+                        e34, e35, e36, e37, e38, e39, e40, e41, e42, e43, e44,
+                        e45, e46, e47, e48, e49, e50, e51, e52, e53, e54, e55,
+                        e56, e57, e58, e59, e60, e61, e62, e63, e64, e65, e66;
     private static MapEntity map;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +185,16 @@ public class TestPathfinder {
         map.addNode(n11); map.addNode(n12); map.addNode(n13); map.addNode(n14); map.addNode(n15);
         map.addNode(n16); map.addNode(n17); map.addNode(n18); map.addNode(n19); map.addNode(n20);
         map.addNode(n21); map.addNode(n22); map.addNode(n23);
+        map.addNode(n24); map.addNode(n25); map.addNode(n26); map.addNode(n27); map.addNode(n28);
+        map.addNode(n29); map.addNode(n30); map.addNode(n31); map.addNode(n32); map.addNode(n33);
+        map.addNode(n34); map.addNode(n35); map.addNode(n36); map.addNode(n37); map.addNode(n38);
+        map.addNode(n39); map.addNode(n40); map.addNode(n41); map.addNode(n42); map.addNode(n43);
+        map.addNode(n44); map.addNode(n45); map.addNode(n46);
+        map.addNode(n47); map.addNode(n48); map.addNode(n49); map.addNode(n50); map.addNode(n51);
+        map.addNode(n52); map.addNode(n53); map.addNode(n54); map.addNode(n55); map.addNode(n56);
+        map.addNode(n57); map.addNode(n58); map.addNode(n59); map.addNode(n60); map.addNode(n61);
+        map.addNode(n62); map.addNode(n63); map.addNode(n64); map.addNode(n65); map.addNode(n66);
+        map.addNode(n67); map.addNode(n68); map.addNode(n69);
 
         //Edges for F3
         e01 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
@@ -206,9 +220,51 @@ public class TestPathfinder {
         e21 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
         e22 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
         //Edges for F2
-
+        e23 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
+        e24 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
+        e25 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
+        e26 = new Edge("EDGE04", n04.getNodeID(), n05.getNodeID());
+        e27 = new Edge("EDGE05", n05.getNodeID(), n06.getNodeID());
+        e28 = new Edge("EDGE06", n06.getNodeID(), n07.getNodeID());
+        e29 = new Edge("EDGE07", n02.getNodeID(), n08.getNodeID());
+        e30 = new Edge("EDGE08", n04.getNodeID(), n10.getNodeID());
+        e31 = new Edge("EDGE09", n08.getNodeID(), n09.getNodeID());
+        e32 = new Edge("EDGE10", n10.getNodeID(), n15.getNodeID());
+        e33 = new Edge("EDGE11", n08.getNodeID(), n11.getNodeID());
+        e34 = new Edge("EDGE12", n10.getNodeID(), n13.getNodeID());
+        e35 = new Edge("EDGE13", n15.getNodeID(), n14.getNodeID());
+        e36 = new Edge("EDGE14", n11.getNodeID(), n12.getNodeID());
+        e37 = new Edge("EDGE15", n12.getNodeID(), n13.getNodeID());
+        e38 = new Edge("EDGE16", n13.getNodeID(), n14.getNodeID());
+        e39 = new Edge("EDGE17", n14.getNodeID(), n16.getNodeID());
+        e40 = new Edge("EDGE18", n12.getNodeID(), n17.getNodeID());
+        e41 = new Edge("EDGE19", n20.getNodeID(), n21.getNodeID());
+        e42 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
+        e43 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
+        e44 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
         //Edges for F1
-
+        e45 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
+        e46 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
+        e47 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
+        e48 = new Edge("EDGE04", n04.getNodeID(), n05.getNodeID());
+        e49 = new Edge("EDGE05", n05.getNodeID(), n06.getNodeID());
+        e50 = new Edge("EDGE06", n06.getNodeID(), n07.getNodeID());
+        e51 = new Edge("EDGE07", n02.getNodeID(), n08.getNodeID());
+        e52 = new Edge("EDGE08", n04.getNodeID(), n10.getNodeID());
+        e53 = new Edge("EDGE09", n08.getNodeID(), n09.getNodeID());
+        e54 = new Edge("EDGE10", n10.getNodeID(), n15.getNodeID());
+        e55 = new Edge("EDGE11", n08.getNodeID(), n11.getNodeID());
+        e56 = new Edge("EDGE12", n10.getNodeID(), n13.getNodeID());
+        e57 = new Edge("EDGE13", n15.getNodeID(), n14.getNodeID());
+        e58 = new Edge("EDGE14", n11.getNodeID(), n12.getNodeID());
+        e59 = new Edge("EDGE15", n12.getNodeID(), n13.getNodeID());
+        e60 = new Edge("EDGE16", n13.getNodeID(), n14.getNodeID());
+        e61 = new Edge("EDGE17", n14.getNodeID(), n16.getNodeID());
+        e62 = new Edge("EDGE18", n12.getNodeID(), n17.getNodeID());
+        e63 = new Edge("EDGE19", n20.getNodeID(), n21.getNodeID());
+        e64 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
+        e65 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
+        e66 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
         //Edges for elevators
 
         //Edges for stairs
@@ -219,6 +275,16 @@ public class TestPathfinder {
         map.addEdge(e11); map.addEdge(e12); map.addEdge(e13); map.addEdge(e14); map.addEdge(e15);
         map.addEdge(e16); map.addEdge(e17); map.addEdge(e18); map.addEdge(e19); map.addEdge(e20);
         map.addEdge(e21); map.addEdge(e22);
+        map.addEdge(e23); map.addEdge(e24); map.addEdge(e25); map.addEdge(e26); map.addEdge(e27);
+        map.addEdge(e28); map.addEdge(e29); map.addEdge(e30); map.addEdge(e31); map.addEdge(e32);
+        map.addEdge(e33); map.addEdge(e34); map.addEdge(e35); map.addEdge(e36); map.addEdge(e37);
+        map.addEdge(e38); map.addEdge(e39); map.addEdge(e40); map.addEdge(e41); map.addEdge(e42);
+        map.addEdge(e43); map.addEdge(e44);
+        map.addEdge(e45); map.addEdge(e46); map.addEdge(e47); map.addEdge(e48); map.addEdge(e49);
+        map.addEdge(e50); map.addEdge(e51); map.addEdge(e52); map.addEdge(e53); map.addEdge(e54);
+        map.addEdge(e55); map.addEdge(e56); map.addEdge(e57); map.addEdge(e58); map.addEdge(e59);
+        map.addEdge(e60); map.addEdge(e61); map.addEdge(e62); map.addEdge(e63); map.addEdge(e64);
+        map.addEdge(e65); map.addEdge(e66);
     }
 
     @After //remove things from database
