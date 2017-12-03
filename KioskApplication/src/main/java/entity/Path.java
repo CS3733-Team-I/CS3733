@@ -63,25 +63,28 @@ public class Path {
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
 
+        //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
             return "Take the elevator to " + nextNode.getFloor().toString() + " ";
         }
+        //Stairs
         else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
             return "Take the stairs to " + nextNode.getFloor().toString() + " ";
         }
 
+        //Calculate angles if turning
         double prevAngle = prevNode.getAngleBetweenNodes(thisNode);
         double nextAngle = thisNode.getAngleBetweenNodes(nextNode);
 
         double angleDif = nextAngle - prevAngle;
         double straightAngle = Math.PI/6;
 
-        String longName = "";
-
+        //Turning directions
         if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
         else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
+        //Default case
         return "Go to ";
     }
 
