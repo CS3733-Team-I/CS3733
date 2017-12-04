@@ -278,8 +278,14 @@ public class MapEntity implements IMapEntity {
     }
 
     //Given a node, return a list of all adjacent nodes.
-    public LinkedList<Node> getConnectedNodes(Node node){
+    public LinkedList<Node> getConnectedNodes(Node node, boolean wheelchairAccessible){
         ArrayList<Edge> edges = this.getEdges(node);
+        if(wheelchairAccessible){
+            for(Edge edge: edges){
+                if(!edge.isWheelchairAccessible())
+                    edges.remove(edge);
+            }
+        }
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
             if(edge.getNode1ID().equals(node.getNodeID()))

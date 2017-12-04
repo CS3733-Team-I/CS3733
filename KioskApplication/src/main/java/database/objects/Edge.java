@@ -98,4 +98,12 @@ public class Edge {
             this.wheelchairAccessible = true;
         }
     }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public boolean isWheelchairAccessible() {
+        return wheelchairAccessible;
+    }
 }

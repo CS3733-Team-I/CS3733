@@ -17,7 +17,7 @@ public class Dijkstra implements SearchAlgorithm {
      * @throws PathfinderException if there are errors
      */
     @Override
-    public LinkedList<Edge> findPath(Node startingNode, Node endingNode, boolean wheelchair) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startingNode, Node endingNode, boolean wheelchairAccessible) throws PathfinderException {
         MapEntity map = MapEntity.getInstance();
 
         StartNode startNode = new StartNode(startingNode);
@@ -81,7 +81,7 @@ public class Dijkstra implements SearchAlgorithm {
                 break;
 
             //If not, start exploring the nodes bordering this one.
-            LinkedList<Node> adjacentNodes = map.getConnectedNodes(lowestCost.getNode());
+            LinkedList<Node> adjacentNodes = map.getConnectedNodes(lowestCost.getNode(), wheelchairAccessible);
             //for each node, check if it's already been explored/is in the frontier.
             for(Node node : adjacentNodes){
                 //If the node has already been reached, mark it.
