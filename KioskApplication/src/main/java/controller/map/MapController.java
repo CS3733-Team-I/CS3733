@@ -201,8 +201,10 @@ public class MapController {
             wayPointPutTransition.setToY(location.getY() - 60);
             //TODO handle waypoint option
             Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(this.container, nodeInfo);
-
+            Tooltip.install(wayPointObject, nodeInfo);
+            nodeInfo.setStyle("-fx-font-weight:bold; " +
+                    "-fx-background-color: #ff1d13;" +
+            "-fx-font-size: 16pt; ");
             waypoints.add(wayPointObject);
             waypointPane.getChildren().add(wayPointObject);
             wayPointPutTransition.play();
