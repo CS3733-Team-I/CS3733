@@ -61,7 +61,7 @@
                               <JFXRadioButton fx:id="bestFirstButton" onAction="#onSearchAlgorithmSelected" prefHeight="57.0" prefWidth="105.0" text="Best-first Search" />
                            </children>
                         </VBox>
-                        <JFXTextField fx:id="beamWidth" layoutX="289.0" layoutY="235.0" onAction="#beamWidthSelected" />
+                        <JFXTextField fx:id="beamWidth" layoutX="289.0" layoutY="235.0" />
                         <Label layoutX="289.0" layoutY="210.0" prefHeight="17.0" prefWidth="135.0" text="Select a Beam width" />
                      </children>
                   </AnchorPane>

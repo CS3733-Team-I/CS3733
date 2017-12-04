@@ -3,6 +3,7 @@ package pathfinder;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SystemSettings;
 
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class Beam implements SearchAlgorithm {
      */
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
-       // int beamwidth = 3;
+        int beamwidth = SystemSettings.getInstance().getBeamWidth();
         MapEntity map = MapEntity.getInstance();
 
         StartNode startingNode = new StartNode(startNode);
@@ -54,17 +55,12 @@ public class Beam implements SearchAlgorithm {
             // clear beam
             beam = new HashMap<>();
             // go through set and add to beam map
-            while ((set.size() != 0) && (3 > beam.size())) {
+            while ((set.size() != 0) && (beamwidth > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
                   // for heristicvalue map
                 for (String key : set.keySet()) {
                      heuristicValue.put(key, set.get(key));
                 }
-                /*
-                if(heuristicValue.size()>4)
-                    beamwidth = 4;
-                else
-                    beamwidth = 3;*/
                     // get min heristic value
                     String minIndex = compare_hashMap_min(heuristicValue, endingNode);
                     Iterator<String> keys = set.keySet().iterator();
