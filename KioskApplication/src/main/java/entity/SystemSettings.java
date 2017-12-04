@@ -45,6 +45,10 @@ public class SystemSettings {
                 this.algorithm = new DepthFirst();
                 this.prefs.put("searchAlgorithm", "DFS");
                 break;
+            case "Beam":
+                this.algorithm = new Beam();
+                this.prefs.put("searchAlgorithm", "Beam");
+                break;
             default:
                 break;  //If the input string is invalid, leave the set search algorithm unchanged.
         }
