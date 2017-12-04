@@ -10,8 +10,8 @@ public class Edge {
     private String edgeID; //ID of the edge
     private String node1ID; //one of the nodes that is part of the edge
     private String node2ID; //one of the nodes that is part of the edge
-    private int cost;
-    private boolean wheelchairAccessible;
+    private Integer cost = null;
+    private Boolean wheelchairAccessible = null;
 
     //initialize the edge with an id, and two nodes
     //checks to see if each node exists
@@ -19,7 +19,6 @@ public class Edge {
         this.edgeID = edgeID;
         this.node1ID = node1;
         this.node2ID = node2;
-        this.calculateCost();
     }
 
     @Override
@@ -115,11 +114,25 @@ public class Edge {
         }
     }
 
+    /**
+     * Getter for this.cost.  Checks to see if this edge's cost has been calculated yet; if not, calculates it and
+     * returns the result; if so, returns the value.
+     * @return
+     */
     public int getCost() {
+        if(this.cost == null)
+            this.calculateCost();
         return cost;
     }
 
+    /**
+     * Getter for this.wheelchairAccessible.  Checks to see if this edge's wheelchair accessibility has been determined
+     * yet; if not, evaluates it and returns the result; if so, returns the value.
+     * @return
+     */
     public boolean isWheelchairAccessible() {
+        if(this.wheelchairAccessible == null)
+            this.calculateCost();
         return wheelchairAccessible;
     }
 }
