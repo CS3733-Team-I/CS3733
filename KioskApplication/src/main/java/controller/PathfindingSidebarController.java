@@ -5,12 +5,16 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.SystemSettings;
+import javafx.animation.PauseTransition;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
@@ -90,7 +94,12 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-
+        if(e.getClickCount() == 2) {
+            getMapController().zoomInPressed();
+        }
+        else {
+            //TODO what if location clicked have no node
+        }
     }
 
     @Override
@@ -102,7 +111,7 @@ public class PathfindingSidebarController extends ScreenController {
             nodeNameLabel.setTextFill(Color.BLACK);
             waypointList.getItems().add(nodeNameLabel);
 
-            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()));
+            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
         }
     }
 
@@ -134,5 +143,23 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(false);
+    }
+
+    private void addPressAndHoldHandler(javafx.scene.Node node, Duration holdTime,
+                                        EventHandler<MouseEvent> handler) {
+
+        class Wrapper<T> { T content ; }
+        Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
+
+        PauseTransition holdTimer = new PauseTransition(holdTime);
+        holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
+
+
+        node.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            eventWrapper.content = event ;
+            holdTimer.playFromStart();
+        });
+        node.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> holdTimer.stop());
+        node.addEventHandler(MouseEvent.DRAG_DETECTED, event -> holdTimer.stop());
     }
 }

@@ -8,6 +8,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -17,15 +18,19 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
+import java.awt.event.ActionEvent;
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -180,20 +185,27 @@ public class MapController {
      * Add a waypoint indicator to the map
      * @param location waypoint location
      */
-    public void addWaypoint(Point2D location) {
+    public void addWaypoint(Point2D location, Node node) {
         try {
             // put the pin and set it's info
             MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
 
             // TODO magic numbers
             wayPointObject.setTranslateX(location.getX() - 24);
-            wayPointObject.setTranslateY(location.getY() - 60);
+            wayPointObject.setTranslateY(- 60 + location.getY() - 60);
+            wayPointObject.setStyle("-fx-background-color: #ff1d13;");
+            TranslateTransition wayPointPutTransition = new TranslateTransition();
+            wayPointPutTransition.setDuration(Duration.millis(400));
+            wayPointPutTransition.setNode(wayPointObject);
 
+            wayPointPutTransition.setToY(location.getY() - 60);
             //TODO handle waypoint option
-            //wayPointObject.setOnAction(ActionEvent -> WaypointOptions());
+            Tooltip nodeInfo = new Tooltip(node.getLongName());
+            Tooltip.install(this.container, nodeInfo);
 
             waypoints.add(wayPointObject);
             waypointPane.getChildren().add(wayPointObject);
+            wayPointPutTransition.play();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -417,14 +429,14 @@ public class MapController {
     }
 
     @FXML
-    protected void zoomInPressed() {
+    public void zoomInPressed() {
         //System.out.println("Zoom in clicked");
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal + 0.1);
     }
 
     @FXML
-    protected void zoomOutPressed() {
+    public void zoomOutPressed() {
         //System.out.println("Zoom out clicked");
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal - 0.1);

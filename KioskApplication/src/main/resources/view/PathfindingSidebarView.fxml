@@ -20,25 +20,26 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="50.0" minHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="50.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="122.0" minHeight="73.0" prefHeight="122.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="30.0" prefWidth="125.0" text="Current Waypoints:" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <JFXButton onAction="#btGeneratePathPressed" ripplerFill="BLACK" style="-fx-background-color: green;" text="Navigate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <JFXButton onAction="#onResetPressed" ripplerFill="BLACK" style="-fx-background-color: #ef5350;" text="Clear Path" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <Label fx:id="exceptionText" prefHeight="50.0" prefWidth="300.0" text="" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Label prefHeight="30.0" prefWidth="125.0" text="Current Waypoints:" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <JFXButton onAction="#btGeneratePathPressed" ripplerFill="BLACK" style="-fx-background-color: green;" text="Navigate" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <JFXButton onAction="#onResetPressed" ripplerFill="BLACK" style="-fx-background-color: #ef5350;" text="Clear Path" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Label fx:id="exceptionText" prefHeight="50.0" prefWidth="300.0" text="" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <JFXButton fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #2196f3;" text="Search" GridPane.columnIndex="3">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </JFXButton>
-            <JFXTextField prefWidth="200.0" promptText="Search" GridPane.columnSpan="3" GridPane.valignment="BOTTOM" />
-            <JFXListView fx:id="waypointList" prefHeight="302.0" prefWidth="300.0" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+            <JFXTextField prefHeight="64.0" prefWidth="225.0" promptText="Search" GridPane.columnSpan="3" GridPane.valignment="BOTTOM" />
+            <JFXListView fx:id="waypointList" prefHeight="302.0" prefWidth="300.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
          </children>
       </GridPane>
    </children>
