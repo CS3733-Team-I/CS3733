@@ -111,7 +111,7 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
-                waypointListView.getItems().clear();
+//                waypointListView.getItems().clear();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
                     for (String direction : directionSegment) {
@@ -126,7 +126,7 @@ public class PathfindingSidebarController extends ScreenController {
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
-            currentNodes.clear();
+//            currentNodes.clear();
         }
     }
 
@@ -231,7 +231,7 @@ public class PathfindingSidebarController extends ScreenController {
 
         JFXButton btRemoveWaypoint = new JFXButton("x");
         btRemoveWaypoint.setStyle("-fx-background-color: #ff000e;"+
-                "-fx-font-size: 12pt; "+
+                "-fx-font-size: 16pt; "+
                 "-fx-font-weight:bold; "+
                 "-fx-background-radius: 3em; ");
 //            btRemoveWaypoint.setGraphic(removeIconView);
@@ -271,8 +271,9 @@ public class PathfindingSidebarController extends ScreenController {
                 "-fx-font-size: 12pt; ");
         JFXButton btNewWayPoint = new JFXButton("+");
         btNewWayPoint.setStyle("-fx-background-color: #00ff02;"+
-                "-fx-font-size: 12pt; "+
-                "-fx-font-weight:bold; "+
+                "-fx-font-size: 16pt; "+
+                "-fx-font-weight: bold; "+
+                "-fx-font-weight: 900;"+
                 "-fx-background-radius: 3em; ");
         btNewWayPoint.setPrefHeight(8);
         btNewWayPoint.setPrefWidth(8);

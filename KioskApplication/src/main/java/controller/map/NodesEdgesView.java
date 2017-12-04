@@ -17,6 +17,7 @@ import java.util.List;
 public class NodesEdgesView extends AnchorPane {
     private ObservableList<Node> nodesList;
     private ObservableList<Edge> edgesList;
+    private ObservableList<Edge> PathList;
 
     private HashMap<Node, NodeView> nodeViewsMap;
     private HashMap<Edge, EdgeView> edgeViewsMap;
@@ -49,6 +50,7 @@ public class NodesEdgesView extends AnchorPane {
 
         nodesList = FXCollections.observableArrayList();
         edgesList = FXCollections.observableArrayList();
+        PathList = FXCollections.observableArrayList();
 
         this.parent = parent;
 
@@ -87,6 +89,35 @@ public class NodesEdgesView extends AnchorPane {
                         else
                             view.setOpacity(0.2);
 
+                        this.edgeViewsMap.put(edge, view);
+                        this.edgesView.getChildren().add(view);
+                    }
+                } else if (listener.wasRemoved()) {
+                    for (Edge edge: listener.getRemoved()) {
+                        EdgeView view = this.edgeViewsMap.get(edge);
+                        this.edgeViewsMap.remove(edge);
+                        this.edgesView.getChildren().remove(view);
+                    }
+                }
+            }
+        });
+
+        PathList.addListener((ListChangeListener<Edge>) listener -> {
+            MapEntity map = MapEntity.getInstance();
+
+            while (listener.next()) {
+                if (listener.wasAdded()) {
+                    for (Edge edge : listener.getAddedSubList()) {
+                        Node node1 = map.getNode(edge.getNode1ID());
+                        Node node2 = map.getNode(edge.getNode2ID());
+                        EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                                new Point2D(node2.getXcoord(), node2.getYcoord()));
+
+                        if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
+                            view.setOpacity(0.95);
+                        else
+                            view.setOpacity(0.2);
+                        view.setStyle("-fx-background-color: #0c00ff;");
                         this.edgeViewsMap.put(edge, view);
                         this.edgesView.getChildren().add(view);
                     }
@@ -148,7 +179,7 @@ public class NodesEdgesView extends AnchorPane {
             parent.clearMap();
 
             for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
-                drawEdgesOnMap(segment);
+                PathList.addAll(segment);
             }
 
             drawNodesOnMap(parent.getPath().getWaypoints());
