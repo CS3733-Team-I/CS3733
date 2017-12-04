@@ -5,6 +5,7 @@ import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import org.junit.After;
 import org.junit.Before;
 import utility.node.NodeBuilding;
@@ -400,9 +401,20 @@ public class TestPathfinder {
     @Test
     public void testFindPathBeam() {
         SearchAlgorithm alg = new Beam();
-
+        SystemSettings.getInstance().setBeamWidth("4");
         testFindPath(alg);
     }
+
+  /*  @Test
+    public void testingerrorfound(){
+        SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("2");
+        try{
+       alg.findPath(n63,n10);}
+        catch(PathfinderException e){
+        System.out.println("No path");
+        }
+    }*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////       Best First Tests       /////////////////////////////////////////

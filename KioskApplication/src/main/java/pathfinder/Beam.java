@@ -88,9 +88,15 @@ public class Beam implements SearchAlgorithm {
      * @return  An estimate of the distance between node1 and node2.
      */
     private int heuristic(PathfinderNode node1, PathfinderNode node2){
+
         double xDistance = node1.getNode().getXcoord() - node2.getNode().getXcoord();
         double yDistance = node1.getNode().getYcoord() - node2.getNode().getYcoord();
-        return (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        int totaldistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        // if the distance is 0 but the node is not the same then the current node is on a different floor
+        if (totaldistance==0&&!node1.getNode().getNodeID().equals(node2.getNode().getNodeID()) ){
+            totaldistance = totaldistance+40;
+        }
+        return totaldistance;
     }
 
     /**
@@ -135,16 +141,16 @@ public class Beam implements SearchAlgorithm {
             }
         }
         else{// go through and compare heristic values
-        String minIndex = "";
-        Set<String> scores_set = scores.keySet();
-        Iterator<String> scores_it = scores_set.iterator();
-        Integer minvalue = heuristic(scores.get(scores_it.next()),endnode);
-        minIndex = scores_it.next();
+          String minIndex = scores.entrySet().iterator().next().getKey();
+        Integer minvalue = heuristic(scores.get(minIndex),endnode);
+        //minIndex = scores_it.next();
             for (String key: scores.keySet()){
-              //int h =  ;
-            if (heuristic(scores.get(key),endnode) < minvalue)
+              int h = heuristic(scores.get(key),endnode);
+            if (h <= minvalue){
                 // herestic is lower than minvalue than set that one to minindex
+                minvalue = h;
                 minIndex = key;
+            }
         }
         return minIndex;}
         return "";
