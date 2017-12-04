@@ -1,5 +1,6 @@
 package entity;
 
+import controller.map.PathView;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.scene.shape.Polyline;

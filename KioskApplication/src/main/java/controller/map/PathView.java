@@ -1,11 +1,14 @@
 package controller.map;
 
 import database.objects.Edge;
+import javafx.animation.PathTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -43,6 +46,16 @@ public class PathView extends AnchorPane {
 
         AnchorPane.setLeftAnchor(container, start.getX());
         AnchorPane.setTopAnchor(container, start.getY());
+
+        Circle circle = new Circle(500);
+        circle.setStyle("-fx-background-color: #ffffff;");
+
+        PathTransition navigationTransition = new PathTransition();
+        navigationTransition.setNode(circle);
+        navigationTransition.setDuration(Duration.seconds(3));
+        navigationTransition.setPath(line);
+        navigationTransition.setCycleCount(PathTransition.INDEFINITE);
+        navigationTransition.play();
     }
 
     public Point2D getStart() {

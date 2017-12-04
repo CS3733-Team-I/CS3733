@@ -15,6 +15,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Polyline;
 import javafx.util.Duration;
 
@@ -34,6 +35,8 @@ public class PathWaypointView extends AnchorPane {
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
+
+    private javafx.scene.shape.Path jfxPath;
 
     MapController parent;
 
@@ -81,6 +84,18 @@ public class PathWaypointView extends AnchorPane {
                     for (Edge edge : listener.getAddedSubList()) {
                         Node node1 = map.getNode(edge.getNode1ID());
                         Node node2 = map.getNode(edge.getNode2ID());
+//                        MoveTo moveTo1 = new MoveTo(node1.getXcoord(), node1.getYcoord());
+//                        MoveTo moveTo2 = new MoveTo(node2.getXcoord(), node2.getYcoord());
+//
+//                        if(jfxPath == null) {
+//                            this.jfxPath = new javafx.scene.shape.Path(moveTo1, moveTo2);
+//                        }
+//                        else {
+//                            jfxPath.getElements().addAll(moveTo1, moveTo2);
+//                        }
+//                        jfxPath.setStyle("-fx-background-color: #0026ff;");
+//                        jfxPath.setStrokeWidth(20);
+
                         PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
                                 new Point2D(node2.getXcoord(), node2.getYcoord()));
 
@@ -89,7 +104,10 @@ public class PathWaypointView extends AnchorPane {
                         else
                             pathview.setOpacity(0.2);
                         this.pathViewsMap.put(edge, pathview);
-                        this.getChildren().add(pathview);
+//                        if(!getChildren().contains(jfxPath)) {
+//                            this.getChildren().add(jfxPath);
+//                        }
+                        getChildren().add(pathview);
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {
@@ -135,29 +153,25 @@ public class PathWaypointView extends AnchorPane {
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);
         }
-
-        Circle circle = new Circle(30);
-        circle.setStyle("-fx-background-color: #ffffff;");
-
-        PathTransition navigationTransition = new PathTransition();
-        navigationTransition.setNode(circle);
-        navigationTransition.setDuration(Duration.seconds(3));
-        navigationTransition.setPath(getPathPolyline());
-        navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-        navigationTransition.play();
     }
 
     public Polyline getPathPolyline() {
         Polyline polyline = new Polyline();
         for(PathView pathView : pathViewsMap.values()) {
-            polyline.getPoints().addAll(new Double[] {
-                    pathView.getStart().getX(), pathView.getStart().getY(),
-                    pathView.getEnd().getX(), pathView.getEnd().getY(),
-            });
+            if(!polyline.contains(pathView.getStart())) {
+                polyline.getPoints().addAll(new Double[] {
+                        pathView.getStart().getX(), pathView.getStart().getY(),
+                });
+            }
+            if(!polyline.contains(pathView.getEnd())) {
+                polyline.getPoints().addAll(new Double[] {
+                        pathView.getEnd().getX(), pathView.getEnd().getY(),
+                });
+            }
+
         }
         polyline.setStyle("-fx-background-color: #ffffff;"+
         "-fx-stroke-width: 10px;");
-        getChildren().add(polyline);
         return polyline;
     }
 
