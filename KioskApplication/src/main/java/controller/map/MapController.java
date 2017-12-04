@@ -57,7 +57,7 @@ public class MapController {
     @FXML private StackPane stackPane;
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
-    @FXML private AnchorPane waypointPane;
+    @FXML private AnchorPane pathWaypointContainer;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
@@ -68,19 +68,20 @@ public class MapController {
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
-    private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
+
+    private PathWaypointView pathWaypointView;
 
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
 
-    private LinkedList<MenuButton> waypoints;
+
 
     private MainWindowController parent = null;
 
     public MapController() {
-        waypoints = new LinkedList<>();
+
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
     }
 
@@ -117,7 +118,7 @@ public class MapController {
      * @return the path
      */
     public Path getPath() {
-        return currentPath;
+        return this.pathWaypointView.getPath();
     }
 
     /**
@@ -128,10 +129,15 @@ public class MapController {
         if (path != null) {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
+            pathWaypointView.drawPath(path);
         }
+    }
 
-        this.currentPath = path;
-        nodesEdgesView.drawPath();
+    /**
+     * Clear the path drawn
+     */
+    public void clearPath() {
+        this.pathWaypointView.clearPath();
     }
 
     public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
@@ -183,15 +189,14 @@ public class MapController {
         this.showEdgesBox.setDisable(false);
 
         nodesEdgesView.reloadDisplay();
+        pathWaypointView.reloadDisplay();
     }
 
     /**
      * Clear the map of waypoints, nodes, and edges
      */
     public void clearMap() {
-        this.waypointPane.getChildren().clear();
-        this.waypoints.clear();
-
+        this.pathWaypointView.clearAll();
         this.nodesEdgesView.clear();
     }
 
@@ -200,44 +205,11 @@ public class MapController {
      * @param location waypoint location
      */
     public void addWaypoint(Point2D location, Node node) {
-        try {
-            // put the pin and set it's info
-            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
-
-            // TODO magic numbers
-            wayPointObject.setTranslateX(location.getX() - 24);
-            wayPointObject.setTranslateY(- 60 + location.getY() - 60);
-            wayPointObject.setStyle("-fx-background-color: #ff1d13;");
-            wayPointObject.setAccessibleText(node.getNodeID());
-            TranslateTransition wayPointPutTransition = new TranslateTransition();
-            wayPointPutTransition.setDuration(Duration.millis(400));
-            wayPointPutTransition.setNode(wayPointObject);
-
-            wayPointPutTransition.setToY(location.getY() - 60);
-            //TODO handle waypoint option
-            Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(wayPointObject, nodeInfo);
-            nodeInfo.setStyle("-fx-font-weight:bold; " +
-                    "-fx-background-color: #ff1d13;" +
-            "-fx-font-size: 16pt; ");
-            waypoints.add(wayPointObject);
-            waypointPane.getChildren().add(wayPointObject);
-            wayPointPutTransition.play();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.pathWaypointView.addWaypoint(location, node);
     }
 
     public void removeWaypoint(Node node) {
-        Iterator<MenuButton> waypointIterator = waypoints.iterator();
-        while(waypointIterator.hasNext()) {
-            MenuButton removedWaypoint = waypointIterator.next();
-            if(removedWaypoint.getAccessibleText().equals(node.getNodeID())) {
-                waypointPane.getChildren().remove(removedWaypoint);
-                waypointIterator.remove();
-                break;
-            }
-        }
+        this.pathWaypointView.removeWaypoint(node);
     }
     /**
      * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
@@ -271,7 +243,7 @@ public class MapController {
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
 
-        nodesEdgesView.drawPath();
+        pathWaypointView.reloadDisplay();
 
         miniMapController.switchFloor(floorImageURL);
     }
@@ -322,12 +294,14 @@ public class MapController {
      */
     @FXML
     protected void initialize() {
-        waypointPane.setPickOnBounds(false);
-
         floorSelector.getItems().addAll(NodeFloor.values());
 
         miniMapController = new MiniMapController(this);
 
+        //initialize paths and waypoints view
+        pathWaypointView = new PathWaypointView(this);
+        pathWaypointView.setPickOnBounds(false);
+        //initialize nodes and egdes view
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
@@ -338,6 +312,9 @@ public class MapController {
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
         nodesEdgesContainer.setMouseTransparent(true);
+
+        pathWaypointContainer.getChildren().add(pathWaypointView);
+        pathWaypointContainer.setMouseTransparent(true);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
@@ -447,6 +424,7 @@ public class MapController {
         // Load the image and reload our display based on the new floor
         loadFloor(floor);
         nodesEdgesView.reloadDisplay();
+        pathWaypointView.reloadDisplay();
 
         // Notify parent
         parent.onMapFloorChanged(floor);
@@ -513,16 +491,15 @@ public class MapController {
         List<javafx.scene.Node> visibleNodes = new ArrayList<>();
         Bounds paneBounds = pane.localToScene(pane.getBoundsInParent());
         if (pane.getContent() instanceof Parent) {
-            for (javafx.scene.Node n : (waypointPane).getChildrenUnmodifiable()) {
+            for (javafx.scene.Node n : (pathWaypointView).getChildrenUnmodifiable()) {
                 Bounds nodeBounds = n.localToScene(n.getBoundsInLocal());
                 //only put in if it's a waypoint
                 if (paneBounds.intersects(nodeBounds)) {
-                    visibleNodes.add(n);
-//                    if(n.getAccessibleText() != null) {
-//                        if(n.getAccessibleText().equals("waypoint")) {
-//
-//                        }
-//                    }
+                    if(n.getAccessibleHelp() != null) {
+                        if(n.getAccessibleHelp().equals("waypoint")) {
+                            visibleNodes.add(n);
+                        }
+                    }
                 }
             }
         }

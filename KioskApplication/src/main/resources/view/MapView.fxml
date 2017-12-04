@@ -20,7 +20,7 @@
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="pathWaypointContainer" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>
          </content>
