@@ -26,16 +26,22 @@ public class PathWaypointView extends AnchorPane {
     private ObservableList<MenuButton> waypointList;
     protected Path currentPath;
 
-    private HashMap<Node, NodeView> nodeViewsMap;
-    private HashMap<Edge, EdgeView> edgeViewsMap;
+    private HashMap<Node, NodeView> wayPointViewsMap;
+    private HashMap<Edge, PathView> pathViewsMap;
+
+    private AnchorPane pathView;
+    private AnchorPane wayPointView;
 
     MapController parent;
 
     public PathWaypointView(MapController parent){
         this.parent = parent;
 
-        nodeViewsMap = new HashMap<>();
-        edgeViewsMap = new HashMap<>();
+        wayPointView = new AnchorPane();
+        wayPointViewsMap = new HashMap<>();
+
+        pathView = new AnchorPane();
+        pathViewsMap = new HashMap<>();
 
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
@@ -69,21 +75,20 @@ public class PathWaypointView extends AnchorPane {
                     for (Edge edge : listener.getAddedSubList()) {
                         Node node1 = map.getNode(edge.getNode1ID());
                         Node node2 = map.getNode(edge.getNode2ID());
-                        EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                        PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
                                 new Point2D(node2.getXcoord(), node2.getYcoord()));
 
                         if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                            view.setOpacity(0.95);
+                            pathview.setOpacity(0.95);
                         else
-                            view.setOpacity(0.2);
-                        view.setStyle("-fx-background-color: #0c00ff;");
-                        this.edgeViewsMap.put(edge, view);
-                        this.getChildren().add(view);
+                            pathview.setOpacity(0.2);
+                        this.pathViewsMap.put(edge, pathview);
+                        this.getChildren().add(pathview);
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {
-                        EdgeView view = this.edgeViewsMap.get(edge);
-                        this.edgeViewsMap.remove(edge);
+                        PathView view = this.pathViewsMap.get(edge);
+                        this.pathViewsMap.remove(edge);
                         this.getChildren().remove(view);
                     }
                 }
