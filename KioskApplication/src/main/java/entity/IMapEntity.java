@@ -1,5 +1,6 @@
 package entity;
 
+import database.connection.NotFoundException;
 import database.objects.Node;
 import database.utility.DatabaseException;
 
@@ -10,7 +11,7 @@ public interface IMapEntity {
 
     public void editNode(Node n) throws DatabaseException;
 
-    public Node getNode(String s);
+    public Node getNode(String s) throws NotFoundException;
 
     public LinkedList<Node> getAllNodes();
 

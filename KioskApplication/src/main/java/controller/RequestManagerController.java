@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -242,28 +243,34 @@ public class RequestManagerController extends ScreenController {
 
     //Creates what goes into the popup when a listview cell is selected
     public void initializePopup(String requestID){
-        Request request = r.getRequest(requestID);
-        Label id = new Label(requestID);
-        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
-        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
-        Label locationOfRequest = new Label(location);
-        Label extraField;
-        RequestType RT = r.checkRequestType(requestID);
-        switch (RT){
-            case INTERPRETER:
-                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
-                extraField = new Label("Language: "+language);
-                break;
-            default: //security
-                int priority = r.getSecurityRequest(requestID).getPriority();
-                extraField = new Label("Priority: "+ priority);
-                break;
-        }
-        VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest, extraField);
+        try {
+            Request request = r.getRequest(requestID);
+            Label id = new Label(requestID);
+            String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+            Label employee = new Label("Employee: ");
+            Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
+            Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+            Label locationOfRequest = new Label(location);
+            Label extraField;
+            RequestType RT = r.checkRequestType(requestID);
+            switch (RT) {
+                case INTERPRETER:
+                    String language = r.getInterpreterRequest(requestID).getLanguage().toString();
+                    extraField = new Label("Language: " + language);
+                    break;
+                default: //security
+                    int priority = r.getSecurityRequest(requestID).getPriority();
+                    extraField = new Label("Priority: " + priority);
+                    break;
+            }
+            VBox vbox = new VBox(id, employee, assigner, typeOfRequest, locationOfRequest, extraField);
 
-        popup = new JFXPopup(vbox);
+            popup = new JFXPopup(vbox);
+        }
+        catch(NotFoundException exception){
+            exception.printStackTrace();
+            //TODO: add actual handling
+        }
     }
 
     //Method to display popup information when a list view cell is selected

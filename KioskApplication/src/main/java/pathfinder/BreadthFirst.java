@@ -17,7 +17,7 @@ public class BreadthFirst implements SearchAlgorithm{
      * @throws PathfinderException if there are errors
      */
     @Override
-    public LinkedList<Edge> findPath(Node startNode, Node endNode)throws PathfinderException{
+    public LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchairAccessible)throws PathfinderException{
             MapEntity map = MapEntity.getInstance();
 
             StartNode startingNode = new StartNode(startNode);
@@ -39,12 +39,12 @@ public class BreadthFirst implements SearchAlgorithm{
                 return current.buildPath();
             }
             else{
-                if(getAndCheckForConnectedNodes(explored,current,map).isEmpty()){
+                if(getAndCheckForConnectedNodes(explored, current, wheelchairAccessible).isEmpty()){
                     // no path is found throw excepetion
                 }
                 else{
                     // add connected nodes not explored in queue
-                    queue.addAll(getAndCheckForConnectedNodes(explored,current,map));
+                    queue.addAll(getAndCheckForConnectedNodes(explored, current, wheelchairAccessible));
                 }
             }
             // add to explored list
@@ -62,9 +62,9 @@ public class BreadthFirst implements SearchAlgorithm{
      * @param mapEntity
      * @return
      */
-    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(ArrayList<PathfinderNode> listExplored, PathfinderNode pathfinderNode, boolean wheelchairAccessible){
         // initalize connected nodes list from current node
-        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
+        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(wheelchairAccessible);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
         holder.addAll(connectedNodes);
         for(PathfinderNode pathfinderNode1: connectedNodes){

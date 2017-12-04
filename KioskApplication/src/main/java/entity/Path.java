@@ -1,5 +1,6 @@
 package entity;
 
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import utility.node.NodeFloor;
@@ -96,7 +97,13 @@ public class Path {
         nodes.add(segmentStart);
 
         for (Edge e : segment) {
-            nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+            try {
+                nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+            }
+            catch (NotFoundException exception){
+                exception.printStackTrace();
+                //TODO: add actual handling
+            }
         }
         return nodes;
     }
