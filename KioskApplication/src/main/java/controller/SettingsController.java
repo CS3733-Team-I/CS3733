@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import utility.csv.CsvFileUtil;
 import utility.node.NodeFloor;
@@ -38,9 +35,12 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
     @FXML private RadioButton beamButton;
+    @FXML private RadioButton bestFirstButton;
 
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
+
+    @FXML private TextField beamWidth;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
 
@@ -60,6 +60,8 @@ public class SettingsController extends ScreenController {
         dfsButton.setUserData("DFS");
         beamButton.setToggleGroup(searchAlgToggleGroup);
         beamButton.setUserData("Beam");
+        bestFirstButton.setToggleGroup(searchAlgToggleGroup);
+        bestFirstButton.setUserData("BestFS");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
@@ -96,6 +98,13 @@ public class SettingsController extends ScreenController {
     void onSearchAlgorithmSelected(){
         SystemSettings systemSettings = SystemSettings.getInstance();
         systemSettings.setAlgorithm(searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
+    }
+
+    @FXML
+    void beamWidthSelected (){
+        // check if it is a text or
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        systemSettings.setBeamWidth(beamWidth.getText());
     }
 
     @FXML
