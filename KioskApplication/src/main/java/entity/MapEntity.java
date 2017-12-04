@@ -89,35 +89,23 @@ public class MapEntity implements IMapEntity {
 
 
     @Override
-    public Node getNode(String s) {
+    public Node getNode(String s) throws NotFoundException {
         for (NodeFloor floor : floors.keySet()) {
-            Node thisNode;
-            try {
-                thisNode = floors.get(floor).getNode(s);
-            }
-            catch(NotFoundException exception){
-                //TODO: add actual handling
-                thisNode = null;
-            }
+            Node thisNode = floors.get(floor).getNode(s);
             return thisNode;
         }
 
         try {
-            Node node;
-            try {
-                node = dbController.getNode(s);
-            }
-            catch (NotFoundException exception){
-                //TODO: add actual handling
-                node = null;
-            }
+            Node node = dbController.getNode(s);
+
             if (node != null) {
                 NodeFloor f = node.getFloor();
-                if(!floorExists(f)) addFloor(f);
+                if (!floorExists(f)) addFloor(f);
 
                 floors.get(f).insertNode(node);
             }
-        } catch (DatabaseException ex) {
+        }
+        catch (DatabaseException ex) {
             ex.printStackTrace();
         }
 
@@ -196,11 +184,16 @@ public class MapEntity implements IMapEntity {
 
         Collection<Edge> allEdges = edges.values();
         for (Edge edge : allEdges) {
-            Node node1 = getNode(edge.getNode1ID());
-            Node node2 = getNode(edge.getNode2ID());
+            try {
+                Node node1 = getNode(edge.getNode1ID());
+                Node node2 = getNode(edge.getNode2ID());
 
-            if ((floor == node1.getFloor()) && (floor == node2.getFloor())) {
-                edgesOnFloor.add(edge);
+                if ((floor == node1.getFloor()) && (floor == node2.getFloor())) {
+                    edgesOnFloor.add(edge);
+                }
+            }
+            catch(NotFoundException exception){
+                //TODO: add actual handling
             }
         }
 
@@ -316,10 +309,22 @@ public class MapEntity implements IMapEntity {
         }
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
-            if(edge.getNode1ID().equals(node.getNodeID()))
-                connectedNodes.add(getNode(edge.getNode2ID()));
-            else if(edge.getNode2ID().equals(node.getNodeID()))
-                connectedNodes.add(getNode(edge.getNode1ID()));
+            if(edge.getNode1ID().equals(node.getNodeID())){
+                try {
+                    connectedNodes.add(getNode(edge.getNode2ID()));
+                }
+                catch (NotFoundException exception){
+                    //TODO: add actual handling
+                }
+            }
+            else if(edge.getNode2ID().equals(node.getNodeID())){
+                try {
+                    connectedNodes.add(getNode(edge.getNode1ID()));
+                }
+                catch(NotFoundException exception){
+                    //TODO: add actual handling
+                }
+            }
         }
         return connectedNodes;
     }
