@@ -35,7 +35,6 @@ public class MapEntity implements IMapEntity {
         return MapEntitySingleton._instance;
     }
 
-
     /**
      * Clears the cached nodes/edges and then adds all the existing nodes and edges from the  database.
      */
