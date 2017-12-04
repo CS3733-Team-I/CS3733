@@ -62,7 +62,9 @@ public class PathWaypointView extends AnchorPane {
                         WaypointView waypointView = new WaypointView(this, addedNode);
 
                         this.wayPointViewsMap.put(addedNode, waypointView);
+
                         this.getChildren().add(waypointView);
+                        waypointView.playWaypointPutTransition();
                     }
                 }
             }

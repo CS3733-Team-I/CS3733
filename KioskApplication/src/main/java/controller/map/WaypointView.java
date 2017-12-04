@@ -21,13 +21,15 @@ public class WaypointView extends StackPane {
 
     Node node;
 
+    TranslateTransition waypointPutTransition;
+
     @FXML private MenuButton waypoint;
     @FXML private StackPane container;
     @FXML private ImageView imageView;
 
     public WaypointView(PathWaypointView parent, Node node) {
         this.parent = parent;
-
+        waypointPutTransition = new TranslateTransition();
         this.node = node;
 
         try {
@@ -50,10 +52,10 @@ public class WaypointView extends StackPane {
         waypoint.setAccessibleText(node.getNodeID());
         waypoint.setAccessibleHelp("waypoint");
 
-        TranslateTransition wayPointPutTransition = new TranslateTransition();
-        wayPointPutTransition.setDuration(Duration.millis(400));
-        wayPointPutTransition.setNode(waypoint);
-        wayPointPutTransition.setToY(node.getYcoord() - 60);
+        waypointPutTransition.setDuration(Duration.millis(400));
+        waypointPutTransition.setNode(waypoint);
+        waypointPutTransition.setFromY(waypoint.getLayoutY()-60);
+        waypointPutTransition.setToY(waypoint.getLayoutY());
 
         //TODO handle waypoint option
         Tooltip nodeInfo = new Tooltip(node.getLongName());
@@ -66,4 +68,8 @@ public class WaypointView extends StackPane {
         container.setLayoutY(node.getYcoord()- 60);
     }
 
+
+    public void playWaypointPutTransition() {
+        waypointPutTransition.play();
+    }
 }
