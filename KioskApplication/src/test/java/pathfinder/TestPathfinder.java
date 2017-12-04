@@ -285,13 +285,13 @@ public class TestPathfinder {
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n18,n19);
+        alg.findPath(n18,n19, false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testDeadEndException2DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n01,n19);
+        alg.findPath(n01,n19, false);
     }
 
     //Breadth first algorithm tests
@@ -403,7 +403,7 @@ public class TestPathfinder {
     public void testPathfinderException() throws PathfinderException{
         //test that the exception is thrown when there is a path but no connection
              SearchAlgorithm alg = new BreadthFirst();
-             alg.findPath(n02,n18);
+             alg.findPath(n02,n18, false);
     }
 
     //Test text directions
@@ -470,7 +470,7 @@ public class TestPathfinder {
         for(Node n1 : map.getAllNodes()) {
             for(Node n2 : map.getAllNodes()) {
                 try {
-                    path = alg.findPath(n1,n2);
+                    path = alg.findPath(n1,n2, false);
 
                     if(!isValidPath(n1,n2,path)) {
                         System.out.println("Not Valid Path\nStart: " + n1.getNodeID() + " End: " + n2.getNodeID());
