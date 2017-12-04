@@ -274,55 +274,6 @@ public class TestPathfinder {
     /////////////////////////////////////////         A_star Tests         /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Test //Tests a path with multiple waypoints
-    public void testMultipleWaypointAstar() {
-
-        pathfinder = new Pathfinder(); //defaults to A-star
-
-        LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n12);
-        nodes.add(n06);
-
-        Path multipath = null;
-        try {
-            multipath = pathfinder.generatePath(nodes);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-
-        LinkedList<Edge> testPathSegment1 = new LinkedList<>();
-        testPathSegment1.add(map.getConnectingEdge(n01,n02));
-        testPathSegment1.add(map.getConnectingEdge(n02,n08));
-        testPathSegment1.add(map.getConnectingEdge(n08,n12));
-
-        LinkedList<Edge> testPathSegment2 = new LinkedList<>();
-        testPathSegment2.add(map.getConnectingEdge(n12,n13));
-        testPathSegment2.add(map.getConnectingEdge(n13,n14));
-        testPathSegment2.add(map.getConnectingEdge(n14,n10));
-        testPathSegment2.add(map.getConnectingEdge(n10,n04));
-        testPathSegment2.add(map.getConnectingEdge(n04,n05));
-        testPathSegment2.add(map.getConnectingEdge(n05,n06));
-
-        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment1);
-        testPathEdges.add(testPathSegment2);
-
-        Path testMultipath = new Path(nodes, testPathEdges);
-
-        /*
-        System.out.println("Expected path:");
-        for(Edge edge: testMultipath.getEdges())
-            System.out.println("\t" + edge.getEdgeID());
-        System.out.println("Actual path:");
-        for(Edge edge: multipath.getEdges())
-            System.out.println("\t" + edge.getEdgeID());
-         */
-
-        assertTrue(multipath.equals(testMultipath));
-
-    }
-
     @Test //Test the FindPath method by testing all possible paths
     public void testFindPathAstar(){
 
@@ -332,13 +283,13 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testDeadEndException1Astar() throws PathfinderException{
+    public void testPathfinderException1Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
         alg.findPath(n18,n19);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testDeadEndException2Astar() throws PathfinderException{
+    public void testPathfinderException2Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
         alg.findPath(n01,n19);
     }
@@ -346,8 +297,6 @@ public class TestPathfinder {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////       DepthFirst Tests       /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //TODO //Tests a path with multiple waypoints
 
     @Test //Test the FindPath method by testing all possible paths
     public void testFindPathDF() throws PathfinderException{
@@ -358,13 +307,13 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testDeadEndException1DF() throws PathfinderException{
+    public void testPathfinderException1DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
         alg.findPath(n18,n19);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testDeadEndException2DF() throws PathfinderException{
+    public void testPathfinderException2DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
         alg.findPath(n01,n19);
     }
@@ -373,13 +322,23 @@ public class TestPathfinder {
     /////////////////////////////////////////      BreadthFirst Tests      /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //TODO //Tests a path with multiple waypoints
-
     @Test //Test the FindPath method by testing all possible paths
     public void testFindPathBF() {
         SearchAlgorithm alg = new BreadthFirst();
 
         testFindPath(alg);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1BF() throws PathfinderException{
+        SearchAlgorithm alg = new BreadthFirst();
+        alg.findPath(n18,n19);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2BF() throws PathfinderException{
+        SearchAlgorithm alg = new BreadthFirst();
+        alg.findPath(n01,n19);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,6 +352,18 @@ public class TestPathfinder {
         testFindPath(alg);
     }
 
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1D() throws PathfinderException{
+        SearchAlgorithm alg = new Dijkstra();
+        alg.findPath(n18,n19);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2D() throws PathfinderException{
+        SearchAlgorithm alg = new Dijkstra();
+        alg.findPath(n01,n19);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////          Beam Tests          /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -404,6 +375,18 @@ public class TestPathfinder {
         testFindPath(alg);
     }
 
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1Beam() throws PathfinderException{
+        SearchAlgorithm alg = new Beam();
+        alg.findPath(n18,n19);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2Beam() throws PathfinderException{
+        SearchAlgorithm alg = new Beam();
+        alg.findPath(n01,n19);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////       Best First Tests       /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -412,6 +395,18 @@ public class TestPathfinder {
     public void testFindPathBestFirst(){
         SearchAlgorithm alg = new BestFirst();
         testFindPath(alg);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1BestFirst() throws PathfinderException{
+        SearchAlgorithm alg = new BestFirst();
+        alg.findPath(n18,n19);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2BestFirst() throws PathfinderException{
+        SearchAlgorithm alg = new BestFirst();
+        alg.findPath(n01,n19);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,8 +427,59 @@ public class TestPathfinder {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////   Multiple Waypoint Tests    /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test //Tests a path with multiple waypoints
+    public void testMultipleWaypoint() {
+
+        pathfinder = new Pathfinder();
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(n01);
+        nodes.add(n12);
+        nodes.add(n06);
+
+        Path multipath = null;
+        try {
+            multipath = pathfinder.generatePath(nodes);
+        } catch (PathfinderException e) {
+            e.printStackTrace();
+        }
+
+        //TODO use isValidPath() instead of building a valid path here
+
+        LinkedList<Edge> testPathSegment1 = new LinkedList<>();
+        testPathSegment1.add(map.getConnectingEdge(n01,n02));
+        testPathSegment1.add(map.getConnectingEdge(n02,n08));
+        testPathSegment1.add(map.getConnectingEdge(n08,n12));
+
+        LinkedList<Edge> testPathSegment2 = new LinkedList<>();
+        testPathSegment2.add(map.getConnectingEdge(n12,n13));
+        testPathSegment2.add(map.getConnectingEdge(n13,n14));
+        testPathSegment2.add(map.getConnectingEdge(n14,n10));
+        testPathSegment2.add(map.getConnectingEdge(n10,n04));
+        testPathSegment2.add(map.getConnectingEdge(n04,n05));
+        testPathSegment2.add(map.getConnectingEdge(n05,n06));
+
+        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
+        testPathEdges.add(testPathSegment1);
+        testPathEdges.add(testPathSegment2);
+
+        Path testMultipath = new Path(nodes, testPathEdges);
+
+        assertTrue(multipath.equals(testMultipath));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////         Other Tests          /////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Helper method to check if a path is valid for multi waypoint navigation
+    private boolean isValidPath(LinkedList<Node> nodes, LinkedList<Edge> path) {
+        //TODO implement this
+        return false;
+    }
 
     //Helper method to check if a path is valid
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
