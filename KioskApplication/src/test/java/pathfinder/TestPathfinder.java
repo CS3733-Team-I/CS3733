@@ -378,13 +378,13 @@ public class TestPathfinder {
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testPathfinderException1Beam() throws PathfinderException{
         SearchAlgorithm alg = new Beam();
-        alg.findPath(n18,n19);
+        alg.findPath(n18,n19,false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testPathfinderException2Beam() throws PathfinderException{
         SearchAlgorithm alg = new Beam();
-        alg.findPath(n01,n19);
+        alg.findPath(n01,n19,false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
