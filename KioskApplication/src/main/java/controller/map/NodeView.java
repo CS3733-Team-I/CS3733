@@ -2,6 +2,7 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tooltip;
@@ -46,9 +47,6 @@ public class NodeView extends StackPane {
 
     @FXML
     public void initialize() {
-        circle.setMouseTransparent(false);
-        circle.setPickOnBounds(false);
-
         circle.setOnMouseClicked(e -> {
             parent.mapNodeClicked(node);
         });
@@ -63,11 +61,18 @@ public class NodeView extends StackPane {
             for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(node)) {
                 nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
             }
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(this.circle, nodeInfo);
         } else {
             Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(this.circle, nodeInfo);
         }
+
+        this.circle.setOnDragDetected(this::dragDetected);
+        this.circle.setOnDragOver(this::dragOver);
+        this.circle.setOnDragDropped(this::dragDropped);
+        this.circle.setOnDragDone(this::dragDone);
+        this.circle.setOnDragEntered(this::dragEntered);
+        this.circle.setOnDragExited(this::dragExited);
     }
 
     /**
@@ -103,20 +108,8 @@ public class NodeView extends StackPane {
         return selectionType;
     }
 
-    @FXML
     private void dragDetected(MouseEvent e) {
         if (this.editable) {
-            // TODO do this in some different way, parent.controllers cannot be public
-            /*if (!parent.controllers.get(ApplicationScreen.MAP_BUILDER).isNewNodeEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error creating connection");
-                alert.setHeaderText("Save new node before creating connections");
-                alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
-                alert.showAndWait();
-                event.consume();
-                return;
-            }*/
-
             if (node.getNodeType() == NodeType.ELEV) {
                 // do something
                 // parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
@@ -128,48 +121,56 @@ public class NodeView extends StackPane {
             db.setContent(content);
 
             circle.setFill(Color.GREEN);
+            e.consume();
         }
     }
 
-    @FXML
+    private void dragOver(DragEvent event) {
+        if (this.editable && event.getDragboard().hasString()) {
+            event.acceptTransferModes(TransferMode.LINK);
+            event.consume();
+        }
+    }
+
     private void dragDone(DragEvent e) {
-        circle.setFill(Color.GRAY);
-
-        parent.mapNodeClicked(node);
+        if (this.editable) {
+            setSelectionType(selectionType);
+            parent.mapNodeClicked(node);
+            e.consume();
+        }
     }
 
-    @FXML
     private void dragDropped(DragEvent e) {
-        // TODO Figure out how to broadcast a message about drag/drop being done
-        // parent.controllers.get(ApplicationScreen.MAP_BUILDER).addConnectionByNodes(nodeView.getAccessibleText(), event.getDragboard().getString());
-    }
+        if (this.editable) {
+            // TODO Figure out how to broadcast a message about drag/drop being done
+            // parent.controllers.get(ApplicationScreen.MAP_BUILDER).addConnectionByNodes(nodeView.getAccessibleText(), event.getDragboard().getString());
+            setSelectionType(selectionType);
 
-    @FXML
+            e.setDropCompleted(true);
+            e.consume();
+        }
+    }
     private void dragEntered(DragEvent event) {
-        if (event.getDragboard().hasString()) {
+        if (this.editable && event.getDragboard().hasString()) {
             if (event.getDragboard().getString().equals(node.getNodeID())) {
                 return;
             }
 
             circle.setFill(Color.DARKGREEN);
+            event.consume();
         }
     }
 
-    @FXML
     private void dragExited(DragEvent event) {
-        if (event.getDragboard().hasString()) {
-            if (event.getDragboard().getString().equals(node.getNodeID())) {
-                return;
+        if (this.editable) {
+            if (event.getDragboard().hasString()) {
+                if (event.getDragboard().getString().equals(node.getNodeID())) {
+                    return;
+                }
             }
-        }
 
-        circle.setFill(Color.GRAY);
-    }
-
-    @FXML
-    private void dragOver(DragEvent event) {
-        if (event.getDragboard().hasString()) {
-            event.acceptTransferModes(TransferMode.LINK);
+            setSelectionType(selectionType);
+            event.consume();
         }
     }
 }

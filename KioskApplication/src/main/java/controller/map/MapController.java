@@ -318,7 +318,6 @@ public class MapController {
         miniMapController = new MiniMapController(this);
 
         nodesEdgesView = new NodesEdgesView(this);
-        nodesEdgesView.setPickOnBounds(false);
 
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
@@ -326,7 +325,6 @@ public class MapController {
         AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
-        nodesEdgesContainer.setMouseTransparent(true);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));

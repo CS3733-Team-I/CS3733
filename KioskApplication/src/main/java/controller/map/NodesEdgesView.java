@@ -27,6 +27,8 @@ public class NodesEdgesView extends AnchorPane {
     MapController parent;
 
     public NodesEdgesView(MapController parent) {
+        this.setPickOnBounds(false);
+
         nodesView = new AnchorPane();
         nodesView.setPickOnBounds(false);
         nodeViewsMap = new HashMap<>();
@@ -37,7 +39,7 @@ public class NodesEdgesView extends AnchorPane {
         AnchorPane.setRightAnchor(nodesView, 0.0);
 
         edgesView = new AnchorPane();
-        nodesView.setPickOnBounds(false);
+        edgesView.setPickOnBounds(false);
         edgeViewsMap = new HashMap<>();
 
         AnchorPane.setTopAnchor(edgesView, 0.0);

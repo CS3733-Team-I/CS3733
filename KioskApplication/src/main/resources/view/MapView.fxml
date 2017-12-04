@@ -19,8 +19,8 @@
             <StackPane alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
-                  <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="nodesEdgesContainer" pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="waypointPane" pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>
          </content>

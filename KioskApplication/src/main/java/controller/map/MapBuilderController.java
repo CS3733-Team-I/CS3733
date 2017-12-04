@@ -347,6 +347,7 @@ public class MapBuilderController extends ScreenController {
                     getMapController().setNodeSelected(oldVal, NodeSelectionType.NORMAL);
             }
 
+            lvConnectedNodes.getItems().clear();
             if (newVal != null) {
                 if (observableChangedNodes.contains(newVal))
                     getMapController().setNodeSelected(newVal, NodeSelectionType.SELECTEDANDCHANGED);
@@ -358,8 +359,6 @@ public class MapBuilderController extends ScreenController {
                 }
 
                 updateNodeDisplay(NodeSelectionType.SELECTED);
-            } else {
-                lvConnectedNodes.getItems().clear();
             }
 
             if(newVal == null && newNode.get() == null) {
@@ -505,7 +504,6 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void resetScreen() {
-
         getMapController().setEditMode(true);
 
         getMapController().setAnchor(0, 450, 0, 0);
@@ -516,7 +514,7 @@ public class MapBuilderController extends ScreenController {
         getMapController().setEdgesVisible(true);
 
         // Set if the options box is visible
-        getMapController().setOptionsBoxVisible(false);
+        getMapController().setOptionsBoxVisible(true);
 
     }
 
