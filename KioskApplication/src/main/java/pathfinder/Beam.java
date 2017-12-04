@@ -4,11 +4,14 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class Beam implements SearchAlgorithm {
     /**
-     * beam first search
+     * beam search  TODO: expand this comment so it actually explains the algorithm
      * @param startNode node that the path should start at
      * @param endNode node that the path should end at
      * @return
@@ -26,9 +29,9 @@ public class Beam implements SearchAlgorithm {
         if(startingNode.getNode().getNodeID().equals(endNode.getNodeID()))
             return startingNode.buildPath();
         // a hash map is used to store nodes that have been visited
-          HashMap<String, PathfinderNode> closedList = new HashMap<>();
-         HashMap<String, PathfinderNode> beam = new HashMap<>();
-         HashMap<String, PathfinderNode> set = new HashMap<>();
+        HashMap<String, PathfinderNode> closedList = new HashMap<>();
+        HashMap<String, PathfinderNode> beam = new HashMap<>();
+        HashMap<String, PathfinderNode> set = new HashMap<>();
 
          // put start node in closesdlist and beam
         closedList.put(startingNode.getNode().getNodeID(), startingNode);
@@ -56,7 +59,7 @@ public class Beam implements SearchAlgorithm {
             // go through set and add to beam map
             while ((set.size() != 0) && (4 > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
-                  // for heuristicValue map
+                  // for heristicvalue map
                 for (String key : set.keySet()) {
                      heuristicValue.put(key, set.get(key));
                 }
@@ -138,7 +141,7 @@ public class Beam implements SearchAlgorithm {
                 return key;
             }
         }
-        else{// go through and compare heristic values
+        else{// go through and compare heuristic values
         String minIndex = "";
         Set<String> scores_set = scores.keySet();
         Iterator<String> scores_it = scores_set.iterator();
