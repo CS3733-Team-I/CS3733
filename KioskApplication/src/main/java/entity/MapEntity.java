@@ -277,7 +277,12 @@ public class MapEntity implements IMapEntity {
         return null;
     }
 
-    //Given a node, return a list of all adjacent nodes.
+    /**
+     * Given a node, return a list of all adjacent nodes.
+     * @param node
+     * @param wheelchairAccessible if true, exclude nodes connected by edges that a wheelchair can't access
+     * @return LinkedList of nodes accessible from this node
+     */
     public LinkedList<Node> getConnectedNodes(Node node, boolean wheelchairAccessible){
         ArrayList<Edge> edges = this.getEdges(node);
         if(wheelchairAccessible){
@@ -294,5 +299,14 @@ public class MapEntity implements IMapEntity {
                 connectedNodes.add(getNode(edge.getNode1ID()));
         }
         return connectedNodes;
+    }
+
+    /**
+     * Alternate call for getConnectedNodes.  If no wheelchair accessibility level is specified, default to false.
+     * @param node
+     * @return
+     */
+    public LinkedList<Node> getConnectedNodes(Node node){
+        return this.getConnectedNodes(node, false);
     }
 }
