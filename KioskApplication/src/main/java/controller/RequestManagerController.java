@@ -113,7 +113,7 @@ public class RequestManagerController extends ScreenController {
     //unopened request button. Displays all of the new requests
     @FXML
     void newRequests(){
-        buttonAction(TO_DO);
+        buttonAction(RequestProgressStatus.TO_DO);
         currentButton = TO_DO;
     }
 
@@ -385,11 +385,11 @@ public class RequestManagerController extends ScreenController {
         getMapController().setPath(null);
         getMapController().reloadDisplay();
 
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
+
         // Set default nodes/edges visibility
         getMapController().setNodesVisible(true);
         getMapController().setEdgesVisible(false);
-
-        // Set if the options box is visible
-        getMapController().setOptionsBoxVisible(false);
     }
 }
