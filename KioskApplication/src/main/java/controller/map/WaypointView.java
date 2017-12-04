@@ -48,6 +48,7 @@ public class WaypointView extends StackPane {
 
 //        waypoint.setTranslateX(node.getXcoord() - 24);
 //        waypoint.setTranslateY(- 60 + node.getYcoord() - 60);
+//        this.setAccessibleText(node.getNodeID());
         waypoint.setStyle("-fx-background-color: #ff1d13;");
         waypoint.setAccessibleText(node.getNodeID());
         waypoint.setAccessibleHelp("waypoint");

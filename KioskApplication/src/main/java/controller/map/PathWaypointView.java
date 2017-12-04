@@ -54,10 +54,10 @@ public class PathWaypointView extends AnchorPane {
                     for (Node node : listener.getRemoved()) {
                         WaypointView view = this.wayPointViewsMap.get(node);
                         this.wayPointViewsMap.remove(node);
-                        this.wayPointView.getChildren().remove(view);
+                        this.getChildren().remove(view);
                     }
                 }
-                else if(listener.wasAdded()) {
+                if(listener.wasAdded()) {
                     for(Node addedNode : listener.getAddedSubList()) {
                         WaypointView waypointView = new WaypointView(this, addedNode);
 
