@@ -7,6 +7,13 @@ import entity.MapEntity;
 import java.util.*;
 
 public class Beam implements SearchAlgorithm {
+    /**
+     * beam first search
+     * @param startNode node that the path should start at
+     * @param endNode node that the path should end at
+     * @return
+     * @throws PathfinderException
+     */
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
        // int beamwidth = 3;
@@ -47,7 +54,7 @@ public class Beam implements SearchAlgorithm {
             // clear beam
             beam = new HashMap<>();
             // go through set and add to beam map
-            while ((set.size() != 0) && (3 > beam.size())) {
+            while ((set.size() != 0) && (4 > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
                   // for heristicvalue map
                 for (String key : set.keySet()) {
