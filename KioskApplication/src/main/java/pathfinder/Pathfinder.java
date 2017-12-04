@@ -78,7 +78,6 @@ public class Pathfinder {
         return(new Path(waypoints, pathEdges));
     }
 
-
     public SearchAlgorithm getSearchAlgorithm() {
         return searchAlgorithm;
     }
