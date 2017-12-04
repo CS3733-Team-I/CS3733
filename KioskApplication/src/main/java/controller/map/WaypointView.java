@@ -1,0 +1,69 @@
+package controller.map;
+
+
+import database.objects.Node;
+import javafx.animation.TranslateTransition;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+import utility.node.NodeSelectionType;
+
+import java.io.IOException;
+
+public class WaypointView extends StackPane {
+
+    PathWaypointView parent;
+
+    Node node;
+
+    @FXML private MenuButton waypoint;
+    @FXML private StackPane container;
+    @FXML private ImageView imageView;
+
+    public WaypointView(PathWaypointView parent, Node node) {
+        this.parent = parent;
+
+        this.node = node;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/WaypointView.fxml"));
+            loader.setController(this);
+            loader.setRoot(this);
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void initialize() throws  IOException{
+        // put the pin and set it's info
+
+//        waypoint.setTranslateX(node.getXcoord() - 24);
+//        waypoint.setTranslateY(- 60 + node.getYcoord() - 60);
+        waypoint.setStyle("-fx-background-color: #ff1d13;");
+        waypoint.setAccessibleText(node.getNodeID());
+        waypoint.setAccessibleHelp("waypoint");
+
+        TranslateTransition wayPointPutTransition = new TranslateTransition();
+        wayPointPutTransition.setDuration(Duration.millis(400));
+        wayPointPutTransition.setNode(waypoint);
+        wayPointPutTransition.setToY(node.getYcoord() - 60);
+
+        //TODO handle waypoint option
+        Tooltip nodeInfo = new Tooltip(node.getLongName());
+        Tooltip.install(waypoint, nodeInfo);
+        nodeInfo.setStyle("-fx-font-weight:bold; " +
+                "-fx-background-color: #ff1d13;" +
+                "-fx-font-size: 16pt; ");
+
+        container.setLayoutX(node.getXcoord() - 24);
+        container.setLayoutY(node.getYcoord()- 60);
+    }
+
+}

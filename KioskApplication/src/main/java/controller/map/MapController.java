@@ -205,7 +205,7 @@ public class MapController {
      * @param location waypoint location
      */
     public void addWaypoint(Point2D location, Node node) {
-        this.pathWaypointView.addWaypoint(location, node);
+        this.pathWaypointView.addWaypoint(node);
     }
 
     public void removeWaypoint(Node node) {
@@ -495,10 +495,8 @@ public class MapController {
                 Bounds nodeBounds = n.localToScene(n.getBoundsInLocal());
                 //only put in if it's a waypoint
                 if (paneBounds.intersects(nodeBounds)) {
-                    if(n.getAccessibleHelp() != null) {
-                        if(n.getAccessibleHelp().equals("waypoint")) {
-                            visibleNodes.add(n);
-                        }
+                    if(n instanceof WaypointView) {
+                        visibleNodes.add(n);
                     }
                 }
             }

@@ -23,10 +23,10 @@ import java.util.LinkedList;
 public class PathWaypointView extends AnchorPane {
 
     private ObservableList<Edge> PathList;
-    private ObservableList<MenuButton> waypointList;
+    private ObservableList<Node> waypointList;
     protected Path currentPath;
 
-    private HashMap<Node, NodeView> wayPointViewsMap;
+    private HashMap<Node, WaypointView> wayPointViewsMap;
     private HashMap<Edge, PathView> pathViewsMap;
 
     private AnchorPane pathView;
@@ -48,20 +48,21 @@ public class PathWaypointView extends AnchorPane {
 
         waypointList = FXCollections.observableArrayList();
 
-        waypointList.addListener(new ListChangeListener<javafx.scene.Node>() {
-            @Override
-            public void onChanged(Change<? extends javafx.scene.Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        for(javafx.scene.Node removedWaypoint : c.getRemoved()) {
-                            getChildren().remove(removedWaypoint);
-                        }
+        waypointList.addListener((ListChangeListener<Node>) listener -> {
+            while (listener.next()) {
+                if(listener.wasRemoved()) {
+                    for (Node node : listener.getRemoved()) {
+                        WaypointView view = this.wayPointViewsMap.get(node);
+                        this.wayPointViewsMap.remove(node);
+                        this.wayPointView.getChildren().remove(view);
                     }
-                    else if(c.wasAdded()) {
-                        for(javafx.scene.Node addedWaypoint : c.getAddedSubList()) {
-                            //draw the way point on Map
-                            getChildren().add(addedWaypoint);
-                        }
+                }
+                else if(listener.wasAdded()) {
+                    for(Node addedNode : listener.getAddedSubList()) {
+                        WaypointView waypointView = new WaypointView(this, addedNode);
+
+                        this.wayPointViewsMap.put(addedNode, waypointView);
+                        this.getChildren().add(waypointView);
                     }
                 }
             }
@@ -136,42 +137,15 @@ public class PathWaypointView extends AnchorPane {
        return this.currentPath;
     }
 
-    public void addWaypoint(Point2D location, Node node) {
-        try {
-            // put the pin and set it's info
-            MenuButton wayPointObject = FXMLLoader.load(getClass().getResource("/view/WaypointView.fxml"));
-
-            // TODO magic numbers
-            wayPointObject.setTranslateX(location.getX() - 24);
-            wayPointObject.setTranslateY(- 60 + location.getY() - 60);
-            wayPointObject.setStyle("-fx-background-color: #ff1d13;");
-            wayPointObject.setAccessibleText(node.getNodeID());
-            wayPointObject.setAccessibleHelp("waypoint");
-
-            TranslateTransition wayPointPutTransition = new TranslateTransition();
-            wayPointPutTransition.setDuration(Duration.millis(400));
-            wayPointPutTransition.setNode(wayPointObject);
-            wayPointPutTransition.setToY(location.getY() - 60);
-
-            //TODO handle waypoint option
-            Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(wayPointObject, nodeInfo);
-            nodeInfo.setStyle("-fx-font-weight:bold; " +
-                    "-fx-background-color: #ff1d13;" +
-                    "-fx-font-size: 16pt; ");
-            waypointList.add(wayPointObject);
-
-            wayPointPutTransition.play();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void addWaypoint(Node node) {
+        waypointList.add(node);
     }
 
     public void removeWaypoint(Node node) {
-        Iterator<MenuButton> waypointIterator = waypointList.iterator();
+        Iterator<Node> waypointIterator = waypointList.iterator();
         while(waypointIterator.hasNext()) {
-            MenuButton removedWaypoint = waypointIterator.next();
-            if(removedWaypoint.getAccessibleText().equals(node.getNodeID())) {
+            Node removedWaypoint = waypointIterator.next();
+            if(removedWaypoint.getNodeID().equals(node.getNodeID())) {
                 this.getChildren().remove(removedWaypoint);
                 waypointIterator.remove();
                 break;

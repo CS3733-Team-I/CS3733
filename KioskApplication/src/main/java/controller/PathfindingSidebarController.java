@@ -221,6 +221,9 @@ public class PathfindingSidebarController extends ScreenController {
         node.addEventHandler(MouseEvent.DRAG_DETECTED, event -> holdTimer.stop());
     }
 
+    /**
+     * create new waypoint list cell
+     */
     private void newWaypointBox(Node node) {
         HBox waypointBox = new HBox();
 
@@ -251,7 +254,9 @@ public class PathfindingSidebarController extends ScreenController {
         waypointBox.setMargin(nodeNameLabel, new Insets(10,1,1,10));
         waypointListView.getItems().add(waypointBox);
     }
-
+    /**
+     * remove the target waypoint bounded with input node
+     */
     private void removeWaypoint(Node node) {
         if(waypointListView.getItems().size()>=2) {
             getMapController().removeWaypoint(currentNodes.get(currentNodes.size()-1));
@@ -259,7 +264,9 @@ public class PathfindingSidebarController extends ScreenController {
             currentNodes.remove(currentNodes.size()-1);
         }
     }
-
+    /**
+     * create add waypoint list cell
+     */
     //TODO make addwaypointbox always the last one
     private void addWaypointBox() {
 //        int addWaypointBoxIndex = 0;
