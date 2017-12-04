@@ -39,7 +39,7 @@
                </opaqueInsets>
             </JFXButton>
             <JFXTextField prefHeight="64.0" prefWidth="225.0" promptText="Search" GridPane.columnSpan="3" GridPane.valignment="BOTTOM" />
-            <JFXListView fx:id="waypointList" prefHeight="302.0" prefWidth="300.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+            <JFXListView fx:id="waypointListView" prefHeight="302.0" prefWidth="300.0" stylesheets="@../css/listView.css" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
          </children>
       </GridPane>
    </children>
