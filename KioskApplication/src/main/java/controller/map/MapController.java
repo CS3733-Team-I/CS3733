@@ -1,5 +1,6 @@
 package controller.map;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
@@ -11,11 +12,16 @@ import entity.Path;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
@@ -25,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -32,7 +39,9 @@ import utility.node.NodeFloor;
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -55,6 +64,8 @@ public class MapController {
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
 
+    @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
+
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
@@ -68,6 +79,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
     }
 
     /**
@@ -194,6 +206,7 @@ public class MapController {
             wayPointObject.setTranslateX(location.getX() - 24);
             wayPointObject.setTranslateY(- 60 + location.getY() - 60);
             wayPointObject.setStyle("-fx-background-color: #ff1d13;");
+            wayPointObject.setAccessibleText("waypoint");
             TranslateTransition wayPointPutTransition = new TranslateTransition();
             wayPointPutTransition.setDuration(Duration.millis(400));
             wayPointPutTransition.setNode(wayPointObject);
@@ -370,6 +383,32 @@ public class MapController {
                 calculateMinZoom();
             }
         });
+
+        scrollPane.vvalueProperty().addListener((obs) -> {
+            checkWaypointVisible(scrollPane);
+            System.out.println(visibleWaypoints);
+        });
+        scrollPane.hvalueProperty().addListener((obs) -> {
+            checkWaypointVisible(scrollPane);
+            System.out.println(visibleWaypoints);
+        });
+        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
+            @Override
+            public void onChanged(Change<? extends javafx.scene.Node> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
+
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(javafx.scene.Node lostSightWaypoint : c.getAddedSubList()) {
+
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -452,5 +491,32 @@ public class MapController {
 
     public void setOptionsBoxVisible(boolean visible) {
         this.optionsBox.setVisible(visible);
+    }
+
+    /**
+     * Get visible waypoints in the scrollpane
+     */
+    private List<javafx.scene.Node> getWaypointNodes(ScrollPane pane) {
+        List<javafx.scene.Node> visibleNodes = new ArrayList<>();
+        Bounds paneBounds = pane.localToScene(pane.getBoundsInParent());
+        if (pane.getContent() instanceof Parent) {
+            for (javafx.scene.Node n : (waypointPane).getChildrenUnmodifiable()) {
+                Bounds nodeBounds = n.localToScene(n.getBoundsInLocal());
+                //only put in if it's a waypoint
+                if (paneBounds.intersects(nodeBounds)) {
+                    visibleNodes.add(n);
+//                    if(n.getAccessibleText() != null) {
+//                        if(n.getAccessibleText().equals("waypoint")) {
+//
+//                        }
+//                    }
+                }
+            }
+        }
+        return visibleNodes;
+    }
+
+    private void checkWaypointVisible(ScrollPane pane) {
+        visibleWaypoints.setAll(getWaypointNodes(pane));
     }
 }
