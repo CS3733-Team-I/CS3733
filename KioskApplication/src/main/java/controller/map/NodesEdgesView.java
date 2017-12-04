@@ -93,6 +93,7 @@ public class NodesEdgesView extends AnchorPane {
                             this.edgesView.getChildren().add(view);
                         }
                         catch(NotFoundException exception){
+                            exception.printStackTrace();
                             //TODO: add actual handling
                         }
                     }

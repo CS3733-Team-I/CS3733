@@ -110,6 +110,7 @@ public class Edge {
             }
         }
         catch (NotFoundException exception){
+            exception.printStackTrace();
             //TODO: add actual handling
         }
     }

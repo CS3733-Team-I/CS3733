@@ -200,6 +200,7 @@ public class MapEntity implements IMapEntity {
                 }
             }
             catch(NotFoundException exception){
+                exception.printStackTrace();
                 //TODO: add actual handling
             }
         }
@@ -222,6 +223,7 @@ public class MapEntity implements IMapEntity {
                 floorEntity.removeNode(node);
             }
             catch(NotFoundException exception){
+                exception.printStackTrace();
                 //TODO: add actual handling
             }
         }
@@ -287,7 +289,7 @@ public class MapEntity implements IMapEntity {
         floors.put(floor, new MapFloorEntity(floor));
     }
 
-    //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
+    //Given two nodes, returns the edge connecting them, or null if they aren't connected.
     public Edge getConnectingEdge(Node node1, Node node2){
         ArrayList<Edge> node1Edges = getEdges(node1);
         for(Edge edge: node1Edges){
@@ -319,6 +321,7 @@ public class MapEntity implements IMapEntity {
                     connectedNodes.add(getNode(edge.getNode2ID()));
                 }
                 catch (NotFoundException exception){
+                    exception.printStackTrace();
                     //TODO: add actual handling
                 }
             }
@@ -327,6 +330,7 @@ public class MapEntity implements IMapEntity {
                     connectedNodes.add(getNode(edge.getNode1ID()));
                 }
                 catch(NotFoundException exception){
+                    exception.printStackTrace();
                     //TODO: add actual handling
                 }
             }

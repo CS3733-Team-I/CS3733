@@ -49,6 +49,7 @@ public class TestMapEntity {
             m.removeNode(n1);
         }
         catch(NotFoundException exception){
+            exception.printStackTrace();
             //TODO: add actual handling
         }
         //Test that the node is not in the map; should throw NotFoundException.

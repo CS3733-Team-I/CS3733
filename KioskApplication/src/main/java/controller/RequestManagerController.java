@@ -268,6 +268,7 @@ public class RequestManagerController extends ScreenController {
             popup = new JFXPopup(vbox);
         }
         catch(NotFoundException exception){
+            exception.printStackTrace();
             //TODO: add actual handling
         }
     }

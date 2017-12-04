@@ -101,6 +101,7 @@ public class Path {
                 nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
             }
             catch (NotFoundException exception){
+                exception.printStackTrace();
                 //TODO: add actual handling
             }
         }
