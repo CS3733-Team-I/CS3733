@@ -89,27 +89,34 @@ public class MapEntity implements IMapEntity {
 
 
     @Override
-    public Node getNode(String s) throws NotFoundException {
+    public Node getNode(String s) throws NotFoundException{
+        Node thisNode = null;
+        //First, check to see if the node is in the map.  Check every floor.
         for (NodeFloor floor : floors.keySet()) {
-            Node thisNode = floors.get(floor).getNode(s);
-            return thisNode;
+            try {
+                thisNode = floors.get(floor).getNode(s);
+            }
+            catch(NotFoundException exception){
+            }
+            //If we found the node, return it.
+            if(thisNode != null)
+                return thisNode;
         }
 
+        //If the node isn't in the map, check the database to see if it even exists.
         try {
-            Node node = dbController.getNode(s);
-
-            if (node != null) {
-                NodeFloor f = node.getFloor();
-                if (!floorExists(f)) addFloor(f);
-
-                floors.get(f).insertNode(node);
-            }
+            thisNode = dbController.getNode(s);
+            //If it does, go ahead and add it to the map.
+            NodeFloor f = thisNode.getFloor();
+            if (!floorExists(f))
+                addFloor(f);
+            floors.get(f).insertNode(thisNode);
         }
         catch (DatabaseException ex) {
             ex.printStackTrace();
         }
-
-        return null;
+        //If you reach this point, something's gone wrong.
+        return thisNode;
     }
 
     @Override
@@ -210,15 +217,13 @@ public class MapEntity implements IMapEntity {
 
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
-            Node floorNode;
             try{
-                floorNode = floorEntity.getNode(node.getNodeID());
+                floorEntity.getNode(node.getNodeID());
+                floorEntity.removeNode(node);
             }
             catch(NotFoundException exception){
-                floorNode = null;
+                //TODO: add actual handling
             }
-            if (floorNode != null)
-                floorEntity.removeNode(node);
         }
     }
 
