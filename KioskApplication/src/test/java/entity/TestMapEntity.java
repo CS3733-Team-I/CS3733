@@ -44,7 +44,7 @@ public class TestMapEntity {
             m.addNode(n1);
             //Test that the node exists in the map
             Node n1_actual = m.getNode(n1.getNodeID());
-            assertEquals(n1_actual.getNodeID(), n1.getNodeID());
+            assertEquals(n1.getNodeID(), n1_actual.getNodeID());
             //Remove the node
             m.removeNode(n1);
         }
@@ -66,7 +66,7 @@ public class TestMapEntity {
         // Get nodes
         LinkedList<Node> nodes = m.getAllNodes();
 
-        assertEquals(nodes.size(), 4);
+        assertEquals(4, nodes.size());
 
         assertTrue(nodes.contains(n1));
         assertTrue(nodes.contains(n2));
@@ -129,7 +129,7 @@ public class TestMapEntity {
         m.addNode(n1);
         m.addNode(n2);
         m.addEdge(e1);
-        assertEquals(m.getConnectingEdge(n1,n2),e1);
+        assertEquals(e1, m.getConnectingEdge(n1,n2));
     }
 
     @Before
