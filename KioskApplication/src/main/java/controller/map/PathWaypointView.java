@@ -14,6 +14,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Polyline;
@@ -84,17 +85,19 @@ public class PathWaypointView extends AnchorPane {
                     for (Edge edge : listener.getAddedSubList()) {
                         Node node1 = map.getNode(edge.getNode1ID());
                         Node node2 = map.getNode(edge.getNode2ID());
-//                        MoveTo moveTo1 = new MoveTo(node1.getXcoord(), node1.getYcoord());
-//                        MoveTo moveTo2 = new MoveTo(node2.getXcoord(), node2.getYcoord());
-//
-//                        if(jfxPath == null) {
-//                            this.jfxPath = new javafx.scene.shape.Path(moveTo1, moveTo2);
-//                        }
-//                        else {
-//                            jfxPath.getElements().addAll(moveTo1, moveTo2);
-//                        }
-//                        jfxPath.setStyle("-fx-background-color: #0026ff;");
-//                        jfxPath.setStrokeWidth(20);
+
+
+                        MoveTo moveTo1 = new MoveTo(node1.getXcoord(), node1.getYcoord());
+                        MoveTo moveTo2 = new MoveTo(node2.getXcoord(), node2.getYcoord());
+
+                        if(jfxPath == null) {
+                            this.jfxPath = new javafx.scene.shape.Path(moveTo1, moveTo2);
+                        }
+                        else {
+                            jfxPath.getElements().addAll(moveTo1, moveTo2);
+                        }
+                        jfxPath.setFill(Color.DARKRED);
+                        jfxPath.setStrokeWidth(20);
 
                         PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
                                 new Point2D(node2.getXcoord(), node2.getYcoord()));
@@ -104,10 +107,11 @@ public class PathWaypointView extends AnchorPane {
                         else
                             pathview.setOpacity(0.2);
                         this.pathViewsMap.put(edge, pathview);
-//                        if(!getChildren().contains(jfxPath)) {
-//                            this.getChildren().add(jfxPath);
-//                        }
+                        if(!getChildren().contains(jfxPath)) {
+                            this.getChildren().add(jfxPath);
+                        }
                         getChildren().add(pathview);
+                        pathview.playPath();
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {

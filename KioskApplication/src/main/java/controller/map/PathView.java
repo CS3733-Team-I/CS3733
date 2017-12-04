@@ -22,6 +22,10 @@ public class PathView extends AnchorPane {
     AnchorPane container;
     @FXML
     Line line;
+    @FXML
+    Circle circle;
+    @FXML
+    PathTransition navigationTransition;
 
 
     public PathView(Edge edge, Point2D start, Point2D end) {
@@ -47,15 +51,12 @@ public class PathView extends AnchorPane {
         AnchorPane.setLeftAnchor(container, start.getX());
         AnchorPane.setTopAnchor(container, start.getY());
 
-        Circle circle = new Circle(500);
-        circle.setStyle("-fx-background-color: #ffffff;");
-
-        PathTransition navigationTransition = new PathTransition();
+        navigationTransition = new PathTransition();
         navigationTransition.setNode(circle);
         navigationTransition.setDuration(Duration.seconds(3));
         navigationTransition.setPath(line);
         navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-        navigationTransition.play();
+
     }
 
     public Point2D getStart() {
@@ -64,5 +65,9 @@ public class PathView extends AnchorPane {
 
     public Point2D getEnd() {
         return end;
+    }
+
+    public void playPath() {
+        navigationTransition.play();
     }
 }
