@@ -135,7 +135,6 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void buttonAction(RequestProgressStatus status){
         setup();
-//        buttonSetupt(status);
         LinkedList<Request> allRequests = filterRequests();
         showRequests(status, allRequests);
     }
@@ -168,7 +167,7 @@ public class RequestManagerController extends ScreenController {
                                 @Override
                                 public void handle(ActionEvent e) {
                                     r.markInProgress((String) employees.getValue(),requestID);
-                                    newRequests();
+                                    refreshRequests();
                                 }
                             });
                             row9.getChildren().add(statusUpdater);
@@ -181,7 +180,7 @@ public class RequestManagerController extends ScreenController {
                                 @Override
                                 public void handle(ActionEvent e) {
                                     r.deleteRequest(requestID);
-                                    doneRequests();
+                                    refreshRequests();
                                 }
                             });
                             row9.getChildren().add(statusUpdater);
@@ -195,7 +194,7 @@ public class RequestManagerController extends ScreenController {
                                 @Override
                                 public void handle(ActionEvent e) {
                                     r.markInProgress(l.getUserID(),requestID);
-                                    newRequests();
+                                    refreshRequests();
                                 }
                             });
                             row9.getChildren().add(statusUpdater);
@@ -206,7 +205,7 @@ public class RequestManagerController extends ScreenController {
                                 @Override
                                 public void handle(ActionEvent e) {
                                     r.completeRequest(requestID);
-                                    inProgressRequests();
+                                    refreshRequests();
                                 }
                             });
                             row9.getChildren().add(statusUpdater);
@@ -250,7 +249,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     //Creates what goes into the popup when a listview cell is selected
-    public void initializePopup(String requestID){
+    public void initializePopup(String requestID) {
 
         JFXButton more = new JFXButton("More");
         JFXButton statusUpdater = new JFXButton();
@@ -260,6 +259,16 @@ public class RequestManagerController extends ScreenController {
         JFXComboBox employees = new JFXComboBox(listOfEmployees);
         employees.setPromptText("Select Employee");
 
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                r.deleteRequest(requestID);
+                popup.hide();
+                refreshRequests();
+            }
+        });
+
+        VBox vbox = new VBox(more);
 
         if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
             listOfEmployees.clear();
@@ -271,28 +280,14 @@ public class RequestManagerController extends ScreenController {
                         @Override
                         public void handle(ActionEvent e) {
                             r.markInProgress((String) employees.getValue(),requestID);
-                            newRequests();
+                            refreshRequests();
                             popup.hide();
                         }
                     });
-                    break;
-                //Admins and Supers can't complete a request
-
-                case DONE:
-                    statusUpdater = new JFXButton("Delete");
-                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            r.deleteRequest(requestID);
-                            doneRequests();
-                            popup.hide();
-                        }
-                    });
+                    vbox.getChildren().addAll(employees, statusUpdater);
                     break;
             }
         }else {
-            listOfEmployees.clear();
-            listOfEmployees.add(l.getUsername());
             switch (currentButton) {
                 case TO_DO:
                     statusUpdater = new JFXButton("Assign Me");
@@ -300,10 +295,11 @@ public class RequestManagerController extends ScreenController {
                         @Override
                         public void handle(ActionEvent e) {
                             r.markInProgress(l.getUserID(), requestID);
-                            newRequests();
+                            refreshRequests();
                             popup.hide();
                         }
                     });
+                    vbox.getChildren().add(statusUpdater);
                     break;
                 case IN_PROGRESS:
                     statusUpdater = new JFXButton("Completed");
@@ -311,10 +307,11 @@ public class RequestManagerController extends ScreenController {
                         @Override
                         public void handle(ActionEvent e) {
                             r.completeRequest(requestID);
-                            inProgressRequests();
+                            refreshRequests();
                             popup.hide();
                         }
                     });
+                    vbox.getChildren().add(statusUpdater);
                     break;
             }
         }
@@ -323,7 +320,7 @@ public class RequestManagerController extends ScreenController {
         statusUpdater.setPrefWidth(200);
         employees.setPrefWidth(200);
 
-        VBox vbox = new VBox(more,employees,statusUpdater,delete);
+        vbox.getChildren().add(delete);
 
         popup = new JFXPopup(vbox);
     }
@@ -356,8 +353,18 @@ public class RequestManagerController extends ScreenController {
 
     //reads requests from a database
     @FXML
-    public void refreshRequests() throws IOException {
-        r.readAllFromDatabase();
+    public void refreshRequests() {
+        switch (currentButton){
+            case IN_PROGRESS:
+                inProgressRequests();
+                break;
+            case TO_DO:
+                newRequests();
+                break;
+            case DONE:
+                doneRequests();
+                break;
+        }
     }
 
     @Override
