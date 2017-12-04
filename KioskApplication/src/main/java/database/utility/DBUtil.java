@@ -43,20 +43,20 @@ public class DBUtil {
     }
 
     public static void createTables(Connection conn) throws SQLException {
-        PreparedStatement pstmt0 = conn.prepareStatement(CREATE_SCHEMA);
-        pstmt0.execute();
-        PreparedStatement pstmt1 = conn.prepareStatement(CREATE_NODE_TABLE);
-        pstmt1.execute();
-        PreparedStatement pstmt2 = conn.prepareStatement(CREATE_EDGE_TABLE);
-        pstmt2.execute();
-        PreparedStatement pstmt3 = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
-        pstmt3.execute();
-        PreparedStatement pstmt4 = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
+        PreparedStatement createSchema = conn.prepareStatement(CREATE_SCHEMA);
+        createSchema.execute();
+        PreparedStatement createNodeTable = conn.prepareStatement(CREATE_NODE_TABLE);
+        createNodeTable.execute();
+        PreparedStatement createEdgeTable = conn.prepareStatement(CREATE_EDGE_TABLE);
+        createEdgeTable.execute();
+        PreparedStatement createEmployeeTable = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
+        createEmployeeTable.execute();
+        PreparedStatement createInterpreterTable = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
-        pstmt4.execute();
-        PreparedStatement pstmt5 = conn.prepareStatement(CREATE_SECURITY_TABLE+
+        createInterpreterTable.execute();
+        PreparedStatement createSecurityTable = conn.prepareStatement(CREATE_SECURITY_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
-        pstmt5.execute();
+        createSecurityTable.execute();
     }
 
     public static void dropAllTables(Connection conn) {
