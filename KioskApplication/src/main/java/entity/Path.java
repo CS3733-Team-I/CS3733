@@ -63,53 +63,41 @@ public class Path {
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
 
+        //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
             return "Take the elevator to " + nextNode.getFloor().toString() + " ";
         }
+        //Stairs
         else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
             return "Take the stairs to " + nextNode.getFloor().toString() + " ";
         }
 
-        double prevAngle = getAngleBetweenNodes(prevNode, thisNode);
-        double nextAngle = getAngleBetweenNodes(thisNode, nextNode);
+        //Calculate angles if turning
+        double prevAngle = prevNode.getAngleBetweenNodes(thisNode);
+        double nextAngle = thisNode.getAngleBetweenNodes(nextNode);
 
         double angleDif = nextAngle - prevAngle;
         double straightAngle = Math.PI/6;
 
+        //Turning directions
         if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
         else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
+        //Default case
         return "Go to ";
-    }
-
-    private double getAngleBetweenNodes(Node n1, Node n2) {
-        double dx = n2.getXcoord() - n1.getXcoord();
-        double dy = n2.getYcoord() - n1.getYcoord();
-
-        return Math.atan2(dy,dx);
     }
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
 
+        MapEntity map = MapEntity.getInstance();
+
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(segmentStart);
 
-        for(Edge e : segment) {
-            nodes.add(getOtherNode(e,nodes.getLast()));
+        for (Edge e : segment) {
+            nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
         }
         return nodes;
-    }
-
-    private Node getOtherNode(Edge e, Node n) {
-
-        MapEntity map = MapEntity.getInstance();
-
-        if(e.getNode1ID().equals(n.getNodeID()))
-            return map.getNode(e.getNode2ID());
-        else if(e.getNode2ID().equals(n.getNodeID()))
-            return map.getNode(e.getNode1ID());
-        else
-            return null;
     }
 }
