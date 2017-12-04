@@ -57,7 +57,12 @@ public class RequestEntity {
         private static final RequestEntity testInstance = new RequestEntity(true);
     }
 
+
     //reads all requests from the database
+
+    /**
+     * reads all requests from the database
+     */
     public void readAllFromDatabase(){
         LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for(InterpreterRequest iR:interpreterRequests) {
@@ -85,6 +90,10 @@ public class RequestEntity {
         }
     }
 
+    /**
+     * Gets a list of all interpreter requests in the hashmaps
+     * @return list of all interpreterRequest found in interpreterRequests hashmap
+     */
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
@@ -93,6 +102,10 @@ public class RequestEntity {
         return intRequests;
     }
 
+    /**
+     * Gets a list of all security requests in the hashmaps
+     * @return list of all securityRequest found in securityRequests hashmap
+     */
     public LinkedList<Request> getAllSecurity(){
         LinkedList<Request> secRequests = new LinkedList<>();
         for(SecurityRequest sR: securityRequests.values()){
@@ -105,23 +118,34 @@ public class RequestEntity {
      * Methods for all request types
      */
 
+    /**
+     * Generic method to get all requests in the hashmaps
+     * @return the requests from the hashmaps
+     */
     public LinkedList<Request> getAllRequests(){
         LinkedList<Request> allRequests = new LinkedList<>();
-        for (InterpreterRequest iR: interpreterRequests.values()){
-            allRequests.add(iR);
-        }
-        for(SecurityRequest sR: securityRequests.values()){
-            allRequests.add(sR);
-        }
+        allRequests.addAll(getAllinterpters());
+        allRequests.addAll(getAllSecurity());
         return allRequests;
     }
 
+    /**
+     * Filters all the requests in the hashmaps by the inputted status
+     * @param status
+     * @return linkedList of requests that fall under the same request progress status
+     */
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
         LinkedList<Request> displayedRequests = filterByStatus(requests, status);
         return displayedRequests;
     }
 
+    /**
+     * Filters the requests from the inputted list by the inputted status
+     * @param requests
+     * @param status
+     * @return linkedList of requests that fall under the same request progress status
+     */
     public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
         LinkedList<Request> displayedRequests = new LinkedList<>();
         for (int i = 0; i < requests.size(); i++) {
@@ -146,6 +170,11 @@ public class RequestEntity {
         return displayedRequests;
     }
 
+    /**
+     * Determines the type of request from a requestID
+     * @param requestID
+     * @return the requestType of a specific request
+     */
     public RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
         if (requestType.equals("Int")) {
@@ -164,7 +193,11 @@ public class RequestEntity {
         }
     }
 
-    //Generic request deleting method
+
+    /**
+     * Generic request for deleting a request from the database and hashmaps
+     * @param requestID
+     */
     public void deleteRequest(String requestID){
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
@@ -195,6 +228,13 @@ public class RequestEntity {
     }
 
     //Generic request in progress maker
+
+    /**
+     * Generic method to mark a request in progress from a requestID
+     * Also adds the completer to the request object completer field
+     * @param completer
+     * @param requestID
+     */
     public void markInProgress(String completer, String requestID){
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
@@ -227,6 +267,11 @@ public class RequestEntity {
     }
 
     //Generic request completing method
+
+    /**
+     * Generic method to complete a request and changes request status to DONE
+     * @param requestID
+     */
     public void completeRequest(String requestID){
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
@@ -260,6 +305,11 @@ public class RequestEntity {
         }
     }
 
+    /**
+     * Generic method to get a request form a requestID
+     * @param requestID
+     * @return returns the request object attatched to the requestID
+     */
     public Request getRequest(String requestID){
         Request request;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
@@ -270,6 +320,16 @@ public class RequestEntity {
         return request;
     }
 
+    /**
+     * Updates a request that is already in the database with the given requestID
+     * @param requestID
+     * @param nodeID
+     * @param assigner
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     */
     public void updateRequest(String requestID, String nodeID, String assigner, String note,
                               Timestamp submittedTime, Timestamp completedTime,
                               RequestProgressStatus status){
@@ -297,6 +357,14 @@ public class RequestEntity {
      * InterpreterRequest methods
      */
 
+    /**
+     * Adds an interpreter request to the database
+     * @param nodeID
+     * @param assignee
+     * @param note
+     * @param lang
+     * @return adds an interpreter request to the database and returns that request
+     */
     public String submitInterpreterRequest(String nodeID, String assignee, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
@@ -311,6 +379,12 @@ public class RequestEntity {
         return rID;
     }
 
+    /**
+     * gets an interpreter request from the database
+     * @param requestID
+     * @return gets an interpreter request from the database that matches the given requestID
+     * @throws NullPointerException
+     */
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
         System.out.println("Getting InterpreterRequest");
         if(interpreterRequests.containsKey(requestID)) {
@@ -327,6 +401,17 @@ public class RequestEntity {
         }
     }
 
+    /**
+     * updates an interpreterRequest that is currently in the database
+     * @param requestID
+     * @param nodeID
+     * @param assigner
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param language
+     */
     public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
@@ -340,6 +425,14 @@ public class RequestEntity {
      * SecurityRequest methods
      */
 
+    /**
+     * Adds a security request to the database
+     * @param nodeID
+     * @param assignee
+     * @param note
+     * @param priority
+     * @return adds a security request to the database and returns that request
+     */
     public String submitSecurityRequest(String nodeID, String assignee, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
@@ -354,6 +447,12 @@ public class RequestEntity {
         return rID;
     }
 
+    /**
+     * gets a security request from the database
+     * @param requestID
+     * @return gets a security request form the database that matches the requestID
+     * @throws NullPointerException
+     */
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
         System.out.println("Getting Security request");
         if(securityRequests.containsKey(requestID)) {
@@ -370,6 +469,17 @@ public class RequestEntity {
         }
     }
 
+    /**
+     * updates a securityRequest that is currently in the database
+     * @param requestID
+     * @param nodeID
+     * @param assigner
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param priority
+     */
     public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
@@ -391,7 +501,9 @@ public class RequestEntity {
      * common IT request problems
      */
 
-    // gets mean time to complete a request from IN_PROGRESS to DONE
+    /**
+     * gets mean time to complete a request from IN_PROGRESS to DONE
+     */
     public void getMeanTimeToComplete(){
         long sum=0;
         int total=0;
@@ -412,7 +524,10 @@ public class RequestEntity {
         }
     }
 
-    // gives a frequency histogram for interpreter request languages
+    /**
+     * gives a frequency historgram for interpreter request langauges
+     * @return a linkedlist of number of interpreter languages requested
+     */
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         dbController.getAllInterpreterRequests();
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
@@ -432,7 +547,10 @@ public class RequestEntity {
         return freq;
     }
 
-    //returns a hashmap of Strings and integers for a pie chart
+    /**
+     * creates a pie chart displaying the percentage of request types
+     * @return a hashmap of Strings and integers for a pie chart
+     */
     public ObservableList<PieChart.Data> getRequestDistribution(){
         ObservableList<PieChart.Data> reqs =
                 FXCollections.observableArrayList(

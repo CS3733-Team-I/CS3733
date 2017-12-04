@@ -35,7 +35,7 @@ public class RequestManagerController extends ScreenController {
     LoginEntity l;
 
     RequestEntity r;
-//    @FXML private JFXListView<VBox> activeRequests;
+
 @FXML private JFXListView<String> activeRequests;
     @FXML private Label totalRequests;
     @FXML private TextField txtID;
@@ -59,8 +59,10 @@ public class RequestManagerController extends ScreenController {
         r.readAllFromDatabase();
     }
 
-    //When an employee is logged in this mehtod checks to see the employee Request Type
-    //it takes that information and filters out the requests to show relevant requests
+    /**
+     * When an employee is logged in this mehtod checks to see the employee Request Type
+     * it takes that information and filters out the requests to show relevant requests
+     */
     @FXML
     public void setup(){
         RequestType employeeType = l.getServiceAbility(l.getUsername());
@@ -96,33 +98,34 @@ public class RequestManagerController extends ScreenController {
         }
     }
 
-    //This used to be how you switched scenes
-    //not sure if it is still being used
-    @FXML
-    void viewRequests() throws IOException {
-        System.out.println("request Manager Pressed\n");
-        getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
-    }
-
-    //unopened request button. Displays all of the new requests
+    /**
+     * unopened request button. Displays all of the new requests
+     */
     @FXML
     void newRequests(){
         buttonAction(RequestProgressStatus.TO_DO);
     }
 
-    //in Progress request button. Displays all of the current requests
+    /**
+     * in Progress request button. Displays all of the current requests
+     */
     @FXML
     void inProgressRequests(){
         buttonAction(RequestProgressStatus.IN_PROGRESS);
     }
 
-    //Completed request button. Displays all of the finished requests
+    /**
+     * Completed request button. Displays all of the finished requests
+     */
     @FXML
     void doneRequests(){
         buttonAction(RequestProgressStatus.DONE);
     }
 
-    //Generic method that updates list of requests
+    /**
+     * Generic method that updates list of requests
+     * @param status RequestProgressStatus is passed through to determine which requests to display
+     */
     @FXML
     void buttonAction(RequestProgressStatus status){
         setup();
@@ -131,7 +134,10 @@ public class RequestManagerController extends ScreenController {
         showRequests(status, allRequests);
     }
 
-    //Displays buttons on the sidebar to assign requests, mark as complete, and delete requests
+    /**
+     * Displays buttons on the sidebar to assign requests, mark as complete, and delete requests
+     * @param status RequestProgressStatus is passed through to determine which requests to display
+     */
     private void buttonSetupt(RequestProgressStatus status) {
         row8.getChildren().clear();
         row9.getChildren().clear();
@@ -208,9 +214,12 @@ public class RequestManagerController extends ScreenController {
         });
     }
 
-    //Checks the checkboxes to see what filters to add.
-    //filters by request type, but must press a button on
-    //the sidebar to see the results of this method
+    /**
+     * Checks the checkboxes to see what filters to add.
+     * filters by request type, but must press a button on
+     * the sidebar to see the results of this method
+     * @return the list of requests to be displayed
+     */
     @FXML
     LinkedList<Request> filterRequests() {
         r.readAllFromDatabase();
@@ -228,7 +237,11 @@ public class RequestManagerController extends ScreenController {
         return allRequests;
     }
 
-    //Creates a list of request IDs and displays them in the ListView activeRequests
+    /**
+     * Creates a list of request IDs and displays them in the ListView activeRequests
+     * @param status RequestProgressStatus so the method knows which requests it is displaying
+     * @param allRequests the list from which the method will filter to display a list of requestIDs
+     */
     private void showRequests(RequestProgressStatus status, LinkedList<Request> allRequests) {
         activeRequests.setItems(null);
         ObservableList<String> requestids = FXCollections.observableArrayList();
@@ -240,7 +253,10 @@ public class RequestManagerController extends ScreenController {
         activeRequests.setItems(requestids);
     }
 
-    //Creates what goes into the popup when a listview cell is selected
+    /**
+     * Creates what goes into the popup when a listview cell is selected
+     * @param requestID To determine which request to display the information of
+     */
     public void initializePopup(String requestID){
         Request request = r.getRequest(requestID);
         Label id = new Label(requestID);
@@ -266,7 +282,10 @@ public class RequestManagerController extends ScreenController {
         popup = new JFXPopup(vbox);
     }
 
-    //Method to display popup information when a list view cell is selected
+    /**
+     * Method to display popup information when a list view cell is selected
+     * @param event the mouse click on an ID triggers this method
+     */
     @FXML
     public void displayInfo(MouseEvent event){
         String requestID = activeRequests.getSelectionModel().getSelectedItem();
@@ -274,13 +293,19 @@ public class RequestManagerController extends ScreenController {
         popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
     }
 
-    //opens the reports pop up window to display the graphs
+    /**
+     * opens the reports pop up window to display the graphs
+     * @throws IOException
+     */
     @FXML
     void showReports() throws IOException{
         getParent().openRequestTrackingTable();
     }
 
-    //sets RequestManagerView as fxml file for this controller
+    /**
+     * sets RequestManagerView as fxml file for this controller
+     * @return displays the request Manager
+     */
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
@@ -292,7 +317,10 @@ public class RequestManagerController extends ScreenController {
         return contentView;
     }
 
-    //reads requests from a database
+    /**
+     * reads requests from a database
+     * @throws IOException
+     */
     @FXML
     public void refreshRequests() throws IOException {
         r.readAllFromDatabase();
