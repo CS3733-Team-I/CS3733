@@ -52,4 +52,14 @@ public class Edge {
                 this.node2ID.equals(e.getNode1ID()) ||
                 this.node2ID.equals(e.getNode2ID());
     }
+
+    public String getOtherNodeID(String id) {
+
+        if(this.node1ID.equals(id))
+            return this.node2ID;
+        else if(this.node2ID.equals(id))
+            return this.node1ID;
+        else
+            return null;
+    }
 }
