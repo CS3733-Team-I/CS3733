@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -36,18 +37,22 @@ public class TestMapEntity {
         e3 = new Edge("EDGE3", "NODE1", "NODE4");
     }
 
-    @Test
-    public void testAddRemoveNode() throws DatabaseException {
-        //Add node to map
-        m.addNode(n1);
-        //Test that the node exists in the map
-        Node n1_actual = m.getNode(n1.getNodeID());
-        assertEquals(n1_actual.getNodeID(), n1.getNodeID());
-        //Remove the node
-        m.removeNode(n1);
-        //Test that the node is not in the map
-        n1_actual = m.getNode(n1.getNodeID());
-        assertEquals(n1_actual, null);
+    @Test(expected = NotFoundException.class)
+    public void testAddRemoveNode() throws DatabaseException, NotFoundException {
+        try {
+            //Add node to map
+            m.addNode(n1);
+            //Test that the node exists in the map
+            Node n1_actual = m.getNode(n1.getNodeID());
+            assertEquals(n1_actual.getNodeID(), n1.getNodeID());
+            //Remove the node
+            m.removeNode(n1);
+        }
+        catch(NotFoundException exception){
+            //TODO: add actual handling
+        }
+        //Test that the node is not in the map; should throw NotFoundException.
+        m.getNode(n1.getNodeID());
     }
 
     @Test
