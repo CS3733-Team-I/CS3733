@@ -164,14 +164,11 @@ public class PathfindingSidebarController extends ScreenController {
         }
         else {
             //remove last node
-            if(waypointListView.getItems().size()>=2) {
-                getMapController().removeWaypoint(currentNodes.get(currentNodes.size()-1));
-                waypointListView.getItems().remove(waypointListView.getItems().size()-2);
-                currentNodes.remove(currentNodes.size()-1);
-                newWaypointBox(node);
-                currentNodes.add(node);
-                getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
-            }
+            removeWaypoint(node);
+            //add new waypoint
+            newWaypointBox(node);
+            currentNodes.add(node);
+            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
         }
         addWaypointBox();
     }
@@ -244,7 +241,7 @@ public class PathfindingSidebarController extends ScreenController {
         btRemoveWaypoint.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO implement this
+                removeWaypoint(node);
             }
         });
 
@@ -253,6 +250,14 @@ public class PathfindingSidebarController extends ScreenController {
         waypointBox.setMargin(btRemoveWaypoint, new Insets(1,1,1,1));
         waypointBox.setMargin(nodeNameLabel, new Insets(10,1,1,10));
         waypointListView.getItems().add(waypointBox);
+    }
+
+    private void removeWaypoint(Node node) {
+        if(waypointListView.getItems().size()>=2) {
+            getMapController().removeWaypoint(currentNodes.get(currentNodes.size()-1));
+            waypointListView.getItems().remove(waypointListView.getItems().size()-2);
+            currentNodes.remove(currentNodes.size()-1);
+        }
     }
 
     //TODO make addwaypointbox always the last one

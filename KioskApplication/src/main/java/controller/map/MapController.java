@@ -36,10 +36,12 @@ import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -206,7 +208,7 @@ public class MapController {
             wayPointObject.setTranslateX(location.getX() - 24);
             wayPointObject.setTranslateY(- 60 + location.getY() - 60);
             wayPointObject.setStyle("-fx-background-color: #ff1d13;");
-            wayPointObject.setAccessibleText("waypoint");
+            wayPointObject.setAccessibleText(node.getNodeID());
             TranslateTransition wayPointPutTransition = new TranslateTransition();
             wayPointPutTransition.setDuration(Duration.millis(400));
             wayPointPutTransition.setNode(wayPointObject);
@@ -226,6 +228,17 @@ public class MapController {
         }
     }
 
+    public void removeWaypoint(Node node) {
+        Iterator<MenuButton> waypointIterator = waypoints.iterator();
+        while(waypointIterator.hasNext()) {
+            MenuButton removedWaypoint = waypointIterator.next();
+            if(removedWaypoint.getAccessibleText().equals(node.getNodeID())) {
+                waypointPane.getChildren().remove(removedWaypoint);
+                waypointIterator.remove();
+                break;
+            }
+        }
+    }
     /**
      * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
      * @param floor the floor to load
@@ -398,12 +411,12 @@ public class MapController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
-
+                            //TODO handle lose sight action
                         }
                     }
                     else if(c.wasAdded()) {
-                        for(javafx.scene.Node lostSightWaypoint : c.getAddedSubList()) {
-
+                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
+                            //TODO regain lose sight action
                         }
                     }
                 }
