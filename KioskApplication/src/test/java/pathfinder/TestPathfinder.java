@@ -334,13 +334,13 @@ public class TestPathfinder {
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testDeadEndException1Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n18,n19);
+        alg.findPath(n18, n19, false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testDeadEndException2Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n01,n19);
+        alg.findPath(n01, n19, false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

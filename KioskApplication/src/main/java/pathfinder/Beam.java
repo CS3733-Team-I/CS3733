@@ -15,7 +15,7 @@ public class Beam implements SearchAlgorithm {
      * @throws PathfinderException
      */
     @Override
-    public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchairAccessible) throws PathfinderException {
        // int beamwidth = 3;
         MapEntity map = MapEntity.getInstance();
 
@@ -43,7 +43,7 @@ public class Beam implements SearchAlgorithm {
             for (PathfinderNode node : beam.values()) {
                 if(node==null)
                     throw new PathfinderException("null node");
-                for (PathfinderNode neighbor : getAndCheckForConnectedNodes(closedList, node, map)) {
+                for (PathfinderNode neighbor : getAndCheckForConnectedNodes(closedList, node, wheelchairAccessible)) {
                     if (neighbor.getNode().getNodeID().equals(endingNode.getNode().getNodeID())) {
                         return neighbor.buildPath();
                     }
@@ -56,7 +56,7 @@ public class Beam implements SearchAlgorithm {
             // go through set and add to beam map
             while ((set.size() != 0) && (4 > beam.size())) {
                   HashMap<String, PathfinderNode> heuristicValue = new HashMap<>();
-                  // for heristicvalue map
+                  // for heuristicValue map
                 for (String key : set.keySet()) {
                      heuristicValue.put(key, set.get(key));
                 }
@@ -102,12 +102,12 @@ public class Beam implements SearchAlgorithm {
      * and the parent node if it there is none
      * @param listExplored
      * @param pathfinderNode
-     * @param mapEntity
+     * @param wheelchairAccessible
      * @return
      */
-    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(HashMap<String,PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(HashMap<String,PathfinderNode> listExplored, PathfinderNode pathfinderNode, boolean wheelchairAccessible){
         // initalize connected nodes list from current node
-        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
+        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(wheelchairAccessible);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
         holder.addAll(connectedNodes);
         for(PathfinderNode pathfinderNode1: connectedNodes){
