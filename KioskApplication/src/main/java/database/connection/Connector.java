@@ -96,7 +96,7 @@ public class Connector {
         return pstmt.executeUpdate();
     }
 
-    public static Node selectNode(Connection conn, String nodeID) throws SQLException {
+    public static Node selectNode(Connection conn, String nodeID) throws SQLException, NotFoundException {
         Node node = null;
         String sql = NODE_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -112,6 +112,8 @@ public class Connector {
                             rs.getString("shortName"),
                             rs.getString("teamAssigned"));
         }
+        if(node == null)
+            throw new NotFoundException("Node not found.");
         return node;
     }
 
@@ -145,7 +147,6 @@ public class Connector {
     public static String selectCountNodeType(Connection conn, NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned) throws SQLException{
         String result = "";
         if(nodeType != NodeType.ELEV) {
-            int temp = 0;
             PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_COUNT_NODETYPE);
             pstmt.setInt(1, nodeType.ordinal());
             pstmt.setInt(2, floor.ordinal());

@@ -1,5 +1,6 @@
 package database;
 
+import database.connection.NotFoundException;
 import database.objects.*;
 import database.utility.DatabaseException;
 import org.junit.Before;
@@ -74,7 +75,13 @@ public class DatabaseControllerTests {
                              NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                              "Test node", "TN1", "I");
         dbController.addNode(node);
-        Node receivedNode  = dbController.getNode(node.getNodeID());
+        Node receivedNode;
+        try {
+            receivedNode = dbController.getNode(node.getNodeID());
+        }
+        catch(NotFoundException exception){
+            receivedNode = null;
+        }
         Assert.assertEquals(receivedNode, node);
     }
 
@@ -97,7 +104,13 @@ public class DatabaseControllerTests {
 
         dbController.updateNode(node);
 
-        Node receivedNode = dbController.getNode(node.getNodeID());
+        Node receivedNode;
+        try {
+            receivedNode = dbController.getNode(node.getNodeID());
+        }
+        catch(NotFoundException exception){
+            receivedNode = null;
+        }
         Assert.assertEquals(receivedNode, node);
     }
 
@@ -110,7 +123,13 @@ public class DatabaseControllerTests {
 
         dbController.removeNode(node);
 
-        Node receivedNode = dbController.getNode(node.getNodeID());
+        Node receivedNode;
+        try {
+            receivedNode = dbController.getNode(node.getNodeID());
+        }
+        catch(NotFoundException exception){
+            receivedNode = null;
+        }
         Assert.assertTrue(receivedNode == null);
     }
 

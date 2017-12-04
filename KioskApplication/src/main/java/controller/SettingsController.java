@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXTabPane;
+import controller.map.MapController;
 import database.objects.Edge;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -36,6 +37,7 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
+    @FXML private RadioButton beamButton;
 
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
@@ -56,6 +58,8 @@ public class SettingsController extends ScreenController {
         bfsButton.setUserData("BFS");
         dfsButton.setToggleGroup(searchAlgToggleGroup);
         dfsButton.setUserData("DFS");
+        beamButton.setToggleGroup(searchAlgToggleGroup);
+        beamButton.setUserData("Beam");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
@@ -142,5 +146,14 @@ public class SettingsController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }

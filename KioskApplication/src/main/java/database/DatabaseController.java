@@ -1,6 +1,7 @@
 package database;
 
 import database.connection.Connector;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Employee;
 import database.objects.Node;
@@ -56,7 +57,7 @@ public class DatabaseController {
     }
 
     //returns null if node does not exist
-    public Node getNode(String id) throws DatabaseException {
+    public Node getNode(String id) throws DatabaseException, NotFoundException {
         try {
             return Connector.selectNode(instanceConnection, id);
         } catch (SQLException e) {
@@ -328,7 +329,6 @@ public class DatabaseController {
     }
 
     //Employee section
-
     /**
      * adds an employee to the database currently more expensive because it needs to return the ID as an identifier
      * @param employee
