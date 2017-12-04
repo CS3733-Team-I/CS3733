@@ -1,5 +1,6 @@
 package pathfinder;
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -291,15 +292,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1Astar() throws PathfinderException{
+    public void testPathfinderException1Astar() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n18, n19, false);
+        alg.findPath(map.getNode("NODE18"), map.getNode("NODE19"), false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2Astar() throws PathfinderException{
+    public void testPathfinderException2Astar() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n01, n19, false);
+        alg.findPath(map.getNode("NODE01"), map.getNode("NODE19"), false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -323,15 +324,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1DF() throws PathfinderException{
+    public void testPathfinderException1DF() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n18,n19, false);
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"), false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2DF() throws PathfinderException{
+    public void testPathfinderException2DF() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n01,n19, false);
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"), false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -353,15 +354,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1BF() throws PathfinderException{
+    public void testPathfinderException1BF() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new BreadthFirst();
-        alg.findPath(n18,n19,false);
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2BF() throws PathfinderException{
+    public void testPathfinderException2BF() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new BreadthFirst();
-        alg.findPath(n01,n19,false);
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,15 +384,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1D() throws PathfinderException{
+    public void testPathfinderException1D() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Dijkstra();
-        alg.findPath(n18,n19,false);
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2D() throws PathfinderException{
+    public void testPathfinderException2D() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Dijkstra();
-        alg.findPath(n01,n19,false);
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -411,15 +412,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1Beam() throws PathfinderException{
+    public void testPathfinderException1Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
-        alg.findPath(n18,n19,false);
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2Beam() throws PathfinderException{
+    public void testPathfinderException2Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
-        alg.findPath(n01,n19,false);
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -439,15 +440,15 @@ public class TestPathfinder {
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testPathfinderException1BestFirst() throws PathfinderException{
+    public void testPathfinderException1BestFirst() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new BestFirst();
-        alg.findPath(n18,n19,false);
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testPathfinderException2BestFirst() throws PathfinderException{
+    public void testPathfinderException2BestFirst() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new BestFirst();
-        alg.findPath(n01,n19,false);
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
