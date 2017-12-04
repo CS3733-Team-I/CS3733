@@ -2,6 +2,7 @@ package entity;
 
 import database.objects.Edge;
 import database.objects.Node;
+import javafx.scene.shape.Polyline;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -100,4 +101,5 @@ public class Path {
         }
         return nodes;
     }
+
 }

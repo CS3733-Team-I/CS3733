@@ -4,6 +4,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -13,6 +14,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polyline;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -133,6 +136,29 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
+        Circle circle = new Circle(30);
+        circle.setStyle("-fx-background-color: #ffffff;");
+
+        PathTransition navigationTransition = new PathTransition();
+        navigationTransition.setNode(circle);
+        navigationTransition.setDuration(Duration.seconds(3));
+        navigationTransition.setPath(getPathPolyline());
+        navigationTransition.setCycleCount(PathTransition.INDEFINITE);
+        navigationTransition.play();
+    }
+
+    public Polyline getPathPolyline() {
+        Polyline polyline = new Polyline();
+        for(PathView pathView : pathViewsMap.values()) {
+            polyline.getPoints().addAll(new Double[] {
+                    pathView.getStart().getX(), pathView.getStart().getY(),
+                    pathView.getEnd().getX(), pathView.getEnd().getY(),
+            });
+        }
+        polyline.setStyle("-fx-background-color: #ffffff;"+
+        "-fx-stroke-width: 10px;");
+        getChildren().add(polyline);
+        return polyline;
     }
 
     public Path getPath() {

@@ -44,4 +44,12 @@ public class PathView extends AnchorPane {
         AnchorPane.setLeftAnchor(container, start.getX());
         AnchorPane.setTopAnchor(container, start.getY());
     }
+
+    public Point2D getStart() {
+        return start;
+    }
+
+    public Point2D getEnd() {
+        return end;
+    }
 }
