@@ -22,47 +22,42 @@ public class SQLStrings {
             " REFERENCES t_nodes ON DELETE CASCADE" +
             ")";
 
+    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?)";
+
+    public static final String REQUEST_UPDATE = " nodeID=?, assigner=?, completer=?,"+
+            " note=?, submittedTime=?, startedTime=?, completedTime=?,"+
+            " status=? where requestID=?";
+
+    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreter("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreter_pk PRIMARY KEY,"+
+            " language INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2 REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_employee_fk REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,";
+
+    public static final String CREATE_SECURITY_TABLE = "create table t_security("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
+            " priority INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk3 REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_employee_fk3 REFERENCES t_employee ON DELETE CASCADE,";
+
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " assigner VARCHAR(63) NOT NULL REFERENCES t_employee on DELETE CASCADE," +
-            " completer VARCHAR(63) NOT NULL,"+
             " note CLOB(280)," +
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
             " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL)";
 
-    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?, ?)";
-    public static final String REQUEST_UPDATE =
-            " nodeID=?," +
-            " assigner=?," +
-            " completer=?,"+
-            " note=?,"+
-            " submittedTime=?,"+
-            " startedTime=?,"+
-            " completedTime=?,"+
-            " status=?"+
-            " where requestID=?";
-
-    public static final String CREATE_INTERPRETER_TABLE = "create table t_interpreters("+
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_interpreters_pk PRIMARY KEY,"+
-            " language INT NOT NULL,"+
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk2" +
-            " REFERENCES t_nodes ON DELETE CASCADE,";
-
-    public static final String INTERPRETER_INSERT = "insert into t_interpreters values(?, ?, ?,";
-    public static final String INTERPRETER_UPDATE = "update t_interpreters set" +
+    public static final String INTERPRETER_INSERT = "insert into t_interpreter values(?, ?, ?, ?, ?,";
+    public static final String INTERPRETER_UPDATE = "update t_interpreter set" +
             " language=?,";
-    public static final String INTERPRETER_SELECT = "select * from t_interpreters where requestID=?";
-    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreters WHERE requestID = ?";
-    public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreters";
+    public static final String INTERPRETER_SELECT = "select * from t_interpreter where requestID=?";
+    public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreter WHERE requestID = ?";
+    public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreter";
 
-    public static final String CREATE_SECURITY_TABLE = "create table t_security("+
-            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_security_pk PRIMARY KEY,"+
-            " priority INT NOT NULL,"+
-            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_nodes_fk3" +
-            " REFERENCES t_nodes ON DELETE CASCADE,";
 
-    public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?,";
+    public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?, ?, ?,";
     public static final String SECURITY_UPDATE = "update t_security set" +
             " priority=?,";
     public static final String SECURITY_SELECT = "select * from t_security where requestID=?";
@@ -71,7 +66,7 @@ public class SQLStrings {
 
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
-    public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreters";
+    public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
     public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
@@ -92,9 +87,10 @@ public class SQLStrings {
 
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
-            " loginID Varchar(63) NOT NULL CONSTRAINT t_employee_pk PRIMARY KEY,"+
-            " userName Varchar(50) NOT NULL,"+
-            // not sure how I want to store passwords
+            " loginID INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_employee_pk PRIMARY KEY,"+
+            " username Varchar(255) NOT NULL UNIQUE,"+
+            " lastName Varchar(35) NOT NULL,"+
+            " firstName Varchar(35) NOT NULL,"+
             " password Varchar(60) NOT NULL,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
@@ -102,10 +98,11 @@ public class SQLStrings {
 
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
-    public static final String EMPLOYEE_INSERT = "insert into t_employee values(?,?,?,?,?)";
-    // this seems insecure AF
-    public static final String EMPLOYEE_UPDATE = "update t_employee set userName=?, password=?, permission=?, serviceAbility=? where loginID=?";
-    // Included a get method for standardization purposes
+    public static final String EMPLOYEE_INSERT = "insert into t_employee"+
+            "(username, lastName, firstName, password, permission, serviceAbility)"+
+            " values(?, ?, ?, ?, ?, ?)";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?,"+
+            " permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";
     public static final String EMPLOYEE_DELETE = "delete from t_employee where loginID=?";

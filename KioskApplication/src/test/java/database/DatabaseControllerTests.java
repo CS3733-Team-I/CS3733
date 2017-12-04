@@ -4,7 +4,6 @@ import database.connection.NotFoundException;
 import database.objects.*;
 import database.utility.DatabaseException;
 import org.junit.Before;
-import org.junit.runner.JUnitCore;
 import utility.KioskPermission;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,6 +26,8 @@ import static org.junit.Assert.assertTrue;
 public class DatabaseControllerTests {
 
     private DatabaseController dbController;
+    private int emp1ID;
+    private int emp2ID;
 
     public DatabaseControllerTests() {
         dbController = DatabaseController.getInstance();
@@ -34,11 +35,13 @@ public class DatabaseControllerTests {
 
     @Before
     public void statrtup(){
-        dbController.addEmployee("boss@hospital.com","test","password",KioskPermission.EMPLOYEE,
-                RequestType.GENERAL);
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp1ID=dbController.addEmployee(emp1,"password");
 
-        dbController.addEmployee("emp@hospital.com","test","password",KioskPermission.EMPLOYEE,
-                RequestType.GENERAL);
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp2ID=dbController.addEmployee(emp2,"password");
     }
 
     @After
@@ -57,7 +60,9 @@ public class DatabaseControllerTests {
         for (SecurityRequest sR: sRs) dbController.deleteSecurityRequest(sR.getRequestID());
 
         List<Employee> employees = dbController.getAllEmployees();
-        for (Employee e : employees) dbController.removeEmployee(e.getLoginID());
+        for (Employee e : employees) {
+            dbController.removeEmployee(e.getLoginID());
+        }
 
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -200,7 +205,7 @@ public class DatabaseControllerTests {
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         Assert.assertEquals(iR,dbController.getInterpreterRequest(iR.getRequestID()));
@@ -218,14 +223,14 @@ public class DatabaseControllerTests {
         dbController.addNode(node2);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         long t2 = System.currentTimeMillis()+2;
 
         //updates InterpreterRequest values
         iR.setNodeID("NODE2");
-        iR.setAssigner("emp@hospital.com");
+        iR.setAssignerID(emp2ID);
         iR.setNote("Professor Wong");
         iR.setSubmittedTime(new Timestamp(t2));
         iR.setCompletedTime(new Timestamp(t2-1));
@@ -245,7 +250,7 @@ public class DatabaseControllerTests {
         dbController.addNode(node);
         long t1 = System.currentTimeMillis();
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes iR
@@ -263,7 +268,7 @@ public class DatabaseControllerTests {
         long t1 = System.currentTimeMillis();
 
         InterpreterRequest iR = new InterpreterRequest("Int 2017:11:22 NODE1","NODE1",
-                "boss@hospital.com", "","", new Timestamp(t1), new Timestamp(t1-1),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
                 new Timestamp(t1-1), RequestProgressStatus.TO_DO, Language.ARABIC);
         dbController.addInterpreterRequest(iR);
         //deletes node
@@ -283,41 +288,40 @@ public class DatabaseControllerTests {
      */
 
     @Test
-    public void testAddEmployee(){
-        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        assertEquals("Name",dbController.getEmployee("ID").getUserName());
+    public void testEmployeeAdd(){
+        Employee testEmp = new Employee("Name","n","t","password",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        int ID = dbController.addEmployee(testEmp,"password");
+        assertEquals("Name",dbController.getEmployee(ID).getUsername());
     }
 
     @Test
-    public void testRemoveEmployee(){
-        dbController.addEmployee("ID","Name","password", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.removeEmployee("ID");
-        assertNull(dbController.getEmployee("ID"));
+    public void testEmployeeRemove(){
+        dbController.removeEmployee(emp2ID);
+        assertNull(dbController.getEmployee(emp2ID));
     }
 
     @Test
-    public void testUpdateEmployee(){
-        Employee testEmp = new Employee("ID","Name","password", KioskPermission.EMPLOYEE,
-                RequestType.INTERPRETER,false);
-        dbController.addEmployee(testEmp.getLoginID(),testEmp.getUserName(),testEmp.getPassword("password"),
-                testEmp.getPermission(), testEmp.getServiceAbility());
-        testEmp.updateUserName("NewName","password");
-        testEmp.updatePassword("NewPassword","password");
-        dbController.updateEmployee("ID",testEmp.getUserName(),testEmp.getPassword("NewPassword"),
-                KioskPermission.ADMIN, RequestType.GENERAL);
-        Employee updatedEmployee=dbController.getEmployee("ID");
-        assertEquals("NewName",updatedEmployee.getUserName());
-        assertEquals(KioskPermission.ADMIN,updatedEmployee.getPermission());
-        assertEquals(RequestType.GENERAL,updatedEmployee.getServiceAbility());
+    public void testEmployeeUpdate(){
+        Employee upEmp = dbController.getEmployee(emp2ID);
+        upEmp.updateUsername("NewName","password");
+        upEmp.updatePassword("NewPassword","password");
+        dbController.updateEmployee(upEmp,"NewPassword");
+        Employee updatedEmployee=dbController.getEmployee(emp2ID);
+        assertEquals("NewName",updatedEmployee.getUsername());
         assertTrue(updatedEmployee.validatePassword("NewPassword"));
     }
 
     @Test
-    public void testGetAllEmployees(){
-        dbController.addEmployee("ID1","Name1","password1", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        dbController.addEmployee("ID2","Name2","password2", KioskPermission.ADMIN, RequestType.GENERAL);
+    public void testEmployeeGetAll(){
+        Employee testEmp1=new Employee("Name1","ln1","fn1","password1",
+                KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+        dbController.addEmployee(testEmp1,"password1");
+        Employee testEmp2=new Employee("Name2","ln2","fn2","password2",
+                KioskPermission.ADMIN, RequestType.GENERAL);
+        dbController.addEmployee(testEmp2,"password2");
         LinkedList<Employee> employees = dbController.getAllEmployees();
-        assertEquals("ID1",employees.get(employees.size()-2).getLoginID());
-        assertEquals("ID2",employees.get(employees.size()-1).getLoginID());
+        assertEquals("Name1",employees.get(employees.size()-2).getUsername());
+        assertEquals("Name2",employees.get(employees.size()-1).getUsername());
     }
 }
