@@ -14,5 +14,5 @@ public interface SearchAlgorithm {
      * @return LinkedList<Edge> List of edges defining a valid path between startNode and endNode.
      * @throws PathfinderException if pretty much anything goes wrong; TODO: improve this (specific exceptions for different errors).
      */
-    LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException;
+    LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchairAccessible) throws PathfinderException;
 }

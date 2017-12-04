@@ -4,18 +4,21 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class Beam implements SearchAlgorithm {
     /**
-     * beam first search
+     * beam search  TODO: expand this comment so it actually explains the algorithm
      * @param startNode node that the path should start at
      * @param endNode node that the path should end at
      * @return
      * @throws PathfinderException
      */
     @Override
-    public LinkedList<Edge> findPath(Node startNode, Node endNode) throws PathfinderException {
+    public LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchairAccessible) throws PathfinderException {
        // int beamwidth = 3;
         MapEntity map = MapEntity.getInstance();
 
@@ -26,9 +29,9 @@ public class Beam implements SearchAlgorithm {
         if(startingNode.getNode().getNodeID().equals(endNode.getNodeID()))
             return startingNode.buildPath();
         // a hash map is used to store nodes that have been visited
-          HashMap<String, PathfinderNode> closedList = new HashMap<>();
-         HashMap<String, PathfinderNode> beam = new HashMap<>();
-         HashMap<String, PathfinderNode> set = new HashMap<>();
+        HashMap<String, PathfinderNode> closedList = new HashMap<>();
+        HashMap<String, PathfinderNode> beam = new HashMap<>();
+        HashMap<String, PathfinderNode> set = new HashMap<>();
 
          // put start node in closesdlist and beam
         closedList.put(startingNode.getNode().getNodeID(), startingNode);
@@ -43,7 +46,7 @@ public class Beam implements SearchAlgorithm {
             for (PathfinderNode node : beam.values()) {
                 if(node==null)
                     throw new PathfinderException("null node");
-                for (PathfinderNode neighbor : getAndCheckForConnectedNodes(closedList, node, map)) {
+                for (PathfinderNode neighbor : getAndCheckForConnectedNodes(closedList, node, wheelchairAccessible)) {
                     if (neighbor.getNode().getNodeID().equals(endingNode.getNode().getNodeID())) {
                         return neighbor.buildPath();
                     }
@@ -102,12 +105,12 @@ public class Beam implements SearchAlgorithm {
      * and the parent node if it there is none
      * @param listExplored
      * @param pathfinderNode
-     * @param mapEntity
+     * @param wheelchairAccessible
      * @return
      */
-    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(HashMap<String,PathfinderNode> listExplored, PathfinderNode pathfinderNode, MapEntity mapEntity){
+    private LinkedList<PathfinderNode> getAndCheckForConnectedNodes(HashMap<String,PathfinderNode> listExplored, PathfinderNode pathfinderNode, boolean wheelchairAccessible){
         // initalize connected nodes list from current node
-        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(mapEntity);
+        LinkedList<PathfinderNode> connectedNodes = pathfinderNode.getConnectedNodes(wheelchairAccessible);
         LinkedList<PathfinderNode> holder = new LinkedList<>();
         holder.addAll(connectedNodes);
         for(PathfinderNode pathfinderNode1: connectedNodes){
@@ -138,7 +141,7 @@ public class Beam implements SearchAlgorithm {
                 return key;
             }
         }
-        else{// go through and compare heristic values
+        else{// go through and compare heuristic values
         String minIndex = "";
         Set<String> scores_set = scores.keySet();
         Iterator<String> scores_it = scores_set.iterator();

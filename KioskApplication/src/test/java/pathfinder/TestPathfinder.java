@@ -285,13 +285,13 @@ public class TestPathfinder {
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testPathfinderException1Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n18,n19);
+        alg.findPath(n18, n19, false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testPathfinderException2Astar() throws PathfinderException{
         SearchAlgorithm alg = new A_star();
-        alg.findPath(n01,n19);
+        alg.findPath(n01, n19, false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -309,13 +309,13 @@ public class TestPathfinder {
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testPathfinderException1DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n18,n19);
+        alg.findPath(n18,n19, false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testPathfinderException2DF() throws PathfinderException{
         SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n01,n19);
+        alg.findPath(n01,n19, false);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -528,7 +528,7 @@ public class TestPathfinder {
         for(Node n1 : map.getAllNodes()) {
             for(Node n2 : map.getAllNodes()) {
                 try {
-                    path = alg.findPath(n1,n2);
+                    path = alg.findPath(n1,n2, false);
 
                     if(!isValidPath(n1,n2,path)) {
                         System.out.println("Not Valid Path\nStart: " + n1.getNodeID() + " End: " + n2.getNodeID());

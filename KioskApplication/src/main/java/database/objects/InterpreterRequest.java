@@ -9,10 +9,10 @@ import java.sql.Timestamp;
 public class InterpreterRequest extends Request {
     private Language language;
 
-    public InterpreterRequest(String requestID, String nodeID, String assigner, String completer,
+    public InterpreterRequest(String requestID, String nodeID, int assignerID, int completerID,
                               String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
                               RequestProgressStatus status, Language language) {
-        super(requestID, nodeID, assigner, completer, note, submittedTime, startedTime, completedTime, status);
+        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
         this.language = language;
     }
 
@@ -24,7 +24,7 @@ public class InterpreterRequest extends Request {
             InterpreterRequest other = (InterpreterRequest)obj;
             return(this.requestID.equals(other.getRequestID())) &&
                     this.getNodeID().equals(other.getNodeID())&&
-                    this.getAssigner().equals(other.getAssigner())&&
+                    this.getAssignerID()==other.getAssignerID()&&
                     this.getNote().equals(other.getNote())&&
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&

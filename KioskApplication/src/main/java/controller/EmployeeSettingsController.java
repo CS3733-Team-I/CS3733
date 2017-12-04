@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
+import database.objects.IEmployee;
 import database.objects.Employee;
 import entity.LoginEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -49,7 +50,7 @@ public class EmployeeSettingsController {
         usernameColumn.setPrefWidth(175);
         usernameColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
-                        new ReadOnlyStringWrapper(param.getValue().getValue().getUserName())
+                        new ReadOnlyStringWrapper(param.getValue().getValue().getUsername())
         );
 
         TreeTableColumn<Employee, String> permissionColumn = new TreeTableColumn<>("Permission");
@@ -76,7 +77,7 @@ public class EmployeeSettingsController {
             if (newValue != null) {
                 LoginEntity e = LoginEntity.getInstance();
                 // Don't allow deletion if the selected user is self
-                if (!newValue.getValue().getUserName().equals(e.getUsername())) {
+                if (!newValue.getValue().getUsername().equals(e.getUsername())) {
                     deleteUserButton.setDisable(false);
                     selectedEmployee = newValue.getValue();
                 }
@@ -98,7 +99,7 @@ public class EmployeeSettingsController {
 
         ArrayList<Employee> logins = LoginEntity.getInstance().getAllLogins();
         logins.stream().forEach((employee) -> {
-            root.getChildren().add(new TreeItem<>(employee));
+            root.getChildren().add(new TreeItem<Employee>(employee));
         });
 
         deleteUserButton.setDisable(true);
@@ -118,7 +119,7 @@ public class EmployeeSettingsController {
     @FXML
     void onDeletePressed(ActionEvent event) {
         // Set delete text
-        deleteText.setText("Delete " + selectedEmployee.getUserName() + "?");
+        deleteText.setText("Delete " + selectedEmployee.getUsername() + "?");
 
         // Adjust visability
         usersList.setVisible(false);
@@ -129,7 +130,7 @@ public class EmployeeSettingsController {
     @FXML
     void deleteSelectedUser(ActionEvent even) {
         // Delete user
-        LoginEntity.getInstance().deleteLogin(selectedEmployee.getUserName());
+        LoginEntity.getInstance().deleteLogin(selectedEmployee.getUsername());
 
         refreshUsers();
 
@@ -153,7 +154,7 @@ public class EmployeeSettingsController {
         // Check that all fields are filled in
         if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             // Add user
-            if (LoginEntity.getInstance().addUser(usernameBox.getText(), passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
+            if (LoginEntity.getInstance().addUser(usernameBox.getText(),"","", passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
                 System.out.println("Adding user ... ");
                 System.out.println("User: " + usernameBox.getText());
                 System.out.println("Pass: " + passwordBox.getText());

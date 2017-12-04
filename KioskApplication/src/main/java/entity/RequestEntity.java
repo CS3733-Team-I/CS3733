@@ -1,9 +1,7 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.InterpreterRequest;
-import database.objects.Request;
-import database.objects.SecurityRequest;
+import database.objects.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -86,6 +84,10 @@ public class RequestEntity {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Request> getAllRequests(){
         LinkedList<Request> allRequests = new LinkedList<>();
         for (InterpreterRequest iR: interpreterRequests.values()){
@@ -97,6 +99,10 @@ public class RequestEntity {
         return allRequests;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
@@ -105,6 +111,10 @@ public class RequestEntity {
         return intRequests;
     }
 
+    /**
+     *
+     * @return List of requests for security
+     */
     public LinkedList<Request> getAllSecurity(){
         LinkedList<Request> secRequests = new LinkedList<>();
         for(SecurityRequest sR: securityRequests.values()){
@@ -113,16 +123,18 @@ public class RequestEntity {
         return secRequests;
     }
 
-    /**
-     * Methods for all request types
-     */
-
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
         LinkedList<Request> displayedRequests = filterByStatus(requests, status);
         return displayedRequests;
     }
 
+    /**
+     *
+     * @param requests
+     * @param status
+     * @return
+     */
     public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
         LinkedList<Request> displayedRequests = new LinkedList<>();
         for (int i = 0; i < requests.size(); i++) {
@@ -149,6 +161,11 @@ public class RequestEntity {
         return displayedRequests;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
     public RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
         if (requestType.equals("Int")) {
@@ -167,7 +184,10 @@ public class RequestEntity {
         }
     }
 
-    //Generic request deleting method
+    /**
+     * Generic request deleting method
+     * @param requestID
+     */
     public void deleteRequest(String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
@@ -197,18 +217,22 @@ public class RequestEntity {
         }
     }
 
-    //Generic request in progress maker
-    public void markInProgress(String completer, String requestID){
+    /**
+     * Generic request in progress marker
+     * @param completerID
+     * @param requestID
+     */
+    public void markInProgress(int completerID, String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.markInProgress(completer);
+            iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.markInProgress(completer);
+            sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
@@ -229,19 +253,22 @@ public class RequestEntity {
         }
     }
 
-    //Generic request completing method
+    /**
+     * Generic request completing method
+     * @param requestID
+     */
     public void completeRequest(String requestID){
         String requestType = requestID.substring(0,3);
         if(requestType.equals("Int")){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.complete();
+            iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals("Sec")){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.complete();
+            sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
@@ -263,6 +290,11 @@ public class RequestEntity {
         }
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
     public Request getRequest(String requestID){
         Request request;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
@@ -273,19 +305,43 @@ public class RequestEntity {
         return request;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
+    public Employee getAssigner(String requestID){
+        Request request = getRequest(requestID);
+        return dbController.getEmployee(request.getAssignerID());
+    }
 
     /**
-     * InterpreterRequest methods
+     * Gets the completer of a request if it is in progress
+     * @param requestID
+     * @return employee
      */
+    public IEmployee getCompleter(String requestID){
+        Request request = getRequest(requestID);
+        if(request.getStatus()!=RequestProgressStatus.TO_DO) return dbController.getEmployee(request.getCompleterID());
+        else return NullEmployee.getInstance();
+    }
 
-    public String submitInterpreterRequest(String nodeID, String assignee, String note,
+    /**
+     * Submits an interpreterRequest
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param lang
+     * @return
+     */
+    public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
-        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignee, "", note,
+        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
@@ -308,12 +364,23 @@ public class RequestEntity {
         }
     }
 
-    public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+    /**
+     *
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param language
+     */
+    public void updateInterpreterRequest(String requestID, String nodeID, int assignerID, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
         oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
+        oldReq.setAssignerID(assignerID);
         oldReq.setNote(note);
         oldReq.setSubmittedTime(submittedTime);
         oldReq.setCompletedTime(completedTime);
@@ -325,23 +392,33 @@ public class RequestEntity {
     }
 
     /**
-     * SecurityRequest methods
+     *
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param priority
+     * @return
      */
-
-    public String submitSecurityRequest(String nodeID, String assignee, String note,
+    public String submitSecurityRequest(String nodeID, int assignerID, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
-        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignee, "", note,
+        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
         return rID;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     * @throws NullPointerException
+     */
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
         System.out.println("Getting Security request");
         if(securityRequests.containsKey(requestID)) {
@@ -353,17 +430,28 @@ public class RequestEntity {
                 return securityRequests.get(requestID);
             }
             else{
-                throw new NullPointerException("Unable to find SecurityReqest in database");
+                throw new NullPointerException("Unable to find SecurityRequest in database");
             }
         }
     }
 
-    public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
+    /**
+     *
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param priority
+     */
+    public void updateSecurityRequest(String requestID, String nodeID, int assignerID, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
         oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
+        oldReq.setAssignerID(assignerID);
         oldReq.setNote(note);
         oldReq.setSubmittedTime(submittedTime);
         oldReq.setCompletedTime(completedTime);
@@ -375,7 +463,7 @@ public class RequestEntity {
     }
 
 
-    /**
+    /*
      * Tracking information
      * what we want:
      * Time from IN_PROGRESS to COMPLETE for requests
@@ -386,7 +474,11 @@ public class RequestEntity {
      * common IT request problems
      */
 
-    // gets mean time to complete a request from IN_PROGRESS to DONE
+    // gets mean time to setComplete a request from IN_PROGRESS to DONE
+
+    /**
+     *
+     */
     public void getMeanTimeToComplete(){
         long sum=0;
         int total=0;
@@ -407,7 +499,10 @@ public class RequestEntity {
         }
     }
 
-    // gives a frequency histogram for interpreter request languages
+    /**
+     * gives a frequency histogram for interpreter request languages
+     * @return
+     */
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         dbController.getAllInterpreterRequests();
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
@@ -427,7 +522,10 @@ public class RequestEntity {
         return freq;
     }
 
-    //returns a hashmap of Strings and integers for a pie chart
+    /**
+     *
+     * @return hashmap of Strings and integers for a pie chart of request types
+     */
     public ObservableList<PieChart.Data> getRequestDistribution(){
         ObservableList<PieChart.Data> reqs =
                 FXCollections.observableArrayList(
