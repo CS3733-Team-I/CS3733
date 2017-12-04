@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -86,15 +87,30 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+
     @Override
     public Node getNode(String s) {
         for (NodeFloor floor : floors.keySet()) {
-            Node thisNode = floors.get(floor).getNode(s);
-            if (thisNode != null) return thisNode;
+            Node thisNode;
+            try {
+                thisNode = floors.get(floor).getNode(s);
+            }
+            catch(NotFoundException exception){
+                //TODO: add actual handling
+                thisNode = null;
+            }
+            return thisNode;
         }
 
         try {
-            Node node = dbController.getNode(s);
+            Node node;
+            try {
+                node = dbController.getNode(s);
+            }
+            catch (NotFoundException exception){
+                //TODO: add actual handling
+                node = null;
+            }
             if (node != null) {
                 NodeFloor f = node.getFloor();
                 if(!floorExists(f)) addFloor(f);
@@ -201,7 +217,14 @@ public class MapEntity implements IMapEntity {
 
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
-            if (floorEntity.getNode(node.getNodeID()) != null)
+            Node floorNode;
+            try{
+                floorNode = floorEntity.getNode(node.getNodeID());
+            }
+            catch(NotFoundException exception){
+                floorNode = null;
+            }
+            if (floorNode != null)
                 floorEntity.removeNode(node);
         }
     }
