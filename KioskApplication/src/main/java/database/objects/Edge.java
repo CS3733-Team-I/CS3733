@@ -1,5 +1,6 @@
 package database.objects;
 
+import database.connection.NotFoundException;
 import entity.MapEntity;
 import utility.node.NodeType;
 
@@ -76,36 +77,41 @@ public class Edge {
      */
     private void calculateCost(){
         MapEntity map = MapEntity.getInstance();
-        Node node1 = map.getNode(this.node1ID);
-        Node node2 = map.getNode(this.node2ID);
-
-        //If the two nodes are both stairs or elevators and are on different floors, the edge between them represents
-        //a staircase or an elevator shaft, respectively.  In either case, assign a cost to approximate the difficulty
-        //of taking a staircase or an elevator up or down a single floor (same weight whether up or down).
-        if(node1.getNodeType().equals(NodeType.STAI) &&
-           node2.getNodeType().equals(NodeType.STAI) &&
-           !node1.getFloor().equals(node2.getFloor())){
-            this.cost =  STAIR_COST;
-            this.wheelchairAccessible = false;
+        Node node1, node2;
+        try {
+            node1 = map.getNode(this.node1ID);
+            node2 = map.getNode(this.node2ID);
+            //If the two nodes are both stairs or elevators and are on different floors, the edge between them represents
+            //a staircase or an elevator shaft, respectively.  In either case, assign a cost to approximate the difficulty
+            //of taking a staircase or an elevator up or down a single floor (same weight whether up or down).
+            if(node1.getNodeType().equals(NodeType.STAI) &&
+               node2.getNodeType().equals(NodeType.STAI) &&
+               !node1.getFloor().equals(node2.getFloor())){
+                this.cost =  STAIR_COST;
+                this.wheelchairAccessible = false;
+            }
+            else if(node1.getNodeType().equals(NodeType.ELEV) &&
+                    node2.getNodeType().equals(NodeType.ELEV) &&
+                    !node1.getFloor().equals(node2.getFloor())) {
+                this.cost = ELEVATOR_COST;
+                this.wheelchairAccessible = true;
+            }
+                //Otherwise, estimate the cost as normal.
+            else {
+                //Assuming all edges are straight lines, the cost of the edge from the parent node should be the
+                // straight-line distance between the two.
+                int xDistance = Math.abs(node1.getXcoord() - node2.getXcoord());
+                int yDistance = Math.abs(node1.getYcoord() - node2.getYcoord());
+                //Calculate distance with Pythagorean theorem
+                int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+                //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
+                //node to here.
+                this.cost =  straightLineDistance;
+                this.wheelchairAccessible = true;
+            }
         }
-        else if(node1.getNodeType().equals(NodeType.ELEV) &&
-                node2.getNodeType().equals(NodeType.ELEV) &&
-                !node1.getFloor().equals(node2.getFloor())) {
-            this.cost = ELEVATOR_COST;
-            this.wheelchairAccessible = true;
-        }
-            //Otherwise, estimate the cost as normal.
-        else {
-            //Assuming all edges are straight lines, the cost of the edge from the parent node should be the
-            // straight-line distance between the two.
-            int xDistance = Math.abs(node1.getXcoord() - node2.getXcoord());
-            int yDistance = Math.abs(node1.getYcoord() - node2.getYcoord());
-            //Calculate distance with Pythagorean theorem
-            int straightLineDistance = (int) Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
-            //Total cost to get here is the sum of the cost to get to the previous node & the cost to get from that
-            //node to here.
-            this.cost =  straightLineDistance;
-            this.wheelchairAccessible = true;
+        catch (NotFoundException exception){
+            //TODO: add actual handling
         }
     }
 
