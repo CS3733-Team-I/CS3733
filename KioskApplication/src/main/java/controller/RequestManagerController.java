@@ -102,13 +102,6 @@ public class RequestManagerController extends ScreenController {
         }
     }
 
-    //This used to be how you switched scenes
-    //not sure if it is still being used
-    @FXML
-    void viewRequests() throws IOException {
-        System.out.println("request Manager Pressed\n");
-        getParent().switchToScreen(ApplicationScreen.REQUEST_MANAGER);
-    }
 
     //unopened request button. Displays all of the new requests
     @FXML
@@ -137,83 +130,6 @@ public class RequestManagerController extends ScreenController {
         setup();
         LinkedList<Request> allRequests = filterRequests();
         showRequests(status, allRequests);
-    }
-
-    //Displays buttons on the sidebar to assign requests, mark as complete, and delete requests
-    private void buttonSetupt(RequestProgressStatus status) {
-        row8.getChildren().clear();
-        row9.getChildren().clear();
-        //Checks to see when a cell in the ListView, activeRequests, is selected
-        activeRequests.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                // Your action here
-                System.out.println("Selected item: " + newValue);
-                row8.getChildren().clear();
-                row9.getChildren().clear();
-                String requestID = newValue;
-                JFXButton statusUpdater;
-                if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
-                    switch (status){
-                        case TO_DO:
-                            ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
-                            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
-                            JFXComboBox employees = new JFXComboBox(listOfEmployees);
-                            employees.setPromptText("Select Employee");
-                            row8.getChildren().add(employees);
-
-                            statusUpdater = new JFXButton("Assign");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.markInProgress((String) employees.getValue(),requestID);
-                                    refreshRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                        //Admins and Supers can't complete a request
-
-                        case DONE:
-                            statusUpdater = new JFXButton("Delete");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.deleteRequest(requestID);
-                                    refreshRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                    }
-                }else{
-                    switch (status){
-                        case TO_DO:
-                            statusUpdater = new JFXButton("Assign Me");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.markInProgress(l.getUserID(),requestID);
-                                    refreshRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                        case IN_PROGRESS:
-                            statusUpdater = new JFXButton("Completed");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.completeRequest(requestID);
-                                    refreshRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                    }
-                }
-            }
-        });
     }
 
     //Checks the checkboxes to see what filters to add.
@@ -321,16 +237,60 @@ public class RequestManagerController extends ScreenController {
         employees.setPrefWidth(200);
 
         vbox.getChildren().add(delete);
-
         popup = new JFXPopup(vbox);
+
+        more.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                vbox.getChildren().clear();
+                vbox.getChildren().add(displayInformation(requestID));
+            }
+        });
+
+    }
+
+    public VBox displayInformation(String requestID){
+        Request request = r.getRequest(requestID);
+        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+        Label employee = new Label("Employee: ");
+        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
+        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+        Label locationOfRequest = new Label(location);
+        Label extraField;
+        RequestType RT = r.checkRequestType(requestID);
+        switch (RT){
+            case INTERPRETER:
+                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
+                extraField = new Label("Language: "+language);
+                break;
+            default: //security
+                int priority = r.getSecurityRequest(requestID).getPriority();
+                extraField = new Label("Priority: "+ priority);
+                break;
+        }
+        JFXButton close = new JFXButton("close");
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popup.hide();
+            }
+        });
+        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,assigner,extraField,close);
+        return vbox;
     }
 
     //Method to display popup information when a list view cell is selected
     @FXML
     public void displayInfo(MouseEvent event){
-        String requestID = activeRequests.getSelectionModel().getSelectedItem();
-        initializePopup(requestID); //Don't like that this is here
-        popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
+        if(activeRequests.getSelectionModel().isEmpty()){
+            event.consume();
+        }else{
+            String requestID = activeRequests.getSelectionModel().getSelectedItem();
+            initializePopup(requestID); //Don't like that this is here
+            popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
+            activeRequests.getSelectionModel().clearSelection();
+
+        }
     }
 
     //opens the reports pop up window to display the graphs
