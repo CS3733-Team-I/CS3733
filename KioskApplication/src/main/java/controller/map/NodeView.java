@@ -190,7 +190,7 @@ public class NodeView extends StackPane {
             }
             // Skip if edge has been added
             circle.setFill(Color.IVORY);
-            
+
             setSelectionType(selectionType);
             event.consume();
         }
