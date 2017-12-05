@@ -92,6 +92,15 @@ public class Edge {
     }
 
     /**
+     * Returns true if the edge has target node
+     * @param  node for checking
+     * @return True if the edge has target node
+     */
+    public boolean hasNode(Node node) {
+        return getNode1ID().equals(node.getNodeID()) || getNode2ID().equals(node.getNodeID());
+    }
+
+    /**
      * Given one node ID return the other node ID or null if the given node isn't a node in the edge
      * @param id ID of the given node
      * @return the ID of the other connected node or null

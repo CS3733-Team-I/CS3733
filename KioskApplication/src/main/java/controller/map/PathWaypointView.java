@@ -155,8 +155,8 @@ public class PathWaypointView extends AnchorPane {
         }
 
         //TODO DATABASE ERROR HERE
-        for(LinkedList<Node> nodes : currentPath.getNodesInSegment(waypointList.get(0))) {
-            System.out.println("1. " + nodes);
+        for(Node nodes : waypointList.subList(0, waypointList.size()-1)) {
+            System.out.println("1. " + currentPath.getNodesInSegment(nodes));
         }
 
 
