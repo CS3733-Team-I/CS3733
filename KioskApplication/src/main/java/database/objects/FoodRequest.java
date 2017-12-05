@@ -5,15 +5,15 @@ import utility.request.RequestProgressStatus;
 import java.sql.Timestamp;
 
 public class FoodRequest extends Request{
-    private String restuarant;
+    private String destinationNodeID;
     private String order;
     private String deliveryDate;
 
     public FoodRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                        Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                       RequestProgressStatus status, String restuarant, String order, String deliveryDate){
+                       RequestProgressStatus status, String destinationNodeID, String order, String deliveryDate){
         super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
-        this.restuarant = restuarant;
+        this.destinationNodeID = destinationNodeID;
         this.order = order;
         this.deliveryDate = deliveryDate;
     }
@@ -31,7 +31,7 @@ public class FoodRequest extends Request{
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&
                     this.getStatus()==other.getStatus()&&
-                    this.restuarant==other.getRestuarant()&&
+                    this.destinationNodeID ==other.getDestinationNodeID()&&
                     this.order==other.getOrder()&&
                     this.deliveryDate==other.getDeliveryDate();
         }
@@ -40,12 +40,12 @@ public class FoodRequest extends Request{
         }
     }
 
-    public String getRestuarant() {
-        return restuarant;
+    public String getDestinationNodeID() {
+        return destinationNodeID;
     }
 
-    public void setRestuarant(String restuarant) {
-        this.restuarant = restuarant;
+    public void setDestinationNodeID(String destinationNodeID) {
+        this.destinationNodeID = destinationNodeID;
     }
 
     public String getOrder() {
