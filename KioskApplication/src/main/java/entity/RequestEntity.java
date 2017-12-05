@@ -230,7 +230,7 @@ public class RequestEntity {
      * @param completerID
      * @param requestID
      */
-    public void markInProgress(String completerID, String requestID){
+    public void markInProgress(int completerID, String requestID){
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
@@ -329,18 +329,18 @@ public class RequestEntity {
      * Updates a request that is already in the database with the given requestID
      * @param requestID
      * @param nodeID
-     * @param assigner
+     * @param assignerID
      * @param note
      * @param submittedTime
      * @param completedTime
      * @param status
      */
-    public void updateRequest(String requestID, String nodeID, String assigner, String note,
+    public void updateRequest(String requestID, String nodeID, int assignerID, String note,
                               Timestamp submittedTime, Timestamp completedTime,
                               RequestProgressStatus status){
         Request oldReq = getRequest(requestID);
         oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
+        oldReq.setAssignerID(assignerID);
         oldReq.setNote(note);
         oldReq.setSubmittedTime(submittedTime);
         oldReq.setCompletedTime(completedTime);
@@ -372,12 +372,12 @@ public class RequestEntity {
     /**
      * Adds an interpreter request to the database
      * @param nodeID
-     * @param assignee
+     * @param assignerID
      * @param note
      * @param lang
      * @return adds an interpreter request to the database and returns that request
      */
-    public String submitInterpreterRequest(String nodeID, String assignerID, String note,
+    public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
@@ -428,15 +428,8 @@ public class RequestEntity {
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssignerID(assignerID);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
         oldReq.setLanguage(language);
-        updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateInterpreterRequest(oldReq);
     }
 
@@ -499,15 +492,7 @@ public class RequestEntity {
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssignerID(assignerID);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
-        oldReq.setPriority(priority);
-        updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateSecurityRequest(oldReq);
     }
 
