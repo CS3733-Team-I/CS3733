@@ -1,5 +1,7 @@
 package database.utility;
 
+import database.template.SQLStrings;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,15 +22,11 @@ public class DBUtil {
     }
 
     public static Connection getConnection() throws SQLException {
-        return getConnection(DBURL+DBCREATE);
+        return getConnection(DBURL + DBCREATE);
     }
 
     public static Connection getTestConnection() throws SQLException {
-        try {
-            return getConnection(DBTESTURL + DBCREATE);
-        } catch (SQLException e){
-            return getConnection(DBTESTURL);
-        }
+        return getConnection(DBTESTURL + DBCREATE);
     }
 
     public static void closeConnection(Connection con) throws SQLException {
@@ -43,14 +41,27 @@ public class DBUtil {
     }
 
     public static void createTables(Connection conn) throws SQLException {
+        // Schema
         PreparedStatement createSchema = conn.prepareStatement(CREATE_SCHEMA);
         createSchema.execute();
+
+        // Nodes
         PreparedStatement createNodeTable = conn.prepareStatement(CREATE_NODE_TABLE);
         createNodeTable.execute();
+        PreparedStatement createNodeUIndex = conn.prepareStatement(CREATE_NODE_UINDEX);
+        createNodeUIndex.execute();
+
+        // Edges
         PreparedStatement createEdgeTable = conn.prepareStatement(CREATE_EDGE_TABLE);
         createEdgeTable.execute();
+        PreparedStatement createEdgeUIndex = conn.prepareStatement(CREATE_EDGE_UINDEX);
+        createEdgeUIndex.execute();
+
+        // Employees
         PreparedStatement createEmployeeTable = conn.prepareStatement(CREATE_EMPLOYEE_TABLE);
         createEmployeeTable.execute();
+
+        // Other
         PreparedStatement createInterpreterTable = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createInterpreterTable.execute();

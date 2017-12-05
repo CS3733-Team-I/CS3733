@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import controller.MainWindowController;
 import controller.ScreenController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -759,26 +760,30 @@ public class MapBuilderController extends ScreenController {
 
         nodeDialogString = "";
         if (nodeToAdd != null) {
-            if (map.getNode(nodeToAdd.getNodeID()) == null) {
-                try {
-                    map.addNode(nodeToAdd);
-                    getMapController().addNode(nodeToAdd, NodeSelectionType.NORMAL);
-                    nodeDialogString += "node ID: " + nodeToAdd.getNodeID() +"\n" + " saved.\n\n";
-                } catch (DatabaseException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error adding node to DB");
-                    alert.setHeaderText("Error occurred while adding node to database.");
-                    alert.setContentText(ex.toString());
-                    alert.showAndWait();
+            try {
+                if (map.getNode(nodeToAdd.getNodeID()) == null) {
+                    try {
+                        map.addNode(nodeToAdd);
+                        getMapController().addNode(nodeToAdd, NodeSelectionType.NORMAL);
+                        nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + " saved.\n\n";
+                    } catch (DatabaseException ex) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error adding node to DB");
+                        alert.setHeaderText("Error occurred while adding node to database.");
+                        alert.setContentText(ex.toString());
+                        alert.showAndWait();
 
-                    nodeDialogString += "ERROR: node " + nodeToAdd.getNodeID() + " was not added to database.\n\n";
+                        nodeDialogString += "ERROR: node " + nodeToAdd.getNodeID() + " was not added to database.\n\n";
+                    }
+                } else { //duplicate node ID found
+                    nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + "Duplicate ID found\n\n";
+                    System.out.println(nodeDialogString);
+                    loadDialog(event);
+                    nodeDialogString = "";
+                    return;
                 }
-            }  else { //duplicate node ID found
-                nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + "Duplicate ID found\n\n";
-                System.out.println(nodeDialogString);
-                loadDialog(event);
-                nodeDialogString = "";
-                return;
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
         }
 

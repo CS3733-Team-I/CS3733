@@ -35,7 +35,8 @@ public class MapFloorEntity implements IMapEntity {
 
     @Override
     public void addNode(Node node) throws DatabaseException {
-        dbController.addNode(node);
+        int newID = dbController.addNode(node);
+        node.setUniqueID(newID);
         nodes.put(node.getNodeID(), node);
     }
 
