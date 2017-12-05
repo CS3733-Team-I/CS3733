@@ -12,6 +12,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -20,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -265,16 +267,31 @@ public class MapController {
      * @param scaleValue zoom value
      */
     private void setZoom(double scaleValue) {
-        double scrollH = scrollPane.getHvalue();
-        double scrollV = scrollPane.getVvalue();
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
 
-        zoomGroup.setScaleX(scaleValue);
-        zoomGroup.setScaleY(scaleValue);
+        double scaleFactor = scaleValue/zoomGroup.getScaleX();
 
-        scrollPane.setHvalue(scrollH);
-        scrollPane.setVvalue(scrollV);
+        // got fix from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
+        if (scaleValue>=minScrollValue&&scaleValue<=zoomSlider.getMax()) {
+            Bounds viewPort = scrollPane.getViewportBounds();
+            Bounds contentSize = zoomGroup.getBoundsInParent();
 
-        miniMapController.setViewportZoom(scaleValue);
+            double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + viewPort.getWidth() / 2;
+            double centerPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + viewPort.getHeight() / 2;
+
+            zoomGroup.setScaleX(scaleValue);
+            zoomGroup.setScaleY(scaleValue);
+
+            double newCenterX = centerPosX * scaleFactor;
+            double newCenterY = centerPosY * scaleFactor;
+
+            scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
+            scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
+
+            miniMapController.setViewportZoom(scaleValue);
+        }
     }
 
     /**
@@ -311,11 +328,40 @@ public class MapController {
         zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
-        Group contentGroup = new Group();
         zoomGroup = new Group();
-        contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(scrollPane.getContent());
+        Group contentGroup = new Group(zoomGroup);
         scrollPane.setContent(contentGroup);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        // got fix from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
+        scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
+            event.consume();
+            if(event.getDeltaY() == 0){
+                return;
+            }
+            double widthRatio = container.getWidth() / mapView.getFitWidth();
+            double heightRatio = container.getHeight() / mapView.getFitHeight();
+            double minScrollValue = Math.max(widthRatio, heightRatio);
+            double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
+            if (scaleFactor*zoomSlider.getValue()>=minScrollValue&&scaleFactor*zoomSlider.getValue()<=zoomSlider.getMax()){
+                Bounds viewPort = scrollPane.getViewportBounds();
+                Bounds contentSize = zoomGroup.getBoundsInParent();
+
+                double mousePosX = (contentSize.getWidth()-viewPort.getWidth())*scrollPane.getHvalue()+event.getX();
+                double mousePosY = (contentSize.getHeight()-viewPort.getHeight())*scrollPane.getVvalue()+event.getY();
+
+                double newMouseX = scaleFactor*mousePosX;
+                double newMouseY = scaleFactor*mousePosY;
+
+                zoomSlider.setValue(zoomSlider.getValue()*scaleFactor);
+
+                scrollPane.setHvalue((newMouseX-event.getX())/(contentSize.getWidth()*scaleFactor-viewPort.getWidth()));
+                scrollPane.setVvalue((newMouseY-event.getY())/(contentSize.getHeight()*scaleFactor-viewPort.getHeight()));
+            }
+        });
+
+
 
         // Update MiniMap on scroll
         scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
