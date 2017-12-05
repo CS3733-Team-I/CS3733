@@ -1,5 +1,6 @@
 package controller.map;
 
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -37,7 +38,7 @@ public class PathWaypointView extends AnchorPane {
 
     MapController parent;
 
-    public PathWaypointView(MapController parent){
+    public PathWaypointView(MapController parent) throws NotFoundException{
         this.parent = parent;
 
         wayPointView = new AnchorPane();
@@ -81,19 +82,21 @@ public class PathWaypointView extends AnchorPane {
             while (listener.next()) {
                 if (listener.wasAdded()) {
                     for (Edge edge : listener.getAddedSubList()) {
-                        Node node1 = map.getNode(edge.getNode1ID());
-                        Node node2 = map.getNode(edge.getNode2ID());
+                        try{
+                            Node node1 = map.getNode(edge.getNode1ID());
+                            Node node2 = map.getNode(edge.getNode2ID());
+                            PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
+                            if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
+                                pathview.setOpacity(0.95);
+                            else
+                                pathview.setOpacity(0.2);
+                            this.pathViewsMap.put(edge, pathview);
 
-                        PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                new Point2D(node2.getXcoord(), node2.getYcoord()));
-
-                        if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                            pathview.setOpacity(0.95);
-                        else
-                            pathview.setOpacity(0.2);
-                        this.pathViewsMap.put(edge, pathview);
-
-                        getChildren().add(pathview);
+                            getChildren().add(pathview);
+                        }catch (NotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {
@@ -117,6 +120,7 @@ public class PathWaypointView extends AnchorPane {
      */
     public void clearPath() {
         this.currentPath = null;
+        parent.getJfxPath().getElements().clear();
     }
     /**
      * Clear drawn waypoints

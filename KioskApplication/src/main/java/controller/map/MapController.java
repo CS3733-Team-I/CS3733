@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import controller.MainWindowController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -143,6 +144,17 @@ public class MapController {
      */
     public void clearPath() {
         this.pathWaypointView.clearPath();
+
+        Iterator<javafx.scene.Node> pathPointerIterator = this.pathWaypointContainer.getChildren().iterator();
+        //TODO make this faster
+        while(pathPointerIterator.hasNext()) {
+            javafx.scene.Node removedPathPointer = pathPointerIterator.next();
+            if(removedPathPointer.getAccessibleHelp() != null) {
+                if(removedPathPointer.getAccessibleHelp().equals("path pointer")) {
+                    pathPointerIterator.remove();
+                }
+            }
+        }
     }
 
     public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
@@ -202,6 +214,7 @@ public class MapController {
      */
     public void clearMap() {
         this.pathWaypointView.clearAll();
+        clearPath();
         this.nodesEdgesView.clear();
     }
 
@@ -298,7 +311,7 @@ public class MapController {
      * Initialize the MapController. Called when the FXML file for this is loaded
      */
     @FXML
-    protected void initialize() {
+    protected void initialize() throws NotFoundException{
         floorSelector.getItems().addAll(NodeFloor.values());
 
         miniMapController = new MiniMapController(this);
@@ -519,15 +532,22 @@ public class MapController {
     }
 
     public void playPath() {
-        Circle circle = new Circle(50);
-        circle.setFill(Color.RED);
-        this.pathWaypointContainer.getChildren().add(circle);
 
-        PathTransition navigationTransition = new PathTransition();
-        navigationTransition.setNode(circle);
-        navigationTransition.setDuration(Duration.seconds(10));
-        navigationTransition.setPath(this.jfxPath);
-        navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-        navigationTransition.play();
+        for(int i = 0; i < pathWaypointView.currentPath.getPathCost()/30; i++) {
+            Circle circle = new Circle(10);
+            circle.setFill(Color.BLUE);
+            circle.setAccessibleHelp("path pointer");
+            this.pathWaypointContainer.getChildren().add(circle);
+
+            PathTransition navigationTransition = new PathTransition();
+            navigationTransition.setNode(circle);
+            navigationTransition.setDuration(Duration.seconds(pathWaypointView.currentPath.getPathCost()/30));
+            navigationTransition.setPath(this.jfxPath);
+            navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+            navigationTransition.setAutoReverse(false);
+            navigationTransition.setCycleCount(PathTransition.INDEFINITE);
+
+            navigationTransition.playFrom(Duration.seconds(i));
+        }
     }
 }

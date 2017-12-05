@@ -1,6 +1,7 @@
 package entity;
 
 import controller.map.PathView;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import javafx.scene.shape.Polyline;
@@ -129,7 +130,7 @@ public class Path {
         int retValue = 0;
         for(LinkedList<Edge> segment: this.edges){
             for(Edge e : segment) {
-//                retValue += e.ge
+                retValue += e.getCost();
             }
         }
         return retValue;
