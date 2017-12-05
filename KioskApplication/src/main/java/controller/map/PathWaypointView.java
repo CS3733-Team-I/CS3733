@@ -15,6 +15,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -35,18 +37,20 @@ public class PathWaypointView extends AnchorPane {
     private HashMap<Node, WaypointView> wayPointViewsMap;
     private HashMap<Edge, PathView> pathViewsMap;
 
-    //TODO use that stack pane
     private AnchorPane pathView;
     private AnchorPane wayPointView;
 
     MapController parent;
 
     public PathWaypointView(MapController parent) throws NotFoundException{
-        this.parent = parent;
-
         wayPointView = new AnchorPane();
         wayPointViewsMap = new HashMap<>();
         wayPointView.setPickOnBounds(false);
+
+        AnchorPane.setTopAnchor(wayPointView, 0.0);
+        AnchorPane.setLeftAnchor(wayPointView, 0.0);
+        AnchorPane.setBottomAnchor(wayPointView, 0.0);
+        AnchorPane.setRightAnchor(wayPointView, 0.0);
 
         pathView = new AnchorPane();
         pathViewsMap = new HashMap<>();
@@ -56,11 +60,6 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setLeftAnchor(pathView, 0.0);
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
-
-        AnchorPane.setTopAnchor(wayPointView, 0.0);
-        AnchorPane.setLeftAnchor(wayPointView, 0.0);
-        AnchorPane.setBottomAnchor(wayPointView, 0.0);
-        AnchorPane.setRightAnchor(wayPointView, 0.0);
 
 //        wayPointView.prefWidthProperty().bind(this.widthProperty());
 //        wayPointView.prefHeightProperty().bind(this.heightProperty());
@@ -75,13 +74,15 @@ public class PathWaypointView extends AnchorPane {
 
         waypointList = FXCollections.observableArrayList();
 
+        this.parent = parent;
+
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
                 if(listener.wasRemoved()) {
                     for (Node node : listener.getRemoved()) {
                         WaypointView view = this.wayPointViewsMap.get(node);
                         this.wayPointViewsMap.remove(node);
-                        this.getChildren().remove(view);
+                        this.wayPointView.getChildren().remove(view);
                     }
                 }
                 if(listener.wasAdded()) {
@@ -90,7 +91,7 @@ public class PathWaypointView extends AnchorPane {
 
                         this.wayPointViewsMap.put(addedNode, waypointView);
 
-                        this.getChildren().add(waypointView);
+                        this.wayPointView.getChildren().add(waypointView);
                         waypointView.playWaypointPutTransition();
                     }
                 }
@@ -114,7 +115,7 @@ public class PathWaypointView extends AnchorPane {
                                 pathview.setOpacity(0.2);
                             this.pathViewsMap.put(edge, pathview);
 
-                            getChildren().add(pathview);
+                            this.pathView.getChildren().add(pathview);
                         }catch (NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -123,12 +124,13 @@ public class PathWaypointView extends AnchorPane {
                     for (Edge edge: listener.getRemoved()) {
                         PathView view = this.pathViewsMap.get(edge);
                         this.pathViewsMap.remove(edge);
-                        this.getChildren().remove(view);
+                        this.pathView.getChildren().remove(view);
                     }
                 }
             }
         });
     }
+
     /**
      * draw a path
      */
@@ -136,21 +138,12 @@ public class PathWaypointView extends AnchorPane {
     public void setPath(Path path) {
         this.currentPath = path;
     }
+
     /**
      * Clear drawn path
      */
     public void clearPath() {
         this.currentPath = null;
-        Iterator<javafx.scene.Node> pathPointerIterator = getChildren().iterator();
-        //TODO make this faster by putting these in pathView
-        while(pathPointerIterator.hasNext()) {
-            javafx.scene.Node removedPathPointer = pathPointerIterator.next();
-            if(removedPathPointer.getAccessibleHelp() != null) {
-                if(removedPathPointer.getAccessibleHelp().equals("path pointer")) {
-                    pathPointerIterator.remove();
-                }
-            }
-        }
         pathView.getChildren().clear();
     }
     /**
@@ -165,7 +158,6 @@ public class PathWaypointView extends AnchorPane {
     public void clearAll() {
         clearWaypoint();
         clearPath();
-        this.getChildren().clear(); //TODO REPLACE THIS WITH CLEAR PATH
     }
 
     public void drawPath(Path path) {
@@ -190,7 +182,7 @@ public class PathWaypointView extends AnchorPane {
                 LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
                 jfxPath.getElements().add(lineTo);
             }
-            getChildren().add(jfxPath);
+            this.pathView.getChildren().add(jfxPath);
 
             //TODO Fix the cost
             Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
@@ -198,7 +190,7 @@ public class PathWaypointView extends AnchorPane {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
-                getChildren().add(circle);
+                this.pathView.getChildren().add(circle);
 
                 PathTransition navigationTransition = new PathTransition();
                 navigationTransition.setNode(circle);
@@ -226,7 +218,7 @@ public class PathWaypointView extends AnchorPane {
         while(waypointIterator.hasNext()) {
             Node removedWaypoint = waypointIterator.next();
             if(removedWaypoint.getNodeID().equals(node.getNodeID())) {
-                this.getChildren().remove(removedWaypoint);
+                this.wayPointView.getChildren().remove(removedWaypoint);
                 waypointIterator.remove();
                 break;
             }
