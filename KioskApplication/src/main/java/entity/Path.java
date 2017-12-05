@@ -103,4 +103,20 @@ public class Path {
         return nodes;
     }
 
+    /**
+     * Returns an ordered list of all nodes along the path.
+     * @return
+     */
+    public LinkedList<Node> getListOfAllNodes(){
+        LinkedList<Node> allNodes = new LinkedList<>();
+        Node startNode = this.waypoints.getFirst();
+        allNodes.add(startNode);
+        for(LinkedList<Edge> segment: this.edges){
+            LinkedList<Node> segmentNodes = this.getListOfNodes(segment, startNode);
+            segmentNodes.removeFirst();
+            allNodes.addAll(segmentNodes);
+        }
+        return(allNodes);
+    }
+
 }
