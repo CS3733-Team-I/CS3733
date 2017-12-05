@@ -6,6 +6,7 @@ import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import org.junit.After;
 import org.junit.Before;
 import utility.node.NodeBuilding;
@@ -356,24 +357,28 @@ public class TestPathfinder {
     @Test
     public void testFindPathBeam() {
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         testFindPath(alg, false);
     }
 
     @Test
     public void testFindPathBeamWC() {
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("5");
         testFindPath(alg, true);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testPathfinderException1Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testPathfinderException2Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
