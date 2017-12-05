@@ -48,6 +48,8 @@ public class MainWindowController {
 
     private HashMap<ApplicationScreen, ScreenController> controllers;
 
+    protected ResourceBundle languageBundle;
+
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
@@ -60,11 +62,11 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        ResourceBundle rb= ResourceBundle.getBundle("Internationalization");
-        Enumeration <String> keys = rb.getKeys();
+        languageBundle= ResourceBundle.getBundle("Internationalization",Locale.FRANCE);
+        Enumeration <String> keys = languageBundle.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            String value = rb.getString(key);
+            String value = languageBundle.getString(key);
             System.out.println(key + ": " + value);
         }
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
