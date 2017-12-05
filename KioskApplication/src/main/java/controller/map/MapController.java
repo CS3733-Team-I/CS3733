@@ -271,35 +271,51 @@ public class MapController {
      * @param scaleValue zoom value
      */
     private void setZoom(double scaleValue) {
+        if(!mouseZoom) {
+            Bounds viewPort = scrollPane.getViewportBounds();
+            zoomOnFocalPoint(scaleValue, viewPort.getWidth() / 2, viewPort.getHeight() / 2);
+        }
+    }
+
+    /**
+     * handles all zooming operations
+     * @param scaleValue
+     * @param focalX the x coordinate of the point to zoom on in container
+     * @param focalY the y coordinate of the point to zoom on in container
+     * @return scaleValue a double that can be modified by the operation
+     */
+    private double zoomOnFocalPoint(double scaleValue, double focalX, double focalY){
         double widthRatio = container.getWidth() / mapView.getFitWidth();
         double heightRatio = container.getHeight() / mapView.getFitHeight();
         double minScrollValue = Math.max(widthRatio, heightRatio);
+        double maxScrollValue = zoomSlider.getMax();
 
-        // got fix from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
-        if (scaleValue>=minScrollValue&&scaleValue<=zoomSlider.getMax()) {
-            if(mouseZoom) {
-                zoomGroup.setScaleX(scaleValue);
-                zoomGroup.setScaleY(scaleValue);
-            }
-            else {
-                double scaleFactor = scaleValue/zoomGroup.getScaleX();
-                Bounds viewPort = scrollPane.getViewportBounds();
-                Bounds contentSize = zoomGroup.getBoundsInParent();
+        //bounds the scaleValue within the min and max zoom values
+        scaleValue=Math.min(scaleValue,maxScrollValue);
+        scaleValue=Math.max(scaleValue,minScrollValue);
 
-                double centerPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + viewPort.getWidth() / 2;
-                double centerPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + viewPort.getHeight() / 2;
+        double scaleFactor = scaleValue/zoomGroup.getScaleX();
 
-                double newCenterX = centerPosX * scaleFactor;
-                double newCenterY = centerPosY * scaleFactor;
+        if(scaleFactor!=1) {
+            // got code from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
+            Bounds viewPort = scrollPane.getViewportBounds();
+            Bounds contentSize = zoomGroup.getBoundsInParent();
 
-                zoomGroup.setScaleX(scaleValue);
-                zoomGroup.setScaleY(scaleValue);
+            double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
+            double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
 
-                scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
-                scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
-            }
+            double scaledFocusX = focalPosX * scaleFactor;
+            double scaledFocusY = focalPosY * scaleFactor;
+
+            zoomGroup.setScaleX(scaleValue);
+            zoomGroup.setScaleY(scaleValue);
+
+            scrollPane.setHvalue((scaledFocusX - focalX) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
+            scrollPane.setVvalue((scaledFocusY - focalY) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
+
             miniMapController.setViewportZoom(scaleValue);
         }
+        return scaleValue;
     }
 
     /**
@@ -341,42 +357,16 @@ public class MapController {
         Group contentGroup = new Group(zoomGroup);
         scrollPane.setContent(contentGroup);
 
-        // got fix from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
+        // MouseWheel zooming event handler
         scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
             event.consume();
             if(event.getDeltaY() == 0){
                 return;
             }
-            double widthRatio = container.getWidth() / mapView.getFitWidth();
-            double heightRatio = container.getHeight() / mapView.getFitHeight();
-            double minScrollValue = Math.max(widthRatio, heightRatio);
             double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
-            if(scaleFactor*zoomSlider.getValue()<minScrollValue){
-                scaleFactor=minScrollValue/zoomSlider.getValue();
-            }
-            else if (scaleFactor*zoomSlider.getValue()>zoomSlider.getMax()){
-                scaleFactor=zoomSlider.getMax()/zoomSlider.getValue();
-            }
-
-            if (scaleFactor*zoomSlider.getValue()>=minScrollValue&&scaleFactor*zoomSlider.getValue()<=zoomSlider.getMax()){
-                Bounds viewPort = scrollPane.getViewportBounds();
-                Bounds contentSize = zoomGroup.getBoundsInParent();
-
-                double mousePosX = (contentSize.getWidth()-viewPort.getWidth())*scrollPane.getHvalue()+event.getX();
-                double mousePosY = (contentSize.getHeight()-viewPort.getHeight())*scrollPane.getVvalue()+event.getY();
-
-                mouseZoom=true;
-
-                zoomSlider.setValue(zoomSlider.getValue()*scaleFactor);
-
-                mouseZoom=false;
-
-                double newMouseX = scaleFactor*mousePosX;
-                double newMouseY = scaleFactor*mousePosY;
-
-                scrollPane.setHvalue((newMouseX-event.getX())/(contentSize.getWidth()*scaleFactor-viewPort.getWidth()));
-                scrollPane.setVvalue((newMouseY-event.getY())/(contentSize.getHeight()*scaleFactor-viewPort.getHeight()));
-            }
+            mouseZoom=true;
+            zoomSlider.setValue(zoomOnFocalPoint(scaleFactor*zoomSlider.getValue(),event.getX(),event.getY()));
+            mouseZoom=false;
         });
 
 
