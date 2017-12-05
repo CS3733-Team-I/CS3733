@@ -60,13 +60,13 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        /*ResourceBundle rb= ResourceBundle.getBundle("Internationalization.properties");
+        ResourceBundle rb= ResourceBundle.getBundle("Internationalization");
         Enumeration <String> keys = rb.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
             String value = rb.getString(key);
             System.out.println(key + ": " + value);
-        }*/
+        }
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
