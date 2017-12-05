@@ -586,4 +586,11 @@ public class MapController {
     {
         visibleWaypoints.setAll(getWaypointNodes(pane));
     }
+
+    /**
+     * swap the waypoints at targeted indexes
+     */
+    public void swapWaypoint(int index1, int index2) {
+        this.pathWaypointView.swapWaypoint(index1, index2);
+    }
 }

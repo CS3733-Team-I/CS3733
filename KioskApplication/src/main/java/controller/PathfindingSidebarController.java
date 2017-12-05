@@ -20,7 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -32,6 +32,8 @@ import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -253,7 +255,84 @@ public class PathfindingSidebarController extends ScreenController {
         waypointBox.setAccessibleText(node.getNodeID());
         waypointBox.setMargin(btRemoveWaypoint, new Insets(1,1,1,1));
         waypointBox.setMargin(nodeNameLabel, new Insets(10,1,1,10));
+
+        waypointBox.setStyle("-fx-background-color: #DDDED0;");
+
         waypointListView.getItems().add(waypointBox);
+
+        waypointBox.setOnDragDetected(new EventHandler <MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                /* allow MOVE transfer mode */
+                Dragboard db = waypointBox.startDragAndDrop(TransferMode.MOVE);
+
+                /* put a string on dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString(Integer.toString(waypointListView.getItems().indexOf(waypointBox)));
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+        waypointBox.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() != waypointBox &&
+                        event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            }
+        });
+        waypointBox.setOnDragEntered(new EventHandler <DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* the drag-and-drop gesture entered the target */
+                /* show to the user that it is an actual gesture target */
+                if (event.getGestureSource() != waypointBox &&
+                        event.getDragboard().hasString()) {
+                    waypointBox.setStyle("-fx-background-color: #4e9f49;");
+                }
+                event.consume();
+            }
+        });
+        waypointBox.setOnDragExited(new EventHandler <DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* mouse moved away, remove the graphical cues */
+                waypointBox.setStyle("-fx-background-color:  #DDDED0;");
+                event.consume();
+            }
+        });
+        waypointBox.setOnDragDropped(new EventHandler <DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                /* data dropped */
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    getMapController().swapWaypoint(waypointListView.getItems().indexOf(waypointBox), Integer.parseInt(db.getString()));
+                    HBox temp = waypointBox;
+                    waypointListView.getItems().set(waypointListView.getItems().indexOf(waypointBox),
+                            waypointListView.getItems().get(Integer.parseInt(db.getString())));
+                    waypointListView.getItems().set(Integer.parseInt(db.getString()), temp);
+                    success = true;
+                }
+                event.setDropCompleted(success);
+
+                event.consume();
+            }
+        });
+        waypointBox.setOnDragDone(new EventHandler <DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                System.out.println("onDragDone");
+                if (event.getTransferMode() == TransferMode.MOVE) {
+                }
+
+                event.consume();
+            }
+        });
     }
     /**
      * remove the target waypoint bounded with input node

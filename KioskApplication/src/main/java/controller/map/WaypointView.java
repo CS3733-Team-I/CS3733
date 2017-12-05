@@ -79,6 +79,6 @@ public class WaypointView extends StackPane {
     }
 
     public void setWaypointCount(int i) {
-        this.waypointCount.setText(Integer.toString(i));
+        this.waypointCount.setText(Integer.toString(i+1));
     }
 }

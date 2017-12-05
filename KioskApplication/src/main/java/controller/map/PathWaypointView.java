@@ -237,4 +237,15 @@ public class PathWaypointView extends AnchorPane {
             }
         }
     }
+
+    /**
+     * swap the waypoints at targeted indexes
+     */
+    public void swapWaypoint(int index1, int index2) {
+        Node temp = waypointList.get(index1);
+        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
+        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+        waypointList.set(index1, waypointList.get(index2));
+        waypointList.set(index2, temp);
+    }
 }
