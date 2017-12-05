@@ -6,18 +6,18 @@ import database.objects.Edge;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.SystemSettings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import utility.csv.CsvFileUtil;
 import utility.node.NodeFloor;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class SettingsController extends ScreenController {
@@ -38,9 +38,12 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
     @FXML private RadioButton beamButton;
+    @FXML private RadioButton bestFirstButton;
 
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
+
+    @FXML private TextField beamWidth;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
 
@@ -60,6 +63,8 @@ public class SettingsController extends ScreenController {
         dfsButton.setUserData("DFS");
         beamButton.setToggleGroup(searchAlgToggleGroup);
         beamButton.setUserData("Beam");
+        bestFirstButton.setToggleGroup(searchAlgToggleGroup);
+        bestFirstButton.setUserData("BestFS");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
@@ -77,6 +82,40 @@ public class SettingsController extends ScreenController {
         loader2.load();
 
         checkPermissions();
+
+        // Listen for TextField text changes
+        beamWidth.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                                String oldValue, String newValue) {
+                // check if it is a text or decimal and don't accept it
+                if (!beamWidth.getText().matches("\\d*")) {
+                    beamWidth.setText(beamWidth.getText().replaceAll("[^\\d]", ""));
+                    return;
+                } // dont accept beam width over 9
+                else if (beamWidth.getText().length()>=2){
+                    beamWidth.setText(beamWidth.getText().replace(newValue,oldValue));
+                    return;
+                }
+                else if (beamWidth.getText().equals(Integer.toString(0))){
+                    // dont accept 0's
+                    beamWidth.setText(beamWidth.getText().replaceAll("[^\\d]", ""));
+                    return;
+                }
+                else if (beamWidth.getText().isEmpty()){
+                    // set to default
+                    SystemSettings systemSettings = SystemSettings.getInstance();
+                    systemSettings.setBeamWidth("3");
+                    return;
+                }
+                  else  {// else it is a number and accept
+                        SystemSettings systemSettings = SystemSettings.getInstance();
+                        systemSettings.setBeamWidth(beamWidth.getText());
+                return;
+                }
+
+            }
+        });
     }
 
     public void checkPermissions() {
