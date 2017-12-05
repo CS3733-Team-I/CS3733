@@ -40,6 +40,7 @@ public class MapController {
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
+    public static final double DEFAULT_ZOOM = 0.75;
 
     @FXML private StackPane stackPane;
     @FXML private ImageView mapView;
@@ -349,13 +350,21 @@ public class MapController {
             System.err.println("Loading MiniMapView failed.");
         }
 
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
-
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
         zoomGroup = new Group();
         zoomGroup.getChildren().add(scrollPane.getContent());
         Group contentGroup = new Group(zoomGroup);
         scrollPane.setContent(contentGroup);
+
+        // Initializes the zoom slider to the current zoom scale
+        zoomSlider.setValue(zoomGroup.getScaleX());
+
+        // Initializes the Hvalue & Vvalue to the default values
+        scrollPane.setHvalue(DEFAULT_HVALUE);
+        scrollPane.setVvalue(DEFAULT_VVALUE);
+
+        // zoomSlider value listener
+        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // MouseWheel zooming event handler
         scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
@@ -479,7 +488,7 @@ public class MapController {
         //System.out.println("Zoom in clicked");
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal + 0.1);
+        zoomSlider.setValue(sliderVal * 1.2);
     }
 
     @FXML
@@ -487,7 +496,7 @@ public class MapController {
         //System.out.println("Zoom out clicked");
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal - 0.1);
+        zoomSlider.setValue(sliderVal / 1.2);
     }
 
     /**
