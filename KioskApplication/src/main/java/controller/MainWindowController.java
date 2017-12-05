@@ -17,7 +17,10 @@ import utility.ApplicationScreen;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MainWindowController {
 
@@ -57,7 +60,13 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-
+        ResourceBundle rb= ResourceBundle.getBundle("mybundletest");
+        Enumeration <String> keys = rb.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            String value = rb.getString(key);
+            System.out.println(key + ": " + value);
+        }
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
