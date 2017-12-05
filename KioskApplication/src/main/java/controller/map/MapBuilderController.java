@@ -472,7 +472,9 @@ public class MapBuilderController extends ScreenController {
                                     getMapController().getCurrentFloor(), NodeBuilding.FRANCIS15,
                                     NodeType.HALL, "", "",
                                     "Team " + TeamAssigned.I.toString());
-
+            if(newNode.get() != null) {
+                getMapController().removeNode(newNode.get());
+            }
             newNode.set(createdNode);
         }
     }
@@ -480,6 +482,8 @@ public class MapBuilderController extends ScreenController {
     @Override
     public void onMapNodeClicked(Node node) {
         if (newNode.get() != null && newNode.get().equals(node)) {
+            // Stop displaying newNode
+            getMapController().removeNode(newNode.get());
             newNode.set(null);
             return;
         } else if(selectedNode.get() != null && selectedNode.get().equals(node)) {
@@ -943,6 +947,7 @@ public class MapBuilderController extends ScreenController {
 
     private void updateSelectedNode(Node node) {
         //remove unsaved new node, if any
+        getMapController().removeNode(newNode.get());
         newNode.set(null);
         selectedNode.set(node);
     }
