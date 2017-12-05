@@ -110,10 +110,10 @@ public class Path {
         return nodes;
     }
 
-    public LinkedList<Node> getNodesInSegment(Node Start) {
-        LinkedList<Node> retVal= new LinkedList<>();
+    public LinkedList<LinkedList<Node>> getNodesInSegment(Node Start) {
+        LinkedList<LinkedList<Node>> retVal= new LinkedList<>();
         for(LinkedList<Edge> edges : this.edges) {
-            retVal.addAll(getListOfNodes(edges, Start));
+            retVal.add(getListOfNodes(edges, Start));
         }
         return retVal;
     }

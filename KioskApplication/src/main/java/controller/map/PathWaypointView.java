@@ -154,9 +154,11 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
-        for(Node node : waypointList) {
-            System.out.println(currentPath.getNodesInSegment(node));
+        //TODO DATABASE ERROR HERE
+        for(LinkedList<Node> nodes : currentPath.getNodesInSegment(waypointList.get(0))) {
+            System.out.println("1. " + nodes);
         }
+
 
         javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
 
@@ -211,6 +213,14 @@ public class PathWaypointView extends AnchorPane {
     public void reloadDisplay() {
         if(currentPath != null) {
             drawPath(currentPath);
+        }
+        for(Node node : waypointList){
+            if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {
+                this.wayPointViewsMap.get(node).setVisible(false);
+            }
+            else {
+                this.wayPointViewsMap.get(node).setVisible(true);
+            }
         }
     }
 }
