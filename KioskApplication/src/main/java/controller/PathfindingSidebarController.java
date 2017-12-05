@@ -50,6 +50,7 @@ public class PathfindingSidebarController extends ScreenController {
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
         exceptionText.setText("");
+        // for setting the pathfinding sidebar to the internationalized language
         btnSubmit.setText(rB.getString("my.search"));
         searchBar.setText(rB.getString("my.search"));
         clearButton.setText(rB.getString("my.clear"));
