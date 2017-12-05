@@ -9,6 +9,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.MoveTo;
 import javafx.util.Duration;
@@ -68,7 +70,6 @@ public class MapController {
     @FXML private JFXCheckBox showEdgesBox;
 
     @FXML private javafx.scene.shape.Path jfxPath;
-    @FXML private MoveTo pathStart;
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
@@ -517,7 +518,16 @@ public class MapController {
         return this.jfxPath;
     }
 
-    public MoveTo getPathStart() {
-        return this.pathStart;
+    public void playPath() {
+        Circle circle = new Circle(50);
+        circle.setFill(Color.RED);
+        this.pathWaypointContainer.getChildren().add(circle);
+
+        PathTransition navigationTransition = new PathTransition();
+        navigationTransition.setNode(circle);
+        navigationTransition.setDuration(Duration.seconds(10));
+        navigationTransition.setPath(this.jfxPath);
+        navigationTransition.setCycleCount(PathTransition.INDEFINITE);
+        navigationTransition.play();
     }
 }

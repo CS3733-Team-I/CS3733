@@ -126,8 +126,8 @@ public class PathfindingSidebarController extends ScreenController {
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
 
-//            currentNodes.clear();
         }
+        getMapController().playPath();
     }
 
     @Override

@@ -119,4 +119,13 @@ public class Path {
         return(allNodes);
     }
 
+    public Integer getPathCost(){
+        int retValue = 0;
+        for(LinkedList<Edge> segment: this.edges){
+            for(Edge e : segment) {
+//                retValue += e.ge
+            }
+        }
+        return retValue;
+    }
 }

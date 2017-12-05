@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.MoveTo?>
 <?import javafx.scene.shape.Path?>
 <?import javafx.scene.text.Font?>
 
@@ -24,11 +23,7 @@
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
                   <AnchorPane fx:id="pathWaypointContainer" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Path fx:id="jfxPath" fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE">
-                            <elements>
-                                <MoveTo fx:id="pathStart" x="100.0" />
-                            </elements>
-                        </Path>
+                        <Path fx:id="jfxPath" fill="DODGERBLUE" stroke="#2605ff" strokeType="INSIDE" />
                      </children></AnchorPane>
                </children>
             </StackPane>

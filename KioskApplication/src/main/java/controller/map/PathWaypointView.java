@@ -94,7 +94,6 @@ public class PathWaypointView extends AnchorPane {
                         this.pathViewsMap.put(edge, pathview);
 
                         getChildren().add(pathview);
-                        pathview.playPath();
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {
@@ -145,14 +144,13 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void showPath() {
-        if(parent.getJfxPath().getElements().size() == 1) {
-            parent.getPathStart().setX(currentPath.getListOfNodesInPath().get(0).getXcoord());
-            parent.getPathStart().setX(currentPath.getListOfNodesInPath().get(0).getYcoord());
-            parent.getJfxPath().setStrokeWidth(20);
-            parent.getJfxPath().setFill(Color.TRANSPARENT);
-        }
 
-        for(Node traversedNode : currentPath.getListOfNodesInPath()) {
+        parent.getJfxPath().setStrokeWidth(20);
+        parent.getJfxPath().setFill(Color.TRANSPARENT);
+        MoveTo moveTo = new MoveTo(currentPath.getListOfAllNodes().get(0).getXcoord(), currentPath.getListOfAllNodes().get(0).getYcoord());
+        parent.getJfxPath().getElements().add(moveTo);
+
+        for(Node traversedNode : currentPath.getListOfAllNodes()) {
             LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
             parent.getJfxPath().getElements().add(lineTo);
         }
