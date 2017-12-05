@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import sun.awt.image.ImageWatched;
+import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -166,26 +167,24 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
-        //TODO FIX NODE SEGMENT
-        for(Node nodes : waypointList.subList(0, waypointList.size()-1)) {
-            System.out.println("1. " + currentPath.getNodesInSegment(nodes));
-            LinkedList<Node> nodesInSegment = currentPath.getNodesInSegment(nodes);
+        for(int i = 0; i < waypointList.size()-1; i ++) {
+            NodeFloor a = parent.getCurrentFloor();
+            LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
+            System.out.println(segmentNodes);
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
-
             jfxPath.setFill(Color.TRANSPARENT);
-            MoveTo moveTo = new MoveTo(nodesInSegment.get(0).getXcoord(), nodesInSegment.get(0).getYcoord());
+            MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
             jfxPath.getElements().add(moveTo);
 
-            for(Node traversedNode : nodesInSegment) {
+            for(Node traversedNode : segmentNodes) {
                 LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
                 jfxPath.getElements().add(lineTo);
             }
             this.pathView.getChildren().add(jfxPath);
 
-            //TODO Fix the cost
             Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
-            for(int i = 0; i < currentPath.getPathCost()/30; i++) {
+            for(int j = 0; j < currentPath.getPathCost(currentPath.getEdges().get(i))/30; j++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
@@ -193,13 +192,13 @@ public class PathWaypointView extends AnchorPane {
 
                 PathTransition navigationTransition = new PathTransition();
                 navigationTransition.setNode(circle);
-                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/30));
+                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost(currentPath.getEdges().get(i))/30));
                 navigationTransition.setPath(jfxPath);
                 navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
                 navigationTransition.setAutoReverse(false);
                 navigationTransition.setCycleCount(PathTransition.INDEFINITE);
 
-                navigationTransition.playFrom(Duration.seconds(i));
+                navigationTransition.playFrom(Duration.seconds(j));
             }
         }
     }
@@ -225,6 +224,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void reloadDisplay() {
+        pathView.getChildren().clear();
         if(currentPath != null) {
             drawPath(currentPath);
         }

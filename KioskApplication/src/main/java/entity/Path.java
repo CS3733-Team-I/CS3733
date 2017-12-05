@@ -102,10 +102,44 @@ public class Path {
             try {
                 nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
             }
-            catch (NotFoundException exception){
-                exception.printStackTrace();
-                //TODO: add actual handling
+            catch (NotFoundException exception){}
+        }
+        return nodes;
+    }
+
+    /**
+     * get the nodes On target floor
+     */
+    public LinkedList<Node> getListOfNodesSegmentOnFloor(LinkedList<Edge> segment, Node segmentStart, NodeFloor floor) {
+
+        MapEntity map = MapEntity.getInstance();
+
+        LinkedList<Node> nodes = new LinkedList<>();
+
+        try {
+            if(segmentStart.getFloor() != floor) {
+                for(Edge e : segment) {
+                    if(e.getEdgeType() == "elevator shaft" || e.getEdgeType() == "staircase") {
+                        if(map.getNode(e.getNode1ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode1ID());
+                        }
+                        if(map.getNode(e.getNode2ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode2ID());
+                        }
+                    }
+                }
             }
+        } catch (NotFoundException exception){}
+
+        nodes.add(segmentStart);
+
+        for (Edge e : segment) {
+            try {
+                if(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())).getFloor() == floor) {
+                    nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+                }
+            }
+            catch (NotFoundException exception){}
         }
         return nodes;
     }
@@ -142,12 +176,10 @@ public class Path {
         return(allNodes);
     }
 
-    public Integer getPathCost(){
+    public Integer getPathCost(LinkedList<Edge> edges){
         int retValue = 0;
-        for(LinkedList<Edge> segment: this.edges){
-            for(Edge e : segment) {
-                retValue += e.getCost();
-            }
+        for(Edge e: edges){
+            retValue += e.getCost();
         }
         return retValue;
     }
