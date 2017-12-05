@@ -15,9 +15,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Polyline;
+import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -37,8 +35,6 @@ public class PathWaypointView extends AnchorPane {
     private AnchorPane pathView;
     private AnchorPane wayPointView;
 
-    private javafx.scene.shape.Path jfxPath;
-
     MapController parent;
 
     public PathWaypointView(MapController parent){
@@ -49,6 +45,8 @@ public class PathWaypointView extends AnchorPane {
 
         pathView = new AnchorPane();
         pathViewsMap = new HashMap<>();
+
+        getChildren().addAll(wayPointView, pathView);
 
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
@@ -86,19 +84,6 @@ public class PathWaypointView extends AnchorPane {
                         Node node1 = map.getNode(edge.getNode1ID());
                         Node node2 = map.getNode(edge.getNode2ID());
 
-
-                        MoveTo moveTo1 = new MoveTo(node1.getXcoord(), node1.getYcoord());
-                        MoveTo moveTo2 = new MoveTo(node2.getXcoord(), node2.getYcoord());
-
-                        if(jfxPath == null) {
-                            this.jfxPath = new javafx.scene.shape.Path(moveTo1, moveTo2);
-                        }
-                        else {
-                            jfxPath.getElements().addAll(moveTo1, moveTo2);
-                        }
-                        jfxPath.setFill(Color.DARKRED);
-                        jfxPath.setStrokeWidth(20);
-
                         PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
                                 new Point2D(node2.getXcoord(), node2.getYcoord()));
 
@@ -107,9 +92,7 @@ public class PathWaypointView extends AnchorPane {
                         else
                             pathview.setOpacity(0.2);
                         this.pathViewsMap.put(edge, pathview);
-                        if(!getChildren().contains(jfxPath)) {
-                            this.getChildren().add(jfxPath);
-                        }
+
                         getChildren().add(pathview);
                         pathview.playPath();
                     }
@@ -157,26 +140,22 @@ public class PathWaypointView extends AnchorPane {
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);
         }
+
+        showPath();
     }
 
-    public Polyline getPathPolyline() {
-        Polyline polyline = new Polyline();
-        for(PathView pathView : pathViewsMap.values()) {
-            if(!polyline.contains(pathView.getStart())) {
-                polyline.getPoints().addAll(new Double[] {
-                        pathView.getStart().getX(), pathView.getStart().getY(),
-                });
-            }
-            if(!polyline.contains(pathView.getEnd())) {
-                polyline.getPoints().addAll(new Double[] {
-                        pathView.getEnd().getX(), pathView.getEnd().getY(),
-                });
-            }
-
+    public void showPath() {
+        if(parent.getJfxPath().getElements().size() == 1) {
+            parent.getPathStart().setX(currentPath.getListOfNodesInPath().get(0).getXcoord());
+            parent.getPathStart().setX(currentPath.getListOfNodesInPath().get(0).getYcoord());
+            parent.getJfxPath().setStrokeWidth(20);
+            parent.getJfxPath().setFill(Color.TRANSPARENT);
         }
-        polyline.setStyle("-fx-background-color: #ffffff;"+
-        "-fx-stroke-width: 10px;");
-        return polyline;
+
+        for(Node traversedNode : currentPath.getListOfNodesInPath()) {
+            LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
+            parent.getJfxPath().getElements().add(lineTo);
+        }
     }
 
     public Path getPath() {

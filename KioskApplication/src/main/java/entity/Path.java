@@ -90,7 +90,7 @@ public class Path {
         return "Go to ";
     }
 
-    private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
+     public LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
 
         MapEntity map = MapEntity.getInstance();
 
@@ -102,5 +102,4 @@ public class Path {
         }
         return nodes;
     }
-
 }

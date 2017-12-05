@@ -32,6 +32,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.MoveTo;
 import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -65,6 +66,9 @@ public class MapController {
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
+
+    @FXML private javafx.scene.shape.Path jfxPath;
+    @FXML private MoveTo pathStart;
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
@@ -504,7 +508,16 @@ public class MapController {
         return visibleNodes;
     }
 
-    private void checkWaypointVisible(ScrollPane pane) {
+    private void checkWaypointVisible(ScrollPane pane)
+    {
         visibleWaypoints.setAll(getWaypointNodes(pane));
+    }
+
+    public javafx.scene.shape.Path getJfxPath() {
+        return this.jfxPath;
+    }
+
+    public MoveTo getPathStart() {
+        return this.pathStart;
     }
 }
