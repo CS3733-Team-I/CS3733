@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
@@ -15,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,6 +47,8 @@ public class PathfindingSidebarController extends ScreenController {
     private ImageView addIconView;
     @FXML
     private ImageView removeIconView;
+    @FXML
+    private JFXButton btNavigate;
     private Boolean isAddingWaypoiny;
 
     private LinkedList<Node> currentNodes;
@@ -80,12 +84,11 @@ public class PathfindingSidebarController extends ScreenController {
             @Override
             public void onChanged(Change c) {
                 while (c.next()) {
-                    if(c.wasAdded()) {
-                        for(Object addedWaypoint: c.getAddedSubList()) {
-                            //TODO implement this
-                        }
+                    if(waypointListView.getItems().size() < 2) {
+                        btNavigate.setDisable(true);
                     }
-                    else if(c.wasRemoved()) {
+                    else {
+                        btNavigate.setDisable(false);
                     }
                 }
             }
@@ -186,7 +189,7 @@ public class PathfindingSidebarController extends ScreenController {
     @Override
     public void resetScreen() {
         // Set the map size
-        getMapController().setAnchor(0, 300, 0, 0);
+        getMapController().setAnchor(0, 400, 0, 0);
 
         // Reset mapcontroller
         onResetPressed();
@@ -223,10 +226,11 @@ public class PathfindingSidebarController extends ScreenController {
     private void newWaypointBox(Node node) {
         HBox waypointBox = new HBox();
 
-        Label nodeNameLabel = new Label(node.getLongName());
-        nodeNameLabel.setTextFill(Color.BLACK);
+        TextField nodeNameLabel = new TextField("(Click to Search) " + node.getLongName());
+//        nodeNameLabel.setTextFill(Color.BLACK);
         nodeNameLabel.setStyle("-fx-font-weight:bold; "+
                 "-fx-font-size: 12pt; ");
+        nodeNameLabel.setPrefWidth(300);
 
         JFXButton btRemoveWaypoint = new JFXButton("x");
         btRemoveWaypoint.setStyle("-fx-background-color: #ff000e;"+
@@ -268,8 +272,10 @@ public class PathfindingSidebarController extends ScreenController {
 //        int addWaypointBoxIndex = 0;
         HBox addWaypointBox = new HBox();
 
-        Label addWaypointLabel = new Label("Click to Add a New Waypoint");
-        addWaypointLabel.setTextFill(Color.BLACK);
+        TextField addWaypointLabel = new TextField();
+        addWaypointLabel.setPromptText("Click + to Add, Here to Search");
+//        addWaypointLabel.setTextFill(Color.BLACK);
+        addWaypointLabel.setPrefWidth(300);
         addWaypointLabel.setStyle("-fx-font-weight:bold; "+
                 "-fx-font-size: 12pt; ");
         JFXButton btNewWayPoint = new JFXButton("+");
@@ -292,7 +298,6 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointBox.setAccessibleText("add waypoint");
         addWaypointBox.setMargin(btNewWayPoint, new Insets(1,1,1,1));
         addWaypointBox.setMargin(addWaypointLabel, new Insets(10,1,1,10));
-
 //        waypointListView.getItems().remove(addWaypointBoxIndex);
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
         while(addwaypointIterator.hasNext()) {
