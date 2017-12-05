@@ -35,7 +35,6 @@ public class MapEntity implements IMapEntity {
         return MapEntitySingleton._instance;
     }
 
-
     /**
      * Clears the cached nodes/edges and then adds all the existing nodes and edges from the  database.
      */
@@ -219,12 +218,11 @@ public class MapEntity implements IMapEntity {
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
             try{
+                //Check to see if the node is on the floor. If so, remove it.
                 floorEntity.getNode(node.getNodeID());
                 floorEntity.removeNode(node);
             }
             catch(NotFoundException exception){
-                exception.printStackTrace();
-                //TODO: add actual handling
             }
         }
     }
@@ -233,10 +231,10 @@ public class MapEntity implements IMapEntity {
     public void removeAll() throws DatabaseException {
         List<Node> nodes = getAllNodes();
         for (Node node : nodes) {
-            removeNode(node);
-
             ArrayList<Edge> edges = MapEntity.getInstance().getEdges(node);
-            for (Edge edge : edges) MapEntity.getInstance().removeEdge(edge);
+            for (Edge edge : edges)
+                MapEntity.getInstance().removeEdge(edge);
+            removeNode(node);
         }
     }
 
@@ -309,10 +307,12 @@ public class MapEntity implements IMapEntity {
     public LinkedList<Node> getConnectedNodes(Node node, boolean wheelchairAccessible){
         ArrayList<Edge> edges = this.getEdges(node);
         if(wheelchairAccessible){
+            ArrayList<Edge> removeList = new ArrayList<>();
             for(Edge edge: edges){
                 if(!edge.isWheelchairAccessible())
-                    edges.remove(edge);
+                    removeList.add(edge);
             }
+            edges.removeAll(removeList);
         }
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
