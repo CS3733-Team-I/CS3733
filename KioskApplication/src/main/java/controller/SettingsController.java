@@ -1,8 +1,10 @@
 package controller;
 
 import com.jfoenix.controls.JFXTabPane;
+import controller.map.MapController;
 import database.objects.Edge;
 import entity.LoginEntity;
+import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +37,7 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton dijkstraButton;
     @FXML private RadioButton bfsButton;
     @FXML private RadioButton dfsButton;
+    @FXML private RadioButton beamButton;
 
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
@@ -55,6 +58,8 @@ public class SettingsController extends ScreenController {
         bfsButton.setUserData("BFS");
         dfsButton.setToggleGroup(searchAlgToggleGroup);
         dfsButton.setUserData("DFS");
+        beamButton.setToggleGroup(searchAlgToggleGroup);
+        beamButton.setUserData("Beam");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: searchAlgToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("searchAlgorithm", "A*")))
@@ -96,27 +101,9 @@ public class SettingsController extends ScreenController {
     @FXML
     void readCSV() {
         try {
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapAnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapBnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapCnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapDnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapEnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapFnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapGnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapHnodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapInodes.csv").toURI().getPath());
-            CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapWnodes.csv").toURI().getPath());
+            MapEntity.getInstance().removeAll();
 
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapAedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapBedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapCedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapDedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapEedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapFedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapGedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapHedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapIedges.csv").toURI().getPath());
-            CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapWedges.csv").toURI().getPath());
+            CsvFileUtil.getInstance().readAllCSVs();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,5 +146,14 @@ public class SettingsController extends ScreenController {
     @Override
     public void resetScreen() {
         getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }

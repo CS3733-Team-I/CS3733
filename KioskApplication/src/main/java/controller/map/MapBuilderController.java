@@ -1,7 +1,9 @@
-package controller;
+package controller.map;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import controller.MainWindowController;
+import controller.ScreenController;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -25,7 +27,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -34,7 +35,7 @@ import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
-import utility.nodeDisplay.NodeDisplay;
+import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -43,16 +44,44 @@ import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapBuilderController extends ScreenController {
+    public MapBuilderController(MainWindowController parent, MapController mapController) {
+        super(parent, mapController);
+    }
 
-    /**
-     * General
-     */
+    @Override
+    public javafx.scene.Node getContentView() {
+        return null;
+    }
+
+    @Override
+    public void onMapLocationClicked(MouseEvent e, Point2D location) {
+
+    }
+
+    @Override
+    public void onMapNodeClicked(Node node) {
+
+    }
+
+    @Override
+    public void onMapEdgeClicked(Edge edge) {
+
+    }
+
+    @Override
+    public void onMapFloorChanged(NodeFloor floor) {
+
+    }
+
+    @Override
+    public void resetScreen() {
+
+    }
+/*
     @FXML
     private TabPane builderTabPane;
     SingleSelectionModel<Tab> selectionModel;
-    /**
-     * Nodes related fields
-     */
+
     Node heightLightedNode;
     //default, nodeFloor is in sync with main map
     NodeType nodeType = NodeType.TEMP;
@@ -61,11 +90,9 @@ public class MapBuilderController extends ScreenController {
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
     RequiredFieldValidator sNameValidator = new RequiredFieldValidator();
-    @FXML
-    private Tab nodeTab;
+    @FXML private Tab nodeTab;
     private String nodeDialogString;
-    @FXML
-    private StackPane mapBuilderStackPane;
+    @FXML private StackPane mapBuilderStackPane;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
@@ -87,6 +114,7 @@ public class MapBuilderController extends ScreenController {
     private Label lbYcoor;
     @FXML
     private Label lbNodeID;
+
     //node operation buttons
     @FXML
     private JFXButton btNodeSave;
@@ -100,9 +128,8 @@ public class MapBuilderController extends ScreenController {
     private JFXButton btAdvance;
     @FXML
     private JFXButton setkiosklocation;
-    /**
-     * Edges related fields
-     */
+
+    // Edges related fields
     @FXML
     private JFXListView<Label> lvConnectedNodes;
     @FXML
@@ -110,22 +137,13 @@ public class MapBuilderController extends ScreenController {
     @FXML
     JFXPopup popup;
 
-    private ImageView ivLOWERLEVEL_2;
-    private ImageView ivLOWERLEVEL_1;
-    private ImageView ivGROUND;
-    private ImageView ivFIRST;
-    private ImageView ivSECOND;
-    private ImageView ivTHIRD;
-
-    /**
-     * Observer lists
-     */
+    // Observer lists
     private ObservableList<database.objects.Node> observableSelectedNodes;
     private ObservableList<database.objects.Node> observableChangedNodes;
     protected ObservableList<database.objects.Node> observableNewNodes;
     private ObservableList<database.objects.Edge> observableSelectedEdges;
 
-    MapBuilderController(MainWindowController parent, MapController map) {
+    public MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
         observableSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
         observableChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
@@ -135,20 +153,9 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     public void initialize() throws IOException{
-
-
-        ivFIRST = floorImage(NodeFloor.FIRST);
-        ivSECOND = floorImage(NodeFloor.SECOND);
-        ivTHIRD = floorImage(NodeFloor.THIRD);
-        ivLOWERLEVEL_1 = floorImage(NodeFloor.LOWERLEVEL_1);
-        ivLOWERLEVEL_2 = floorImage(NodeFloor.LOWERLEVEL_2);
-        ivGROUND = floorImage(NodeFloor.GROUND);
-
         Advance.setVisible(false);
 
-        /**
-         * node Input put validators
-         */
+        // node Input put validators
         lName.getValidators().add(lNameValidator);
         sName.getValidators().add(sNameValidator);
         lNameValidator.setMessage("Long Name Required");
@@ -209,6 +216,7 @@ public class MapBuilderController extends ScreenController {
                 //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
             }
         });
+
         CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
             @Override
             public void changed(ObservableValue<? extends NodeType> observable, NodeType oldValue, NodeType newValue) {
@@ -405,7 +413,7 @@ public class MapBuilderController extends ScreenController {
                 while(c.next()) {
                     if(c.wasRemoved()) {
                         lvConnectedNodes.getItems().clear();
-                        updateNodeDisplay(NodeDisplay.SELECTED);
+                        updateNodeDisplay(NodeSelectionType.SELECTED);
                     }
                     else if(c.wasAdded()) {
                         for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
@@ -414,7 +422,7 @@ public class MapBuilderController extends ScreenController {
                             connection.setAlignment(Pos.CENTER);
                             lvConnectedNodes.getItems().add(connection);
                         }
-                        updateNodeDisplay(NodeDisplay.SELECTED);
+                        updateNodeDisplay(NodeSelectionType.SELECTED);
                     }
                 }
                 if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
@@ -425,7 +433,7 @@ public class MapBuilderController extends ScreenController {
         observableChangedNodes.addListener(new ListChangeListener<Node>() {
             @Override
             public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeDisplay.CHANGED);//currently do nothing
+                updateNodeDisplay(NodeSelectionType.CHANGED);//currently do nothing
                 while(c.next()) {
                     if(c.wasAdded()) {
                         for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
@@ -451,10 +459,10 @@ public class MapBuilderController extends ScreenController {
             public void onChanged(Change<? extends Node> c) {
                 while(c.next()) {
                     if(c.wasRemoved()) {
-                        updateNodeDisplay(NodeDisplay.NEW);
+                        updateNodeDisplay(NodeSelectionType.NEW);
                     }
                     else if(c.wasAdded()) {
-                        updateNodeDisplay(NodeDisplay.NEW);
+                        updateNodeDisplay(NodeSelectionType.NEW);
                     }
                 }
                 if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
@@ -510,8 +518,7 @@ public class MapBuilderController extends ScreenController {
                 if (db.hasString()) {
                     success = true;
                 }
-                /* let the source know whether the string was successfully
-                 * transferred and used */
+                // let the source know whether the string was successfully transferred and used
                 event.setDropCompleted(success);
 
                 //add connection between nodes
@@ -627,17 +634,25 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void resetScreen() {
+
         getMapController().setAnchor(0, 450, 0, 0);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
+
     }
 
-    /**
-     * Handles node Related operations
-     */
+    // Handles node Related operations
 
 //TODO REFACTOR THIS USING "CHANGE"
-    private void updateNodeDisplay(NodeDisplay nodeDisplay) {
+    private void updateNodeDisplay(NodeSelectionType nodeSelectionType) {
         setNodeAllDisable();
-        switch (nodeDisplay) {
+        switch (nodeSelectionType) {
             case SELECTED:
                 if(observableSelectedNodes.size() == 0) { //no node selected
                     setNodeAllDisable();
@@ -742,16 +757,13 @@ public class MapBuilderController extends ScreenController {
     private void updateNodeID() {
         //System.out.println(observableSelectedNodes.get(0).getNodeID());
         if(nodeType == NodeType.ELEV) {
-            /*String elevTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, "Team " + nodeTeamAssigned.toString());
-            nodeID.setText(nodeTeamAssigned.toString() + nodeType.toString() + "00" + (elevTypeCount + trackElev) + convertFloor(mapController.floorSelector.getValue().toString()));
-            trackElev++;*/
+
             String result = elevNameInChangedList();
             nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString1()));
 
         }
         else {
         //System.out.println("");
-            int nodeTypeCountPrepared = 0;
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
                 nodeID.setText(nodeIDtemp);
@@ -1298,9 +1310,9 @@ public class MapBuilderController extends ScreenController {
         JFXDialogLayout floorDialoglo = new JFXDialogLayout();
         floorDialoglo.setHeading(new Text("Select a floor"));
         JFXDialog Dialog = new JFXDialog(mapBuilderStackPane, floorDialoglo, JFXDialog.DialogTransition.CENTER);
-        HBox floorHBox = new HBox(ivFIRST, ivSECOND, ivTHIRD, ivLOWERLEVEL_1, ivLOWERLEVEL_2, ivGROUND);
         floorDialoglo.setActions(Dialog);
 
         Dialog.show();
     }
+    */
 }

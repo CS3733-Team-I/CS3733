@@ -1,57 +1,53 @@
 package database;
 
-import controller.MapController;
-import database.objects.Edge;
-import database.objects.InterpreterRequest;
-import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import utility.csv.CsvFileUtil;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CsvLoadingTests {
 
-    DatabaseController dbController;
-
-    public CsvLoadingTests() {
-        dbController = DatabaseController.getInstance();
-    }
+    public CsvLoadingTests() { }
 
     @Test
     public void loadCSVs() throws URISyntaxException{
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapAnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapBnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapCnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapDnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapEnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapFnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapGnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapHnodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapInodes.csv").toURI().getPath());
-        CsvFileUtil.readNodesCSV(getClass().getResource("/csv/MapWnodes.csv").toURI().getPath());
+        try {
+            MapEntity.getInstance().removeAll();
 
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapAedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapBedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapCedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapDedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapEedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapFedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapGedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapHedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapIedges.csv").toURI().getPath());
-        CsvFileUtil.readEdgesCSV(getClass().getResource("/csv/MapWedges.csv").toURI().getPath());
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapAnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapBnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapCnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapDnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapEnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapFnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapGnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapHnodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapInodes.csv");
+            CsvFileUtil.getInstance().readNodesCSV("/csv/MapWnodes.csv");
 
-        Assert.assertTrue(true); // If we get here we're good!
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapAedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapBedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapCedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapDedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapEedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapFedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapGedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapHedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapIedges.csv");
+            CsvFileUtil.getInstance().readEdgesCSV("/csv/MapWedges.csv");
+
+            Assert.assertTrue(true); // If we get here we're good!
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+
+            Assert.assertTrue(false); // :(
+        }
     }
 
-    @Before
     @After
     public void cleanup() throws DatabaseException {
         MapEntity.getInstance().removeAll();
