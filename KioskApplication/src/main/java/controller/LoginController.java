@@ -67,8 +67,7 @@ public class LoginController {
 
     @FXML
     public void OnLoginClicked() throws IOException {
-        KioskPermission access = l.logIn(tfEmail.getText(),pfPassword.getText());
-        if(access != KioskPermission.NONEMPLOYEE) {
+        if(l.logIn(tfEmail.getText(),pfPassword.getText())) {
             resetFields();
             parent.closeLoginPopup();
             parent.checkPermissions();
