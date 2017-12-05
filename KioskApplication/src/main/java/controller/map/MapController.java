@@ -27,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.request.Language;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -47,6 +48,7 @@ public class MapController {
     @FXML private AnchorPane waypointPane;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
+    @FXML private JFXComboBox<String> languageSelector; // need to check this
     @FXML private JFXSlider zoomSlider;
 
     @FXML private VBox optionsBox;

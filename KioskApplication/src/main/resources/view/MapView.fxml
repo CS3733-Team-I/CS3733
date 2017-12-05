@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.52" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.3" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
@@ -20,7 +20,10 @@
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <JFXComboBox fx:id="languageSelector" layoutX="144.0" layoutY="416.0" onAction="#onLanguageSelect" prefHeight="25.0" prefWidth="125.0" promptText="Language" style="-fx-background-color: #ffffff;" />
+                     </children></AnchorPane>
                </children>
             </StackPane>
          </content>
