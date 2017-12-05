@@ -273,9 +273,10 @@ public class RequestManagerController extends ScreenController {
     public VBox displayInformation(String requestID) throws NotFoundException {
         Request request = r.getRequest(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Employee: " + request.getAssignerID());
+        Label employee = new Label("Requested By: " + request.getAssignerID());
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
+        Label requestNotes = new Label(request.getNote());
         Label extraField;
         RequestType RT = r.checkRequestType(requestID);
         switch (RT){
@@ -295,7 +296,7 @@ public class RequestManagerController extends ScreenController {
                 popup.hide();
             }
         });
-        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,extraField,close);
+        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,extraField,requestNotes,close);
         return vbox;
     }
 
