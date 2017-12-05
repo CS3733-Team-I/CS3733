@@ -299,10 +299,6 @@ public class MapController {
             scrollPane.setHvalue((newCenterX - viewPort.getWidth() / 2) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
             scrollPane.setVvalue((newCenterY - viewPort.getHeight() / 2) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
 
-
-            //scrollPane.setHvalue(scrollH);
-            //scrollPane.setVvalue(scrollV);
-
             miniMapController.setViewportZoom(scaleValue);
         }
     }
@@ -343,7 +339,7 @@ public class MapController {
         scrollPane.setContent(contentGroup);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        // Thanks ragerdl on https://stackoverflow.com/questions/27461643/javafx-disable-scrolling-by-mousewheel-in-scrollpane
+        // got fix from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
         scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
             event.consume();
             if(event.getDeltaY() == 0){
@@ -353,28 +349,21 @@ public class MapController {
             double heightRatio = container.getHeight() / mapView.getFitHeight();
             double minScrollValue = Math.max(widthRatio, heightRatio);
             double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
-            zoomSlider.setValue(zoomSlider.getValue()*scaleFactor);
-            /*if (scaleFactor*zoomSlider.getValue()>=minScrollValue&&scaleFactor*zoomSlider.getValue()<=2){
+            if (scaleFactor*zoomSlider.getValue()>=minScrollValue&&scaleFactor*zoomSlider.getValue()<=2){
                 Bounds viewPort = scrollPane.getViewportBounds();
                 Bounds contentSize = zoomGroup.getBoundsInParent();
 
-                double centerPosX = (contentSize.getWidth()-viewPort.getWidth())*scrollPane.getHvalue()+viewPort.getWidth()/2;
-                double centerPosY = (contentSize.getHeight()-viewPort.getHeight())*scrollPane.getVvalue()+viewPort.getHeight()/2;
+                double mousePosX = (contentSize.getWidth()-viewPort.getWidth())*scrollPane.getHvalue()+event.getX();
+                double mousePosY = (contentSize.getHeight()-viewPort.getHeight())*scrollPane.getVvalue()+event.getY();
 
-                System.out.println("scaleX: "+zoomGroup.getScaleX());
-                System.out.println("scaleY: "+zoomGroup.getScaleY());
-
-                System.out.println("Vbar: "+scrollPane.getVvalue());
-                System.out.println("Hbar: "+scrollPane.getHvalue());
+                double newMouseX = scaleFactor*mousePosX;
+                double newMouseY = scaleFactor*mousePosY;
 
                 zoomSlider.setValue(zoomSlider.getValue()*scaleFactor);
 
-                double newCenterX = centerPosX*scaleFactor;
-                double newCenterY = centerPosY*scaleFactor;
-
-                scrollPane.setHvalue((newCenterX-viewPort.getWidth()/2)/(contentSize.getWidth()*scaleFactor-viewPort.getWidth()));
-                scrollPane.setVvalue((newCenterY-viewPort.getHeight()/2)/(contentSize.getHeight()*scaleFactor-viewPort.getHeight()));
-            }*/
+                scrollPane.setHvalue((newMouseX-event.getX())/(contentSize.getWidth()*scaleFactor-viewPort.getWidth()));
+                scrollPane.setVvalue((newMouseY-event.getY())/(contentSize.getHeight()*scaleFactor-viewPort.getHeight()));
+            }
         });
 
         //floor changing listeners
