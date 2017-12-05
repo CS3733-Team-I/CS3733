@@ -15,6 +15,7 @@ public class Path {
     private LinkedList<Node> waypoints;
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
+    private int currentCost = 0;
 
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
@@ -111,6 +112,7 @@ public class Path {
      * get the nodes On target floor
      */
     public LinkedList<Node> getListOfNodesSegmentOnFloor(LinkedList<Edge> segment, Node segmentStart, NodeFloor floor) {
+        currentCost = 0;
 
         MapEntity map = MapEntity.getInstance();
 
@@ -136,6 +138,7 @@ public class Path {
         for (Edge e : segment) {
             try {
                 if(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())).getFloor() == floor) {
+                    currentCost += e.getCost();
                     nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
                 }
             }
@@ -176,11 +179,7 @@ public class Path {
         return(allNodes);
     }
 
-    public Integer getPathCost(LinkedList<Edge> edges){
-        int retValue = 0;
-        for(Edge e: edges){
-            retValue += e.getCost();
-        }
-        return retValue;
+    public int getPathCost(){
+        return currentCost;
     }
 }

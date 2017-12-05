@@ -184,7 +184,7 @@ public class PathWaypointView extends AnchorPane {
             this.pathView.getChildren().add(jfxPath);
 
             Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
-            for(int j = 0; j < currentPath.getPathCost(currentPath.getEdges().get(i))/30; j++) {
+            for(int j = 0; j < currentPath.getPathCost()/20; j++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
@@ -192,7 +192,7 @@ public class PathWaypointView extends AnchorPane {
 
                 PathTransition navigationTransition = new PathTransition();
                 navigationTransition.setNode(circle);
-                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost(currentPath.getEdges().get(i))/30));
+                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/20));
                 navigationTransition.setPath(jfxPath);
                 navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
                 navigationTransition.setAutoReverse(false);
