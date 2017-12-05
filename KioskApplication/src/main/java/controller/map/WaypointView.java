@@ -5,6 +5,7 @@ import database.objects.Node;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -26,8 +27,9 @@ public class WaypointView extends StackPane {
     @FXML private MenuButton waypoint;
     @FXML private StackPane container;
     @FXML private ImageView imageView;
+    @FXML private Label waypointCount;
 
-    public WaypointView(PathWaypointView parent, Node node) {
+    public WaypointView(PathWaypointView parent, Node node, int count) {
         this.parent = parent;
         waypointPutTransition = new TranslateTransition();
         this.node = node;
@@ -40,6 +42,7 @@ public class WaypointView extends StackPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.setWaypointCount(count);
     }
 
     @FXML
@@ -70,7 +73,12 @@ public class WaypointView extends StackPane {
     }
 
 
-    public void playWaypointPutTransition() {
+    public void playWaypointPutTransition()
+    {
         waypointPutTransition.play();
+    }
+
+    public void setWaypointCount(int i) {
+        this.waypointCount.setText(Integer.toString(i));
     }
 }

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
-
+<?import javafx.scene.text.Font?>
 
 <fx:root fx:id="container" type="StackPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MenuButton fx:id="waypoint" mnemonicParsing="false" styleClass="map-pin" stylesheets="@../css/airportapp.css">
 </MenuButton>
       <ImageView fx:id="imageView" fitHeight="63.0" fitWidth="48.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="waypointCount" text="1" textFill="#00589f">
+         <font>
+            <Font size="31.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="15.0" right="2.0" />
+         </StackPane.margin>
+      </Label>
    </children>
 </fx:root>

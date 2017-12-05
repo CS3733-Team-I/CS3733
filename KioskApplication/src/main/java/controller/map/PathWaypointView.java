@@ -87,8 +87,7 @@ public class PathWaypointView extends AnchorPane {
                 }
                 if(listener.wasAdded()) {
                     for(Node addedNode : listener.getAddedSubList()) {
-                        WaypointView waypointView = new WaypointView(this, addedNode);
-
+                        WaypointView waypointView = new WaypointView(this, addedNode, waypointList.indexOf(addedNode));
                         this.wayPointViewsMap.put(addedNode, waypointView);
 
                         this.wayPointView.getChildren().add(waypointView);
