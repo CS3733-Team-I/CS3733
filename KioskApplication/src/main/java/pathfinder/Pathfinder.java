@@ -10,15 +10,24 @@ import java.util.*;
 
 public class Pathfinder {
 
-    private SearchAlgorithm searchAlgorithm;
+    private SearchAlgorithm searchAlgorithm = new A_star(); //Default search algorithm
+    private boolean wheelchairAccessible = false;   //Default wheelchair accessibility level
+
+    public Pathfinder(SearchAlgorithm searchAlgorithm, boolean wheelchairAccessible) {
+        this.searchAlgorithm = searchAlgorithm;
+        this.wheelchairAccessible = wheelchairAccessible;
+    }
+
+    //Alternate constructors
+    public Pathfinder() {
+    }
 
     public Pathfinder(SearchAlgorithm searchAlgorithm) {
         this.searchAlgorithm = searchAlgorithm;
     }
 
-    //Alternate constructor; if no search algorithm is selected, default to A*
-    public Pathfinder() {
-        this.searchAlgorithm = new A_star();
+    public Pathfinder(boolean wheelchairAccessible) {
+        this.wheelchairAccessible = wheelchairAccessible;
     }
 
     /**
@@ -59,7 +68,7 @@ public class Pathfinder {
 
 
             //Now, find the path from the previous waypoint to this one.
-            pathEdges.add(searchAlgorithm.findPath(startNode, endNode));  //Add this section to the rest of the path.
+            pathEdges.add(searchAlgorithm.findPath(startNode, endNode, this.wheelchairAccessible));  //Add this section to the rest of the path.
             startNode = endNode;    //Set this waypoint as the start for the next waypoint and repeat.
         }
         //At this point, pathEdges should contain a full list of edges from the first to the last waypoint, passing
@@ -69,27 +78,19 @@ public class Pathfinder {
         return(new Path(waypoints, pathEdges));
     }
 
-    //Old method. use the method that takes a LinkedList
-    /**
-     * An alternate call for generatePath for use without intermediate waypoints.  If a user has only a start and an end
-     * point and no other waypoints in between, they just pass in the two nodes rather than having to assemble them into
-     * a list first.
-     * @param startNode node that the algorithm should start at
-     * @param endNode node that the algorithm should end at
-     * @return A Path object containing the waypoints and a list of edges marking a path between them.
-     */
-    public Path generatePath(Node startNode, Node endNode) throws PathfinderException{
-        LinkedList<Node> waypoints = new LinkedList<>();
-        waypoints.add(startNode);
-        waypoints.add(endNode);
-        return(generatePath(waypoints));
-    }
-
     public SearchAlgorithm getSearchAlgorithm() {
         return searchAlgorithm;
     }
 
     public void setSearchAlgorithm(SearchAlgorithm searchAlgorithm) {
         this.searchAlgorithm = searchAlgorithm;
+    }
+
+    public boolean isWheelchairAccessible() {
+        return wheelchairAccessible;
+    }
+
+    public void setWheelchairAccessible(boolean wheelchairAccessible) {
+        this.wheelchairAccessible = wheelchairAccessible;
     }
 }

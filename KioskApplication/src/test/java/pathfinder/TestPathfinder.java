@@ -1,5 +1,6 @@
 package pathfinder;
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -23,21 +24,21 @@ import static org.junit.Assert.assertTrue;
 public class TestPathfinder {
 
     private static Pathfinder pathfinder;
-    private static Node n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12,
-                 n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23;
-    private static Edge e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11,
-                 e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22;
     private static MapEntity map;
 
-    /* New Map Structure
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////             Map              /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-          X   10    20    30    40    50    60    70    80
-       Y
-       10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07
+    /*
+                        NodeFloor.THIRD
+          X   10    20    30    40    50    60    70    80              n01 & n16 are elevators
+       Y                                                                n07 & n17 are stairs
+       10     n01 - n02 - n03 - n04 - - - - n05 - n06 - n07             n09 is a bathroom (not handicapped)
                      |           |
-       20           n08 - n09   n10 - - - - n15
+       20           n08 - n09   n10 - - - - n11
                      |           |        /
-       30           n11 - n12 - n13 - n14 - n16
+       30           n12 - n13 - n14 - n15 - n16
                            |
        40                 n17
 
@@ -47,7 +48,35 @@ public class TestPathfinder {
                            |     |
        70                 n22 - n23
 
+
+                        NodeFloor.SECOND
+          X   10    20    30    40    50    60    70    80              n24 & n39 are elevators
+       Y                                                                n30 & n40 are stairs
+       10     n24 - n25 - n26 - n27 - - - - n28 - n29 - n30             n32 is a bathroom (handicapped)
+                     |           |
+       20           n31 - n32   n33 - - - - n34
+                     |           |        /
+       30           n35 - n36 - n37 - n38 - n39
+                           |
+       40                 n40
+
+
+                        NodeFloor.FIRST
+          X   10    20    30    40    50    60    70    80              n47 & n62 are elevators
+       Y                                                                n53 & n63 are stairs
+       10     n47 - n48 - n49 - n50 - - - - n51 - n52 - n53             n55 is a bathroom (not handicapped)
+                     |           |
+       20           n54 - n55   n56 - - - - n57
+                     |           |        /
+       30           n58 - n59 - n60 - n61 - n62
+                           |
+       40                 n63
+
     */
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////     BEFORE/AFTER METHODS     /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Before //Build map for testing all algorithms
     public void setup() throws DatabaseException {
@@ -55,67 +84,140 @@ public class TestPathfinder {
         map = MapEntity.getInstance();
         this.removeAllFromDB();
 
+        //Nodes for F3
+        map.addNode(new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I"));
+        map.addNode(new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I"));
+        map.addNode(new Node("NODE03",30,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I"));
+        map.addNode(new Node("NODE04",40,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I"));
+        map.addNode(new Node("NODE05",60,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I"));
+        map.addNode(new Node("NODE06",70,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I"));
+        map.addNode(new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I"));
+        map.addNode(new Node("NODE08",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I"));
+        map.addNode(new Node("NODE09",30,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped","RR - nHC","I"));
+        map.addNode(new Node("NODE10",40,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I"));
+        map.addNode(new Node("NODE11",60,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I"));
+        map.addNode(new Node("NODE12",20,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I"));
+        map.addNode(new Node("NODE13",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I"));
+        map.addNode(new Node("NODE14",40,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I"));
+        map.addNode(new Node("NODE15",50,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I"));
+        map.addNode(new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I"));
+        map.addNode(new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I"));
+        map.addNode(new Node("NODE18",30,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I"));
+        map.addNode(new Node("NODE19",40,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I"));
+        map.addNode(new Node("NODE20",30,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I"));
+        map.addNode(new Node("NODE21",40,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I"));
+        map.addNode(new Node("NODE22",30,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I"));
+        map.addNode(new Node("NODE23",40,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I"));
+        //Nodes for F2
+        map.addNode(new Node("NODE24",10,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I"));
+        map.addNode(new Node("NODE25",20,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE25_LN","NODE25_SN","I"));
+        map.addNode(new Node("NODE26",30,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE26_LN","NODE26_SN","I"));
+        map.addNode(new Node("NODE27",40,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE27_LN","NODE27_SN","I"));
+        map.addNode(new Node("NODE28",60,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE28_LN","NODE28_SN","I"));
+        map.addNode(new Node("NODE29",70,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE29_LN","NODE29_SN","I"));
+        map.addNode(new Node("NODE30",80,10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I"));
+        map.addNode(new Node("NODE31",20,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE31_LN","NODE31_SN","I"));
+        map.addNode(new Node("NODE32",30,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Handicapped","RR - HC","I"));
+        map.addNode(new Node("NODE33",40,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE33_LN","NODE33_SN","I"));
+        map.addNode(new Node("NODE34",60,20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE34_LN","NODE34_SN","I"));
+        map.addNode(new Node("NODE35",20,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE35_LN","NODE35_SN","I"));
+        map.addNode(new Node("NODE36",30,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE36_LN","NODE36_SN","I"));
+        map.addNode(new Node("NODE37",40,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE37_LN","NODE37_SN","I"));
+        map.addNode(new Node("NODE38",50,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE38_LN","NODE38_SN","I"));
+        map.addNode(new Node("NODE39",60,30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I"));
+        map.addNode(new Node("NODE40",30,40, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I"));
+        //Nodes for F1
+        map.addNode(new Node("NODE47",10,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A","Elev A","I"));
+        map.addNode(new Node("NODE48",20,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE48_LN","NODE48_SN","I"));
+        map.addNode(new Node("NODE49",30,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE49_LN","NODE49_SN","I"));
+        map.addNode(new Node("NODE50",40,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE50_LN","NODE50_SN","I"));
+        map.addNode(new Node("NODE51",60,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE51_LN","NODE51_SN","I"));
+        map.addNode(new Node("NODE52",70,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE52_LN","NODE52_SN","I"));
+        map.addNode(new Node("NODE53",80,10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A","St A","I"));
+        map.addNode(new Node("NODE54",20,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE54_LN","NODE54_SN","I"));
+        map.addNode(new Node("NODE55",30,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped","RR - nHC","I"));
+        map.addNode(new Node("NODE56",40,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE56_LN","NODE56_SN","I"));
+        map.addNode(new Node("NODE57",60,20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE57_LN","NODE57_SN","I"));
+        map.addNode(new Node("NODE58",20,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE58_LN","NODE58_SN","I"));
+        map.addNode(new Node("NODE59",30,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE59_LN","NODE59_SN","I"));
+        map.addNode(new Node("NODE60",40,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE60_LN","NODE60_SN","I"));
+        map.addNode(new Node("NODE61",50,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE61_LN","NODE61_SN","I"));
+        map.addNode(new Node("NODE62",60,30, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B","Elev B","I"));
+        map.addNode(new Node("NODE63",30,40, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B","St B","I"));
 
-        n01 = new Node("NODE01",10,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE01_LN","NODE01_SN","I");
-        n02 = new Node("NODE02",20,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE02_LN","NODE02_SN","I");
-        n03 = new Node("NODE03",30,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE03_LN","NODE03_SN","I");
-        n04 = new Node("NODE04",40,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE04_LN","NODE04_SN","I");
-        n05 = new Node("NODE05",60,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE05_LN","NODE05_SN","I");
-        n06 = new Node("NODE06",70,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE06_LN","NODE06_SN","I");
-        n07 = new Node("NODE07",80,10, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE07_LN","NODE07_SN","I");
-        n08 = new Node("NODE08",20,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE08_LN","NODE08_SN","I");
-        n09 = new Node("NODE09",30,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE09_LN","NODE09_SN","I");
-        n10 = new Node("NODE10",40,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN","NODE10_SN","I");
-        n11 = new Node("NODE11",20,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN","NODE11_SN","I");
-        n12 = new Node("NODE12",30,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN","NODE12_SN","I");
-        n13 = new Node("NODE13",40,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN","NODE13_SN","I");
-        n14 = new Node("NODE14",50,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN","NODE14_SN","I");
-        n15 = new Node("NODE15",60,20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN","NODE15_SN","I");
-        n16 = new Node("NODE16",60,30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE16_LN","NODE16_SN","I");
-        n17 = new Node("NODE17",30,40, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE17_LN","NODE17_SN","I");
-        n18 = new Node("NODE18",30,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE18_LN","NODE18_SN","I");
-        n19 = new Node("NODE19",40,50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN","NODE19_SN","I");
-        n20 = new Node("NODE20",30,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE20_LN","NODE20_SN","I");
-        n21 = new Node("NODE21",40,60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN","NODE21_SN","I");
-        n22 = new Node("NODE22",30,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN","NODE22_SN","I");
-        n23 = new Node("NODE23",40,70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE23_LN","NODE23_SN","I");
-
-
-        map.addNode(n01); map.addNode(n02); map.addNode(n03); map.addNode(n04); map.addNode(n05);
-        map.addNode(n06); map.addNode(n07); map.addNode(n08); map.addNode(n09); map.addNode(n10);
-        map.addNode(n11); map.addNode(n12); map.addNode(n13); map.addNode(n14); map.addNode(n15);
-        map.addNode(n16); map.addNode(n17); map.addNode(n18); map.addNode(n19); map.addNode(n20);
-        map.addNode(n21); map.addNode(n22); map.addNode(n23);
-
-
-        e01 = new Edge("EDGE01", n01.getNodeID(), n02.getNodeID());
-        e02 = new Edge("EDGE02", n02.getNodeID(), n03.getNodeID());
-        e03 = new Edge("EDGE03", n03.getNodeID(), n04.getNodeID());
-        e04 = new Edge("EDGE04", n04.getNodeID(), n05.getNodeID());
-        e05 = new Edge("EDGE05", n05.getNodeID(), n06.getNodeID());
-        e06 = new Edge("EDGE06", n06.getNodeID(), n07.getNodeID());
-        e07 = new Edge("EDGE07", n02.getNodeID(), n08.getNodeID());
-        e08 = new Edge("EDGE08", n04.getNodeID(), n10.getNodeID());
-        e09 = new Edge("EDGE09", n08.getNodeID(), n09.getNodeID());
-        e10 = new Edge("EDGE10", n10.getNodeID(), n15.getNodeID());
-        e11 = new Edge("EDGE11", n08.getNodeID(), n11.getNodeID());
-        e12 = new Edge("EDGE12", n10.getNodeID(), n13.getNodeID());
-        e13 = new Edge("EDGE13", n15.getNodeID(), n14.getNodeID());
-        e14 = new Edge("EDGE14", n11.getNodeID(), n12.getNodeID());
-        e15 = new Edge("EDGE15", n12.getNodeID(), n13.getNodeID());
-        e16 = new Edge("EDGE16", n13.getNodeID(), n14.getNodeID());
-        e17 = new Edge("EDGE17", n14.getNodeID(), n16.getNodeID());
-        e18 = new Edge("EDGE18", n12.getNodeID(), n17.getNodeID());
-        e19 = new Edge("EDGE19", n20.getNodeID(), n21.getNodeID());
-        e20 = new Edge("EDGE20", n20.getNodeID(), n22.getNodeID());
-        e21 = new Edge("EDGE21", n21.getNodeID(), n23.getNodeID());
-        e22 = new Edge("EDGE22", n22.getNodeID(), n23.getNodeID());
-
-        map.addEdge(e01); map.addEdge(e02); map.addEdge(e03); map.addEdge(e04); map.addEdge(e05);
-        map.addEdge(e06); map.addEdge(e07); map.addEdge(e08); map.addEdge(e09); map.addEdge(e10);
-        map.addEdge(e11); map.addEdge(e12); map.addEdge(e13); map.addEdge(e14); map.addEdge(e15);
-        map.addEdge(e16); map.addEdge(e17); map.addEdge(e18); map.addEdge(e19); map.addEdge(e20);
-        map.addEdge(e21); map.addEdge(e22);
+        //Edges for F3
+        map.addEdge(new Edge("EDGE01", "NODE01", "NODE02"));
+        map.addEdge(new Edge("EDGE02", "NODE02", "NODE03"));
+        map.addEdge(new Edge("EDGE03", "NODE03", "NODE04"));
+        map.addEdge(new Edge("EDGE04", "NODE04", "NODE05"));
+        map.addEdge(new Edge("EDGE05", "NODE05", "NODE06"));
+        map.addEdge(new Edge("EDGE06", "NODE06", "NODE07"));
+        map.addEdge(new Edge("EDGE07", "NODE02", "NODE08"));
+        map.addEdge(new Edge("EDGE08", "NODE04", "NODE10"));
+        map.addEdge(new Edge("EDGE09", "NODE08", "NODE09"));
+        map.addEdge(new Edge("EDGE10", "NODE10", "NODE11"));
+        map.addEdge(new Edge("EDGE11", "NODE08", "NODE12"));
+        map.addEdge(new Edge("EDGE12", "NODE10", "NODE14"));
+        map.addEdge(new Edge("EDGE13", "NODE11", "NODE15"));
+        map.addEdge(new Edge("EDGE14", "NODE12", "NODE13"));
+        map.addEdge(new Edge("EDGE15", "NODE13", "NODE14"));
+        map.addEdge(new Edge("EDGE16", "NODE14", "NODE15"));
+        map.addEdge(new Edge("EDGE17", "NODE15", "NODE16"));
+        map.addEdge(new Edge("EDGE18", "NODE13", "NODE17"));
+        map.addEdge(new Edge("EDGE19", "NODE20", "NODE21"));
+        map.addEdge(new Edge("EDGE20", "NODE20", "NODE22"));
+        map.addEdge(new Edge("EDGE21", "NODE21", "NODE23"));
+        map.addEdge(new Edge("EDGE22", "NODE22", "NODE23"));
+        //Edges for F2
+        map.addEdge(new Edge("EDGE23", "NODE24", "NODE25"));
+        map.addEdge(new Edge("EDGE24", "NODE25", "NODE26"));
+        map.addEdge(new Edge("EDGE25", "NODE26", "NODE27"));
+        map.addEdge(new Edge("EDGE26", "NODE27", "NODE28"));
+        map.addEdge(new Edge("EDGE27", "NODE28", "NODE29"));
+        map.addEdge(new Edge("EDGE28", "NODE29", "NODE30"));
+        map.addEdge(new Edge("EDGE29", "NODE25", "NODE31"));
+        map.addEdge(new Edge("EDGE30", "NODE27", "NODE33"));
+        map.addEdge(new Edge("EDGE31", "NODE31", "NODE32"));
+        map.addEdge(new Edge("EDGE32", "NODE33", "NODE34"));
+        map.addEdge(new Edge("EDGE33", "NODE31", "NODE35"));
+        map.addEdge(new Edge("EDGE34", "NODE33", "NODE37"));
+        map.addEdge(new Edge("EDGE35", "NODE34", "NODE38"));
+        map.addEdge(new Edge("EDGE36", "NODE35", "NODE36"));
+        map.addEdge(new Edge("EDGE37", "NODE36", "NODE37"));
+        map.addEdge(new Edge("EDGE38", "NODE37", "NODE38"));
+        map.addEdge(new Edge("EDGE39", "NODE38", "NODE39"));
+        map.addEdge(new Edge("EDGE40", "NODE36", "NODE40"));
+        //Edges for F1
+        map.addEdge(new Edge("EDGE45", "NODE47", "NODE48"));
+        map.addEdge(new Edge("EDGE46", "NODE48", "NODE49"));
+        map.addEdge(new Edge("EDGE47", "NODE49", "NODE50"));
+        map.addEdge(new Edge("EDGE48", "NODE50", "NODE51"));
+        map.addEdge(new Edge("EDGE49", "NODE51", "NODE52"));
+        map.addEdge(new Edge("EDGE50", "NODE52", "NODE53"));
+        map.addEdge(new Edge("EDGE51", "NODE48", "NODE54"));
+        map.addEdge(new Edge("EDGE52", "NODE50", "NODE56"));
+        map.addEdge(new Edge("EDGE53", "NODE54", "NODE55"));
+        map.addEdge(new Edge("EDGE54", "NODE56", "NODE57"));
+        map.addEdge(new Edge("EDGE55", "NODE54", "NODE58"));
+        map.addEdge(new Edge("EDGE56", "NODE56", "NODE60"));
+        map.addEdge(new Edge("EDGE57", "NODE57", "NODE61"));
+        map.addEdge(new Edge("EDGE58", "NODE58", "NODE59"));
+        map.addEdge(new Edge("EDGE59", "NODE59", "NODE60"));
+        map.addEdge(new Edge("EDGE60", "NODE60", "NODE61"));
+        map.addEdge(new Edge("EDGE61", "NODE61", "NODE62"));
+        map.addEdge(new Edge("EDGE62", "NODE59", "NODE63"));
+        //Edges for elevators
+        map.addEdge(new Edge("EDGE67", "NODE01", "NODE24"));
+        map.addEdge(new Edge("EDGE68", "NODE01", "NODE47"));
+        map.addEdge(new Edge("EDGE69", "NODE24", "NODE47"));
+        map.addEdge(new Edge("EDGE70", "NODE16", "NODE39"));
+        map.addEdge(new Edge("EDGE71", "NODE16", "NODE62"));
+        map.addEdge(new Edge("EDGE72", "NODE39", "NODE62"));
+        //Edges for stairs
+        map.addEdge(new Edge("EDGE73", "NODE07", "NODE30"));
+        map.addEdge(new Edge("EDGE74", "NODE30", "NODE53"));
+        map.addEdge(new Edge("EDGE75", "NODE17", "NODE40"));
+        map.addEdge(new Edge("EDGE76", "NODE40", "NODE63"));
     }
 
     @After //remove things from database
@@ -123,89 +225,216 @@ public class TestPathfinder {
         MapEntity.getInstance().removeAll();
     }
 
-    //A-star algorithm tests
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////         A_star Tests         /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Test //Tests the best path from node n01 to n07
-    public void testPathAstar() {
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathAstar(){
 
-        pathfinder = new Pathfinder(); //defaults to A-star
+        SearchAlgorithm alg = new A_star();
 
-        Path path1 = null;
-        try {
-            path1 = pathfinder.generatePath(n01, n07);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-
-        LinkedList<Edge> testPathSegment = new LinkedList<>();
-        testPathSegment.add(map.getConnectingEdge(n01,n02));
-        testPathSegment.add(map.getConnectingEdge(n02,n03));
-        testPathSegment.add(map.getConnectingEdge(n03,n04));
-        testPathSegment.add(map.getConnectingEdge(n04,n05));
-        testPathSegment.add(map.getConnectingEdge(n05,n06));
-        testPathSegment.add(map.getConnectingEdge(n06,n07));
-
-        LinkedList<Node> testPathWaypoints = new LinkedList<>();
-        testPathWaypoints.add(n01);
-        testPathWaypoints.add(n07);
-
-        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment);
-
-        Path testPath = new Path(testPathWaypoints, testPathEdges);
-
-        //System.out.println(path1.getEdges().toString());
-        //System.out.println(path1.getEdges().size());
-        //System.out.println(testPath.getEdges().toString());
-
-        assertTrue(path1.equals(testPath));
+        testFindPath(alg,false);
     }
 
-    @Test //Tests that a bad path is not used (should not be needed)
-    public void testWrongPathAstar() {
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathAstarWC(){
 
-        pathfinder = new Pathfinder(); //defaults to A-star
+        SearchAlgorithm alg = new A_star();
 
-        Path path1 = null;
-        try {
-            path1 = pathfinder.generatePath(n01, n06);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-
-        LinkedList<Edge> testPathSegment = new LinkedList<>();
-        testPathSegment.add(map.getConnectingEdge(n01,n02));
-        testPathSegment.add(map.getConnectingEdge(n02,n08));
-        testPathSegment.add(map.getConnectingEdge(n08,n11));
-        testPathSegment.add(map.getConnectingEdge(n11,n12));
-        testPathSegment.add(map.getConnectingEdge(n12,n13));
-        testPathSegment.add(map.getConnectingEdge(n13,n10));
-        testPathSegment.add(map.getConnectingEdge(n10,n04));
-        testPathSegment.add(map.getConnectingEdge(n04,n05));
-        testPathSegment.add(map.getConnectingEdge(n05,n06));
-        testPathSegment.add(map.getConnectingEdge(n06,n07));
-
-        LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
-        testPathEdges.add(testPathSegment);
-
-        LinkedList<Node> testPathWaypoints = new LinkedList<>();
-        testPathWaypoints.add(n01);
-        testPathWaypoints.add(n07);
-
-        Path testPath = new Path(testPathWaypoints, testPathEdges);
-
-        assertFalse(path1.equals(testPath));
+        testFindPath(alg,true);
     }
 
-    @Test //Tests a path with multiple waypoints
-    public void testMultipleWaypointAstar() {
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1Astar() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new A_star();
+        alg.findPath(map.getNode("NODE18"), map.getNode("NODE19"), false);
+    }
 
-        pathfinder = new Pathfinder(); //defaults to A-star
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2Astar() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new A_star();
+        alg.findPath(map.getNode("NODE01"), map.getNode("NODE19"), false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////       DepthFirst Tests       /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathDF() throws PathfinderException{
+
+        SearchAlgorithm alg = new DepthFirst();
+
+        testFindPath(alg,false);
+    }
+
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathDFWC() throws PathfinderException{
+
+        SearchAlgorithm alg = new DepthFirst();
+
+        testFindPath(alg,true);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1DF() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new DepthFirst();
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"), false);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2DF() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new DepthFirst();
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"), false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////      BreadthFirst Tests      /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathBF() {
+        SearchAlgorithm alg = new BreadthFirst();
+
+        testFindPath(alg,false);
+    }
+
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathBFWC() {
+        SearchAlgorithm alg = new BreadthFirst();
+
+        testFindPath(alg,true);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1BF() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new BreadthFirst();
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2BF() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new BreadthFirst();
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////        Dijkstra Tests        /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test //Test the FindPath method by testing all possible paths
+    public void testFindPathD() {
+        SearchAlgorithm alg = new Dijkstra();
+
+        testFindPath(alg, false);
+    }
+
+    @Test
+    public void testFindPathDWC() {
+        SearchAlgorithm alg = new Dijkstra();
+
+        testFindPath(alg, true);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1D() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new Dijkstra();
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2D() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new Dijkstra();
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////          Beam Tests          /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testFindPathBeam() {
+        SearchAlgorithm alg = new Beam();
+        testFindPath(alg, false);
+    }
+
+    @Test
+    public void testFindPathBeamWC() {
+        SearchAlgorithm alg = new Beam();
+        testFindPath(alg, true);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1Beam() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new Beam();
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2Beam() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new Beam();
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////       Best First Tests       /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testFindPathBestFirst(){
+        SearchAlgorithm alg = new BestFirst();
+        testFindPath(alg,false);
+    }
+
+    @Test
+    public void testFindPathBestFirstWC(){
+        SearchAlgorithm alg = new BestFirst();
+        testFindPath(alg,true);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
+    public void testPathfinderException1BestFirst() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new BestFirst();
+        alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
+    }
+
+    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
+    public void testPathfinderException2BestFirst() throws PathfinderException,NotFoundException{
+        SearchAlgorithm alg = new BestFirst();
+        alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////     Text Direction Tests     /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void testGenerateDirections() throws PathfinderException,NotFoundException{
+        pathfinder = new Pathfinder();
 
         LinkedList<Node> nodes = new LinkedList<>();
-        nodes.add(n01);
-        nodes.add(n12);
-        nodes.add(n07);
+        nodes.add(map.getNode("NODE01"));
+        nodes.add(map.getNode("NODE17"));
+
+        Path path = pathfinder.generatePath(nodes);
+
+        System.out.println(path.getDirections());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////   Multiple Waypoint Tests    /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test //Tests a path with multiple waypoints
+    public void testMultipleWaypoint() throws NotFoundException{
+
+        pathfinder = new Pathfinder();
+
+        LinkedList<Node> nodes = new LinkedList<>();
+        nodes.add(map.getNode("NODE01"));
+        nodes.add(map.getNode("NODE12"));
+        nodes.add(map.getNode("NODE06"));
 
         Path multipath = null;
         try {
@@ -214,19 +443,20 @@ public class TestPathfinder {
             e.printStackTrace();
         }
 
+        //TODO use isValidPath() instead of building a valid path here
+
         LinkedList<Edge> testPathSegment1 = new LinkedList<>();
-        testPathSegment1.add(map.getConnectingEdge(n01,n02));
-        testPathSegment1.add(map.getConnectingEdge(n02,n08));
-        testPathSegment1.add(map.getConnectingEdge(n08,n11));
-        testPathSegment1.add(map.getConnectingEdge(n11,n12));
+        testPathSegment1.add(map.getConnectingEdge(map.getNode("NODE01"),map.getNode("NODE02")));
+        testPathSegment1.add(map.getConnectingEdge(map.getNode("NODE02"),map.getNode("NODE08")));
+        testPathSegment1.add(map.getConnectingEdge(map.getNode("NODE08"),map.getNode("NODE12")));
 
         LinkedList<Edge> testPathSegment2 = new LinkedList<>();
-        testPathSegment2.add(map.getConnectingEdge(n12,n13));
-        testPathSegment2.add(map.getConnectingEdge(n13,n10));
-        testPathSegment2.add(map.getConnectingEdge(n10,n04));
-        testPathSegment2.add(map.getConnectingEdge(n04,n05));
-        testPathSegment2.add(map.getConnectingEdge(n05,n06));
-        testPathSegment2.add(map.getConnectingEdge(n06,n07));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE12"),map.getNode("NODE13")));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE13"),map.getNode("NODE14")));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE14"),map.getNode("NODE10")));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE10"),map.getNode("NODE04")));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE04"),map.getNode("NODE05")));
+        testPathSegment2.add(map.getConnectingEdge(map.getNode("NODE05"),map.getNode("NODE06")));
 
         LinkedList<LinkedList<Edge>> testPathEdges = new LinkedList<>();
         testPathEdges.add(testPathSegment1);
@@ -234,166 +464,18 @@ public class TestPathfinder {
 
         Path testMultipath = new Path(nodes, testPathEdges);
 
-        /*
-        System.out.println("Expected path:");
-        for(Edge edge: testMultipath.getEdges())
-            System.out.println("\t" + edge.getEdgeID());
-        System.out.println("Actual path:");
-        for(Edge edge: multipath.getEdges())
-            System.out.println("\t" + edge.getEdgeID());
-         */
-
         assertTrue(multipath.equals(testMultipath));
-
     }
 
-    @Test //TODO
-    public void testPrepForFrontierAstar(){
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////         Other Tests          /////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Helper method to check if a path is valid for multi waypoint navigation
+    private boolean isValidPath(LinkedList<Node> nodes, LinkedList<Edge> path) {
+        //TODO implement this
+        return false;
     }
-
-    @Test //TODO
-    public void testHeuristicAstar(){
-    }
-
-    @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathAstar(){
-
-        SearchAlgorithm alg = new A_star();
-
-        testFindPath(alg);
-    }
-
-    //Depth first algorithm tests
-
-    @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathDF() throws PathfinderException{
-
-        SearchAlgorithm alg = new DepthFirst();
-
-        testFindPath(alg);
-    }
-
-    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
-    public void testDeadEndException1DF() throws PathfinderException{
-        SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n18,n19);
-    }
-
-    @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
-    public void testDeadEndException2DF() throws PathfinderException{
-        SearchAlgorithm alg = new DepthFirst();
-        alg.findPath(n01,n19);
-    }
-
-    //Breadth first algorithm tests
-
-    @Test
-    public void testFindPathBF() {
-        SearchAlgorithm alg = new BreadthFirst();
-
-        testFindPath(alg);
-    }
-
-    @Test
-    public void testBreadthFirstSearch() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = null;
-        try {
-            path = breadth.generatePath(n01, n02);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-        LinkedList<Edge> testPath2Segment = new LinkedList<>();
-        testPath2Segment.add(e01);
-
-        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(testPath2Segment);
-
-        assertTrue(path.getEdges().equals(testPath2Edges));
-    }
-
-    @Test
-    public void testBreadthFirstSearch1() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = null;
-        try {
-            path = breadth.generatePath(n01, n17);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-        LinkedList<Edge> testPath2Segment = new LinkedList<>();
-        testPath2Segment.add(map.getConnectingEdge(n01,n02));
-        testPath2Segment.add(map.getConnectingEdge(n02,n08));
-        testPath2Segment.add(map.getConnectingEdge(n08,n11));
-        testPath2Segment.add(map.getConnectingEdge(n11,n12));
-        testPath2Segment.add(map.getConnectingEdge(n12,n17));
-
-        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(testPath2Segment);
-
-
-        assertTrue(path.getEdges().equals(testPath2Edges));
-        // System.out.println(path.getEdges().toString());
-        // System.out.println(testPath2.getEdges().toString());
-    }
-
-    @Test
-    public void testBreadthFirstSearchTestPathEquality() {
-        Pathfinder breadth = new Pathfinder(new BreadthFirst());
-        Path path = null;
-        try {
-            path = breadth.generatePath(n02, n05);
-        } catch (PathfinderException e) {
-            e.printStackTrace();
-        }
-        LinkedList<Edge> testPath2Segment = new LinkedList<>();
-        testPath2Segment.add(map.getConnectingEdge(n02,n03));
-        testPath2Segment.add(map.getConnectingEdge(n03,n04));
-        testPath2Segment.add(map.getConnectingEdge(n04,n05));
-        LinkedList<Node> testPath2Waypoints = new LinkedList<>();
-        testPath2Waypoints.add(n02);
-        testPath2Waypoints.add(n05);
-
-        LinkedList<LinkedList<Edge>> testPath2Edges = new LinkedList<>();
-        testPath2Edges.add(testPath2Segment);
-
-        Path testPath2 = new Path(testPath2Waypoints, testPath2Edges);
-
-        assertTrue(path.equals(testPath2));
-        // System.out.println(path2.getEdges().toString());
-        // System.out.println(testPath2.getEdges().toString());
-    }
-
-    //Dijkstra's algorithm tests
-
-    @Test
-    public void testFindPathD() {
-        SearchAlgorithm alg = new Dijkstra();
-
-        testFindPath(alg);
-    }
-
-    //Test exceptions
-
-    @Test (expected = PathfinderException.class)
-    public void testPathfinderException() throws PathfinderException{
-        //test that the exception is thrown when there is a path but no connection
-             SearchAlgorithm alg = new BreadthFirst();
-             alg.findPath(n02,n18);
-    }
-
-    //Test text directions
-
-    @Test
-    public void testGenerateDirections() throws PathfinderException{
-        pathfinder = new Pathfinder();
-
-        Path path = pathfinder.generatePath(n01,n17);
-
-        System.out.println(path.getDirections());
-    }
-
-    //Other methods
 
     //Helper method to check if a path is valid
     private boolean isValidPath(Node startNode, Node endNode, LinkedList<Edge> path) {
@@ -434,7 +516,7 @@ public class TestPathfinder {
     }
 
     //Helper method to test generating every possible path
-    private void testFindPath(SearchAlgorithm alg) {
+    private void testFindPath(SearchAlgorithm alg, boolean wheelchairAccessible) {
 
         LinkedList<Edge> path;
 
@@ -442,7 +524,7 @@ public class TestPathfinder {
         for(Node n1 : map.getAllNodes()) {
             for(Node n2 : map.getAllNodes()) {
                 try {
-                    path = alg.findPath(n1,n2);
+                    path = alg.findPath(n1,n2, wheelchairAccessible);
 
                     if(!isValidPath(n1,n2,path)) {
                         System.out.println("Not Valid Path\nStart: " + n1.getNodeID() + " End: " + n2.getNodeID());

@@ -146,7 +146,20 @@ public class Node {
     public void setNodeID(String nodeID) {
         this.nodeID = nodeID;
     }
+
     public String getXyz() {
         return Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
+    }
+
+    /**
+     * Return angle between this and Node n
+     * @param n node to get angle to
+     * @return angle in radians
+     */
+    public double getAngleBetweenNodes(Node n) {
+        double dx = n.getXcoord() - xcoord;
+        double dy = n.getYcoord() -ycoord;
+
+        return Math.atan2(dy,dx);
     }
 }
