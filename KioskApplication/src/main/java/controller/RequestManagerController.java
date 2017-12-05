@@ -44,7 +44,6 @@ public class RequestManagerController extends ScreenController {
     @FXML private JFXPopup popup;
     @FXML private HBox row8;
     @FXML private HBox row9;
-
     //filter buttons
     @FXML private JFXCheckBox foodFilter;
     @FXML private JFXCheckBox janitorFilter;
