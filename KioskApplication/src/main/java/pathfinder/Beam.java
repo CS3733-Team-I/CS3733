@@ -20,7 +20,7 @@ public class Beam implements SearchAlgorithm {
      */
     @Override
     public LinkedList<Edge> findPath(Node startNode, Node endNode, boolean wheelchairAccessible) throws PathfinderException {
-            int beamwidth = SystemSettings.getInstance().getBeamWidth();
+        int beamwidth = SystemSettings.getInstance().getBeamWidth();
         MapEntity map = MapEntity.getInstance();
 
         StartNode startingNode = new StartNode(startNode);

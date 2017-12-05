@@ -364,7 +364,7 @@ public class TestPathfinder {
     @Test
     public void testFindPathBeamWC() {
         SearchAlgorithm alg = new Beam();
-        SystemSettings.getInstance().setBeamWidth("4");
+        SystemSettings.getInstance().setBeamWidth("5");
         testFindPath(alg, true);
     }
 
