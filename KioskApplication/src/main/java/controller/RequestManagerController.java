@@ -188,7 +188,7 @@ public class RequestManagerController extends ScreenController {
         JFXButton statusUpdater = new JFXButton();
         JFXButton delete = new JFXButton("Delete");
 
-        ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
+        ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
         JFXComboBox employees = new JFXComboBox(listOfEmployees);
         employees.setPromptText("Select Employee");
 
@@ -212,7 +212,7 @@ public class RequestManagerController extends ScreenController {
                     statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
-                            r.markInProgress((String) employees.getValue(),requestID);
+                            r.markInProgress((Integer) employees.getValue(),requestID);
                             refreshRequests();
                             popup.hide();
                         }
@@ -227,7 +227,7 @@ public class RequestManagerController extends ScreenController {
                     statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
-                            r.markInProgress(l.getUserID(), requestID);
+                            r.markInProgress(l.getLoginID(), requestID);
                             refreshRequests();
                             popup.hide();
                         }
@@ -260,17 +260,20 @@ public class RequestManagerController extends ScreenController {
             @Override
             public void handle(ActionEvent event) {
                 vbox.getChildren().clear();
-                vbox.getChildren().add(displayInformation(requestID));
+                try {
+                    vbox.getChildren().add(displayInformation(requestID));
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
     }
 
-    public VBox displayInformation(String requestID){
+    public VBox displayInformation(String requestID) throws NotFoundException {
         Request request = r.getRequest(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
+        Label employee = new Label("Employee: " + request.getAssignerID());
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label extraField;
@@ -292,7 +295,7 @@ public class RequestManagerController extends ScreenController {
                 popup.hide();
             }
         });
-        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,assigner,extraField,close);
+        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,extraField,close);
         return vbox;
     }
 
