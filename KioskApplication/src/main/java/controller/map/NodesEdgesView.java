@@ -38,7 +38,7 @@ public class NodesEdgesView extends AnchorPane {
         AnchorPane.setRightAnchor(nodesView, 0.0);
 
         edgesView = new AnchorPane();
-        nodesView.setPickOnBounds(false);
+        edgesView.setPickOnBounds(false);
         edgeViewsMap = new HashMap<>();
 
         AnchorPane.setTopAnchor(edgesView, 0.0);
