@@ -146,6 +146,27 @@ public class DatabaseController {
         }
     }
 
+    /**
+     * update node with uniqueID
+     * @param node
+     * @return
+     * @throws DatabaseException
+     */
+    public int updateNodeWithID(Node node) throws DatabaseException {
+        try {
+            return Connector.updateNodeWithID(instanceConnection, node);
+        } catch (SQLException e) {
+            DatabaseExceptionType type;
+            if (e.getSQLState() != "23505") {
+                type = DatabaseExceptionType.ID_ALREADY_EXISTS;
+            } else {
+                e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
+            }
+            throw new DatabaseNodeException(node, type);
+        }
+    }
+
     public  Edge getEdge(String edgeID) throws DatabaseException {
         try {
             return Connector.selectEdge(instanceConnection, edgeID);

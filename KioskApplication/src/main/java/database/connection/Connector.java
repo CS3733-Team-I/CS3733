@@ -102,6 +102,29 @@ public class Connector {
         return pstmt.executeUpdate();
     }
 
+    /**
+     * Update node with the uniqueID(when a node is update, it's nodeID should be updated too)
+     * @param con
+     * @param node
+     * @return
+     * @throws SQLException
+     */
+    public static int updateNodeWithID(Connection con, Node node) throws SQLException{
+        PreparedStatement pstmt = con.prepareStatement(NODE_UPDATE_WITHID);
+        pstmt.setString(1, node.getNodeID());
+        pstmt.setInt(2, node.getXcoord());
+        pstmt.setInt(3, node.getYcoord());
+        pstmt.setInt(4, node.getFloor().ordinal());
+        pstmt.setInt(5, node.getBuilding().ordinal());
+        pstmt.setInt(6, node.getNodeType().ordinal());
+        pstmt.setString(7, node.getLongName());
+        pstmt.setString(8, node.getShortName());
+        pstmt.setString(9, node.getTeamAssigned());
+        pstmt.setInt(10, node.getUniqueID());
+
+        return pstmt.executeUpdate();
+    }
+
     public static Node selectNode(Connection conn, String nodeID) throws SQLException, NotFoundException {
         Node node = null;
         String sql = NODE_SELECT;
