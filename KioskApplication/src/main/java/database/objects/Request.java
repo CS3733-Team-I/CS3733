@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 //Class object that creates a 'request' which stores the information of a request
 //This object can then be passed to the database as well as to the active requests list
 public abstract class Request {
-    //Format for requestID: type, nodeID, time, assigner
+    //Format for requestID: type, nodeID, time, assignerID
     protected String requestID;
     private String nodeID;
-    private String assigner;
-    private String completer;
+    private int assignerID;
+    private int completerID;
     private String note;
     private RequestProgressStatus status;
     private Timestamp submittedTime;
@@ -19,11 +19,11 @@ public abstract class Request {
     private Timestamp completedTime;
 
     //Use to retrieve requests
-    public Request(String requestID, String nodeID, String assigner,String completer, String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime, RequestProgressStatus status){
+    public Request(String requestID, String nodeID, int assignerID,int completerID, String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime, RequestProgressStatus status){
         this.requestID=requestID;
         this.nodeID=nodeID;
-        this.assigner=assigner;
-        this.completer=completer;
+        this.assignerID =assignerID;
+        this.completerID =completerID;
         this.note=note;
         this.submittedTime=submittedTime;
         this.startedTime=startedTime;
@@ -39,9 +39,9 @@ public abstract class Request {
         this.note=newNote;
     }
 
-    public boolean markInProgress(String completer){
+    public boolean setInProgress(int completerID){
         if(this.status==RequestProgressStatus.TO_DO){
-            this.completer=completer;
+            this.completerID =completerID;
             this.status=RequestProgressStatus.IN_PROGRESS;
             this.startedTime=new Timestamp(System.currentTimeMillis());
             return true;
@@ -51,7 +51,7 @@ public abstract class Request {
         }
     }
 
-    public boolean complete(){
+    public boolean setComplete(){
         if (this.status==RequestProgressStatus.IN_PROGRESS){
             this.status=RequestProgressStatus.DONE;
             this.completedTime=new Timestamp(System.currentTimeMillis());
@@ -89,12 +89,12 @@ public abstract class Request {
 
     public String getNodeID(){return this.nodeID;}
 
-    public String getAssigner(){
-        return this.assigner;
+    public int getAssignerID(){
+        return this.assignerID;
     }
 
-    public String getCompleter() {
-        return completer;
+    public int getCompleterID() {
+        return completerID;
     }
 
     public String getNote() {
@@ -117,8 +117,8 @@ public abstract class Request {
         return status;
     }
 
-    public void setAssigner(String assigner) {
-        this.assigner = assigner;
+    public void setAssignerID(int assignerID) {
+        this.assignerID = assignerID;
     }
 
     public void setNodeID(String nodeID) {

@@ -114,7 +114,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML
     public void addRequest() throws IOException{
         String location = locationTxt.getText();
-        String assigner = l.getUserID();
+        int assigner = l.getLoginID();
         String notes = notesArea.getText();
         if(notes==null){
             notes="";
@@ -134,7 +134,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @FXML
-    public void addIntRequest(String location, String assigner, String notes) throws IOException {
+    public void addIntRequest(String location, int assigner, String notes) throws IOException {
         Language language = Language.valueOf(reqMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
@@ -148,7 +148,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @FXML
-    public void addSecRequest(String location, String assigner, String notes)throws IOException {
+    public void addSecRequest(String location, int assigner, String notes)throws IOException {
 
         int priority = Integer.parseInt(reqMenu.getValue().toString());
         System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);

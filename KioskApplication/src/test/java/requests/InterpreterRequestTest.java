@@ -21,11 +21,11 @@ public class InterpreterRequestTest {
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
-        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc","nurse","",
+        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc",1,1,
                 "note",submittedTime, startedTime, completedTime, TO_DO, Language.ARABIC);
-        assertTrue(iR1.markInProgress("emp"));
+        assertTrue(iR1.setInProgress(2));
         assertEquals(IN_PROGRESS, iR1.getStatus());
-        assertEquals("emp", iR1.getCompleter());
+        assertEquals(2, iR1.getCompleterID());
     }
 
     @Test
@@ -34,10 +34,10 @@ public class InterpreterRequestTest {
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
-        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc","nurse","",
+        InterpreterRequest iR1 = new InterpreterRequest("test","currentloc",1,1,
                 "note",submittedTime, startedTime, completedTime, TO_DO, Language.ARABIC);
-        iR1.markInProgress("emp");
-        assertTrue(iR1.complete());
+        iR1.setInProgress(2);
+        assertTrue(iR1.setComplete());
         assertEquals(DONE, iR1.getStatus());
     }
 }

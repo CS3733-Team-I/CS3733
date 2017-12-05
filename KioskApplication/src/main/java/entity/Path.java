@@ -1,5 +1,6 @@
 package entity;
 
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import utility.node.NodeFloor;
@@ -78,10 +79,13 @@ public class Path {
 
         double angleDif = nextAngle - prevAngle;
         double straightAngle = Math.PI/6;
+        double rightAngle = Math.PI/2;
 
         //Turning directions
         if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
+        else if(angleDif >= rightAngle) return "Make a sharp right at " + thisNode.getLongName();
         else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
+        else if(angleDif <= rightAngle) return "Make a sharp left at " + thisNode.getLongName();
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
         //Default case
@@ -96,7 +100,13 @@ public class Path {
         nodes.add(segmentStart);
 
         for (Edge e : segment) {
-            nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+            try {
+                nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+            }
+            catch (NotFoundException exception){
+                exception.printStackTrace();
+                //TODO: add actual handling
+            }
         }
         return nodes;
     }

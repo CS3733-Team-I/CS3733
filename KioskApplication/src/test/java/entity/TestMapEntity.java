@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -36,18 +37,23 @@ public class TestMapEntity {
         e3 = new Edge("EDGE3", "NODE1", "NODE4");
     }
 
-    @Test
-    public void testAddRemoveNode() throws DatabaseException {
-        //Add node to map
-        m.addNode(n1);
-        //Test that the node exists in the map
-        Node n1_actual = m.getNode(n1.getNodeID());
-        assertEquals(n1_actual.getNodeID(), n1.getNodeID());
-        //Remove the node
-        m.removeNode(n1);
-        //Test that the node is not in the map
-        n1_actual = m.getNode(n1.getNodeID());
-        assertEquals(n1_actual, null);
+    @Test(expected = NotFoundException.class)
+    public void testAddRemoveNode() throws DatabaseException, NotFoundException {
+        try {
+            //Add node to map
+            m.addNode(n1);
+            //Test that the node exists in the map
+            Node n1_actual = m.getNode(n1.getNodeID());
+            assertEquals(n1.getNodeID(), n1_actual.getNodeID());
+            //Remove the node
+            m.removeNode(n1);
+        }
+        catch(NotFoundException exception){
+            exception.printStackTrace();
+            //TODO: add actual handling
+        }
+        //Test that the node is not in the map; should throw NotFoundException.
+        m.getNode(n1.getNodeID());
     }
 
     @Test
@@ -61,7 +67,7 @@ public class TestMapEntity {
         // Get nodes
         LinkedList<Node> nodes = m.getAllNodes();
 
-        assertEquals(nodes.size(), 4);
+        assertEquals(4, nodes.size());
 
         assertTrue(nodes.contains(n1));
         assertTrue(nodes.contains(n2));
@@ -124,7 +130,7 @@ public class TestMapEntity {
         m.addNode(n1);
         m.addNode(n2);
         m.addEdge(e1);
-        assertEquals(m.getConnectingEdge(n1,n2),e1);
+        assertEquals(e1, m.getConnectingEdge(n1,n2));
     }
 
     @Before

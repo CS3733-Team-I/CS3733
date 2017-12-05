@@ -1,9 +1,7 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.InterpreterRequest;
-import database.objects.Request;
-import database.objects.SecurityRequest;
+import database.objects.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -56,9 +54,6 @@ public class RequestEntity {
         private static final RequestEntity instance = new RequestEntity(false);
         private static final RequestEntity testInstance = new RequestEntity(true);
     }
-
-
-    //reads all requests from the database
 
     /**
      * reads all requests from the database
@@ -232,20 +227,20 @@ public class RequestEntity {
     /**
      * Generic method to mark a request in progress from a requestID
      * Also adds the completer to the request object completer field
-     * @param completer
+     * @param completerID
      * @param requestID
      */
-    public void markInProgress(String completer, String requestID){
+    public void markInProgress(String completerID, String requestID){
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.markInProgress(completer);
+            iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.markInProgress(completer);
+            sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
@@ -276,14 +271,14 @@ public class RequestEntity {
         RequestType requestType = checkRequestType(requestID);
         if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.complete();
+            iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.complete();
+            sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
@@ -321,6 +316,16 @@ public class RequestEntity {
     }
 
     /**
+     *
+     * @param requestID
+     * @return
+     */
+    public Employee getAssigner(String requestID){
+        Request request = getRequest(requestID);
+        return dbController.getEmployee(request.getAssignerID());
+    }
+
+    /**
      * Updates a request that is already in the database with the given requestID
      * @param requestID
      * @param nodeID
@@ -354,8 +359,15 @@ public class RequestEntity {
 
 
     /**
-     * InterpreterRequest methods
+     * Gets the completer of a request if it is in progress
+     * @param requestID
+     * @return employee
      */
+    public IEmployee getCompleter(String requestID){
+        Request request = getRequest(requestID);
+        if(request.getStatus()!=RequestProgressStatus.TO_DO) return dbController.getEmployee(request.getCompleterID());
+        else return NullEmployee.getInstance();
+    }
 
     /**
      * Adds an interpreter request to the database
@@ -365,14 +377,14 @@ public class RequestEntity {
      * @param lang
      * @return adds an interpreter request to the database and returns that request
      */
-    public String submitInterpreterRequest(String nodeID, String assignee, String note,
+    public String submitInterpreterRequest(String nodeID, String assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
-        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignee, "", note,
+        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
@@ -402,45 +414,48 @@ public class RequestEntity {
     }
 
     /**
-     * updates an interpreterRequest that is currently in the database
+     * updates an interpreterRequest that is currently
      * @param requestID
      * @param nodeID
-     * @param assigner
+     * @param assignerID
      * @param note
      * @param submittedTime
      * @param completedTime
      * @param status
      * @param language
      */
-    public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+    public void updateInterpreterRequest(String requestID, String nodeID, int assignerID, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssignerID(assignerID);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
         oldReq.setLanguage(language);
         updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
         dbController.updateInterpreterRequest(oldReq);
     }
 
     /**
-     * SecurityRequest methods
-     */
-
-    /**
-     * Adds a security request to the database
+     *
      * @param nodeID
-     * @param assignee
+     * @param assignerID
      * @param note
      * @param priority
-     * @return adds a security request to the database and returns that request
+     * @return
      */
-    public String submitSecurityRequest(String nodeID, String assignee, String note,
+    public String submitSecurityRequest(String nodeID, int assignerID, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
-        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignee, "", note,
+        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
@@ -464,7 +479,7 @@ public class RequestEntity {
                 return securityRequests.get(requestID);
             }
             else{
-                throw new NullPointerException("Unable to find SecurityReqest in database");
+                throw new NullPointerException("Unable to find SecurityRequest in database");
             }
         }
     }
@@ -473,24 +488,31 @@ public class RequestEntity {
      * updates a securityRequest that is currently in the database
      * @param requestID
      * @param nodeID
-     * @param assigner
+     * @param assignerID
      * @param note
      * @param submittedTime
      * @param completedTime
      * @param status
      * @param priority
      */
-    public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
+    public void updateSecurityRequest(String requestID, String nodeID, int assignerID, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssignerID(assignerID);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
         oldReq.setPriority(priority);
         updateRequest(requestID,nodeID,assigner,note,submittedTime,completedTime,status);
         dbController.updateSecurityRequest(oldReq);
     }
 
 
-    /**
+    /*
      * Tracking information
      * what we want:
      * Time from IN_PROGRESS to COMPLETE for requests
@@ -502,7 +524,7 @@ public class RequestEntity {
      */
 
     /**
-     * gets mean time to complete a request from IN_PROGRESS to DONE
+     * gets mean time to setComplete a request from IN_PROGRESS to DONE
      */
     public void getMeanTimeToComplete(){
         long sum=0;

@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -60,12 +61,12 @@ public class RequestManagerController extends ScreenController {
     }
 
     /**
-     * When an employee is logged in this mehtod checks to see the employee Request Type
+     * When an employee is logged in this method checks to see the employee Request Type
      * it takes that information and filters out the requests to show relevant requests
      */
     @FXML
     public void setup(){
-        RequestType employeeType = l.getServiceAbility(l.getUsername());
+        RequestType employeeType = l.getServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
             foodFilter.setDisable(true);
@@ -154,7 +155,7 @@ public class RequestManagerController extends ScreenController {
                 if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
                     switch (status){
                         case TO_DO:
-                            ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
+                            ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
                             listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
                             JFXComboBox employees = new JFXComboBox(listOfEmployees);
                             employees.setPromptText("Select Employee");
@@ -164,13 +165,13 @@ public class RequestManagerController extends ScreenController {
                             statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent e) {
-                                    r.markInProgress((String) employees.getValue(),requestID);
+                                    r.markInProgress((int) employees.getValue(),requestID);
                                     newRequests();
                                 }
                             });
                             row9.getChildren().add(statusUpdater);
                             break;
-                        //Admins and Supers can't complete a request
+                        //Admins and Supers can't setComplete a request
 
                         case DONE:
                             statusUpdater = new JFXButton("Delete");
@@ -191,7 +192,7 @@ public class RequestManagerController extends ScreenController {
                             statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent e) {
-                                    r.markInProgress(l.getUserID(),requestID);
+                                    r.markInProgress(l.getLoginID(),requestID);
                                     newRequests();
                                 }
                             });
@@ -258,28 +259,34 @@ public class RequestManagerController extends ScreenController {
      * @param requestID To determine which request to display the information of
      */
     public void initializePopup(String requestID){
-        Request request = r.getRequest(requestID);
-        Label id = new Label(requestID);
-        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Employee: ");
-        Label assigner = new Label(request.getAssigner()); //Some reason this returns more than needed
-        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
-        Label locationOfRequest = new Label(location);
-        Label extraField;
-        RequestType RT = r.checkRequestType(requestID);
-        switch (RT){
-            case INTERPRETER:
-                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
-                extraField = new Label("Language: "+language);
-                break;
-            default: //security
-                int priority = r.getSecurityRequest(requestID).getPriority();
-                extraField = new Label("Priority: "+ priority);
-                break;
-        }
-        VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest, extraField);
 
-        popup = new JFXPopup(vbox);
+        try {
+            Request request = r.getRequest(requestID);
+            Label id = new Label(requestID);
+            String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+            Label employee = new Label("Employee: ");
+            Label assigner = new Label(r.getAssigner(requestID).getUsername()); //Some reason this returns more than needed
+            Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+            Label locationOfRequest = new Label(location);
+            Label extraField;
+            RequestType RT = r.checkRequestType(requestID);
+            switch (RT){
+                case INTERPRETER:
+                    String language = r.getInterpreterRequest(requestID).getLanguage().toString();
+                    extraField = new Label("Language: "+language);
+                    break;
+                default: //security
+                    int priority = r.getSecurityRequest(requestID).getPriority();
+                    extraField = new Label("Priority: "+ priority);
+                    break;
+            }
+            VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest, extraField);
+            popup = new JFXPopup(vbox);
+        }
+        catch(NotFoundException exception){
+            exception.printStackTrace();
+            //TODO: add actual handling
+        }
     }
 
     /**
