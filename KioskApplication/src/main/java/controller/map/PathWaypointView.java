@@ -120,7 +120,17 @@ public class PathWaypointView extends AnchorPane {
      */
     public void clearPath() {
         this.currentPath = null;
-        parent.getJfxPath().getElements().clear();
+        Iterator<javafx.scene.Node> pathPointerIterator = getChildren().iterator();
+        //TODO make this faster by putting these in pathView
+        while(pathPointerIterator.hasNext()) {
+            javafx.scene.Node removedPathPointer = pathPointerIterator.next();
+            if(removedPathPointer.getAccessibleHelp() != null) {
+                if(removedPathPointer.getAccessibleHelp().equals("path pointer")) {
+                    pathPointerIterator.remove();
+                }
+            }
+        }
+        pathView.getChildren().clear();
     }
     /**
      * Clear drawn waypoints
@@ -144,19 +154,37 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
-        showPath();
-    }
+        for(Node node : waypointList) {
+            System.out.println(currentPath.getNodesInSegment(node));
+        }
 
-    public void showPath() {
+        javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
 
-        parent.getJfxPath().setStrokeWidth(20);
-        parent.getJfxPath().setFill(Color.TRANSPARENT);
+        jfxPath.setFill(Color.TRANSPARENT);
         MoveTo moveTo = new MoveTo(currentPath.getListOfAllNodes().get(0).getXcoord(), currentPath.getListOfAllNodes().get(0).getYcoord());
-        parent.getJfxPath().getElements().add(moveTo);
+        jfxPath.getElements().add(moveTo);
 
         for(Node traversedNode : currentPath.getListOfAllNodes()) {
             LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
-            parent.getJfxPath().getElements().add(lineTo);
+            jfxPath.getElements().add(lineTo);
+        }
+        getChildren().add(jfxPath);
+
+        for(int i = 0; i < currentPath.getPathCost()/30; i++) {
+            Circle circle = new Circle(10);
+            circle.setFill(Color.BLUE);
+            circle.setAccessibleHelp("path pointer");
+            getChildren().add(circle);
+
+            PathTransition navigationTransition = new PathTransition();
+            navigationTransition.setNode(circle);
+            navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/30));
+            navigationTransition.setPath(jfxPath);
+            navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+            navigationTransition.setAutoReverse(false);
+            navigationTransition.setCycleCount(PathTransition.INDEFINITE);
+
+            navigationTransition.playFrom(Duration.seconds(i));
         }
     }
 

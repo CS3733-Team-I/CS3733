@@ -110,6 +110,13 @@ public class Path {
         return nodes;
     }
 
+    public LinkedList<Node> getNodesInSegment(Node Start) {
+        LinkedList<Node> retVal= new LinkedList<>();
+        for(LinkedList<Edge> edges : this.edges) {
+            retVal.addAll(getListOfNodes(edges, Start));
+        }
+        return retVal;
+    }
     /**
      * Returns an ordered list of all nodes along the path.
      * @return

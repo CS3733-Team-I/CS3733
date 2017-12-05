@@ -70,7 +70,6 @@ public class MapController {
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
 
-    @FXML private javafx.scene.shape.Path jfxPath;
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
@@ -144,17 +143,6 @@ public class MapController {
      */
     public void clearPath() {
         this.pathWaypointView.clearPath();
-
-        Iterator<javafx.scene.Node> pathPointerIterator = this.pathWaypointContainer.getChildren().iterator();
-        //TODO make this faster
-        while(pathPointerIterator.hasNext()) {
-            javafx.scene.Node removedPathPointer = pathPointerIterator.next();
-            if(removedPathPointer.getAccessibleHelp() != null) {
-                if(removedPathPointer.getAccessibleHelp().equals("path pointer")) {
-                    pathPointerIterator.remove();
-                }
-            }
-        }
     }
 
     public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
@@ -525,29 +513,5 @@ public class MapController {
     private void checkWaypointVisible(ScrollPane pane)
     {
         visibleWaypoints.setAll(getWaypointNodes(pane));
-    }
-
-    public javafx.scene.shape.Path getJfxPath() {
-        return this.jfxPath;
-    }
-
-    public void playPath() {
-
-        for(int i = 0; i < pathWaypointView.currentPath.getPathCost()/30; i++) {
-            Circle circle = new Circle(10);
-            circle.setFill(Color.BLUE);
-            circle.setAccessibleHelp("path pointer");
-            this.pathWaypointContainer.getChildren().add(circle);
-
-            PathTransition navigationTransition = new PathTransition();
-            navigationTransition.setNode(circle);
-            navigationTransition.setDuration(Duration.seconds(pathWaypointView.currentPath.getPathCost()/30));
-            navigationTransition.setPath(this.jfxPath);
-            navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-            navigationTransition.setAutoReverse(false);
-            navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-
-            navigationTransition.playFrom(Duration.seconds(i));
-        }
     }
 }

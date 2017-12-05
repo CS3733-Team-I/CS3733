@@ -111,24 +111,19 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
                 getMapController().setPath(pathfinder.generatePath(currentNodes));
-//                waypointListView.getItems().clear();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
                     for (String direction : directionSegment) {
                         Label label = new Label(direction);
                         label.setTextFill(Color.BLACK);
                         //TODO FIX THIS
-//                        waypointListView.getItems().add(label);
                     }
                 }
             }
             catch(PathfinderException exception){
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
-
-//            currentNodes.clear();
         }
-        getMapController().playPath();
     }
 
     @Override

@@ -23,7 +23,7 @@
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
                   <AnchorPane fx:id="pathWaypointContainer" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Path fx:id="jfxPath" fill="DODGERBLUE" stroke="#d0111100" strokeType="INSIDE" />
+                        <Path fx:id="jfxPath" fill="DODGERBLUE" stroke="#d0111100" strokeType="INSIDE" strokeWidth="50.0" />
                      </children></AnchorPane>
                </children>
             </StackPane>
