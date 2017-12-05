@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="container" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.52" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.3" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
+            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
@@ -42,9 +42,9 @@
          </opaqueInsets>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding></AnchorPane>      <VBox layoutX="425.0" layoutY="84.0" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+         </padding></AnchorPane>      <VBox alignment="CENTER" layoutX="425.0" layoutY="84.0" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
          <children>
-            <JFXButton buttonType="RAISED" onAction="#zoomInPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
+            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomInPressed" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin>
@@ -52,8 +52,8 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" min="0.001" minorTickCount="0" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="0.5" />
-            <JFXButton buttonType="RAISED" onAction="#zoomOutPressed" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
+            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" focusTraversable="false" majorTickUnit="0.1" max="1.0" min="0.001" minorTickCount="0" onMousePressed="#zoomWithSlider" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="0.5" />
+            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomOutPressed" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin>
