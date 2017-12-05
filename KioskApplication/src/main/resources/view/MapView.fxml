@@ -20,10 +20,7 @@
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <JFXComboBox fx:id="languageSelector" layoutX="144.0" layoutY="416.0" onAction="#onLanguageSelect" prefHeight="25.0" prefWidth="125.0" promptText="Language" style="-fx-background-color: #ffffff;" />
-                     </children></AnchorPane>
+                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </StackPane>
          </content>

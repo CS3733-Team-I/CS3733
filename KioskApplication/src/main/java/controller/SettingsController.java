@@ -40,19 +40,31 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton beamButton;
     @FXML private RadioButton bestFirstButton;
 
+    @FXML private RadioButton englishButton;
+    @FXML private RadioButton franceSelected;
+
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
 
     @FXML private TextField beamWidth;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
-
+    ToggleGroup languageSelectToggleGroup = new ToggleGroup();
     public SettingsController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
     }
 
     public void initialize() throws IOException{
         SystemSettings systemSettings = SystemSettings.getInstance();
+        englishButton.setToggleGroup(languageSelectToggleGroup);
+        englishButton.setUserData("English");
+        franceSelected.setToggleGroup(languageSelectToggleGroup);
+        franceSelected.setUserData("France");
+        //Load saved selection; select appropriate radio button.
+        for(Toggle toggle: languageSelectToggleGroup.getToggles()) {
+            if(toggle.getUserData().equals(systemSettings.getPrefs().get("Internationalization", "English")))
+                languageSelectToggleGroup.selectToggle(toggle);
+        }
         astarButton.setToggleGroup(searchAlgToggleGroup);
         astarButton.setUserData("A*");
         dijkstraButton.setToggleGroup(searchAlgToggleGroup);
@@ -135,6 +147,15 @@ public class SettingsController extends ScreenController {
     void onSearchAlgorithmSelected(){
         SystemSettings systemSettings = SystemSettings.getInstance();
         systemSettings.setAlgorithm(searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
+    }
+
+    /**
+     * select language from settings
+     */
+    @FXML
+    void onLanguageSelected(){
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        systemSettings.setResourceBundle(languageSelectToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
     @FXML

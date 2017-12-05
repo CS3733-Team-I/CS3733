@@ -1,5 +1,7 @@
 package utility.node;
 
+import entity.SystemSettings;
+
 public enum NodeFloor {
     LOWERLEVEL_2,
     LOWERLEVEL_1,
@@ -22,7 +24,7 @@ public enum NodeFloor {
             case SECOND:
                 return "Second Floor";
             case THIRD:
-                return "Third Floor";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.thirdfloor");
             default:
                 return "Not Set: Contact Programmer";
         }

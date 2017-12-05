@@ -1,13 +1,16 @@
 package controller.map;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import controller.MainWindowController;
+import controller.SettingsController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -46,9 +49,9 @@ public class MapController {
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane waypointPane;
+    @FXML private JFXButton recenterButton;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
-    @FXML private JFXComboBox<String> languageSelector; // need to check this
     @FXML private JFXSlider zoomSlider;
 
     @FXML private VBox optionsBox;
@@ -65,6 +68,7 @@ public class MapController {
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
+
 
     public MapController() {
         waypoints = new LinkedList<>();
@@ -169,6 +173,9 @@ public class MapController {
         this.showEdgesBox.setDisable(false);
 
         nodesEdgesView.reloadDisplay();
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        // error with not refreshing languages
+        NodeFloor.values();
     }
 
     /**
@@ -325,6 +332,7 @@ public class MapController {
      */
     @FXML
     protected void initialize() {
+
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
@@ -334,6 +342,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -445,6 +454,7 @@ public class MapController {
         // Notify parent
         parent.onMapFloorChanged(floor);
     }
+
 
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {

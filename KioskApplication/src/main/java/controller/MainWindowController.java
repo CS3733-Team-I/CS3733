@@ -7,6 +7,7 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
+import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -62,18 +63,16 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        languageBundle= ResourceBundle.getBundle("Internationalization",Locale.FRANCE);
-        Enumeration <String> keys = languageBundle.getKeys();
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            String value = languageBundle.getString(key);
-            System.out.println(key + ": " + value);
-        }
+        languageBundle= SystemSettings.getInstance().getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
             switch (newValue.getText()) { // TODO make this more modular/language independent
@@ -92,6 +91,21 @@ public class MainWindowController {
                 case "Settings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
+                case "Carte":
+                        switchToScreen(ApplicationScreen.PATHFINDING);
+                        break;
+                case "Générateur de carte":
+                        switchToScreen(ApplicationScreen.MAP_BUILDER);
+                        break;
+                case "Gestionnaire de requêtes":
+                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
+                        break;
+                case "Demande de soumission":
+                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
+                        break;
+                case "Paramètres":
+                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+                        break;
             }
         });
 
@@ -139,7 +153,7 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText("Staff Login");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
@@ -150,7 +164,7 @@ public class MainWindowController {
                 break;
 
             case EMPLOYEE:
-                switchButton.setText("Logoff");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -158,7 +172,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText("Logoff");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -175,7 +189,12 @@ public class MainWindowController {
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
         }
-
+        languageBundle = SystemSettings.getInstance().getResourceBundle();
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
