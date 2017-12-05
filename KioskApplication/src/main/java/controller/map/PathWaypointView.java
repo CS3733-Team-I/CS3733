@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
+import sun.awt.image.ImageWatched;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -154,39 +155,41 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
-        //TODO DATABASE ERROR HERE
+        //TODO FIX NODE SEGMENT
         for(Node nodes : waypointList.subList(0, waypointList.size()-1)) {
             System.out.println("1. " + currentPath.getNodesInSegment(nodes));
-        }
+            LinkedList<Node> nodesInSegment = currentPath.getNodesInSegment(nodes);
 
+            javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
 
-        javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
+            jfxPath.setFill(Color.TRANSPARENT);
+            MoveTo moveTo = new MoveTo(nodesInSegment.get(0).getXcoord(), nodesInSegment.get(0).getYcoord());
+            jfxPath.getElements().add(moveTo);
 
-        jfxPath.setFill(Color.TRANSPARENT);
-        MoveTo moveTo = new MoveTo(currentPath.getListOfAllNodes().get(0).getXcoord(), currentPath.getListOfAllNodes().get(0).getYcoord());
-        jfxPath.getElements().add(moveTo);
+            for(Node traversedNode : nodesInSegment) {
+                LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
+                jfxPath.getElements().add(lineTo);
+            }
+            getChildren().add(jfxPath);
 
-        for(Node traversedNode : currentPath.getListOfAllNodes()) {
-            LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
-            jfxPath.getElements().add(lineTo);
-        }
-        getChildren().add(jfxPath);
+            //TODO Fix the cost
+            Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
+            for(int i = 0; i < currentPath.getPathCost()/30; i++) {
+                Circle circle = new Circle(10);
+                circle.setFill(colorForPointers);
+                circle.setAccessibleHelp("path pointer");
+                getChildren().add(circle);
 
-        for(int i = 0; i < currentPath.getPathCost()/30; i++) {
-            Circle circle = new Circle(10);
-            circle.setFill(Color.BLUE);
-            circle.setAccessibleHelp("path pointer");
-            getChildren().add(circle);
+                PathTransition navigationTransition = new PathTransition();
+                navigationTransition.setNode(circle);
+                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/30));
+                navigationTransition.setPath(jfxPath);
+                navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+                navigationTransition.setAutoReverse(false);
+                navigationTransition.setCycleCount(PathTransition.INDEFINITE);
 
-            PathTransition navigationTransition = new PathTransition();
-            navigationTransition.setNode(circle);
-            navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/30));
-            navigationTransition.setPath(jfxPath);
-            navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-            navigationTransition.setAutoReverse(false);
-            navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-
-            navigationTransition.playFrom(Duration.seconds(i));
+                navigationTransition.playFrom(Duration.seconds(i));
+            }
         }
     }
 
