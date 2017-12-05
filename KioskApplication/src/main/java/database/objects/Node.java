@@ -7,6 +7,7 @@ import utility.node.NodeType;
 
 public class Node {
 
+    private int uniqueID;
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -73,6 +74,10 @@ public class Node {
             return false;
         }
     }
+
+    public int getUniqueID() { return uniqueID; }
+
+    public void setUniqueID(int uniqueID) { this.uniqueID = uniqueID; }
 
     public int getXcoord() {
         return xcoord;
@@ -146,7 +151,20 @@ public class Node {
     public void setNodeID(String nodeID) {
         this.nodeID = nodeID;
     }
+
     public String getXyz() {
         return Integer.toString(xcoord)+Integer.toString(ycoord)+floor.toString();
+    }
+
+    /**
+     * Return angle between this and Node n
+     * @param n node to get angle to
+     * @return angle in radians
+     */
+    public double getAngleBetweenNodes(Node n) {
+        double dx = n.getXcoord() - xcoord;
+        double dy = n.getYcoord() -ycoord;
+
+        return Math.atan2(dy,dx);
     }
 }

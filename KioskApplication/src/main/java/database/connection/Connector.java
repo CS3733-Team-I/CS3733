@@ -67,7 +67,7 @@ public class Connector {
     }
 
     public static int insertNode(Connection conn, Node node) throws SQLException{
-        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, node.getNodeID());
         pstmt.setInt(2, node.getXcoord());
         pstmt.setInt(3, node.getYcoord());
@@ -77,7 +77,13 @@ public class Connector {
         pstmt.setString(7, node.getLongName());
         pstmt.setString(8, node.getShortName());
         pstmt.setString(9, node.getTeamAssigned());
-        return pstmt.executeUpdate();
+        int result = pstmt.executeUpdate();
+        if (result == 1) {
+            ResultSet rs = pstmt.getGeneratedKeys();
+            return rs.getInt("id");
+        } else {
+            return 0;
+        }
     }
 
     public static int updateNode(Connection conn, Node node) throws SQLException{
@@ -96,7 +102,7 @@ public class Connector {
         return pstmt.executeUpdate();
     }
 
-    public static Node selectNode(Connection conn, String nodeID) throws SQLException {
+    public static Node selectNode(Connection conn, String nodeID) throws SQLException, NotFoundException {
         Node node = null;
         String sql = NODE_SELECT;
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -112,6 +118,8 @@ public class Connector {
                             rs.getString("shortName"),
                             rs.getString("teamAssigned"));
         }
+        if(node == null)
+            throw new NotFoundException("Node not found.");
         return node;
     }
 
@@ -127,7 +135,7 @@ public class Connector {
 
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
-            nodes.add(new Node(rs.getString("nodeID"),
+            Node nd = new Node(rs.getString("nodeID"),
                                rs.getInt("xcoord"),
                                rs.getInt("ycoord"),
                                NodeFloor.values()[rs.getInt("floor")],
@@ -135,7 +143,9 @@ public class Connector {
                                NodeType.values()[rs.getInt("nodeType")],
                                rs.getString("longName"),
                                rs.getString("shortName"),
-                               rs.getString("teamAssigned")));
+                               rs.getString("teamAssigned"));
+            nd.setUniqueID(rs.getInt("id"));
+            nodes.add(nd);
         }
         return nodes;
     }
@@ -189,8 +199,8 @@ public class Connector {
         pstmt.setString(1, iR.getRequestID());
         pstmt.setInt(2, iR.getLanguage().ordinal());
         pstmt.setString(3, iR.getNodeID());
-        pstmt.setString(4, iR.getAssigner());
-        pstmt.setString(5, iR.getCompleter());
+        pstmt.setInt(4, iR.getAssignerID());
+        pstmt.setInt(5, iR.getCompleterID());
         pstmt.setString(6, iR.getNote());
         pstmt.setTimestamp(7, iR.getSubmittedTime());
         pstmt.setTimestamp(8, iR.getStartedTime());
@@ -204,8 +214,8 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, iR.getLanguage().ordinal());
         pstmt.setString(2, iR.getNodeID());
-        pstmt.setString(3, iR.getAssigner());
-        pstmt.setString(4, iR.getCompleter());
+        pstmt.setInt(3, iR.getAssignerID());
+        pstmt.setInt(4, iR.getCompleterID());
         pstmt.setString(5, iR.getNote());
         pstmt.setTimestamp(6, iR.getSubmittedTime());
         pstmt.setTimestamp(7, iR.getStartedTime());
@@ -228,8 +238,8 @@ public class Connector {
            interpreterRequest = new InterpreterRequest(
                 requestID,
                 rs.getString("nodeID"),
-                rs.getString("assigner"),
-                rs.getString("completer"),
+                rs.getInt("assigner"),
+                rs.getInt("completer"),
                 rs.getString("note"),
                 rs.getTimestamp("submittedTime"),
                 rs.getTimestamp("startedTime"),
@@ -258,8 +268,8 @@ public class Connector {
             interpreterRequest = new InterpreterRequest(
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
-                    rs.getString("assigner"),
-                    rs.getString("completer"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
                     rs.getTimestamp("startedTime"),
@@ -278,8 +288,8 @@ public class Connector {
         pstmt.setString(1, sR.getRequestID());
         pstmt.setInt(2, sR.getPriority());
         pstmt.setString(3, sR.getNodeID());
-        pstmt.setString(4, sR.getAssigner());
-        pstmt.setString(5, sR.getCompleter());
+        pstmt.setInt(4, sR.getAssignerID());
+        pstmt.setInt(5, sR.getCompleterID());
         pstmt.setString(6, sR.getNote());
         pstmt.setTimestamp(7, sR.getSubmittedTime());
         pstmt.setTimestamp(8, sR.getStartedTime());
@@ -293,8 +303,8 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, sR.getPriority());
         pstmt.setString(2, sR.getNodeID());
-        pstmt.setString(3, sR.getAssigner());
-        pstmt.setString(4, sR.getCompleter());
+        pstmt.setInt(3, sR.getAssignerID());
+        pstmt.setInt(4, sR.getCompleterID());
         pstmt.setString(5, sR.getNote());
         pstmt.setTimestamp(6, sR.getSubmittedTime());
         pstmt.setTimestamp(7, sR.getStartedTime());
@@ -317,8 +327,8 @@ public class Connector {
             securityRequest = new SecurityRequest(
                     requestID,
                     rs.getString("nodeID"),
-                    rs.getString("assigner"),
-                    rs.getString("completer"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
                     rs.getTimestamp("startedTime"),
@@ -347,8 +357,8 @@ public class Connector {
             securityRequest = new SecurityRequest(
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
-                    rs.getString("assigner"),
-                    rs.getString("completer"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
                     rs.getString("note"),
                     rs.getTimestamp("submittedTime"),
                     rs.getTimestamp("startedTime"),

@@ -57,13 +57,13 @@ public class NodeView extends StackPane {
 
         // Show tooltip based on the current tab
         if (this.editable) {
-            Tooltip nodeInfo = new Tooltip(node.getLongName() + "\n\nConnections:\n");
+            Tooltip nodeInfo = new Tooltip(node.getLongName() + "\nID: " + node.getUniqueID() + "\n\nConnections:\n");
             for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(node)) {
                 nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
             }
             Tooltip.install(this.circle, nodeInfo);
         } else {
-            Tooltip nodeInfo = new Tooltip(node.getLongName());
+            Tooltip nodeInfo = new Tooltip(node.getLongName() + "\nID: " + node.getUniqueID());
             Tooltip.install(this.circle, nodeInfo);
         }
 

@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -86,26 +87,36 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+
     @Override
-    public Node getNode(String s) {
+    public Node getNode(String s) throws NotFoundException{
+        Node thisNode = null;
+        //First, check to see if the node is in the map.  Check every floor.
         for (NodeFloor floor : floors.keySet()) {
-            Node thisNode = floors.get(floor).getNode(s);
-            if (thisNode != null) return thisNode;
+            try {
+                thisNode = floors.get(floor).getNode(s);
+            }
+            catch(NotFoundException exception){
+            }
+            //If we found the node, return it.
+            if(thisNode != null)
+                return thisNode;
         }
 
+        //If the node isn't in the map, check the database to see if it even exists.
         try {
-            Node node = dbController.getNode(s);
-            if (node != null) {
-                NodeFloor f = node.getFloor();
-                if(!floorExists(f)) addFloor(f);
-
-                floors.get(f).insertNode(node);
-            }
-        } catch (DatabaseException ex) {
+            thisNode = dbController.getNode(s);
+            //If it does, go ahead and add it to the map.
+            NodeFloor f = thisNode.getFloor();
+            if (!floorExists(f))
+                addFloor(f);
+            floors.get(f).insertNode(thisNode);
+        }
+        catch (DatabaseException ex) {
             ex.printStackTrace();
         }
-
-        return null;
+        //If you reach this point, something's gone wrong.
+        return thisNode;
     }
 
     @Override
@@ -180,11 +191,17 @@ public class MapEntity implements IMapEntity {
 
         Collection<Edge> allEdges = edges.values();
         for (Edge edge : allEdges) {
-            Node node1 = getNode(edge.getNode1ID());
-            Node node2 = getNode(edge.getNode2ID());
+            try {
+                Node node1 = getNode(edge.getNode1ID());
+                Node node2 = getNode(edge.getNode2ID());
 
-            if ((floor == node1.getFloor()) && (floor == node2.getFloor())) {
-                edgesOnFloor.add(edge);
+                if ((floor == node1.getFloor()) && (floor == node2.getFloor())) {
+                    edgesOnFloor.add(edge);
+                }
+            }
+            catch(NotFoundException exception){
+                exception.printStackTrace();
+                //TODO: add actual handling
             }
         }
 
@@ -201,8 +218,14 @@ public class MapEntity implements IMapEntity {
 
         for (NodeFloor floor : floors.keySet()) {
             MapFloorEntity floorEntity = floors.get(floor);
-            if (floorEntity.getNode(node.getNodeID()) != null)
+            try{
+                floorEntity.getNode(node.getNodeID());
                 floorEntity.removeNode(node);
+            }
+            catch(NotFoundException exception){
+                exception.printStackTrace();
+                //TODO: add actual handling
+            }
         }
     }
 
@@ -266,7 +289,7 @@ public class MapEntity implements IMapEntity {
         floors.put(floor, new MapFloorEntity(floor));
     }
 
-    //TODO: Given two nodes, returns the edge connecting them, or null if they aren't connected.
+    //Given two nodes, returns the edge connecting them, or null if they aren't connected.
     public Edge getConnectingEdge(Node node1, Node node2){
         ArrayList<Edge> node1Edges = getEdges(node1);
         for(Edge edge: node1Edges){
@@ -277,16 +300,50 @@ public class MapEntity implements IMapEntity {
         return null;
     }
 
-    //Given a node, return a list of all adjacent nodes.
-    public LinkedList<Node> getConnectedNodes(Node node){
+    /**
+     * Given a node, return a list of all adjacent nodes.
+     * @param node
+     * @param wheelchairAccessible if true, exclude nodes connected by edges that a wheelchair can't access
+     * @return LinkedList of nodes accessible from this node
+     */
+    public LinkedList<Node> getConnectedNodes(Node node, boolean wheelchairAccessible){
         ArrayList<Edge> edges = this.getEdges(node);
+        if(wheelchairAccessible){
+            for(Edge edge: edges){
+                if(!edge.isWheelchairAccessible())
+                    edges.remove(edge);
+            }
+        }
         LinkedList<Node> connectedNodes = new LinkedList<>();
         for(Edge edge: edges){
-            if(edge.getNode1ID().equals(node.getNodeID()))
-                connectedNodes.add(getNode(edge.getNode2ID()));
-            else if(edge.getNode2ID().equals(node.getNodeID()))
-                connectedNodes.add(getNode(edge.getNode1ID()));
+            if(edge.getNode1ID().equals(node.getNodeID())){
+                try {
+                    connectedNodes.add(getNode(edge.getNode2ID()));
+                }
+                catch (NotFoundException exception){
+                    exception.printStackTrace();
+                    //TODO: add actual handling
+                }
+            }
+            else if(edge.getNode2ID().equals(node.getNodeID())){
+                try {
+                    connectedNodes.add(getNode(edge.getNode1ID()));
+                }
+                catch(NotFoundException exception){
+                    exception.printStackTrace();
+                    //TODO: add actual handling
+                }
+            }
         }
         return connectedNodes;
+    }
+
+    /**
+     * Alternate call for getConnectedNodes.  If no wheelchair accessibility level is specified, default to false.
+     * @param node
+     * @return
+     */
+    public LinkedList<Node> getConnectedNodes(Node node){
+        return this.getConnectedNodes(node, false);
     }
 }

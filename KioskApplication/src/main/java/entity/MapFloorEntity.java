@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.control.Alert;
@@ -34,7 +35,8 @@ public class MapFloorEntity implements IMapEntity {
 
     @Override
     public void addNode(Node node) throws DatabaseException {
-        dbController.addNode(node);
+        int newID = dbController.addNode(node);
+        node.setUniqueID(newID);
         nodes.put(node.getNodeID(), node);
     }
 
@@ -45,10 +47,12 @@ public class MapFloorEntity implements IMapEntity {
     }
 
     @Override
-    public Node getNode(String s) {
+    public Node getNode(String s) throws NotFoundException{
         // Load node from local data
-        Node node = nodes.get(s);
 
+        Node node = nodes.get(s);
+        if(node == null)
+            throw new NotFoundException("Node not found.");
         return node;
     }
 

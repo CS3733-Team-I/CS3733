@@ -1,5 +1,6 @@
 package controller.map;
 
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -79,18 +80,24 @@ public class NodesEdgesView extends AnchorPane {
             while (listener.next()) {
                 if (listener.wasAdded()) {
                     for (Edge edge : listener.getAddedSubList()) {
-                        Node node1 = map.getNode(edge.getNode1ID());
-                        Node node2 = map.getNode(edge.getNode2ID());
-                        EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                                           new Point2D(node2.getXcoord(), node2.getYcoord()));
+                        try {
+                            Node node1 = map.getNode(edge.getNode1ID());
+                            Node node2 = map.getNode(edge.getNode2ID());
+                            EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
 
-                        if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                            view.setOpacity(0.95);
-                        else
-                            view.setOpacity(0.2);
+                            if (map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
+                                view.setOpacity(0.95);
+                            else
+                                view.setOpacity(0.2);
 
-                        this.edgeViewsMap.put(edge, view);
-                        this.edgesView.getChildren().add(view);
+                            this.edgeViewsMap.put(edge, view);
+                            this.edgesView.getChildren().add(view);
+                        }
+                        catch(NotFoundException exception){
+                            exception.printStackTrace();
+                            //TODO: add actual handling
+                        }
                     }
                 } else if (listener.wasRemoved()) {
                     for (Edge edge: listener.getRemoved()) {
