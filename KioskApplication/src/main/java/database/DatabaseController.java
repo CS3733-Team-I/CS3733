@@ -2,12 +2,8 @@ package database;
 
 import database.connection.Connector;
 import database.connection.NotFoundException;
-import database.objects.Edge;
-import database.objects.Employee;
-import database.objects.Node;
+import database.objects.*;
 import database.utility.*;
-import database.objects.SecurityRequest;
-import database.objects.InterpreterRequest;
 import org.springframework.security.core.parameters.P;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -231,6 +227,17 @@ public class DatabaseController {
         return 0;
     }
 
+    public int addFoodRequest(FoodRequest fR){
+        try{
+            return Connector.insertFood(instanceConnection, fR);
+        }catch(SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     //TODO: Update this method
     public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
@@ -255,6 +262,17 @@ public class DatabaseController {
         return 0;
     }
 
+    public int updateFoodRequest(FoodRequest fR){
+        try{
+            return Connector.updateFood(instanceConnection, fR);
+        }catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
 
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
@@ -270,6 +288,17 @@ public class DatabaseController {
     public  SecurityRequest getSecurityRequest(String requestID) {
         try {
             return Connector.selectSecurity(instanceConnection, requestID);
+        } catch(SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public FoodRequest getFoodRequest(String requestID){
+        try {
+            return Connector.selectFood(instanceConnection, requestID);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
@@ -302,6 +331,18 @@ public class DatabaseController {
         return false;
     }
 
+    public boolean deleteFoodRequest(String requestID){
+        try {
+            Connector.deleteFood(instanceConnection, requestID);
+            return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public  LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
@@ -322,6 +363,17 @@ public class DatabaseController {
             }
         }
         return new LinkedList<SecurityRequest>();
+    }
+
+    public LinkedList<FoodRequest> getAllFoodRequest(){
+        try {
+            return Connector.selectAllFood(instanceConnection);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<FoodRequest>();
     }
 
     public void deleteTestTables() {

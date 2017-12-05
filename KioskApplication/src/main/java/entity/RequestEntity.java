@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class RequestEntity {
     private HashMap<String,InterpreterRequest> interpreterRequests;
     private HashMap<String,SecurityRequest> securityRequests;
-    //private HashMap<String,FoodRequest> foodRequests;
+    private HashMap<String,FoodRequest> foodRequests;
     //private HashMap<String,JanitorRequest> janitorRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
@@ -33,6 +33,7 @@ public class RequestEntity {
     protected RequestEntity(boolean test) {
         interpreterRequests=new HashMap<>();
         securityRequests=new HashMap<>();
+        foodRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getInstance();
@@ -83,6 +84,16 @@ public class RequestEntity {
                 this.securityRequests.put(rID, sR);
             }
         }
+        LinkedList<FoodRequest> foodRequests = dbController.getAllFoodRequests();
+        for (FoodRequest fR: foodRequests){
+            String rID = fR.getRequestID();
+            if(this.foodRequests.containsKey(rID)){
+                this.foodRequests.replace(rID, fR);
+            }
+            else{
+                this.foodRequests.put(rID, fR);
+            }
+        }
     }
 
     /**
@@ -110,6 +121,18 @@ public class RequestEntity {
     }
 
     /**
+     * Gets a list of all food requests in the hashmaps
+     * @return list of all foodRequest found in foodRequests hashmap
+     */
+    public LinkedList<Request> getAllFoodRequests(){
+        LinkedList<Request> fooRequests = new LinkedList<>();
+        for(FoodRequest fR: foodRequests.values()){
+            fooRequests.add(fR);
+        }
+        return fooRequests;
+    }
+
+    /**
      * Methods for all request types
      */
 
@@ -121,6 +144,7 @@ public class RequestEntity {
         LinkedList<Request> allRequests = new LinkedList<>();
         allRequests.addAll(getAllinterpters());
         allRequests.addAll(getAllSecurity());
+        allRequests.addAll(getAllFoodRequests());
         return allRequests;
     }
 
@@ -206,6 +230,8 @@ public class RequestEntity {
             System.out.println("Deleting SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
+            foodRequests.remove(requestID);
+            dbController.deleteFoodRequest(requestID);
             System.out.println("Deleting FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
@@ -245,6 +271,9 @@ public class RequestEntity {
             System.out.println("In Progress SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
+            FoodRequest fR = foodRequests.get(requestID);
+            fR.setInProgress(completerID);
+            dbController.updateFoodRequest(fR);
             System.out.println("In Progress FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
@@ -284,6 +313,10 @@ public class RequestEntity {
             System.out.println("Complete SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
+            FoodRequest fR = foodRequests.get(requestID);
+            fR.setComplete();
+            foodRequests.replace(requestID, fR);
+            dbController.updateFoodRequest(fR);
             System.out.println("Complete FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
@@ -309,7 +342,10 @@ public class RequestEntity {
         Request request;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
             request = getInterpreterRequest(requestID);
-        }else{
+        }else if(checkRequestType(requestID).equals(RequestType.FOOD)){
+            request = getFoodRequest(requestID);
+        }
+        else{ //security request
             request = getSecurityRequest(requestID);
         }
         return request;
@@ -353,6 +389,8 @@ public class RequestEntity {
             case SECURITY:
                 dbController.updateSecurityRequest((SecurityRequest) oldReq);
                 break;
+            case FOOD:
+                dbController.updateFoodRequest((FoodRequest) oldReq);
         }
 
     }
@@ -496,6 +534,75 @@ public class RequestEntity {
         dbController.updateSecurityRequest(oldReq);
     }
 
+    /**
+     * Adds food request to the database and the hashmaps
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param destinationNodeID
+     * @param order
+     * @param deliveryDate
+     * @return Adds food request to the database and the hashmaps
+     */
+    public String submitFoodRequest(String nodeID, int assignerID, String note,
+                                    String destinationNodeID, String order, String deliveryDate){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Foo"+currTime;
+        FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, order, deliveryDate);
+        foodRequests.put(rID, fR);
+        dbController.addFoodRequest(fR);
+        return rID;
+    }
+
+    /**
+     * gets a food request form the database
+     * @param requestID
+     * @return gets a food request from the database that matches the given requestID
+     * @throws NullPointerException
+     */
+    public FoodRequest getFoodRequest(String requestID)throws NullPointerException{
+        if (foodRequests.containsKey(requestID)){
+            return foodRequests.get(requestID);
+        }
+        else{
+            readAllFromDatabase();
+            if(foodRequests.containsKey(requestID)){
+                return foodRequests.get(requestID);
+            }
+            else{
+                throw new NullPointerException("Unable to find Food Request in database");
+            }
+        }
+    }
+
+    /**
+     * updates a foodRequest that is currently in the database
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param destinationNodeID
+     * @param order
+     * @param deliveryDate
+     */
+    public void updateFoodRequest(String requestID, String nodeID, int assignerID, String note,
+                                  Timestamp submittedTime, Timestamp completedTime,
+                                  RequestProgressStatus status, String destinationNodeID,
+                                  String order, String deliveryDate){
+        FoodRequest oldReq = foodRequests.get(requestID);
+        oldReq.setDestinationNodeID(destinationNodeID);
+        oldReq.setOrder(order);
+        oldReq.setDeliveryDate(deliveryDate);
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
+        dbController.updateFoodRequest(oldReq);
+    }
 
     /*
      * Tracking information

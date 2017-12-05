@@ -30,8 +30,6 @@ import java.time.LocalTime;
 public class RequestSubmitterController extends ScreenController {
 
     @FXML private JFXTabPane requestTypeTabs;
-
-
     @FXML private Tab interpreterTab;
     @FXML private JFXTextField intLocation;
     @FXML private JFXComboBox langMenu;
@@ -52,7 +50,21 @@ public class RequestSubmitterController extends ScreenController {
 
     /*janitor related*/
     @FXML private Tab janitorTab;
-    @FXML private JFXButton btnSubmit;
+
+//    @FXML private JFXTabPane requestTypeTabs;
+//    @FXML private Tab interpreterTab;
+//    @FXML private JFXTextField locationTxt;
+//    @FXML private JFXComboBox reqMenu;
+//    @FXML private JFXTextArea notesArea;
+//    @FXML private HBox row1, row2;
+//    /*food related*/
+//    @FXML private Tab foodTab;
+//    @FXML private JFXComboBox foodMenu;
+//    /*security related*/
+//    @FXML private Tab securityTab;
+//    /*janitor related*/
+//    @FXML private Tab janitorTab;
+//    @FXML private JFXButton btnSubmit;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -131,6 +143,7 @@ public class RequestSubmitterController extends ScreenController {
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
+
                 intNotesArea.clear();
                 intLocation.clear();
 
@@ -139,6 +152,7 @@ public class RequestSubmitterController extends ScreenController {
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SECURITY;
+
                 secNoteField.clear();
                 secLocationField.clear();
 
@@ -149,7 +163,6 @@ public class RequestSubmitterController extends ScreenController {
         });
     }
 
-    // adds the request. TODO: make this generic and able to process any and all requests
     @FXML
     public void addRequest() throws IOException{
         switch(currentRequestType){

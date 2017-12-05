@@ -2,11 +2,8 @@ package database.connection;
 
 
 
-import database.objects.Edge;
-import database.objects.Node;
-import database.objects.SecurityRequest;
+import database.objects.*;
 import database.template.SQLStrings;
-import database.objects.InterpreterRequest;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -345,7 +342,7 @@ public class Connector {
         LinkedList<SecurityRequest> securityRequests = new LinkedList<>();
         while(rs.next()) {
             SecurityRequest securityRequest = null;
-            //for completed InterpreterRequests
+            //for completed SecurityRequests
             securityRequest = new SecurityRequest(
                     rs.getString("requestID"),
                     rs.getString("nodeID"),
@@ -363,4 +360,103 @@ public class Connector {
         return securityRequests;
     }
 
+    public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
+        PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT+REQUEST_INSERT);
+        pstmt.setString(1, fR.getRequestID());
+        pstmt.setString(2,fR.getDestinationNodeID());
+//        pstmt.setInt(2, sR.getPriority());
+        pstmt.setString(3, fR.getNodeID());
+        pstmt.setInt(4, fR.getAssignerID());
+        pstmt.setInt(5, fR.getCompleterID());
+        pstmt.setString(6, fR.getNote());
+        pstmt.setTimestamp(7, fR.getSubmittedTime());
+        pstmt.setTimestamp(8, fR.getStartedTime());
+        pstmt.setTimestamp(9, fR.getCompletedTime());
+        pstmt.setInt(10, fR.getStatus().ordinal());
+        pstmt.setString(11,fR.getOrder());
+        pstmt.setString(12,fR.getDeliveryDate());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateFood(Connection conn, FoodRequest fR) throws SQLException{
+        String sql = FOOD_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+//        pstmt.setInt(1, sR.getPriority());
+        pstmt.setString(1,fR.getDestinationNodeID());
+        pstmt.setString(2, fR.getNodeID());
+        pstmt.setInt(3, fR.getAssignerID());
+        pstmt.setInt(4, fR.getCompleterID());
+        pstmt.setString(5, fR.getNote());
+        pstmt.setTimestamp(6, fR.getSubmittedTime());
+        pstmt.setTimestamp(7, fR.getStartedTime());
+        pstmt.setTimestamp(8, fR.getCompletedTime());
+        pstmt.setInt(9, fR.getStatus().ordinal());
+        pstmt.setString(10, fR.getOrder());
+        pstmt.setString(11, fR.getDeliveryDate());
+        //search parameter below
+        pstmt.setString(12, fR.getRequestID());
+        return pstmt.executeUpdate();
+
+    }
+
+    public static FoodRequest selectFood(Connection conn, String requestID) throws SQLException{
+        String sql = FOOD_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        FoodRequest foodRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()){
+            //for completed FoodRequests
+            foodRequest = new FoodRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getString("destinationNodeID"),
+                    rs.getString("order"),
+                    rs.getString("deliveryTime")
+            );
+        }
+        return  foodRequest;
+    }
+
+    public static boolean deleteFood(Connection conn, String requestID) throws SQLException{
+        PreparedStatement pstmt = conn.prepareStatement(FOOD_DELETE);
+        pstmt.setString(1,requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<FoodRequest> selectAllFood(Connection conn) throws SQLException {
+        String sql = FOOD_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<FoodRequest> foodRequests = new LinkedList<>();
+        while(rs.next()){
+            FoodRequest foodRequest = null;
+            //for completed FoodRequests
+            foodRequest = new FoodRequest(
+                rs.getString("requestID"),
+                rs.getString("nodeID"),
+                rs.getInt("assigner"),
+                rs.getInt("completer"),
+                rs.getString("note"),
+                rs.getTimestamp("submittedTime"),
+                rs.getTimestamp("startedTime"),
+                rs.getTimestamp("completedTime"),
+                RequestProgressStatus.values()[rs.getInt("status")],
+                rs.getString("destinationNodeID"),
+                rs.getString("order"),
+                rs.getString("deliveryTime"));
+
+            foodRequests.add(foodRequest);
+            }
+            return foodRequests;
+        }
 }
