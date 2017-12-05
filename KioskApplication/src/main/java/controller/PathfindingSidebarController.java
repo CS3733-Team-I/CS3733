@@ -227,6 +227,7 @@ public class PathfindingSidebarController extends ScreenController {
         HBox waypointBox = new HBox();
 
         TextField nodeNameLabel = new TextField("(Click to Search) " + node.getLongName());
+        nodeNameLabel.setPromptText("(Click to Search) " + node.getLongName());
 //        nodeNameLabel.setTextFill(Color.BLACK);
         nodeNameLabel.setStyle("-fx-font-weight:bold; "+
                 "-fx-font-size: 12pt; ");
@@ -279,7 +280,7 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointLabel.setStyle("-fx-font-weight:bold; "+
                 "-fx-font-size: 12pt; ");
         JFXButton btNewWayPoint = new JFXButton("+");
-        btNewWayPoint.setStyle("-fx-background-color: #00ff02;"+
+        btNewWayPoint.setStyle("-fx-background-color: #00589F;"+
                 "-fx-font-size: 16pt; "+
                 "-fx-font-weight: bold; "+
                 "-fx-font-weight: 900;"+
