@@ -214,7 +214,9 @@ public class LoginEntity {
         return currentLogin.getServiceAbility();
     }
 
-    // Method for users to update only their passwords, and no one else's
+    /**
+     * Method for users to update only their passwords, and no one else's
+     */
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean updated = false;
         if (currentLogin.updatePassword(newPassword, oldPassword)) {
