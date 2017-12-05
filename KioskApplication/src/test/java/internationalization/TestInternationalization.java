@@ -20,4 +20,15 @@ public class TestInternationalization {
         assertEquals("Navigate",bundleUS.getString("my.navigate"));
         assertEquals("Clear",bundleUS.getString("my.clear"));
     }
+
+    @Test
+    public void testFR(){
+        ResourceBundle bundleFR = ResourceBundle.getBundle(
+                "TestInternationalization",Locale.FRANCE);
+        assertEquals("Rechercher",bundleFR.getString("my.search"));
+        assertEquals("Carte",bundleFR.getString("my.map"));
+        assertEquals("Points De Cheminement Actuels:",bundleFR.getString("my.waypoints"));
+        assertEquals("Itinéraire",bundleFR.getString("my.navigate"));
+        assertEquals("Nettoyer",bundleFR.getString("my.clear"));
+    }
 }
