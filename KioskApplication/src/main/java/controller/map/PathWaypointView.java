@@ -15,6 +15,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
@@ -34,6 +35,7 @@ public class PathWaypointView extends AnchorPane {
     private HashMap<Node, WaypointView> wayPointViewsMap;
     private HashMap<Edge, PathView> pathViewsMap;
 
+    //TODO use that stack pane
     private AnchorPane pathView;
     private AnchorPane wayPointView;
 
@@ -44,11 +46,29 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointView = new AnchorPane();
         wayPointViewsMap = new HashMap<>();
+        wayPointView.setPickOnBounds(false);
 
         pathView = new AnchorPane();
         pathViewsMap = new HashMap<>();
+        pathView.setPickOnBounds(false);
 
-        getChildren().addAll(wayPointView, pathView);
+        AnchorPane.setTopAnchor(pathView, 0.0);
+        AnchorPane.setLeftAnchor(pathView, 0.0);
+        AnchorPane.setBottomAnchor(pathView, 0.0);
+        AnchorPane.setRightAnchor(pathView, 0.0);
+
+        AnchorPane.setTopAnchor(wayPointView, 0.0);
+        AnchorPane.setLeftAnchor(wayPointView, 0.0);
+        AnchorPane.setBottomAnchor(wayPointView, 0.0);
+        AnchorPane.setRightAnchor(wayPointView, 0.0);
+
+//        wayPointView.prefWidthProperty().bind(this.widthProperty());
+//        wayPointView.prefHeightProperty().bind(this.heightProperty());
+//
+//        pathView.prefWidthProperty().bind(this.widthProperty());
+//        pathView.prefHeightProperty().bind(this.heightProperty());
+
+        this.getChildren().addAll(wayPointView, pathView);
 
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();

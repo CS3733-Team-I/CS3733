@@ -359,6 +359,11 @@ public class MapController {
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
         nodesEdgesContainer.setMouseTransparent(true);
 
+        AnchorPane.setTopAnchor(pathWaypointView, 0.0);
+        AnchorPane.setLeftAnchor(pathWaypointView, 0.0);
+        AnchorPane.setBottomAnchor(pathWaypointView, 0.0);
+        AnchorPane.setRightAnchor(pathWaypointView, 0.0);
+
         pathWaypointContainer.getChildren().add(pathWaypointView);
         pathWaypointContainer.setMouseTransparent(true);
 
