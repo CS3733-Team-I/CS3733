@@ -7,17 +7,29 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.node.NodeFloor;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import java.beans.PropertyChangeEvent;
 
 public class MainWindowController {
 
@@ -37,6 +49,10 @@ public class MainWindowController {
     @FXML private Tab tabSettings;
 
     private LoginEntity loginEntity;
+
+
+    private Timer timer = new Timer();
+    public boolean timeout = false;
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -84,10 +100,13 @@ public class MainWindowController {
             }
         });
 
+
+
         initializeLoginPopup();
         initializeTrackingTable();
 
         checkPermissions();
+        resetTimer();
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -124,10 +143,46 @@ public class MainWindowController {
         this.mapView.setDisable(true);
     }
 
+    @FXML
+    void resetTimer(){
+        System.out.println("TIMER RESET");
+        timer.cancel();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                    funct();
+            }
+        }, 5000);
+    }
+
+    public void funct(){
+        System.out.println("funct");
+        LoginEntity.getInstance().logOut();
+        System.out.println("Logged Off, Switching");
+
+        try {
+            switchButton.setText("Staff Login");
+            System.out.println(switchButton.getText());
+            //hides all but the Map tab from non logged in users
+            tabPane.getTabs().clear();
+            tabPane.getTabs().add(tabMap);
+
+            mapController.setNodesVisible(false);
+            mapController.setEdgesVisible(false);
+
+        }catch (IllegalStateException e) {
+            System.out.println("EXCEPTION");
+        }
+        System.out.println("Done Switching");
+    }
+
     //checks permissions of user and adjusts visible tabs and screens
     void checkPermissions() {
+        System.out.println(loginEntity.getCurrentPermission()== KioskPermission.NONEMPLOYEE);
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
+                System.out.println("Logged Off, Switching");
                 switchButton.setText("Staff Login");
 
                 //hides all but the Map tab from non logged in users
@@ -136,6 +191,7 @@ public class MainWindowController {
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
+                System.out.println("Done Switching");
                 break;
 
             case EMPLOYEE:
@@ -155,6 +211,9 @@ public class MainWindowController {
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
+                break;
+            default:
+                System.out.println("DEFAULT");
                 break;
         }
     }
@@ -213,6 +272,8 @@ public class MainWindowController {
         // Reset controller's view
         controller.resetScreen();
 
+        resetTimer();
+
         this.currentScreen = screen;
     }
 
@@ -240,6 +301,7 @@ public class MainWindowController {
         this.tabMap.setDisable(false);
         this.contentNode.setDisable(false);
         this.mapView.setDisable(false);
+        resetTimer();
     }
 
     @FXML
@@ -251,6 +313,7 @@ public class MainWindowController {
         this.tabMap.setDisable(true);
         this.contentNode.setDisable(true);
         this.mapView.setDisable(true);
+        resetTimer();
     }
 
     @FXML
@@ -266,25 +329,32 @@ public class MainWindowController {
                 this.openLoginPopup();
                 break;
         }
+        resetTimer();
     }
 
     public void onMapNodeClicked(Node n) {
         controllers.get(currentScreen).onMapNodeClicked(n);
+        resetTimer();
     }
 
     public void onMapEdgeClicked(Edge e) {
         controllers.get(currentScreen).onMapEdgeClicked(e);
+        resetTimer();
     }
 
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
         controllers.get(currentScreen).onMapLocationClicked(e, location);
+        resetTimer();
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
         controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
+        resetTimer();
     }
 
     protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
     }
+
+
 }

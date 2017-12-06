@@ -118,6 +118,11 @@ public class SettingsController extends ScreenController {
         });
     }
 
+    @FXML
+    void resetTimer(){
+        getParent().resetTimer();
+    }
+
     public void checkPermissions() {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:

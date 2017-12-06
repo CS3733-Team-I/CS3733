@@ -41,6 +41,7 @@ public class PathfindingSidebarController extends ScreenController {
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
         exceptionText.setText("");
+        getParent().resetTimer();
     }
 
     @FXML
@@ -52,6 +53,7 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().setPath(null);
         getMapController().clearMap();
         getMapController().reloadDisplay();
+        getParent().resetTimer();
     }
 
     @FXML
@@ -77,6 +79,7 @@ public class PathfindingSidebarController extends ScreenController {
 
             currentNodes.clear();
         }
+        getParent().resetTimer();
     }
 
     @Override
@@ -134,5 +137,6 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(false);
+        getParent().resetTimer();
     }
 }

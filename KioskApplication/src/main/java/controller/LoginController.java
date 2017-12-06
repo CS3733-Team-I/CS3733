@@ -63,6 +63,7 @@ public class LoginController {
                 tfEmail.requestFocus();
             }
         });
+        parent.resetTimer();
     }
 
     @FXML
@@ -75,6 +76,7 @@ public class LoginController {
         else {
             errorMsg.setVisible(true);
         }
+        parent.resetTimer();
     }
 
     @FXML
@@ -82,6 +84,7 @@ public class LoginController {
         resetFields();
         disableCancelButton(true);
         parent.closeLoginPopup();
+        parent.resetTimer();
     }
 
     //Helper function for resetting the internals of the employee popup

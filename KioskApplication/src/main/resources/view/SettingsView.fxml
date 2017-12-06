@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXTabPane id="tab-header-area" fx:id="settingTabPane" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <JFXTabPane onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" id="tab-header-area" fx:id="settingTabPane" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab fx:id="aboutTab" text="About">
               <content>
@@ -37,31 +37,31 @@
                         </Label>
                         <VBox layoutX="63.0" layoutY="89.0" prefHeight="227.0" prefWidth="155.0">
                            <children>
-                              <JFXRadioButton fx:id="dfsButton" onAction="#onSearchAlgorithmSelected" text="Depth-first Search">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="dfsButton" onAction="#onSearchAlgorithmSelected" text="Depth-first Search">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="bfsButton" onAction="#onSearchAlgorithmSelected" text="Breadth-first Search">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="bfsButton" onAction="#onSearchAlgorithmSelected" text="Breadth-first Search">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="dijkstraButton" onAction="#onSearchAlgorithmSelected" text="Dijkstras">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="dijkstraButton" onAction="#onSearchAlgorithmSelected" text="Dijkstras">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="astarButton" onAction="#onSearchAlgorithmSelected" text="A *">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="astarButton" onAction="#onSearchAlgorithmSelected" text="A *">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="beamButton" onAction="#onSearchAlgorithmSelected" text="Beam" />
-                              <JFXRadioButton fx:id="bestFirstButton" onAction="#onSearchAlgorithmSelected" prefHeight="57.0" prefWidth="105.0" text="Best-first Search" />
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="beamButton" onAction="#onSearchAlgorithmSelected" text="Beam" />
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="bestFirstButton" onAction="#onSearchAlgorithmSelected" prefHeight="57.0" prefWidth="105.0" text="Best-first Search" />
                            </children>
                         </VBox>
-                        <JFXTextField fx:id="beamWidth" layoutX="289.0" layoutY="235.0" />
+                        <JFXTextField onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="beamWidth" layoutX="289.0" layoutY="235.0" />
                         <Label layoutX="289.0" layoutY="210.0" prefHeight="17.0" prefWidth="135.0" text="Select a Beam width" />
                      </children>
                   </AnchorPane>
