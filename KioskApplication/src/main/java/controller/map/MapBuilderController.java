@@ -12,6 +12,7 @@ import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import utility.ResourceManager;
 import utility.node.*;
 
@@ -332,7 +334,7 @@ public class MapBuilderController extends ScreenController {
         });
 
         //keep track on selected, new, and changed nodes and edges list
-        selectedNode.addListener((ChangeListener<Node>) (o, oldVal, newVal) -> {
+        selectedNode.addListener((ChangeListener<Node>) (ObservableValue<? extends Node> o, Node oldVal, Node newVal) -> {
             if (oldVal != null) {
                 if (observableChangedNodes.contains(oldVal))
                     getMapController().setNodeSelected(oldVal, NodeSelectionType.CHANGED);
@@ -353,6 +355,26 @@ public class MapBuilderController extends ScreenController {
 
                 updateNodeDisplay(NodeSelectionType.SELECTED);
             }
+
+            lvConnectedNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
+
+                @Override
+                public ListCell<Node> call(ListView<Node> param) {
+                    ListCell<Node> cell = new ListCell<Node>() {
+
+                        @Override
+                        protected void updateItem(Node item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item != null) {
+                                setText(item.getLongName());
+                            } else {
+                                setText("");
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            });
 
             if(newVal == null && newNode.get() == null) {
                 setEditingDisabled();
@@ -495,8 +517,7 @@ public class MapBuilderController extends ScreenController {
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-        getMapController().setNodesVisible(true);
-        getMapController().setEdgesVisible(true);
+
     }
 
     @Override
@@ -509,6 +530,8 @@ public class MapBuilderController extends ScreenController {
         // Set default nodes/edges visibility
         getMapController().setNodesVisible(true);
         getMapController().setEdgesVisible(true);
+
+        setEditingDisabled();
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(true);
@@ -926,6 +949,17 @@ public class MapBuilderController extends ScreenController {
             Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
 
             deleteConnection(event, selectedNode);
+
+            lvConnectedNodes.getItems().clear();
+            for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(this.selectedNode.get())) {
+                lvConnectedNodes.getItems().add(connectedNode);
+            }
+
+
+            Node savedNode = this.selectedNode.get();
+            updateSelectedNode(null);
+            updateSelectedNode(savedNode);
+
             popup.hide();
         });
 
@@ -943,8 +977,10 @@ public class MapBuilderController extends ScreenController {
 
     private void updateSelectedNode(Node node) {
         //remove unsaved new node, if any
-        getMapController().removeNode(newNode.get());
-        newNode.set(null);
+        if (newNode.get() != null) {
+            getMapController().removeNode(newNode.get());
+            newNode.set(null);
+        }
         selectedNode.set(node);
     }
 
@@ -998,11 +1034,7 @@ public class MapBuilderController extends ScreenController {
         }
 
         //refresh edges display
-        // TODO do this better
-        getMapController().setEdgesVisible(false);
-        getMapController().setEdgesVisible(true);
-
-        updateSelectedNode(selectedNode.get());
+        getMapController().reloadDisplay();
     }
 
     public void addConnectionByNodes(int uniqueNodeID1, int uniqueNodeID2) {
@@ -1015,6 +1047,7 @@ public class MapBuilderController extends ScreenController {
             alert.showAndWait();
             return;
         }
+
         for (database.objects.Node connectingNode1 : map.getAllNodes()) {
             if (uniqueNodeID1 == connectingNode1.getUniqueID()) {
                 for (database.objects.Node connectingNode2 : map.getAllNodes()) {
@@ -1049,6 +1082,7 @@ public class MapBuilderController extends ScreenController {
                         }
 
                         getMapController().reloadDisplay();
+                        updateSelectedNode(selectedNode.get());
                     }
                 }
             }
@@ -1098,8 +1132,7 @@ public class MapBuilderController extends ScreenController {
                         alert.showAndWait();
                     }
                     //refresh edges display
-                    getMapController().setEdgesVisible(false);
-                    getMapController().setEdgesVisible(true);
+                    getMapController().reloadDisplay();
                     updateSelectedNode(selectedNode.get());
                 }
             }
