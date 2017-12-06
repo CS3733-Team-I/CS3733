@@ -6,7 +6,7 @@ import utility.node.NodeType;
 
 public class Edge {
 
-    public static final double COST_TO_FEET = 0.1; //TODO get actual value
+    public static final double COST_TO_FEET = 0.25; //TODO get actual value
     public static final double COST_TO_METERS = 0.1; //TODO get actual values
     public static final int STAIR_COST = 100;
     public static final int ELEVATOR_COST = 100;
