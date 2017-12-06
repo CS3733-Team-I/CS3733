@@ -1,17 +1,15 @@
 package controller.map;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
+import controller.FloorPreviewTray;
 import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import javafx.animation.PathTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,9 +22,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -34,19 +30,11 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.MoveTo;
-import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,6 +70,7 @@ public class MapController {
 
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
+    private FloorPreviewTray previewTray;
 
 
 
