@@ -7,13 +7,13 @@ import database.objects.Node;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
@@ -24,7 +24,6 @@ import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
-import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
 
