@@ -1,6 +1,8 @@
 package controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
@@ -16,13 +18,18 @@ import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
 
 public class PathfindingSidebarController extends ScreenController {
 
     @FXML private AnchorPane container;
     @FXML private GridPane waypointsContainer;
     @FXML private JFXListView waypointList;
+    @FXML private JFXButton btnSubmit;
+    @FXML private JFXTextField searchBar;
+    @FXML private Label waypointLabel;
+    @FXML private JFXButton navigateButton;
+    @FXML private JFXButton clearButton;
 
     @FXML private Label exceptionText;
 
@@ -36,11 +43,19 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
+        System.out.println("initializing");
+        ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
         exceptionText.setText("");
+        // for setting the pathfinding sidebar to the internationalized language
+        btnSubmit.setText(rB.getString("my.search"));
+        searchBar.setPromptText(rB.getString("my.search"));
+        clearButton.setText(rB.getString("my.clear"));
+        navigateButton.setText(rB.getString("my.navigate"));
+        waypointLabel.setText(rB.getString("my.waypoints"));
     }
 
     @FXML
@@ -134,5 +149,12 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(false);
+        ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
+        // for setting the pathfinding sidebar to the internationalized language
+        btnSubmit.setText(rB.getString("my.search"));
+        searchBar.setText(rB.getString("my.search"));
+        clearButton.setText(rB.getString("my.clear"));
+        navigateButton.setText(rB.getString("my.navigate"));
+        waypointLabel.setText(rB.getString("my.waypoints"));
     }
 }

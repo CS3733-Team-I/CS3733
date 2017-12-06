@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Path {
-
     private LinkedList<Node> waypoints;
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
@@ -58,7 +57,7 @@ public class Path {
                     directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
             }
 
-            directionSegment.add("End at " + nodes.getLast().getLongName());
+            directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.end") + nodes.getLast().getLongName());
             directions.add(directionSegment);
         }
     }
@@ -90,13 +89,13 @@ public class Path {
 
         MapEntity map = MapEntity.getInstance();
 
-        //        //Elevator
+        //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
-            return "Take the elevator to " + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.elevator") + nextNode.getFloor().toString() + " ";
         }
         //Stairs
         else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
-            return "Take the stairs to " + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.stairs") + nextNode.getFloor().toString() + " ";
         }
 
         //Calculate angles if turning
@@ -111,11 +110,11 @@ public class Path {
         String returnStr = "";
 
         if(!thisNode.getNodeType().equals(NodeType.HALL)){
-            if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at " + thisNode.getLongName();
-            else if(angleDif > rightAngle) returnStr += "Make a sharp right at " + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif >= straightAngle) returnStr += "Turn right at " + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif < rightAngle) returnStr += "Make a sharp left at " + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif <= straightAngle) returnStr += "Turn left at " + thisNode.getLongName() + ".\n\tGo straight for ";
+            if(Math.abs(angleDif) < straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.straight") + thisNode.getLongName();
+            else if(angleDif > rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharpright") + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif >= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.right") + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif < rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharpleft") + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif <= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.left") + thisNode.getLongName() + ".\n\tGo straight for ";
             else returnStr += "Go to " + thisNode.getLongName() + ".\n\tGo straight for ";
         }
         else {
@@ -124,7 +123,7 @@ public class Path {
             else if(angleDif >= straightAngle) returnStr += "Turn right at hallway intersection.\n\tGo straight for ";
             else if(angleDif < rightAngle) returnStr += "Make a sharp left at hallway intersection.\n\tGo straight for ";
             else if(angleDif <= straightAngle) returnStr += "Turn left at hallway intersection.\n\tGo straight for ";
-            else returnStr += "Go to " + thisNode.getLongName() + ".\n\tGo straight for ";
+            else returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.go") + thisNode.getLongName() + ".\n\tGo straight for ";
         }
         return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " feet.";
     }

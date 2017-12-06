@@ -1,5 +1,6 @@
 package controller.map;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
@@ -8,6 +9,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -25,6 +28,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
@@ -45,13 +49,16 @@ public class MapController {
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane waypointPane;
+    //@FXML private JFXButton recenterButton;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+    @FXML private JFXButton recenterButton;
 
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
+    @FXML private JFXButton aboutButton;
 
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
@@ -63,6 +70,7 @@ public class MapController {
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
+
 
     public MapController() {
         waypoints = new LinkedList<>();
@@ -165,8 +173,12 @@ public class MapController {
     public void reloadDisplay() {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
-
         nodesEdgesView.reloadDisplay();
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        //hackey way to reset the comobobox
+        int floor = floorSelector.getValue().ordinal();
+        floorSelector.getItems().removeAll();
+        floorSelector.setValue(NodeFloor.values()[floor]);
     }
 
     /**
@@ -323,15 +335,18 @@ public class MapController {
      */
     @FXML
     protected void initialize() {
+
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
+        aboutButton.setVisible(true);
 
         miniMapController = new MiniMapController(this);
 
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -444,6 +459,7 @@ public class MapController {
         parent.onMapFloorChanged(floor);
     }
 
+
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
         if (parent != null) {
@@ -506,5 +522,10 @@ public class MapController {
 
     public void setOptionsBoxVisible(boolean visible) {
         this.optionsBox.setVisible(visible);
+    }
+
+    @FXML
+   private void onAboutAction(){
+        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
     }
 }
