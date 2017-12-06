@@ -75,17 +75,17 @@ public class Path {
 
         double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
 
-        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += ".\n\tGo east for ";
-        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += ".\n\tGo southeast for ";
-        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += ".\n\tGo south for ";
-        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += ".\n\tGo southwest for ";
+        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.east");
+        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.southeast");
+        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.south");
+        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.southwest");
 
-        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += ".\n\tGo northeast for ";
-        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += ".\n\tGo north for ";
-        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += ".\n\tGo northwest for ";
-        else returnStr += ".\n\tGo west for ";
+        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.northeast");
+        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.north");
+        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.northwest");
+        else returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.west");
 
-        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + " feet.";
+        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + SystemSettings.getInstance().getResourceBundle().getString("my.feet");
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
@@ -202,6 +202,7 @@ public class Path {
         }
         return retVal;
     }
+
     /**
      * Returns an ordered list of all nodes along the path.
      * @return
