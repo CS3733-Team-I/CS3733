@@ -121,7 +121,7 @@ public class PathfindingSidebarController extends ScreenController {
         }
         exceptionText.setText("");
         if (currentNodes.size() > 0) {
-            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm(), getMapController().isWheelchairSet());
             try{
                 Path path = pathfinder.generatePath(currentNodes);
                 getMapController().setPath(path);

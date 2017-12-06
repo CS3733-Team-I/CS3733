@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MapController {
+    private boolean wheelchairSet;
+    @FXML JFXCheckBox wheelchairCheckbox;
     @FXML
     private AnchorPane container;
 
@@ -106,6 +108,7 @@ public class MapController {
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
+        this.wheelchairSet = false;
     }
 
     /**
@@ -677,5 +680,14 @@ public class MapController {
     private void keyClosed(){
         keyDialog.close();
         keyButton.setDisable(false);
+    }
+
+    @FXML
+    private void OnToggleWheelchair(){
+        this.wheelchairSet = !wheelchairSet;
+    }
+
+    public boolean isWheelchairSet() {
+        return wheelchairSet;
     }
 }
