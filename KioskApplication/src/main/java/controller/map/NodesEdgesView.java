@@ -4,6 +4,7 @@ import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -64,6 +65,8 @@ public class NodesEdgesView extends AnchorPane {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
 
                         view.setPickOnBounds(false);
+                        if(SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID()))
+                            view.setImage(node);
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);
                     }
