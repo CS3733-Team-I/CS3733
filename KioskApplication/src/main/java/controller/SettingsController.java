@@ -140,6 +140,10 @@ public class SettingsController extends ScreenController {
                 settingTabPane.getTabs().clear();
                 settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab, employeesTab);
                 break;
+            case NONEMPLOYEE:
+                settingTabPane.getTabs().clear();
+                settingTabPane.getTabs().addAll(aboutTab,displayTab);
+                break;
         }
     }
 

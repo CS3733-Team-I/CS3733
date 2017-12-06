@@ -44,6 +44,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding></AnchorPane>      <VBox alignment="CENTER" layoutX="425.0" layoutY="84.0" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
          <children>
+            <JFXButton fx:id="aboutButton" onAction="#onAboutAction" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5084d1;" text="i" textFill="WHITE" />
             <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomInPressed" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />

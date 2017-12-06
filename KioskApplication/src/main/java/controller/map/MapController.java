@@ -18,6 +18,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -27,6 +28,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
@@ -56,6 +58,7 @@ public class MapController {
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
+    @FXML private JFXButton aboutButton;
 
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
@@ -336,6 +339,7 @@ public class MapController {
         waypointPane.setPickOnBounds(false);
 
         floorSelector.getItems().addAll(NodeFloor.values());
+        aboutButton.setVisible(true);
 
         miniMapController = new MiniMapController(this);
 
@@ -518,5 +522,10 @@ public class MapController {
 
     public void setOptionsBoxVisible(boolean visible) {
         this.optionsBox.setVisible(visible);
+    }
+
+    @FXML
+   private void onAboutAction(){
+        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
     }
 }

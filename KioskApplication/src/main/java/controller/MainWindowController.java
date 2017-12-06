@@ -140,6 +140,7 @@ public class MainWindowController {
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
+                tabPane.getTabs().add(tabSettings);
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
@@ -166,7 +167,7 @@ public class MainWindowController {
         }
     }
 
-    void switchToScreen(ApplicationScreen screen) {
+    public void switchToScreen(ApplicationScreen screen) {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
