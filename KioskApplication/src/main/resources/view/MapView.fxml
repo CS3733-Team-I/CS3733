@@ -32,6 +32,8 @@
             </StackPane>
          </content>
       </ScrollPane>
+      <JFXButton fx:id="recenterButton" buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <JFXComboBox fx:id="languageSelector" onAction="#onLanguageSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="300.0" AnchorPane.bottomAnchor="10.0" />
       <JFXButton fx:id="recenterButton" buttonType="RAISED" focusTraversable="false" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
        <JFXButton fx:id="keyButton" buttonType="RAISED" focusTraversable="false" layoutX="223.0" layoutY="419.0" onAction="#keyOpened" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Map Key" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="110.0" />
        <JFXDialogLayout fx:id="keyDialogContainer" prefHeight="570.0" prefWidth="150.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0">

@@ -10,7 +10,6 @@ import entity.Path;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.WeakEventHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,6 +20,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,44 +34,61 @@ import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static javafx.scene.input.KeyCode.T;
+import java.util.ResourceBundle;
 
 public class MapController {
-    @FXML private AnchorPane container;
+    @FXML
+    private AnchorPane container;
 
     private Group zoomGroup;
-    @FXML private ScrollPane scrollPane;
+    @FXML
+    private ScrollPane scrollPane;
     private boolean mouseZoom;
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
     public static final double DEFAULT_ZOOM = 0.75;
 
-    @FXML private StackPane stackPane;
-    @FXML private ImageView mapView;
-    @FXML private AnchorPane nodesEdgesContainer;
-    @FXML private AnchorPane pathWaypointContainer;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private ImageView mapView;
+    @FXML
+    private AnchorPane nodesEdgesContainer;
+    @FXML
+    private AnchorPane pathWaypointContainer;
 
-    @FXML private JFXComboBox<NodeFloor> floorSelector;
-    @FXML private JFXSlider zoomSlider;
-    @FXML private JFXButton recenterButton;
+    @FXML
+    private JFXComboBox<String> languageSelector;
+    @FXML
+    private JFXComboBox<NodeFloor> floorSelector;
+    @FXML
+    private JFXSlider zoomSlider;
+    @FXML
+    private JFXButton recenterButton;
 
-    @FXML private VBox optionsBox;
-    @FXML private JFXCheckBox showNodesBox;
-    @FXML private JFXCheckBox showEdgesBox;
-    @FXML private JFXButton aboutButton;
+    @FXML
+    private VBox optionsBox;
+    @FXML
+    private JFXCheckBox showNodesBox;
+    @FXML
+    private JFXCheckBox showEdgesBox;
+    @FXML
+    private JFXButton aboutButton;
 
-    @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
+    @FXML
+    private ObservableList<javafx.scene.Node> visibleWaypoints;
 
-    @FXML private JFXButton keyButton;
-    @FXML private JFXDialog keyDialog;
-    @FXML private JFXDialogLayout keyDialogContainer;
+    @FXML
+    private JFXButton keyButton;
+    @FXML
+    private JFXDialog keyDialog;
+    @FXML
+    private JFXDialogLayout keyDialogContainer;
 
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
@@ -80,11 +97,16 @@ public class MapController {
     private PathWaypointView pathWaypointView;
 
     private MiniMapController miniMapController;
-    @FXML private AnchorPane miniMapPane;
+    @FXML
+    private AnchorPane miniMapPane;
+    private SystemSettings systemSettings;
 
     private MainWindowController parent = null;
 
-    public MapController() { visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList(); }
+    public MapController() {
+        visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
+        systemSettings = SystemSettings.getInstance();
+    }
 
     /**
      * Set the parent MainWindowController for this MapController
@@ -190,9 +212,9 @@ public class MapController {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
         nodesEdgesView.reloadDisplay();
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
         pathWaypointView.reloadDisplay();
 
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         //hackey way to reset the comobobox
         int floor = floorSelector.getValue().ordinal();
         floorSelector.getItems().removeAll();
@@ -342,6 +364,7 @@ public class MapController {
     protected void initialize() throws NotFoundException{
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
+        languageSelector.getItems().addAll("English","French");
 
         miniMapController = new MiniMapController(this);
 
@@ -352,7 +375,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -370,6 +393,13 @@ public class MapController {
         pathWaypointContainer.setPickOnBounds(false);
 
         keyDialog.setDialogContainer(keyDialogContainer);
+
+        // Controller-wide localization observer
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            recenterButton.setText(rB.getString("recenter"));
+
+        });
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
@@ -629,6 +659,12 @@ public class MapController {
     @FXML
     private void onAboutAction(){
         parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+    }
+
+    @FXML
+    void onLanguageSelected() {
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        systemSettings.setResourceBundle(languageSelector.getValue());
     }
 
     @FXML

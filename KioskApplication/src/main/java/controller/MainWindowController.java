@@ -39,6 +39,7 @@ public class MainWindowController {
     @FXML private Tab tabSettings;
 
     private LoginEntity loginEntity;
+    private SystemSettings systemSettings;
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -48,6 +49,7 @@ public class MainWindowController {
     private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
+        systemSettings = SystemSettings.getInstance();
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
@@ -59,16 +61,40 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        ResourceBundle languageBundle= SystemSettings.getInstance().getResourceBundle();
+        ResourceBundle languageBundle= systemSettings.getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-        tabMap.setText(languageBundle.getString("my.map"));
-        tabMB.setText(languageBundle.getString("my.mapbuilder"));
-        tabRM.setText(languageBundle.getString("my.requestmanager"));
-        tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
+        tabMap.setText(languageBundle.getString("map"));
+        tabMB.setText(languageBundle.getString("mapBuilder"));
+        tabRM.setText(languageBundle.getString("requestManager"));
+        tabRS.setText(languageBundle.getString("requestSubmit"));
+        tabSettings.setText(languageBundle.getString("setting"));
+        // attaches observer to the systemSettings
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            switch (loginEntity.getCurrentPermission()) {
+                case NONEMPLOYEE:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                    break;
+
+                case EMPLOYEE:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    break;
+
+                case SUPER_USER:
+                case ADMIN:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    break;
+            }
+            tabMap.setText(rB.getString("map"));
+            tabMB.setText(rB.getString("mapBuilder"));
+            tabRM.setText(rB.getString("requestManager"));
+            tabRS.setText(rB.getString("requestSubmit"));
+            tabSettings.setText(rB.getString("setting"));
+        });
+
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
             switch (newValue.getId().toString()) {
@@ -135,7 +161,7 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
@@ -147,7 +173,7 @@ public class MainWindowController {
                 break;
 
             case EMPLOYEE:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -155,7 +181,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -171,14 +197,14 @@ public class MainWindowController {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
-        }
-        ResourceBundle languageBundle = SystemSettings.getInstance().getResourceBundle();
-        switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
+        }/*
+        ResourceBundle languageBundle = systemSettings.getResourceBundle();
+        switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
         tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
-        tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
+        tabRS.setText(languageBundle.getString("requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));*/
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
