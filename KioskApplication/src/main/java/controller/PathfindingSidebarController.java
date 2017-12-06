@@ -43,6 +43,7 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
+        System.out.println("initializing");
         ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);

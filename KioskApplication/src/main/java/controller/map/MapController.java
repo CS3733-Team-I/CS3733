@@ -173,12 +173,12 @@ public class MapController {
     public void reloadDisplay() {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
-      //  floorSelector.setVisible(true);
         nodesEdgesView.reloadDisplay();
-        floorSelector.getItems();
         recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
-        // error with not refreshing languages
-       // loadFloor(NodeFloor.);
+        //hackey way to reset the comobobox
+        int floor = floorSelector.getValue().ordinal();
+        floorSelector.getItems().removeAll();
+        floorSelector.setValue(NodeFloor.values()[floor]);
     }
 
     /**
