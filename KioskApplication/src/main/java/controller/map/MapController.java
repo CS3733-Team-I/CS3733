@@ -422,6 +422,7 @@ public class MapController {
         pathWaypointContainer.setPickOnBounds(false);
 
         keyDialog.setDialogContainer(keyDialogContainer);
+        keyDialogContainer.setDisable(true);
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
@@ -701,6 +702,7 @@ public class MapController {
 
     @FXML
     private void keyOpened(){
+        keyDialogContainer.setDisable(false);
         keyDialog.show();
         keyButton.setDisable(true);
     }
@@ -708,6 +710,7 @@ public class MapController {
     @FXML
     private void keyClosed(){
         keyDialog.close();
+        keyDialogContainer.setDisable(true);
         keyButton.setDisable(false);
     }
 }
