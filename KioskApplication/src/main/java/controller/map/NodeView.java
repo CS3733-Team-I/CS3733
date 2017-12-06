@@ -2,14 +2,17 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import utility.ResourceManager;
 import utility.node.NodeSelectionType;
 import utility.node.NodeType;
 
@@ -63,10 +66,10 @@ public class NodeView extends StackPane {
             for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(node)) {
                 nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
             }
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(circle, nodeInfo);
         } else {
             Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(circle, nodeInfo);
         }
     }
 
@@ -84,7 +87,11 @@ public class NodeView extends StackPane {
                 circle.setFill(Color.RED);
                 break;
             case NORMAL:
+                if(this.node.getNodeID().equals(SystemSettings.getInstance().getDefaultnode().getNodeID()))
+                    circle.setFill(Color.GREEN);
+                else
                 circle.setFill(Color.GRAY);
+                //circle.setFill(Color.GREEN);
                 break;
             case SELECTEDANDCHANGED:
                 circle.setFill(Color.PURPLE);
@@ -171,5 +178,16 @@ public class NodeView extends StackPane {
         if (event.getDragboard().hasString()) {
             event.acceptTransferModes(TransferMode.LINK);
         }
+    }
+
+    /**
+     * sets an image for default location
+     * @param node
+     */
+    public void setImage(Node node){
+       Image img = ResourceManager.getInstance().getImage("/images/crosshairs-gps2x.png");
+        imageView.setImage(img);
+        imageView.setX(node.getXcoord());
+        imageView.setY(node.getYcoord());
     }
 }

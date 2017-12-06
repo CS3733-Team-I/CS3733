@@ -4,6 +4,7 @@ import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -38,7 +39,7 @@ public class NodesEdgesView extends AnchorPane {
         AnchorPane.setRightAnchor(nodesView, 0.0);
 
         edgesView = new AnchorPane();
-        nodesView.setPickOnBounds(false);
+        edgesView.setPickOnBounds(false);
         edgeViewsMap = new HashMap<>();
 
         AnchorPane.setTopAnchor(edgesView, 0.0);
@@ -59,6 +60,8 @@ public class NodesEdgesView extends AnchorPane {
                     for (Node node : listener.getAddedSubList()) {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
                         view.setPickOnBounds(false);
+                        if(SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID()))
+                            view.setImage(node);
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);
                     }
@@ -106,6 +109,7 @@ public class NodesEdgesView extends AnchorPane {
                 }
             }
         });
+
     }
     /**
      * Set a NodeView's selection type given a node
@@ -123,9 +127,6 @@ public class NodesEdgesView extends AnchorPane {
     public void reloadDisplay() {
         setShowNodes(parent.areNodesVisible());
         setShowEdges(parent.areEdgesVisible());
-        if(parent.getPath() != null) {
-            drawPath();
-        }
     }
 
     /**
@@ -148,18 +149,26 @@ public class NodesEdgesView extends AnchorPane {
         edgesList.addAll(edges);
     }
 
-    public void drawPath() {
-        if (parent.getPath() != null) {
-            // TODO re-enable auto floor selection for path
-            // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
-            parent.clearMap();
 
-            for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
-                drawEdgesOnMap(segment);
-            }
+//    public void drawPath() {
+//        if (parent.getPath() != null) {
+//            // TODO re-enable auto floor selection for path
+//            // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
+//            parent.clearMap();
+//
+//            for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
+//                PathList.addAll(segment);
+//            }
+//
+//            drawNodesOnMap(parent.getPath().getWaypoints());
+//        }
+//    }
 
-            drawNodesOnMap(parent.getPath().getWaypoints());
-        }
+    /**
+     * Clear drawn path
+     */
+    public void clearPath() {
+        //TODO FINISH THIS
     }
 
     public void setShowNodes(boolean show) {

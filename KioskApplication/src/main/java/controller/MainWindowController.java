@@ -212,21 +212,33 @@ public class MainWindowController {
             switch (screen) {
                 case MAP_BUILDER:
                     controller = new MapBuilderController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabMB);
                     break;
 
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
+                    //connect pathWaypointView with sidebar if applicable
+                    mapController.getPathWaypointView().setSidebarController((PathfindingSidebarController) controller);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabMap);
                     break;
                 case REQUEST_MANAGER:
                     controller = new RequestManagerController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabRM);
                     break;
 
                 case REQUEST_SUBMITTER:
                     controller = new RequestSubmitterController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabRS);
                     break;
 
                 case ADMIN_SETTINGS:
                     controller = new SettingsController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabSettings);
                     break;
 
                 default:

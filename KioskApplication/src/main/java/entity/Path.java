@@ -13,6 +13,7 @@ public class Path {
     private LinkedList<Node> waypoints;
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
+    private int currentCost = 0;
 
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
@@ -128,7 +129,7 @@ public class Path {
         return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " "+ SystemSettings.getInstance().getResourceBundle().getString("feet"); //" feet."
     }
 
-    private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
+     public LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
 
         MapEntity map = MapEntity.getInstance();
 
@@ -139,11 +140,83 @@ public class Path {
             try {
                 nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
             }
-            catch (NotFoundException exception){
-                exception.printStackTrace();
-                //TODO: add actual handling
-            }
+            catch (NotFoundException exception){}
         }
         return nodes;
+    }
+
+    /**
+     * get the nodes On target floor
+     */
+    public LinkedList<Node> getListOfNodesSegmentOnFloor(LinkedList<Edge> segment, Node segmentStart, NodeFloor floor) {
+        currentCost = 0;
+
+        MapEntity map = MapEntity.getInstance();
+
+        LinkedList<Node> nodes = new LinkedList<>();
+
+        try {
+            if(segmentStart.getFloor() != floor) {
+                for(Edge e : segment) {
+                    if(e.getEdgeType() == "elevator shaft" || e.getEdgeType() == "staircase") {
+                        if(map.getNode(e.getNode1ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode1ID());
+                        }
+                        if(map.getNode(e.getNode2ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode2ID());
+                        }
+                    }
+                }
+            }
+        } catch (NotFoundException exception){}
+
+        nodes.add(segmentStart);
+
+        for (Edge e : segment) {
+            try {
+                if(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())).getFloor() == floor) {
+                    currentCost += e.getCost();
+                    nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+                }
+            }
+            catch (NotFoundException exception){}
+        }
+        return nodes;
+    }
+
+    /**
+     * Returns an ordered list of all nodes along the path.
+     * @return a list of nodes containing in a path segment
+     */
+    public LinkedList<Node> getNodesInSegment(Node Start) {
+        LinkedList<Node> retVal= new LinkedList<>();
+        for(LinkedList<Edge> edges : this.edges) {
+            for(Edge edge : edges) {
+                if(edge.hasNode(Start)){
+                    retVal.addAll(getListOfNodes(edges, Start));
+                    break;
+                }
+            }
+        }
+        return retVal;
+    }
+    /**
+     * Returns an ordered list of all nodes along the path.
+     * @return
+     */
+    public LinkedList<Node> getListOfAllNodes(){
+        LinkedList<Node> allNodes = new LinkedList<>();
+        Node startNode = this.waypoints.getFirst();
+        allNodes.add(startNode);
+        for(LinkedList<Edge> segment: this.edges){
+            LinkedList<Node> segmentNodes = this.getListOfNodes(segment, startNode);
+            segmentNodes.removeFirst();
+            allNodes.addAll(segmentNodes);
+        }
+        return(allNodes);
+    }
+
+    public int getPathCost(){
+        return currentCost;
     }
 }

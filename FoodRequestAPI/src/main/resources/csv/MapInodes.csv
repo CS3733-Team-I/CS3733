@@ -1,0 +1,36 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+IHALL00103,2255,1290,3,45 Francis,HALL,Hallway Node 1,H1,Team I
+IHALL00203,2323,1290,3,45 Francis,HALL,Hallway Node 2,H2,Team I
+IHALL00303,2448,1290,3,45 Francis,HALL,Hallway Node 3,H3,Team I
+IHALL00403,2570,1290,3,45 Francis,HALL,Hallway Node 4,H4,Team I
+IHALL00503,2730,1290,3,45 Francis,HALL,Hallway Node 5,H5,Team I
+IHALL00603,2772,1290,3,45 Francis,HALL,Hallway Node 6,H6,Team I
+IHALL00703,2772,1227,3,45 Francis,HALL,Hallway Node 7,H7,Team I
+IHALL00803,2772,1147,3,45 Francis,HALL,Hallway Node 8,H8,Team I
+IHALL00903,2649,1075,3,45 Francis,HALL,Hallway Node 9,H9,Team I
+IHALL01003,2772,1075,3,45 Francis,HALL,Hallway Node 10,H10,Team I
+IHALL01103,2922,1075,3,45 Francis,HALL,Hallway Node 11,H11,Team I
+IHALL01203,2220,1034,3,45 Francis,HALL,Hallway Node 12,H12,Team I
+IHALL01303,2323,1034,3,45 Francis,HALL,Hallway Node 13,H13,Team I
+IHALL01403,2323,993,3,45 Francis,HALL,Hallway Node 14,H14,Team I
+IHALL01503,2220,944,3,45 Francis,HALL,Hallway Node 15,H15,Team I
+IHALL01603,2252,851,3,45 Francis,HALL,Hallway Node 16,H16,Team I
+IHALL01703,2323,851,3,45 Francis,HALL,Hallway Node 17,H17,Team I
+IHALL01803,2362,851,3,45 Francis,HALL,Hallway Node 18,H18,Team I
+IHALL01903,2492,851,3,45 Francis,HALL,Hallway Node 19,H19,Team I
+IHALL02003,2597,851,3,45 Francis,HALL,Hallway Node 20,H20,Team I
+IHALL02203,2362,764,3,45 Francis,HALL,Hallway Node 22,H22,Team I
+IREST00103,2255,1255,3,45 Francis,REST,Restroom 1 - Family,R1,Team I
+IREST00203,2570,1257,3,45 Francis,REST,Restroom 2,R2,Team I
+IREST00303,2745,1147,3,45 Francis,REST,Restroom 3,R3,Team I
+IREST00403,2300,1018,3,45 Francis,REST,Restroom 4 - M wheelchair,R4,Team I
+IREST00503,2277,995,3,45 Francis,REST,Restroom 5 - F wheelchair,R5,Team I
+IDEPT00103,2323,1328,3,45 Francis,DEPT,Center for Infertility and Reproductive Surgery,D1,Team I
+IDEPT00203,2448,1328,3,45 Francis,DEPT,Gynecology Oncology MIGS,D2,Team I
+IDEPT00303,2730,1315,3,45 Francis,DEPT,General Surgical Specialties Suite A,D3,Team I
+IDEPT00403,2738,1227,3,45 Francis,DEPT,General Surgical Specialties Suite B,D4,Team I
+IDEPT00503,2868,1075,3,45 Francis,DEPT,Urology,D5,Team I
+IDEPT00603,2333,764,3,45 Francis,DEPT,Maternal Fetal Practice,D6,Team I
+IDEPT00703,2400,764,3,45 Francis,DEPT,Obstetrics,D7,Team I
+IDEPT00803,2492,887,3,45 Francis,DEPT,Fetal Med & Genetics,D8,Team I
+IDEPT00903,2631,851,3,45 Francis,DEPT,Gynecology,D9,Team I
