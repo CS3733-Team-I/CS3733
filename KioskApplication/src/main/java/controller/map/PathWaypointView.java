@@ -80,6 +80,9 @@ public class PathWaypointView extends AnchorPane {
 
         this.getChildren().addAll(wayPointView, pathView);
 
+        wayPointView.setMouseTransparent(true);
+        pathView.setMouseTransparent(false);
+
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
 
@@ -207,12 +210,11 @@ public class PathWaypointView extends AnchorPane {
                 jfxPath.getElements().add(lineTo);
 
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
+                    switchFloor = new JFXButton();
                     //going up
                     final NodeFloor targetFloor = waypointList.get(i+1).getFloor();
                     final NodeFloor sourceFloor = waypointList.get(i).getFloor();
                     if(targetFloor.toInt() > sourceFloor.toInt()) {
-                        switchFloor = new JFXButton();
-
                         switchFloor.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
@@ -228,8 +230,6 @@ public class PathWaypointView extends AnchorPane {
                     }
                     //going down
                     else if(targetFloor.toInt() < sourceFloor.toInt()) {
-                        switchFloor = new JFXButton();
-
                         switchFloor.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {

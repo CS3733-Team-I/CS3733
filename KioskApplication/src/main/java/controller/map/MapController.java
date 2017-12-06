@@ -357,7 +357,7 @@ public class MapController {
         AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
-        nodesEdgesContainer.setMouseTransparent(true);
+        nodesEdgesContainer.setPickOnBounds(false);
 
         AnchorPane.setTopAnchor(pathWaypointView, 0.0);
         AnchorPane.setLeftAnchor(pathWaypointView, 0.0);
@@ -365,7 +365,7 @@ public class MapController {
         AnchorPane.setRightAnchor(pathWaypointView, 0.0);
 
         pathWaypointContainer.getChildren().add(pathWaypointView);
-        pathWaypointContainer.setMouseTransparent(true);
+        pathWaypointContainer.setPickOnBounds(false);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
