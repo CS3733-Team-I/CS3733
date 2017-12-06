@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
+import controller.map.PathWaypointView;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
@@ -154,6 +155,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
+
         if (isAddingWaypoiny) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);
