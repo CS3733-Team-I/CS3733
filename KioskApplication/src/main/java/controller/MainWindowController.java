@@ -213,7 +213,6 @@ public class MainWindowController {
             currentScreen.onScreenChanged();
         }
         ResourceBundle languageBundle = SystemSettings.getInstance().getResourceBundle();
-        switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
         tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
