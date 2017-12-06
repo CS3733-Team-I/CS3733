@@ -58,7 +58,7 @@ public class SettingsController extends ScreenController {
         englishButton.setToggleGroup(languageSelectToggleGroup);
         englishButton.setUserData("English");
         franceSelected.setToggleGroup(languageSelectToggleGroup);
-        franceSelected.setUserData("France");
+        franceSelected.setUserData("French");
         //Load saved selection; select appropriate radio button.
         for(Toggle toggle: languageSelectToggleGroup.getToggles()) {
             if(toggle.getUserData().equals(systemSettings.getPrefs().get("Internationalization", "English")))

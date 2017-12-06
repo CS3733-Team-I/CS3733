@@ -114,7 +114,7 @@ public class SystemSettings extends Observable {
                     "Internationalization", Locale.US);
                 this.prefs.put("Internationalization", "English");
                 break;
-            case "France":
+            case "French":
                 this.resourceBundle = ResourceBundle.getBundle(
                         "Internationalization",Locale.FRANCE);
                 this.prefs.put("Internationalization", "France");

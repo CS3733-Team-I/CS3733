@@ -52,6 +52,7 @@ public class MapController {
     @FXML private AnchorPane waypointPane;
     //@FXML private JFXButton recenterButton;
 
+    @FXML private JFXComboBox<String> languageSelector;
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
     @FXML private JFXButton recenterButton;
@@ -344,6 +345,7 @@ public class MapController {
 
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
+        languageSelector.getItems().addAll("English","French");
 
         miniMapController = new MiniMapController(this);
 
@@ -546,5 +548,11 @@ public class MapController {
     @FXML
    private void onAboutAction(){
         parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+    }
+
+    @FXML
+    void onLanguageSelected(){
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        systemSettings.setResourceBundle(languageSelector.getValue());
     }
 }
