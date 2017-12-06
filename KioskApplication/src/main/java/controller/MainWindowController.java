@@ -68,27 +68,27 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-       /* tabMap.setText(languageBundle.getString("my.map"));
+        tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));*/
+        tabSettings.setText(languageBundle.getString("my.setting"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
-            switch (newValue.getText()) { // TODO make this more modular/language independent
-                case "Map":
+            switch (newValue.getId().toString()) {
+                case "tabMap":
                     switchToScreen(ApplicationScreen.PATHFINDING);
                     break;
-                case "Map Builder":
+                case "tabMB":
                     switchToScreen(ApplicationScreen.MAP_BUILDER);
                     break;
-                case "Request Manager":
+                case "tabRM":
                     switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                     break;
-                case "Request Submit":
+                case "tabRS":
                     switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                     break;
-                case "Settings":
+                case "tabSettings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
             }
@@ -175,11 +175,12 @@ public class MainWindowController {
             currentScreen.onScreenChanged();
         }
         languageBundle = SystemSettings.getInstance().getResourceBundle();
-       /* tabMap.setText(languageBundle.getString("my.map"));
+        switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
+        tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));*/
+        tabSettings.setText(languageBundle.getString("my.setting"));
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
@@ -227,6 +228,7 @@ public class MainWindowController {
 
         // Reset controller's view
         controller.resetScreen();
+        mapController.reloadDisplay();
 
         this.currentScreen = screen;
     }
