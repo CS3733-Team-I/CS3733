@@ -42,28 +42,43 @@ public class SQLStrings {
             " assigner INT NOT NULL CONSTRAINT t_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,"+
             " completer INT NOT NULL CONSTRAINT t_employee_fk3 REFERENCES t_employee ON DELETE CASCADE,";
 
+    public static final String CREATE_FOOD_TABLE = "create table t_food("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_food_pk PRIMARY KEY,"+
+            " sourceID VARCHAR(10) NOT NULL CONSTRAINT t_food_fk_sourceID REFERENCES t_nodes ON DELETE CASCADE,"+
+            " destinationID VARCHAR(10) NOT NULL CONSTRAINT t_food_fk_destinationID REFERENCES t_nodes ON DELETE CASCADE,"+
+            " deliveryTime TIMESTAMP NOT NULL,"+
+            " assigner INT NOT NULL CONSTRAINT t_food_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_food_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,";
+
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
-            " note CLOB(280)," +
+            " note LONG VARCHAR," +
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
             " completedTime TIMESTAMP NOT NULL," +
             " status INT NOT NULL)";
 
+    // Interpreter
     public static final String INTERPRETER_INSERT = "insert into t_interpreter values(?, ?, ?, ?, ?,";
-    public static final String INTERPRETER_UPDATE = "update t_interpreter set" +
-            " language=?,";
+    public static final String INTERPRETER_UPDATE = "update t_interpreter set language=?,";
     public static final String INTERPRETER_SELECT = "select * from t_interpreter where requestID=?";
     public static final String INTERPRETER_DELETE = "DELETE FROM t_interpreter WHERE requestID = ?";
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreter";
 
+    // Food
+    public static final String FOOD_INSERT = "insert into t_food values(?, ?, ?, ?, ?, ?,";
+    public static final String FOOD_UPDATE = "update t_food set sourceID=? destinationID=? deliveryTime=? assigner=? completer=? ";
+    public static final String FOOD_SELECT = "select * from t_food where requestID=?";
+    public static final String FOOD_DELETE = "DELETE FROM t_food WHERE requestID = ?";
+    public static final String FOOD_SELECT_ALL = "select * from t_food";
 
+    // Security
     public static final String SECURITY_INSERT = "insert into t_security values(?, ?, ?, ?, ?,";
-    public static final String SECURITY_UPDATE = "update t_security set" +
-            " priority=?,";
+    public static final String SECURITY_UPDATE = "update t_security set priority=?,";
     public static final String SECURITY_SELECT = "select * from t_security where requestID=?";
     public static final String SECURITY_DELETE = "DELETE FROM t_security WHERE requestID = ?";
     public static final String SECURITY_SELECT_ALL = "select * from t_security";
 
+    // Dropping
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
@@ -84,7 +99,6 @@ public class SQLStrings {
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";
     public static final String NODE_NODETYPE_SELECT = "Select nodeID from T_nodes where xcoord=? and ycoord=? and floor=? and nodeType=?";
-
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
             " loginID INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_employee_pk PRIMARY KEY,"+

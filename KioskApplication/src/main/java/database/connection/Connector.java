@@ -1,7 +1,5 @@
 package database.connection;
 
-
-
 import database.objects.*;
 import database.template.SQLStrings;
 import utility.node.NodeBuilding;
@@ -363,18 +361,16 @@ public class Connector {
     public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT+REQUEST_INSERT);
         pstmt.setString(1, fR.getRequestID());
-        pstmt.setString(2,fR.getDestinationNodeID());
-//        pstmt.setInt(2, sR.getPriority());
-        pstmt.setString(3, fR.getNodeID());
-        pstmt.setInt(4, fR.getAssignerID());
-        pstmt.setInt(5, fR.getCompleterID());
-        pstmt.setString(6, fR.getNote());
-        pstmt.setTimestamp(7, fR.getSubmittedTime());
-        pstmt.setTimestamp(8, fR.getStartedTime());
-        pstmt.setTimestamp(9, fR.getCompletedTime());
-        pstmt.setInt(10, fR.getStatus().ordinal());
-        pstmt.setString(11,fR.getOrder());
-        pstmt.setString(12,fR.getDeliveryDate());
+        pstmt.setString(2, fR.getNodeID());
+        pstmt.setString(3,fR.getDestinationNodeID());
+        pstmt.setTimestamp(4, fR.getDeliveryDate());
+        pstmt.setInt(5, fR.getAssignerID());
+        pstmt.setInt(6, fR.getCompleterID());
+        pstmt.setString(7, fR.getNote());
+        pstmt.setTimestamp(8, fR.getSubmittedTime());
+        pstmt.setTimestamp(9, fR.getStartedTime());
+        pstmt.setTimestamp(10, fR.getCompletedTime());
+        pstmt.setInt(11, fR.getStatus().ordinal());
         return pstmt.executeUpdate();
     }
 
@@ -382,17 +378,16 @@ public class Connector {
         String sql = FOOD_UPDATE+REQUEST_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
 //        pstmt.setInt(1, sR.getPriority());
-        pstmt.setString(1,fR.getDestinationNodeID());
-        pstmt.setString(2, fR.getNodeID());
-        pstmt.setInt(3, fR.getAssignerID());
-        pstmt.setInt(4, fR.getCompleterID());
-        pstmt.setString(5, fR.getNote());
-        pstmt.setTimestamp(6, fR.getSubmittedTime());
-        pstmt.setTimestamp(7, fR.getStartedTime());
-        pstmt.setTimestamp(8, fR.getCompletedTime());
-        pstmt.setInt(9, fR.getStatus().ordinal());
-        pstmt.setString(10, fR.getOrder());
-        pstmt.setString(11, fR.getDeliveryDate());
+        pstmt.setString(1, fR.getNodeID());
+        pstmt.setString(2,fR.getDestinationNodeID());
+        pstmt.setTimestamp(4, fR.getDeliveryDate());
+        pstmt.setInt(5, fR.getAssignerID());
+        pstmt.setInt(6, fR.getCompleterID());
+        pstmt.setString(7, fR.getNote());
+        pstmt.setTimestamp(8, fR.getSubmittedTime());
+        pstmt.setTimestamp(9, fR.getStartedTime());
+        pstmt.setTimestamp(10, fR.getCompletedTime());
+        pstmt.setInt(11, fR.getStatus().ordinal());
         //search parameter below
         pstmt.setString(12, fR.getRequestID());
         return pstmt.executeUpdate();
@@ -419,8 +414,7 @@ public class Connector {
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     rs.getString("destinationNodeID"),
-                    rs.getString("order"),
-                    rs.getString("deliveryTime")
+                    rs.getTimestamp("deliveryTime")
             );
         }
         return  foodRequest;
@@ -442,21 +436,22 @@ public class Connector {
             FoodRequest foodRequest = null;
             //for completed FoodRequests
             foodRequest = new FoodRequest(
-                rs.getString("requestID"),
-                rs.getString("nodeID"),
-                rs.getInt("assigner"),
-                rs.getInt("completer"),
-                rs.getString("note"),
-                rs.getTimestamp("submittedTime"),
-                rs.getTimestamp("startedTime"),
-                rs.getTimestamp("completedTime"),
-                RequestProgressStatus.values()[rs.getInt("status")],
-                rs.getString("destinationNodeID"),
-                rs.getString("order"),
-                rs.getString("deliveryTime"));
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getString("destinationNodeID"),
+                    rs.getTimestamp("deliveryTime")
+            );
 
             foodRequests.add(foodRequest);
-            }
-            return foodRequests;
         }
+
+        return foodRequests;
+    }
 }
