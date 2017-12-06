@@ -20,6 +20,8 @@ public class EdgeView extends AnchorPane {
     Line line;
 
     public EdgeView(Edge edge, Point2D start, Point2D end) {
+        this.setPickOnBounds(false);
+
         this.edge = edge;
         this.start = start;
         this.end = end;

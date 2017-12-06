@@ -779,21 +779,7 @@ public class MapBuilderController extends ScreenController {
         nodeDialogString = "";
         if (nodeToAdd != null) {
             try {
-                if (map.getNode(nodeToAdd.getNodeID()) == null) {
-                    try {
-                        map.addNode(nodeToAdd);
-                        getMapController().addNode(nodeToAdd, NodeSelectionType.NORMAL);
-                        nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + " saved.\n\n";
-                    } catch (DatabaseException ex) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error adding node to DB");
-                        alert.setHeaderText("Error occurred while adding node to database.");
-                        alert.setContentText(ex.toString());
-                        alert.showAndWait();
-
-                        nodeDialogString += "ERROR: node " + nodeToAdd.getNodeID() + " was not added to database.\n\n";
-                    }
-                } else { //duplicate node ID found
+                if (map.getNode(nodeToAdd.getNodeID()) != null) {
                     nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + "Duplicate ID found\n\n";
                     System.out.println(nodeDialogString);
                     loadDialog(event);
@@ -801,7 +787,19 @@ public class MapBuilderController extends ScreenController {
                     return;
                 }
             } catch (NotFoundException e) {
-                e.printStackTrace();
+                try {
+                    map.addNode(nodeToAdd);
+                    getMapController().addNode(nodeToAdd, NodeSelectionType.NORMAL);
+                    nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + " saved.\n\n";
+                } catch (DatabaseException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error adding node to DB");
+                    alert.setHeaderText("Error occurred while adding node to database.");
+                    alert.setContentText(ex.toString());
+                    alert.showAndWait();
+
+                    nodeDialogString += "ERROR: node " + nodeToAdd.getNodeID() + " was not added to database.\n\n";
+                }
             }
         }
 
