@@ -10,12 +10,8 @@ public enum NodeFloor {
     SECOND,
     THIRD;
 
-    private ResourceBundle rB;
-
     @Override
     public String toString() {
-        InternationalizationEntity intEntity = InternationalizationEntity.getInstance();
-        rB = intEntity.getCurrentLanguage();
         switch(this){
             case LOWERLEVEL_2:
                 return SystemSettings.getInstance().getResourceBundle().getString("my.lowerleveltwo");

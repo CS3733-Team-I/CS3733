@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.InternationalizationEntity;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -36,12 +35,9 @@ public class PathfindingSidebarController extends ScreenController {
 
     private LinkedList<Node> currentNodes;
 
-    private InternationalizationEntity intEntity;
-
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
-        intEntity=InternationalizationEntity.getInstance();
     }
 
     @FXML
@@ -59,36 +55,17 @@ public class PathfindingSidebarController extends ScreenController {
         clearButton.setText(rB.getString("my.clear"));
         navigateButton.setText(rB.getString("my.navigate"));
         waypointLabel.setText(rB.getString("my.waypoints"));
-        intEntity.addObserver(new Observer() {
-            @Override
-            public void update(Observable o, Object arg) {
-                System.out.println("changing language");
-                ResourceBundle rB = intEntity.getCurrentLanguage();
-                btnSubmit.setText(rB.getString("my.search"));
-                searchBar.setPromptText(rB.getString("my.search"));
-                clearButton.setText(rB.getString("my.clear"));
-                navigateButton.setText(rB.getString("my.navigate"));
-                waypointLabel.setText(rB.getString("my.waypoints"));
-            }
-        });
     }
 
     @FXML
     void onResetPressed() {
-        if(intEntity.getLocale()==Locale.FRANCE) {
-            intEntity.setLocale(Locale.US);
-        }
-        else {
-            intEntity.setLocale(Locale.FRANCE);
-        }
-
-        /*currentNodes.clear();
+        currentNodes.clear();
         waypointList.getItems().clear();
         exceptionText.setText("");
 
         getMapController().setPath(null);
         getMapController().clearMap();
-        getMapController().reloadDisplay();*/
+        getMapController().reloadDisplay();
     }
 
     @FXML

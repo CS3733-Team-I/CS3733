@@ -5,10 +5,8 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import controller.MainWindowController;
-import controller.SettingsController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.InternationalizationEntity;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
@@ -31,7 +29,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
-import utility.request.Language;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -50,7 +47,7 @@ public class MapController {
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane waypointPane;
-    @FXML private JFXButton recenterButton;
+    //@FXML private JFXButton recenterButton;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
@@ -74,7 +71,6 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
-        intEntity=InternationalizationEntity.getInstance();
     }
 
     /**
