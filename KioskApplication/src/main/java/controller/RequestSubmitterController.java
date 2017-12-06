@@ -7,6 +7,8 @@ import database.objects.Node;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,9 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import org.springframework.cglib.core.Local;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -39,6 +39,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXComboBox<Node> restaurantComboBox;
     @FXML private JFXTimePicker deliveryTimePicker;
     @FXML private JFXTreeTableView menuTable;
+    @FXML private TreeTableColumn<String,String> menuColumn;
     @FXML private JFXTextField deliveryLocation;
 
     /*security related*/
@@ -49,21 +50,6 @@ public class RequestSubmitterController extends ScreenController {
 
     /*janitor related*/
     @FXML private Tab janitorTab;
-
-//    @FXML private JFXTabPane requestTypeTabs;
-//    @FXML private Tab interpreterTab;
-//    @FXML private JFXTextField locationTxt;
-//    @FXML private JFXComboBox reqMenu;
-//    @FXML private JFXTextArea notesArea;
-//    @FXML private HBox row1, row2;
-//    /*food related*/
-//    @FXML private Tab foodTab;
-//    @FXML private JFXComboBox foodMenu;
-//    /*security related*/
-//    @FXML private Tab securityTab;
-//    /*janitor related*/
-//    @FXML private Tab janitorTab;
-//    @FXML private JFXButton btnSubmit;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -105,17 +91,6 @@ public class RequestSubmitterController extends ScreenController {
         janitorIconView.setFitHeight(24);
         janitorIconView.setFitWidth(24);
         janitorTab.setGraphic(janitorIconView);
-
-        ObservableList<String> languages = FXCollections.observableArrayList();
-        languages.addAll("Spanish", "Chinese", "French", "Tagalog",
-                "Vietnamese", "Korean","German","Arabic","Russian","Italian","Portuguese");
-        langMenu.setPromptText("Select Language");
-        langMenu.setItems(languages);
-
-        ObservableList<String> priorities = FXCollections.observableArrayList();
-        priorities.addAll("1","2","3","4","5");
-        priorityMenu.setPromptText("Select Priority");
-        priorityMenu.setItems(priorities);
 
         ObservableList<Node> restaurants = FXCollections.observableArrayList();
         for (Node node : MapEntity.getInstance().getAllNodes()) {
@@ -160,44 +135,6 @@ public class RequestSubmitterController extends ScreenController {
                 currentRequestType = RequestType.JANITOR;
             }
         });
-
-        JFXCheckBox fries = new JFXCheckBox("Fries");
-        JFXCheckBox salad = new JFXCheckBox("Salad");
-        JFXCheckBox chips = new JFXCheckBox("Chips");
-
-        TreeItem<VBox> side1 = new TreeItem<>(new VBox(fries));
-        TreeItem<VBox> side2 = new TreeItem<>(new VBox(salad));
-        TreeItem<VBox> side3 = new TreeItem<>(new VBox(chips));
-
-        TreeItem<VBox> root1 = new TreeItem<>(new VBox(new Label("Sides")));
-        root1.setExpanded(true);
-        root1.getChildren().setAll(side1,side2,side3);
-
-        JFXCheckBox hamburger = new JFXCheckBox("Hamburger");
-        JFXCheckBox blt = new JFXCheckBox("BLT");
-        JFXCheckBox chxParm = new JFXCheckBox("Chicken Parm");
-
-        TreeItem<VBox> main1 = new TreeItem<>(new VBox(hamburger));
-        TreeItem<VBox> main2 = new TreeItem<>(new VBox(blt));
-        TreeItem<VBox> main3 = new TreeItem<>(new VBox(chxParm));
-
-        TreeItem<VBox> root2 = new TreeItem<>(new VBox(new Label("Entree")));
-        root2.setExpanded(true);
-        root2.getChildren().setAll(main1,main2,main3);
-
-        JFXCheckBox soda = new JFXCheckBox("Soda");
-        JFXCheckBox orange = new JFXCheckBox("Orange Juice");
-        JFXCheckBox milk = new JFXCheckBox("Milk");
-
-        TreeItem<VBox> drink1 = new TreeItem<>(new VBox(soda));
-        TreeItem<VBox> drink2 = new TreeItem<>(new VBox(orange));
-        TreeItem<VBox> drink3 = new TreeItem<>(new VBox(milk));
-
-        TreeItem<VBox> root3 = new TreeItem<>(new VBox(new Label("Entree")));
-        root3.setExpanded(true);
-        root3.getChildren().setAll(drink1,drink2,drink3);
-
-
     }
 
     @FXML
@@ -208,6 +145,9 @@ public class RequestSubmitterController extends ScreenController {
                 break;
             case SECURITY:
                 addSecRequest();
+                break;
+            case FOOD:
+                addFoodRequest();
                 break;
         }
     }
@@ -220,6 +160,7 @@ public class RequestSubmitterController extends ScreenController {
 
         restaurantComboBox.setValue(null);
         deliveryTimePicker.setValue(LocalTime.now());
+        deliveryLocation.setText("");
 
         secLocationField.setText("");
         secNoteField.setText("");
@@ -237,6 +178,14 @@ public class RequestSubmitterController extends ScreenController {
         System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
         //node ID, employee, notes, priority
         requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getLoginID(), secNoteField.getText(), priority);
+    }
+
+    public void addFoodRequest(){
+        String notes = "";
+        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getLoginID(),notes,
+                restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
+        System.out.println(requestEntity.getAllFoodRequests());
+        clearButton();
     }
 
     @Override
@@ -260,7 +209,7 @@ public class RequestSubmitterController extends ScreenController {
                 secLocationField.setText(n.getNodeID());
                 break;
             case FOOD:
-                System.out.println("map clicked in Food tab");
+                deliveryLocation.setText(n.getNodeID());
                 break;
             case JANITOR:
                 System.out.println("map clicked in Janitor tab");

@@ -5,14 +5,14 @@ import utility.request.RequestProgressStatus;
 import java.sql.Timestamp;
 
 public class FoodRequest extends Request{
-    private String destinationNodeID;
+    private String restaurantLocNodeID;
     private Timestamp deliveryDate;
 
     public FoodRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                        Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                       RequestProgressStatus status, String destinationNodeID, Timestamp deliveryDate){
+                       RequestProgressStatus status, String restaurantLocNodeID, Timestamp deliveryDate){
         super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
-        this.destinationNodeID = destinationNodeID;
+        this.restaurantLocNodeID = restaurantLocNodeID;
         this.deliveryDate = deliveryDate;
     }
 
@@ -29,7 +29,7 @@ public class FoodRequest extends Request{
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&
                     this.getStatus().equals(other.getStatus())&&
-                    this.destinationNodeID.equals(other.getDestinationNodeID()) &&
+                    this.restaurantLocNodeID.equals(other.getRestaurantLocNodeID()) &&
                     this.deliveryDate.equals(other.getDeliveryDate());
         }
         else{
@@ -37,12 +37,12 @@ public class FoodRequest extends Request{
         }
     }
 
-    public String getDestinationNodeID() {
-        return destinationNodeID;
+    public String getRestaurantLocNodeID() {
+        return restaurantLocNodeID;
     }
 
-    public void setDestinationNodeID(String destinationNodeID) {
-        this.destinationNodeID = destinationNodeID;
+    public void setRestaurantLocNodeID(String restaurantLocNodeID) {
+        this.restaurantLocNodeID = restaurantLocNodeID;
     }
 
     public Timestamp getDeliveryDate() {

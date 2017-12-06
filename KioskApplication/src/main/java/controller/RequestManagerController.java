@@ -235,6 +235,7 @@ public class RequestManagerController extends ScreenController {
                 allRequests.add(iR);
             }
         }
+
         return allRequests;
     }
 

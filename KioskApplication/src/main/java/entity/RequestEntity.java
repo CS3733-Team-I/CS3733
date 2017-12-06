@@ -384,16 +384,16 @@ public class RequestEntity {
         oldReq.setCompletedTime(completedTime);
         //not sure if editing the status is needed
         oldReq.setStatus(status);
-        switch (checkRequestType(requestID)){
-            case INTERPRETER:
-                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
-                break;
-            case SECURITY:
-                dbController.updateSecurityRequest((SecurityRequest) oldReq);
-                break;
-            case FOOD:
-                dbController.updateFoodRequest((FoodRequest) oldReq);
-        }
+//        switch (checkRequestType(requestID)){
+//            case INTERPRETER:
+//                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
+//                break;
+//            case SECURITY:
+//                dbController.updateSecurityRequest((SecurityRequest) oldReq);
+//                break;
+//            case FOOD:
+//                dbController.updateFoodRequest((FoodRequest) oldReq);
+//        }
 
     }
 
@@ -542,12 +542,11 @@ public class RequestEntity {
      * @param assignerID
      * @param note
      * @param destinationNodeID
-     * @param order
      * @param deliveryDate
      * @return Adds food request to the database and the hashmaps
      */
     public String submitFoodRequest(String nodeID, int assignerID, String note,
-                                    String destinationNodeID, String order, LocalTime deliveryDate){
+                                    String destinationNodeID, LocalTime deliveryDate){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
@@ -600,15 +599,14 @@ public class RequestEntity {
      * @param completedTime
      * @param status
      * @param destinationNodeID
-     * @param order
      * @param deliveryDate
      */
     public void updateFoodRequest(String requestID, String nodeID, int assignerID, String note,
                                   Timestamp submittedTime, Timestamp completedTime,
                                   RequestProgressStatus status, String destinationNodeID,
-                                  String order, Timestamp deliveryDate){
+                                  Timestamp deliveryDate){
         FoodRequest oldReq = foodRequests.get(requestID);
-        oldReq.setDestinationNodeID(destinationNodeID);
+        oldReq.setRestaurantLocNodeID(destinationNodeID);
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);

@@ -362,7 +362,7 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT+REQUEST_INSERT);
         pstmt.setString(1, fR.getRequestID());
         pstmt.setString(2, fR.getNodeID());
-        pstmt.setString(3,fR.getDestinationNodeID());
+        pstmt.setString(3,fR.getRestaurantLocNodeID());
         pstmt.setTimestamp(4, fR.getDeliveryDate());
         pstmt.setInt(5, fR.getAssignerID());
         pstmt.setInt(6, fR.getCompleterID());
@@ -379,7 +379,7 @@ public class Connector {
         PreparedStatement pstmt = conn.prepareStatement(sql);
 //        pstmt.setInt(1, sR.getPriority());
         pstmt.setString(1, fR.getNodeID());
-        pstmt.setString(2,fR.getDestinationNodeID());
+        pstmt.setString(2,fR.getRestaurantLocNodeID());
         pstmt.setTimestamp(4, fR.getDeliveryDate());
         pstmt.setInt(5, fR.getAssignerID());
         pstmt.setInt(6, fR.getCompleterID());
@@ -433,11 +433,9 @@ public class Connector {
 
         LinkedList<FoodRequest> foodRequests = new LinkedList<>();
         while(rs.next()){
-            FoodRequest foodRequest = null;
-            //for completed FoodRequests
-            foodRequest = new FoodRequest(
+            FoodRequest foodRequest = new FoodRequest(
                     rs.getString("requestID"),
-                    rs.getString("nodeID"),
+                    rs.getString("sourceID"),
                     rs.getInt("assigner"),
                     rs.getInt("completer"),
                     rs.getString("note"),
@@ -445,7 +443,7 @@ public class Connector {
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getString("destinationNodeID"),
+                    rs.getString("destinationID"),
                     rs.getTimestamp("deliveryTime")
             );
 
