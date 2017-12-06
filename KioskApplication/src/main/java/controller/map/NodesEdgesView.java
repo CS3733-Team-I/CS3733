@@ -27,6 +27,8 @@ public class NodesEdgesView extends AnchorPane {
 
     MapController parent;
 
+    static int reloads = 0;
+
     public NodesEdgesView(MapController parent) {
         this.setPickOnBounds(false);
 
@@ -60,6 +62,7 @@ public class NodesEdgesView extends AnchorPane {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
+
                         view.setPickOnBounds(false);
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);
@@ -83,16 +86,22 @@ public class NodesEdgesView extends AnchorPane {
                         try {
                             Node node1 = map.getNode(edge.getNode1ID());
                             Node node2 = map.getNode(edge.getNode2ID());
-                            EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
 
-                            if (map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                                view.setOpacity(0.95);
-                            else
-                                view.setOpacity(0.2);
+                            // Only render edges that are contained on one floor
+                            if (node1.getFloor() == node2.getFloor()) {
 
-                            this.edgeViewsMap.put(edge, view);
-                            this.edgesView.getChildren().add(view);
+                                EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                                        new Point2D(node2.getXcoord(), node2.getYcoord()));
+
+                                if (node1.getFloor() == parent.getCurrentFloor() &&
+                                        node2.getFloor() == parent.getCurrentFloor())
+                                    view.setOpacity(0.95);
+                                else
+                                    view.setOpacity(0.2);
+
+                                this.edgeViewsMap.put(edge, view);
+                                this.edgesView.getChildren().add(view);
+                            }
                         }
                         catch(NotFoundException exception){
                             exception.printStackTrace();
@@ -100,6 +109,7 @@ public class NodesEdgesView extends AnchorPane {
                         }
                     }
                 } else if (listener.wasRemoved()) {
+                    long startTime = System.nanoTime();
                     for (Edge edge: listener.getRemoved()) {
                         EdgeView view = this.edgeViewsMap.get(edge);
                         this.edgeViewsMap.remove(edge);
@@ -124,8 +134,10 @@ public class NodesEdgesView extends AnchorPane {
      * Reload the nodes and edges views based on if nodes and edges are set to be shown
      */
     public void reloadDisplay() {
-        setShowNodes(parent.areNodesVisible());
-        setShowEdges(parent.areEdgesVisible());
+        clear();
+        drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
+        drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
+
         if(parent.getPath() != null) {
             drawPath();
         }
@@ -178,18 +190,14 @@ public class NodesEdgesView extends AnchorPane {
     }
 
     public void setShowNodes(boolean show) {
-        nodesList.clear();
-
-        if (show) {
-            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
-        }
+        nodesView.setVisible(show);
     }
 
     public void setShowEdges(boolean show) {
-        edgesList.clear();
+        edgesView.setVisible(show);
+    }
 
-        if (show) {
-            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
-        }
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        parent.nodesConnected(nodeID1, nodeID2);
     }
 }

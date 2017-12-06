@@ -22,10 +22,10 @@ import java.util.HashMap;
 public class MainWindowController {
 
     @FXML private AnchorPane contentWindow;
-          private javafx.scene.Node contentNode;
-          private LoginController loginController;
+    private javafx.scene.Node contentNode;
+    private LoginController loginController;
     @FXML private BorderPane loginPopup;
-          private RequestTrackingDataController reqTrackController;
+    private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
 
@@ -62,6 +62,47 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
+
+        // Default to third floor
+        mapController.setFloorSelector(NodeFloor.THIRD);
+
+        // Pre-load all controllers/views
+        for (ApplicationScreen screen : ApplicationScreen.values()) {
+            ScreenController controller = null;
+
+            switch (screen) {
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
+                    break;
+
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    break;
+
+                case REQUEST_MANAGER:
+                    controller = new RequestManagerController(this, mapController);
+                    break;
+
+                case REQUEST_SUBMITTER:
+                    controller = new RequestSubmitterController(this, mapController);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (screen != null) {
+                // load content view
+                controller.getContentView();
+
+                // cache controller
+                controllers.put(screen, controller);
+            }
+        }
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
@@ -167,35 +208,6 @@ public class MainWindowController {
 
         ScreenController controller = controllers.get(screen);
 
-        // Initialize controller if it doesn't exist
-        if (controller == null) {
-            switch (screen) {
-                case MAP_BUILDER:
-                    controller = new MapBuilderController(this, mapController);
-                    break;
-
-                case PATHFINDING:
-                    controller = new PathfindingSidebarController(this, mapController);
-                    break;
-                case REQUEST_MANAGER:
-                    controller = new RequestManagerController(this, mapController);
-                    break;
-
-                case REQUEST_SUBMITTER:
-                    controller = new RequestSubmitterController(this, mapController);
-                    break;
-
-                case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
-                    break;
-
-                default:
-                    break;
-            }
-
-            controllers.put(screen, controller);
-        }
-
         contentNode = controller.getContentView();
 
         // Display view with new controller
@@ -269,22 +281,31 @@ public class MainWindowController {
     }
 
     public void onMapNodeClicked(Node n) {
-        controllers.get(currentScreen).onMapNodeClicked(n);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapNodeClicked(n);
     }
 
     public void onMapEdgeClicked(Edge e) {
-        controllers.get(currentScreen).onMapEdgeClicked(e);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
     public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(e);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapLocationClicked(e);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
-        controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 
     protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
+    }
+
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
+        mbc.addConnectionByNodes(nodeID1, nodeID2);
     }
 }

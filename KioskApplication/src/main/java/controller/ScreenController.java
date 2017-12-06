@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public abstract class ScreenController {
         javafx.scene.Node view;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = ResourceManager.getInstance().getFXMLLoader(path);
             loader.setController(this);
             view = loader.load();
         } catch (IOException e) {

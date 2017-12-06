@@ -174,7 +174,7 @@ public class MapBuilderController extends ScreenController {
                 if (observableChangedNodes.contains(selectedNode.get())) {
                     System.out.println("update changes in changed node");
                     for (Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setNodeType(CBnodeType.getValue());
                             updateNodeID();
                         }
@@ -204,7 +204,7 @@ public class MapBuilderController extends ScreenController {
                 // Otherwise look for the changed node and update the building
                 if(observableChangedNodes.contains(selectedNode.get())) {
                     for(Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setBuilding(CBnodeBuilding.getValue());
                             updateNodeID();
                         }
@@ -233,7 +233,7 @@ public class MapBuilderController extends ScreenController {
 
                 if (observableChangedNodes.contains(selectedNode.get())) {
                     for(Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
                             updateNodeID();
                         }
@@ -261,7 +261,7 @@ public class MapBuilderController extends ScreenController {
 
                 if(observableChangedNodes.contains(selectedNode.get())) {
                     for(Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setLongName(lName.getText());
                         }
                     }
@@ -283,7 +283,7 @@ public class MapBuilderController extends ScreenController {
 
                 if(observableChangedNodes.contains(selectedNode.get())) {
                     for(Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setShortName(sName.getText());
                         }
                     }
@@ -306,7 +306,7 @@ public class MapBuilderController extends ScreenController {
 
                 if(observableChangedNodes.contains(selectedNode.get())) {
                     for(Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        if(changingNode.getXyz().equals(selectedNode.get().getXyz())) {
                             changingNode.setNodeID(nodeID.getText());
                         }
                     }
@@ -317,7 +317,7 @@ public class MapBuilderController extends ScreenController {
 
                 //reflect node ID changes in mapEntity also in edges
                 for(Node node : MapEntity.getInstance().getAllNodes()) {
-                    if(node.getUniqueID() == selectedNode.get().getUniqueID()) {
+                    if(node.getXyz().equals(selectedNode.get().getXyz())) {
                         for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
                             System.out.println("3. Begin Updating edge ID");
 
@@ -444,7 +444,7 @@ public class MapBuilderController extends ScreenController {
             event.setDropCompleted(success);
 
             //add connection between nodes
-            addConnection(Integer.parseInt(db.getString()));
+            addConnection(db.getString());
 
             event.consume();
         });
@@ -532,7 +532,7 @@ public class MapBuilderController extends ScreenController {
             case SELECTED:
                 // If the selected node has already been changed set the values to the changed values
                 for(Node targetNode : observableChangedNodes) {
-                    if(selectedNode.get().getUniqueID() == targetNode.getUniqueID()) {
+                    if(selectedNode.get().getXyz().equals(targetNode.getXyz())) {
                         xcoord.setText(String.valueOf(targetNode.getXcoord()));
                         ycoord.setText(String.valueOf(targetNode.getYcoord()));
 
@@ -653,14 +653,14 @@ public class MapBuilderController extends ScreenController {
         return preparedName;
     }
 
-/*    public boolean checkExist(){
+    public boolean checkExist(){
         for(int i=0; i<observableChangedNodes.size(); i++) {
             if (selectedNode.get().getNodeType() == observableChangedNodes.get(i).getNodeType() && selectedNode.get().getXyz() == observableChangedNodes.get(i).getXyz()){
                 return false;
             }
         }
         return true;
-    }*/
+    }
 
     private void setEditingEnabled() {
         CBnodeType.setDisable(false);
@@ -965,7 +965,7 @@ public class MapBuilderController extends ScreenController {
             Iterator<database.objects.Node> builderNodeObjectIterator = observableChangedNodes.iterator();
             while (builderNodeObjectIterator.hasNext()) {
                 database.objects.Node deletedNode = builderNodeObjectIterator.next();
-                if (deletedNode.getUniqueID() == observableChangedNodes.get(0).getUniqueID()) {
+                if (deletedNode.getXyz().equals(observableChangedNodes.get(0).getXyz())) {
                     builderNodeObjectIterator.remove();
                     break;
                 }
@@ -975,7 +975,7 @@ public class MapBuilderController extends ScreenController {
             getMapController().removeNode(selectedNode.get());
 
             for(database.objects.Node deletedNode : MapEntity.getInstance().getAllNodes()) {
-                if(deletedNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                if(deletedNode.getXyz().equals(selectedNode.get().getXyz())) {
                     try{
                         MapEntity.getInstance().removeNode(selectedNode.get());
                     }catch (DatabaseException databaseException) {
@@ -1013,7 +1013,7 @@ public class MapBuilderController extends ScreenController {
         updateSelectedNode(selectedNode.get());
     }
 
-    public void addConnectionByNodes(int uniqueNodeID1, int uniqueNodeID2) {
+    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2) {
         MapEntity map = MapEntity.getInstance();
         if(newNode.get() != null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -1024,9 +1024,9 @@ public class MapBuilderController extends ScreenController {
             return;
         }
         for (database.objects.Node connectingNode1 : map.getAllNodes()) {
-            if (uniqueNodeID1 == connectingNode1.getUniqueID()) {
+            if (nodeXyz1.equals(connectingNode1.getXyz())) {
                 for (database.objects.Node connectingNode2 : map.getAllNodes()) {
-                    if (uniqueNodeID2 == connectingNode2.getUniqueID()) {
+                    if (nodeXyz2.equals(connectingNode2.getXyz())) {
                         try{
                             if (MapEntity.getInstance().getEdge(connectingNode1.getNodeID() + "_" + connectingNode2.getNodeID()) != null ||
                                     MapEntity.getInstance().getEdge(connectingNode2.getNodeID() + "_" + connectingNode1.getNodeID()) != null) {
@@ -1065,7 +1065,7 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    private void addConnection(int uniqueNodeID) {
+    private void addConnection(String nodeXyz) {
         MapEntity map = MapEntity.getInstance();
 
         if(newNode.get() != null) {
@@ -1077,7 +1077,7 @@ public class MapBuilderController extends ScreenController {
             return;
         } else if(selectedNode.get() != null) {
             for(database.objects.Node connectingNode : map.getAllNodes()) {
-                if(uniqueNodeID == connectingNode.getUniqueID()) {
+                if(nodeXyz.equals(connectingNode.getXyz())) {
                     try{
                         if (MapEntity.getInstance().getEdge(connectingNode.getNodeID() + "_" + selectedNode.get().getNodeID()) != null ||
                                 MapEntity.getInstance().getEdge(selectedNode.get().getNodeID() + "_" + connectingNode.getNodeID()) != null) {

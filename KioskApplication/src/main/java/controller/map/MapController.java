@@ -466,4 +466,8 @@ public class MapController {
     public void setOptionsBoxVisible(boolean visible) {
         this.optionsBox.setVisible(visible);
     }
+
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        this.parent.nodesConnected(nodeID1, nodeID2);
+    }
 }
