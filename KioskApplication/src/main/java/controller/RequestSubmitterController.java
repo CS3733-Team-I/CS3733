@@ -38,10 +38,10 @@ public class RequestSubmitterController extends ScreenController {
 
     /*food related*/
     @FXML private Tab foodTab;
-    @FXML private JFXComboBox foodMenu;
     @FXML private JFXComboBox<Node> restaurantComboBox;
     @FXML private JFXTimePicker deliveryTimePicker;
     @FXML private JFXTreeTableView menuTable;
+    @FXML private JFXTextField deliveryLocation;
 
     /*security related*/
     @FXML private Tab securityTab;
