@@ -24,7 +24,8 @@ public class SystemSettings {
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
         this.setDefaultnode(this.prefs.get("defaultNode","IDEPT00403"));
         this.setBeamWidth(this.prefs.get("beamWidth", "3"));
-        this.setResourceBundle(this.prefs.get("Internationalization","English"));
+        //this.setResourceBundle(this.prefs.get("Internationalization","English"));
+        this.setResourceBundle("English");
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
@@ -103,7 +104,6 @@ public class SystemSettings {
     public int getBeamWidth() {
         return beamWidth;
     }
-
 
     public void setResourceBundle(String resourceBundle) {
         switch(resourceBundle){
