@@ -10,8 +10,12 @@ public enum NodeFloor {
     SECOND,
     THIRD;
 
+    private ResourceBundle rB;
+
     @Override
     public String toString() {
+        InternationalizationEntity intEntity = InternationalizationEntity.getInstance();
+        rB = intEntity.getCurrentLanguage();
         switch(this){
             case LOWERLEVEL_2:
                 return SystemSettings.getInstance().getResourceBundle().getString("my.lowerleveltwo");
@@ -30,7 +34,7 @@ public enum NodeFloor {
         }
     }
 
-    public String toString1() {
+    /*public String toString1() {
         switch(this){
             case LOWERLEVEL_2:
                 return "LOWERLEVEL_2";
@@ -47,7 +51,7 @@ public enum NodeFloor {
             default:
                 return "Not Set: Contact Programmer";
         }
-    }
+    }*/
 }
 
 

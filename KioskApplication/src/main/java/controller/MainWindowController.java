@@ -6,6 +6,7 @@ import controller.map.MapBuilderController;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.InternationalizationEntity;
 import entity.LoginEntity;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
@@ -49,10 +50,11 @@ public class MainWindowController {
 
     private HashMap<ApplicationScreen, ScreenController> controllers;
 
-    protected ResourceBundle languageBundle;
+    private InternationalizationEntity intEntity;
 
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();
+        intEntity = InternationalizationEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
     }
@@ -98,6 +100,7 @@ public class MainWindowController {
         initializeTrackingTable();
 
         checkPermissions();
+
     }
 
     private void initializeTrackingTable() throws IOException{

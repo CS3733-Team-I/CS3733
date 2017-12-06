@@ -8,6 +8,7 @@ import controller.MainWindowController;
 import controller.SettingsController;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.InternationalizationEntity;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
@@ -53,6 +54,7 @@ public class MapController {
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+    @FXML private JFXButton recenterButton;
 
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
@@ -72,6 +74,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        intEntity=InternationalizationEntity.getInstance();
     }
 
     /**
