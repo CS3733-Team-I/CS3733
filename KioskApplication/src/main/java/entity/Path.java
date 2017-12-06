@@ -51,13 +51,13 @@ public class Path {
         for(LinkedList<Edge> edgeSegment: edges) {
             LinkedList<String> directionSegment = new LinkedList<>();
             LinkedList<Node> nodes = getListOfNodes(edgeSegment, this.waypoints.get(segmentIndex++));
-            directionSegment.add("Start at " + nodes.getFirst().getLongName());
+            directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.start") + nodes.getFirst().getLongName());
             for (int i = 0; i < nodes.size(); i++) {
                 if (i != 0 && i != nodes.size() - 1)
                     directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
             }
 
-            directionSegment.add("End at " + nodes.getLast().getLongName());
+            directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.end") + nodes.getLast().getLongName());
             directions.add(directionSegment);
         }
     }
@@ -66,11 +66,11 @@ public class Path {
 
         //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
-            return "Take the elevator to " + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.elevator") + nextNode.getFloor().toString() + " ";
         }
         //Stairs
         else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
-            return "Take the stairs to " + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.stairs") + nextNode.getFloor().toString() + " ";
         }
 
         //Calculate angles if turning
@@ -82,14 +82,14 @@ public class Path {
         double rightAngle = Math.PI/2;
 
         //Turning directions
-        if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
-        else if(angleDif >= rightAngle) return "Make a sharp right at " + thisNode.getLongName();
-        else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
-        else if(angleDif <= rightAngle) return "Make a sharp left at " + thisNode.getLongName();
-        else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
+        if(Math.abs(angleDif) < straightAngle) return SystemSettings.getInstance().getResourceBundle().getString("my.straight") + thisNode.getLongName();
+        else if(angleDif >= rightAngle) return SystemSettings.getInstance().getResourceBundle().getString("my.sharpright") + thisNode.getLongName();
+        else if(angleDif >= straightAngle) return SystemSettings.getInstance().getResourceBundle().getString("my.right") + thisNode.getLongName();
+        else if(angleDif <= rightAngle) return SystemSettings.getInstance().getResourceBundle().getString("my.sharpleft") + thisNode.getLongName();
+        else if(angleDif <= straightAngle) return SystemSettings.getInstance().getResourceBundle().getString("my.left") + thisNode.getLongName();
 
         //Default case
-        return "Go to ";
+        return SystemSettings.getInstance().getResourceBundle().getString("my.go");
     }
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
