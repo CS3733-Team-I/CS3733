@@ -39,6 +39,7 @@ public class MainWindowController {
     @FXML private Tab tabSettings;
 
     private LoginEntity loginEntity;
+    private SystemSettings systemSettings;
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -48,6 +49,7 @@ public class MainWindowController {
     private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
+        systemSettings = SystemSettings.getInstance();
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
@@ -58,16 +60,11 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        ResourceBundle languageBundle= SystemSettings.getInstance().getResourceBundle();
+        ResourceBundle languageBundle= systemSettings.getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-        tabMap.setText(languageBundle.getString("my.map"));
-        tabMB.setText(languageBundle.getString("my.mapbuilder"));
-        tabRM.setText(languageBundle.getString("my.requestmanager"));
-        tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
 
         // Default to third floor
         mapController.setFloorSelector(NodeFloor.THIRD);
@@ -109,6 +106,35 @@ public class MainWindowController {
                 controllers.put(screen, controller);
             }
         }
+
+        tabMap.setText(languageBundle.getString("map"));
+        tabMB.setText(languageBundle.getString("mapBuilder"));
+        tabRM.setText(languageBundle.getString("requestManager"));
+        tabRS.setText(languageBundle.getString("requestSubmit"));
+        tabSettings.setText(languageBundle.getString("setting"));
+        // attaches observer to the systemSettings
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            switch (loginEntity.getCurrentPermission()) {
+                case NONEMPLOYEE:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                    break;
+
+                case EMPLOYEE:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    break;
+
+                case SUPER_USER:
+                case ADMIN:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    break;
+            }
+            tabMap.setText(rB.getString("map"));
+            tabMB.setText(rB.getString("mapBuilder"));
+            tabRM.setText(rB.getString("requestManager"));
+            tabRS.setText(rB.getString("requestSubmit"));
+            tabSettings.setText(rB.getString("setting"));
+        });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
@@ -175,7 +201,7 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
@@ -187,7 +213,7 @@ public class MainWindowController {
                 break;
 
             case EMPLOYEE:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -195,7 +221,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -212,14 +238,49 @@ public class MainWindowController {
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
         }
-        ResourceBundle languageBundle = SystemSettings.getInstance().getResourceBundle();
-        switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
-        tabMap.setText(languageBundle.getString("my.map"));
-        tabMB.setText(languageBundle.getString("my.mapbuilder"));
-        tabRM.setText(languageBundle.getString("my.requestmanager"));
-        tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
+
         ScreenController controller = controllers.get(screen);
+
+        // Initialize controller if it doesn't exist
+        if (controller == null) {
+            switch (screen) {
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabMB);
+                    break;
+
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    //connect pathWaypointView with sidebar if applicable
+                    mapController.getPathWaypointView().setSidebarController((PathfindingSidebarController) controller);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabMap);
+                    break;
+                case REQUEST_MANAGER:
+                    controller = new RequestManagerController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabRM);
+                    break;
+
+                case REQUEST_SUBMITTER:
+                    controller = new RequestSubmitterController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabRS);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    //synchronize tab
+                    tabPane.getSelectionModel().select(tabSettings);
+                    break;
+
+                default:
+                    break;
+            }
+
+            controllers.put(screen, controller);
+        }
 
         contentNode = controller.getContentView();
 
