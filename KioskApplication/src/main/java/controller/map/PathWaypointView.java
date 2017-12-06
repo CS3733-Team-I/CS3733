@@ -313,4 +313,11 @@ public class PathWaypointView extends AnchorPane {
         waypointList.set(index1, waypointList.get(index2));
         waypointList.set(index2, temp);
     }
+
+    public Node getStartWaypoint() {
+        if(this.waypointList.size() != 0) {
+            return waypointList.get(0);
+        }
+        else return null;
+    }
 }

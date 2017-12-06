@@ -136,6 +136,7 @@ public class MapController {
         if (path != null) {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
+            setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
             pathWaypointView.drawPath(path);
         }
     }
