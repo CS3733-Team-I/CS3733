@@ -1,9 +1,6 @@
 package controller.map;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.*;
 import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
@@ -13,6 +10,7 @@ import entity.Path;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.WeakEventHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -36,10 +34,13 @@ import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static javafx.scene.input.KeyCode.T;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -68,6 +69,11 @@ public class MapController {
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
+    @FXML private JFXButton keyButton;
+    @FXML private JFXDialog keyDialog;
+    @FXML private JFXDialogLayout keyDialogContainer;
+
+    private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
 
@@ -363,6 +369,8 @@ public class MapController {
         pathWaypointContainer.getChildren().add(pathWaypointView);
         pathWaypointContainer.setPickOnBounds(false);
 
+        keyDialog.setDialogContainer(keyDialogContainer);
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
             loader.setController(miniMapController);
@@ -621,5 +629,17 @@ public class MapController {
     @FXML
     private void onAboutAction(){
         parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+    }
+
+    @FXML
+    private void keyOpened(){
+        keyDialog.show();
+        keyButton.setDisable(true);
+    }
+
+    @FXML
+    private void keyClosed(){
+        keyDialog.close();
+        keyButton.setDisable(false);
     }
 }
