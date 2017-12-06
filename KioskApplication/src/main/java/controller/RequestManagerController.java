@@ -30,12 +30,16 @@ import utility.request.RequestType;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import static utility.request.RequestProgressStatus.DONE;
+import static utility.request.RequestProgressStatus.IN_PROGRESS;
+import static utility.request.RequestProgressStatus.TO_DO;
+
 public class RequestManagerController extends ScreenController {
 
 
     LoginEntity l;
-
     RequestEntity r;
+    RequestProgressStatus currentButton;
 
 @FXML private JFXListView<String> activeRequests;
     @FXML private Label totalRequests;
@@ -58,6 +62,7 @@ public class RequestManagerController extends ScreenController {
         r = RequestEntity.getInstance();
         l = LoginEntity.getInstance();
         r.readAllFromDatabase();
+        currentButton = TO_DO;
     }
 
     /**
@@ -105,6 +110,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void newRequests(){
         buttonAction(RequestProgressStatus.TO_DO);
+        currentButton = TO_DO;
     }
 
     /**
@@ -113,6 +119,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void inProgressRequests(){
         buttonAction(RequestProgressStatus.IN_PROGRESS);
+        currentButton = IN_PROGRESS;
     }
 
     /**
@@ -121,6 +128,7 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void doneRequests(){
         buttonAction(RequestProgressStatus.DONE);
+        currentButton = DONE;
     }
 
     /**
@@ -130,89 +138,8 @@ public class RequestManagerController extends ScreenController {
     @FXML
     void buttonAction(RequestProgressStatus status){
         setup();
-        buttonSetupt(status);
         LinkedList<Request> allRequests = filterRequests();
         showRequests(status, allRequests);
-    }
-
-    /**
-     * Displays buttons on the sidebar to assign requests, mark as complete, and delete requests
-     * @param status RequestProgressStatus is passed through to determine which requests to display
-     */
-    private void buttonSetupt(RequestProgressStatus status) {
-        row8.getChildren().clear();
-        row9.getChildren().clear();
-        //Checks to see when a cell in the ListView, activeRequests, is selected
-        activeRequests.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                // Your action here
-                System.out.println("Selected item: " + newValue);
-                row8.getChildren().clear();
-                row9.getChildren().clear();
-                String requestID = newValue;
-                JFXButton statusUpdater;
-                if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
-                    switch (status){
-                        case TO_DO:
-                            ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
-                            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
-                            JFXComboBox employees = new JFXComboBox(listOfEmployees);
-                            employees.setPromptText("Select Employee");
-                            row8.getChildren().add(employees);
-
-                            statusUpdater = new JFXButton("Assign");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.markInProgress((int) employees.getValue(),requestID);
-                                    newRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                        //Admins and Supers can't setComplete a request
-
-                        case DONE:
-                            statusUpdater = new JFXButton("Delete");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.deleteRequest(requestID);
-                                    doneRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                    }
-                }else{
-                    switch (status){
-                        case TO_DO:
-                            statusUpdater = new JFXButton("Assign Me");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.markInProgress(l.getLoginID(),requestID);
-                                    newRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                        case IN_PROGRESS:
-                            statusUpdater = new JFXButton("Completed");
-                            statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    r.completeRequest(requestID);
-                                    inProgressRequests();
-                                }
-                            });
-                            row9.getChildren().add(statusUpdater);
-                            break;
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -266,38 +193,125 @@ public class RequestManagerController extends ScreenController {
      */
     public void initializePopup(String requestID){
 
-        try {
-            Request request = r.getRequest(requestID);
-            Label id = new Label(requestID);
-            String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-            Label employee = new Label("Employee: ");
-            Label assigner = new Label(r.getAssigner(requestID).getUsername()); //Some reason this returns more than needed
-            Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
-            Label locationOfRequest = new Label(location);
-            Label extraField;
-            RequestType RT = r.checkRequestType(requestID);
-            switch (RT){
-                case INTERPRETER:
-                    String language = r.getInterpreterRequest(requestID).getLanguage().toString();
-                    extraField = new Label("Language: "+language);
-                    break;
-                case FOOD:
-                    String restaurantID = r.getFoodRequest(requestID).getRestaurantLocNodeID();
-                    String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
-                    extraField = new Label("Restaurant: " + restaurant);
-                    break;
-                default: //security
-                    int priority = r.getSecurityRequest(requestID).getPriority();
-                    extraField = new Label("Priority: "+ priority);
+        JFXButton more = new JFXButton("More");
+        JFXButton statusUpdater = new JFXButton();
+        JFXButton delete = new JFXButton("Delete");
+
+        ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
+        JFXComboBox employees = new JFXComboBox(listOfEmployees);
+        employees.setPromptText("Select Employee");
+
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                r.deleteRequest(requestID);
+                popup.hide();
+                refreshRequests();
+            }
+        });
+
+        VBox vbox = new VBox(more);
+
+        if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
+            listOfEmployees.clear();
+            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
+            switch (currentButton){
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress((Integer) employees.getValue(),requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().addAll(employees, statusUpdater);
                     break;
             }
-            VBox vbox = new VBox(id,employee,assigner,typeOfRequest,locationOfRequest, extraField);
-            popup = new JFXPopup(vbox);
+        }else {
+            switch (currentButton) {
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign Me");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress(l.getLoginID(), requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().add(statusUpdater);
+                    break;
+                case IN_PROGRESS:
+                    statusUpdater = new JFXButton("Completed");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.completeRequest(requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().add(statusUpdater);
+                    break;
+            }
         }
-        catch(NotFoundException exception){
-            exception.printStackTrace();
-            //TODO: add actual handling
+        more.setPrefWidth(200);
+        delete.setPrefWidth(200);
+        statusUpdater.setPrefWidth(200);
+        employees.setPrefWidth(200);
+
+        vbox.getChildren().add(delete);
+        popup = new JFXPopup(vbox);
+
+        more.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                vbox.getChildren().clear();
+                try {
+                    vbox.getChildren().add(displayInformation(requestID));
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public VBox displayInformation(String requestID) throws NotFoundException {
+        Request request = r.getRequest(requestID);
+        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+        Label employee = new Label("Requested By: " + request.getAssignerID());
+        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+        Label locationOfRequest = new Label(location);
+        Label requestNotes = new Label(request.getNote());
+        Label extraField;
+        RequestType RT = r.checkRequestType(requestID);
+        switch (RT){
+            case INTERPRETER:
+                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
+                extraField = new Label("Language: "+language);
+                break;
+            case FOOD:
+                String restaurantID = r.getFoodRequest(requestID).getRestaurantLocNodeID();
+                String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+                extraField = new Label("Restaurant: " + restaurant);
+                break;
+            default: //security
+                int priority = r.getSecurityRequest(requestID).getPriority();
+                extraField = new Label("Priority: "+ priority);
+                break;
         }
+        JFXButton close = new JFXButton("close");
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popup.hide();
+            }
+        });
+        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,extraField,requestNotes,close);
+        return vbox;
     }
 
     /**
@@ -306,9 +320,15 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void displayInfo(MouseEvent event){
-        String requestID = activeRequests.getSelectionModel().getSelectedItem();
-        initializePopup(requestID); //Don't like that this is here
-        popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
+        if(activeRequests.getSelectionModel().isEmpty()){
+            event.consume();
+        }else{
+            String requestID = activeRequests.getSelectionModel().getSelectedItem();
+            initializePopup(requestID); //Don't like that this is here
+            popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
+            activeRequests.getSelectionModel().clearSelection();
+
+        }
     }
 
     /**
@@ -340,8 +360,18 @@ public class RequestManagerController extends ScreenController {
      * @throws IOException
      */
     @FXML
-    public void refreshRequests() throws IOException {
-        r.readAllFromDatabase();
+    public void refreshRequests() {
+        switch (currentButton){
+            case IN_PROGRESS:
+                inProgressRequests();
+                break;
+            case TO_DO:
+                newRequests();
+                break;
+            case DONE:
+                doneRequests();
+                break;
+        }
     }
 
     @Override
@@ -362,11 +392,11 @@ public class RequestManagerController extends ScreenController {
         getMapController().setPath(null);
         getMapController().reloadDisplay();
 
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
+
         // Set default nodes/edges visibility
         getMapController().setNodesVisible(true);
         getMapController().setEdgesVisible(false);
-
-        // Set if the options box is visible
-        getMapController().setOptionsBoxVisible(false);
     }
 }
