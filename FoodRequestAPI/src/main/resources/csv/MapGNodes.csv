@@ -1,0 +1,108 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+GCONF02001,1513,2116,1,Shapiro,CONF,Shapiro Board Room Node 20 Floor 1,Shapiro Board Room,Team G
+GDEPT01901,1567,2116,1,Shapiro,DEPT,Zinner Breakout Room Node 19 Floor 1,Zinner Breakout Room,Team G
+GELEV00N01,1647,1930,1,Shapiro,ELEV,Elevator N Node 26 Floor 1,,Team G
+GELEV00Q01,1607,2115,1,Shapiro,ELEV,Elevator Q Node 18 Floor 1,Elevator Q Floor 1,Team G
+GEXIT00101,1748,1832,1,Shapiro,EXIT,Francis Street Exit Node 1 Floor 1,Francis Street Exit Floor 1,Team G
+GHALL00201,1722,1832,1,Shapiro,HALL,Hallway Node 2 Floor 1,,Team G
+GHALL00301,1705,1831,1,Shapiro,HALL,Hallway Node 3 Floor 1,,Team G
+GHALL00601,1707,2015,1,Shapiro,HALL,Hallway Node 6 Floor 1,,Team G
+GHALL00701,1708,2092,1,Shapiro,HALL,Hallway Node 7 Floor 1,,Team G
+GHALL00801,1707,2152,1,Shapiro,HALL,Hallway Node 8 Floor 1,,Team G
+GHALL00901,1707,2164,1,Shapiro,HALL,Hallway Node 9 Floor 1,,Team G
+GHALL01001,1673,2165,1,Shapiro,HALL,Hallway Node 10 Floor 1,,Team G
+GHALL01401,1749,2151,1,Shapiro,HALL,Hallway Node 14 Floor 1,,Team G
+GHALL01501,1749,2224,1,Shapiro,HALL,Hallway Node 15 Floor 1,,Team G
+GHALL01601,1689,2225,1,Shapiro,HALL,Hallway Node 16 Floor 1,,Team G
+GHALL01701,1605,2093,1,Shapiro,HALL,Hallway Node 17 Floor 1,,Team G
+GHALL02101,1600,1830,1,Shapiro,HALL,Hallway Node 21 Floor 1,,Team G
+GHALL02201,1601,1866,1,Shapiro,HALL,Hallway Node 22 Floor 1,,Team G
+GHALL02401,1602,1928,1,Shapiro,HALL,Hallway Node 24 Floor 1,,Team G
+GHALL02801,1270,1830,1,Shapiro,HALL,Hallway Node 28 Floor 1,,Team G
+GHALL02901,1262,1850,1,Shapiro,HALL,Hallway Node 29 Floor 1,,Team G
+GHALL0301,1256,1858,1,Shapiro,HALL,Hallway Node 30 Floor 1,,Team G
+GHALL03101,1227,1859,1,Shapiro,HALL,Hallway Node 31 Floor 1,,Team G
+GHALL03301,1255,1872,1,Shapiro,HALL,Hallway Node 33 Floor 1,,Team G
+GHALL03401,1284,1872,1,Shapiro,HALL,Hallway Node 34 Floor 1,,Team G
+GREST01201,1671,2015,1,Shapiro,REST,Bathroom Node 12 Floor 1,Restroom Shapiro Floor 1,Team G
+GRETL03501,1284,1884,1,Shapiro,REST,Random Room Node 35 Floor 1,Secret Room Floor 1,Team G
+GSERV02301,1600,1895,1,Shapiro,SERV,ATM Node 23 Floor 1,ATM Floor 1,Team G
+GSTAI00501,1707,1992,1,Shapiro,STAI,Stairway Node 5 Floor 1,Northbound Stairs Floor 2,Team G
+GSTAI01301,1750,2014,1,Shapiro,STAI,Staircase Node 13 Floor 1,Southbound Stairs Floor 1,Team G
+GDEPT00702,1341,1778,2,Shapiro,DEPT,Waiting room? Node 7 Floor 2,Waiting Area Shapiro Floor 2,Team G
+GDEPT02402,1578,1932,2,Shapiro,DEPT,Watkins A Node 24 Floor 2 Floor 2,Watkins A,Team G
+GDEPT03502,1580,2166,2,Shapiro,DEPT,Watkins B Node 35 Floor 2,Watkins B,Team G
+GELEV00N02,1630,1931,2,Shapiro,ELEV,Elevator N Node 25 Floor 2,Elevator N Floor 1,Team G
+GELEV00Q02,1628,2102,2,Shapiro,ELEV,Elevator Q Node 31a Floor 2,Elevator Q Floor 2,Team G
+GHALL00102,1170,1780,2,Shapiro,HALL,Hall Node 1 Floor 2,,Team G
+GHALL00202,1168,1820,2,Shapiro,HALL,Hall Node 2 Floor 2,,Team G
+GHALL00302,1231,1781,2,Shapiro,HALL,Hall Node 3 Floor 2,,Team G
+GHALL00402,1230,1820,2,Shapiro,HALL,Hall Node 4 Floor 2,,Team G
+GHALL00502,1283,1781,2,Shapiro,HALL,Hall Node 5 Floor 2,,Team G
+GHALL01002,1340,1820,2,Shapiro,HALL,Hall Node 10 Floor 2,,Team G
+GHALL01102,1396,1781,2,Shapiro,HALL,Hall Node 11 Floor 2,,Team G
+GHALL01202,1395,1820,2,Shapiro,HALL,Hall Node 12 Floor 2,,Team G
+GHALL01302,1450,1781,2,Shapiro,HALL,Hall Node 13 Floor 2,,Team G
+GHALL01402,1450,1820,2,Shapiro,HALL,Hall Node 14 Floor 2,,Team G
+GHALL01502,1502,1781,2,Shapiro,HALL,Hall Node 15 Floor 2,,Team G
+GHALL01602,1502,1820,2,Shapiro,HALL,Hall Node 16 Floor 2,,Team G
+GHALL01702,1578,1820,2,Shapiro,HALL,Hall Node 17 (Exit?) Floor 2,,Team G
+GHALL01802,1630,1801,2,Shapiro,HALL,Hall Node 18 Floor 2,,Team G
+GHALL02002,1684,1801,2,Shapiro,HALL,Hall Node 20 Floor 2,,Team G
+GHALL02102,1683,1821,2,Shapiro,HALL,Hall Node 21 Floor 2,,Team G
+GHALL02202,1720,1801,2,Shapiro,HALL,Hall Node 22 Floor 2,,Team G
+GHALL02302,1726,1835,2,Shapiro,HALL,Hall Node 23 Floor 2,,Team G
+GHALL02702,1726,1930,2,Shapiro,HALL,Hall Node 27 Floor 2,,Team G
+GHALL02902,1728,2042,2,Shapiro,HALL,Hall Node 29 Floor 2,,Team G
+GHALL03002,1580,2090,2,Shapiro,HALL,Hall Node 30 Floor 2,,Team G
+GHALL03202,1684,2091,2,Shapiro,HALL,Hall Node 32 Floor 2,,Team G
+GHALL03302,1692,2124,2,Shapiro,HALL,Hall Node 33 Floor 2,,Team G
+GHALL03402,1724,2123,2,Shapiro,HALL,Hall Node 34 Floor 2,,Team G
+GHALL03602,1580,2208,2,Shapiro,HALL,Hall Node 36 Floor 2,,Team G
+GHALL03702,1692,2211,2,Shapiro,HALL,Hall Node 37 Floor 2,,Team G
+GHALL03802,1726,2210,2,Shapiro,HALL,Hall Node 38 Floor 2,,Team G
+GINFO01902,1630,1821,2,Shapiro,INFO,Info Node 19 Floor 2,Information Center Shapiro Floor 2,Team G
+GREST00602,1284,1821,2,Shapiro,REST,Restroom Node 6 Floor 2,Restroom 1 Shapiro Floor 2,Team G
+GREST03102,1628,2092,2,Shapiro,REST,Restroom Node 31 Floor 2,Handicap Accessible Restrooms Shapiro Floor 2,Team G
+GSTAI02602,1686,1931,2,Shapiro,STAI,Stairs Node 26 Floor 2,Floor 2 Stairs Upper,Team G
+GSTAI02802,1685,2041,2,Shapiro,STAI,Stairs Node 28 Floor 2,Floor 2 Stairs Lower,Team G
+GDEPT00403,1580,2142,3,Shapiro,DEPT,Brigham Circle Medical Associates Node 4 Floor 3,Brigham Circle Medical Associates,Team G
+GDEPT01403,1580,1904,3,Shapiro,DEPT,Watkins Clinic C Node 14 Floor 3,Watkins Clinic C,Team G
+GELEV00N03,1628,1904,3,Shapiro,ELEV,Elevator N Node 15 Floor 3,Elevator N Floor 3,Team G
+GELEV00Q03,1628,2142,3,Shapiro,ELEV,Elevator Q Node 5 Floor 3,Elevator Q Floor 3,Team G
+GHALL00103,1562,2230,3,Shapiro,HALL,Hallway Node 1 Floor 3,,Team G
+GHALL00203,1580,2230,3,Shapiro,HALL,Hallway Node 2 Floor 3,,Team G
+GHALL00303,1580,2180,3,Shapiro,HALL,Hallway Node 3 Floor 3,,Team G
+GHALL00603,1685,2142,3,Shapiro,HALL,Hallway Node 6 Floor 3,,Team G
+GHALL00703,1685,2230,3,Shapiro,HALL,Hallway Node 7 Floor 3,,Team G
+GHALL00803,1685,2106,3,Shapiro,HALL,Hallway Node 8 Floor 3,,Team G
+GHALL01003,1580,2070,3,Shapiro,HALL,Hallway Node 10 Floor 3,,Team G
+GHALL01103,1628,2070,3,Shapiro,HALL,Hallway Node 11 Floor 3,,Team G
+GHALL01303,1580,2006,3,Shapiro,HALL,Hallway Node 13 Floor 3,,Team G
+GREST01203,1628,2052,3,Shapiro,REST,Restroom Node 12 Floor 3,Restroom Shapiro Floor 3,Team G
+GSERV01603,1580,1858,3,Shapiro,SERV,The Porch Node 16 Floor 3,The Porch,Team G
+GSTAI00903,1685,2052,3,Shapiro,STAI,Staircase Node 9 Floor 3,Floor 3 Stairs ,Team G
+GELEV00QL1,1637,2116,L1,Shapiro,ELEV,Elevator Q Node 7 Floor L1,Elevator Q L1,Team G
+GEXIT001L1,1702,2260,L1,Shapiro,EXIT,Fenwood Road Exit Node 1 Floor L1,Fenwood Road Entrance/Exit L1,Team G
+GHALL002L1,1702,2167,L1,Shapiro,HALL,Hallway Node 2 Floor L1,,Team G
+GHALL003L1,1688,2167,L1,Shapiro,HALL,Hallway Node 3 Floor L1,,Team G
+GHALL004L1,1666,2167,L1,Shapiro,HALL,Hallway Node 4 Floor L1,,Team G
+GHALL005L1,1688,2131,L1,Shapiro,HALL,Hallway Node 5 Floor L1,,Team G
+GHALL006L1,1665,2116,L1,Shapiro,HALL,Hallway Node 6 Floor L1,,Team G
+GSTAI008L1,1720,2131,L1,Shapiro,STAI,Stairs Node 8 Floor L1,L1 Stairs,Team G
+GELEV00QL2,1625,2089,L2,Shapiro,ELEV,Elevator Q Node 6 Floor L2,Elevator Q L2,Team G
+GHALL001L2,1730,1585,L2,Shapiro,HALL,Hallway Node 1 Floor L2,,Team G
+GHALL005L2,1642,2089,L2,Shapiro,HALL,Hallway Node 5 Floor L2,,Team G
+GHALL007L2,1578,2089,L2,Shapiro,HALL,Hallway Node 7 Floor L2,,Team G
+GHALL008L2,1577,2195,L2,Shapiro,HALL,Hallway Node 8 Floor L2,,Team G
+GHALL009L2,1578,2032,L2,Shapiro,HALL,Hallway Node 9 Floor L2,,Team G
+GHALL010L2,1550,2032,L2,Shapiro,HALL,Hallway Node 10 Floor L2,,Team G
+GHALL011L2,1550,1966,L2,Shapiro,HALL,Hallway Node 11 Floor L2,,Team G
+GHALL012L2,1512,1967,L2,Shapiro,HALL,Hallway Node 12 Floor L2,,Team G
+GHALL013L2,1512,1910,L2,Shapiro,HALL,Hallway Node 13 Floor L2,,Team G
+GHALL016L2,1512,1702,L2,Shapiro,HALL,Hallway Node 16 Floor L2,,Team G
+GHALL017L2,1512,1539,L2,Shapiro,HALL,Hallway Node 17 Floor L2,,Team G
+GLABS003L2,1729,2089,L2,Shapiro,LABS,Cardiovascular Imaging Center Floor L2,Cardiovascular Imaging Center,Team G
+GLABS014L2,1512,1844,L2,Shapiro,LABS,Cardiac Stress Test Lab Floor L2,Cardiac Stress Test Lab,Team G
+GLABS015L2,1512,1812,L2,Shapiro,LABS,CVRR Floor L2,CVRR,Team G
+GREST004L2,1680,2090,L2,Shapiro,REST,Restroom Node 4 Floor L2,Restroom Shapiro L2,Team G

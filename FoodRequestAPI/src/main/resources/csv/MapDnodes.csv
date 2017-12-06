@@ -1,0 +1,85 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+DELEV00A02,4550,375,2,15 Francis,ELEV,Elevator A Floor 2,Elevator A2,Team D
+DELEV00B02,4155,650,2,15 Francis,ELEV,Elevator B Floor 2,Elevator B2,Team D
+DELEV00C02,3955,885,2,15 Francis,ELEV,Elevator C Floor 2,Elevator C2,Team D
+DELEV00D02,3475,760,2,15 Francis,ELEV,Elevator D Floor 2,Elevator D2,Team D
+DREST00102,4125,625,2,15 Francis,REST,Restroom B elevator Floor 2,Restroom B,Team D
+DREST00202,3895,695,2,15 Francis,REST,Restroom C elevator Floor 2,Restroom C,Team D
+DREST00302,3635,830,2,15 Francis,REST,Restroom C-D elevator Floor 2,Restroom C-D,Team D
+DREST00402,3525,850,2,15 Francis,REST,Restroom D elevator Floor 2,Restroom D,Team D
+DINFO00102,4210,630,2,15 Francis,INFO,15 Francis Security Desk Floor 2,Information Desk,Team D
+DINFO00202,3490,825,2,15 Francis,INFO,Security Desk Thorn Floor 2,Security Desk,Team D
+DDEPT00102,4330,700,2,15 Francis,DEPT,Chest Diseases Floor 2,Chest Diseases,Team D
+DDEPT00202,4240,730,2,15 Francis,DEPT,Thoracic Surgery Clinic Floor 2,Thoracic Surgery Clinic,Team D
+DDEPT00302,3900,640,2,15 Francis,DEPT,Brigham Health Floor 2,Brigham Health,Team D
+DDEPT00402,3425,870,2,15 Francis,DEPT,Waiting Room Floor 2,Waiting Room,Team D
+DLABS00102,3830,775,2,15 Francis,LABS,MRI Associates Floor 2,MRI Associates,Team D
+DCONF00102,4595,550,2,15 Francis,CONF,Carrie M. Hall Conference Center Floor 2,Conference Center,Team D
+DRETL00102,4270,480,2,15 Francis,RETL,Pat's Place Floor 2,Pat's Place,Team D
+DEXIT00102,4295,750,2,15 Francis,EXIT,15 Lobby Entrance Floor 2,15 Lobby Entrance,Team D
+DSTAI00102,4650,675,2,15 Francis,STAI,Staircase1 Floor2,Staircase1,Team D
+DSTAI00202,4330,580,2,15 Francis,STAI,Staircase2 Floor2,Staircase2,Team D
+DSTAI00302,4250,440,2,15 Francis,STAI,Staircase3 Floor2,Staircase3,Team D
+DSTAI00402,4175,620,2,15 Francis,STAI,Staircase4 Floor2,Staircase4,Team D
+DSTAI00502,4065,630,2,15 Francis,STAI,Staircase5 Floor2,Staircase5,Team D
+DSTAI00602,3950,865,2,15 Francis,STAI,Staircase6 Floor2,Staircase6,Team D
+DSTAI00702,3855,565,2,15 Francis,STAI,Staircase7 Floor2,Staircase7,Team D
+DSTAI00802,3535,645,2,15 Francis,STAI,Staircase8 Floor2,Staircase8,Team D
+DHALL00102,4770,1140,2,15 Francis,HALL,Hallway 1 Floor 2,Hallway D0102,Team D
+DHALL00202,4750,1080,2,15 Francis,HALL,Hallway 2 Floor 2,Hallway D0202,Team D
+DHALL00302,4725,995,2,15 Francis,HALL,Hallway 3 Floor 2,Hallway D0302,Team D
+DHALL00402,4785,975,2,15 Francis,HALL,Hallway 4 Floor 2,Hallway D0402,Team D
+DHALL00502,4705,925,2,15 Francis,HALL,Hallway 5 Floor 2,Hallway D0502,Team D
+DHALL00602,4690,870,2,15 Francis,HALL,Hallway 6 Floor 2,Hallway D0602,Team D
+DHALL00702,4675,820,2,15 Francis,HALL,Hallway 7 Floor 2,Hallway D0702,Team D
+DHALL00802,4660,770,2,15 Francis,HALL,Hallway 8 Floor 2,Hallway D0802,Team D
+DHALL00902,4635,680,2,15 Francis,HALL,Hallway 9 Floor 2,Hallway D0902,Team D
+DHALL01002,4625,650,2,15 Francis,HALL,Hallway 10 Floor 2,Hallway D1002,Team D
+DHALL01102,4605,655,2,15 Francis,HALL,Hallway 11 Floor 3,Hallway D1102,Team D
+DHALL01202,4570,555,2,15 Francis,HALL,Hallway 12 Floor 3,Hallway D1202,Team D
+DHALL01302,4545,460,2,15 Francis,HALL,Hallway 13 Floor 3,Hallway D1302,Team D
+DHALL01402,4570,455,2,15 Francis,HALL,Hallway 14 Floor 3,Hallway D1402,Team D
+DHALL01502,4480,580,2,15 Francis,HALL,Hallway 15 Floor 3,Hallway D1502,Team D
+DHALL01602,4390,605,2,15 Francis,HALL,Hallway 16 Floor 3,Hallway D1602,Team D
+DHALL01702,4385,585,2,15 Francis,HALL,Hallway 17 Floor 3,Hallway D1702,Team D
+DHALL01802,4340,625,2,15 Francis,HALL,Hallway 18 Floor 3,Hallway D1802,Team D
+DHALL01902,4310,585,2,15 Francis,HALL,Hallway 19 Floor 3,Hallway D1902,Team D
+DHALL02002,4295,530,2,15 Francis,HALL,Hallway 20 Floor 3,Hallway D2002,Team D
+DHALL02102,4280,475,2,15 Francis,HALL,Hallway 21 Floor 4,Hallway D2102,Team D
+DHALL02202,4270,440,2,15 Francis,HALL,Hallway 22 Floor 4,Hallway D2202,Team D
+DHALL02302,4280,435,2,15 Francis,HALL,Hallway 23 Floor 4,Hallway D2302,Team D
+DHALL02402,4295,475,2,15 Francis,HALL,Hallway 24 Floor 4,Hallway D2402,Team D
+DHALL02502,4285,715,2,15 Francis,HALL,Hallway 25 Floor 4,Hallway D2502,Team D
+DHALL02602,4270,650,2,15 Francis,HALL,Hallway 26 Floor 4,Hallway D2602,Team D
+DHALL02702,4220,660,2,15 Francis,HALL,Hallway 27 Floor 4,Hallway D2702,Team D
+DHALL02802,4185,665,2,15 Francis,HALL,Hallway 28 Floor 4,Hallway D2802,Team D
+DHALL02902,4140,680,2,15 Francis,HALL,Hallway 29 Floor 4,Hallway D2902,Team D
+DHALL03002,4130,650,2,15 Francis,HALL,Hallway 30 Floor 4,Hallway D3002,Team D
+DHALL03102,4020,715,2,15 Francis,HALL,Hallway 31 Floor 5,Hallway D3102,Team D
+DHALL03202,4000,645,2,15 Francis,HALL,Hallway 32 Floor 5,Hallway D3202,Team D
+DHALL03302,3925,740,2,15 Francis,HALL,Hallway 33 Floor 5,Hallway D3302,Team D
+DHALL03402,3945,790,2,15 Francis,HALL,Hallway 34 Floor 5,Hallway D3402,Team D
+DHALL03502,3955,830,2,15 Francis,HALL,Hallway 35 Floor 5,Hallway D3502,Team D
+DHALL03602,3965,860,2,15 Francis,HALL,Hallway 36 Floor 5,Hallway D3602,Team D
+DHALL03702,3970,880,2,15 Francis,HALL,Hallway 37 Floor 5,Hallway D3702,Team D
+DHALL03802,3980,910,2,15 Francis,HALL,Hallway 38 Floor 5,Hallway D3802,Team D
+DHALL03902,3910,685,2,15 Francis,HALL,Hallway 39 Floor 5,Hallway D3902,Team D
+DHALL04002,3875,560,2,15 Francis,HALL,Hallway 40 Floor 5,Hallway D4002,Team D
+DHALL04102,3870,540,2,15 Francis,HALL,Hallway 41 Floor 6,Hallway D4102,Team D
+DHALL04202,3865,750,2,15 Francis,HALL,Hallway 42 Floor 6,Hallway D4202,Team D
+DHALL04302,3860,725,2,15 Francis,HALL,Hallway 43 Floor 6,Hallway D4302,Team D
+DHALL04402,3775,745,2,15 Francis,HALL,Hallway 44 Floor 6,Hallway D4402,Team D
+DHALL04502,3825,760,2,15 Francis,HALL,Hallway 45 Floor 6,Hallway D4502,Team D
+DHALL04602,3745,780,2,15 Francis,HALL,Hallway 46 Floor 6,Hallway D4602,Team D
+DHALL04702,3655,805,2,15 Francis,HALL,Hallway 47 Floor 6,Hallway D4702,Team D
+DHALL04802,3645,775,2,15 Francis,HALL,Hallway 48 Floor 2,Hallway D4802,Team D
+DHALL04902,3630,810,2,15 Francis,HALL,Hallway 49 Floor 2,Hallway D4902,Team D
+DHALL05002,3575,825,2,15 Francis,HALL,Hallway 50 Floor 2,Hallway D5002,Team D
+DHALL05102,3555,730,2,15 Francis,HALL,Hallway 51 Floor 2,Hallway D5102,Team D
+DHALL05202,3525,840,2,15 Francis,HALL,Hallway 52 Floor 2,Hallway D5202,Team D
+DHALL05302,3490,845,2,15 Francis,HALL,Hallway 53 Floor 2,Hallway D5302,Team D
+DHALL05402,3450,850,2,15 Francis,HALL,Hallway 54 Floor 2,Hallway D5402,Team D
+DHALL05502,3440,800,2,15 Francis,HALL,Hallway 55 Floor 2,Hallway D5502,Team D
+DHALL05602,3480,790,2,15 Francis,HALL,Hallway 56 Floor 2,Hallway D5602,Team D
+DHALL05702,3510,790,2,15 Francis,HALL,Hallway 57 Floor 2,Hallway D5702,Team D
+DHALL05802,3420,850,2,15 Francis,HALL,Hallway 58 Floor 2,Hallway D5802,Team D

@@ -1,0 +1,56 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+FHALL00101,2055,910,1,Tower,HALL,Lower Pike Hallway Exit Lobby,Hallway F00101,Team F
+FHALL00201,2026,910,1,Tower ,HALL,Lobby Shattuck Street,Hallway F00201,Team F
+FSTAI00101,2026,892,1,Tower,STAI,Lobby Shattuck Street Stairs,Stairway F00101,Team F
+FHALL00301,2017,910,1,Tower,HALL,Shattuck Street Lobby 1,Hallway F00301,Team F
+FEXIT00101,2017,799,1,Tower,EXIT,Shattuck Street Lobby Exit,Shattuck St. Exit,Team F
+FHALL00401,1973,910,1,Tower,HALL,Shattuck Street Lobby 2,Hallway F00401,Team F
+FRETL00101,1973,844,1,Tower,RETL,Lobby Vending Machine,VM Lobby,Team F
+FHALL00501,1950,910,1,Tower,HALL,Shattuck Street Lobby 3,Hallway F00501,Team F
+FSERV00101,1950,871,1,Tower,SERV,Shattuck Street Lobby ATM,Lobby ATM,Team F
+FHALL00601,1869,930,1,Tower,HALL,Tower Lobby Entrance 1,Tower Entrance,Team F
+FHALL00701,1758,930,1,Tower,HALL,Tower Elevator Entrance,Hallway F00701,Team F
+FHALL00801,1758,850,1,Tower,HALL,Tower Hallway 1,Hallway F00801,Team F
+FHALL01301,1627,825,1,Tower,HALL,Tower Hallway 5,Hallway F01301,Team F
+FHALL00901,1627,850,1,Tower,HALL,Tower Hallway 2,Hallway F00901,Team F
+FHALL01001,1627,802,1,Tower,HALL,Tower Hallway 3,Hallway F01001,Team F
+FSTAI00201,1673,802,1,Tower,STAI,Tower Stairway 1,Tower Stairs 1,Team F
+FHALL01101,1627,930,1,Tower,HALL,Tower Hallway 4,Hallway F01101,Team F
+FHALL01201,1548,930,1,Tower,HALL,Tower Staff Entrance,Hallway F01201,Team F
+FDEPT00101,1617,825,1,Tower,DEPT,Center for International Medicine,CIM,Team F
+FSERV00401,1721,970,1,Tower,DEPT,Spiritual Care Office,SCO,Team F
+FHALL01401,1627,1029,1,Tower,HALL,Tower Hallway 6,Hallway F01401,Team F
+FSERV00201,1605,1029,1,Tower,SERV,Tower Medical Cashier,Tower Cashier,Team F
+FHALL01501,1627,1060,1,Tower,HALL,Tower Hallway 7,Hallway F01501,Team F
+FHALL01601,1758,1060,1,Tower,HALL,Tower Hallway 8,Hallway F01601,Team F
+FHALL01701,1721,956,1,Tower,HALL,Tower Hallway 9,Hallway F01701,Team F
+FDEPT00301,1721,931,1,Tower,DEPT,Multifaith Chapel,Chapel,Team F
+FHALL01801,1758,956,1,Tower,HALL,Tower Hallway 10,Hallway F01801,Team F
+FHALL01901,1758,1120,1,Tower,HALL,Tower Hallway 11,Hallway F01901,Team F
+FHALL02001,1700,1120,1,Tower,HALL,Tower Hallway 12,Hallway F02001,Team F
+FDEPT00201,1610,1120,1,Tower,DEPT,Bretholtz Center for Patients and Families,Bretholtz WR,Team F
+FSERV00301,1700,1158,1,Tower,SERV,Kessler Library,Kessler Library,Team F
+FHALL02101,1769,1146,1,Tower,HALL,Tower Hallway Entrance,Tower Entrance 2,Team F
+FDEPT00401,1794,1146,1,Tower,DEPT,Sharf Admitting Center,Sharf Center,Team F
+FHALL02201,1769,1280,1,Tower,HALL,Hallway Lobby Entrance,Entrance Hallway,Team F
+FLABS00101,1845,1250,1,Tower,LABS,Obstetrics Admitting,Obs Admitting,Team F
+FHALL02301,1845,1280,1,Tower,HALL,Lobby Hallway 1,Hallway F02301,Team F
+FHALL02401,1965,1280,1,Tower,HALL,Lobby Hallway 2,Hallway F02401,Team F
+FHALL02501,1965,1239,1,Tower,HALL,Lobby Hallway 3,Hallway F02501,Team F
+FSTAI00301,1947,1239,1,Tower,STAI,Lobby Escalator,Lobby Escalator,Team F
+FHALL02601,2026,1239,1,Tower,HALL,Lobby Hallway 4,Hallway F02601,Team F
+FHALL02701,2066,1239,1,Tower,HALL,Lobby Hallway 7,Hallway F02701,Team F
+FDEPT00501,2128,1300,1,Tower,DEPT,Emergency Department,Emergency,Team F
+FHALL02801,1748,1280,1,Tower,HALL,Lobby Entrance Hallway,HallwayF02801,Team F
+FEXIT00201,1748,1321,1,Tower,EXIT,75 Francis Valet Drop-off,75 Francis Exit,Team F
+FHALL02901,1700,1280,1,Tower,HALL,75 Lobby,75 Lobby,Team F
+FINFO00101,1700,1226,1,Tower,INFO,75 Lobby Information Desk,Lobby Info Desk,Team F
+FSERV00501,1645,1280,1,Tower,SERV,75 Lobby Valet Cashier,Valet Cashier,Team F
+FHALL03001,1645,1246,1,Tower,HALL,Lobby Hallway 5,Hallway F02701,Team F
+FRETL00201,1609,1246,1,Tower,RETL,Au Bon Pain,ABP,Team F
+FHALL03101,2026,976,1,Tower,HALL,Lobby Hallway 6,Hallway F02801,Team F
+FREST00101,2091,976,1,Tower,REST,Bathroom 75 Lobby,Bathroom Lobby,Team F
+FEXIT00301,2099,1357,1,Tower,EXIT,Emergency Department Entrance,Emergency Entrance,Team F
+FHALL03201,1758,1029,1,Tower,HALL,Tower Hallway 13 ,Hallway F03201,Team F
+FDEPT00601,1780,1029,1,Tower,DEPT,International Patient Center,IPC,Team F
+FHALL03301,2066,1282,1,Tower,HALL,Emergency Hallway,Hallway F03301,Team F

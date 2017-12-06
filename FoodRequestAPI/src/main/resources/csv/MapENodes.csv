@@ -1,0 +1,51 @@
+nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned
+ESTAI00101,2190,910,1,45 Francis,STAI,Staircase K1 Floor 1,Stair K1,Team E
+EHALL00301,2240,910,1,45 Francis,HALL,Hallway Node 1 Floor 1,Hall 01,Team E
+EHALL00401,2275,910,1,45 Francis,HALL,Hallway Node 2 Floor 1,HallE02,Team E
+ESTAI00201,2275,830,1,45 Francis,STAI,Staircase J1 Floor 1,Stair J1,Team E
+EEXIT00101,2275,785,1,45 Francis,EXIT,Ambulance Parking Exit Floor 1,AmbExit 1,Team E
+EHALL00501,2290,910,1,45 Francis,HALL,Hallway Node 3 Floor 1,HallE03,Team E
+EHALL00601,2385,910,1,45 Francis,HALL,Hallway Node 4 Floor 1,HallE04,Team E
+EHALL00701,2385,860,1,45 Francis,HALL,Hallway Node 5 Floor 1,HallE05,Team E
+EDEPT00101,2335,860,1,45 Francis,DEPT,Waiting Room 1 Floor 1,Wait 1,Team E
+EHALL00801,2460,910,1,45 Francis,HALL,Hallway Node 6 Floor 1,HallE06,Team E
+EINFO00101,2460,850,1,45 Francis,INFO,Connor's Center Security Desk Floor 1,Security 1,Team E
+EHALL00901,2585,910,1,45 Francis,HALL,Hallway Node 7 Floor 1,HallE07,Team E
+EHALL01001,2585,890,1,45 Francis,HALL,Hallway Node 8 Floor 1,HallE08,Team E
+EHALL01101,2610,910,1,45 Francis,HALL,Hallway Node 9 Floor 1,HallE09,Team E
+EHALL01201,2610,955,1,45 Francis,HALL,Hallway Node 10 Floor 1,HallE10,Team E
+EHALL01301,2660,955,1,45 Francis,HALL,Hallway Node 11 Floor 1,HallE11,Team E
+EHALL01401,2660,980,1,45 Francis,HALL,Hallway Node 12 Floor 1,HallE12,Team E
+EHALL01501,2675,910,1,45 Francis,HALL,Hallway Node 13 Floor 1,HallE13,Team E
+EHALL01601,2910,910,1,45 Francis,HALL,Hallway Node 14 Floor 1,HallE14,Team E
+EHALL01701,2910,890,1,45 Francis,HALL,Hallway Node 15 Floor 1,HallE15,Team E
+EHALL01801,2925,910,1,45 Francis,HALL,Hallway Node 16 Floor 1,HallE16,Team E
+EHALL01901,2960,900,1,45 Francis,HALL,Hallway Node 17 Floor 1,HallE17,Team E
+EHALL02001,2950,745,1,45 Francis,HALL,Hallway Node 18 Floor 1,HallE18,Team E
+EREST00101,2950,730,1,45 Francis,REST,Restroom G1 Floor 1,Restroom G1,Team E
+EEXIT00201,2950,705,1,45 Francis,EXIT,Exit 2 Floor 1,Exit 2,Team E
+ELABS00101,3050,730,1,45 Francis,LABS,Asthma Research Floor 1,Asthma 1,Team E
+EDEPT00201,3100,890,1,45 Francis,DEPT,Wound and Ambulatory 1,WCCAT 1,Team E
+EDEPT00301,3200,880,1,45 Francis,DEPT,Ocupational Health Floor 1,Ocupational 1,Team E
+EHALL02101,3230,880,1,45 Francis,HALL,Hallway Node 19 Floor 1,HallE19,Team E
+EHALL02201,3270,875,1,45 Francis,HALL,Hallway Node 20 Floor 1,HallE20,Team E
+EHALL02301,3325,870,1,45 Francis,HALL,Hallway Node 21 Floor 1,HallE21,Team E
+EHALL02401,2770,980,1,45 Francis,HALL,Hallway Node 22 Floor 1,HallE22,Team E
+EHALL02501,2925,980,1,45 Francis,HALL,Hallway Node 23 Floor 1,HallE23,Team E
+EREST00201,2985,980,1,45 Francis,REST,Restroom F1 Floor 1,Restroom F1,Team E
+EHALL02601,3085,980,1,45 Francis,HALL,Hallway Node 24 Floor 1,HallE24,Team E
+EHALL02701,3085,1000,1,45 Francis,HALL,Hallway Node 25 Floor 1,HallE25,Team E
+EHALL02801,2925,1050,1,45 Francis,HALL,Hallway Node 26 Floor 1,HallE26,Team E
+EHALL02901,2770,1070,1,45 Francis,HALL,Hallway Node 27 Floor 1,HallE27,Team E
+EHALL03001,2790,1070,1,45 Francis,HALL,Hallway Node 28 Floor 1,HallE28,Team E
+ESTAI00301,2790,1155,1,45 Francis,STAI,Staircase H1 Floor 1,Stair H1,Team E
+EREST00301,2790,1190,1,45 Francis,REST,Restroom H1 Floor 1,Restroom H1,Team E
+ELABS00201,2790,1290,1,45 Francis,LABS,Ambulatory X-Ray Floor 1,X-Ray 1,Team E
+EDEPT00401,2790,1380,1,45 Francis,DEPT,Rehabilitation Services Floor 1,Rehab 1,Team E
+EHALL03101,2790,1460,1,45 Francis,HALL,Hallway Node 29 Floor 1,HallE29,Team E
+EHALL03201,2670,1380,1,45 Francis,HALL,Hallway Node 30 Floor 1,HallE30,Team E
+EHALL03301,2605,1380,1,45 Francis,HALL,Hallway Node 31 Floor 1,HallE31,Team E
+ESTAI00401,2605,1340,1,45 Francis,STAI,Staircase H2 Floor 1,Stair H2,Team E
+EHALL03401,2835,1460,1,45 Francis,HALL,Hallway Node 32 Floor 1,HallE32,Team E
+EHALL03501,2760,1460,1,45 Francis,HALL,Hallway Node 33 Floor 1,HallE33,Team E
+EHALL03601,2760,1405,1,45 Francis,HALL,Hallway Node 34 Floor 1,HallE34,Team E
