@@ -68,11 +68,11 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-        tabMap.setText(languageBundle.getString("my.map"));
+       /* tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
+        tabSettings.setText(languageBundle.getString("my.setting"));*/
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
             switch (newValue.getText()) { // TODO make this more modular/language independent
@@ -91,21 +91,6 @@ public class MainWindowController {
                 case "Settings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
-                case "Carte":
-                        switchToScreen(ApplicationScreen.PATHFINDING);
-                        break;
-                case "Générateur de carte":
-                        switchToScreen(ApplicationScreen.MAP_BUILDER);
-                        break;
-                case "Gestionnaire de requêtes":
-                        switchToScreen(ApplicationScreen.REQUEST_MANAGER);
-                        break;
-                case "Demande de soumission":
-                        switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
-                        break;
-                case "Paramètres":
-                        switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
-                        break;
             }
         });
 
@@ -190,11 +175,11 @@ public class MainWindowController {
             currentScreen.onScreenChanged();
         }
         languageBundle = SystemSettings.getInstance().getResourceBundle();
-        tabMap.setText(languageBundle.getString("my.map"));
+       /* tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));
+        tabSettings.setText(languageBundle.getString("my.setting"));*/
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist

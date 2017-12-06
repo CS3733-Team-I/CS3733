@@ -175,7 +175,7 @@ public class MapController {
         nodesEdgesView.reloadDisplay();
         recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         // error with not refreshing languages
-        NodeFloor.values();
+       // loadFloor(NodeFloor.);
     }
 
     /**
