@@ -1,7 +1,5 @@
 package database.utility;
 
-import database.template.SQLStrings;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +24,11 @@ public class DBUtil {
     }
 
     public static Connection getTestConnection() throws SQLException {
-        return getConnection(DBTESTURL + DBCREATE);
+        try {
+            return getConnection(DBTESTURL + DBCREATE);
+        } catch (SQLException e){
+            return getConnection(DBTESTURL);
+        }
     }
 
     public static void closeConnection(Connection con) throws SQLException {

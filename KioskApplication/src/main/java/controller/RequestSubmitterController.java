@@ -6,15 +6,17 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
 import entity.RequestEntity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import utility.ApplicationScreen;
+import javafx.scene.layout.HBox;
 import utility.ResourceManager;
-import utility.request.Language;
 import utility.node.NodeFloor;
+import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
@@ -23,27 +25,21 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML private JFXTabPane requestTypeTabs;
 
-    @FXML private JFXTextField intLocation;
-    @FXML private JFXTextField secLocationField;
-    @FXML private JFXComboBox priorityMenu;
+
     @FXML private Tab interpreterTab;
-    @FXML private JFXComboBox langMenu;
-    @FXML private JFXTextArea intNotesArea;
+    @FXML private JFXTextField locationTxt;
+    @FXML private JFXComboBox reqMenu;
+    @FXML private JFXTextArea notesArea;
+    @FXML private HBox row1, row2;
     /*food related*/
     @FXML private Tab foodTab;
     @FXML private JFXComboBox foodMenu;
     /*security related*/
     @FXML private Tab securityTab;
-    @FXML private JFXTextArea secNoteField;
     /*janitor related*/
     @FXML private Tab janitorTab;
-
     @FXML private JFXButton btnSubmit;
 
-    @FXML private JFXButton btnCancel;
-    @FXML private JFXTextField txtLocation;
-    @FXML private JFXDatePicker datePicker;
-    @FXML private JFXTimePicker timePicker;
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     LoginEntity l;
@@ -88,64 +84,76 @@ public class RequestSubmitterController extends ScreenController {
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
+                notesArea.clear();
+                locationTxt.clear();
+                reqMenu.setItems(null);
+                ObservableList<String> languages = FXCollections.observableArrayList();
+                languages.addAll("Spanish", "Chinese", "French", "Tagalog",
+                        "Vietnamese", "Korean","German","Arabic","Russian","Italian","Portuguese");
+                reqMenu.setPromptText("Select Language");
+                reqMenu.setItems(languages);
             } else if (newValue == foodTab) {
-                System.out.println("FOOD");
+//                System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SECURITY;
+                notesArea.clear();
+                locationTxt.clear();
+                reqMenu.setItems(null);
+                ObservableList<String> priorities = FXCollections.observableArrayList();
+                priorities.addAll("1","2","3","4","5");
+                reqMenu.setPromptText("Select Priority");
+                reqMenu.setItems(priorities);
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
         });
     }
 
-    @FXML
-    void onInterpreterPressed() throws IOException {
-        getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
-    }
-
     // adds the request. TODO: make this generic and able to process any and all requests
     @FXML
-    public void addIntRequest() throws IOException {
-        String location = intLocation.getText();
+    public void addRequest() throws IOException{
+        String location = locationTxt.getText();
         int assigner = l.getLoginID();
-        String notes = intNotesArea.getText();
-        if (notes==null){
+        String notes = notesArea.getText();
+        if(notes==null){
             notes="";
         }
-        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
+        RequestType type = currentRequestType;
+        switch(type){
+            case INTERPRETER:
+                addIntRequest(location,assigner,notes);
+                break;
+            case SECURITY:
+                addSecRequest(location,assigner,notes);
+                break;
+        }
+        locationTxt.clear();
+        notesArea.clear();
+        reqMenu.setValue("");
+    }
+
+    @FXML
+    public void addIntRequest(String location, int assigner, String notes) throws IOException {
+        Language language = Language.valueOf(reqMenu.getValue().toString().toUpperCase());
         r.submitInterpreterRequest(location, assigner, notes, language);
         System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
-        intLocation.clear();
-        intNotesArea.clear();
-        langMenu.setValue("");
     }
 
     @FXML
-    public void intClear() {
-        intLocation.clear();
-        intNotesArea.clear();
-        langMenu.setValue("");
+    public void clearButton() {
+        locationTxt.clear();
+        notesArea.clear();
+        reqMenu.setValue("");
     }
 
     @FXML
-    public void addSecRequest()throws IOException {
-        String location = secLocationField.getText();
-        int assignerID = l.getLoginID();
-        String notes = secNoteField.getText();
-        int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assignerID);
+    public void addSecRequest(String location, int assigner, String notes)throws IOException {
+
+        int priority = Integer.parseInt(reqMenu.getValue().toString());
+        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
         //node ID, employee, notes, priority
-        r.submitSecurityRequest(location, assignerID, notes, priority);
-        secLocationField.clear();
-        secNoteField.clear();
-        priorityMenu.setValue("");
-    }
-
-    @FXML
-    public void clearSecPressed(){
-        secLocationField.setText("");
-
+        r.submitSecurityRequest(location, assigner, notes, priority);
     }
 
     @Override
@@ -163,10 +171,10 @@ public class RequestSubmitterController extends ScreenController {
     public void onMapNodeClicked(Node n) {
         switch (currentRequestType){
             case INTERPRETER:
-                intLocation.setText(n.getNodeID());
+                locationTxt.setText(n.getNodeID());
                 break;
             case SECURITY:
-                secLocationField.setText(n.getNodeID());
+                locationTxt.setText(n.getNodeID());
                 break;
             case FOOD:
                 System.out.println("map clicked in Food tab");
@@ -185,8 +193,6 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setEditMode(false);
-
         getMapController().setAnchor(0,235,0,0);
         getMapController().setPath(null);
         getMapController().reloadDisplay();

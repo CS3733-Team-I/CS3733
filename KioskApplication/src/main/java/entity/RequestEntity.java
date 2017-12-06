@@ -55,7 +55,9 @@ public class RequestEntity {
         private static final RequestEntity testInstance = new RequestEntity(true);
     }
 
-    //reads all requests from the database
+    /**
+     * reads all requests from the database
+     */
     public void readAllFromDatabase(){
         LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for(InterpreterRequest iR:interpreterRequests) {
@@ -83,25 +85,9 @@ public class RequestEntity {
         }
     }
 
-
     /**
-     *
-     * @return
-     */
-    public LinkedList<Request> getAllRequests(){
-        LinkedList<Request> allRequests = new LinkedList<>();
-        for (InterpreterRequest iR: interpreterRequests.values()){
-            allRequests.add(iR);
-        }
-        for(SecurityRequest sR: securityRequests.values()){
-            allRequests.add(sR);
-        }
-        return allRequests;
-    }
-
-    /**
-     *
-     * @return
+     * Gets a list of all interpreter requests in the hashmaps
+     * @return list of all interpreterRequest found in interpreterRequests hashmap
      */
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
@@ -112,8 +98,8 @@ public class RequestEntity {
     }
 
     /**
-     *
-     * @return List of requests for security
+     * Gets a list of all security requests in the hashmaps
+     * @return list of all securityRequest found in securityRequests hashmap
      */
     public LinkedList<Request> getAllSecurity(){
         LinkedList<Request> secRequests = new LinkedList<>();
@@ -123,6 +109,26 @@ public class RequestEntity {
         return secRequests;
     }
 
+    /**
+     * Methods for all request types
+     */
+
+    /**
+     * Generic method to get all requests in the hashmaps
+     * @return the requests from the hashmaps
+     */
+    public LinkedList<Request> getAllRequests(){
+        LinkedList<Request> allRequests = new LinkedList<>();
+        allRequests.addAll(getAllinterpters());
+        allRequests.addAll(getAllSecurity());
+        return allRequests;
+    }
+
+    /**
+     * Filters all the requests in the hashmaps by the inputted status
+     * @param status
+     * @return linkedList of requests that fall under the same request progress status
+     */
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
         LinkedList<Request> displayedRequests = filterByStatus(requests, status);
@@ -130,10 +136,10 @@ public class RequestEntity {
     }
 
     /**
-     *
+     * Filters the requests from the inputted list by the inputted status
      * @param requests
      * @param status
-     * @return
+     * @return linkedList of requests that fall under the same request progress status
      */
     public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
         LinkedList<Request> displayedRequests = new LinkedList<>();
@@ -155,16 +161,14 @@ public class RequestEntity {
                     }
                     break;
             }
-
-
         }
         return displayedRequests;
     }
 
     /**
-     *
+     * Determines the type of request from a requestID
      * @param requestID
-     * @return
+     * @return the requestType of a specific request
      */
     public RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
@@ -184,32 +188,33 @@ public class RequestEntity {
         }
     }
 
+
     /**
-     * Generic request deleting method
+     * Generic request for deleting a request from the database and hashmaps
      * @param requestID
      */
     public void deleteRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             securityRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
             System.out.println("Deleting SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("Deleting FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Deleting JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
+        else if(requestType.equals("Ins")){ //TODO: change to Enum
             System.out.println("Deleting InsideTransportationRequest");
         }
-        else if(requestType.equals("Out")){
+        else if(requestType.equals("Out")){ //TODO: change to Enum
             System.out.println("Deleting OutsideTransportationRequest");
         }
         else{
@@ -217,83 +222,88 @@ public class RequestEntity {
         }
     }
 
+    //Generic request in progress maker
+
     /**
-     * Generic request in progress marker
+     * Generic method to mark a request in progress from a requestID
+     * Also adds the completer to the request object completer field
      * @param completerID
      * @param requestID
      */
     public void markInProgress(int completerID, String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("In Progress FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("In Progress JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("In Progress InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("In Progress OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("In Progress InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("In Progress OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
     }
 
+    //Generic request completing method
+
     /**
-     * Generic request completing method
+     * Generic method to complete a request and changes request status to DONE
      * @param requestID
      */
     public void completeRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
             System.out.println("Complete FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Complete JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("Complete InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("Complete OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("Complete InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("Complete OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
     }
 
     /**
-     *
+     * Generic method to get a request form a requestID
      * @param requestID
-     * @return
+     * @return returns the request object attatched to the requestID
      */
     public Request getRequest(String requestID){
         Request request;
@@ -316,6 +326,39 @@ public class RequestEntity {
     }
 
     /**
+     * Updates a request that is already in the database with the given requestID
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     */
+    public void updateRequest(String requestID, String nodeID, int assignerID, String note,
+                              Timestamp submittedTime, Timestamp completedTime,
+                              RequestProgressStatus status){
+        Request oldReq = getRequest(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssignerID(assignerID);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
+        switch (checkRequestType(requestID)){
+            case INTERPRETER:
+                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
+                break;
+            case SECURITY:
+                dbController.updateSecurityRequest((SecurityRequest) oldReq);
+                break;
+        }
+
+    }
+
+
+    /**
      * Gets the completer of a request if it is in progress
      * @param requestID
      * @return employee
@@ -327,12 +370,12 @@ public class RequestEntity {
     }
 
     /**
-     * Submits an interpreterRequest
+     * Adds an interpreter request to the database
      * @param nodeID
      * @param assignerID
      * @param note
      * @param lang
-     * @return
+     * @return adds an interpreter request to the database and returns that request
      */
     public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
@@ -348,6 +391,12 @@ public class RequestEntity {
         return rID;
     }
 
+    /**
+     * gets an interpreter request from the database
+     * @param requestID
+     * @return gets an interpreter request from the database that matches the given requestID
+     * @throws NullPointerException
+     */
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
         System.out.println("Getting InterpreterRequest");
         if(interpreterRequests.containsKey(requestID)) {
@@ -365,7 +414,7 @@ public class RequestEntity {
     }
 
     /**
-     *
+     * updates an interpreterRequest that is currently
      * @param requestID
      * @param nodeID
      * @param assignerID
@@ -379,15 +428,8 @@ public class RequestEntity {
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssignerID(assignerID);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
         oldReq.setLanguage(language);
-        //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateInterpreterRequest(oldReq);
     }
 
@@ -414,9 +456,9 @@ public class RequestEntity {
     }
 
     /**
-     *
+     * gets a security request from the database
      * @param requestID
-     * @return
+     * @return gets a security request form the database that matches the requestID
      * @throws NullPointerException
      */
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
@@ -436,7 +478,7 @@ public class RequestEntity {
     }
 
     /**
-     *
+     * updates a securityRequest that is currently in the database
      * @param requestID
      * @param nodeID
      * @param assignerID
@@ -450,15 +492,7 @@ public class RequestEntity {
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssignerID(assignerID);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
-        oldReq.setPriority(priority);
-        //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateSecurityRequest(oldReq);
     }
 
@@ -474,10 +508,8 @@ public class RequestEntity {
      * common IT request problems
      */
 
-    // gets mean time to setComplete a request from IN_PROGRESS to DONE
-
     /**
-     *
+     * gets mean time to setComplete a request from IN_PROGRESS to DONE
      */
     public void getMeanTimeToComplete(){
         long sum=0;
@@ -500,8 +532,8 @@ public class RequestEntity {
     }
 
     /**
-     * gives a frequency histogram for interpreter request languages
-     * @return
+     * gives a frequency historgram for interpreter request langauges
+     * @return a linkedlist of number of interpreter languages requested
      */
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         dbController.getAllInterpreterRequests();
@@ -523,8 +555,8 @@ public class RequestEntity {
     }
 
     /**
-     *
-     * @return hashmap of Strings and integers for a pie chart of request types
+     * creates a pie chart displaying the percentage of request types
+     * @return a hashmap of Strings and integers for a pie chart
      */
     public ObservableList<PieChart.Data> getRequestDistribution(){
         ObservableList<PieChart.Data> reqs =

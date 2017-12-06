@@ -1,5 +1,7 @@
 package utility.node;
 
+import entity.SystemSettings;
+
 public enum NodeFloor {
     LOWERLEVEL_2,
     LOWERLEVEL_1,
@@ -12,38 +14,42 @@ public enum NodeFloor {
     public String toString() {
         switch(this){
             case LOWERLEVEL_2:
-                return "Lower Level 2";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.lowerleveltwo");
             case LOWERLEVEL_1:
-                return "Lower Level 1";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.lowerlevelone");
             case GROUND:
-                return "Ground Floor";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.groundfloor");
             case FIRST:
-                return "First Floor";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.firstfloor");
             case SECOND:
-                return "Second Floor";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.secondfloor");
             case THIRD:
-                return "Third Floor";
+                return SystemSettings.getInstance().getResourceBundle().getString("my.thirdfloor");
             default:
                 return "Not Set: Contact Programmer";
         }
     }
 
     public String toLiteralString() {
+        return super.toString();
+    }
+
+    public int toInt() {
         switch(this){
             case LOWERLEVEL_2:
-                return "LOWERLEVEL_2";
+                return -2;
             case LOWERLEVEL_1:
-                return "LOWERLEVEL_1";
+                return -1;
             case GROUND:
-                return "GROUND";
+                return 0;
             case FIRST:
-                return "FIRST";
+                return 1;
             case SECOND:
-                return "SECOND";
+                return 2;
             case THIRD:
-                return "THIRD";
+                return 3;
             default:
-                return "Not Set: Contact Programmer";
+                return 9999;
         }
     }
 }

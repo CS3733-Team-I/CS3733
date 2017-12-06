@@ -5,7 +5,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.input.MouseEvent;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -46,10 +46,16 @@ public abstract class ScreenController {
         return view;
     }
 
-    public abstract void onMapLocationClicked(MouseEvent e);
+    public abstract void onMapLocationClicked(javafx.scene.input.MouseEvent e);
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
+    //TODO temporary: to be changed Override by Map Builder
+    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2){}
+    public boolean isNewNodeEmpty() {
+        return true;
+    }
+    public void showFloors() {}
 
     public void onScreenChanged() {}
     public abstract void resetScreen();

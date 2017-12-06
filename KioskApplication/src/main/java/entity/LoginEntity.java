@@ -75,7 +75,10 @@ public class LoginEntity {
         return currentLogin.getLoginID();
     }
 
-    // Adds every employee from the database to the logins hashmap
+    /**
+     * Adds every employee from the database to the logins hashmap
+     * @return
+     */
     private void readAllFromDatabase(){
         LinkedList<Employee> employees = database.getAllEmployees();
         for (Employee emp : employees) {
@@ -86,6 +89,7 @@ public class LoginEntity {
 
     /**
      * Gets all the login info from the entity, only allowed if currently a super user.
+     * @return
      */
     public ArrayList<Employee> getAllLogins() {
         ArrayList<Employee> emps = new ArrayList<Employee>();
@@ -98,6 +102,10 @@ public class LoginEntity {
         return emps;
     }
 
+    /**
+     * Creates a list of employee Usernames for all the employees in the database
+     * @return
+     */
     public ArrayList<String> getAllUserNames(){
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<String> userNames = new ArrayList<String>();

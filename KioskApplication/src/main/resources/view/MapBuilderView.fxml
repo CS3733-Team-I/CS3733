@@ -99,17 +99,17 @@
                                     <Insets left="45.0" />
                                  </GridPane.margin>
                               </Label>
-                              <JFXTextField fx:id="nodeID" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Node ID" GridPane.columnIndex="1">
+                              <JFXTextField fx:id="nodeID" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="132.0" promptText="Long Name" text="Node ID" GridPane.columnIndex="1">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                               </JFXTextField>
-                              <JFXTextField maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" promptText="X Coordinate" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xcoord">
+                              <JFXTextField maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" promptText="Short Name" text="X Coordinate" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="xcoord">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                               </JFXTextField>
-                              <JFXTextField fx:id="ycoord" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" promptText="Y Coordinate" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <JFXTextField fx:id="ycoord" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" promptText="Short Name" text="Y Coordinate" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>

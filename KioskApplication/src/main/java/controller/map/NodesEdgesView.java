@@ -137,10 +137,6 @@ public class NodesEdgesView extends AnchorPane {
         clear();
         drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
         drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
-
-        if(parent.getPath() != null) {
-            drawPath();
-        }
     }
 
     /**
@@ -174,20 +170,6 @@ public class NodesEdgesView extends AnchorPane {
      * @param node the node to remove
      */
     protected void removeNode(Node node) { nodesList.remove(node); }
-
-    public void drawPath() {
-        if (parent.getPath() != null) {
-            // TODO re-enable auto floor selection for path
-            // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
-            parent.clearMap();
-
-            for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
-                drawEdgesOnMap(segment);
-            }
-
-            drawNodesOnMap(parent.getPath().getWaypoints());
-        }
-    }
 
     public void setShowNodes(boolean show) {
         nodesView.setVisible(show);
