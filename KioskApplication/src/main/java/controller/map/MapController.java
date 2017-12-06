@@ -581,6 +581,8 @@ public class MapController {
         return visibleNodes;
     }
 
+
+    //TODO REFACTOR ALL THESE MAKE PATHWAYPOINTVIEW A DELEGATION IN PATHFINDING SIDEBAR
     private void checkWaypointVisible(ScrollPane pane)
     {
         visibleWaypoints.setAll(getWaypointNodes(pane));
@@ -606,5 +608,9 @@ public class MapController {
 
     public PathWaypointView getPathWaypointView() {
         return pathWaypointView;
+    }
+
+    public ArrayList<Color> getsSegmentColorList() {
+        return pathWaypointView.getsSegmentColorList();
     }
 }

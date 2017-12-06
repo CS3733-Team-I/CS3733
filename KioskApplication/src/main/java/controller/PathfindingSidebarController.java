@@ -370,6 +370,7 @@ public class PathfindingSidebarController extends ScreenController {
                             directionLabel.setStyle("-fx-font-weight:bold; "+
                                     "-fx-font-size: 12pt; "+
                                     " -fx-underline: true;");
+                            directionLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
                             directionLabelBox.getChildren().add(directionLabel);
                         }
                     }
