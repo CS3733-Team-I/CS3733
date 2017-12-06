@@ -224,36 +224,15 @@ public class MapController {
      * @param floor the floor to load
      */
     private void loadFloor(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
 
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        Image floorImage = ResourceManager.getInstance().getImage(floor.toImagePath());
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
 
         pathWaypointView.reloadDisplay();
 
-        miniMapController.switchFloor(floorImageURL);
+        miniMapController.switchFloor(floor.toImagePath());
     }
 
     /**
