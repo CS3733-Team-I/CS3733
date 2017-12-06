@@ -371,7 +371,7 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointBox.setAlignment(Pos.CENTER_LEFT);
 
         TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText("Click + to Add, Here to Search");
+        addWaypointLabel.setPromptText(SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
         addWaypointLabel.setPrefWidth(300);
         addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
         addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
