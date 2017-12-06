@@ -85,7 +85,7 @@ public class Path {
         else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.northwest");
         else returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.west");
 
-        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + SystemSettings.getInstance().getResourceBundle().getString("my.feet");
+        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + " " + SystemSettings.getInstance().getResourceBundle().getString("my.feet");
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
