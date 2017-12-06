@@ -57,8 +57,10 @@ public class Path {
                 if (i != 0 && i != nodes.size() - 1)
                     directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
             }
-
-            directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.end") + nodes.getLast().getLongName());
+            if(!nodes.getLast().getNodeType().equals(NodeType.HALL))
+                directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.end") + nodes.getLast().getLongName() + ".");
+            else
+                directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.endHall") + ".");
             directions.add(directionSegment);
         }
     }
@@ -69,7 +71,7 @@ public class Path {
         if(!nodes.getFirst().getNodeType().equals(NodeType.HALL))
             returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.start") + nodes.getFirst().getLongName();
         else
-            returnStr += "Start at hallway intersection";
+            returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.startHall");
 
         double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
 
