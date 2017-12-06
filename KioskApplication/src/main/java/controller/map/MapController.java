@@ -28,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utility.ResourceManager;
@@ -40,6 +41,8 @@ import java.util.List;
 
 public class MapController {
     @FXML private AnchorPane container;
+    @FXML private AnchorPane trayContainer;
+    @FXML private BorderPane mapBorder;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
@@ -435,6 +438,11 @@ public class MapController {
                 }
             }
         });
+
+        this.previewTray = new FloorPreviewTray();
+        this.previewTray.addFloor(NodeFloor.THIRD);  //For debugging
+        this.hideTray();
+        this.trayContainer.getChildren().add(previewTray);
     }
 
     /**
@@ -558,5 +566,13 @@ public class MapController {
      */
     public void swapWaypoint(int index1, int index2) {
         this.pathWaypointView.swapWaypoint(index1, index2);
+    }
+
+    public void hideTray(){
+        this.mapBorder.setBottom(null);
+    }
+
+    public void showTray(){
+        this.mapBorder.setBottom(this.trayContainer);
     }
 }

@@ -3,10 +3,10 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import utility.node.NodeFloor;
 
-import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -19,9 +19,11 @@ public class FloorPreviewTray extends ScrollPane {
     HBox tray;
 
     public FloorPreviewTray() {
-        displayedFloors = FXCollections.observableArrayList();
+        this.displayedFloors = FXCollections.observableArrayList();
+        this.tray = new HBox();
+        this.floorMap = new HashMap<>();
 
-        displayedFloors.addListener((ListChangeListener<NodeFloor>) listener -> {
+        this.displayedFloors.addListener((ListChangeListener<NodeFloor>) listener -> {
             while(listener.next()){
                 if(listener.wasPermutated()){
                     //do stuff
@@ -43,5 +45,9 @@ public class FloorPreviewTray extends ScrollPane {
                 }
             }
         });
+    }
+
+    public void addFloor(NodeFloor floor){
+        this.displayedFloors.add(floor);
     }
 }

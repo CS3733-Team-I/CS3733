@@ -105,10 +105,11 @@ public class PathfindingSidebarController extends ScreenController {
         waypointListView.getItems().clear();
         addWaypointBox();
         exceptionText.setText("");
-
-        getMapController().setPath(null);
-        getMapController().clearMap();
-        getMapController().reloadDisplay();
+        MapController mapController = getMapController();
+        mapController.setPath(null);
+        mapController.clearMap();
+        mapController.hideTray();
+        mapController.reloadDisplay();
     }
 
     @FXML
@@ -119,6 +120,7 @@ public class PathfindingSidebarController extends ScreenController {
             try{
                 Path path = pathfinder.generatePath(currentNodes);
                 getMapController().setPath(path);
+                getMapController().showTray();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
                     for (String direction : directionSegment) {
