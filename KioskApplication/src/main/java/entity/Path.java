@@ -83,9 +83,9 @@ public class Path {
 
         //Turning directions
         if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
-        else if(angleDif >= rightAngle) return "Make a sharp right at " + thisNode.getLongName();
+        else if(angleDif > rightAngle) return "Make a sharp right at " + thisNode.getLongName();
         else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
-        else if(angleDif <= rightAngle) return "Make a sharp left at " + thisNode.getLongName();
+        else if(angleDif < rightAngle) return "Make a sharp left at " + thisNode.getLongName();
         else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
         //Default case
