@@ -51,14 +51,14 @@ public class PathfindingSidebarController extends ScreenController {
     private ImageView removeIconView;
     @FXML
     private JFXButton btNavigate;
-    private Boolean isAddingWaypoiny;
+    private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentNodes;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
-        isAddingWaypoiny = true;
+        isAddingWaypoint = true;
     }
 
     @FXML
@@ -152,7 +152,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
-        if (isAddingWaypoiny) {
+        if (isAddingWaypoint) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);
 
@@ -160,7 +160,7 @@ public class PathfindingSidebarController extends ScreenController {
 
                 getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
 
-                isAddingWaypoiny = false;
+                isAddingWaypoint = false;
             }
         }
         else {
@@ -370,7 +370,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                isAddingWaypoiny = true;
+                isAddingWaypoint = true;
             }
         });
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
