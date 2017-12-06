@@ -80,7 +80,8 @@ public class Connector {
         int result = pstmt.executeUpdate();
         if (result == 1) {
             ResultSet rs = pstmt.getGeneratedKeys();
-            return rs.getInt("id");
+            rs.next();
+            return rs.getInt(1);
         } else {
             return 0;
         }

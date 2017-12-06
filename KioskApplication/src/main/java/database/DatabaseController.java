@@ -121,7 +121,7 @@ public class DatabaseController {
             return Connector.insertNode(instanceConnection, node);
         } catch (SQLException e) {
             DatabaseExceptionType type;
-            if (e.getSQLState() != "23505") {
+            if (e.getSQLState() == "23505") {
                 type = DatabaseExceptionType.DUPLICATE_ENTRY;
             } else {
                 e.printStackTrace();
