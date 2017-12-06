@@ -45,7 +45,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
-    @FXML private JFXButton btNavigate;
+    @FXML private JFXButton btNavigate, clearButton;
     private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentNodes;
@@ -94,7 +94,7 @@ public class PathfindingSidebarController extends ScreenController {
         // for setting the pathfinding sidebar to the internationalized language
         //btnSubmit.setText(rB.getString("my.search"));
         //searchBar.setPromptText(rB.getString("my.search"));
-        //clearButton.setText(rB.getString("my.clear"));
+        clearButton.setText(rB.getString("my.clear"));
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
     }
@@ -219,7 +219,7 @@ public class PathfindingSidebarController extends ScreenController {
 
         //btnSubmit.setText(rB.getString("my.search"));
         //searchBar.setText(rB.getString("my.search"));
-        //clearButton.setText(rB.getString("my.clear"));
+        clearButton.setText(rB.getString("my.clear"));
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
     }
