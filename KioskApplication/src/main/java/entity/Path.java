@@ -73,17 +73,17 @@ public class Path {
 
         double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
 
-        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += ". Go east for ";
-        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += ". Go northeast for ";
-        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += ". Go north for ";
-        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += ". Go northwest for ";
+        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += ".\n\tGo east for ";
+        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += ".\n\tGo southeast for ";
+        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += ".\n\tGo south for ";
+        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += ".\n\tGo southwest for ";
 
-        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += ". Go southeast for ";
-        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += ". Go south for ";
-        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += ". Go southwest for ";
-        else returnStr += ". Go west for ";
+        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += ".\n\tGo northeast for ";
+        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += ".\n\tGo north for ";
+        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += ".\n\tGo northwest for ";
+        else returnStr += ".\n\tGo west for ";
 
-        return returnStr + map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCost() + " feet.";
+        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + " feet.";
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
@@ -113,21 +113,21 @@ public class Path {
 
         if(!thisNode.getNodeType().equals(NodeType.HALL)){
             if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at " + thisNode.getLongName();
-            else if(angleDif > rightAngle) returnStr += "Make a sharp right at " + thisNode.getLongName() + ". Go straight for ";
-            else if(angleDif >= straightAngle) returnStr += "Turn right at " + thisNode.getLongName() + ". Go straight for ";
-            else if(angleDif < rightAngle) returnStr += "Make a sharp left at " + thisNode.getLongName() + ". Go straight for ";
-            else if(angleDif <= straightAngle) returnStr += "Turn left at " + thisNode.getLongName() + ". Go straight for ";
-            else returnStr += "Go to " + thisNode.getLongName() + ". Go straight for ";
+            else if(angleDif > rightAngle) returnStr += "Make a sharp right at " + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif >= straightAngle) returnStr += "Turn right at " + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif < rightAngle) returnStr += "Make a sharp left at " + thisNode.getLongName() + ".\n\tGo straight for ";
+            else if(angleDif <= straightAngle) returnStr += "Turn left at " + thisNode.getLongName() + ".\n\tGo straight for ";
+            else returnStr += "Go to " + thisNode.getLongName() + ".\n\tGo straight for ";
         }
         else {
-            if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at hallway intersection for ";
-            else if(angleDif > rightAngle) returnStr += "Make a sharp right at hallway intersection. Go straight for ";
-            else if(angleDif >= straightAngle) returnStr += "Turn right at hallway intersection. Go straight for ";
-            else if(angleDif < rightAngle) returnStr += "Make a sharp left at hallway intersection. Go straight for ";
-            else if(angleDif <= straightAngle) returnStr += "Turn left at hallway intersection. Go straight for ";
-            else returnStr += "Go to " + thisNode.getLongName() + ". Go straight for ";
+            if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at hallway intersection\n\tfor ";
+            else if(angleDif > rightAngle) returnStr += "Make a sharp right at hallway intersection.\n\tGo straight for ";
+            else if(angleDif >= straightAngle) returnStr += "Turn right at hallway intersection.\n\tGo straight for ";
+            else if(angleDif < rightAngle) returnStr += "Make a sharp left at hallway intersection.\n\tGo straight for ";
+            else if(angleDif <= straightAngle) returnStr += "Turn left at hallway intersection.\n\tGo straight for ";
+            else returnStr += "Go to " + thisNode.getLongName() + ".\n\tGo straight for ";
         }
-        return returnStr + map.getConnectingEdge(thisNode,nextNode).getCost() + " feet.";
+        return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " feet.";
 
     }
 
