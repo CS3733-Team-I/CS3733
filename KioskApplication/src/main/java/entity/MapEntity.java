@@ -136,6 +136,10 @@ public class MapEntity implements IMapEntity {
             return new LinkedList<>();
     }
 
+    public boolean isNodeOnFloor(Node node, NodeFloor floor) {
+        return floors.get(floor).getAllNodes().contains(node);
+    }
+
     public String getNodeTypeCount(NodeType nodeType, NodeFloor floor, TeamAssigned teamAssigned, String temp) {
         try {
             if(nodeType != NodeType.ELEV) {

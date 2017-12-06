@@ -16,11 +16,11 @@
    <children>
       <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
+            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
-                  <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="nodesEdgesContainer" />
+                  <AnchorPane fx:id="pathWaypointContainer" />
                </children>
             </StackPane>
          </content>
