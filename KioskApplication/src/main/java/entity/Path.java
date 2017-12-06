@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Path {
+
     private LinkedList<Node> waypoints;
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
@@ -64,7 +65,9 @@ public class Path {
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
 
-        //Elevator
+        MapEntity map = MapEntity.getInstance();
+
+        //        //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
             return "Take the elevator to " + nextNode.getFloor().toString() + " ";
         }
@@ -82,14 +85,27 @@ public class Path {
         double rightAngle = Math.PI/2;
 
         //Turning directions
-        if(Math.abs(angleDif) < straightAngle) return "Go straight at " + thisNode.getLongName();
-        else if(angleDif > rightAngle) return "Make a sharp right at " + thisNode.getLongName();
-        else if(angleDif >= straightAngle) return "Turn right at " + thisNode.getLongName();
-        else if(angleDif < rightAngle) return "Make a sharp left at " + thisNode.getLongName();
-        else if(angleDif <= straightAngle) return "Turn left at " + thisNode.getLongName();
 
-        //Default case
-        return "Go to ";
+        String returnStr = "";
+
+        if(!thisNode.getNodeType().equals(NodeType.HALL)){
+            if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at " + thisNode.getLongName();
+            else if(angleDif > rightAngle) returnStr += "Make a sharp right at " + thisNode.getLongName() + ". Go straight for ";
+            else if(angleDif >= straightAngle) returnStr += "Turn right at " + thisNode.getLongName() + ". Go straight for ";
+            else if(angleDif < rightAngle) returnStr += "Make a sharp left at " + thisNode.getLongName() + ". Go straight for ";
+            else if(angleDif <= straightAngle) returnStr += "Turn left at " + thisNode.getLongName() + ". Go straight for ";
+            else returnStr += "Go to " + thisNode.getLongName() + ". Go straight for ";
+        }
+        else {
+            if(Math.abs(angleDif) < straightAngle) returnStr += "Go straight at hallway intersection for ";
+            else if(angleDif > rightAngle) returnStr += "Make a sharp right at hallway intersection. Go straight for ";
+            else if(angleDif >= straightAngle) returnStr += "Turn right at hallway intersection. Go straight for ";
+            else if(angleDif < rightAngle) returnStr += "Make a sharp left at hallway intersection. Go straight for ";
+            else if(angleDif <= straightAngle) returnStr += "Turn left at hallway intersection. Go straight for ";
+            else returnStr += "Go to " + thisNode.getLongName() + ". Go straight for ";
+        }
+        return returnStr + map.getConnectingEdge(thisNode,nextNode).getCost() + " feet.";
+
     }
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
