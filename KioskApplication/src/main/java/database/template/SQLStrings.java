@@ -65,7 +65,7 @@ public class SQLStrings {
     public static final String INTERPRETER_SELECT_ALL = "select * from t_interpreter";
 
     // Food
-    public static final String FOOD_INSERT = "insert into t_food values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String FOOD_INSERT = "insert into t_food values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String FOOD_UPDATE = "update t_food set destinationID=?, deliveryTime=?, sourceID=?," +
             " assigner=?, completer=?,"+
             " note=?, submittedTime=?, startedTime=?, completedTime=?,"+

@@ -359,7 +359,7 @@ public class Connector {
     }
 
     public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
-        PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT+REQUEST_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT);
         pstmt.setString(1, fR.getRequestID());
         pstmt.setString(2,fR.getDestinationID());
         pstmt.setTimestamp(3, fR.getDeliveryDate());
