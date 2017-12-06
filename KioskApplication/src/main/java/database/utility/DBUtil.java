@@ -54,6 +54,9 @@ public class DBUtil {
         PreparedStatement createInterpreterTable = conn.prepareStatement(CREATE_INTERPRETER_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createInterpreterTable.execute();
+        PreparedStatement createFoodTable = conn.prepareStatement(CREATE_FOOD_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES);
+        createFoodTable.execute();
         PreparedStatement createSecurityTable = conn.prepareStatement(CREATE_SECURITY_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createSecurityTable.execute();

@@ -12,6 +12,8 @@ import utility.request.RequestType;
 import utility.request.*;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -545,14 +547,23 @@ public class RequestEntity {
      * @return Adds food request to the database and the hashmaps
      */
     public String submitFoodRequest(String nodeID, int assignerID, String note,
-                                    String destinationNodeID, String order, String deliveryDate){
+                                    String destinationNodeID, String order, LocalTime deliveryDate){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Foo"+currTime;
+
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR, deliveryDate.getHour());
+        now.set(Calendar.MINUTE, deliveryDate.getMinute());
+        now.set(Calendar.SECOND, deliveryDate.getSecond());
+
+        Timestamp deliveryTime = new Timestamp(now.getTimeInMillis());
+
         FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, order, deliveryDate);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime);
+
         foodRequests.put(rID, fR);
         dbController.addFoodRequest(fR);
         return rID;
@@ -595,10 +606,9 @@ public class RequestEntity {
     public void updateFoodRequest(String requestID, String nodeID, int assignerID, String note,
                                   Timestamp submittedTime, Timestamp completedTime,
                                   RequestProgressStatus status, String destinationNodeID,
-                                  String order, String deliveryDate){
+                                  String order, Timestamp deliveryDate){
         FoodRequest oldReq = foodRequests.get(requestID);
         oldReq.setDestinationNodeID(destinationNodeID);
-        oldReq.setOrder(order);
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);

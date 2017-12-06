@@ -32,7 +32,6 @@ public class DatabaseController {
         try {
             if(test) {
                 instanceConnection = DBUtil.getTestConnection();
-
             } else {
                 instanceConnection = DBUtil.getConnection();
             }
@@ -343,7 +342,7 @@ public class DatabaseController {
         return false;
     }
 
-    public  LinkedList<InterpreterRequest> getAllInterpreterRequests() {
+    public LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
         } catch (SQLException e) {
@@ -354,7 +353,7 @@ public class DatabaseController {
         return new LinkedList<InterpreterRequest>();
     }
 
-    public  LinkedList<SecurityRequest> getAllSecurityRequests() {
+    public LinkedList<SecurityRequest> getAllSecurityRequests() {
         try {
             return Connector.selectAllSecurity(instanceConnection);
         } catch (SQLException e) {
@@ -363,6 +362,17 @@ public class DatabaseController {
             }
         }
         return new LinkedList<SecurityRequest>();
+    }
+
+    public LinkedList<FoodRequest> getAllFoodRequests() {
+        try {
+            return Connector.selectAllFood(instanceConnection);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<FoodRequest>();
     }
 
     public LinkedList<FoodRequest> getAllFoodRequest(){

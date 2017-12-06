@@ -6,15 +6,13 @@ import java.sql.Timestamp;
 
 public class FoodRequest extends Request{
     private String destinationNodeID;
-    private String order;
-    private String deliveryDate;
+    private Timestamp deliveryDate;
 
     public FoodRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                        Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                       RequestProgressStatus status, String destinationNodeID, String order, String deliveryDate){
+                       RequestProgressStatus status, String destinationNodeID, Timestamp deliveryDate){
         super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
         this.destinationNodeID = destinationNodeID;
-        this.order = order;
         this.deliveryDate = deliveryDate;
     }
 
@@ -26,14 +24,13 @@ public class FoodRequest extends Request{
             FoodRequest other = (FoodRequest) obj;
             return(this.requestID.equals(other.getRequestID())) &&
                     this.getNodeID().equals(other.getNodeID())&&
-                    this.getAssignerID()==other.getAssignerID()&&
+                    this.getAssignerID() == other.getAssignerID()&&
                     this.getNote().equals(other.getNote())&&
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&
-                    this.getStatus()==other.getStatus()&&
-                    this.destinationNodeID ==other.getDestinationNodeID()&&
-                    this.order==other.getOrder()&&
-                    this.deliveryDate==other.getDeliveryDate();
+                    this.getStatus().equals(other.getStatus())&&
+                    this.destinationNodeID.equals(other.getDestinationNodeID()) &&
+                    this.deliveryDate.equals(other.getDeliveryDate());
         }
         else{
             return false;
@@ -48,19 +45,11 @@ public class FoodRequest extends Request{
         this.destinationNodeID = destinationNodeID;
     }
 
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
-    }
-
-    public String getDeliveryDate() {
+    public Timestamp getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(String deliveryDate) {
+    public void setDeliveryDate(Timestamp deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 }
