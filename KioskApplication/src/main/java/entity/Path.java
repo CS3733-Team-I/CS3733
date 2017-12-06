@@ -52,7 +52,7 @@ public class Path {
         for(LinkedList<Edge> edgeSegment: edges) {
             LinkedList<String> directionSegment = new LinkedList<>();
             LinkedList<Node> nodes = getListOfNodes(edgeSegment, this.waypoints.get(segmentIndex++));
-            directionSegment.add("Start at " + nodes.getFirst().getLongName());
+            directionSegment.add(findStartDirectionInstructions(nodes));
             for (int i = 0; i < nodes.size(); i++) {
                 if (i != 0 && i != nodes.size() - 1)
                     directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
@@ -61,6 +61,24 @@ public class Path {
             directionSegment.add("End at " + nodes.getLast().getLongName());
             directions.add(directionSegment);
         }
+    }
+
+    private String findStartDirectionInstructions(LinkedList<Node> nodes) {
+        String returnStr = "";
+        if(!nodes.getFirst().getNodeType().equals(NodeType.HALL))
+            returnStr += "Start at " + nodes.getFirst().getLongName();
+        else
+            returnStr += "Start at hallway intersection.";
+
+        double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
+
+        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += " Go east for ";
+        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += " Go northeast for ";
+        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += " Go north for ";
+        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += " Go northwest for ";
+        //else if(angle<=)
+
+        return returnStr;
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
