@@ -30,7 +30,7 @@ public enum NodeFloor {
         }
     }
 
-    public String toString1() {
+    /*public String toString1() {
         switch(this){
             case LOWERLEVEL_2:
                 return "LOWERLEVEL_2";
@@ -47,7 +47,7 @@ public enum NodeFloor {
             default:
                 return "Not Set: Contact Programmer";
         }
-    }
+    }*/
 }
 
 

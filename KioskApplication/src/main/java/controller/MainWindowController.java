@@ -18,9 +18,7 @@ import utility.ApplicationScreen;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class MainWindowController {
@@ -49,8 +47,6 @@ public class MainWindowController {
 
     private HashMap<ApplicationScreen, ScreenController> controllers;
 
-    protected ResourceBundle languageBundle;
-
     public MainWindowController() {
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
@@ -63,7 +59,7 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-        languageBundle= SystemSettings.getInstance().getResourceBundle();
+        ResourceBundle languageBundle= SystemSettings.getInstance().getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
@@ -98,6 +94,7 @@ public class MainWindowController {
         initializeTrackingTable();
 
         checkPermissions();
+
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -174,7 +171,7 @@ public class MainWindowController {
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
         }
-        languageBundle = SystemSettings.getInstance().getResourceBundle();
+        ResourceBundle languageBundle = SystemSettings.getInstance().getResourceBundle();
         switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
         tabMap.setText(languageBundle.getString("my.map"));
         tabMB.setText(languageBundle.getString("my.mapbuilder"));

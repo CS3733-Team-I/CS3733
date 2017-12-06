@@ -18,8 +18,7 @@ import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PathfindingSidebarController extends ScreenController {
 
@@ -52,7 +51,7 @@ public class PathfindingSidebarController extends ScreenController {
         exceptionText.setText("");
         // for setting the pathfinding sidebar to the internationalized language
         btnSubmit.setText(rB.getString("my.search"));
-        searchBar.setText(rB.getString("my.search"));
+        searchBar.setPromptText(rB.getString("my.search"));
         clearButton.setText(rB.getString("my.clear"));
         navigateButton.setText(rB.getString("my.navigate"));
         waypointLabel.setText(rB.getString("my.waypoints"));

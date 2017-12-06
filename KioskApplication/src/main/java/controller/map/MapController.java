@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import controller.MainWindowController;
-import controller.SettingsController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
@@ -30,7 +29,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
-import utility.request.Language;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -49,10 +47,11 @@ public class MapController {
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane waypointPane;
-    @FXML private JFXButton recenterButton;
+    //@FXML private JFXButton recenterButton;
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+    @FXML private JFXButton recenterButton;
 
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
