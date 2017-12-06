@@ -314,10 +314,20 @@ public class PathWaypointView extends AnchorPane {
         waypointList.set(index2, temp);
     }
 
+    /**
+     * give the starting waypoint in path(first one)
+     */
     public Node getStartWaypoint() {
         if(this.waypointList.size() != 0) {
             return waypointList.get(0);
         }
         else return null;
+    }
+
+    /**
+     * return true if there's path displaying
+     */
+    public boolean isPathShowing() {
+        return this.currentPath != null;
     }
 }

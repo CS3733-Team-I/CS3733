@@ -113,6 +113,9 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML
     void btGeneratePathPressed() throws IOException {
+        if(getMapController().isPathShowing()) {
+            onResetPressed();
+        }
         exceptionText.setText("");
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
@@ -155,7 +158,9 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
-
+        if(getMapController().isPathShowing()) {
+            onResetPressed();
+        }
         if (isAddingWaypoiny) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);

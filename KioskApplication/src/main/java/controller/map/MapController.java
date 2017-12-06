@@ -592,4 +592,11 @@ public class MapController {
     public void swapWaypoint(int index1, int index2) {
         this.pathWaypointView.swapWaypoint(index1, index2);
     }
+
+    /**
+     * return true if there's path displaying
+     */
+    public boolean isPathShowing() {
+        return pathWaypointView.isPathShowing();
+    }
 }
