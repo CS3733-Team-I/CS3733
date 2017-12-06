@@ -599,4 +599,12 @@ public class MapController {
     public boolean isPathShowing() {
         return pathWaypointView.isPathShowing();
     }
+
+    public LinkedList<String> getIndexedDirection(int i) {
+        return pathWaypointView.getDirectionForWaypointIndex(i);
+    }
+
+    public PathWaypointView getPathWaypointView() {
+        return pathWaypointView;
+    }
 }
