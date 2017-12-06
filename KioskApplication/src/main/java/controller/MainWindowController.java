@@ -201,7 +201,7 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
@@ -213,7 +213,7 @@ public class MainWindowController {
                 break;
 
             case EMPLOYEE:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -221,7 +221,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("my.staffLogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -240,47 +240,6 @@ public class MainWindowController {
         }
 
         ScreenController controller = controllers.get(screen);
-
-        // Initialize controller if it doesn't exist
-        if (controller == null) {
-            switch (screen) {
-                case MAP_BUILDER:
-                    controller = new MapBuilderController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabMB);
-                    break;
-
-                case PATHFINDING:
-                    controller = new PathfindingSidebarController(this, mapController);
-                    //connect pathWaypointView with sidebar if applicable
-                    mapController.getPathWaypointView().setSidebarController((PathfindingSidebarController) controller);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabMap);
-                    break;
-                case REQUEST_MANAGER:
-                    controller = new RequestManagerController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabRM);
-                    break;
-
-                case REQUEST_SUBMITTER:
-                    controller = new RequestSubmitterController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabRS);
-                    break;
-
-                case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabSettings);
-                    break;
-
-                default:
-                    break;
-            }
-
-            controllers.put(screen, controller);
-        }
 
         contentNode = controller.getContentView();
 

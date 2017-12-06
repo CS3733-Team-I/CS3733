@@ -212,7 +212,7 @@ public class RequestSubmitterController extends ScreenController {
         langMenu.setValue(null);
 
         restaurantComboBox.setValue(null);
-        deliveryTimePicker.setValue(LocalTime.now());
+        deliveryTimePicker.setValue(null);
         deliveryLocation.setText("");
 
         secLocationField.setText("");
@@ -224,6 +224,7 @@ public class RequestSubmitterController extends ScreenController {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getLoginID(), intNotesArea.getText(), language);
         System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getLoginID());
+        clearButton();
     }
 
     public void addSecRequest() {
@@ -231,6 +232,7 @@ public class RequestSubmitterController extends ScreenController {
         System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
         //node ID, employee, notes, priority
         requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getLoginID(), secNoteField.getText(), priority);
+        clearButton();
     }
 
     public void addFoodRequest(){

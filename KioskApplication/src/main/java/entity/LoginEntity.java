@@ -124,15 +124,15 @@ public class LoginEntity {
         return loginIDs;
     }
 
-    public ArrayList<Integer> getAllEmployeeType(RequestType type){
+    public ArrayList<String> getAllEmployeeType(RequestType type){
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
-        ArrayList<Integer> loginIDs = new ArrayList<Integer>();
+        ArrayList<String> loginIDs = new ArrayList<>();
         if(type.equals(RequestType.GENERAL)){
-            loginIDs = getAllLoginIDs();
+            loginIDs = getAllUserNames();
         }else{
             for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
-                    loginIDs.add(employee.getLoginID());
+                    loginIDs.add(employee.getUsername());
                 }
             }
         }

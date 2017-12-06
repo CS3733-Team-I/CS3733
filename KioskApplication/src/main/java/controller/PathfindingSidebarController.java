@@ -45,7 +45,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
-    @FXML private JFXButton btNavigate;
+    @FXML private JFXButton btNavigate, clearButton;
     private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentNodes;
@@ -99,8 +99,8 @@ public class PathfindingSidebarController extends ScreenController {
             ResourceBundle resB = systemSettings.getResourceBundle();
             //btnSubmit.setText(resB.getString("search"));
             //searchBar.setPromptText(resB.getString("search"));
-            //btClear.setText(resB.getString("clear"));
-            btNavigate.setText(resB.getString("navigate"));
+            clearButton.setText(resB.getString("my.clear"));
+            btNavigate.setText(resB.getString("my.navigate"));
             //waypointLabel.setText(resB.getString("waypoints"));
         });
     }
@@ -223,11 +223,11 @@ public class PathfindingSidebarController extends ScreenController {
         ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         // for setting the pathfinding sidebar to the internationalized language
 
-        //btnSubmit.setText(rB.getString("search"));
-        //searchBar.setText(rB.getString("search"));
-        //clearButton.setText(rB.getString("clear"));
-        btNavigate.setText(rB.getString("navigate"));
-        //waypointLabel.setText(rB.getString("waypoints"));
+        //btnSubmit.setText(rB.getString("my.search"));
+        //searchBar.setText(rB.getString("my.search"));
+        clearButton.setText(rB.getString("my.clear"));
+        btNavigate.setText(rB.getString("my.navigate"));
+        //waypointLabel.setText(rB.getString("my.waypoints"));
     }
 
     /**
@@ -377,7 +377,7 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointBox.setAlignment(Pos.CENTER_LEFT);
 
         TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText("Click + to Add, Here to Search");
+        addWaypointLabel.setPromptText(SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
         addWaypointLabel.setPrefWidth(300);
         addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
         addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
@@ -400,5 +400,6 @@ public class PathfindingSidebarController extends ScreenController {
         }
         waypointListView.getItems().add(addWaypointBox);
 //        addWaypointBoxIndex = waypointListView.getItems().indexOf(addWaypointBox);
+
     }
 }

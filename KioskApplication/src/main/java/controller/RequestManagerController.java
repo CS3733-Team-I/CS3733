@@ -202,7 +202,7 @@ public class RequestManagerController extends ScreenController {
         JFXButton statusUpdater = new JFXButton();
         JFXButton delete = new JFXButton("Delete");
 
-        ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
+        ObservableList<String> listOfEmployees = FXCollections.observableArrayList();
         JFXComboBox employees = new JFXComboBox(listOfEmployees);
         employees.setPromptText("Select Employee");
 
