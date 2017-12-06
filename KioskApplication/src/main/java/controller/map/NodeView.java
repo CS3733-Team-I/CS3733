@@ -120,7 +120,7 @@ public class NodeView extends StackPane {
 
             Dragboard db = this.startDragAndDrop(TransferMode.COPY);
             ClipboardContent content = new ClipboardContent();
-            content.putString(this.node.getNodeID());
+            content.putString(Integer.toString(this.node.getUniqueID()));
             db.setContent(content);
 
             circle.setFill(Color.GREEN);
@@ -156,7 +156,7 @@ public class NodeView extends StackPane {
 
                 System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() +'_'+ node.getNodeID());
 
-                parent.nodesConnected(this.node.getNodeID(), e.getDragboard().getString());
+                parent.nodesConnected(Integer.toString(this.node.getUniqueID()), e.getDragboard().getString());
             }
             e.setDropCompleted(success);
             e.consume();

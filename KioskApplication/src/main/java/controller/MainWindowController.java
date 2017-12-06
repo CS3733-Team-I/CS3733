@@ -113,6 +113,7 @@ public class MainWindowController {
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
         tabSettings.setText(languageBundle.getString("my.setting"));
         // attaches observer to the systemSettings
+
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             switch (loginEntity.getCurrentPermission()) {
@@ -337,6 +338,6 @@ public class MainWindowController {
 
     public void nodesConnected(String nodeID1, String nodeID2) {
         MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
-        mbc.addConnectionByNodes(nodeID1, nodeID2);
+        mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
     }
 }
