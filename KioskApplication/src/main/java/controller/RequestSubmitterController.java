@@ -11,12 +11,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.springframework.cglib.core.Local;
 import utility.ResourceManager;
@@ -162,6 +160,44 @@ public class RequestSubmitterController extends ScreenController {
                 currentRequestType = RequestType.JANITOR;
             }
         });
+
+        JFXCheckBox fries = new JFXCheckBox("Fries");
+        JFXCheckBox salad = new JFXCheckBox("Salad");
+        JFXCheckBox chips = new JFXCheckBox("Chips");
+
+        TreeItem<VBox> side1 = new TreeItem<>(new VBox(fries));
+        TreeItem<VBox> side2 = new TreeItem<>(new VBox(salad));
+        TreeItem<VBox> side3 = new TreeItem<>(new VBox(chips));
+
+        TreeItem<VBox> root1 = new TreeItem<>(new VBox(new Label("Sides")));
+        root1.setExpanded(true);
+        root1.getChildren().setAll(side1,side2,side3);
+
+        JFXCheckBox hamburger = new JFXCheckBox("Hamburger");
+        JFXCheckBox blt = new JFXCheckBox("BLT");
+        JFXCheckBox chxParm = new JFXCheckBox("Chicken Parm");
+
+        TreeItem<VBox> main1 = new TreeItem<>(new VBox(hamburger));
+        TreeItem<VBox> main2 = new TreeItem<>(new VBox(blt));
+        TreeItem<VBox> main3 = new TreeItem<>(new VBox(chxParm));
+
+        TreeItem<VBox> root2 = new TreeItem<>(new VBox(new Label("Entree")));
+        root2.setExpanded(true);
+        root2.getChildren().setAll(main1,main2,main3);
+
+        JFXCheckBox soda = new JFXCheckBox("Soda");
+        JFXCheckBox orange = new JFXCheckBox("Orange Juice");
+        JFXCheckBox milk = new JFXCheckBox("Milk");
+
+        TreeItem<VBox> drink1 = new TreeItem<>(new VBox(soda));
+        TreeItem<VBox> drink2 = new TreeItem<>(new VBox(orange));
+        TreeItem<VBox> drink3 = new TreeItem<>(new VBox(milk));
+
+        TreeItem<VBox> root3 = new TreeItem<>(new VBox(new Label("Entree")));
+        root3.setExpanded(true);
+        root3.getChildren().setAll(drink1,drink2,drink3);
+
+
     }
 
     @FXML
