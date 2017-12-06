@@ -10,8 +10,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import javafx.animation.PathTransition;
-import javafx.animation.TranslateTransition;
+import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,9 +23,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -35,18 +32,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.MoveTo;
-import javafx.util.Duration;
+import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,6 +50,7 @@ public class MapController {
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
+    public static final double DEFAULT_ZOOM = 0.75;
 
     @FXML private StackPane stackPane;
     @FXML private ImageView mapView;
@@ -67,11 +59,12 @@ public class MapController {
 
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
+    @FXML private JFXButton recenterButton;
 
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
     @FXML private JFXCheckBox showEdgesBox;
-
+    @FXML private JFXButton aboutButton;
 
     @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
@@ -83,14 +76,9 @@ public class MapController {
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
 
-
-
     private MainWindowController parent = null;
 
-    public MapController() {
-
-        visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
-    }
+    public MapController() { visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList(); }
 
     /**
      * Set the parent MainWindowController for this MapController
@@ -195,9 +183,14 @@ public class MapController {
     public void reloadDisplay() {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
-
         nodesEdgesView.reloadDisplay();
         pathWaypointView.reloadDisplay();
+
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        //hackey way to reset the comobobox
+        int floor = floorSelector.getValue().ordinal();
+        floorSelector.getItems().removeAll();
+        floorSelector.setValue(NodeFloor.values()[floor]);
     }
 
     /**
@@ -342,6 +335,7 @@ public class MapController {
     @FXML
     protected void initialize() throws NotFoundException{
         floorSelector.getItems().addAll(NodeFloor.values());
+        aboutButton.setVisible(true);
 
         miniMapController = new MiniMapController(this);
 
@@ -352,6 +346,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -377,13 +372,21 @@ public class MapController {
             System.err.println("Loading MiniMapView failed.");
         }
 
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
-
         // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
         zoomGroup = new Group();
         zoomGroup.getChildren().add(scrollPane.getContent());
         Group contentGroup = new Group(zoomGroup);
         scrollPane.setContent(contentGroup);
+
+        // Initializes the zoom slider to the current zoom scale
+        zoomSlider.setValue(zoomGroup.getScaleX());
+
+        // Initializes the Hvalue & Vvalue to the default values
+        scrollPane.setHvalue(DEFAULT_HVALUE);
+        scrollPane.setVvalue(DEFAULT_VVALUE);
+
+        // zoomSlider value listener
+        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // MouseWheel zooming event handler
         scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
@@ -499,6 +502,7 @@ public class MapController {
         parent.onMapFloorChanged(floor);
     }
 
+
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
         if (parent != null) {
@@ -533,14 +537,14 @@ public class MapController {
     public void zoomInPressed() {
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal + 0.1);
+        zoomSlider.setValue(sliderVal * 1.2);
     }
 
     @FXML
     public void zoomOutPressed() {
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal - 0.1);
+        zoomSlider.setValue(sliderVal / 1.2);
     }
 
     /**
@@ -612,5 +616,10 @@ public class MapController {
 
     public ArrayList<Color> getsSegmentColorList() {
         return pathWaypointView.getsSegmentColorList();
+    }
+
+    @FXML
+    private void onAboutAction(){
+        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
     }
 }

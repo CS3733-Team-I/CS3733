@@ -288,7 +288,7 @@ public class MapEntity implements IMapEntity {
     }
 
     private void addFloor(NodeFloor floor) {
-        floors.put(floor, new MapFloorEntity(floor));
+        floors.put(floor, new MapFloorEntity());
     }
 
     //Given two nodes, returns the edge connecting them, or null if they aren't connected.

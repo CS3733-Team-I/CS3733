@@ -3,6 +3,8 @@ package entity;
 import database.objects.Node;
 import pathfinder.*;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class SystemSettings {
@@ -10,6 +12,7 @@ public class SystemSettings {
     private SearchAlgorithm algorithm;
     private Node defaultnode;
     private int beamWidth;
+    private ResourceBundle resourceBundle;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -21,6 +24,8 @@ public class SystemSettings {
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
         this.setDefaultnode(this.prefs.get("defaultNode","IDEPT00403"));
         this.setBeamWidth(this.prefs.get("beamWidth", "3"));
+        //this.setResourceBundle(this.prefs.get("Internationalization","English"));
+        this.setResourceBundle("English");
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
@@ -98,5 +103,29 @@ public class SystemSettings {
      */
     public int getBeamWidth() {
         return beamWidth;
+    }
+
+    public void setResourceBundle(String resourceBundle) {
+        switch(resourceBundle){
+            case "English":
+                this.resourceBundle = ResourceBundle.getBundle(
+                    "Internationalization", Locale.US);
+                this.prefs.put("Internationalization", "English");
+                break;
+            case "France":
+                this.resourceBundle = ResourceBundle.getBundle(
+                        "Internationalization",Locale.FRANCE);
+                this.prefs.put("Internationalization", "France");
+                break;
+                default:
+                    this.resourceBundle = ResourceBundle.getBundle(
+                            "Internationalization", Locale.US);
+                    this.prefs.put("Internationalization", "English");
+                    break;
+        }
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 }

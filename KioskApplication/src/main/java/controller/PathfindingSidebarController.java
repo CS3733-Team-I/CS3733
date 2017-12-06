@@ -2,9 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
-import controller.map.PathWaypointView;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
@@ -17,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -28,7 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
@@ -43,28 +39,26 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private AnchorPane container;
     @FXML private GridPane waypointsContainer;
     @FXML private JFXListView<HBox> waypointListView;
-
     @FXML private Label exceptionText;
 
-    @FXML
-    private ImageView addIconView;
-    @FXML
-    private ImageView removeIconView;
-    @FXML
-    private JFXButton btNavigate;
-    private Boolean isAddingWaypoiny;
+    @FXML private ImageView addIconView;
+    @FXML private ImageView removeIconView;
+    @FXML private JFXButton btNavigate;
+    private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentNodes;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
-        isAddingWaypoiny = true;
+        isAddingWaypoint = true;
     }
 
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
+        System.out.println("initializing");
+        ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
@@ -83,19 +77,23 @@ public class PathfindingSidebarController extends ScreenController {
 
         addWaypointBox();
 
-        waypointListView.getItems().addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(Change c) {
-                while (c.next()) {
-                    if(waypointListView.getItems().size() < 2) {
-                        btNavigate.setDisable(true);
-                    }
-                    else {
-                        btNavigate.setDisable(false);
-                    }
+        waypointListView.getItems().addListener((ListChangeListener<HBox>) c -> {
+            while (c.next()) {
+                if(waypointListView.getItems().size() < 2) {
+                    btNavigate.setDisable(true);
+                }
+                else {
+                    btNavigate.setDisable(false);
                 }
             }
         });
+
+        // for setting the pathfinding sidebar to the internationalized language
+        //btnSubmit.setText(rB.getString("my.search"));
+        //searchBar.setPromptText(rB.getString("my.search"));
+        //clearButton.setText(rB.getString("my.clear"));
+        btNavigate.setText(rB.getString("my.navigate"));
+        //waypointLabel.setText(rB.getString("my.waypoints"));
     }
 
     @FXML
@@ -161,7 +159,7 @@ public class PathfindingSidebarController extends ScreenController {
         if(getMapController().isPathShowing()) {
             onResetPressed();
         }
-        if (isAddingWaypoiny) {
+        if (isAddingWaypoint) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);
 
@@ -169,7 +167,7 @@ public class PathfindingSidebarController extends ScreenController {
 
                 getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
 
-                isAddingWaypoiny = false;
+                isAddingWaypoint = false;
             }
         }
         else {
@@ -211,6 +209,14 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(false);
+        ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
+        // for setting the pathfinding sidebar to the internationalized language
+
+        //btnSubmit.setText(rB.getString("my.search"));
+        //searchBar.setText(rB.getString("my.search"));
+        //clearButton.setText(rB.getString("my.clear"));
+        btNavigate.setText(rB.getString("my.navigate"));
+        //waypointLabel.setText(rB.getString("my.waypoints"));
     }
 
     private void addPressAndHoldHandler(javafx.scene.Node node, Duration holdTime,
@@ -424,7 +430,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                isAddingWaypoiny = true;
+                isAddingWaypoint = true;
             }
         });
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));

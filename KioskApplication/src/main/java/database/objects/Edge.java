@@ -5,6 +5,9 @@ import entity.MapEntity;
 import utility.node.NodeType;
 
 public class Edge {
+
+    public static final double COST_TO_FEET = 0.25; //TODO get actual value
+    public static final double COST_TO_METERS = 0.1; //TODO get actual values
     public static final int STAIR_COST = 100;
     public static final int ELEVATOR_COST = 100;
     private String edgeID; //ID of the edge
@@ -174,9 +177,17 @@ public class Edge {
     }
 
     public String getEdgeType() {
-        if(this.cost == null)
+        if (this.cost == null)
             this.calculateCost();
         return edgeType;
+    }
+
+    public double getCostFeet() {
+        return (double)(getCost())*COST_TO_FEET;
+    }
+
+    public double getCostMeters() {
+        return (double)(getCost())*COST_TO_METERS;
     }
 
     /**

@@ -7,6 +7,7 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
+import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -18,6 +19,7 @@ import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 public class MainWindowController {
 
@@ -57,28 +59,32 @@ public class MainWindowController {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-
+        ResourceBundle languageBundle= SystemSettings.getInstance().getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
-            switch (newValue.getText()) { // TODO make this more modular/language independent
-                case "Map":
+            switch (newValue.getId().toString()) {
+                case "tabMap":
                     switchToScreen(ApplicationScreen.PATHFINDING);
                     break;
-                case "Map Builder":
+                case "tabMB":
                     switchToScreen(ApplicationScreen.MAP_BUILDER);
                     break;
-                case "Request Manager":
+                case "tabRM":
                     switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                     break;
-                case "Request Submit":
+                case "tabRS":
                     switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                     break;
-                case "Settings":
+                case "tabSettings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
             }
@@ -88,6 +94,7 @@ public class MainWindowController {
         initializeTrackingTable();
 
         checkPermissions();
+
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -128,18 +135,19 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText("Staff Login");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
+                tabPane.getTabs().add(tabSettings);
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
                 break;
 
             case EMPLOYEE:
-                switchButton.setText("Logoff");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -147,7 +155,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText("Logoff");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -159,12 +167,18 @@ public class MainWindowController {
         }
     }
 
-    void switchToScreen(ApplicationScreen screen) {
+    public void switchToScreen(ApplicationScreen screen) {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
         }
-
+        ResourceBundle languageBundle = SystemSettings.getInstance().getResourceBundle();
+        switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         ScreenController controller = controllers.get(screen);
 
         // Initialize controller if it doesn't exist
@@ -214,6 +228,7 @@ public class MainWindowController {
 
         // Reset controller's view
         controller.resetScreen();
+        mapController.reloadDisplay();
 
         this.currentScreen = screen;
     }
