@@ -22,7 +22,7 @@ public class SystemSettings {
     private SystemSettings() {
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-        this.setDefaultnode(this.prefs.get("defaultNode","IDEPT00403"));
+        this.setDefaultnode(this.prefs.get("defaultNode","IHALL00303"));
         this.setBeamWidth(this.prefs.get("beamWidth", "3"));
         this.setResourceBundle(this.prefs.get("Internationalization","English"));
         //if not set, default to A*
