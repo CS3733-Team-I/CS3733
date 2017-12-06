@@ -11,8 +11,6 @@ import javafx.animation.PathTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -50,7 +48,8 @@ public class PathWaypointView extends AnchorPane {
     MapController parent;
     PathfindingSidebarController sidebarController;
 
-    public PathWaypointView(MapController parent) throws NotFoundException{
+    public PathWaypointView(MapController parent) throws NotFoundException {
+        this.setPickOnBounds(false);
         wayPointView = new AnchorPane();
         wayPointViewsMap = new HashMap<>();
         wayPointView.setPickOnBounds(false);
@@ -69,16 +68,7 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
-//        wayPointView.prefWidthProperty().bind(this.widthProperty());
-//        wayPointView.prefHeightProperty().bind(this.heightProperty());
-//
-//        pathView.prefWidthProperty().bind(this.widthProperty());
-//        pathView.prefHeightProperty().bind(this.heightProperty());
-
-        this.getChildren().addAll(wayPointView, pathView);
-
-        wayPointView.setMouseTransparent(true);
-        pathView.setMouseTransparent(false);
+        this.getChildren().addAll(pathView, wayPointView);
 
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
@@ -89,17 +79,15 @@ public class PathWaypointView extends AnchorPane {
 
         segmentColorList = new ArrayList<>();
 
-        Image upIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-up.png");
-        upView = new javafx.scene.image.ImageView(upIcon);
+        Image arrowButtonIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-button.png");
+        upView = new javafx.scene.image.ImageView(arrowButtonIcon);
         upView.setFitHeight(48);
         upView.setFitWidth(48);
-        upView.setStyle("-fx-background-color: #00589F;");
 
-        Image downIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-down.png");
-        downView = new javafx.scene.image.ImageView(downIcon);
+        downView = new javafx.scene.image.ImageView(arrowButtonIcon);
+        downView.setRotate(180);
         downView.setFitHeight(48);
         downView.setFitWidth(48);
-        downView.setStyle("-fx-background-color: #00589F;");
 
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
@@ -210,44 +198,27 @@ public class PathWaypointView extends AnchorPane {
                 jfxPath.getElements().add(lineTo);
 
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    switchFloor = new JFXButton();
-                    //going up
                     final NodeFloor targetFloor = waypointList.get(i+1).getFloor();
                     final NodeFloor sourceFloor = waypointList.get(i).getFloor();
+
+                    switchFloor = new JFXButton();
+                    switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
+                    switchFloor.setLayoutX(traversedNode.getXcoord()-48);
+                    switchFloor.setLayoutY(traversedNode.getYcoord());
+                    switchFloor.setPrefHeight(48);
+                    switchFloor.setPrefWidth(48);
+
+                    // Change image based on if we're going up or down
                     if(targetFloor.toInt() > sourceFloor.toInt()) {
-                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                parent.setFloorSelector(targetFloor);
-                            }
-                        });
-                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                        switchFloor.setLayoutY(traversedNode.getYcoord());
-                        switchFloor.setPrefHeight(48);
-                        switchFloor.setPrefWidth(48);
-                        switchFloor.setStyle("-fx-background-color: #01499f;");
                         switchFloor.setGraphic(upView);
-                    }
-                    //going down
-                    else if(targetFloor.toInt() < sourceFloor.toInt()) {
-                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                parent.setFloorSelector(targetFloor);
-                            }
-                        });
-                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                        switchFloor.setLayoutY(traversedNode.getYcoord());
-                        switchFloor.setPrefHeight(48);
-                        switchFloor.setPrefWidth(48);
-                        switchFloor.setStyle("-fx-background-color: #00589F;");
+                    } else if(targetFloor.toInt() < sourceFloor.toInt()) {
                         switchFloor.setGraphic(downView);
                     }
                 }
             }
             this.pathView.getChildren().add(jfxPath);
 
-            Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
+            Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);
             for(int j = 0; j < currentPath.getPathCost()/20; j++) {
                 Circle circle = new Circle(10);
@@ -266,6 +237,7 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.playFrom(Duration.seconds(j));
             }
         }
+
         this.pathView.getChildren().add(switchFloor);
     }
 
@@ -314,9 +286,6 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-
-//        waypointList.remove(index1);
-//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
