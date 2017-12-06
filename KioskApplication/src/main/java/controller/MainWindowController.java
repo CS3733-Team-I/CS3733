@@ -2,34 +2,33 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
 import controller.map.MapBuilderController;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import java.beans.PropertyChangeEvent;
+
+import javafx.beans.*;
+import javafx.beans.property.*;
+import javafx.beans.value.*;
 
 public class MainWindowController {
 
@@ -52,7 +51,7 @@ public class MainWindowController {
 
 
     private Timer timer = new Timer();
-    public boolean timeout = false;
+    public BooleanProperty timeout = new SimpleBooleanProperty(false);
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -65,6 +64,7 @@ public class MainWindowController {
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
+
     }
 
     @FXML
@@ -104,9 +104,20 @@ public class MainWindowController {
 
         initializeLoginPopup();
         initializeTrackingTable();
+        initializeListener();
+
 
         checkPermissions();
         resetTimer();
+    }
+
+    private void initializeListener(){
+        timeout.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Listener Triggered");
+            loginEntity.logOut();
+            checkPermissions();
+            System.out.println("Listener Finished");
+        });
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -151,13 +162,20 @@ public class MainWindowController {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                    funct();
+                timeout.setValue(true);
+                funct();
             }
-        }, 5000);
+        }, 10000);
     }
 
     public void funct(){
+
+
         System.out.println("funct");
+        /*
+        if(countdown != 0)
+            countdown--;
+        System.out.println(countdown);
         LoginEntity.getInstance().logOut();
         System.out.println("Logged Off, Switching");
 
@@ -165,8 +183,8 @@ public class MainWindowController {
             switchButton.setText("Staff Login");
             System.out.println(switchButton.getText());
             //hides all but the Map tab from non logged in users
-            tabPane.getTabs().clear();
-            tabPane.getTabs().add(tabMap);
+            //tabPane.getTabs().clear();
+            //tabPane.getTabs().add(tabMap);
 
             mapController.setNodesVisible(false);
             mapController.setEdgesVisible(false);
@@ -175,6 +193,8 @@ public class MainWindowController {
             System.out.println("EXCEPTION");
         }
         System.out.println("Done Switching");
+        */
+
     }
 
     //checks permissions of user and adjusts visible tabs and screens
