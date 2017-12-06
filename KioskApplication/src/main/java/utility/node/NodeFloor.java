@@ -24,26 +24,30 @@ public enum NodeFloor {
             case THIRD:
                 return "Third Floor";
             default:
-                return "Not Set: Contact Programmer";
+                return "Floor Not Found";
         }
     }
 
-    public String toString1() {
+    /**
+     * Returns the location of an image file containing a map of the corresponding floor
+     * @return
+     */
+    public String toImagePath() {
         switch(this){
             case LOWERLEVEL_2:
-                return "LOWERLEVEL_2";
+                return "/images/00_thelowerlevel2.png";
             case LOWERLEVEL_1:
-                return "LOWERLEVEL_1";
+                return "/images/00_thelowerlevel1.png";
             case GROUND:
-                return "GROUND";
+                return "/images/00_thegroundfloor.png";
             case FIRST:
-                return "FIRST";
+                return "/images/01_thefirstfloor.png";
             case SECOND:
-                return "SECOND";
+                return "/images/02_thesecondfloor.png";
             case THIRD:
-                return "THIRD";
+                return "/images/03_thethirdfloor.png";
             default:
-                return "Not Set: Contact Programmer";
+                return "Floor Not Found";
         }
     }
 }
