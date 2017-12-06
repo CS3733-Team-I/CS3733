@@ -107,33 +107,31 @@ public class MainWindowController {
             }
         }
 
-        tabMap.setText(languageBundle.getString("map"));
-        tabMB.setText(languageBundle.getString("mapBuilder"));
-        tabRM.setText(languageBundle.getString("requestManager"));
-        tabRS.setText(languageBundle.getString("requestSubmit"));
-        tabSettings.setText(languageBundle.getString("setting"));
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         // attaches observer to the systemSettings
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             switch (loginEntity.getCurrentPermission()) {
                 case NONEMPLOYEE:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
                     break;
 
                 case EMPLOYEE:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
-                    break;
-
                 case SUPER_USER:
                 case ADMIN:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
                     break;
             }
-            tabMap.setText(rB.getString("map"));
-            tabMB.setText(rB.getString("mapBuilder"));
-            tabRM.setText(rB.getString("requestManager"));
-            tabRS.setText(rB.getString("requestSubmit"));
-            tabSettings.setText(rB.getString("setting"));
+
+            tabMap.setText(languageBundle.getString("my.map"));
+            tabMB.setText(languageBundle.getString("my.mapbuilder"));
+            tabRM.setText(languageBundle.getString("my.requestmanager"));
+            tabRS.setText(languageBundle.getString("my.requestsubmit"));
+            tabSettings.setText(languageBundle.getString("my.setting"));
         });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
@@ -221,7 +219,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText(systemSettings.getResourceBundle().getString("my.staffLogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);

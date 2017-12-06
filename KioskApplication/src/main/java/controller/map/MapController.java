@@ -241,7 +241,7 @@ public class MapController {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
         nodesEdgesView.reloadDisplay();
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         pathWaypointView.reloadDisplay();
 
         //hackey way to reset the comobobox
@@ -404,7 +404,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -426,8 +426,7 @@ public class MapController {
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
-            recenterButton.setText(rB.getString("recenter"));
-
+            recenterButton.setText(rB.getString("my.recenter"));
         });
 
         try {
