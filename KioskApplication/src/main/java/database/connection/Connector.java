@@ -361,9 +361,9 @@ public class Connector {
     public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT+REQUEST_INSERT);
         pstmt.setString(1, fR.getRequestID());
-        pstmt.setString(2, fR.getNodeID());
-        pstmt.setString(3,fR.getRestaurantLocNodeID());
-        pstmt.setTimestamp(4, fR.getDeliveryDate());
+        pstmt.setString(2,fR.getDestinationID());
+        pstmt.setTimestamp(3, fR.getDeliveryDate());
+        pstmt.setString(4, fR.getNodeID());
         pstmt.setInt(5, fR.getAssignerID());
         pstmt.setInt(6, fR.getCompleterID());
         pstmt.setString(7, fR.getNote());
@@ -375,21 +375,20 @@ public class Connector {
     }
 
     public static int updateFood(Connection conn, FoodRequest fR) throws SQLException{
-        String sql = FOOD_UPDATE+REQUEST_UPDATE;
+        String sql = FOOD_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-//        pstmt.setInt(1, sR.getPriority());
-        pstmt.setString(1, fR.getNodeID());
-        pstmt.setString(2,fR.getRestaurantLocNodeID());
-        pstmt.setTimestamp(4, fR.getDeliveryDate());
-        pstmt.setInt(5, fR.getAssignerID());
-        pstmt.setInt(6, fR.getCompleterID());
-        pstmt.setString(7, fR.getNote());
-        pstmt.setTimestamp(8, fR.getSubmittedTime());
-        pstmt.setTimestamp(9, fR.getStartedTime());
-        pstmt.setTimestamp(10, fR.getCompletedTime());
-        pstmt.setInt(11, fR.getStatus().ordinal());
+        pstmt.setString(1,fR.getDestinationID());
+        pstmt.setTimestamp(2, fR.getDeliveryDate());
+        pstmt.setString(3, fR.getNodeID());
+        pstmt.setInt(4, fR.getAssignerID());
+        pstmt.setInt(5, fR.getCompleterID());
+        pstmt.setString(6, fR.getNote());
+        pstmt.setTimestamp(7, fR.getSubmittedTime());
+        pstmt.setTimestamp(8, fR.getStartedTime());
+        pstmt.setTimestamp(9, fR.getCompletedTime());
+        pstmt.setInt(10, fR.getStatus().ordinal());
         //search parameter below
-        pstmt.setString(12, fR.getRequestID());
+        pstmt.setString(11, fR.getRequestID());
         return pstmt.executeUpdate();
 
     }

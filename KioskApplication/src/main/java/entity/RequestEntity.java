@@ -384,16 +384,16 @@ public class RequestEntity {
         oldReq.setCompletedTime(completedTime);
         //not sure if editing the status is needed
         oldReq.setStatus(status);
-//        switch (checkRequestType(requestID)){
-//            case INTERPRETER:
-//                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
-//                break;
-//            case SECURITY:
-//                dbController.updateSecurityRequest((SecurityRequest) oldReq);
-//                break;
-//            case FOOD:
-//                dbController.updateFoodRequest((FoodRequest) oldReq);
-//        }
+        switch (checkRequestType(requestID)){
+            case INTERPRETER:
+                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
+                break;
+            case SECURITY:
+                dbController.updateSecurityRequest((SecurityRequest) oldReq);
+                break;
+            case FOOD:
+                dbController.updateFoodRequest((FoodRequest) oldReq);
+        }
 
     }
 
@@ -607,7 +607,7 @@ public class RequestEntity {
                                   RequestProgressStatus status, String destinationNodeID,
                                   Timestamp deliveryDate){
         FoodRequest oldReq = foodRequests.get(requestID);
-        oldReq.setRestaurantLocNodeID(destinationNodeID);
+        oldReq.setDestinationID(destinationNodeID);
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);

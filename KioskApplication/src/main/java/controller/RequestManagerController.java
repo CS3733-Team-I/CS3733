@@ -8,8 +8,6 @@ import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
@@ -101,6 +98,14 @@ public class RequestManagerController extends ScreenController {
                     janitorFilter.setSelected(true);
                     break;
             }
+        }else{
+            foodFilter.setDisable(false);
+            janitorFilter.setDisable(false);
+            securityFilter.setDisable(false);
+            interpreterFilter.setDisable(false);
+            maintenanceFilter.setDisable(false);
+            itFilter.setDisable(false);
+            transportationFilter.setDisable(false);
         }
     }
 
@@ -295,7 +300,7 @@ public class RequestManagerController extends ScreenController {
                 extraField = new Label("Language: "+language);
                 break;
             case FOOD:
-                String restaurantID = r.getFoodRequest(requestID).getRestaurantLocNodeID();
+                String restaurantID = r.getFoodRequest(requestID).getDestinationID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField = new Label("Restaurant: " + restaurant);
                 break;
