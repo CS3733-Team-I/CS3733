@@ -107,7 +107,7 @@
                    <Label focusTraversable="false" prefHeight="30.0" text="Public Elevator" GridPane.columnIndex="0" GridPane.rowIndex="12" />
                    <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="13">
                        <image><Image url="@../images/mapKey/ShieldIcon.png" /></image></ImageView>
-                   <Label focusTraversable="false" prefHeight="30.0" text="???" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+                   <Label focusTraversable="false" prefHeight="30.0" text="Elevator Name" GridPane.columnIndex="0" GridPane.rowIndex="13" />
                    <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="14">
                        <image><Image url="@../images/mapKey/ShuttleIcon.png" /></image></ImageView>
                    <Label focusTraversable="false" prefHeight="30.0" text="Shuttle" GridPane.columnIndex="0" GridPane.rowIndex="14" />
