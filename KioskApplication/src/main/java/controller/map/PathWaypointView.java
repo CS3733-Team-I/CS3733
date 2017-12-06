@@ -1,6 +1,7 @@
 package controller.map;
 
 import com.jfoenix.controls.JFXButton;
+import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
@@ -32,9 +33,7 @@ import utility.node.NodeType;
 
 import javax.swing.text.html.ImageView;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class PathWaypointView extends AnchorPane {
 
@@ -51,7 +50,10 @@ public class PathWaypointView extends AnchorPane {
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
 
+    private ArrayList<Color> segmentColorList;
+
     MapController parent;
+    PathfindingSidebarController sidebarController;
 
     public PathWaypointView(MapController parent) throws NotFoundException{
         wayPointView = new AnchorPane();
@@ -89,6 +91,8 @@ public class PathWaypointView extends AnchorPane {
         waypointList = FXCollections.observableArrayList();
 
         this.parent = parent;
+
+        segmentColorList = new ArrayList<>();
 
         Image upIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-up.png");
         upView = new javafx.scene.image.ImageView(upIcon);
@@ -188,6 +192,7 @@ public class PathWaypointView extends AnchorPane {
 
     public void drawPath(Path path) {
         JFXButton switchFloor = new JFXButton();
+        segmentColorList.clear();
 
         this.currentPath = path;
 
@@ -248,6 +253,7 @@ public class PathWaypointView extends AnchorPane {
             this.pathView.getChildren().add(jfxPath);
 
             Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
+            segmentColorList.add(colorForPointers);
             for(int j = 0; j < currentPath.getPathCost()/20; j++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
@@ -307,10 +313,63 @@ public class PathWaypointView extends AnchorPane {
      * swap the waypoints at targeted indexes
      */
     public void swapWaypoint(int index1, int index2) {
-        Node temp = waypointList.get(index1);
+        Node temp1 = waypointList.get(index1);
+        Node temp2 = waypointList.get(index2);
+        WaypointView tempWaypointView = wayPointViewsMap.get(temp2);
+
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-        waypointList.set(index1, waypointList.get(index2));
-        waypointList.set(index2, temp);
+
+//        waypointList.remove(index1);
+//        waypointList.remove(index2);
+
+        waypointList.set(index1, temp2);
+        waypointList.set(index2, temp1);
+
+        wayPointViewsMap.put(temp2, tempWaypointView);
+
+        for(Node node : waypointList){
+            if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {
+                this.wayPointViewsMap.get(node).setVisible(false);
+            }
+            else {
+                this.wayPointViewsMap.get(node).setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * give the starting waypoint in path(first one)
+     */
+    public Node getStartWaypoint() {
+        if(this.waypointList.size() != 0) {
+            return waypointList.get(0);
+        }
+        else return null;
+    }
+
+    /**
+     * return true if there's path displaying
+     */
+    public boolean isPathShowing() {
+        return this.currentPath != null;
+    }
+
+    /**
+     * return the text direction for targeted index
+     */
+    public LinkedList<String> getDirectionForWaypointIndex(int i) {
+        if(currentPath != null && i < currentPath.getDirectionsList().size()) {
+            return currentPath.getDirectionsList().get(i);
+        }
+        else return null;
+    }
+
+    public ArrayList<Color> getsSegmentColorList() {
+        return segmentColorList;
+    }
+
+    public void setSidebarController(PathfindingSidebarController sidebarController) {
+        this.sidebarController = sidebarController;
     }
 }

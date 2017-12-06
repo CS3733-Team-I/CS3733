@@ -26,7 +26,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
@@ -34,10 +36,7 @@ import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class PathfindingSidebarController extends ScreenController {
 
@@ -114,6 +113,9 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML
     void btGeneratePathPressed() throws IOException {
+        if(getMapController().isPathShowing()) {
+            onResetPressed();
+        }
         exceptionText.setText("");
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
@@ -134,6 +136,7 @@ public class PathfindingSidebarController extends ScreenController {
                 exceptionText.setText("ERROR! "+ exception.getMessage());
             }
         }
+        addTextDirection();
     }
 
     @Override
@@ -157,7 +160,9 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
-
+        if(getMapController().isPathShowing()) {
+            onResetPressed();
+        }
         if (isAddingWaypoint) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);
@@ -259,6 +264,9 @@ public class PathfindingSidebarController extends ScreenController {
 
         waypointBox.getChildren().addAll(btRemoveWaypoint, nodeNameLabel);
         waypointBox.setAccessibleText(node.getNodeID());
+        waypointBox.setAccessibleHelp("waypointCell");
+        waypointBox.setAccessibleRoleDescription(node.getLongName());
+
         waypointBox.setMargin(btRemoveWaypoint, new Insets(1,1,1,1));
         waypointBox.setMargin(nodeNameLabel, new Insets(10,1,1,10));
 
@@ -340,6 +348,48 @@ public class PathfindingSidebarController extends ScreenController {
             }
         });
     }
+
+    /**
+     * replace the waypoint cells with text direction
+     */
+    private void addTextDirection() {
+        for(HBox waypointCell : waypointListView.getItems()) {
+            if(waypointCell.getAccessibleHelp() != null) {
+                if(waypointCell.getAccessibleHelp().equals("waypointCell")) {
+                    waypointCell.getChildren().clear();
+
+                    VBox directionLabelBox = new VBox();
+
+                    Label waypointLabel = new Label(waypointListView.getItems().indexOf(waypointCell)+1 + ". " + waypointCell.getAccessibleRoleDescription());
+                    waypointLabel.setTextFill(Color.RED);
+                    waypointLabel.setStyle("-fx-font-weight:bold; "+
+                            "-fx-font-size: 16pt; ");
+                    waypointLabel.setPrefWidth(300);
+                    directionLabelBox.getChildren().add(waypointLabel);
+
+                    if(getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
+                        for(String textDirection : getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell))) {
+                            Label directionLabel = new Label(textDirection);
+                            directionLabel.setStyle("-fx-font-weight:bold; "+
+                                    "-fx-font-size: 12pt; "+
+                                    " -fx-underline: true;");
+                            directionLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
+                            directionLabelBox.getChildren().add(directionLabel);
+                        }
+                    }
+                    if(directionLabelBox.getChildren().size() == 1) {
+                        Label destinationLabel = new Label();
+                        destinationLabel.setText("*DESTINATION*");
+                        destinationLabel.setStyle("-fx-font-weight:bold; "+
+                                "-fx-font-size: 16pt; ");
+                        directionLabelBox.getChildren().add(destinationLabel);
+                    }
+                    waypointCell.getChildren().add(directionLabelBox);
+                }
+            }
+        }
+    }
+
     /**
      * remove the target waypoint bounded with input node
      */

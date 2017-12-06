@@ -128,6 +128,7 @@ public class MapController {
         if (path != null) {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
+            setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
             pathWaypointView.drawPath(path);
         }
     }
@@ -556,6 +557,8 @@ public class MapController {
         return visibleNodes;
     }
 
+
+    //TODO REFACTOR ALL THESE MAKE PATHWAYPOINTVIEW A DELEGATION IN PATHFINDING SIDEBAR
     private void checkWaypointVisible(ScrollPane pane)
     {
         visibleWaypoints.setAll(getWaypointNodes(pane));
@@ -574,5 +577,24 @@ public class MapController {
 
     public void showTray(){
         this.mapBorder.setBottom(this.trayContainer);
+    }
+
+    /**
+     * return true if there's path displaying
+     */
+    public boolean isPathShowing() {
+        return pathWaypointView.isPathShowing();
+    }
+
+    public LinkedList<String> getIndexedDirection(int i) {
+        return pathWaypointView.getDirectionForWaypointIndex(i);
+    }
+
+    public PathWaypointView getPathWaypointView() {
+        return pathWaypointView;
+    }
+
+    public ArrayList<Color> getsSegmentColorList() {
+        return pathWaypointView.getsSegmentColorList();
     }
 }
