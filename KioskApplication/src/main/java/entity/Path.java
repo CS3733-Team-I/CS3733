@@ -64,21 +64,26 @@ public class Path {
     }
 
     private String findStartDirectionInstructions(LinkedList<Node> nodes) {
+        MapEntity map = MapEntity.getInstance();
         String returnStr = "";
         if(!nodes.getFirst().getNodeType().equals(NodeType.HALL))
             returnStr += "Start at " + nodes.getFirst().getLongName();
         else
-            returnStr += "Start at hallway intersection.";
+            returnStr += "Start at hallway intersection";
 
         double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
 
-        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += " Go east for ";
-        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += " Go northeast for ";
-        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += " Go north for ";
-        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += " Go northwest for ";
-        //else if(angle<=)
+        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += ". Go east for ";
+        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += ". Go northeast for ";
+        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += ". Go north for ";
+        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += ". Go northwest for ";
 
-        return returnStr;
+        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += ". Go southeast for ";
+        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += ". Go south for ";
+        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += ". Go southwest for ";
+        else returnStr += ". Go west for ";
+
+        return returnStr + map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCost() + " feet.";
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
