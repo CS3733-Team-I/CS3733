@@ -176,6 +176,8 @@ public class MainWindowController {
 
                 case PATHFINDING:
                     controller = new PathfindingSidebarController(this, mapController);
+                    //connect pathWaypointView with sidebar if applicable
+                    mapController.getPathWaypointView().setSidebarController((PathfindingSidebarController) controller);
                     break;
                 case REQUEST_MANAGER:
                     controller = new RequestManagerController(this, mapController);

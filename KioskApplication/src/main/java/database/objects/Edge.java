@@ -12,6 +12,7 @@ public class Edge {
     private String node2ID; //one of the nodes that is part of the edge
     private Integer cost = null;
     private Boolean wheelchairAccessible = null;
+    private String edgeType = null;
 
     //initialize the edge with an id, and two nodes
     //checks to see if each node exists
@@ -92,6 +93,15 @@ public class Edge {
     }
 
     /**
+     * Returns true if the edge has target node
+     * @param  node for checking
+     * @return True if the edge has target node
+     */
+    public boolean hasNode(Node node) {
+        return getNode1ID().equals(node.getNodeID()) || getNode2ID().equals(node.getNodeID());
+    }
+
+    /**
      * Given one node ID return the other node ID or null if the given node isn't a node in the edge
      * @param id ID of the given node
      * @return the ID of the other connected node or null
@@ -123,12 +133,14 @@ public class Edge {
                !node1.getFloor().equals(node2.getFloor())){
                 this.cost =  STAIR_COST;
                 this.wheelchairAccessible = false;
+                this.edgeType = "staircase";
             }
             else if(node1.getNodeType().equals(NodeType.ELEV) &&
                     node2.getNodeType().equals(NodeType.ELEV) &&
                     !node1.getFloor().equals(node2.getFloor())) {
                 this.cost = ELEVATOR_COST;
                 this.wheelchairAccessible = true;
+                this.edgeType = "elevator shaft";
             }
                 //Otherwise, estimate the cost as normal.
             else {
@@ -159,6 +171,12 @@ public class Edge {
         if(this.cost == null)
             this.calculateCost();
         return cost;
+    }
+
+    public String getEdgeType() {
+        if(this.cost == null)
+            this.calculateCost();
+        return edgeType;
     }
 
     /**
