@@ -575,6 +575,7 @@ public class RequestEntity {
      * @throws NullPointerException
      */
     public FoodRequest getFoodRequest(String requestID)throws NullPointerException{
+        System.out.println("Getting Food Request");
         if (foodRequests.containsKey(requestID)){
             return foodRequests.get(requestID);
         }

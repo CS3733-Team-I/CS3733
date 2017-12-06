@@ -405,7 +405,7 @@ public class Connector {
             //for completed FoodRequests
             foodRequest = new FoodRequest(
                     requestID,
-                    rs.getString("nodeID"),
+                    rs.getString("sourceID"),
                     rs.getInt("assigner"),
                     rs.getInt("completer"),
                     rs.getString("note"),
@@ -413,7 +413,7 @@ public class Connector {
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getString("destinationNodeID"),
+                    rs.getString("destinationID"),
                     rs.getTimestamp("deliveryTime")
             );
         }

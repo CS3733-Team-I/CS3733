@@ -235,6 +235,11 @@ public class RequestManagerController extends ScreenController {
                 allRequests.add(iR);
             }
         }
+        if(foodFilter.isSelected()){
+            for(Request fR : r.getAllFoodRequests()){
+                allRequests.add(fR);
+            }
+        }
 
         return allRequests;
     }
@@ -275,6 +280,11 @@ public class RequestManagerController extends ScreenController {
                 case INTERPRETER:
                     String language = r.getInterpreterRequest(requestID).getLanguage().toString();
                     extraField = new Label("Language: "+language);
+                    break;
+                case FOOD:
+                    String restaurantID = r.getFoodRequest(requestID).getRestaurantLocNodeID();
+                    String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+                    extraField = new Label("Restaurant: " + restaurant);
                     break;
                 default: //security
                     int priority = r.getSecurityRequest(requestID).getPriority();
