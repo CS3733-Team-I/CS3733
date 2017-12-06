@@ -282,7 +282,8 @@ public class RequestManagerController extends ScreenController {
     public VBox displayInformation(String requestID) throws NotFoundException {
         Request request = r.getRequest(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Requested By: " + request.getAssignerID());
+        String assigner = r.getAssigner(requestID).getUsername();
+        Label employee = new Label("Requested By: " + assigner);
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label requestNotes = new Label(request.getNote());
