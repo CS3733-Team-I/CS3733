@@ -325,7 +325,7 @@ public class MapController {
         AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
-        nodesEdgesContainer.setMouseTransparent(true);
+        nodesEdgesContainer.setPickOnBounds(false);
 
         AnchorPane.setTopAnchor(pathWaypointView, 0.0);
         AnchorPane.setLeftAnchor(pathWaypointView, 0.0);
@@ -333,7 +333,7 @@ public class MapController {
         AnchorPane.setRightAnchor(pathWaypointView, 0.0);
 
         pathWaypointContainer.getChildren().add(pathWaypointView);
-        pathWaypointContainer.setMouseTransparent(true);
+        pathWaypointContainer.setPickOnBounds(false);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
@@ -412,11 +412,11 @@ public class MapController {
 
         scrollPane.vvalueProperty().addListener((obs) -> {
             checkWaypointVisible(scrollPane);
-            System.out.println(visibleWaypoints);
+//            System.out.println(visibleWaypoints);
         });
         scrollPane.hvalueProperty().addListener((obs) -> {
             checkWaypointVisible(scrollPane);
-            System.out.println(visibleWaypoints);
+//            System.out.println(visibleWaypoints);
         });
         visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
             @Override
@@ -498,7 +498,6 @@ public class MapController {
 
     @FXML
     public void zoomInPressed() {
-        //System.out.println("Zoom in clicked");
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal + 0.1);
@@ -506,7 +505,6 @@ public class MapController {
 
     @FXML
     public void zoomOutPressed() {
-        //System.out.println("Zoom out clicked");
         mouseZoom=false;
         double sliderVal = zoomSlider.getValue();
         zoomSlider.setValue(sliderVal - 0.1);

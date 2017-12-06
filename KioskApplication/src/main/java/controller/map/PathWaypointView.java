@@ -1,5 +1,6 @@
 package controller.map;
 
+import com.jfoenix.controls.JFXButton;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
@@ -10,10 +11,13 @@ import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,7 +26,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import sun.awt.image.ImageWatched;
+import utility.ResourceManager;
+import utility.node.NodeFloor;
+import utility.node.NodeType;
 
+import javax.swing.text.html.ImageView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +47,9 @@ public class PathWaypointView extends AnchorPane {
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
+
+    private javafx.scene.image.ImageView upView;
+    private javafx.scene.image.ImageView downView;
 
     MapController parent;
 
@@ -69,12 +80,27 @@ public class PathWaypointView extends AnchorPane {
 
         this.getChildren().addAll(wayPointView, pathView);
 
+        wayPointView.setMouseTransparent(true);
+        pathView.setMouseTransparent(false);
+
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
 
         waypointList = FXCollections.observableArrayList();
 
         this.parent = parent;
+
+        Image upIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-up.png");
+        upView = new javafx.scene.image.ImageView(upIcon);
+        upView.setFitHeight(48);
+        upView.setFitWidth(48);
+        upView.setStyle("-fx-background-color: #00589F;");
+
+        Image downIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-down.png");
+        downView = new javafx.scene.image.ImageView(downIcon);
+        downView.setFitHeight(48);
+        downView.setFitWidth(48);
+        downView.setStyle("-fx-background-color: #00589F;");
 
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
@@ -150,6 +176,7 @@ public class PathWaypointView extends AnchorPane {
      */
     public void clearWaypoint() {
         this.waypointList.clear();
+        wayPointView.getChildren().clear();
     }
     /**
      * Clear both waypoints and path
@@ -160,32 +187,68 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
+        JFXButton switchFloor = new JFXButton();
+
         this.currentPath = path;
 
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);
         }
 
-        //TODO FIX NODE SEGMENT
-        for(Node nodes : waypointList.subList(0, waypointList.size()-1)) {
-            System.out.println("1. " + currentPath.getNodesInSegment(nodes));
-            LinkedList<Node> nodesInSegment = currentPath.getNodesInSegment(nodes);
+        for(int i = 0; i < waypointList.size()-1; i ++) {
+            NodeFloor a = parent.getCurrentFloor();
+            LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
+            System.out.println(segmentNodes);
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
-
             jfxPath.setFill(Color.TRANSPARENT);
-            MoveTo moveTo = new MoveTo(nodesInSegment.get(0).getXcoord(), nodesInSegment.get(0).getYcoord());
+            MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
             jfxPath.getElements().add(moveTo);
 
-            for(Node traversedNode : nodesInSegment) {
+            for(Node traversedNode : segmentNodes) {
                 LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
                 jfxPath.getElements().add(lineTo);
+
+                if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
+                    switchFloor = new JFXButton();
+                    //going up
+                    final NodeFloor targetFloor = waypointList.get(i+1).getFloor();
+                    final NodeFloor sourceFloor = waypointList.get(i).getFloor();
+                    if(targetFloor.toInt() > sourceFloor.toInt()) {
+                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                parent.setFloorSelector(targetFloor);
+                            }
+                        });
+                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
+                        switchFloor.setLayoutY(traversedNode.getYcoord());
+                        switchFloor.setPrefHeight(48);
+                        switchFloor.setPrefWidth(48);
+                        switchFloor.setStyle("-fx-background-color: #01499f;");
+                        switchFloor.setGraphic(upView);
+                    }
+                    //going down
+                    else if(targetFloor.toInt() < sourceFloor.toInt()) {
+                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                parent.setFloorSelector(targetFloor);
+                            }
+                        });
+                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
+                        switchFloor.setLayoutY(traversedNode.getYcoord());
+                        switchFloor.setPrefHeight(48);
+                        switchFloor.setPrefWidth(48);
+                        switchFloor.setStyle("-fx-background-color: #00589F;");
+                        switchFloor.setGraphic(downView);
+                    }
+                }
             }
             this.pathView.getChildren().add(jfxPath);
 
-            //TODO Fix the cost
             Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
-            for(int i = 0; i < currentPath.getPathCost()/30; i++) {
+            for(int j = 0; j < currentPath.getPathCost()/20; j++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
@@ -193,15 +256,16 @@ public class PathWaypointView extends AnchorPane {
 
                 PathTransition navigationTransition = new PathTransition();
                 navigationTransition.setNode(circle);
-                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/30));
+                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/20));
                 navigationTransition.setPath(jfxPath);
                 navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
                 navigationTransition.setAutoReverse(false);
                 navigationTransition.setCycleCount(PathTransition.INDEFINITE);
 
-                navigationTransition.playFrom(Duration.seconds(i));
+                navigationTransition.playFrom(Duration.seconds(j));
             }
         }
+        this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -225,6 +289,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void reloadDisplay() {
+        pathView.getChildren().clear();
         if(currentPath != null) {
             drawPath(currentPath);
         }

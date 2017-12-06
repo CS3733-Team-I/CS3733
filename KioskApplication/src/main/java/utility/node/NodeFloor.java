@@ -50,6 +50,25 @@ public enum NodeFloor {
                 return "Floor Not Found";
         }
     }
+
+    public int toInt() {
+        switch(this){
+            case LOWERLEVEL_2:
+                return -2;
+            case LOWERLEVEL_1:
+                return -1;
+            case GROUND:
+                return 0;
+            case FIRST:
+                return 1;
+            case SECOND:
+                return 2;
+            case THIRD:
+                return 3;
+            default:
+                return 9999;
+        }
+    }
 }
 
 

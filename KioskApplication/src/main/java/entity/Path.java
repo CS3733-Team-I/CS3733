@@ -15,6 +15,7 @@ public class Path {
     private LinkedList<Node> waypoints;
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
+    private int currentCost = 0;
 
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
@@ -102,10 +103,46 @@ public class Path {
             try {
                 nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
             }
-            catch (NotFoundException exception){
-                exception.printStackTrace();
-                //TODO: add actual handling
+            catch (NotFoundException exception){}
+        }
+        return nodes;
+    }
+
+    /**
+     * get the nodes On target floor
+     */
+    public LinkedList<Node> getListOfNodesSegmentOnFloor(LinkedList<Edge> segment, Node segmentStart, NodeFloor floor) {
+        currentCost = 0;
+
+        MapEntity map = MapEntity.getInstance();
+
+        LinkedList<Node> nodes = new LinkedList<>();
+
+        try {
+            if(segmentStart.getFloor() != floor) {
+                for(Edge e : segment) {
+                    if(e.getEdgeType() == "elevator shaft" || e.getEdgeType() == "staircase") {
+                        if(map.getNode(e.getNode1ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode1ID());
+                        }
+                        if(map.getNode(e.getNode2ID()).getFloor() == floor) {
+                            segmentStart = map.getNode(e.getNode2ID());
+                        }
+                    }
+                }
             }
+        } catch (NotFoundException exception){}
+
+        nodes.add(segmentStart);
+
+        for (Edge e : segment) {
+            try {
+                if(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())).getFloor() == floor) {
+                    currentCost += e.getCost();
+                    nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+                }
+            }
+            catch (NotFoundException exception){}
         }
         return nodes;
     }
@@ -142,13 +179,7 @@ public class Path {
         return(allNodes);
     }
 
-    public Integer getPathCost(){
-        int retValue = 0;
-        for(LinkedList<Edge> segment: this.edges){
-            for(Edge e : segment) {
-                retValue += e.getCost();
-            }
-        }
-        return retValue;
+    public int getPathCost(){
+        return currentCost;
     }
 }

@@ -4,8 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import controller.map.MapController;
+import controller.map.PathWaypointView;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.Path;
 import entity.SystemSettings;
 import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
@@ -115,7 +117,8 @@ public class PathfindingSidebarController extends ScreenController {
         if (currentNodes.size() > 0) {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
-                getMapController().setPath(pathfinder.generatePath(currentNodes));
+                Path path = pathfinder.generatePath(currentNodes);
+                getMapController().setPath(path);
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
                     for (String direction : directionSegment) {
@@ -152,6 +155,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node node) {
+
         if (isAddingWaypoint) {
             if (!currentNodes.contains(node)) {
                 currentNodes.add(node);
