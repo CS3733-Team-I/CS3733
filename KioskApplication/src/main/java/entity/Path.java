@@ -108,7 +108,6 @@ public class Path {
         double rightAngle = Math.PI/2;
 
         //Turning directions
-
         String returnStr = "";
 
         if(!thisNode.getNodeType().equals(NodeType.HALL)){
@@ -128,7 +127,6 @@ public class Path {
             else returnStr += "Go to " + thisNode.getLongName() + ".\n\tGo straight for ";
         }
         return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " feet.";
-
     }
 
     private LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
