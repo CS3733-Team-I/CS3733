@@ -35,7 +35,6 @@ public class PathWaypointView extends AnchorPane {
     protected Path currentPath;
 
     private HashMap<Node, WaypointView> wayPointViewsMap;
-    private HashMap<Edge, PathView> pathViewsMap;
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
@@ -60,7 +59,6 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setRightAnchor(wayPointView, 0.0);
 
         pathView = new AnchorPane();
-        pathViewsMap = new HashMap<>();
         pathView.setPickOnBounds(false);
 
         AnchorPane.setTopAnchor(pathView, 0.0);
@@ -109,38 +107,6 @@ public class PathWaypointView extends AnchorPane {
                 }
             }
         });
-
-        PathList.addListener((ListChangeListener<Edge>) listener -> {
-            MapEntity map = MapEntity.getInstance();
-
-            while (listener.next()) {
-                if (listener.wasAdded()) {
-                    for (Edge edge : listener.getAddedSubList()) {
-                        try{
-                            Node node1 = map.getNode(edge.getNode1ID());
-                            Node node2 = map.getNode(edge.getNode2ID());
-                            PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
-                            if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                                pathview.setOpacity(0.95);
-                            else
-                                pathview.setOpacity(0.2);
-                            this.pathViewsMap.put(edge, pathview);
-
-                            this.pathView.getChildren().add(pathview);
-                        }catch (NotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else if (listener.wasRemoved()) {
-                    for (Edge edge: listener.getRemoved()) {
-                        PathView view = this.pathViewsMap.get(edge);
-                        this.pathViewsMap.remove(edge);
-                        this.pathView.getChildren().remove(view);
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -174,7 +140,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
-        JFXButton switchFloor = new JFXButton();
+        JFXButton switchFloor = null;
         segmentColorList.clear();
 
         this.currentPath = path;
@@ -186,7 +152,6 @@ public class PathWaypointView extends AnchorPane {
         for(int i = 0; i < waypointList.size()-1; i ++) {
             NodeFloor a = parent.getCurrentFloor();
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-            System.out.println(segmentNodes);
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
@@ -238,7 +203,7 @@ public class PathWaypointView extends AnchorPane {
             }
         }
 
-        this.pathView.getChildren().add(switchFloor);
+        if (switchFloor != null) this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {

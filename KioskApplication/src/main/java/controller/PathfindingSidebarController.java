@@ -324,14 +324,17 @@ public class PathfindingSidebarController extends ScreenController {
                     VBox directionLabelBox = new VBox();
 
                     Label waypointLabel = new Label(waypointListView.getItems().indexOf(waypointCell)+1 + ". " + waypointCell.getAccessibleRoleDescription());
-                    waypointLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
+                    try {
+                        waypointLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
+                    } catch (IndexOutOfBoundsException e) {
+                        waypointLabel.setTextFill(Color.BLACK);
+                    }
 
                     waypointLabel.setStyle("-fx-font-weight:bold; "+
                             "-fx-font-size: 16pt; ");
-                    waypointLabel.setPrefWidth(300);
                     directionLabelBox.getChildren().add(waypointLabel);
 
-                    if(getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
+                    if (getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
                         for(String textDirection : getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell))) {
                             Label directionLabel = new Label(textDirection);
                             directionLabel.setTextFill(Color.BLACK);
@@ -342,13 +345,6 @@ public class PathfindingSidebarController extends ScreenController {
                         }
                     }
 
-                    if(directionLabelBox.getChildren().size() == 1) {
-                        Label destinationLabel = new Label();
-                        destinationLabel.setText("*DESTINATION*");
-                        destinationLabel.setStyle("-fx-font-weight:bold; "+
-                                "-fx-font-size: 16pt; ");
-                        directionLabelBox.getChildren().add(destinationLabel);
-                    }
                     waypointCell.getChildren().add(directionLabelBox);
                 }
             }
