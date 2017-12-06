@@ -162,4 +162,20 @@ public class Node {
 
         return Math.atan2(dy,dx);
     }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public void copy(Node node) {
+        this.nodeID = node.nodeID;
+        this.xcoord = node.xcoord;
+        this.ycoord = node.ycoord;
+        this.floor = node.floor;
+        this.building = node.building;
+        this.nodeType = node.nodeType;
+        this.longName = node.longName;
+        this.shortName = node.shortName;
+        this.teamAssigned = node.teamAssigned;
+    }
 }

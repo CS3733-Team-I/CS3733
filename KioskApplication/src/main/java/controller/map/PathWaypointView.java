@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class PathWaypointView extends AnchorPane {
 
@@ -307,11 +308,20 @@ public class PathWaypointView extends AnchorPane {
      * swap the waypoints at targeted indexes
      */
     public void swapWaypoint(int index1, int index2) {
-        Node temp = waypointList.get(index1);
+        Node temp1 = waypointList.get(index1);
+        Node temp2 = waypointList.get(index2);
+        WaypointView tempWaypointView = wayPointViewsMap.get(temp2);
+
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-        waypointList.set(index1, waypointList.get(index2));
-        waypointList.set(index2, temp);
+
+//        waypointList.remove(index1);
+//        waypointList.remove(index2);
+
+        waypointList.set(index1, temp2);
+        waypointList.set(index2, temp1);
+
+        wayPointViewsMap.put(temp2, tempWaypointView);
     }
 
     /**
