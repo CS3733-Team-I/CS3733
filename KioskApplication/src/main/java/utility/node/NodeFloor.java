@@ -30,24 +30,24 @@ public enum NodeFloor {
         }
     }
 
-    /*public String toString1() {
+    public int toInt() {
         switch(this){
             case LOWERLEVEL_2:
-                return "LOWERLEVEL_2";
+                return -2;
             case LOWERLEVEL_1:
-                return "LOWERLEVEL_1";
+                return -1;
             case GROUND:
-                return "GROUND";
+                return 0;
             case FIRST:
-                return "FIRST";
+                return 1;
             case SECOND:
-                return "SECOND";
+                return 2;
             case THIRD:
-                return "THIRD";
+                return 3;
             default:
-                return "Not Set: Contact Programmer";
+                return 9999;
         }
-    }*/
+    }
 }
 
 

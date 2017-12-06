@@ -66,10 +66,10 @@ public class NodeView extends StackPane {
             for (Node connectingNode : MapEntity.getInstance().getConnectedNodes(node)) {
                 nodeInfo.setText(nodeInfo.getText() + connectingNode.getLongName() + "\n");
             }
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(circle, nodeInfo);
         } else {
             Tooltip nodeInfo = new Tooltip(node.getLongName());
-            Tooltip.install(this.container, nodeInfo);
+            Tooltip.install(circle, nodeInfo);
         }
     }
 

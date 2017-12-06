@@ -17,7 +17,6 @@ import javafx.scene.layout.AnchorPane;
 import utility.csv.CsvFileUtil;
 import utility.node.NodeFloor;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class SettingsController extends ScreenController {
@@ -25,7 +24,7 @@ public class SettingsController extends ScreenController {
     @FXML private JFXTabPane settingTabPane;
 
     @FXML private Tab aboutTab;
-    @FXML private Tab displayTab;
+    @FXML private Tab languageTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;
 
@@ -134,15 +133,15 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, displayTab, pathfindingTab, userTab, databaseTab, employeesTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, employeesTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab,displayTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab);
                 break;
         }
     }
