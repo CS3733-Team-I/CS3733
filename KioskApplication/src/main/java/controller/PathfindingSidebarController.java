@@ -44,15 +44,16 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
     @FXML private JFXButton btNavigate;
+    @FXML private  JFXButton btClearPath;
     private Boolean isAddingWaypoint;
 
-    private LinkedList<Node> currentNodes;
+    private LinkedList<Node> currentWaypoints;
 
     private SystemSettings systemSettings;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
-        currentNodes = new LinkedList<>();
+        currentWaypoints = new LinkedList<>();
         systemSettings = SystemSettings.getInstance();
 
         isAddingWaypoint = true;
@@ -97,14 +98,16 @@ public class PathfindingSidebarController extends ScreenController {
             //btnSubmit.setText(resB.getString("search"));
             //searchBar.setPromptText(resB.getString("search"));
             //btClear.setText(resB.getString("clear"));
+
             btNavigate.setText(resB.getString("navigate"));
             //waypointLabel.setText(resB.getString("waypoints"));
+            btClearPath.setText(resB.getString("clearpath"));
         });
     }
 
     @FXML
     void onResetPressed() {
-        currentNodes.clear();
+        currentWaypoints.clear();
         waypointListView.getItems().clear();
         addWaypointBox();
         exceptionText.setText("");
@@ -120,10 +123,17 @@ public class PathfindingSidebarController extends ScreenController {
             onResetPressed();
         }
         exceptionText.setText("");
-        if (currentNodes.size() > 0) {
+        if (currentWaypoints.size() > 0) {
+            if(currentWaypoints.size() == 1) {
+                isAddingWaypoint = true;
+                Node end = removeWaypoint(currentWaypoints.get(0));
+                onMapNodeClicked(SystemSettings.getInstance().getDefaultnode());
+                isAddingWaypoint = true;
+                onMapNodeClicked(end);
+            }
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try{
-                Path path = pathfinder.generatePath(currentNodes);
+                Path path = pathfinder.generatePath(currentWaypoints);
                 getMapController().setPath(path);
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
                 for(LinkedList<String> directionSegment: directionsList) {
@@ -166,9 +176,8 @@ public class PathfindingSidebarController extends ScreenController {
             onResetPressed();
         }
         if (isAddingWaypoint) {
-            if (!currentNodes.contains(node)) {
-                currentNodes.add(node);
-
+            if (!currentWaypoints.contains(node)) {
+                currentWaypoints.add(node);
                 newWaypointBox(node);
 
                 getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
@@ -181,7 +190,7 @@ public class PathfindingSidebarController extends ScreenController {
             removeWaypoint(node);
             //add new waypoint
             newWaypointBox(node);
-            currentNodes.add(node);
+            currentWaypoints.add(node);
             getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
         }
         addWaypointBox();
@@ -403,12 +412,13 @@ public class PathfindingSidebarController extends ScreenController {
     /**
      * remove the target waypoint bounded with input node
      */
-    private void removeWaypoint(Node node) {
+    private Node removeWaypoint(Node node) {
         if(waypointListView.getItems().size()>=2) {
-            getMapController().removeWaypoint(currentNodes.get(currentNodes.size()-1));
+            getMapController().removeWaypoint(currentWaypoints.get(currentWaypoints.size()-1));
             waypointListView.getItems().remove(waypointListView.getItems().size()-2);
-            currentNodes.remove(currentNodes.size()-1);
+            return currentWaypoints.remove(currentWaypoints.size()-1);
         }
+        else return null;
     }
     /**
      * create add waypoint list cell
