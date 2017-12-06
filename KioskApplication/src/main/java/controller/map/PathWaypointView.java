@@ -327,6 +327,15 @@ public class PathWaypointView extends AnchorPane {
         waypointList.set(index2, temp1);
 
         wayPointViewsMap.put(temp2, tempWaypointView);
+
+        for(Node node : waypointList){
+            if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {
+                this.wayPointViewsMap.get(node).setVisible(false);
+            }
+            else {
+                this.wayPointViewsMap.get(node).setVisible(true);
+            }
+        }
     }
 
     /**

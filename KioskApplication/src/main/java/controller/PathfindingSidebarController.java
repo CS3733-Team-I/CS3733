@@ -346,8 +346,9 @@ public class PathfindingSidebarController extends ScreenController {
             }
         });
     }
+
     /**
-     * remove the target waypoint bounded with input node
+     * replace the waypoint cells with text direction
      */
     private void addTextDirection() {
         for(HBox waypointCell : waypointListView.getItems()) {
@@ -357,7 +358,7 @@ public class PathfindingSidebarController extends ScreenController {
 
                     VBox directionLabelBox = new VBox();
 
-                    Label waypointLabel = new Label(waypointCell.getAccessibleRoleDescription());
+                    Label waypointLabel = new Label(waypointListView.getItems().indexOf(waypointCell)+1 + ". " + waypointCell.getAccessibleRoleDescription());
                     waypointLabel.setTextFill(Color.RED);
                     waypointLabel.setStyle("-fx-font-weight:bold; "+
                             "-fx-font-size: 16pt; ");
@@ -387,7 +388,9 @@ public class PathfindingSidebarController extends ScreenController {
         }
     }
 
-
+    /**
+     * remove the target waypoint bounded with input node
+     */
     private void removeWaypoint(Node node) {
         if(waypointListView.getItems().size()>=2) {
             getMapController().removeWaypoint(currentNodes.get(currentNodes.size()-1));
