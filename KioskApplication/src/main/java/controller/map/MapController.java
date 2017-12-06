@@ -18,7 +18,6 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -34,6 +33,7 @@ import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -68,6 +68,8 @@ public class MapController {
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
 
+    private SystemSettings systemSettings;
+
     private LinkedList<MenuButton> waypoints;
 
     private MainWindowController parent = null;
@@ -75,6 +77,7 @@ public class MapController {
 
     public MapController() {
         waypoints = new LinkedList<>();
+        systemSettings = SystemSettings.getInstance();
     }
 
     /**
@@ -175,7 +178,7 @@ public class MapController {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
         nodesEdgesView.reloadDisplay();
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
         //hackey way to reset the comobobox
         int floor = floorSelector.getValue().ordinal();
         floorSelector.getItems().removeAll();
@@ -347,7 +350,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -355,6 +358,13 @@ public class MapController {
 
         nodesEdgesContainer.getChildren().add(nodesEdgesView);
         nodesEdgesContainer.setMouseTransparent(true);
+
+        // Controller-wide localization observer
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            recenterButton.setText(rB.getString("recenter"));
+
+        });
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));

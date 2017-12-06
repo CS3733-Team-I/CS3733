@@ -35,27 +35,38 @@ public class PathfindingSidebarController extends ScreenController {
 
     private LinkedList<Node> currentNodes;
 
+    private SystemSettings systemSettings;
+
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentNodes = new LinkedList<>();
+        systemSettings = SystemSettings.getInstance();
     }
 
     @FXML
     void initialize() {
         // Set containers to be transparent to mouse events
         System.out.println("initializing");
-        ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
+        ResourceBundle rB = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointList.setPickOnBounds(false);
         exceptionText.setText("");
         // for setting the pathfinding sidebar to the internationalized language
-        btnSubmit.setText(rB.getString("my.search"));
-        searchBar.setPromptText(rB.getString("my.search"));
-        clearButton.setText(rB.getString("my.clear"));
-        navigateButton.setText(rB.getString("my.navigate"));
-        waypointLabel.setText(rB.getString("my.waypoints"));
+        /*btnSubmit.setText(rB.getString("search"));
+        searchBar.setPromptText(rB.getString("search"));
+        clearButton.setText(rB.getString("clear"));
+        navigateButton.setText(rB.getString("navigate"));
+        waypointLabel.setText(rB.getString("waypoints"));*/
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle resB = systemSettings.getResourceBundle();
+            btnSubmit.setText(resB.getString("search"));
+            searchBar.setPromptText(resB.getString("search"));
+            clearButton.setText(resB.getString("clear"));
+            navigateButton.setText(resB.getString("navigate"));
+            waypointLabel.setText(resB.getString("waypoints"));
+        });
     }
 
     @FXML
@@ -151,10 +162,10 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().setOptionsBoxVisible(false);
         ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         // for setting the pathfinding sidebar to the internationalized language
-        btnSubmit.setText(rB.getString("my.search"));
-        searchBar.setText(rB.getString("my.search"));
-        clearButton.setText(rB.getString("my.clear"));
-        navigateButton.setText(rB.getString("my.navigate"));
-        waypointLabel.setText(rB.getString("my.waypoints"));
+        btnSubmit.setText(rB.getString("search"));
+        searchBar.setText(rB.getString("search"));
+        clearButton.setText(rB.getString("clear"));
+        navigateButton.setText(rB.getString("navigate"));
+        waypointLabel.setText(rB.getString("waypoints"));
     }
 }
