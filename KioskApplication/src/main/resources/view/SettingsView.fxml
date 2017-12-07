@@ -18,16 +18,16 @@
    <children>
       <JFXTabPane onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" id="tab-header-area" fx:id="settingTabPane" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab fx:id="aboutTab" text="About">
+            <Tab fx:id="aboutTab"  text="About">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="57.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About" wrappingWidth="88.13671875">
+                        <Text onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" layoutX="57.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About" wrappingWidth="88.13671875">
                            <font>
                               <Font size="28.0" />
                            </font>
                         </Text>
-                        <JFXTextArea editable="false" layoutX="57.0" layoutY="91.0" prefHeight="329.0" prefWidth="464.0" text="Team Members:                                                     &#10;Benjamin Gillette - Project Manager/ Scrum Master &#10;Jerish Brown - Lead Software Engineer         &#10;John Parrick  - Assistant Lead Software Engineer&#10;Ziheng (Leo) L - Assistant Lead Software Engineer&#10;James Taylor - Product Owner&#10;Michael Sidler - Test Engineer&#10;Mary Hatfalvi - Documentation Analyst&#10;Henry Dunphy - Software Engineer&#10;Ryan Racine  - Software Engineer&#10;Da Xu - Software Engineer&#10;&#10;WPI Computer Science Department, &#10;CS3733 Software Engineering, Prof. Wilson Wong, &#10;Team Coach - Akshit (Axe) Soota &#10;We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.&#10;" />
+                        <JFXTextArea onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" editable="false" layoutX="57.0" layoutY="91.0" prefHeight="329.0" prefWidth="464.0" text="Team Members:                                                     &#10;Benjamin Gillette - Project Manager/ Scrum Master &#10;Jerish Brown - Lead Software Engineer         &#10;John Parrick  - Assistant Lead Software Engineer&#10;Ziheng (Leo) L - Assistant Lead Software Engineer&#10;James Taylor - Product Owner&#10;Michael Sidler - Test Engineer&#10;Mary Hatfalvi - Documentation Analyst&#10;Henry Dunphy - Software Engineer&#10;Ryan Racine  - Software Engineer&#10;Da Xu - Software Engineer&#10;&#10;WPI Computer Science Department, &#10;CS3733 Software Engineering, Prof. Wilson Wong, &#10;Team Coach - Akshit (Axe) Soota &#10;We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.&#10;" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -97,7 +97,7 @@
             </Tab>
             <Tab fx:id="userTab" text="User">
                <content>
-                  <AnchorPane fx:id="userPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="userPane" onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </Tab>
             <Tab fx:id="databaseTab" text="Database">
@@ -122,8 +122,8 @@
                                     <Insets right="5.0" />
                                  </padding>
                               </Label>
-                              <JFXButton buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
-                              <JFXButton buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
+                              <JFXButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
+                              <JFXButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
                            </children>
                         </VBox>
                      </children></AnchorPane>
@@ -131,7 +131,7 @@
             </Tab>
             <Tab fx:id="employeesTab" text="Employees">
               <content>
-                <AnchorPane fx:id="employeesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane fx:id="employeesPane" onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
          </tabs>

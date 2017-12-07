@@ -87,6 +87,11 @@ public class LoginController {
         parent.resetTimer();
     }
 
+    @FXML
+    public void resetTimer(){
+        parent.resetTimer();
+    }
+
     //Helper function for resetting the internals of the employee popup
     private void resetFields(){
         tfEmail.clear();

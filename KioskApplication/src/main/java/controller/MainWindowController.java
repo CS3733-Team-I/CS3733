@@ -240,10 +240,11 @@ public class MainWindowController {
      * Reset time when countdown isnt at max or min values
      * (prevents from calling too often or when reset is occurring)
      */
-    void resetTimer(){
+    public void resetTimer(){
         System.out.println("TIMER RESET?");
         if(countdown != maxCountdown && countdown != 0) {
             System.out.println("TIMER RESET");
+            countdown = maxCountdown;
             timeline.stop();
             timeline = new Timeline(new KeyFrame(
                     Duration.millis(1000),
@@ -278,11 +279,11 @@ public class MainWindowController {
         // Log out
         LoginEntity.getInstance().logOut();
         switchButton.setText("Staff Login");
-        System.out.println(switchButton.getText());
         // Clears Tabs
         tabPane.getTabs().clear();
         // Reset tabs
         tabPane.getTabs().add(tabMap);
+        tabPane.getTabs().add(tabSettings);
 
         // Adjust node visability
         mapController.setNodesVisible(false);
@@ -294,6 +295,8 @@ public class MainWindowController {
         mapController.recenterPressed();
         // Adjust Zoom
         mapController.getZoomSlider().setValue(defZoom);
+        // Icon key close
+        mapController.keyClosed();
 
         System.out.println("TIMEOUT DONE");
     }
@@ -311,7 +314,6 @@ public class MainWindowController {
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
-                System.out.println("Done Switching");
                 break;
 
             case EMPLOYEE:

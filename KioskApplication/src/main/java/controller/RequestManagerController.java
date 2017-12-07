@@ -201,6 +201,10 @@ public class RequestManagerController extends ScreenController {
         JFXButton more = new JFXButton("More");
         JFXButton statusUpdater = new JFXButton();
         JFXButton delete = new JFXButton("Delete");
+        more.setOnMousePressed(e -> resetTimer());
+        more.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMousePressed(e -> resetTimer());
 
         ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
         JFXComboBox employees = new JFXComboBox(listOfEmployees);
@@ -378,6 +382,11 @@ public class RequestManagerController extends ScreenController {
                 doneRequests();
                 break;
         }
+    }
+
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
     }
 
     @Override

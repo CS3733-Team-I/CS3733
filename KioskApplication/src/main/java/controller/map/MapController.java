@@ -690,6 +690,11 @@ public class MapController {
     }
 
     @FXML
+    public void resetTimer(){
+        parent.resetTimer();
+    }
+
+    @FXML
     private void keyOpened(){
         keyDialogContainer.setDisable(false);
         keyDialog.show();
@@ -697,7 +702,7 @@ public class MapController {
     }
 
     @FXML
-    private void keyClosed(){
+    public void keyClosed(){
         keyDialog.close();
         keyDialogContainer.setDisable(true);
         keyButton.setDisable(false);

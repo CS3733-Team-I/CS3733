@@ -40,6 +40,11 @@ public class UserSettingsController {
         }
     }
 
+    @FXML
+    void resetTimer(){
+
+    }
+
     void resetScreen() {
         usernameBox.setText("");
         passwordBoxOld.setText("");

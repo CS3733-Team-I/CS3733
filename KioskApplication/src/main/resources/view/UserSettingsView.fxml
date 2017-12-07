@@ -22,7 +22,7 @@
       </Label>
       <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
-            <GridPane prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
+            <GridPane onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -36,9 +36,9 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <JFXTextField fx:id="usernameBox" editable="false" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                  <JFXTextField fx:id="passwordBoxOld" labelFloat="true" promptText="Old Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                  <JFXButton fx:id="saveButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="4" />
+                  <JFXTextField fx:id="usernameBox" editable="false" labelFloat="true" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="passwordBoxOld" labelFloat="true" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Old Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                  <JFXButton fx:id="saveButton" onAction="#onUserSave" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Save" GridPane.rowIndex="4" />
                   <Label fx:id="userDialogLabel" prefHeight="30.0" text="User Info" GridPane.columnSpan="2">
                      <font>
                         <Font size="25.0" />
