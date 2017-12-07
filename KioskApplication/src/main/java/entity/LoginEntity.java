@@ -5,6 +5,7 @@ import database.objects.IEmployee;
 import database.objects.Employee;
 import database.objects.NullEmployee;
 import utility.KioskPermission;
+import utility.request.Language;
 import utility.request.RequestType;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static utility.KioskPermission.*;
+import static utility.request.RequestType.INTERPRETER;
 
 /**
  * Should handle user credential validation and connection to the user database for LoginController
@@ -285,5 +287,26 @@ public class LoginEntity {
     // Logout method
     public void logOut(){
         currentLogin=NullEmployee.getInstance();
+    }
+
+    /**
+     * Used to return the list of languages an interpreter can speak for request filtering
+     * @return ArrayList of Languages an interpreter can speak
+     */
+    public ArrayList<Language> getInterpreterLanguages(){
+        ArrayList<Language> languages = new ArrayList<Language>();
+        if(currentLogin.getServiceAbility()==INTERPRETER){
+            String inLanguage="";
+            for(char c : currentLogin.getOptions().toCharArray()){
+                if(c==':'){
+                    languages.add(Language.values()[Integer.parseInt(inLanguage)]);
+                    inLanguage="";
+                }
+		else{
+                    inLanguage=inLanguage+c;
+                }
+            }
+        }
+        return languages;
     }
 }

@@ -126,7 +126,7 @@ public class SQLStrings {
     public static final String EMPLOYEE_INSERT = "insert into t_employee"+
             "(username, lastName, firstName, password, options, permission, serviceAbility)"+
             " values(?, ?, ?, ?, ?, ?, ?)";
-    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?, options=?"+
+    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?, options=?,"+
             " permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

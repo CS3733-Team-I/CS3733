@@ -449,7 +449,7 @@ public class DatabaseController {
     public int updateEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
-            pstmt.setInt(7,employee.getLoginID());
+            pstmt.setInt(8,employee.getLoginID());
             pstmt.setString(1,employee.getUsername());
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());

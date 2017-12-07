@@ -5,12 +5,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utility.KioskPermission;
+import utility.request.Language;
 import utility.request.RequestType;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static utility.KioskPermission.ADMIN;
 import static utility.KioskPermission.EMPLOYEE;
 import static utility.KioskPermission.SUPER_USER;
+import static utility.request.Language.CHINESE;
+import static utility.request.Language.SPANISH;
 
 public class TestLoginEntity {
     private LoginEntity l;
@@ -142,5 +147,16 @@ public class TestLoginEntity {
         assertEquals("emp1",l.getUsername());
         becomeSuperUser();
         l.deleteLogin("emp1");
+    }
+
+    /**
+     * Tests that the method returns a list of Languages containing Spanish (1) and Chinese (2)
+     */
+    @Test
+    public void testGetInterpreterLanguages(){
+        l.logIn("emp@hospital.com","12");
+        ArrayList<Language> languages = l.getInterpreterLanguages();
+        assertEquals(SPANISH,languages.get(0));
+        assertEquals(CHINESE,languages.get(1));
     }
 }
