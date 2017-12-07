@@ -87,6 +87,9 @@ public class LoginController {
         parent.resetTimer();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     public void resetTimer(){
         parent.resetTimer();

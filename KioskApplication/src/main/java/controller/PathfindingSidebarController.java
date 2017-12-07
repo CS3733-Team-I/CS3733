@@ -154,6 +154,9 @@ public class PathfindingSidebarController extends ScreenController {
         addTextDirection();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     public void resetTimer(){
         getParent().resetTimer();

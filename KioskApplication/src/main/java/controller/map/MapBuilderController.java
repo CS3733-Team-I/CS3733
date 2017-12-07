@@ -466,6 +466,9 @@ public class MapBuilderController extends ScreenController {
         initPopup();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     void resetTimer(){
         getParent().resetTimer();

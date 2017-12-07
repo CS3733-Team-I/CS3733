@@ -689,6 +689,9 @@ public class MapController {
         systemSettings.setResourceBundle(languageSelector.getValue());
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     public void resetTimer(){
         parent.resetTimer();

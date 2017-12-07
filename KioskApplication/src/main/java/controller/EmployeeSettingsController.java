@@ -190,6 +190,9 @@ public class EmployeeSettingsController {
         }
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     void resetTimer(){
 

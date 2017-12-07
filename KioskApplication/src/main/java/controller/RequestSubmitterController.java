@@ -253,6 +253,9 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     public void resetTimer(){
         getParent().resetTimer();

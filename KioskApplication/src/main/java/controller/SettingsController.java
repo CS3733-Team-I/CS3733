@@ -129,6 +129,9 @@ public class SettingsController extends ScreenController {
         });
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     void resetTimer(){
         getParent().resetTimer();

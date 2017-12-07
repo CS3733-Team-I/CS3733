@@ -47,6 +47,9 @@ public class RequestTrackingDataController {
         parent.closeRequestTrackingTable();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
     @FXML
     public void resetTimer(){
         parent.resetTimer();
