@@ -25,6 +25,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
@@ -32,6 +34,7 @@ import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -340,16 +343,29 @@ public class PathfindingSidebarController extends ScreenController {
                             "-fx-font-size: 16pt; ");
                     directionLabelBox.getChildren().add(waypointLabel);
 
+                    TextFlow directionLabel = new TextFlow();
+                    directionLabel.setPrefWidth(300);
+                    directionLabel.setLineSpacing(5);
+                    directionLabel.setStyle("-fx-text-fill: black;" +
+                            "-fx-font-weight:bold; "+
+                            "-fx-font-size: 12pt; "+
+                            " -fx-underline: true;");
+
                     if (getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
+                        Text direction = new Text();
+                        String lastDirection = "";
                         for(String textDirection : getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell))) {
-                            Label directionLabel = new Label(textDirection);
-                            directionLabel.setTextFill(Color.BLACK);
-                            directionLabel.setStyle("-fx-font-weight:bold; "+
-                                    "-fx-font-size: 12pt; "+
-                                    " -fx-underline: true;");
-                            directionLabelBox.getChildren().add(directionLabel);
+                            direction = new Text(textDirection + "\n\n");
+                            directionLabel.getChildren().add(direction);
+
+                            lastDirection = textDirection;
                         }
+
+                        // Set last text direction string to not have new lines
+                        direction.setText(lastDirection);
                     }
+
+                    directionLabelBox.getChildren().add(directionLabel);
 
                     waypointCell.getChildren().add(directionLabelBox);
                 }

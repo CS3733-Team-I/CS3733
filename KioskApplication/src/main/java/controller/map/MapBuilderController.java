@@ -1015,6 +1015,7 @@ public class MapBuilderController extends ScreenController {
             }
 
             selectedNode.set(null);
+            getMapController().reloadDisplay();
         }
     }
 
