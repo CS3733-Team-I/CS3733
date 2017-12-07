@@ -414,6 +414,7 @@ public class MapController {
                 calculateMinZoom();
             }
         });
+        parent.setDefZoom(zoomSlider.getValue());
     }
 
     /**
@@ -474,6 +475,14 @@ public class MapController {
         nodesEdgesView.setShowEdges(showEdgesBox.isSelected());
     }
 
+    /**
+     * Getter for zoomSlider
+     * @return the zoomSlider value from the map
+     */
+    public JFXSlider getZoomSlider() {
+        return zoomSlider;
+    }
+
     @FXML
     protected void zoomInPressed() {
         //System.out.println("Zoom in clicked");
@@ -499,7 +508,7 @@ public class MapController {
     }
 
     @FXML
-    protected void recenterPressed() {
+    public void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }
