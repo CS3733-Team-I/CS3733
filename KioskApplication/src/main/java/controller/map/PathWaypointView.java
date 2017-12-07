@@ -113,38 +113,6 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
-        PathList.addListener((ListChangeListener<Edge>) listener -> {
-            MapEntity map = MapEntity.getInstance();
-
-            while (listener.next()) {
-                if (listener.wasAdded()) {
-                    for (Edge edge : listener.getAddedSubList()) {
-                        try{
-                            Node node1 = map.getNode(edge.getNode1ID());
-                            Node node2 = map.getNode(edge.getNode2ID());
-                            PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
-                            if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                                pathview.setOpacity(0.95);
-                            else
-                                pathview.setOpacity(0.2);
-                            this.pathViewsMap.put(edge, pathview);
-
-                            this.pathView.getChildren().add(pathview);
-                        }catch (NotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else if (listener.wasRemoved()) {
-                    for (Edge edge: listener.getRemoved()) {
-                        PathView view = this.pathViewsMap.get(edge);
-                        this.pathViewsMap.remove(edge);
-                        this.pathView.getChildren().remove(view);
-                    }
-                }
-            }
-        });
-
         Image youarehereIcon = ResourceManager.getInstance().getImage("/images/crosshairs-gps.png");
         ImageView youarehereView = new javafx.scene.image.ImageView(youarehereIcon);
         youarehereView.setFitHeight(48);
@@ -251,8 +219,7 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.playFrom(Duration.seconds(k));
             }
         }
-
-        if (switchFloor != null) this.pathView.getChildren().add(switchFloor);
+        this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -300,6 +267,9 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+//        waypointList.remove(index1);
+//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);

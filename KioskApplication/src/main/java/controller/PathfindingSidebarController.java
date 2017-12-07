@@ -48,7 +48,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
-    @FXML private JFXButton btNavigate, clearButton;
+    @FXML private JFXButton btNavigate;
     @FXML private  JFXButton btClearPath;
     private Boolean isAddingWaypoint;
 
@@ -103,7 +103,7 @@ public class PathfindingSidebarController extends ScreenController {
             ResourceBundle resB = systemSettings.getResourceBundle();
             //btnSubmit.setText(resB.getString("search"));
             //searchBar.setPromptText(resB.getString("search"));
-            clearButton.setText(resB.getString("my.clear"));
+            btClearPath.setText(resB.getString("my.clear"));
             btNavigate.setText(resB.getString("my.navigate"));
             //btClear.setText(resB.getString("clear"));
 
@@ -129,7 +129,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNavigate.setDisable(false);
     }
     public void disableClearBtn(){
-        clearButton.setDisable(true);
+        btClearPath.setDisable(true);
     }
 
     @FXML
@@ -254,7 +254,7 @@ public class PathfindingSidebarController extends ScreenController {
 
         //btnSubmit.setText(rB.getString("my.search"));
         //searchBar.setText(rB.getString("my.search"));
-        clearButton.setText(rB.getString("my.clear"));
+        btClearPath.setText(rB.getString("my.clear"));
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
     }
