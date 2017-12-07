@@ -15,10 +15,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
@@ -38,7 +41,7 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
     RequestProgressStatus currentButton;
 
-@FXML private JFXListView<String> activeRequests;
+@FXML private JFXListView<Request> activeRequests;
     @FXML private Label totalRequests;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
@@ -183,13 +186,10 @@ public class RequestManagerController extends ScreenController {
      */
     private void showRequests(RequestProgressStatus status, LinkedList<Request> allRequests) {
         activeRequests.setItems(null);
-        ObservableList<String> requestids = FXCollections.observableArrayList();
-        LinkedList<Request> requests = r.filterByStatus(allRequests,status);
-        for (int i = 0; i < requests.size(); i++) {
-            String id = requests.get(i).getRequestID();
-            requestids.add(id);
-        }
-        activeRequests.setItems(requestids);
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        requests.addAll(r.filterByStatus(allRequests,status));
+        activeRequests.setItems(requests);
+        activeRequests.setCellFactory(param -> new RequestListCell());
     }
 
     /**
@@ -333,10 +333,10 @@ public class RequestManagerController extends ScreenController {
         if(activeRequests.getSelectionModel().isEmpty()){
             event.consume();
         }else{
-            String requestID = activeRequests.getSelectionModel().getSelectedItem();
-            initializePopup(requestID); //Don't like that this is here
-            popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
-            activeRequests.getSelectionModel().clearSelection();
+//            String requestID = activeRequests.getSelectionModel().getSelectedItem();
+//            initializePopup(requestID); //Don't like that this is here
+//            popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
+//            activeRequests.getSelectionModel().clearSelection();
 
         }
     }
