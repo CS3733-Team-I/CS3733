@@ -2,6 +2,8 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import utility.ResourceManager;
 
 public class MiniMapController {
@@ -209,20 +212,47 @@ public class MiniMapController {
         miniMapWaypoint.setAccessibleText(node.getNodeID());
         miniMapWaypoint.setAccessibleHelp(node.getFloor().toString());
         miniMapWaypoint.setFill(Color.RED);
+
         miniMapWaypoint.setCenterX(node.getXcoord()*RAWRatio);
         miniMapWaypoint.setCenterY(node.getYcoord()*RAHRatio);
+
+        TranslateTransition miniWaypointPutTransition = new TranslateTransition();
+        miniWaypointPutTransition.setDuration(Duration.millis(400));
+        miniWaypointPutTransition.setNode(miniMapWaypoint);
+        miniWaypointPutTransition.setFromY(miniMapWaypoint.getCenterY()-10-50);
+        miniWaypointPutTransition.setToY(miniMapWaypoint.getCenterY()-50);
+
         miniWaypointPane.getChildren().add(miniMapWaypoint);
+
+
+        miniWaypointPutTransition.play();
     }
 
     public void removeMiniWayPoint(Node node) {
         for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
             if(removedMiniWaypoint.getAccessibleText().equals(node.getNodeID())) {
+                FadeTransition miniWaypointTransition = new FadeTransition();
+                miniWaypointTransition.setNode(removedMiniWaypoint);
+                miniWaypointTransition.setDuration(Duration.millis(300));
+                miniWaypointTransition.setFromValue(1.0);
+                miniWaypointTransition.setFromValue(0.0);
+                miniWaypointTransition.setAutoReverse(false);
+                miniWaypointTransition.play();
                 miniWaypointPane.getChildren().remove(removedMiniWaypoint);
             }
         }
     }
 
     public void clearMiniWaypoint() {
+        for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
+            FadeTransition miniWaypointTransition = new FadeTransition();
+            miniWaypointTransition.setNode(removedMiniWaypoint);
+            miniWaypointTransition.setDuration(Duration.millis(300));
+            miniWaypointTransition.setFromValue(1.0);
+            miniWaypointTransition.setFromValue(0.0);
+            miniWaypointTransition.setAutoReverse(false);
+            miniWaypointTransition.play();
+        }
         miniWaypointPane.getChildren().clear();
     }
 
