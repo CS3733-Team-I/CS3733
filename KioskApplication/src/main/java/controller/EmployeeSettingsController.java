@@ -150,7 +150,6 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserSave(ActionEvent event) {
-
         // Check that all fields are filled in
         if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             // Add user
