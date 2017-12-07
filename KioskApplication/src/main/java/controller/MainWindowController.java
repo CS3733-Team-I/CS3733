@@ -241,7 +241,6 @@ public class MainWindowController {
      * (prevents from calling too often or when reset is occurring)
      */
     public void resetTimer(){
-        System.out.println("TIMER RESET?");
         if(countdown != maxCountdown && countdown != 0) {
             System.out.println("TIMER RESET");
             countdown = maxCountdown;
@@ -258,7 +257,6 @@ public class MainWindowController {
      * Called by the timeline each second
      */
     public void perSec(){
-        System.out.println("perSec");
         if(countdown == 0){
             timeout();
             countdown = maxCountdown;
