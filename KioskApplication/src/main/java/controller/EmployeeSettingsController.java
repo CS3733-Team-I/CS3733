@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
+import controller.map.MapController;
 import database.objects.IEmployee;
 import database.objects.Employee;
 import entity.LoginEntity;
@@ -40,6 +41,9 @@ public class EmployeeSettingsController {
     private final TreeItem<Employee> root = new TreeItem<>();
 
     Employee selectedEmployee;
+
+    public EmployeeSettingsController(){
+    }
 
     @FXML
     void initialize() {
@@ -150,7 +154,6 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserSave(ActionEvent event) {
-
         // Check that all fields are filled in
         if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             // Add user
@@ -185,6 +188,14 @@ public class EmployeeSettingsController {
                 errLabel.setText("User Type Select Required");
             }
         }
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    void resetTimer(){
+
     }
 
     void resetScreen(){

@@ -28,7 +28,11 @@ public class NodesEdgesView extends AnchorPane {
 
     MapController parent;
 
+    static int reloads = 0;
+
     public NodesEdgesView(MapController parent) {
+        this.setPickOnBounds(false);
+
         nodesView = new AnchorPane();
         nodesView.setPickOnBounds(false);
         nodeViewsMap = new HashMap<>();
@@ -59,6 +63,7 @@ public class NodesEdgesView extends AnchorPane {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
+
                         view.setPickOnBounds(false);
                         if(SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID()))
                             view.setImage(node);
@@ -84,16 +89,22 @@ public class NodesEdgesView extends AnchorPane {
                         try {
                             Node node1 = map.getNode(edge.getNode1ID());
                             Node node2 = map.getNode(edge.getNode2ID());
-                            EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
 
-                            if (map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                                view.setOpacity(0.95);
-                            else
-                                view.setOpacity(0.2);
+                            // Only render edges that are contained on one floor
+                            if (node1.getFloor() == node2.getFloor()) {
 
-                            this.edgeViewsMap.put(edge, view);
-                            this.edgesView.getChildren().add(view);
+                                EdgeView view = new EdgeView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
+                                        new Point2D(node2.getXcoord(), node2.getYcoord()));
+
+                                if (node1.getFloor() == parent.getCurrentFloor() &&
+                                        node2.getFloor() == parent.getCurrentFloor())
+                                    view.setOpacity(0.95);
+                                else
+                                    view.setOpacity(0.2);
+
+                                this.edgeViewsMap.put(edge, view);
+                                this.edgesView.getChildren().add(view);
+                            }
                         }
                         catch(NotFoundException exception){
                             exception.printStackTrace();
@@ -101,6 +112,7 @@ public class NodesEdgesView extends AnchorPane {
                         }
                     }
                 } else if (listener.wasRemoved()) {
+                    long startTime = System.nanoTime();
                     for (Edge edge: listener.getRemoved()) {
                         EdgeView view = this.edgeViewsMap.get(edge);
                         this.edgeViewsMap.remove(edge);
@@ -109,8 +121,8 @@ public class NodesEdgesView extends AnchorPane {
                 }
             }
         });
-
     }
+
     /**
      * Set a NodeView's selection type given a node
      * @param node the Node that corresponds to a NodeView
@@ -125,8 +137,9 @@ public class NodesEdgesView extends AnchorPane {
      * Reload the nodes and edges views based on if nodes and edges are set to be shown
      */
     public void reloadDisplay() {
-        setShowNodes(parent.areNodesVisible());
-        setShowEdges(parent.areEdgesVisible());
+        clear();
+        drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
+        drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
     }
 
     /**
@@ -141,49 +154,35 @@ public class NodesEdgesView extends AnchorPane {
         parent.nodeClicked(n);
     }
 
-    protected void drawNodesOnMap(List<Node> nodes) {
-        nodesList.addAll(nodes);
-    }
+    /**
+     * Draw a list of nodes on the map
+     * @param nodes the list of nodes to draw
+     */
+    protected void drawNodesOnMap(List<Node> nodes) { nodesList.addAll(nodes); }
 
+    /**
+     * Draw a list of edges on the map
+     * @param edges the list of edges to draw
+     */
     protected void drawEdgesOnMap(List<Edge> edges) {
         edgesList.addAll(edges);
     }
 
-
-//    public void drawPath() {
-//        if (parent.getPath() != null) {
-//            // TODO re-enable auto floor selection for path
-//            // parent.setFloorSelector(parent.getPath().getWaypoints().get(0).getFloor());
-//            parent.clearMap();
-//
-//            for (LinkedList<Edge> segment : parent.getPath().getEdges()) {
-//                PathList.addAll(segment);
-//            }
-//
-//            drawNodesOnMap(parent.getPath().getWaypoints());
-//        }
-//    }
-
     /**
-     * Clear drawn path
+     * Remove a node from the map
+     * @param node the node to remove
      */
-    public void clearPath() {
-        //TODO FINISH THIS
-    }
+    protected void removeNode(Node node) { nodesList.remove(node); }
 
     public void setShowNodes(boolean show) {
-        nodesList.clear();
-
-        if (show) {
-            drawNodesOnMap(MapEntity.getInstance().getNodesOnFloor(parent.getCurrentFloor()));
-        }
+        nodesView.setVisible(show);
     }
 
     public void setShowEdges(boolean show) {
-        edgesList.clear();
+        edgesView.setVisible(show);
+    }
 
-        if (show) {
-            drawEdgesOnMap(MapEntity.getInstance().getEdgesOnFloor(parent.getCurrentFloor()));
-        }
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        parent.nodesConnected(nodeID1, nodeID2);
     }
 }

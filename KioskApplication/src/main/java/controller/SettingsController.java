@@ -129,6 +129,14 @@ public class SettingsController extends ScreenController {
         });
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    void resetTimer(){
+        getParent().resetTimer();
+    }
+
     public void checkPermissions() {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
@@ -195,7 +203,7 @@ public class SettingsController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) { }

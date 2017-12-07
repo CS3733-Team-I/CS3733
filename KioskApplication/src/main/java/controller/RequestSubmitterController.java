@@ -4,16 +4,19 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.FoodMenuItem;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
@@ -38,8 +41,7 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private Tab foodTab;
     @FXML private JFXComboBox<Node> restaurantComboBox;
     @FXML private JFXTimePicker deliveryTimePicker;
-    @FXML private JFXTreeTableView menuTable;
-    @FXML private TreeTableColumn<String,String> menuColumn;
+    @FXML private JFXTreeTableView<FoodMenuItem> menuTable;
     @FXML private JFXTextField deliveryLocation;
 
     /*security related*/
@@ -134,7 +136,59 @@ public class RequestSubmitterController extends ScreenController {
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
+            resetTimer();
         });
+
+        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99));
+        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0));
+        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99));
+
+        //Creating the root element
+        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0));
+        root.setExpanded(true);
+
+        //Adding tree items to the root
+        root.getChildren().setAll(childNode1, childNode2, childNode3);
+
+        //Creating a column
+        TreeTableColumn<FoodMenuItem, String> nameColumn = new TreeTableColumn<>("Name");
+        nameColumn.setPrefWidth(200);
+        nameColumn.setResizable(false);
+        TreeTableColumn<FoodMenuItem, String> costColumn = new TreeTableColumn<>("Cost");
+        costColumn.setPrefWidth(75);
+        costColumn.setResizable(false);
+        TreeTableColumn<FoodMenuItem, Boolean> checkboxColumn = new TreeTableColumn<>("Selected");
+        checkboxColumn.setPrefWidth(70);
+        checkboxColumn.setResizable(false);
+
+        //Defining cell content
+        nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, String> p) ->
+            new ReadOnlyStringWrapper(p.getValue().getValue().getName()));
+
+        costColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, String> p) -> {
+            if (p.getValue().isLeaf()) {
+                String moneyValue = Double.toString(p.getValue().getValue().getCost());
+                if (moneyValue.length() == 2) moneyValue += "0";
+                return new ReadOnlyStringWrapper("$" + moneyValue);
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        checkboxColumn.setCellFactory( tc -> new CheckBoxTreeTableCell<>());
+        checkboxColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, Boolean> p) -> {
+            if (p.getValue().isLeaf()) {
+                return new ReadOnlyBooleanWrapper(false);
+            } else {
+                return p.getValue().getValue().selectedProperty();
+            }
+        });
+
+        //Creating a tree table view
+        menuTable.setRoot(root);
+        menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
+        menuTable.setShowRoot(true);
+        menuTable.setEditable(true);
     }
 
     @FXML
@@ -159,7 +213,7 @@ public class RequestSubmitterController extends ScreenController {
         langMenu.setValue(null);
 
         restaurantComboBox.setValue(null);
-        deliveryTimePicker.setValue(LocalTime.now());
+        deliveryTimePicker.setValue(null);
         deliveryLocation.setText("");
 
         secLocationField.setText("");
@@ -171,6 +225,7 @@ public class RequestSubmitterController extends ScreenController {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getLoginID(), intNotesArea.getText(), language);
         System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getLoginID());
+        clearButton();
     }
 
     public void addSecRequest() {
@@ -178,14 +233,32 @@ public class RequestSubmitterController extends ScreenController {
         System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
         //node ID, employee, notes, priority
         requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getLoginID(), secNoteField.getText(), priority);
+        clearButton();
     }
 
     public void addFoodRequest(){
-        String notes = "";
-        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getLoginID(),notes,
+        String order = "Order:";
+        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
+            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
+            if (item.isLeaf()) {
+                order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+            }
+        }
+
+        if (order.endsWith(",")) order.substring(0, order.length() - 1);
+
+        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getLoginID(),order,
                 restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
         System.out.println(requestEntity.getAllFoodRequests());
         clearButton();
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
     }
 
     @Override
@@ -197,7 +270,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(Node n) {
@@ -225,7 +298,7 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0,235,0,0);
+        getMapController().setAnchor(0,400,0,0);
         getMapController().setPath(null);
         getMapController().reloadDisplay();
 

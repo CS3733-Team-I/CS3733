@@ -7,32 +7,37 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
 import entity.SystemSettings;
-import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
+import utility.NoSelectionModel;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ResourceBundle;
 
 public class PathfindingSidebarController extends ScreenController {
 
@@ -43,7 +48,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
-    @FXML private JFXButton btNavigate;
+    @FXML private JFXButton btNavigate, clearButton;
     @FXML private  JFXButton btClearPath;
     private Boolean isAddingWaypoint;
 
@@ -68,6 +73,7 @@ public class PathfindingSidebarController extends ScreenController {
         container.setPickOnBounds(false);
         waypointsContainer.setPickOnBounds(false);
         waypointListView.setPickOnBounds(false);
+        waypointListView.setSelectionModel(new NoSelectionModel<>());
         exceptionText.setText("");
 
         Image addIcon = ResourceManager.getInstance().getImage("/images/icons/plus.png");
@@ -97,6 +103,8 @@ public class PathfindingSidebarController extends ScreenController {
             ResourceBundle resB = systemSettings.getResourceBundle();
             //btnSubmit.setText(resB.getString("search"));
             //searchBar.setPromptText(resB.getString("search"));
+            clearButton.setText(resB.getString("my.clear"));
+            btNavigate.setText(resB.getString("my.navigate"));
             //btClear.setText(resB.getString("clear"));
 
             btNavigate.setText(resB.getString("navigate"));
@@ -115,6 +123,13 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().setPath(null);
         getMapController().clearMap();
         getMapController().reloadDisplay();
+    }
+
+    public void enableNavBtn(){
+        btNavigate.setDisable(false);
+    }
+    public void disableClearBtn(){
+        clearButton.setDisable(true);
     }
 
     @FXML
@@ -151,6 +166,14 @@ public class PathfindingSidebarController extends ScreenController {
         addTextDirection();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
+    }
+
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
@@ -161,7 +184,7 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) {
         if(e.getClickCount() == 2) {
             getMapController().zoomInPressed();
         }
@@ -212,6 +235,8 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        getMapController().setEditMode(false);
+
         // Set the map size
         getMapController().setAnchor(0, 400, 0, 0);
 
@@ -219,37 +244,19 @@ public class PathfindingSidebarController extends ScreenController {
         onResetPressed();
 
         // Set default nodes/edges visibility
-        getMapController().setNodesVisible(true);
-        getMapController().setEdgesVisible(true);
+        getMapController().setNodesVisible(false);
+        getMapController().setEdgesVisible(false);
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(false);
         ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
         // for setting the pathfinding sidebar to the internationalized language
 
-        //btnSubmit.setText(rB.getString("search"));
-        //searchBar.setText(rB.getString("search"));
-        //clearButton.setText(rB.getString("clear"));
-        btNavigate.setText(rB.getString("navigate"));
-        //waypointLabel.setText(rB.getString("waypoints"));
-    }
-
-    private void addPressAndHoldHandler(javafx.scene.Node node, Duration holdTime,
-                                        EventHandler<MouseEvent> handler) {
-
-        class Wrapper<T> { T content ; }
-        Wrapper<MouseEvent> eventWrapper = new Wrapper<>();
-
-        PauseTransition holdTimer = new PauseTransition(holdTime);
-        holdTimer.setOnFinished(event -> handler.handle(eventWrapper.content));
-
-
-        node.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-            eventWrapper.content = event ;
-            holdTimer.playFromStart();
-        });
-        node.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> holdTimer.stop());
-        node.addEventHandler(MouseEvent.DRAG_DETECTED, event -> holdTimer.stop());
+        //btnSubmit.setText(rB.getString("my.search"));
+        //searchBar.setText(rB.getString("my.search"));
+        clearButton.setText(rB.getString("my.clear"));
+        btNavigate.setText(rB.getString("my.navigate"));
+        //waypointLabel.setText(rB.getString("my.waypoints"));
     }
 
     /**
@@ -258,113 +265,87 @@ public class PathfindingSidebarController extends ScreenController {
     private void newWaypointBox(Node node) {
         HBox waypointBox = new HBox();
 
-        TextField nodeNameLabel = new TextField("(Click to Search) " + node.getLongName());
-        nodeNameLabel.setPromptText("(Click to Search) " + node.getLongName());
-//        nodeNameLabel.setTextFill(Color.BLACK);
-        nodeNameLabel.setStyle("-fx-font-weight:bold; "+
-                "-fx-font-size: 12pt; ");
-        nodeNameLabel.setPrefWidth(300);
+        waypointBox.setAlignment(Pos.CENTER_LEFT);
 
-        JFXButton btRemoveWaypoint = new JFXButton("x");
-        btRemoveWaypoint.setStyle("-fx-background-color: #ff000e;"+
-                "-fx-font-size: 16pt; "+
-                "-fx-font-weight:bold; "+
-                "-fx-background-radius: 3em; ");
-//            btRemoveWaypoint.setGraphic(removeIconView);
-        btRemoveWaypoint.setPrefHeight(8);
-        btRemoveWaypoint.setPrefWidth(8);
+        Label nodeNameLabel = new Label(node.getLongName());
+        nodeNameLabel.setStyle("-fx-font-weight:bold;" + "-fx-font-size: 12pt; ");
+        nodeNameLabel.setPrefWidth(300);
+        nodeNameLabel.setPadding(new Insets(0, 0, 0, 10));
+
+        JFXButton btRemoveWaypoint = new JFXButton("");
+        btRemoveWaypoint.setOnMouseMoved(e -> resetTimer());
+        btRemoveWaypoint.setOnMousePressed(e -> resetTimer());
+        btRemoveWaypoint.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/close-circle.png")));
+        btRemoveWaypoint.setStyle("-fx-background-color: transparent");
         btRemoveWaypoint.setTooltip(new Tooltip("Remove"));
-        btRemoveWaypoint.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                removeWaypoint(node);
-            }
-        });
+        btRemoveWaypoint.setOnAction(event -> removeWaypoint(node));
 
         waypointBox.getChildren().addAll(btRemoveWaypoint, nodeNameLabel);
         waypointBox.setAccessibleText(node.getNodeID());
         waypointBox.setAccessibleHelp("waypointCell");
         waypointBox.setAccessibleRoleDescription(node.getLongName());
 
-        waypointBox.setMargin(btRemoveWaypoint, new Insets(1,1,1,1));
-        waypointBox.setMargin(nodeNameLabel, new Insets(10,1,1,10));
-
-        waypointBox.setStyle("-fx-background-color: #DDDED0;");
-
         waypointListView.getItems().add(waypointBox);
 
-        waypointBox.setOnDragDetected(new EventHandler <MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                /* allow MOVE transfer mode */
-                Dragboard db = waypointBox.startDragAndDrop(TransferMode.MOVE);
+        waypointBox.setOnMouseMoved(e ->resetTimer());
+        waypointBox.setOnMousePressed(e ->resetTimer());
+        waypointBox.setOnDragDetected(event -> {
+            /* allow MOVE transfer mode */
+            Dragboard db = waypointBox.startDragAndDrop(TransferMode.MOVE);
 
-                /* put a string on dragboard */
-                ClipboardContent content = new ClipboardContent();
-                content.putString(Integer.toString(waypointListView.getItems().indexOf(waypointBox)));
-                db.setContent(content);
+            /* put a string on dragboard */
+            ClipboardContent content = new ClipboardContent();
+            content.putString(Integer.toString(waypointListView.getItems().indexOf(waypointBox)));
+            db.setContent(content);
 
-                event.consume();
-            }
+            event.consume();
         });
-        waypointBox.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if (event.getGestureSource() != waypointBox &&
-                        event.getDragboard().hasString()) {
-                    event.acceptTransferModes(TransferMode.MOVE);
-                }
-                event.consume();
-            }
-        });
-        waypointBox.setOnDragEntered(new EventHandler <DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* the drag-and-drop gesture entered the target */
-                /* show to the user that it is an actual gesture target */
-                if (event.getGestureSource() != waypointBox &&
-                        event.getDragboard().hasString()) {
-                    waypointBox.setStyle("-fx-background-color: #4e9f49;");
-                }
-                event.consume();
-            }
-        });
-        waypointBox.setOnDragExited(new EventHandler <DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* mouse moved away, remove the graphical cues */
-                waypointBox.setStyle("-fx-background-color:  #DDDED0;");
-                event.consume();
-            }
-        });
-        waypointBox.setOnDragDropped(new EventHandler <DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                /* data dropped */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    getMapController().swapWaypoint(waypointListView.getItems().indexOf(waypointBox), Integer.parseInt(db.getString()));
-                    HBox temp = waypointBox;
-                    waypointListView.getItems().set(waypointListView.getItems().indexOf(waypointBox),
-                            waypointListView.getItems().get(Integer.parseInt(db.getString())));
-                    waypointListView.getItems().set(Integer.parseInt(db.getString()), temp);
-                    success = true;
-                }
-                event.setDropCompleted(success);
 
-                event.consume();
+        waypointBox.setOnDragOver(event -> {
+            if (event.getGestureSource() != waypointBox &&
+                    event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
             }
+            event.consume();
         });
-        waypointBox.setOnDragDone(new EventHandler <DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                System.out.println("onDragDone");
-                if (event.getTransferMode() == TransferMode.MOVE) {
-                }
 
-                event.consume();
+        waypointBox.setOnDragEntered(event -> {
+            /* the drag-and-drop gesture entered the target */
+            /* show to the user that it is an actual gesture target */
+            if (event.getGestureSource() != waypointBox &&
+                    event.getDragboard().hasString()) {
             }
+            event.consume();
+        });
+
+        waypointBox.setOnDragExited(event -> {
+            /* mouse moved away, remove the graphical cues */
+            event.consume();
+        });
+
+        waypointBox.setOnDragDropped(event -> {
+            /* data dropped */
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                getMapController().swapWaypoint(waypointListView.getItems().indexOf(waypointBox), Integer.parseInt(db.getString()));
+                HBox temp = waypointBox;
+                waypointListView.getItems().set(waypointListView.getItems().indexOf(waypointBox),
+                        waypointListView.getItems().get(Integer.parseInt(db.getString())));
+                waypointListView.getItems().set(Integer.parseInt(db.getString()), temp);
+                success = true;
+            }
+            event.setDropCompleted(success);
+
+            event.consume();
+        });
+
+        waypointBox.setOnDragDone(event -> {
+            System.out.println("onDragDone");
+            if (event.getTransferMode() == TransferMode.MOVE) {
+            }
+
+            event.consume();
         });
     }
 
@@ -373,6 +354,8 @@ public class PathfindingSidebarController extends ScreenController {
      */
     private void addTextDirection() {
         for(HBox waypointCell : waypointListView.getItems()) {
+            waypointCell.setOnDragDetected(null);
+
             if(waypointCell.getAccessibleHelp() != null) {
                 if(waypointCell.getAccessibleHelp().equals("waypointCell")) {
                     waypointCell.getChildren().clear();
@@ -380,29 +363,40 @@ public class PathfindingSidebarController extends ScreenController {
                     VBox directionLabelBox = new VBox();
 
                     Label waypointLabel = new Label(waypointListView.getItems().indexOf(waypointCell)+1 + ". " + waypointCell.getAccessibleRoleDescription());
-                    waypointLabel.setTextFill(Color.RED);
+                    try {
+                        waypointLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
+                    } catch (IndexOutOfBoundsException e) {
+                        waypointLabel.setTextFill(Color.BLACK);
+                    }
+
                     waypointLabel.setStyle("-fx-font-weight:bold; "+
                             "-fx-font-size: 16pt; ");
-                    waypointLabel.setPrefWidth(300);
                     directionLabelBox.getChildren().add(waypointLabel);
 
-                    if(getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
+                    TextFlow directionLabel = new TextFlow();
+                    directionLabel.setPrefWidth(300);
+                    directionLabel.setLineSpacing(5);
+                    directionLabel.setStyle("-fx-text-fill: black;" +
+                            "-fx-font-weight:bold; "+
+                            "-fx-font-size: 12pt; "+
+                            " -fx-underline: true;");
+
+                    if (getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell)) != null) {
+                        Text direction = new Text();
+                        String lastDirection = "";
                         for(String textDirection : getMapController().getIndexedDirection(waypointListView.getItems().indexOf(waypointCell))) {
-                            Label directionLabel = new Label(textDirection);
-                            directionLabel.setStyle("-fx-font-weight:bold; "+
-                                    "-fx-font-size: 12pt; "+
-                                    " -fx-underline: true;");
-                            directionLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
-                            directionLabelBox.getChildren().add(directionLabel);
+                            direction = new Text(textDirection + "\n\n");
+                            directionLabel.getChildren().add(direction);
+
+                            lastDirection = textDirection;
                         }
+
+                        // Set last text direction string to not have new lines
+                        direction.setText(lastDirection);
                     }
-                    if(directionLabelBox.getChildren().size() == 1) {
-                        Label destinationLabel = new Label();
-                        destinationLabel.setText("*DESTINATION*");
-                        destinationLabel.setStyle("-fx-font-weight:bold; "+
-                                "-fx-font-size: 16pt; ");
-                        directionLabelBox.getChildren().add(destinationLabel);
-                    }
+
+                    directionLabelBox.getChildren().add(directionLabel);
+
                     waypointCell.getChildren().add(directionLabelBox);
                 }
             }
@@ -425,36 +419,33 @@ public class PathfindingSidebarController extends ScreenController {
      */
     //TODO make addwaypointbox always the last one
     private void addWaypointBox() {
-//        int addWaypointBoxIndex = 0;
         HBox addWaypointBox = new HBox();
 
+        addWaypointBox.setAlignment(Pos.CENTER_LEFT);
+
         TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText("Click + to Add, Here to Search");
-//        addWaypointLabel.setTextFill(Color.BLACK);
+        addWaypointLabel.setPromptText(
+                SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
         addWaypointLabel.setPrefWidth(300);
-        addWaypointLabel.setStyle("-fx-font-weight:bold; "+
-                "-fx-font-size: 12pt; ");
-        JFXButton btNewWayPoint = new JFXButton("+");
-        btNewWayPoint.setStyle("-fx-background-color: #00589F;"+
-                "-fx-font-size: 16pt; "+
-                "-fx-font-weight: bold; "+
-                "-fx-font-weight: 900;"+
-                "-fx-background-radius: 3em; ");
-        btNewWayPoint.setPrefHeight(8);
-        btNewWayPoint.setPrefWidth(8);
-//                      btNewWayPoint.setGraphic(addIconView);
-        btNewWayPoint.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                isAddingWaypoint = true;
-            }
+        addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
+        addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
+        addWaypointLabel.setOnMouseMoved(e -> resetTimer());
+        addWaypointLabel.setOnMousePressed(e -> resetTimer());
+        systemSettings.addObserver((o, arg) -> {
+            addWaypointLabel.setText(systemSettings.getResourceBundle().getString("my.searchprompt"));
         });
+
+        JFXButton btNewWayPoint = new JFXButton("");
+        btNewWayPoint.setOnMouseMoved(e -> resetTimer());
+        btNewWayPoint.setOnMousePressed(e -> resetTimer());
+        btNewWayPoint.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/plus-circle.png")));
+        btNewWayPoint.setStyle("-fx-background-color: transparent");
+        btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
+
         addWaypointBox.getChildren().addAll(btNewWayPoint, addWaypointLabel);
         addWaypointBox.setAccessibleText("add waypoint");
-        addWaypointBox.setMargin(btNewWayPoint, new Insets(1,1,1,1));
-        addWaypointBox.setMargin(addWaypointLabel, new Insets(10,1,1,10));
-//        waypointListView.getItems().remove(addWaypointBoxIndex);
+
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
         while(addwaypointIterator.hasNext()) {
             HBox lastAddWaypoint = addwaypointIterator.next();
@@ -464,5 +455,6 @@ public class PathfindingSidebarController extends ScreenController {
         }
         waypointListView.getItems().add(addWaypointBox);
 //        addWaypointBoxIndex = waypointListView.getItems().indexOf(addWaypointBox);
+
     }
 }

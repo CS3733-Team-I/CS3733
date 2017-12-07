@@ -7,6 +7,7 @@ import utility.node.NodeType;
 
 public class Node {
 
+    private int uniqueID;
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -73,6 +74,10 @@ public class Node {
             return false;
         }
     }
+
+    public int getUniqueID() { return uniqueID; }
+
+    public void setUniqueID(int uniqueID) { this.uniqueID = uniqueID; }
 
     public int getXcoord() {
         return xcoord;
@@ -161,21 +166,5 @@ public class Node {
         double dy = n.getYcoord() -ycoord;
 
         return Math.atan2(dy,dx);
-    }
-
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    public void copy(Node node) {
-        this.nodeID = node.nodeID;
-        this.xcoord = node.xcoord;
-        this.ycoord = node.ycoord;
-        this.floor = node.floor;
-        this.building = node.building;
-        this.nodeType = node.nodeType;
-        this.longName = node.longName;
-        this.shortName = node.shortName;
-        this.teamAssigned = node.teamAssigned;
     }
 }
