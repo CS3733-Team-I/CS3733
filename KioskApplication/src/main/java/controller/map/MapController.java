@@ -698,16 +698,23 @@ public class MapController {
     }
 
     @FXML
-    private void keyOpened(){
-        keyDialogContainer.setDisable(false);
-        keyDialog.show();
-        keyButton.setDisable(true);
+    private void btKeyClicked(){
+        if(keyDialogContainer.isDisabled()) {
+            keyDialogContainer.setDisable(false);
+            keyDialog.show();
+            keyButton.setStyle("-fx-background-color: #039f00");
+        }
+        else {
+            keyDialog.close();
+            keyDialogContainer.setDisable(true);
+            keyButton.setStyle("-fx-background-color: #00589F");
+        }
     }
 
     @FXML
-    public void keyClosed(){
+    public void keyClosed() {
         keyDialog.close();
         keyDialogContainer.setDisable(true);
-        keyButton.setDisable(false);
     }
+
 }
