@@ -1,11 +1,16 @@
 package controller.map;
 
+import database.objects.Node;
+import entity.MapEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import utility.ResourceManager;
 
@@ -13,6 +18,8 @@ public class MiniMapController {
 
     @FXML public ImageView miniMapView;
     @FXML private Rectangle viewportRect;
+    @FXML private AnchorPane miniWaypointPane;
+    @FXML private AnchorPane miniPathPane;
 
     // Width and Height of the Floor Image (px)
     private double imageWidth;
@@ -56,6 +63,10 @@ public class MiniMapController {
         viewportRect.setX((MapController.DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
         viewportRect.setY((MapController.DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
 
+        //set the waypoint and path pane cannot be clicked
+        miniWaypointPane.setMouseTransparent(true);
+        miniPathPane.setMouseTransparent(true);
+
         // TODO this is bad oo, we should expose a way to add a listener not directly access scrollPane
         // sync navigation rectangle's position with viewable region(scroll pane)
         viewportRect.yProperty().addListener(new ChangeListener<Number>() {
@@ -86,6 +97,16 @@ public class MiniMapController {
 
         RAHRatio = miniMapView.getFitHeight()/imageHeight;
         RAWRatio = miniMapView.getFitWidth()/imageWidth;
+
+        //handle miniwaypoint display when switching floors
+        for(javafx.scene.Node miniWawypoint : miniWaypointPane.getChildren()){
+            if(!mapController.getCurrentFloor().toString().equals(miniWawypoint.getAccessibleHelp())) {
+                miniWawypoint.setVisible(false);
+            }
+            else {
+                miniWawypoint.setVisible(true);
+            }
+        }
     }
 
     /**
@@ -181,5 +202,37 @@ public class MiniMapController {
      */
     private double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
+    }
+
+    public void showMiniWayPoint(Node node) {
+        Circle miniMapWaypoint = new Circle(3);
+        miniMapWaypoint.setAccessibleText(node.getNodeID());
+        miniMapWaypoint.setAccessibleHelp(node.getFloor().toString());
+        miniMapWaypoint.setFill(Color.RED);
+        miniMapWaypoint.setCenterX(node.getXcoord()*RAWRatio);
+        miniMapWaypoint.setCenterY(node.getYcoord()*RAHRatio);
+        miniWaypointPane.getChildren().add(miniMapWaypoint);
+    }
+
+    public void removeMiniWayPoint(Node node) {
+        for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
+            if(removedMiniWaypoint.getAccessibleText().equals(node.getNodeID())) {
+                miniWaypointPane.getChildren().remove(removedMiniWaypoint);
+            }
+        }
+    }
+
+    public void clearMiniWaypoint() {
+        miniWaypointPane.getChildren().clear();
+    }
+
+    public void showPath() {
+
+    }
+
+
+
+    public void clearPath() {
+
     }
 }

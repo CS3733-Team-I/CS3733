@@ -710,4 +710,8 @@ public class MapController {
         keyDialogContainer.setDisable(true);
         keyButton.setDisable(false);
     }
+
+    public MiniMapController getMiniMapController() {
+        return miniMapController;
+    }
 }

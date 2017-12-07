@@ -89,18 +89,22 @@ public class PathWaypointView extends AnchorPane {
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
                 if(listener.wasRemoved()) {
-                    for (Node node : listener.getRemoved()) {
-                        WaypointView view = this.wayPointViewsMap.get(node);
-                        this.wayPointViewsMap.remove(node);
-                        this.wayPointView.getChildren().remove(view);
+                    for (Node removedWaypoint : listener.getRemoved()) {
+                        WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
+                        this.wayPointViewsMap.remove(removedWaypoint);
+                        this.wayPointView.getChildren().remove(removedView);
+                        parent.getMiniMapController().removeMiniWayPoint(removedWaypoint);
                     }
                 }
                 if(listener.wasAdded()) {
-                    for(Node addedNode : listener.getAddedSubList()) {
-                        WaypointView waypointView = new WaypointView(this, addedNode, waypointList.indexOf(addedNode));
-                        this.wayPointViewsMap.put(addedNode, waypointView);
+                    for(Node addedWaypoint : listener.getAddedSubList()) {
+                        WaypointView waypointView = new WaypointView(this, addedWaypoint, waypointList.indexOf(addedWaypoint));
+                        this.wayPointViewsMap.put(addedWaypoint, waypointView);
 
                         this.wayPointView.getChildren().add(waypointView);
+                        //add the waypoint on the mini map
+                        parent.getMiniMapController().showMiniWayPoint(addedWaypoint);
+
                         waypointView.playWaypointPutTransition();
                     }
                 }
