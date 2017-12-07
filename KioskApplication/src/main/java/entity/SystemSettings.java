@@ -3,24 +3,31 @@ package entity;
 import database.objects.Node;
 import pathfinder.*;
 
+import java.util.Locale;
+import java.util.Observable;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-public class SystemSettings {
+public class SystemSettings extends Observable {
     private Preferences prefs;
     private SearchAlgorithm algorithm;
     private Node defaultnode;
     private int beamWidth;
+    private ResourceBundle resourceBundle;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
 
     }
 
-    private SystemSettings() {
+    private SystemSettings () {
+        super();
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-        this.setDefaultnode(this.prefs.get("defaultNode","IDEPT00403"));
+        this.setDefaultnode(this.prefs.get("defaultNode","IHALL00303"));
         this.setBeamWidth(this.prefs.get("beamWidth", "3"));
+        //this.setResourceBundle(this.prefs.get("Internationalization","English"));
+        this.setResourceBundle("English");
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
     }
@@ -98,5 +105,31 @@ public class SystemSettings {
      */
     public int getBeamWidth() {
         return beamWidth;
+    }
+
+    public void setResourceBundle(String resourceBundle) {
+        switch(resourceBundle){
+            case "English":
+                this.resourceBundle = ResourceBundle.getBundle(
+                    "Internationalization", Locale.US);
+                this.prefs.put("Internationalization", "English");
+                break;
+            case "French":
+                this.resourceBundle = ResourceBundle.getBundle(
+                        "Internationalization",Locale.FRANCE);
+                this.prefs.put("Internationalization", "France");
+                break;
+            default:
+                this.resourceBundle = ResourceBundle.getBundle(
+                        "Internationalization", Locale.US);
+                this.prefs.put("Internationalization", "English");
+                break;
+        }
+        this.setChanged();
+        notifyObservers();
+    }
+
+    public ResourceBundle getResourceBundle() {
+        return resourceBundle;
     }
 }

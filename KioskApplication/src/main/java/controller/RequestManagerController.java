@@ -8,8 +8,6 @@ import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
@@ -101,6 +98,14 @@ public class RequestManagerController extends ScreenController {
                     janitorFilter.setSelected(true);
                     break;
             }
+        }else{
+            foodFilter.setDisable(false);
+            janitorFilter.setDisable(false);
+            securityFilter.setDisable(false);
+            interpreterFilter.setDisable(false);
+            maintenanceFilter.setDisable(false);
+            itFilter.setDisable(false);
+            transportationFilter.setDisable(false);
         }
     }
 
@@ -162,6 +167,12 @@ public class RequestManagerController extends ScreenController {
                 allRequests.add(iR);
             }
         }
+        if(foodFilter.isSelected()){
+            for(Request fR : r.getAllFoodRequests()){
+                allRequests.add(fR);
+            }
+        }
+
         return allRequests;
     }
 
@@ -181,8 +192,11 @@ public class RequestManagerController extends ScreenController {
         activeRequests.setItems(requestids);
     }
 
-    //Creates what goes into the popup when a listview cell is selected
-    public void initializePopup(String requestID) {
+    /**
+     * Creates what goes into the popup when a listview cell is selected
+     * @param requestID To determine which request to display the information of
+     */
+    public void initializePopup(String requestID){
 
         JFXButton more = new JFXButton("More");
         JFXButton statusUpdater = new JFXButton();
@@ -273,7 +287,8 @@ public class RequestManagerController extends ScreenController {
     public VBox displayInformation(String requestID) throws NotFoundException {
         Request request = r.getRequest(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Requested By: " + request.getAssignerID());
+        String assigner = r.getAssigner(requestID).getUsername();
+        Label employee = new Label("Requested By: " + assigner);
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label requestNotes = new Label(request.getNote());
@@ -283,6 +298,11 @@ public class RequestManagerController extends ScreenController {
             case INTERPRETER:
                 String language = r.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField = new Label("Language: "+language);
+                break;
+            case FOOD:
+                String restaurantID = r.getFoodRequest(requestID).getDestinationID();
+                String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+                extraField = new Label("Restaurant: " + restaurant);
                 break;
             default: //security
                 int priority = r.getSecurityRequest(requestID).getPriority();
@@ -361,7 +381,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) { }
