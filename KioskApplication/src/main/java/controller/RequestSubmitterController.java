@@ -136,6 +136,7 @@ public class RequestSubmitterController extends ScreenController {
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
+            resetTimer();
         });
 
         final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99));
@@ -250,6 +251,14 @@ public class RequestSubmitterController extends ScreenController {
                 restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
         System.out.println(requestEntity.getAllFoodRequests());
         clearButton();
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
     }
 
     @Override

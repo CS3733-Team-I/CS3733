@@ -2,11 +2,17 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
 import controller.map.MapBuilderController;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,12 +20,21 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javafx.beans.*;
+import javafx.beans.property.*;
+import javafx.beans.value.*;
 
 public class MainWindowController {
 
@@ -40,6 +55,18 @@ public class MainWindowController {
 
     private LoginEntity loginEntity;
     private SystemSettings systemSettings;
+
+
+    private Timer timer = new Timer();
+    int countdown;
+    int maxCountdown = 30;
+    double defZoom;
+
+    Timeline timeline = new Timeline(new KeyFrame(
+            Duration.millis(10000),
+            ae -> timeout()));
+
+    public BooleanProperty timeout = new SimpleBooleanProperty(false);
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
@@ -158,6 +185,9 @@ public class MainWindowController {
 
         initializeLoginPopup();
         initializeTrackingTable();
+        defZoom = mapController.getZoomSlider().getValue();
+        countdown = maxCountdown;
+        startTimer();
 
         checkPermissions();
     }
@@ -194,6 +224,79 @@ public class MainWindowController {
         this.tabRM.setDisable(true);
         this.contentNode.setDisable(true);
         this.mapView.setDisable(true);
+    }
+
+    void startTimer(){
+        System.out.println("TIMER START");
+        timeline.stop();
+        timeline = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> perSec()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+    }
+
+    /**
+     * Reset time when countdown isnt at max or min values
+     * (prevents from calling too often or when reset is occurring)
+     */
+    public void resetTimer(){
+        if(countdown != maxCountdown && countdown != 0) {
+            System.out.println("TIMER RESET");
+            countdown = maxCountdown;
+            timeline.stop();
+            timeline = new Timeline(new KeyFrame(
+                    Duration.millis(1000),
+                    ae -> perSec()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+        }
+    }
+
+    /**
+     * Called by the timeline each second
+     */
+    public void perSec(){
+        if(countdown == 0){
+            timeout();
+            countdown = maxCountdown;
+        }
+        else {
+            countdown--;
+            System.out.println(countdown);
+        }
+    }
+
+    /**
+     * Called by peSec when the countdown reaches 0
+     */
+    public void timeout() {
+        System.out.println("TIMEOUT");
+        // Close the Login panel if open
+        closeLoginPopup();
+        // Log out
+        LoginEntity.getInstance().logOut();
+        switchButton.setText("Staff Login");
+        // Clears Tabs
+        tabPane.getTabs().clear();
+        // Reset tabs
+        tabPane.getTabs().add(tabMap);
+        tabPane.getTabs().add(tabSettings);
+
+        // Adjust node visability
+        mapController.setNodesVisible(false);
+        mapController.setEdgesVisible(false);
+
+        // Reset floor
+        mapController.setFloorSelector(NodeFloor.THIRD);
+        // Recenter
+        mapController.recenterPressed();
+        // Adjust Zoom
+        mapController.getZoomSlider().setValue(defZoom);
+        // Icon key close
+        mapController.keyClosed();
+
+        System.out.println("TIMEOUT DONE");
     }
 
     //checks permissions of user and adjusts visible tabs and screens
@@ -310,6 +413,14 @@ public class MainWindowController {
                 this.openLoginPopup();
                 break;
         }
+    }
+
+    /**
+     * Sets default Zoom
+     * @param defZoom is the default zoom
+     */
+    public void setDefZoom(double defZoom){
+        this.defZoom = defZoom;
     }
 
     public void onMapNodeClicked(Node n) {

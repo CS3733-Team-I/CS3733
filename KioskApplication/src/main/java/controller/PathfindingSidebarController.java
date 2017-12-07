@@ -120,6 +120,13 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().reloadDisplay();
     }
 
+    public void enableNavBtn(){
+        btNavigate.setDisable(false);
+    }
+    public void disableClearBtn(){
+        clearButton.setDisable(true);
+    }
+
     @FXML
     void btGeneratePathPressed() throws IOException {
         if(getMapController().isPathShowing()) {
@@ -145,6 +152,14 @@ public class PathfindingSidebarController extends ScreenController {
             }
         }
         addTextDirection();
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
     }
 
     @Override
@@ -247,6 +262,8 @@ public class PathfindingSidebarController extends ScreenController {
         nodeNameLabel.setPadding(new Insets(0, 0, 0, 10));
 
         JFXButton btRemoveWaypoint = new JFXButton("");
+        btRemoveWaypoint.setOnMouseMoved(e -> resetTimer());
+        btRemoveWaypoint.setOnMousePressed(e -> resetTimer());
         btRemoveWaypoint.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/close-circle.png")));
         btRemoveWaypoint.setStyle("-fx-background-color: transparent");
         btRemoveWaypoint.setTooltip(new Tooltip("Remove"));
@@ -259,6 +276,8 @@ public class PathfindingSidebarController extends ScreenController {
 
         waypointListView.getItems().add(waypointBox);
 
+        waypointBox.setOnMouseMoved(e ->resetTimer());
+        waypointBox.setOnMousePressed(e ->resetTimer());
         waypointBox.setOnDragDetected(event -> {
             /* allow MOVE transfer mode */
             Dragboard db = waypointBox.startDragAndDrop(TransferMode.MOVE);
@@ -398,11 +417,15 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointLabel.setPrefWidth(300);
         addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
         addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
+        addWaypointLabel.setOnMouseMoved(e -> resetTimer());
+        addWaypointLabel.setOnMousePressed(e -> resetTimer());
         systemSettings.addObserver((o, arg) -> {
             addWaypointLabel.setText(systemSettings.getResourceBundle().getString("my.searchprompt"));
         });
 
         JFXButton btNewWayPoint = new JFXButton("");
+        btNewWayPoint.setOnMouseMoved(e -> resetTimer());
+        btNewWayPoint.setOnMousePressed(e -> resetTimer());
         btNewWayPoint.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/plus-circle.png")));
         btNewWayPoint.setStyle("-fx-background-color: transparent");
         btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);

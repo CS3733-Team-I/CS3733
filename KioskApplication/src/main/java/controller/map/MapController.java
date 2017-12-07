@@ -43,54 +43,36 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MapController {
-    @FXML
-    private AnchorPane container;
+    @FXML private AnchorPane container;
 
     private Group zoomGroup;
-    @FXML
-    private ScrollPane scrollPane;
+    @FXML private ScrollPane scrollPane;
     private boolean mouseZoom;
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
     public static final double DEFAULT_ZOOM = 0.75;
 
-    @FXML
-    private StackPane stackPane;
-    @FXML
-    private ImageView mapView;
-    @FXML
-    private AnchorPane nodesEdgesContainer;
-    @FXML
-    private AnchorPane pathWaypointContainer;
+    @FXML private StackPane stackPane;
+    @FXML private ImageView mapView;
+    @FXML private AnchorPane nodesEdgesContainer;
+    @FXML private AnchorPane pathWaypointContainer;
 
-    @FXML
-    private JFXComboBox<String> languageSelector;
-    @FXML
-    private JFXComboBox<NodeFloor> floorSelector;
-    @FXML
-    private JFXSlider zoomSlider;
-    @FXML
-    private JFXButton recenterButton;
+    @FXML private JFXComboBox<String> languageSelector;
+    @FXML private JFXComboBox<NodeFloor> floorSelector;
+    @FXML private JFXSlider zoomSlider;
+    @FXML private JFXButton recenterButton;
 
-    @FXML
-    private VBox optionsBox;
-    @FXML
-    private JFXCheckBox showNodesBox;
-    @FXML
-    private JFXCheckBox showEdgesBox;
-    @FXML
-    private JFXButton aboutButton;
+    @FXML private VBox optionsBox;
+    @FXML private JFXCheckBox showNodesBox;
+    @FXML private JFXCheckBox showEdgesBox;
+    @FXML private JFXButton aboutButton;
 
-    @FXML
-    private ObservableList<javafx.scene.Node> visibleWaypoints;
+    @FXML private ObservableList<javafx.scene.Node> visibleWaypoints;
 
-    @FXML
-    private JFXButton keyButton;
-    @FXML
-    private JFXDialog keyDialog;
-    @FXML
-    private JFXDialogLayout keyDialogContainer;
+    @FXML private JFXButton keyButton;
+    @FXML private JFXDialog keyDialog;
+    @FXML private JFXDialogLayout keyDialogContainer;
 
     private Path currentPath;
     private NodesEdgesView nodesEdgesView;
@@ -99,8 +81,7 @@ public class MapController {
     private PathWaypointView pathWaypointView;
 
     private MiniMapController miniMapController;
-    @FXML
-    private AnchorPane miniMapPane;
+    @FXML private AnchorPane miniMapPane;
     private SystemSettings systemSettings;
 
     private MainWindowController parent = null;
@@ -600,6 +581,14 @@ public class MapController {
         nodesEdgesView.setShowEdges(showEdgesBox.isSelected());
     }
 
+    /**
+     * Getter for zoomSlider
+     * @return the zoomSlider value from the map
+     */
+    public JFXSlider getZoomSlider() {
+        return zoomSlider;
+    }
+
     @FXML
     public void zoomInPressed() {
         mouseZoom=false;
@@ -623,7 +612,7 @@ public class MapController {
     }
 
     @FXML
-    protected void recenterPressed() {
+    public void recenterPressed() {
         this.scrollPane.setHvalue(DEFAULT_HVALUE);
         this.scrollPane.setVvalue(DEFAULT_VVALUE);
     }
@@ -700,6 +689,14 @@ public class MapController {
         systemSettings.setResourceBundle(languageSelector.getValue());
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        parent.resetTimer();
+    }
+
     @FXML
     private void keyOpened(){
         keyDialogContainer.setDisable(false);
@@ -708,7 +705,7 @@ public class MapController {
     }
 
     @FXML
-    private void keyClosed(){
+    public void keyClosed(){
         keyDialog.close();
         keyDialogContainer.setDisable(true);
         keyButton.setDisable(false);

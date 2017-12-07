@@ -466,6 +466,14 @@ public class MapBuilderController extends ScreenController {
         initPopup();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    void resetTimer(){
+        getParent().resetTimer();
+    }
+
     @Override
     public javafx.scene.Node getContentView() {
         if (contentView == null) {
@@ -934,6 +942,8 @@ public class MapBuilderController extends ScreenController {
 
         JFXButton btGoToNode = new JFXButton("", goIconView);
         btGoToNode.setTooltip(new Tooltip("Go To Node"));
+        btGoToNode.setOnMouseMoved(e -> resetTimer());
+        btGoToNode.setOnMousePressed(e -> resetTimer());
         btGoToNode.setOnAction(event -> {
             Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
 
@@ -942,7 +952,9 @@ public class MapBuilderController extends ScreenController {
         });
 
         JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
-        btGoToNode.setTooltip(new Tooltip("Delete Connection"));
+        btDeleteConnection.setTooltip(new Tooltip("Delete Connection"));
+        btDeleteConnection.setOnMouseMoved(e -> resetTimer());
+        btDeleteConnection.setOnMousePressed(e -> resetTimer());
         btDeleteConnection.setOnAction(event -> {
             Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
 
@@ -962,7 +974,9 @@ public class MapBuilderController extends ScreenController {
         });
 
         JFXButton btBack = new JFXButton("", backIconView);
-        btGoToNode.setTooltip(new Tooltip("Back"));
+        btBack.setTooltip(new Tooltip("Back"));
+        btBack.setOnMouseMoved(e -> resetTimer());
+        btBack.setOnMousePressed(e -> resetTimer());
         btBack.setOnAction(event -> popup.hide());
 
         btGoToNode.setStyle("-fx-background-color: #000000;" + "-fx-backgound-raidus: 0");

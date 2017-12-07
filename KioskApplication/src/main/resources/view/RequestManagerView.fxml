@@ -14,7 +14,7 @@
 
 <AnchorPane maxWidth="-Infinity" minHeight="685.0" minWidth="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane minHeight="685.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane minHeight="685.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="300.0" />
@@ -47,10 +47,10 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <JFXButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#newRequests" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Unopened Requests" wrapText="true" />
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#inProgressRequests" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="In Progress Requests" wrapText="true" GridPane.rowIndex="1" />
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#doneRequests" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Completed Requests" wrapText="true" GridPane.rowIndex="2" />
-                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#refreshRequests" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="Refresh" wrapText="true" GridPane.rowIndex="3" />
+                                    <JFXButton alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#newRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Unopened Requests" wrapText="true" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#inProgressRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="In Progress Requests" wrapText="true" GridPane.rowIndex="1" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#doneRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="request-manager-button-1" stylesheets="@../css/application.css" text="Completed Requests" wrapText="true" GridPane.rowIndex="2" />
+                                    <JFXButton maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#refreshRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="request-manager-button-2" stylesheets="@../css/application.css" text="Refresh" wrapText="true" GridPane.rowIndex="3" />
                                  </children>
                               </GridPane>
                            </children>
@@ -83,18 +83,18 @@
                                           <Insets top="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <JFXCheckBox fx:id="foodFilter" selected="true" text="Food" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                    <JFXCheckBox fx:id="janitorFilter" selected="true" text="Janitor" GridPane.rowIndex="2">
+                                    <JFXCheckBox fx:id="foodFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Food" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                    <JFXCheckBox fx:id="janitorFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Janitor" GridPane.rowIndex="2">
                                        <GridPane.margin>
                                           <Insets />
                                        </GridPane.margin>
                                     </JFXCheckBox>
-                                    <JFXCheckBox fx:id="securityFilter" selected="true" text="Security" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                                    <JFXCheckBox fx:id="interpreterFilter" selected="true" text="Interpreter" GridPane.rowIndex="4" />
-                                    <JFXCheckBox fx:id="maintenanceFilter" selected="true" text="Maintenance" GridPane.rowIndex="5" />
-                                    <JFXCheckBox fx:id="itFilter" selected="true" text="IT Help" GridPane.rowIndex="6" />
-                                    <JFXCheckBox fx:id="transportationFilter" selected="true" text="Transportation" GridPane.rowIndex="7" />
-                                    <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                                    <JFXCheckBox fx:id="securityFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Security" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                                    <JFXCheckBox fx:id="interpreterFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Interpreter" GridPane.rowIndex="4" />
+                                    <JFXCheckBox fx:id="maintenanceFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Maintenance" GridPane.rowIndex="5" />
+                                    <JFXCheckBox fx:id="itFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="IT Help" GridPane.rowIndex="6" />
+                                    <JFXCheckBox fx:id="transportationFilter" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Transportation" GridPane.rowIndex="7" />
+                                    <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" style="-fx-background-color: gray;" text="Reports" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
                                     <HBox fx:id="row8" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="8" />
                                     <HBox fx:id="row9" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="9" />
                                  </children>
@@ -110,7 +110,7 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="300.0" GridPane.columnIndex="1">
                <children>
-                  <JFXListView fx:id="activeRequests" onMouseClicked="#displayInfo" prefHeight="685.0" prefWidth="300.0" />
+                  <JFXListView fx:id="activeRequests" onMouseClicked="#displayInfo" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="685.0" prefWidth="300.0" />
                </children>
             </AnchorPane>
          </children>
