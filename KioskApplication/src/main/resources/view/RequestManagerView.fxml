@@ -75,7 +75,7 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label focusTraversable="false" text="Filter By:" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                                    <Label fx:id="filterLabel" focusTraversable="false" text="Filter By:" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
