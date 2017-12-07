@@ -57,8 +57,10 @@ public class Path {
                 if (i != 0 && i != nodes.size() - 1)
                     directionSegment.add(findDirectionInstructions(nodes.get(i), nodes.get(i - 1), nodes.get(i + 1)));
             }
-
-            directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("end") + nodes.getLast().getLongName());
+            if(!nodes.getLast().getNodeType().equals(NodeType.HALL))
+                directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.end") + nodes.getLast().getLongName() + ".");
+            else
+                directionSegment.add(SystemSettings.getInstance().getResourceBundle().getString("my.endHall") + ".");
             directions.add(directionSegment);
         }
     }
@@ -67,23 +69,23 @@ public class Path {
         MapEntity map = MapEntity.getInstance();
         String returnStr = "";
         if(!nodes.getFirst().getNodeType().equals(NodeType.HALL))
-            returnStr += SystemSettings.getInstance().getResourceBundle().getString("start") + nodes.getFirst().getLongName();
+            returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.start") + nodes.getFirst().getLongName();
         else
-            returnStr += "Start at hallway intersection";
+            returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.startHall");
 
         double angle = nodes.getFirst().getAngleBetweenNodes(nodes.get(1));
 
-        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += ".\n\tGo east for ";
-        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += ".\n\tGo southeast for ";
-        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += ".\n\tGo south for ";
-        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += ".\n\tGo southwest for ";
+        if(angle<=Math.PI/6 && angle>=-Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.east");
+        else if(angle<=Math.PI/3 && angle>Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.southeast");
+        else if(angle<=2*Math.PI/3 && angle>Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.south");
+        else if(angle<=5*Math.PI/6 && angle>2*Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.southwest");
 
-        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += ".\n\tGo northeast for ";
-        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += ".\n\tGo north for ";
-        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += ".\n\tGo northwest for ";
-        else returnStr += ".\n\tGo west for ";
+        else if(angle>=-Math.PI/3 && angle<-Math.PI/6) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.northeast");
+        else if(angle>=-2*Math.PI/3 && angle<-Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.north");
+        else if(angle>=-5*Math.PI/6 && angle<-2*Math.PI/3) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.northwest");
+        else returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.west");
 
-        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + " feet.";
+        return returnStr + (int)map.getConnectingEdge(nodes.getFirst(),nodes.get(1)).getCostFeet() + " " + SystemSettings.getInstance().getResourceBundle().getString("my.feet");
     }
 
     private String findDirectionInstructions(Node thisNode, Node prevNode, Node nextNode) {
@@ -92,11 +94,11 @@ public class Path {
 
         //Elevator
         if(nextNode.getNodeType().equals(NodeType.ELEV) && thisNode.getNodeType().equals(NodeType.ELEV)) {
-            return SystemSettings.getInstance().getResourceBundle().getString("elevator") + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.elevator") + nextNode.getFloor().toString() + " ";
         }
         //Stairs
         else if(nextNode.getNodeType().equals(NodeType.STAI) && thisNode.getNodeType().equals(NodeType.STAI)) {
-            return SystemSettings.getInstance().getResourceBundle().getString("stairs") + nextNode.getFloor().toString() + " ";
+            return SystemSettings.getInstance().getResourceBundle().getString("my.stairs") + nextNode.getFloor().toString() + " ";
         }
 
         //Calculate angles if turning
@@ -111,22 +113,22 @@ public class Path {
         String returnStr = "";
 
         if(!thisNode.getNodeType().equals(NodeType.HALL)){
-            if(Math.abs(angleDif) < straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("straight") + thisNode.getLongName();
-            else if(angleDif > rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("sharpRight") + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif >= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("right") + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif < rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("sharpLeft") + thisNode.getLongName() + ".\n\tGo straight for ";
-            else if(angleDif <= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("left") + thisNode.getLongName() + ".\n\tGo straight for ";
-            else returnStr += "Go to " + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("goFor"); //".\n\tGo straight for "
+            if(Math.abs(angleDif) < straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.straight") + thisNode.getLongName();
+            else if(angleDif > rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharpright") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor");
+            else if(angleDif >= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.right") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor");
+            else if(angleDif < rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharpleft") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor");
+            else if(angleDif <= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.left") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor");
+            else returnStr += "Go to " + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor"); //".\n\tGo straight for "
         }
         else {
-            if(Math.abs(angleDif) < straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("straightHall"); //"Go straight at hallway intersection\n\tfor "
-            else if(angleDif > rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("sharpRightHall"); //"Make a sharp right at hallway intersection.\n\tGo straight for "
-            else if(angleDif >= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("rightHall"); //"Turn right at hallway intersection.\n\tGo straight for "
-            else if(angleDif < rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("sharpLeftHall"); //"Make a sharp left at hallway intersection.\n\tGo straight for "
-            else if(angleDif <= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("leftHall"); //"Turn left at hallway intersection.\n\tGo straight for "
-            else returnStr += SystemSettings.getInstance().getResourceBundle().getString("go") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("goFor");
+            if(Math.abs(angleDif) < straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.straightHall"); //"Go straight at hallway intersection\n\tfor "
+            else if(angleDif > rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharprightHall"); //"Make a sharp right at hallway intersection.\n\tGo straight for "
+            else if(angleDif >= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.rightHall"); //"Turn right at hallway intersection.\n\tGo straight for "
+            else if(angleDif < rightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.sharpleftHall"); //"Make a sharp left at hallway intersection.\n\tGo straight for "
+            else if(angleDif <= straightAngle) returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.leftHall"); //"Turn left at hallway intersection.\n\tGo straight for "
+            else returnStr += SystemSettings.getInstance().getResourceBundle().getString("my.go") + thisNode.getLongName() + SystemSettings.getInstance().getResourceBundle().getString("my.gofor");
         }
-        return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " "+ SystemSettings.getInstance().getResourceBundle().getString("feet"); //" feet."
+        return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " "+ SystemSettings.getInstance().getResourceBundle().getString("my.feet"); //" feet."
     }
 
      public LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
@@ -200,6 +202,7 @@ public class Path {
         }
         return retVal;
     }
+
     /**
      * Returns an ordered list of all nodes along the path.
      * @return

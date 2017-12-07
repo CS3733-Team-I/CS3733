@@ -56,8 +56,7 @@ public class MainWindowController {
     }
 
     @FXML
-    protected void initialize() throws IOException
-    {
+    protected void initialize() throws IOException {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
@@ -66,33 +65,74 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
-        tabMap.setText(languageBundle.getString("map"));
-        tabMB.setText(languageBundle.getString("mapBuilder"));
-        tabRM.setText(languageBundle.getString("requestManager"));
-        tabRS.setText(languageBundle.getString("requestSubmit"));
-        tabSettings.setText(languageBundle.getString("setting"));
+
+        // Default to third floor
+        mapController.setFloorSelector(NodeFloor.THIRD);
+
+        // Pre-load all controllers/views
+        for (ApplicationScreen screen : ApplicationScreen.values()) {
+            ScreenController controller = null;
+
+            switch (screen) {
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
+                    break;
+
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    break;
+
+                case REQUEST_MANAGER:
+                    controller = new RequestManagerController(this, mapController);
+                    break;
+
+                case REQUEST_SUBMITTER:
+                    controller = new RequestSubmitterController(this, mapController);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (controller != null) {
+                // load content view
+                controller.getContentView();
+
+                // cache controller
+                controllers.put(screen, controller);
+            }
+        }
+
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
         // attaches observer to the systemSettings
+
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             switch (loginEntity.getCurrentPermission()) {
                 case NONEMPLOYEE:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
                     break;
 
                 case EMPLOYEE:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
-                    break;
-
                 case SUPER_USER:
                 case ADMIN:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
                     break;
             }
-            tabMap.setText(rB.getString("map"));
-            tabMB.setText(rB.getString("mapBuilder"));
-            tabRM.setText(rB.getString("requestManager"));
-            tabRS.setText(rB.getString("requestSubmit"));
-            tabSettings.setText(rB.getString("setting"));
+
+            tabMap.setText(languageBundle.getString("my.map"));
+            tabMB.setText(languageBundle.getString("my.mapbuilder"));
+            tabRM.setText(languageBundle.getString("my.requestmanager"));
+            tabRS.setText(languageBundle.getString("my.requestsubmit"));
+            tabSettings.setText(languageBundle.getString("my.setting"));
         });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
@@ -120,7 +160,6 @@ public class MainWindowController {
         initializeTrackingTable();
 
         checkPermissions();
-
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -161,7 +200,7 @@ public class MainWindowController {
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogin"));
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
@@ -173,7 +212,7 @@ public class MainWindowController {
                 break;
 
             case EMPLOYEE:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -181,7 +220,7 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText(systemSettings.getResourceBundle().getString("staffLogoff"));
+                switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
 
                 //default to showing all nodes and edges
                 mapController.setNodesVisible(true);
@@ -197,56 +236,9 @@ public class MainWindowController {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
-        }/*
-        ResourceBundle languageBundle = systemSettings.getResourceBundle();
-        switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
-        tabMap.setText(languageBundle.getString("my.map"));
-        tabMB.setText(languageBundle.getString("my.mapbuilder"));
-        tabRM.setText(languageBundle.getString("my.requestmanager"));
-        tabRS.setText(languageBundle.getString("requestsubmit"));
-        tabSettings.setText(languageBundle.getString("my.setting"));*/
-        ScreenController controller = controllers.get(screen);
-
-        // Initialize controller if it doesn't exist
-        if (controller == null) {
-            switch (screen) {
-                case MAP_BUILDER:
-                    controller = new MapBuilderController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabMB);
-                    break;
-
-                case PATHFINDING:
-                    controller = new PathfindingSidebarController(this, mapController);
-                    //connect pathWaypointView with sidebar if applicable
-                    mapController.getPathWaypointView().setSidebarController((PathfindingSidebarController) controller);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabMap);
-                    break;
-                case REQUEST_MANAGER:
-                    controller = new RequestManagerController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabRM);
-                    break;
-
-                case REQUEST_SUBMITTER:
-                    controller = new RequestSubmitterController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabRS);
-                    break;
-
-                case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
-                    //synchronize tab
-                    tabPane.getSelectionModel().select(tabSettings);
-                    break;
-
-                default:
-                    break;
-            }
-
-            controllers.put(screen, controller);
         }
+
+        ScreenController controller = controllers.get(screen);
 
         contentNode = controller.getContentView();
 
@@ -264,7 +256,6 @@ public class MainWindowController {
 
         // Reset controller's view
         controller.resetScreen();
-        mapController.reloadDisplay();
 
         this.currentScreen = screen;
     }
@@ -322,22 +313,31 @@ public class MainWindowController {
     }
 
     public void onMapNodeClicked(Node n) {
-        controllers.get(currentScreen).onMapNodeClicked(n);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapNodeClicked(n);
     }
 
     public void onMapEdgeClicked(Edge e) {
-        controllers.get(currentScreen).onMapEdgeClicked(e);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(e, location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) {
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapLocationClicked(e);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
-        controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 
     protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
+    }
+
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
+        mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
     }
 }

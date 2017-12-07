@@ -11,9 +11,6 @@ import javafx.animation.PathTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -37,7 +34,6 @@ public class PathWaypointView extends AnchorPane {
     protected Path currentPath;
 
     private HashMap<Node, WaypointView> wayPointViewsMap;
-    private HashMap<Edge, PathView> pathViewsMap;
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
@@ -50,7 +46,8 @@ public class PathWaypointView extends AnchorPane {
     MapController parent;
     PathfindingSidebarController sidebarController;
 
-    public PathWaypointView(MapController parent) throws NotFoundException{
+    public PathWaypointView(MapController parent) throws NotFoundException {
+        this.setPickOnBounds(false);
         wayPointView = new AnchorPane();
         wayPointViewsMap = new HashMap<>();
         wayPointView.setPickOnBounds(false);
@@ -61,7 +58,6 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setRightAnchor(wayPointView, 0.0);
 
         pathView = new AnchorPane();
-        pathViewsMap = new HashMap<>();
         pathView.setPickOnBounds(false);
 
         AnchorPane.setTopAnchor(pathView, 0.0);
@@ -69,16 +65,7 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
-//        wayPointView.prefWidthProperty().bind(this.widthProperty());
-//        wayPointView.prefHeightProperty().bind(this.heightProperty());
-//
-//        pathView.prefWidthProperty().bind(this.widthProperty());
-//        pathView.prefHeightProperty().bind(this.heightProperty());
-
-        this.getChildren().addAll(wayPointView, pathView);
-
-        wayPointView.setMouseTransparent(true);
-        pathView.setMouseTransparent(false);
+        this.getChildren().addAll(pathView, wayPointView);
 
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
@@ -89,17 +76,15 @@ public class PathWaypointView extends AnchorPane {
 
         segmentColorList = new ArrayList<>();
 
-        Image upIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-up.png");
-        upView = new javafx.scene.image.ImageView(upIcon);
+        Image arrowButtonIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-button.png");
+        upView = new javafx.scene.image.ImageView(arrowButtonIcon);
         upView.setFitHeight(48);
         upView.setFitWidth(48);
-        upView.setStyle("-fx-background-color: #00589F;");
 
-        Image downIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-down.png");
-        downView = new javafx.scene.image.ImageView(downIcon);
+        downView = new javafx.scene.image.ImageView(arrowButtonIcon);
+        downView.setRotate(180);
         downView.setFitHeight(48);
         downView.setFitWidth(48);
-        downView.setStyle("-fx-background-color: #00589F;");
 
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
@@ -117,38 +102,6 @@ public class PathWaypointView extends AnchorPane {
 
                         this.wayPointView.getChildren().add(waypointView);
                         waypointView.playWaypointPutTransition();
-                    }
-                }
-            }
-        });
-
-        PathList.addListener((ListChangeListener<Edge>) listener -> {
-            MapEntity map = MapEntity.getInstance();
-
-            while (listener.next()) {
-                if (listener.wasAdded()) {
-                    for (Edge edge : listener.getAddedSubList()) {
-                        try{
-                            Node node1 = map.getNode(edge.getNode1ID());
-                            Node node2 = map.getNode(edge.getNode2ID());
-                            PathView pathview = new PathView(edge, new Point2D(node1.getXcoord(), node1.getYcoord()),
-                                    new Point2D(node2.getXcoord(), node2.getYcoord()));
-                            if(map.getEdgesOnFloor(parent.getCurrentFloor()).contains(edge))
-                                pathview.setOpacity(0.95);
-                            else
-                                pathview.setOpacity(0.2);
-                            this.pathViewsMap.put(edge, pathview);
-
-                            this.pathView.getChildren().add(pathview);
-                        }catch (NotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else if (listener.wasRemoved()) {
-                    for (Edge edge: listener.getRemoved()) {
-                        PathView view = this.pathViewsMap.get(edge);
-                        this.pathViewsMap.remove(edge);
-                        this.pathView.getChildren().remove(view);
                     }
                 }
             }
@@ -186,7 +139,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
-        JFXButton switchFloor = new JFXButton();
+        JFXButton switchFloor = null;
         segmentColorList.clear();
 
         this.currentPath = path;
@@ -198,7 +151,6 @@ public class PathWaypointView extends AnchorPane {
         for(int i = 0; i < waypointList.size()-1; i ++) {
             NodeFloor a = parent.getCurrentFloor();
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-            System.out.println(segmentNodes);
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
@@ -210,46 +162,26 @@ public class PathWaypointView extends AnchorPane {
                 jfxPath.getElements().add(lineTo);
 
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    switchFloor = new JFXButton();
-                    //going up
-                    final NodeFloor targetFloor = waypointList.get(i+1).getFloor();
-                    final NodeFloor sourceFloor = waypointList.get(i).getFloor();
-                    if(targetFloor.toInt() > sourceFloor.toInt()) {
-                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                parent.setFloorSelector(targetFloor);
-                            }
-                        });
-                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                        switchFloor.setLayoutY(traversedNode.getYcoord());
-                        switchFloor.setPrefHeight(48);
-                        switchFloor.setPrefWidth(48);
-                        switchFloor.setStyle("-fx-background-color: #01499f;");
+                    /*switchFloor = new JFXButton();
+                    switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
+                    switchFloor.setLayoutX(traversedNode.getXcoord()-48);
+                    switchFloor.setLayoutY(traversedNode.getYcoord());
+                    switchFloor.setPrefHeight(48);
+                    switchFloor.setPrefWidth(48);
+
+                    if (traversedNode.getFloor().toInt() > targetFloor.toInt()) {
                         switchFloor.setGraphic(upView);
-                    }
-                    //going down
-                    else if(targetFloor.toInt() < sourceFloor.toInt()) {
-                        switchFloor.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                parent.setFloorSelector(targetFloor);
-                            }
-                        });
-                        switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                        switchFloor.setLayoutY(traversedNode.getYcoord());
-                        switchFloor.setPrefHeight(48);
-                        switchFloor.setPrefWidth(48);
-                        switchFloor.setStyle("-fx-background-color: #00589F;");
+                    } else {
                         switchFloor.setGraphic(downView);
-                    }
+                    }*/
                 }
             }
+
             this.pathView.getChildren().add(jfxPath);
 
-            Color colorForPointers = Color.color(Math.random(), Math.random(), Math.random());
+            Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);
-            for(int j = 0; j < currentPath.getPathCost()/20; j++) {
+            for(int k = 0; k < currentPath.getPathCost()/20; k++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
@@ -263,10 +195,11 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.setAutoReverse(false);
                 navigationTransition.setCycleCount(PathTransition.INDEFINITE);
 
-                navigationTransition.playFrom(Duration.seconds(j));
+                navigationTransition.playFrom(Duration.seconds(k));
             }
         }
-        this.pathView.getChildren().add(switchFloor);
+
+        if (switchFloor != null) this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -314,9 +247,6 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-
-//        waypointList.remove(index1);
-//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);

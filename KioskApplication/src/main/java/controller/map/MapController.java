@@ -33,9 +33,11 @@ import javafx.scene.paint.Color;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -137,6 +139,33 @@ public class MapController {
     }
 
     /**
+     * Add a node to the map
+     * @param node the node to add
+     * @param type what selection state it is
+     */
+    public void addNode(Node node, NodeSelectionType type) {
+        nodesEdgesView.drawNodesOnMap(Arrays.asList(node));
+        setNodeSelected(node, type);
+    }
+
+    /**
+     * Remove a node from the map
+     * @param node the node to remove
+     */
+    public void removeNode(Node node) {
+        nodesEdgesView.removeNode(node);
+    }
+
+    /**
+     * Tell the NodesEdgesView to highlight a node
+     * @param node the Node to highlight
+     * @param type the type to set the selection to
+     */
+    public void setNodeSelected(Node node, NodeSelectionType type) {
+        nodesEdgesView.setNodeSelected(node, type);
+    }
+
+    /**
      * Gets the current path
      * @return the path
      */
@@ -212,7 +241,7 @@ public class MapController {
         this.showNodesBox.setDisable(false);
         this.showEdgesBox.setDisable(false);
         nodesEdgesView.reloadDisplay();
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         pathWaypointView.reloadDisplay();
 
         //hackey way to reset the comobobox
@@ -375,7 +404,7 @@ public class MapController {
         nodesEdgesView = new NodesEdgesView(this);
         nodesEdgesView.setPickOnBounds(false);
 
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("recenter"));
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -393,12 +422,12 @@ public class MapController {
         pathWaypointContainer.setPickOnBounds(false);
 
         keyDialog.setDialogContainer(keyDialogContainer);
+        keyDialogContainer.setDisable(true);
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
-            recenterButton.setText(rB.getString("recenter"));
-
+            recenterButton.setText(rB.getString("my.recenter"));
         });
 
         try {
@@ -557,7 +586,7 @@ public class MapController {
                 }
             }
             // Otherwise return the x,y coordinates
-            parent.onMapLocationClicked(event, new Point2D(event.getX(), event.getY()));
+            parent.onMapLocationClicked(event);
         }
     }
 
@@ -661,6 +690,10 @@ public class MapController {
         parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
     }
 
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        parent.nodesConnected(nodeID1, nodeID2);
+    }
+
     @FXML
     void onLanguageSelected() {
         SystemSettings systemSettings = SystemSettings.getInstance();
@@ -669,6 +702,7 @@ public class MapController {
 
     @FXML
     private void keyOpened(){
+        keyDialogContainer.setDisable(false);
         keyDialog.show();
         keyButton.setDisable(true);
     }
@@ -676,6 +710,7 @@ public class MapController {
     @FXML
     private void keyClosed(){
         keyDialog.close();
+        keyDialogContainer.setDisable(true);
         keyButton.setDisable(false);
     }
 }

@@ -126,7 +126,7 @@ public class LoginEntity {
 
     public ArrayList<Integer> getAllEmployeeType(RequestType type){
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
-        ArrayList<Integer> loginIDs = new ArrayList<Integer>();
+        ArrayList<Integer> loginIDs = new ArrayList<>();
         if(type.equals(RequestType.GENERAL)){
             loginIDs = getAllLoginIDs();
         }else{

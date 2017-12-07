@@ -5,7 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import utility.ResourceManager;
 
 import java.io.IOException;
 
@@ -15,30 +17,25 @@ public class EdgeView extends AnchorPane {
 
     Point2D start, end;
 
-    @FXML AnchorPane container;
-    @FXML Line line;
+    Line line;
 
     public EdgeView(Edge edge, Point2D start, Point2D end) {
+        this.setPickOnBounds(false);
+
         this.edge = edge;
         this.start = start;
         this.end = end;
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EdgeView.fxml"));
-            loader.setController(this);
-            loader.setRoot(this);
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        line = new Line();
+        line.setStrokeWidth(10);
+        line.setStroke(Color.DARKGRAY);
 
-    @FXML
-    private void initialize() {
         line.setEndX(end.getX() - start.getX());
         line.setEndY(end.getY() - start.getY());
 
-        AnchorPane.setLeftAnchor(container, start.getX());
-        AnchorPane.setTopAnchor(container, start.getY());
+        AnchorPane.setLeftAnchor(this, start.getX());
+        AnchorPane.setTopAnchor(this, start.getY());
+
+        this.getChildren().add(line);
     }
 }

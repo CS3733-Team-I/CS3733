@@ -14,20 +14,24 @@ public enum NodeFloor {
     public String toString() {
         switch(this){
             case LOWERLEVEL_2:
-                return SystemSettings.getInstance().getResourceBundle().getString("lowerLevelTwo");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.lowerleveltwo");
             case LOWERLEVEL_1:
-                return SystemSettings.getInstance().getResourceBundle().getString("lowerLevelOne");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.lowerlevelone");
             case GROUND:
-                return SystemSettings.getInstance().getResourceBundle().getString("groundFloor");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.groundfloor");
             case FIRST:
-                return SystemSettings.getInstance().getResourceBundle().getString("firstFloor");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.firstfloor");
             case SECOND:
-                return SystemSettings.getInstance().getResourceBundle().getString("secondFloor");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.secondfloor");
             case THIRD:
-                return SystemSettings.getInstance().getResourceBundle().getString("thirdFloor");
+                return SystemSettings.getInstance().getResourceBundle().getString("my.thirdfloor");
             default:
                 return "Not Set: Contact Programmer";
         }
+    }
+
+    public String toLiteralString() {
+        return super.toString();
     }
 
     public int toInt() {

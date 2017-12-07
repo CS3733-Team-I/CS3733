@@ -4,11 +4,13 @@ import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import controller.MainWindowController;
 import controller.ScreenController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.SystemSettings;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,12 +19,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -30,125 +29,72 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import utility.ResourceManager;
-import utility.node.NodeBuilding;
-import utility.node.NodeFloor;
-import utility.node.NodeType;
-import utility.node.TeamAssigned;
-import utility.node.NodeSelectionType;
+import utility.node.*;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-import static entity.MapEntity.getInstance;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapBuilderController extends ScreenController {
-    public MapBuilderController(MainWindowController parent, MapController mapController) {
-        super(parent, mapController);
-    }
+    @FXML private TabPane builderTabPane;
 
-    @Override
-    public javafx.scene.Node getContentView() {
-        return null;
-    }
-
-    @Override
-    public void onMapLocationClicked(MouseEvent e, Point2D location) {
-
-    }
-
-    @Override
-    public void onMapNodeClicked(Node node) {
-
-    }
-
-    @Override
-    public void onMapEdgeClicked(Edge edge) {
-
-    }
-
-    @Override
-    public void onMapFloorChanged(NodeFloor floor) {
-
-    }
-
-    @Override
-    public void resetScreen() {
-
-    }
-/*
-    @FXML
-    private TabPane builderTabPane;
-    SingleSelectionModel<Tab> selectionModel;
-
-    Node heightLightedNode;
     //default, nodeFloor is in sync with main map
-    NodeType nodeType = NodeType.TEMP;
+    NodeType nodeType = NodeType.HALL;
     NodeFloor nodeFloor = NodeFloor.THIRD;
     NodeBuilding nodeBuilding = NodeBuilding.FRANCIS15;
     TeamAssigned nodeTeamAssigned = TeamAssigned.I;
     RequiredFieldValidator lNameValidator = new RequiredFieldValidator();
     RequiredFieldValidator sNameValidator = new RequiredFieldValidator();
+
     @FXML private Tab nodeTab;
     private String nodeDialogString;
+
     @FXML private StackPane mapBuilderStackPane;
     @FXML private JFXComboBox<NodeType> CBnodeType;
     @FXML private JFXComboBox<TeamAssigned> CBnodeTeamAssigned;
     @FXML private JFXComboBox<NodeBuilding> CBnodeBuilding;
     @FXML private JFXTextField lName;
     @FXML private JFXTextField sName;
-    @FXML
-    private JFXButton btNodeInstruction;
-    @FXML
-    private GridPane Advance;
-    @FXML
-    private TextField xcoord;
-    @FXML
-    private TextField ycoord;
-    @FXML
-    private TextField nodeID;
-    @FXML
-    private Label lbXcoor;
-    @FXML
-    private Label lbYcoor;
-    @FXML
-    private Label lbNodeID;
+    @FXML private JFXButton btNodeInstruction;
+    @FXML private GridPane Advance;
+    @FXML private TextField xcoord;
+    @FXML private TextField ycoord;
+    @FXML private TextField nodeID;
+    @FXML private Label lbXcoor;
+    @FXML private Label lbYcoor;
+    @FXML private Label lbNodeID;
 
     //node operation buttons
-    @FXML
-    private JFXButton btNodeSave;
-    @FXML
-    private JFXButton btNodeUndo;
-    @FXML
-    private JFXButton btNodeRedo;
-    @FXML
-    private JFXButton btNodeDelete;
-    @FXML
-    private JFXButton btAdvance;
-    @FXML
-    private JFXButton setkiosklocation;
+    @FXML private JFXButton btNodeSave;
+    @FXML private JFXButton btNodeUndo;
+    @FXML private JFXButton btNodeRedo;
+    @FXML private JFXButton btNodeDelete;
+    @FXML private JFXButton btAdvance;
+    @FXML private JFXButton setkiosklocation;
 
     // Edges related fields
-    @FXML
-    private JFXListView<Label> lvConnectedNodes;
-    @FXML
-    private JFXButton btExpand;
-    @FXML
-    JFXPopup popup;
+    @FXML private JFXListView<Node> lvConnectedNodes;
+    @FXML private JFXButton btExpand;
+    @FXML JFXPopup popup;
 
     // Observer lists
-    private ObservableList<database.objects.Node> observableSelectedNodes;
-    private ObservableList<database.objects.Node> observableChangedNodes;
-    protected ObservableList<database.objects.Node> observableNewNodes;
-    private ObservableList<database.objects.Edge> observableSelectedEdges;
+    private SimpleObjectProperty<Node> selectedNode;
+    private SimpleObjectProperty<Node> newNode;
+    private ObservableList<Node> observableChangedNodes;
 
     public MapBuilderController(MainWindowController parent, MapController map) {
         super(parent, map);
-        observableSelectedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableChangedNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableNewNodes = FXCollections.<database.objects.Node>observableArrayList();
-        observableSelectedEdges = FXCollections.<database.objects.Edge>observableArrayList();
+
+        selectedNode = new SimpleObjectProperty<>();
+        selectedNode.set(null);
+
+        newNode = new SimpleObjectProperty<>();
+        newNode.set(null);
+
+        observableChangedNodes = FXCollections.observableArrayList();
     }
 
     @FXML
@@ -164,7 +110,7 @@ public class MapBuilderController extends ScreenController {
         //disable all fields
         btNodeSave.setDisable(true);
         setkiosklocation.setDisable(true);
-        setNodeAllDisable();
+        setEditingDisabled();
 
         //add items into the combobox
         CBnodeType.getItems().addAll(NodeType.values());
@@ -196,7 +142,6 @@ public class MapBuilderController extends ScreenController {
         plusIconView.setFitHeight(24);
         plusIconView.setFitWidth(24);
 
-
         btNodeInstruction.setGraphic(infoIconView);
         btExpand.setGraphic(expandIconView);
 
@@ -205,359 +150,320 @@ public class MapBuilderController extends ScreenController {
         ycoord.setEditable(false);
 
         //update floor based on the floor selector
-        nodeFloor = mapController.getCurrentFloor();
+        nodeFloor = getMapController().getCurrentFloor();
 
-        //TODO MAKE THE NODE CHANGE REACTION MORE CONCRETELY
-        mapController.floorSelector.valueProperty().addListener(new ChangeListener<NodeFloor>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeFloor> observable, NodeFloor oldValue, NodeFloor newValue) {
-                nodeFloor = mapController.getCurrentFloor();
-                updateNodeID();
-                //observableChangedNodes.addAll(observableSelectedNodes); //current selected node is changed
-            }
-        });
+        CBnodeType.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeType = newValue;
 
-        CBnodeType.valueProperty().addListener(new ChangeListener<NodeType>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeType> observable, NodeType oldValue, NodeType newValue) {
-                nodeType = newValue;
+            if (!CBnodeType.isDisable()) {
+                // If we're adding a new node, newNode will not be null
+                if (newNode.get() != null) {
+                    newNode.get().setNodeType(CBnodeType.getValue());
+                    updateNodeID();
 
-                if(!CBnodeType.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        //System.out.println("Before setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        observableNewNodes.get(0).setNodeType(CBnodeType.getValue());
-                        //System.out.println("After setting node type: "+ observableNewNodes.get(0).getNodeType());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedTypeNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedTypeNode)) {
-                            System.out.println("update changes in changed node");
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedTypeNode.getXyz())) {
-                                    changingNode.setNodeType(CBnodeType.getValue());
-                                    updateNodeID();
-                                }
-                            }
-                        }
-                        else {
-                            changedTypeNode.setNodeType(CBnodeType.getValue());
+                    return;
+                }
+
+                // Otherwise look for the changed node and update the type
+                if (observableChangedNodes.contains(selectedNode.get())) {
+                    System.out.println("update changes in changed node");
+                    for (Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setNodeType(CBnodeType.getValue());
                             updateNodeID();
-                            if(!observableChangedNodes.contains(changedTypeNode)){
-                                observableChangedNodes.add(changedTypeNode);
-                            } //current selected node is changed
                         }
+                    }
+                } else {
+                    // And if we don't find the changed node, change the type and add it to the list of changed
+                    selectedNode.get().setNodeType(CBnodeType.getValue());
+                    updateNodeID();
+
+                    if (!observableChangedNodes.contains(selectedNode.get())){
+                        observableChangedNodes.add(selectedNode.get());
                     }
                 }
             }
         });
 
-        CBnodeBuilding.valueProperty().addListener(new ChangeListener<NodeBuilding>() {
-            @Override
-            public void changed(ObservableValue<? extends NodeBuilding> observable, NodeBuilding oldValue, NodeBuilding newValue) {
-                nodeBuilding = newValue;
-                if(!CBnodeBuilding.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setBuilding(CBnodeBuilding.getValue());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedBuildingNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedBuildingNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedBuildingNode.getXyz())) {
-                                    changingNode.setBuilding(CBnodeBuilding.getValue());
-                                    updateNodeID();
-                                }
-                            }
-                        }
-                        else {
-                            changedBuildingNode.setBuilding(CBnodeBuilding.getValue());
-                            updateNodeID();
-                            if(!observableChangedNodes.contains(changedBuildingNode)){
-                                observableChangedNodes.add(changedBuildingNode);
-                            }
+        CBnodeBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeBuilding = newValue;
+            if(!CBnodeBuilding.isDisable()) {
+                // If we're adding a new node, newNode will not be null
+                if(newNode.get() != null) {
+                    newNode.get().setBuilding(CBnodeBuilding.getValue());
+                    updateNodeID();
+                    return;
+                }
 
+                // Otherwise look for the changed node and update the building
+                if(observableChangedNodes.contains(selectedNode.get())) {
+                    for(Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setBuilding(CBnodeBuilding.getValue());
+                            updateNodeID();
                         }
                     }
+                } else {
+                    // And if we don't find the changed node, change the ID and add it to the list of changed
+                    selectedNode.get().setBuilding(CBnodeBuilding.getValue());
+                    updateNodeID();
+
+                    if(!observableChangedNodes.contains(selectedNode.get())){
+                        observableChangedNodes.add(selectedNode.get());
+                    }
+
                 }
             }
         });
-        CBnodeTeamAssigned.valueProperty().addListener(new ChangeListener<TeamAssigned>() {
-            @Override
-            public void changed(ObservableValue<? extends TeamAssigned> observable, TeamAssigned oldValue, TeamAssigned newValue) {
-                nodeTeamAssigned = newValue;
-                if(!CBnodeTeamAssigned.isDisable()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                        updateNodeID();
-                        return;
-                    }
-                    for(database.objects.Node changedTeamNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedTeamNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedTeamNode.getXyz())) {
-                                    changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                                    updateNodeID();
-                                }
-                            }
-                        }
-                        else {
-                            changedTeamNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
-                            updateNodeID();
-                            if(!observableChangedNodes.contains(changedTeamNode)){
-                                observableChangedNodes.add(changedTeamNode);
-                            }
 
+        CBnodeTeamAssigned.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nodeTeamAssigned = newValue;
+            if(!CBnodeTeamAssigned.isDisable()) {
+                if(newNode.get() != null) {
+                    newNode.get().setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                    updateNodeID();
+                    return;
+                }
+
+                if (observableChangedNodes.contains(selectedNode.get())) {
+                    for(Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                            updateNodeID();
                         }
                     }
+                } else {
+                    selectedNode.get().setTeamAssigned("Team " + CBnodeTeamAssigned.getValue().toString());
+                    updateNodeID();
+                    if(!observableChangedNodes.contains(selectedNode.get())){
+                        observableChangedNodes.add(selectedNode.get());
+                    }
+
                 }
             }
         });
+
         //notify changed node list
-        lName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        lName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!lName.isDisable()) {
+                lName.resetValidation();
 
-                if(!lName.isDisable()) {
-                    lName.resetValidation();
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setLongName(lName.getText());
+                if(newNode.get() != null) {
+                    newNode.get().setLongName(lName.getText());
+                    return;
+                }
+
+                if(observableChangedNodes.contains(selectedNode.get())) {
+                    for(Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setLongName(lName.getText());
+                        }
                     }
-                    for(database.objects.Node changedLNameNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedLNameNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedLNameNode.getXyz())) {
-                                    changingNode.setLongName(lName.getText());
-                                }
+                } else {
+                    selectedNode.get().setLongName(lName.getText());
+                    observableChangedNodes.add(selectedNode.get());
+                }
+            }
+        });
+
+        sName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!sName.isDisable()) {
+                sName.resetValidation();
+
+                if(newNode.get() != null) {
+                    newNode.get().setShortName(sName.getText());
+                    return;
+                }
+
+                if(observableChangedNodes.contains(selectedNode.get())) {
+                    for(Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setShortName(sName.getText());
+                        }
+                    }
+                }
+                else {
+                    selectedNode.get().setShortName(sName.getText());
+                    observableChangedNodes.add(selectedNode.get());
+                }
+            }
+        });
+
+        nodeID.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue.equals(newValue)) return;
+
+            if (!nodeID.isDisabled()) {
+                if (newNode.get() != null) {
+                    newNode.get().setNodeID(nodeID.getText());
+                    return;
+                }
+
+                if(observableChangedNodes.contains(selectedNode.get())) {
+                    for(Node changingNode : observableChangedNodes) {
+                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                            changingNode.setNodeID(nodeID.getText());
+                        }
+                    }
+                } else {
+                    selectedNode.get().setNodeID(nodeID.getText());
+                    observableChangedNodes.add(selectedNode.get());
+                }
+
+                //reflect node ID changes in mapEntity also in edges
+                for(Node node : MapEntity.getInstance().getAllNodes()) {
+                    if(node.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
+                            System.out.println("3. Begin Updating edge ID");
+
+                            if(edge.getNode1ID().equals(oldValue)) {
+                                edge.setNode1ID(nodeID.getText());
                             }
+                            if(edge.getNode2ID().equals(oldValue)) {
+                                edge.setNode2ID(nodeID.getText());
+                            }
+
+                            // TODO make this update the database, currently doesnt
+
+                            System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
                         }
-                        else {
-                            changedLNameNode.setLongName(lName.getText());
-                            observableChangedNodes.add(changedLNameNode);
-                        }
+
+                        node.setNodeID(nodeID.getText());
                     }
                 }
             }
         });
-        sName.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!sName.isDisable()) {
-                    sName.resetValidation();
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setShortName(sName.getText());
-                    }
-                    for(database.objects.Node changedSNameNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedSNameNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedSNameNode.getXyz())) {
-                                    changingNode.setShortName(sName.getText());
-                                }
-                            }
-                        }
-                        else {
-                            changedSNameNode.setShortName(sName.getText());
-                            observableChangedNodes.add(changedSNameNode);
-                        }
-                    }
-                }
-            }
-        });
-        nodeID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(!nodeID.isDisabled()) {
-                    if(!observableNewNodes.isEmpty()) {
-                        observableNewNodes.get(0).setNodeID(nodeID.getText());
-                    }
-                    for(database.objects.Node changedIDNode : observableSelectedNodes) {
-                        if(observableChangedNodes.contains(changedIDNode)) {
-                            for(database.objects.Node changingNode : observableChangedNodes) {
-                                if(changingNode.getXyz().equals(changedIDNode.getXyz())) {
-                                    changingNode.setNodeID(nodeID.getText());
-                                }
-                            }
-                        }
-                        else {
-                            changedIDNode.setNodeID(nodeID.getText());
-                            observableChangedNodes.add(changedIDNode);
-                        }
-                        //reflect node ID changes in mapEntity also in edges
-                        for(database.objects.Node node : MapEntity.getInstance().getAllNodes()) {
-                            if(node.getXyz().equals(changedIDNode.getXyz())) {
 
-                                for(database.objects.Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
-
-                                    System.out.println("3. Begin Updating edge ID");
-
-                                    if(edge.getNode1ID().equals(oldValue)) {
-                                        edge.setNode1ID(nodeID.getText());
-                                    }
-                                    if(edge.getNode2ID().equals(oldValue)) {
-                                        edge.setNode2ID(nodeID.getText());
-                                    }
-                                    System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
-                                }
-                                node.setNodeID(nodeID.getText());
-                            }
-                        }
-                    }
-                }
-            }
-        });
         //keep track on selected, new, and changed nodes and edges list
-        observableSelectedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        lvConnectedNodes.getItems().clear();
-                        updateNodeDisplay(NodeSelectionType.SELECTED);
-                    }
-                    else if(c.wasAdded()) {
-                        for(Node connectedNode : getInstance().getConnectedNodes(observableSelectedNodes.get(0))) {
-                            Label connection = new Label(connectedNode.getLongName());
-                            connection.setAccessibleText(connectedNode.getXyz());
-                            connection.setAlignment(Pos.CENTER);
-                            lvConnectedNodes.getItems().add(connection);
+        selectedNode.addListener((ChangeListener<Node>) (ObservableValue<? extends Node> o, Node oldVal, Node newVal) -> {
+            if (oldVal != null) {
+                if (observableChangedNodes.contains(oldVal))
+                    getMapController().setNodeSelected(oldVal, NodeSelectionType.CHANGED);
+                else
+                    getMapController().setNodeSelected(oldVal, NodeSelectionType.NORMAL);
+            }
+
+            lvConnectedNodes.getItems().clear();
+            if (newVal != null) {
+                if (observableChangedNodes.contains(newVal))
+                    getMapController().setNodeSelected(newVal, NodeSelectionType.SELECTEDANDCHANGED);
+                else
+                    getMapController().setNodeSelected(newVal, NodeSelectionType.SELECTED);
+
+                for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(newVal)) {
+                    lvConnectedNodes.getItems().add(connectedNode);
+                }
+
+                updateNodeDisplay(NodeSelectionType.SELECTED);
+            }
+
+            lvConnectedNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
+
+                @Override
+                public ListCell<Node> call(ListView<Node> param) {
+                    ListCell<Node> cell = new ListCell<Node>() {
+
+                        @Override
+                        protected void updateItem(Node item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item != null) {
+                                setText(item.getLongName());
+                            } else {
+                                setText("");
+                            }
                         }
-                        updateNodeDisplay(NodeSelectionType.SELECTED);
-                    }
+                    };
+                    return cell;
                 }
-                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
-                    setNodeAllDisable();
-                }
-            }
-        });
-        observableChangedNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                updateNodeDisplay(NodeSelectionType.CHANGED);//currently do nothing
-                while(c.next()) {
-                    if(c.wasAdded()) {
-                        for(database.objects.Node addedChangedNode : c.getAddedSubList()) {
-                            mapController.observableHighlightedChangedNodes.add(addedChangedNode);
-                        }
-                    }
-                    if(c.wasRemoved()) {
-                        for(database.objects.Node removedChangedNode : c.getRemoved()) {
-                            mapController.observableHighlightedChangedNodes.remove(removedChangedNode);
-                        }
-                    }
-                }
-                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
-                    btNodeSave.setDisable(true);
-                }
-                else {
-                    btNodeSave.setDisable(false);
-                }
-            }
-        });
-        observableNewNodes.addListener(new ListChangeListener<Node>() {
-            @Override
-            public void onChanged(Change<? extends Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        updateNodeDisplay(NodeSelectionType.NEW);
-                    }
-                    else if(c.wasAdded()) {
-                        updateNodeDisplay(NodeSelectionType.NEW);
-                    }
-                }
-                if(observableChangedNodes.isEmpty() && observableNewNodes.isEmpty()){
-                    btNodeSave.setDisable(true);
-                }
-                else {
-                    btNodeSave.setDisable(false);
-                }
-                if(observableSelectedNodes.isEmpty() && observableNewNodes.isEmpty()) {
-                    setNodeAllDisable();
-                }
-            }
-        });
-        observableSelectedEdges.addListener(new ListChangeListener<Edge>() {
-            @Override
-            public void onChanged(Change<? extends Edge> c) {
-                System.out.println("Edge Change Detected");
+            });
+
+            if(newVal == null && newNode.get() == null) {
+                setEditingDisabled();
+            } else {
+                setEditingEnabled();
             }
         });
 
-        //let list view accept node dragging
-        lvConnectedNodes.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if(event.getDragboard().hasString()) {
-                    event.acceptTransferModes(TransferMode.COPY);
+        observableChangedNodes.addListener((ListChangeListener<Node>) c -> {
+            while(c.next()) {
+                if(c.wasAdded()) {
+                    for(Node node : c.getAddedSubList()) {
+                        if (node.equals(selectedNode.get()))
+                            getMapController().setNodeSelected(node, NodeSelectionType.SELECTEDANDCHANGED);
+                        else
+                            getMapController().setNodeSelected(node, NodeSelectionType.CHANGED);
+                    }
                 }
 
-                event.consume();
-            }
-        });
-        lvConnectedNodes.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if(event.getDragboard().hasString()) {
-                    lvConnectedNodes.setStyle("-fx-background-color: #4e9f42");
+                if(c.wasRemoved()) {
+                    for(Node node : c.getRemoved()) {
+                        getMapController().setNodeSelected(node, NodeSelectionType.NORMAL);
+                    }
                 }
-                event.consume();
             }
-        });
-        lvConnectedNodes.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                lvConnectedNodes.setStyle("-fx-background-color: IVORY");
-                event.consume();
-            }
-        });
-        lvConnectedNodes.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    success = true;
-                }
-                // let the source know whether the string was successfully transferred and used
-                event.setDropCompleted(success);
 
-                //add connection between nodes
-                addConnection(db.getString());
-
-                event.consume();
+            if(observableChangedNodes.isEmpty() && newNode.get() == null){
+                btNodeSave.setDisable(true);
+            } else {
+                btNodeSave.setDisable(false);
             }
         });
+
+        newNode.addListener((ChangeListener<Node>) (o, oldVal, newVal) -> {
+            if (newVal != null) {
+                getMapController().addNode(newVal, NodeSelectionType.NEW);
+                updateNodeDisplay(NodeSelectionType.NEW);
+            }
+
+            if(observableChangedNodes.isEmpty() && newVal == null){
+                btNodeSave.setDisable(true);
+            } else {
+                btNodeSave.setDisable(false);
+            }
+
+            if(selectedNode.get() == null && newVal == null) {
+                setEditingDisabled();
+            }
+        });
+
+        // Enable nodes to be dragged from the map to the list view in order to
+        // connect nodes that are far apart or on separate floors
+        lvConnectedNodes.setOnDragOver(event -> {
+            if(event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragEntered(event -> {
+            if(event.getDragboard().hasString()) {
+                lvConnectedNodes.setStyle("-fx-background-color: #4e9f42");
+            }
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragExited(event -> {
+            lvConnectedNodes.setStyle("-fx-background-color: IVORY");
+            event.consume();
+        });
+
+        lvConnectedNodes.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                success = true;
+            }
+
+            // let the source know whether the string was successfully transferred and used
+            event.setDropCompleted(success);
+
+            //add connection between nodes
+            addConnection(Integer.parseInt(db.getString()));
+
+            event.consume();
+        });
+
         initPopup();
-    }
-
-    private ImageView floorImage(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
-
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
-        ImageView floorView = new ImageView(floorImage);
-        floorView.setFitHeight(100);
-        floorView.setFitWidth(100);
-        return floorView;
     }
 
     @Override
@@ -570,43 +476,34 @@ public class MapBuilderController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
+    public void onMapLocationClicked(MouseEvent event) {
         //deselect node on one mouse click
-        if(e.getClickCount() == 1) {
-            mapController.observableHighlightedSelectedNodes.clear();
-            observableSelectedNodes.clear();
-        }
-        //detects double-click events
-        else if(e.getClickCount() == 2)
-        {
-            //remove selected nodes, if any
-            mapController.observableHighlightedSelectedNodes.clear();
-            observableSelectedNodes.clear();
+        if(event.getClickCount() == 1) {
+            selectedNode.set(null);
+        } else if(event.getClickCount() == 2) {
+            selectedNode.set(null);
 
-            database.objects.Node newNode = new database.objects.Node(nodeID.getText(), (int)location.getX(), (int)location.getY(),
-                    mapController.floorSelector.getValue(), NodeBuilding.FRANCIS15, NodeType.TEMP, lName.getText(), sName.getText(), "Team " + TeamAssigned.I.toString());
-
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
-            mapController.observableHighlightedNewNodes.add(newNode);
-            observableNewNodes.clear();
-            observableNewNodes.add(newNode);
+            Node createdNode = new Node("", (int)event.getX(), (int)event.getY(),
+                    getMapController().getCurrentFloor(), NodeBuilding.FRANCIS15,
+                    NodeType.HALL, "", "",
+                    "Team " + TeamAssigned.I.toString());
+            if(newNode.get() != null) {
+                getMapController().removeNode(newNode.get());
+            }
+            newNode.set(createdNode);
         }
     }
 
     @Override
-    public void onMapNodeClicked(database.objects.Node node) {
-
-        if(observableNewNodes.contains(node)) {
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
-            observableNewNodes.clear();
+    public void onMapNodeClicked(Node node) {
+        if (newNode.get() != null && newNode.get().equals(node)) {
+            // Stop displaying newNode
+            getMapController().removeNode(newNode.get());
+            newNode.set(null);
             return;
-        }
-        else if(observableSelectedNodes.contains(node)) {
+        } else if(selectedNode.get() != null && selectedNode.get().equals(node)) {
             return;
-        }
-        else {
+        } else {
             updateSelectedNode(node);
         }
     }
@@ -614,26 +511,18 @@ public class MapBuilderController extends ScreenController {
     @Override
     public void onMapEdgeClicked(database.objects.Edge edge) {
         //remove changes on nodes
-        //TODO make this into a method
-        mapController.observableHighlightedSelectedNodes.clear();
-        observableSelectedNodes.clear();
-
-        mapController.isNodeAdded = false;
-        mapController.observableHighlightedNewNodes.clear();
-        observableNewNodes.clear();
-
-        observableSelectedEdges.clear();
-        observableSelectedEdges.add(edge);
+        selectedNode.set(null);
+        newNode.set(null);
     }
 
     @Override
     public void onMapFloorChanged(NodeFloor floor) {
-        mapController.showEdgesBox.setSelected(false);
-        mapController.showNodesBox.setSelected(false);
+
     }
 
     @Override
     public void resetScreen() {
+        getMapController().setEditMode(true);
 
         getMapController().setAnchor(0, 450, 0, 0);
         getMapController().reloadDisplay();
@@ -642,82 +531,65 @@ public class MapBuilderController extends ScreenController {
         getMapController().setNodesVisible(true);
         getMapController().setEdgesVisible(true);
 
+        setEditingDisabled();
+
         // Set if the options box is visible
-        getMapController().setOptionsBoxVisible(false);
+        getMapController().setOptionsBoxVisible(true);
 
     }
 
     // Handles node Related operations
 
-//TODO REFACTOR THIS USING "CHANGE"
+    //TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeSelectionType nodeSelectionType) {
-        setNodeAllDisable();
+        setEditingDisabled();
         switch (nodeSelectionType) {
             case SELECTED:
-                if(observableSelectedNodes.size() == 0) { //no node selected
-                    setNodeAllDisable();
-                }
-                else if(observableSelectedNodes.size() == 1){
-                    for(database.objects.Node targetNode : observableChangedNodes) {
-                        if(observableSelectedNodes.get(0).getXyz().equals(targetNode.getXyz())) {
-                            xcoord.setText(String.valueOf(targetNode.getXcoord()));
-                            ycoord.setText(String.valueOf(targetNode.getYcoord()));
+                // If the selected node has already been changed set the values to the changed values
+                for(Node targetNode : observableChangedNodes) {
+                    if(selectedNode.get().getUniqueID() == targetNode.getUniqueID()) {
+                        xcoord.setText(String.valueOf(targetNode.getXcoord()));
+                        ycoord.setText(String.valueOf(targetNode.getYcoord()));
 
-                            CBnodeBuilding.setValue(targetNode.getBuilding());
-                            CBnodeType.setValue(targetNode.getNodeType());
-                            CBnodeTeamAssigned.setValue(convertToTeamEnum(targetNode.getTeamAssigned()));
+                        CBnodeBuilding.setValue(targetNode.getBuilding());
+                        CBnodeType.setValue(targetNode.getNodeType());
+                        CBnodeTeamAssigned.setValue(convertToTeamEnum(targetNode.getTeamAssigned()));
 
-                            lName.setText(targetNode.getLongName());
-                            sName.setText(targetNode.getShortName());
+                        lName.setText(targetNode.getLongName());
+                        sName.setText(targetNode.getShortName());
 
-                            nodeID.setText(targetNode.getNodeID());
-
-                            setNodeFieldEnable();
-                            return;
-                        }
+                        nodeID.setText(targetNode.getNodeID());
+                        return;
                     }
-                    xcoord.setText(String.valueOf(observableSelectedNodes.get(0).getXcoord()));
-                    ycoord.setText(String.valueOf(observableSelectedNodes.get(0).getYcoord()));
+                }
 
-                    CBnodeBuilding.setValue(observableSelectedNodes.get(0).getBuilding());
-                    CBnodeType.setValue(observableSelectedNodes.get(0).getNodeType());
-                    lName.setText(observableSelectedNodes.get(0).getLongName());
-                    sName.setText(observableSelectedNodes.get(0).getShortName());
-                    CBnodeTeamAssigned.setValue(convertToTeamEnum(observableSelectedNodes.get(0).getTeamAssigned()));
-                    nodeID.setText(observableSelectedNodes.get(0).getNodeID());
-                }
-                else {
-                    //TODO make this an exception
-                    System.out.println("THIS SHOULD NEVER HAPPEN!\n");
-                }
-                break;
-            case CHANGED: //currently do nothing
+                // Otherwise set the text fields to the selected node
+                xcoord.setText(String.valueOf(selectedNode.get().getXcoord()));
+                ycoord.setText(String.valueOf(selectedNode.get().getYcoord()));
+
+                CBnodeBuilding.setValue(selectedNode.get().getBuilding());
+                CBnodeType.setValue(selectedNode.get().getNodeType());
+                lName.setText(selectedNode.get().getLongName());
+                sName.setText(selectedNode.get().getShortName());
+                CBnodeTeamAssigned.setValue(convertToTeamEnum(selectedNode.get().getTeamAssigned()));
+                nodeID.setText(selectedNode.get().getNodeID());
+                setEditingEnabled();
                 break;
             case NEW:
-                if(observableNewNodes.size() == 0) { //no node selected
-                    setNodeAllDisable();
-                }
-                else if(observableNewNodes.size() == 1){
+                lName.setText("");
+                sName.setText("");
 
-                    xcoord.setText(String.valueOf(observableNewNodes.get(0).getXcoord()));
-                    ycoord.setText(String.valueOf(observableNewNodes.get(0).getYcoord()));
+                xcoord.setText(String.valueOf(newNode.get().getXcoord()));
+                ycoord.setText(String.valueOf(newNode.get().getYcoord()));
 
-                    CBnodeBuilding.setValue(observableNewNodes.get(0).getBuilding());
-                    CBnodeType.setValue(observableNewNodes.get(0).getNodeType());
-                    CBnodeTeamAssigned.setValue(convertToTeamEnum(observableNewNodes.get(0).getTeamAssigned()));
+                CBnodeBuilding.setValue(newNode.get().getBuilding());
+                CBnodeType.setValue(newNode.get().getNodeType());
+                CBnodeTeamAssigned.setValue(convertToTeamEnum(newNode.get().getTeamAssigned()));
 
-                    lName.setText(observableNewNodes.get(0).getLongName());
-                    sName.setText(observableNewNodes.get(0).getShortName());
-                    //nodeID.setText(observableNewNodes.get(0).getNodeID());
-                    updateNodeID();
-                }
-                else {
-                    //TODO make this an exception
-                    System.out.println("THIS SHOULD NEVER HAPPEN!\n");
-                }
+                setEditingEnabled();
+                updateNodeID();
                 break;
         }
-        setNodeFieldEnable();
     }
 
     public String convertFloor(String eString){
@@ -753,25 +625,20 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
-
     private void updateNodeID() {
-        //System.out.println(observableSelectedNodes.get(0).getNodeID());
+        //System.out.println(selectedNode.get().getNodeID());
         if(nodeType == NodeType.ELEV) {
-
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(mapController.floorSelector.getValue().toString1()));
-
-        }
-        else {
-        //System.out.println("");
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
+        } else {
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
                 nodeID.setText(nodeIDtemp);
             }else{
                 String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, nodeTeamAssigned, "");
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
-                System.out.println(convertFloor(nodeFloor.toString1()));
-                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toString1()));
+                System.out.println(convertFloor(nodeFloor.toLiteralString()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
 
             }
         }
@@ -788,7 +655,7 @@ public class MapBuilderController extends ScreenController {
         }
         return result;
     }
-    
+
     private String elevNameInChangedList(){
 
         String result = "";
@@ -797,20 +664,20 @@ public class MapBuilderController extends ScreenController {
                 result += observableChangedNodes.get(i).getNodeID().charAt(7);
             }
         }
-        String preparedName = getInstance().generateElevName(nodeFloor, nodeTeamAssigned, result);
+        String preparedName = MapEntity.getInstance().generateElevName(nodeFloor, nodeTeamAssigned, result);
         return preparedName;
     }
 
-    public boolean checkExist(){
+/*    public boolean checkExist(){
         for(int i=0; i<observableChangedNodes.size(); i++) {
-            if (observableSelectedNodes.get(0).getNodeType() == observableChangedNodes.get(i).getNodeType() && observableSelectedNodes.get(0).getXyz() == observableChangedNodes.get(i).getXyz()){
+            if (selectedNode.get().getNodeType() == observableChangedNodes.get(i).getNodeType() && selectedNode.get().getXyz() == observableChangedNodes.get(i).getXyz()){
                 return false;
             }
         }
         return true;
-    }
+    }*/
 
-    private void setNodeFieldEnable() {
+    private void setEditingEnabled() {
         CBnodeType.setDisable(false);
         CBnodeBuilding.setDisable(false);
         CBnodeTeamAssigned.setDisable(false);
@@ -827,15 +694,27 @@ public class MapBuilderController extends ScreenController {
         btNodeDelete.setDisable(false);
         setkiosklocation.setDisable(false);
     }
-    private void setNodeAllDisable() {
+
+    private void setEditingDisabled() {
         CBnodeType.setDisable(true);
         CBnodeBuilding.setDisable(true);
         CBnodeTeamAssigned.setDisable(true);
+
         lName.setDisable(true);
+        lName.setText("");
+
         sName.setDisable(true);
+        sName.setText("");
+
         nodeID.setDisable(true);
+        nodeID.setText("");
+
         xcoord.setDisable(true);
+        xcoord.setText("");
+
         ycoord.setDisable(true);
+        ycoord.setText("");
+
         //turn off advanced options
         btAdvance.setDisable(true);
         //disable node operation buttons
@@ -875,28 +754,43 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void SaveNode(ActionEvent event) {
+        MapEntity map = MapEntity.getInstance();
 
-        if(lName.getText().trim().equals("")) {
-            lName.validate();
-            return;
-        }
-        if(sName.getText().trim().equals("")) {
-            sName.validate();
-            return;
-        }
-
-        for(database.objects.Node newNode : observableNewNodes) {
-            if(newNode.getNodeType() == NodeType.TEMP) { //no type of temp is allowed to save
-                nodeDialogString +=  "node ID: " + newNode.getNodeID() + "\n" + "node Type cannot be TEMP.\n\n";
-                System.out.println(nodeDialogString);
-                loadDialog(event);
-                nodeDialogString = "";
-                return;
+        // Check the text boxes if selected
+        if (selectedNode.get() != null) {
+            boolean isValid = true;
+            if (lName.getText().trim().equals("")) {
+                lName.validate();
+                isValid = false;
             }
-            else if (getInstance().getNode(newNode.getNodeID()) == null) {
+            if (sName.getText().trim().equals("")) {
+                sName.validate();
+                isValid = false;
+            }
+
+            if (!isValid) return;
+        }
+
+        Node nodeToAdd = newNode.get();
+
+        //clear new node
+        newNode.set(null);
+
+        nodeDialogString = "";
+        if (nodeToAdd != null) {
+            try {
+                if (map.getNode(nodeToAdd.getNodeID()) != null) {
+                    nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + "Duplicate ID found\n\n";
+                    System.out.println(nodeDialogString);
+                    loadDialog(event);
+                    nodeDialogString = "";
+                    return;
+                }
+            } catch (NotFoundException e) {
                 try {
-                    getInstance().addNode(newNode);
-                    nodeDialogString += "node ID: " + newNode.getNodeID() +"\n" + " saved.\n\n";
+                    map.addNode(nodeToAdd);
+                    getMapController().addNode(nodeToAdd, NodeSelectionType.NORMAL);
+                    nodeDialogString += "node ID: " + nodeToAdd.getNodeID() + "\n" + " saved.\n\n";
                 } catch (DatabaseException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error adding node to DB");
@@ -904,35 +798,24 @@ public class MapBuilderController extends ScreenController {
                     alert.setContentText(ex.toString());
                     alert.showAndWait();
 
-                    nodeDialogString += "ERROR: node " + newNode.getNodeID() + " was not added to database.\n\n";
+                    nodeDialogString += "ERROR: node " + nodeToAdd.getNodeID() + " was not added to database.\n\n";
                 }
-            }  else { //duplicate node ID found
-                nodeDialogString += "node ID: " + newNode.getNodeID() + "\n" + "Duplicate ID found\n\n";
-                System.out.println(nodeDialogString);
-                loadDialog(event);
-                nodeDialogString = "";
-                return;
             }
         }
 
-        //clear new node list
-        mapController.isNodeAdded = true;
-        mapController.observableHighlightedNewNodes.clear();
-        observableNewNodes.clear();
+        for (Node changedNode : observableChangedNodes) {
+            try {
+                map.editNode(changedNode);
+                nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
+            } catch (DatabaseException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error editing node in DB");
+                alert.setHeaderText("Error occurred while updating a node in the database.");
+                alert.setContentText(ex.toString());
+                alert.showAndWait();
 
-        for(database.objects.Node changedNode : observableChangedNodes) {
-                try {
-                    getInstance().editNode(changedNode);
-                    nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
-                } catch (DatabaseException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error editing node in DB");
-                    alert.setHeaderText("Error occurred while updating a node in the database.");
-                    alert.setContentText(ex.toString());
-                    alert.showAndWait();
-
-                    nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
-                }
+                nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
+            }
         }
         observableChangedNodes.clear();
         System.out.println(nodeDialogString);
@@ -943,7 +826,6 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void loadDialog(ActionEvent event) {
-
         //TODO FIND A BETTER PLACE TO PUT THE DIALOG
         JFXDialogLayout nodeDialogLayout = new JFXDialogLayout();
         nodeDialogLayout.setHeading(new Text(""));
@@ -973,12 +855,12 @@ public class MapBuilderController extends ScreenController {
         JFXDialogLayout helpDlo = new JFXDialogLayout();
         helpDlo.setHeading(new Text("Help"));
         helpDlo.setBody(new Text("Click on a existing node to edit it.\n" +
-                                 "Double click on the map to create a\n" +
-                                 "new node. Click on a unsaved new node\n" +
-                                 "again to remove it.\n\n" +
-                                 "When a node is selected, click an empty\n" +
-                                 "spot in map to deselect. Edit their\n" +
-                                 "information and click on confirm to save."));
+                "Double click on the map to create a\n" +
+                "new node. Click on a unsaved new node\n" +
+                "again to remove it.\n\n" +
+                "When a node is selected, click an empty\n" +
+                "spot in map to deselect. Edit their\n" +
+                "information and click on confirm to save."));
         JFXDialog helpD = new JFXDialog(mapBuilderStackPane, helpDlo, JFXDialog.DialogTransition.CENTER);
 
 
@@ -1014,7 +896,7 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void setKioskDefaultLocation(ActionEvent event){
-        SystemSettings.getInstance().setDefaultnode(observableSelectedNodes.get(0).getNodeID());
+        SystemSettings.getInstance().setDefaultnode(selectedNode.get().getNodeID());
     }
 
     @FXML
@@ -1035,7 +917,6 @@ public class MapBuilderController extends ScreenController {
     }
 
     private void initPopup() {
-
         Image goIcon = new Image(getClass().getResource("/images/icons/go.png").toString());
         ImageView goIconView = new ImageView(goIcon);
         goIconView.setFitHeight(24);
@@ -1053,110 +934,76 @@ public class MapBuilderController extends ScreenController {
 
         JFXButton btGoToNode = new JFXButton("", goIconView);
         btGoToNode.setTooltip(new Tooltip("Go To Node"));
-        btGoToNode.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                for(database.objects.Node selectedNode : mapController.databaseNodeObjectList) {
-                    String selectedText = lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText();
-                    if(selectedNode.getXyz().equals(selectedText)) {
-                        updateSelectedNode(selectedNode);
-                        popup.hide();
-                    }
-                }
-            }
+        btGoToNode.setOnAction(event -> {
+            Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
+
+            updateSelectedNode(selectedNode);
+            popup.hide();
         });
+
         JFXButton btDeleteConnection = new JFXButton("", deleteIconView);
         btGoToNode.setTooltip(new Tooltip("Delete Connection"));
-        btDeleteConnection.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String targetText = lvConnectedNodes.getSelectionModel().getSelectedItem().getAccessibleText();
-                for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
-                    if(targetNode.getXyz().equals(targetText)) {
-                        deleteConnection(event, targetNode);
-                        popup.hide();
-                        return;
-                    }
-                }
+        btDeleteConnection.setOnAction(event -> {
+            Node selectedNode = lvConnectedNodes.getSelectionModel().getSelectedItem();
+
+            deleteConnection(event, selectedNode);
+
+            lvConnectedNodes.getItems().clear();
+            for(Node connectedNode : MapEntity.getInstance().getConnectedNodes(this.selectedNode.get())) {
+                lvConnectedNodes.getItems().add(connectedNode);
             }
+
+
+            Node savedNode = this.selectedNode.get();
+            updateSelectedNode(null);
+            updateSelectedNode(savedNode);
+
+            popup.hide();
         });
+
         JFXButton btBack = new JFXButton("", backIconView);
         btGoToNode.setTooltip(new Tooltip("Back"));
-        btBack.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                popup.hide();
-            }
-        });
+        btBack.setOnAction(event -> popup.hide());
 
-        btGoToNode.setStyle("-fx-background-color: #000000;" +
-                "-fx-backgound-raidus: 0");
-        btDeleteConnection.setStyle("-fx-background-color: #d32a04;" +
-                "-fx-backgound-raidus: 0");
-        btBack.setStyle("-fx-background-color: #999999;" +
-                "-fx-backgound-raidus: 0");
-
-
+        btGoToNode.setStyle("-fx-background-color: #000000;" + "-fx-backgound-raidus: 0");
+        btDeleteConnection.setStyle("-fx-background-color: #d32a04;" + "-fx-backgound-raidus: 0");
+        btBack.setStyle("-fx-background-color: #999999;" + "-fx-backgound-raidus: 0");
 
         VBox vBox = new VBox(btGoToNode, btDeleteConnection, btBack);
         popup = new JFXPopup(vBox);
     }
 
-    private void updateSelectedNode(database.objects.Node selectedNode) {
+    private void updateSelectedNode(Node node) {
         //remove unsaved new node, if any
-        mapController.isNodeAdded = false;
-        mapController.observableHighlightedNewNodes.clear();
-        observableNewNodes.clear();
-
-        //add new node to selected node list
-        //TODO MAKE THIS AN EXCEPTION
-        if(mapController.observableHighlightedSelectedNodes.size() > 2) {
-            System.out.println("observableHighlightedSelectedNodes size greater than 2, Problematic!");
+        if (newNode.get() != null) {
+            getMapController().removeNode(newNode.get());
+            newNode.set(null);
         }
-        mapController.observableHighlightedSelectedNodes.clear();
-        mapController.observableHighlightedSelectedNodes.add(selectedNode);
-
-        if(observableSelectedNodes.size() > 2) {
-            System.out.println("observableSelectedNodes size greater than 2, Problematic!");
-        }
-        observableSelectedNodes.clear();
-        observableSelectedNodes.add(selectedNode);
+        selectedNode.set(node);
     }
+
     @FXML
     private void onDeleteClicked(ActionEvent e) {
-        if(!observableNewNodes.isEmpty()) {
-            mapController.isNodeAdded = false;
-            mapController.observableHighlightedNewNodes.clear();
-            observableNewNodes.clear();
-        }
-
-        else if(!observableSelectedNodes.isEmpty()) {
-
+        if(newNode.get() != null) {
+            newNode.set(null);
+        } else if(selectedNode.get() != null) {
             //remove this node from map builder changed list
             Iterator<database.objects.Node> builderNodeObjectIterator = observableChangedNodes.iterator();
             while (builderNodeObjectIterator.hasNext()) {
                 database.objects.Node deletedNode = builderNodeObjectIterator.next();
-                if (deletedNode.getXyz().equals(observableChangedNodes.get(0).getXyz())) {
+                if (deletedNode.getUniqueID() == observableChangedNodes.get(0).getUniqueID()) {
                     builderNodeObjectIterator.remove();
                     break;
                 }
             }
-            //remove this node from map controller changed list
-            Iterator<database.objects.Node> mapNodeObjectIterator = mapController.observableHighlightedChangedNodes.iterator();
-            while (mapNodeObjectIterator.hasNext()) {
-                database.objects.Node deletedNode = mapNodeObjectIterator.next();
-                if (deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
-                    mapNodeObjectIterator.remove();
-                    break;
-                }
-            }
+
             //remove this node from map controller drawn list
-            mapController.undrawNodeOnMap(observableSelectedNodes.get(0));
+            getMapController().removeNode(selectedNode.get());
 
             for(database.objects.Node deletedNode : MapEntity.getInstance().getAllNodes()) {
-                if(deletedNode.getXyz().equals(observableSelectedNodes.get(0).getXyz())) {
+                if(deletedNode.getUniqueID() == selectedNode.get().getUniqueID()) {
                     try{
-                        MapEntity.getInstance().removeNode(observableSelectedNodes.get(0));
+                        MapEntity.getInstance().removeNode(selectedNode.get());
                     }catch (DatabaseException databaseException) {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error deleting Node");
@@ -1166,16 +1013,15 @@ public class MapBuilderController extends ScreenController {
                     }
                 }
             }
-            mapController.refresh();
-            //remove this selected node
-            mapController.observableHighlightedSelectedNodes.clear();
-            observableSelectedNodes.clear();
+
+            selectedNode.set(null);
+            getMapController().reloadDisplay();
         }
     }
 
     @FXML
     private void deleteConnection(ActionEvent e, database.objects.Node targetNode) {
-        database.objects.Edge deletingEdge = MapEntity.getInstance().getConnectingEdge(targetNode, observableSelectedNodes.get(0));
+        database.objects.Edge deletingEdge = MapEntity.getInstance().getConnectingEdge(targetNode, selectedNode.get());
         try{
             MapEntity.getInstance().removeEdge(deletingEdge);
         }catch (DatabaseException databaseException) {
@@ -1187,15 +1033,12 @@ public class MapBuilderController extends ScreenController {
         }
 
         //refresh edges display
-        mapController.showEdgesBox.setSelected(false);
-        mapController.showEdgesBox.setSelected(true);
-        updateSelectedNode(observableSelectedNodes.get(0));
-
+        getMapController().reloadDisplay();
     }
 
-    @Override
-    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2) {
-        if(!observableNewNodes.isEmpty()) {
+    public void addConnectionByNodes(int uniqueNodeID1, int uniqueNodeID2) {
+        MapEntity map = MapEntity.getInstance();
+        if(newNode.get() != null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error creating connection ");
             alert.setHeaderText("Save new node before creating connections");
@@ -1203,10 +1046,11 @@ public class MapBuilderController extends ScreenController {
             alert.showAndWait();
             return;
         }
-        for (database.objects.Node connectingNode1 : getInstance().getAllNodes()) {
-            if (nodeXyz1.equals(connectingNode1.getXyz())) {
-                for (database.objects.Node connectingNode2 : getInstance().getAllNodes()) {
-                    if (nodeXyz2.equals(connectingNode2.getXyz())) {
+
+        for (database.objects.Node connectingNode1 : map.getAllNodes()) {
+            if (uniqueNodeID1 == connectingNode1.getUniqueID()) {
+                for (database.objects.Node connectingNode2 : map.getAllNodes()) {
+                    if (uniqueNodeID2 == connectingNode2.getUniqueID()) {
                         try{
                             if (MapEntity.getInstance().getEdge(connectingNode1.getNodeID() + "_" + connectingNode2.getNodeID()) != null ||
                                     MapEntity.getInstance().getEdge(connectingNode2.getNodeID() + "_" + connectingNode1.getNodeID()) != null) {
@@ -1227,7 +1071,7 @@ public class MapBuilderController extends ScreenController {
                         //add the new edge
                         Edge edge = new Edge((connectingNode1.getNodeID()+"_"+connectingNode2.getNodeID()), connectingNode1.getNodeID(), connectingNode2.getNodeID());
                         try{
-                            getInstance().addEdge(edge);
+                            map.addEdge(edge);
                         }catch (DatabaseException ex) {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Error creating connection ");
@@ -1235,9 +1079,9 @@ public class MapBuilderController extends ScreenController {
                             alert.setContentText(ex.toString());
                             alert.showAndWait();
                         }
-                        //refresh edges display
-                        mapController.showEdgesBox.setSelected(false);
-                        mapController.showEdgesBox.setSelected(true);
+
+                        getMapController().reloadDisplay();
+                        updateSelectedNode(selectedNode.get());
                     }
                 }
             }
@@ -1245,21 +1089,22 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    private void addConnection(String nodeXyz) {
-        if(!observableNewNodes.isEmpty()) {
+    private void addConnection(int uniqueNodeID) {
+        MapEntity map = MapEntity.getInstance();
+
+        if(newNode.get() != null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error creating connection");
             alert.setHeaderText("Save new node before creating connections");
             alert.setContentText("Press save button to save any new node before connecting them with other nodes.");
             alert.showAndWait();
             return;
-        }
-        else if(!observableSelectedNodes.isEmpty()) {
-            for(database.objects.Node connectingNode : getInstance().getAllNodes()) {
-                if(nodeXyz.equals(connectingNode.getXyz())) {
+        } else if(selectedNode.get() != null) {
+            for(database.objects.Node connectingNode : map.getAllNodes()) {
+                if(uniqueNodeID == connectingNode.getUniqueID()) {
                     try{
-                        if (MapEntity.getInstance().getEdge(connectingNode.getNodeID() + "_" + observableSelectedNodes.get(0).getNodeID()) != null ||
-                                MapEntity.getInstance().getEdge(observableSelectedNodes.get(0).getNodeID() + "_" + connectingNode.getNodeID()) != null) {
+                        if (MapEntity.getInstance().getEdge(connectingNode.getNodeID() + "_" + selectedNode.get().getNodeID()) != null ||
+                                MapEntity.getInstance().getEdge(selectedNode.get().getNodeID() + "_" + connectingNode.getNodeID()) != null) {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Error creating connection");
                             alert.setHeaderText("Connection already exit");
@@ -1275,9 +1120,9 @@ public class MapBuilderController extends ScreenController {
                         alert.showAndWait();
                     }
                     //add the new edge
-                    Edge edge = new Edge((connectingNode.getNodeID()+ "_" +observableSelectedNodes.get(0).getNodeID()), connectingNode.getNodeID(), observableSelectedNodes.get(0).getNodeID());
+                    Edge edge = new Edge((connectingNode.getNodeID()+ "_" +selectedNode.get().getNodeID()), connectingNode.getNodeID(), selectedNode.get().getNodeID());
                     try{
-                        getInstance().addEdge(edge);
+                        map.addEdge(edge);
                     }catch (DatabaseException ex) {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error creating connection");
@@ -1286,9 +1131,8 @@ public class MapBuilderController extends ScreenController {
                         alert.showAndWait();
                     }
                     //refresh edges display
-                    mapController.showEdgesBox.setSelected(false);
-                    mapController.showEdgesBox.setSelected(true);
-                    updateSelectedNode(observableSelectedNodes.get(0));
+                    getMapController().reloadDisplay();
+                    updateSelectedNode(selectedNode.get());
                 }
             }
         }
@@ -1300,12 +1144,11 @@ public class MapBuilderController extends ScreenController {
             alert.showAndWait();
         }
     }
-    @Override
+
     public boolean isNewNodeEmpty() {
-        return observableNewNodes.isEmpty();
+        return newNode.get() != null;
     }
 
-    @Override
     public void showFloors() {
         JFXDialogLayout floorDialoglo = new JFXDialogLayout();
         floorDialoglo.setHeading(new Text("Select a floor"));
@@ -1314,5 +1157,4 @@ public class MapBuilderController extends ScreenController {
 
         Dialog.show();
     }
-    */
 }
