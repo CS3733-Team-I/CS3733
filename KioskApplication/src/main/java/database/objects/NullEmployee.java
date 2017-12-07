@@ -41,6 +41,10 @@ public class NullEmployee implements IEmployee {
         return "";
     }
 
+    public String getOptions(){
+        return "";
+    }
+
     public KioskPermission getPermission() {
         return KioskPermission.NONEMPLOYEE;
     }

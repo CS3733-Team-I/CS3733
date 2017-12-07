@@ -43,14 +43,14 @@ public class LoginEntity {
         logins = new HashMap<>();
         if (test){
             // so tests can add and remove logins as needed
-            currentLogin = new Employee("firstTimeSetup","","","root",
+            currentLogin = new Employee("firstTimeSetup","","","root","",
                     SUPER_USER,RequestType.GENERAL);
         } else {
             readAllFromDatabase();
 
             if (database.getAllEmployees().size() == 0) {
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee("firstTimeSetup","","","root",
+                currentLogin = new Employee("firstTimeSetup","","","root","",
                         SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
@@ -154,7 +154,7 @@ public class LoginEntity {
      * @param serviceAbility
      * @return
      */
-    public boolean addUser(String userName, String lastName, String firstName, String password,
+    public boolean addUser(String userName, String lastName, String firstName, String password, String options,
                            KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
         if(currentLogin.getPermission()==NONEMPLOYEE||permission==NONEMPLOYEE){
@@ -172,7 +172,7 @@ public class LoginEntity {
             // fitting it into the table
             if(userName.length()<=50){
                 //constructs a temporary employee for database insertion
-                Employee tempEmployee=new Employee(userName,lastName,firstName, password, permission,
+                Employee tempEmployee=new Employee(userName,lastName,firstName, password, options, permission,
                         serviceAbility);
                 int ID = database.addEmployee(tempEmployee,password);
                 logins.put(userName,database.getEmployee(ID));
@@ -254,7 +254,7 @@ public class LoginEntity {
         logins.remove(oldUsername);
         Employee tempEmp = new Employee(currentLogin.getLoginID(), currentLogin.getLastName(),
                 currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
-                currentLogin.getPermission(), currentLogin.getServiceAbility());
+                currentLogin.getOptions(), currentLogin.getPermission(), currentLogin.getServiceAbility());
         logins.put(currentLogin.getUsername(), tempEmp);
                 //haven't figured out how to safely get things from an interface to the class
                 //so yeah...

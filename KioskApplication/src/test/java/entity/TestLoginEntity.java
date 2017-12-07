@@ -18,8 +18,8 @@ public class TestLoginEntity {
     @Before
     public void setup(){
         l = LoginEntity.getTestInstance();
-        l.addUser("boss@hospital.com","","", "123",SUPER_USER, RequestType.GENERAL);
-        l.addUser("emp@hospital.com", "","","12",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("boss@hospital.com","","", "123","",SUPER_USER, RequestType.GENERAL);
+        l.addUser("emp@hospital.com", "","","12","1:2:",EMPLOYEE,RequestType.INTERPRETER);
         becomeSuperUser();
     }
 
@@ -68,7 +68,7 @@ public class TestLoginEntity {
     //Employees should not delete the admin login
     @Test
     public void testDeleteLoginEmployeeDeleteAdmin(){
-        l.addUser("admin","Wong","Wilson","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","Wong","Wilson","345","",ADMIN,RequestType.GENERAL);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("admin");
         assertEquals(true,l.logIn("admin","345"));
@@ -79,7 +79,7 @@ public class TestLoginEntity {
     //Employees should not delete the employee login
     @Test
     public void testDeleteLoginEmployeeDeleteEmployee(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456","",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("employee");
         assertEquals(true,l.logIn("employee","456"));
@@ -90,7 +90,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the admin login
     @Test
     public void testDeleteLoginNonemployeeDeleteAdmin(){
-        l.addUser("admin","Wong","Wilson","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","Wong","Wilson","345","",ADMIN,RequestType.GENERAL);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("admin");
         assertEquals(true,l.logIn("admin","345"));
@@ -101,7 +101,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the employee login
     @Test
     public void testDeleteLoginNonemployeeDeleteEmployee(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456","3:4:",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("employee");
         assertEquals(true,l.logIn("employee","456"));
@@ -113,20 +113,20 @@ public class TestLoginEntity {
     @Test
     public void testAddLoginEmployee(){
         l.logIn("emp@hospital.com","12");
-        l.addUser("test","Wong","Wilson","pass",EMPLOYEE,RequestType.GENERAL);
+        l.addUser("test","Wong","Wilson","pass","",EMPLOYEE,RequestType.GENERAL);
         assertEquals(false,l.logIn("test","pass"));
     }
 
     @Test
     public void testAddLoginNonemployee(){
         l.logIn("emp@otherhospital.com","1");
-        l.addUser("test","Wong","Wilson","pass",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("test","Wong","Wilson","pass","3:4:",EMPLOYEE,RequestType.INTERPRETER);
         assertEquals(false,l.logIn("test","pass"));
     }
 
     @Test
     public void testUpdatePassword(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456","3:4:",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("employee","456");
         l.updatePassword("789","456");
         assertEquals(true,l.logIn("employee","789"));
@@ -136,7 +136,7 @@ public class TestLoginEntity {
 
     @Test
     public void testUpdateUserName(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456","3:4:",EMPLOYEE,RequestType.INTERPRETER);
         l.logIn("employee","456");
         l.updateUsername("emp1","456");
         assertEquals("emp1",l.getUsername());

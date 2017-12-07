@@ -74,4 +74,9 @@ public class TestNullEmployee {
     public void testUpdateUsername(){
         assertFalse(nullEmployee.updateUsername("",""));
     }
+
+    @Test
+    public void testGetOptions(){
+        assertEquals("",nullEmployee.getOptions());
+    }
 }

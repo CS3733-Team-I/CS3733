@@ -25,6 +25,8 @@ public interface IEmployee {
 
     String getFirstName();
 
+    String getOptions();
+
     KioskPermission getPermission();
 
     RequestType getServiceAbility();

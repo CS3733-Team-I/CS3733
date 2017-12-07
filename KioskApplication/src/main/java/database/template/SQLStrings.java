@@ -116,6 +116,7 @@ public class SQLStrings {
             " lastName Varchar(35) NOT NULL,"+
             " firstName Varchar(35) NOT NULL,"+
             " password Varchar(60) NOT NULL,"+
+            " options CLOB(255),"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
             ")";
@@ -123,9 +124,9 @@ public class SQLStrings {
     public static final String DROP_EMPLOYEE_TABLE = "drop table t_employee";
 
     public static final String EMPLOYEE_INSERT = "insert into t_employee"+
-            "(username, lastName, firstName, password, permission, serviceAbility)"+
-            " values(?, ?, ?, ?, ?, ?)";
-    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?,"+
+            "(username, lastName, firstName, password, options, permission, serviceAbility)"+
+            " values(?, ?, ?, ?, ?, ?, ?)";
+    public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?, options=?"+
             " permission=?, serviceAbility=? where loginID=?";
     public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";

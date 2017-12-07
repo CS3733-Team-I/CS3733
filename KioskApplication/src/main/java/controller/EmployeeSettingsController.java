@@ -157,7 +157,7 @@ public class EmployeeSettingsController {
         // Check that all fields are filled in
         if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             // Add user
-            if (LoginEntity.getInstance().addUser(usernameBox.getText(),"","", passwordBox.getText(), permissionSelect.getValue(), typeSelect.getValue())) {
+            if (LoginEntity.getInstance().addUser(usernameBox.getText(),"","", passwordBox.getText(),"", permissionSelect.getValue(), typeSelect.getValue())) {
                 System.out.println("Adding user ... ");
                 System.out.println("User: " + usernameBox.getText());
                 System.out.println("Pass: " + passwordBox.getText());

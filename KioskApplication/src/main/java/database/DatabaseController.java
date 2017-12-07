@@ -426,8 +426,9 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setInt(5,employee.getPermission().ordinal());
-            pstmt.setInt(6,employee.getServiceAbility().ordinal());
+            pstmt.setString(5, employee.getOptions());
+            pstmt.setInt(6,employee.getPermission().ordinal());
+            pstmt.setInt(7,employee.getServiceAbility().ordinal());
             pstmt.executeUpdate();
             PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT loginID FROM t_employee"+
             " where username=?");
@@ -453,8 +454,9 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setInt(5,employee.getPermission().ordinal());
-            pstmt.setInt(6,employee.getServiceAbility().ordinal());
+            pstmt.setString(5, employee.getOptions());
+            pstmt.setInt(6,employee.getPermission().ordinal());
+            pstmt.setInt(7,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -492,6 +494,7 @@ public class DatabaseController {
                         rs.getString("lastName"),
                         rs.getString("firstName"),
                         rs.getString("password"),
+                        rs.getString("options"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
             }
@@ -518,6 +521,7 @@ public class DatabaseController {
                         rs.getString("lastName"),
                         rs.getString("firstName"),
                         rs.getString("password"),
+                        rs.getString("options"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
                 employees.add(employee);
