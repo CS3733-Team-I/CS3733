@@ -162,29 +162,26 @@ public class PathWaypointView extends AnchorPane {
                 jfxPath.getElements().add(lineTo);
 
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    final NodeFloor targetFloor = waypointList.get(i+1).getFloor();
-                    final NodeFloor sourceFloor = waypointList.get(i).getFloor();
-
-                    switchFloor = new JFXButton();
+                    /*switchFloor = new JFXButton();
                     switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
                     switchFloor.setLayoutX(traversedNode.getXcoord()-48);
                     switchFloor.setLayoutY(traversedNode.getYcoord());
                     switchFloor.setPrefHeight(48);
                     switchFloor.setPrefWidth(48);
 
-                    // Change image based on if we're going up or down
-                    if(targetFloor.toInt() > sourceFloor.toInt()) {
+                    if (traversedNode.getFloor().toInt() > targetFloor.toInt()) {
                         switchFloor.setGraphic(upView);
-                    } else if(targetFloor.toInt() < sourceFloor.toInt()) {
+                    } else {
                         switchFloor.setGraphic(downView);
-                    }
+                    }*/
                 }
             }
+
             this.pathView.getChildren().add(jfxPath);
 
             Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);
-            for(int j = 0; j < currentPath.getPathCost()/20; j++) {
+            for(int k = 0; k < currentPath.getPathCost()/20; k++) {
                 Circle circle = new Circle(10);
                 circle.setFill(colorForPointers);
                 circle.setAccessibleHelp("path pointer");
@@ -198,7 +195,7 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.setAutoReverse(false);
                 navigationTransition.setCycleCount(PathTransition.INDEFINITE);
 
-                navigationTransition.playFrom(Duration.seconds(j));
+                navigationTransition.playFrom(Duration.seconds(k));
             }
         }
 
