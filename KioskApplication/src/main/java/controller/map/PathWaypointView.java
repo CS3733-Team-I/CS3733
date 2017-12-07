@@ -161,8 +161,9 @@ public class PathWaypointView extends AnchorPane {
                 LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
                 jfxPath.getElements().add(lineTo);
 
+                NodeFloor targetFloor = waypointList.get(i+1).getFloor();
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    /*switchFloor = new JFXButton();
+                    switchFloor = new JFXButton();
                     switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
                     switchFloor.setLayoutX(traversedNode.getXcoord()-48);
                     switchFloor.setLayoutY(traversedNode.getYcoord());
@@ -173,7 +174,7 @@ public class PathWaypointView extends AnchorPane {
                         switchFloor.setGraphic(upView);
                     } else {
                         switchFloor.setGraphic(downView);
-                    }*/
+                    }
                 }
             }
 
