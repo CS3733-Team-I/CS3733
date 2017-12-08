@@ -28,8 +28,9 @@ public class RequestListCellController {
     LoginEntity lEntity;
     RequestEntity rEntity;
     Request request;
+    RequestManagerController parent;
 
-    @FXML private ImageView iconView;
+    @FXML private ImageView iconView,readView;
     @FXML private Label nameLabel,timeLabel,extraField,requestNotes,locationOfRequest,person;
     @FXML private JFXButton locateNodeButton,delete;
     @FXML private HBox buttonBox;
@@ -37,10 +38,11 @@ public class RequestListCellController {
     private VBox rootVbox;
 
 
-    public RequestListCellController(Request request) throws NotFoundException {
+    public RequestListCellController(Request request, RequestManagerController parent) throws NotFoundException {
         lEntity = LoginEntity.getInstance();
         rEntity = RequestEntity.getInstance();
         this.request = request;
+        this.parent = parent;
         rootVbox = new VBox();
 
         FXMLLoader loader = ResourceManager.getInstance().getFXMLLoader("/view/RequestListCellView.fxml");
@@ -61,16 +63,20 @@ public class RequestListCellController {
 
         nameLabel.setText(RT.toString());
         timeLabel.setText(request.getSubmittedTime().toString());
-        person.setText("No One?");
+        person.setText("No One?"); //had to initialize it
         requestNotes.setText(request.getNote());
         locationOfRequest.setText(location);
 
-        //TODO: change color of icons
+        Image readIcon = ResourceManager.getInstance().getImage("/images/icons/readIcon.png");
+        readView.setImage(readIcon);
+        readView.setFitWidth(24);
+        readView.setFitHeight(24);
+
         switch (RT){
             case INTERPRETER:
                 String language = rEntity.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField.setText("Language: "+language);
-                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
+                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIconBlack.png");
                 iconView.setImage(interpreterIcon);
                 iconView.setFitHeight(48);
                 iconView.setFitWidth(48);
@@ -79,7 +85,7 @@ public class RequestListCellController {
                 String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField.setText("Restaurant: " + restaurant);
-                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIcon.png");
+                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
                 iconView.setImage(foodIcon);
                 iconView.setFitHeight(48);
                 iconView.setFitWidth(48);
@@ -87,7 +93,7 @@ public class RequestListCellController {
             default: //security
                 int priority = rEntity.getSecurityRequest(requestID).getPriority();
                 extraField.setText("Priority: "+ priority);
-                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIcon.png");
+                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIconBlack.png");
                 iconView.setImage(securityIcon);
                 iconView.setFitHeight(48);
                 iconView.setFitWidth(48);
@@ -104,13 +110,12 @@ public class RequestListCellController {
                 person.setText("Completed by: " + completer);
                 break;
         }
-
-//        JFXButton delete = new JFXButton("Delete");
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 rEntity.deleteRequest(requestID);
-                //TODO: refresh list of requests
+                parent.refreshRequests();
+                //TODO: refresh list of requests  ?
             }
         });
 
@@ -127,13 +132,14 @@ public class RequestListCellController {
                     if(employees.getValue().equals(null)){
                     }else {
                         rEntity.markInProgress((Integer) employees.getValue(),requestID);
+                        parent.refreshRequests();
                         //TODO: refresh list of requests
                     }
                 }
             });
 
             buttonBox.getChildren().add(employees);
-        }else{ //TODO: the buttons aren't being deleted might be fixed
+        }else{
             JFXButton statusUpdater = new JFXButton();
             switch (RPS) {
                 case TO_DO:
@@ -143,9 +149,9 @@ public class RequestListCellController {
                         public void handle(ActionEvent e) {
                             rEntity.markInProgress(lEntity.getLoginID(), requestID);
                             //TODO: refresh
+                            parent.refreshRequests();
                         }
                     });
-//                    buttonBox.getChildren().add(statusUpdater);
                     buttonBox.getChildren().add(statusUpdater);
                     break;
                 case IN_PROGRESS:
@@ -155,100 +161,13 @@ public class RequestListCellController {
                         public void handle(ActionEvent e) {
                             rEntity.completeRequest(requestID);
                             //TODO: refresh
+                            parent.refreshRequests();
                         }
                     });
                     buttonBox.getChildren().add(statusUpdater);
                     break;
             }
         }
-
-
-//        Label typeOfRequest = new Label(rEntity.checkRequestType(requestID).toString());
-
-
-        /*
-        JFXComboBox employees = new JFXComboBox(listOfEmployees);
-        employees.setPromptText("Select Employee");
-
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                rEntity.deleteRequest(requestID);
-                popup.hide();
-                refreshRequests();
-            }
-        });
-
-        VBox vbox = new VBox(more);
-
-        if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
-            listOfEmployees.clear();
-            listOfEmployees.addAll(l.getAllEmployeeType(rEntity.checkRequestType(requestID)));
-            switch (currentButton){
-                case TO_DO:
-                    statusUpdater = new JFXButton("Assign");
-                    statusUpdaterEntity.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            rEntity.markInProgress((Integer) employees.getValue(),requestID);
-                            refreshRequests();
-                            popup.hide();
-                        }
-                    });
-                    vbox.getChildren().addAll(employees, statusUpdater);
-                    break;
-            }
-        }else {
-            switch (currentButton) {
-                case TO_DO:
-                    statusUpdater = new JFXButton("Assign Me");
-                    statusUpdaterEntity.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            rEntity.markInProgress(l.getLoginID(), requestID);
-                            refreshRequests();
-                            popup.hide();
-                        }
-                    });
-                    vbox.getChildren().add(statusUpdater);
-                    break;
-                case IN_PROGRESS:
-                    statusUpdater = new JFXButton("Completed");
-                    statusUpdaterEntity.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            rEntity.completeRequest(requestID);
-                            refreshRequests();
-                            popup.hide();
-                        }
-                    });
-                    vbox.getChildren().add(statusUpdater);
-                    break;
-            }
-        }
-         */
-
-
-//        if (item != null) {
-//            String nameLabelText = "";
-//            // TODO set icons for different types in here
-//            // TODO handle more names in here
-//            switch (rEntity.checkRequestType(this.getItem().getRequestID())) {
-//                case FOOD:
-//                    FoodRequest req = (FoodRequest) this.getItem();
-//                    try {
-//                        Node source = MapEntity.getInstance().getNode(req.getNodeID());
-//                        nameLabelText = "Order at " + source.getLongName();
-//                    } catch (NotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                    break;
-//
-//            }
-////            this.nameLabel.setText(nameLabelText);
-////
-////            this.getChildren().add(rootVbox);
-//        }
     }
 
 
@@ -256,7 +175,4 @@ public class RequestListCellController {
         return rootVbox;
     }
 
-//    public void setRequest(Request request) {
-//        this.request = request;
-//    }
 }

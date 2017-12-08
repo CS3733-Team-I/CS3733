@@ -12,19 +12,11 @@
     <children>
       <HBox alignment="CENTER_LEFT" minHeight="10.0">
          <children>
-            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="readView" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </ImageView>
-            <Label fx:id="timeLabel" text="&lt;&lt;timeStamp&gt;&gt;">
-               <font>
-                  <Font name="System Italic" size="11.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="25.0" right="50.0" />
-               </HBox.margin>
-            </Label>
          </children>
       </HBox>
         <HBox alignment="CENTER_LEFT">
@@ -34,10 +26,20 @@
                         <Insets left="10.0" right="30.0" />
                     </HBox.margin>
                 </ImageView>
-                <Label fx:id="nameLabel" text="&lt;&lt;request title&gt;&gt;">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font></Label>
+            <VBox alignment="CENTER">
+               <children>
+                      <Label fx:id="nameLabel" text="&lt;&lt;request title&gt;&gt;">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="timeLabel" text="&lt;&lt;timeStamp&gt;&gt;">
+                     <font>
+                        <Font name="System Italic" size="11.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
             </children>
         </HBox>
       <VBox fx:id="textFlow" minWidth="15.0">
@@ -63,6 +65,9 @@
                </VBox.margin>
             </Label>
          </children>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
       </VBox>
         <HBox fx:id="buttonBox" alignment="CENTER_LEFT">
             <children>

@@ -2,6 +2,7 @@ package utility;
 
 import com.jfoenix.controls.JFXListCell;
 import controller.RequestListCellController;
+import controller.RequestManagerController;
 import database.connection.NotFoundException;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -10,10 +11,14 @@ import javafx.scene.layout.VBox;
 
 public final class RequestListCell extends JFXListCell<Request> {
 
-    LoginEntity lEntity;
-    RequestEntity rEntity;
+    RequestManagerController parent;
+
 
     private RequestListCellController controller;
+
+    public RequestListCell(RequestManagerController parent) {
+        this.parent = parent;
+    }
 
     @Override
     public void updateItem(Request item, boolean empty) {
@@ -22,13 +27,14 @@ public final class RequestListCell extends JFXListCell<Request> {
             setGraphic(null);
         }else{
             try {
-                controller = new RequestListCellController(item);
+                controller = new RequestListCellController(item, parent);
             } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             setGraphic(controller.getView());
         }
     }
+
 
 
     /*

@@ -190,7 +190,7 @@ public class RequestManagerController extends ScreenController {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         requests.addAll(r.filterByStatus(allRequests,status));
         activeRequests.setItems(requests);
-        activeRequests.setCellFactory(param -> new RequestListCell());
+        activeRequests.setCellFactory(param -> new RequestListCell(this));
     }
 
     /**
