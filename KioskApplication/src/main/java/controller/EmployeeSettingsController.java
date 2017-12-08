@@ -81,8 +81,15 @@ public class EmployeeSettingsController {
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getServiceAbility().toString())
         );
+        TreeTableColumn<Employee, String> optionsColumn = new TreeTableColumn<>("Options");
+        serviceColumn.setResizable(false);
+        serviceColumn.setPrefWidth(175);
+        serviceColumn.setCellValueFactory(
+                (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
+                        new ReadOnlyStringWrapper(param.getValue().getValue().getOptions())
+        );
 
-        usersList.getColumns().setAll(usernameColumn, permissionColumn, serviceColumn);
+        usersList.getColumns().setAll(usernameColumn, permissionColumn, serviceColumn, optionsColumn);
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
@@ -116,7 +123,7 @@ public class EmployeeSettingsController {
         }
     }
 
-    private void refreshUsers() {
+    public void refreshUsers() {
         root.getChildren().clear();
         selectedEmployee = null;
 

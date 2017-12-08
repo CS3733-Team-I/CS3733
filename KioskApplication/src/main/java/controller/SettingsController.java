@@ -47,6 +47,8 @@ public class SettingsController extends ScreenController {
 
     @FXML private TextField beamWidth;
 
+    private FXMLLoader employeeLoader;
+
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
     ToggleGroup languageSelectToggleGroup = new ToggleGroup();
     public SettingsController(MainWindowController parent, MapController mapController) {
@@ -83,9 +85,9 @@ public class SettingsController extends ScreenController {
         }
 
         // Add Employee Settings Screen
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeSettingsView.fxml"));
-        loader.setRoot(employeesPane);
-        loader.load();
+        employeeLoader = new FXMLLoader(getClass().getResource("/view/EmployeeSettingsView.fxml"));
+        employeeLoader.setRoot(employeesPane);
+        employeeLoader.load();
 
         // Add Users Settings Screen
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
@@ -125,6 +127,18 @@ public class SettingsController extends ScreenController {
                 return;
                 }
 
+            }
+        });
+        // fixes bug where employees wouldn't show up in the table after initialization
+        settingTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+                if(newTab == employeesTab){
+                    if(employeeLoader.getController() instanceof EmployeeSettingsController){
+                        EmployeeSettingsController eSC = ((EmployeeSettingsController) employeeLoader.getController());
+                        eSC.refreshUsers();
+                    }
+                }
             }
         });
     }
