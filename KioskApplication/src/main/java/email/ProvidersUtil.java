@@ -59,12 +59,4 @@ public class ProvidersUtil {
                 return null;
         }
     }
-
-    public static SMS getValidExtension(SMS.Builder sms, Providers provider) {
-        if(sms.getLength() > 100) {
-
-        } else  {
-
-        }
-    }
 }

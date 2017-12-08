@@ -1,4 +1,7 @@
 import email.Email;
+import email.EmailSender;
+import email.Providers;
+import email.SMS;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,11 +26,20 @@ public class Main extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
         */
-
-        Email email = new Email("jflparrick@gmail.com", "jfparrick@wpi.edu");
-        email.setBody("This is a test");
-        email.setSubject("TEST");
-        Sender.sendEmail(email);
+        EmailSender.init();
+        /*Email email = new Email.Builder("jflparrick@gmail.com")
+                .setAttachment(null)
+                .setBody("THIS IS A TEST")
+                .setFrom("me")
+                .setSubject("TEST")
+                .build(); */
+        SMS sms = new SMS.Builder("2077455316", Providers.VERIZON)
+                .setAttachment(null)
+                .setBody("THIS IS A TEST")
+                .setSubject("TEST")
+                .setFrom("me")
+                .build();
+        EmailSender.sendEmail(sms);
     }
 
     public static void main(String[] args) {

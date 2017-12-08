@@ -54,7 +54,7 @@ public class EmailSender {
      * If modifying these scopes, delete your previously saved credentials
      */
     private static final List<String> SCOPES =
-            Arrays.asList(GmailScopes.GMAIL_LABELS);
+            Arrays.asList(GmailScopes.MAIL_GOOGLE_COM);
 
     private static Gmail DEFAULT_SERVICE;
 
@@ -76,7 +76,7 @@ public class EmailSender {
     public static Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                EmailSender.class.getResourceAsStream("/client_secret.json");
+                EmailSender.class.getResourceAsStream("/gmail/client_secret.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 

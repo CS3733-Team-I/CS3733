@@ -3,19 +3,26 @@ package email;
 import java.io.File;
 
 public class Email implements MessageTemplate {
-    private String to, from, host, body, subject;
+    private String to, from, body, subject;
     private File attachment;
 
     public Email(Email.Builder builder) {
         this.to = builder.to;
         this.from = builder.from;
-        this.host = builder.host;
         this.body = builder.body;
         this.subject = builder.subject;
         this.attachment = builder.attachment;
     }
 
-    public Email() {};
+    protected Email() {};
+
+    protected void setTo(String to) {
+        this.to = to;
+    }
+
+    protected void setFrom(String from) {
+        this.from = from;
+    }
 
     public String getTo() {
         return to;
@@ -23,10 +30,6 @@ public class Email implements MessageTemplate {
 
     public String getFrom() {
         return from;
-    }
-
-    public String getHost() {
-        return host;
     }
 
     public String getBody() {
@@ -41,7 +44,7 @@ public class Email implements MessageTemplate {
         this.attachment = attachment;
     }
 
-    public void setBody(String body) {
+    protected void setBody(String body) {
         this.body = body;
     }
 
@@ -49,12 +52,12 @@ public class Email implements MessageTemplate {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    protected void setSubject(String subject) {
         this.subject = subject;
     }
 
     public static class Builder {
-        private String to, from, host, body, subject;
+        private String to, from = "me", body, subject;
         private File attachment;
 
         public Builder(String to) {
@@ -63,11 +66,6 @@ public class Email implements MessageTemplate {
 
         public Builder setFrom(String from) {
             this.from = from;
-            return this;
-        }
-
-        public Builder setHost(String host) {
-            this.host = host;
             return this;
         }
 
@@ -83,6 +81,11 @@ public class Email implements MessageTemplate {
 
         public Builder setAttachment(File file) {
             this.attachment = file;
+            return this;
+        }
+
+        public Builder setTo(String to) {
+            this.to = to;
             return this;
         }
 
