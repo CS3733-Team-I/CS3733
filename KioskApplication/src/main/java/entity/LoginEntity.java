@@ -2,9 +2,7 @@ package entity;
 
 import com.jfoenix.controls.JFXCheckBox;
 import database.DatabaseController;
-import database.objects.IEmployee;
-import database.objects.Employee;
-import database.objects.NullEmployee;
+import database.objects.*;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -130,12 +128,36 @@ public class LoginEntity {
         return loginIDs;
     }
 
-    public ArrayList<Integer> getAllEmployeeType(RequestType type){
+    public ArrayList<Integer> getAllEmployeeType(Request request){
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<Integer> loginIDs = new ArrayList<>();
+        RequestType type = request.getRequestType();
         if(type.equals(RequestType.GENERAL)){
             loginIDs = getAllLoginIDs();
-        }else{
+        }
+        //for filtering out interpreters by language
+        else if(request instanceof InterpreterRequest){
+            InterpreterRequest iRequest = ((InterpreterRequest) request);
+            for(Employee employee: employees){
+                if(employee.getServiceAbility()==INTERPRETER){
+                    ArrayList<Language> interpretersLanguages = new ArrayList<Language>();
+                    String inLanguage="";
+                    for(char c : employee.getOptions().toCharArray()){
+                        if(c==':'){
+                            interpretersLanguages.add(Language.values()[Integer.parseInt(inLanguage)]);
+                            inLanguage="";
+                        }
+                        else{
+                            inLanguage=inLanguage+c;
+                        }
+                    }
+                    if(interpretersLanguages.contains(iRequest.getLanguage())){
+                        loginIDs.add(employee.getID());
+                    }
+                }
+            }
+        }
+        else{
             for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
                     loginIDs.add(employee.getID());

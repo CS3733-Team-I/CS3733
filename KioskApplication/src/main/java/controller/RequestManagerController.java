@@ -222,7 +222,7 @@ public class RequestManagerController extends ScreenController {
 
         if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
             listOfEmployees.clear();
-            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
+            listOfEmployees.addAll(l.getAllEmployeeType(r.getRequest(requestID)));
             switch (currentButton){
                 case TO_DO:
                     statusUpdater = new JFXButton("Assign");
