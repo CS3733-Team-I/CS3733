@@ -21,6 +21,7 @@ import utility.KioskPermission;
 import utility.ResourceManager;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
+import javafx.scene.image.Image;
 
 public class RequestListCellController {
 
@@ -30,7 +31,7 @@ public class RequestListCellController {
 
     @FXML private ImageView iconView;
     @FXML private Label nameLabel,timeLabel,extraField,requestNotes,locationOfRequest,person;
-    @FXML private JFXButton locateNodeButton;
+    @FXML private JFXButton locateNodeButton,delete;
     @FXML private HBox buttonBox;
     @FXML private VBox textFlow;
     private VBox rootVbox;
@@ -63,19 +64,33 @@ public class RequestListCellController {
         person.setText("No One?");
         requestNotes.setText(request.getNote());
         locationOfRequest.setText(location);
+
+        //TODO: change color of icons
         switch (RT){
             case INTERPRETER:
                 String language = rEntity.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField.setText("Language: "+language);
+                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
+                iconView.setImage(interpreterIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
                 break;
             case FOOD:
                 String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField.setText("Restaurant: " + restaurant);
+                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIcon.png");
+                iconView.setImage(foodIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
                 break;
             default: //security
                 int priority = rEntity.getSecurityRequest(requestID).getPriority();
                 extraField.setText("Priority: "+ priority);
+                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIcon.png");
+                iconView.setImage(securityIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
                 break;
         }
         switch(RPS){
@@ -90,7 +105,7 @@ public class RequestListCellController {
                 break;
         }
 
-        JFXButton delete = new JFXButton("Delete");
+//        JFXButton delete = new JFXButton("Delete");
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -130,6 +145,7 @@ public class RequestListCellController {
                             //TODO: refresh
                         }
                     });
+//                    buttonBox.getChildren().add(statusUpdater);
                     buttonBox.getChildren().add(statusUpdater);
                     break;
                 case IN_PROGRESS:
@@ -146,7 +162,6 @@ public class RequestListCellController {
             }
         }
 
-        buttonBox.getChildren().add(delete);
 
 //        Label typeOfRequest = new Label(rEntity.checkRequestType(requestID).toString());
 

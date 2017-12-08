@@ -70,6 +70,11 @@
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin></JFXButton>
+            <JFXButton fx:id="delete" text="Delete">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </JFXButton>
             </children>
         </HBox>
     </children>
