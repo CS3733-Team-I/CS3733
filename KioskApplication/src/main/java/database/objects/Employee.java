@@ -6,7 +6,7 @@ import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
 public class Employee extends RecursiveTreeObject<Employee> implements IEmployee {
-    private int loginID;
+    private int id;
     private String username;
     private String lastName;
     private String firstName;
@@ -40,7 +40,7 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
 
     /**
      * This is for database side use,
-     * @param loginID retrieves it from the database
+     * @param id retrieves it from the database
      * @param username
      * @param lastName
      * @param firstName
@@ -49,9 +49,9 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param permission
      * @param serviceAbility
      */
-    public Employee(int loginID, String username, String lastName, String firstName, String password, String options,
+    public Employee(int id, String username, String lastName, String firstName, String password, String options,
                     KioskPermission permission, RequestType serviceAbility){
-        this.loginID = loginID;
+        this.id = id;
         this.username = username;
         this.lastName=lastName;
         this.firstName=firstName;
@@ -61,8 +61,8 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
         this.serviceAbility = serviceAbility;
     }
 
-    public int getLoginID() {
-        return loginID;
+    public int getID() {
+        return id;
     }
 
     public String getUsername() {

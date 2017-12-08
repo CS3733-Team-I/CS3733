@@ -61,7 +61,7 @@ public class DatabaseControllerTests {
 
         List<Employee> employees = dbController.getAllEmployees();
         for (Employee e : employees) {
-            dbController.removeEmployee(e.getLoginID());
+            dbController.removeEmployee(e.getID());
         }
 
         } catch (DatabaseException e) {

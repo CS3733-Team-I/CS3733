@@ -52,7 +52,7 @@ public class TestNullEmployee {
 
     @Test
     public void testGetLoginID(){
-        assertEquals(-1,nullEmployee.getLoginID());
+        assertEquals(-1,nullEmployee.getID());
     }
 
     @Test

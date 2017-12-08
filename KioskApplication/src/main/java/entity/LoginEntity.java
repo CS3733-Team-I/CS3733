@@ -74,7 +74,7 @@ public class LoginEntity {
      * @return integer LoginID
      */
     public int getLoginID(){
-        return currentLogin.getLoginID();
+        return currentLogin.getID();
     }
 
     /**
@@ -121,7 +121,7 @@ public class LoginEntity {
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<Integer> loginIDs= new ArrayList<Integer>();
         for(Employee employee: employees){
-            loginIDs.add(employee.getLoginID());
+            loginIDs.add(employee.getID());
         }
         return loginIDs;
     }
@@ -134,7 +134,7 @@ public class LoginEntity {
         }else{
             for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
-                    loginIDs.add(employee.getLoginID());
+                    loginIDs.add(employee.getID());
                 }
             }
         }
@@ -201,7 +201,7 @@ public class LoginEntity {
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
                 logins.remove(username);
-                database.removeEmployee(delEmp.getLoginID());
+                database.removeEmployee(delEmp.getID());
                 return true;
             }
         }
@@ -254,7 +254,7 @@ public class LoginEntity {
      */
     private void updateCurrentLogin(String password,String oldUsername) {
         logins.remove(oldUsername);
-        Employee tempEmp = new Employee(currentLogin.getLoginID(), currentLogin.getLastName(),
+        Employee tempEmp = new Employee(currentLogin.getID(), currentLogin.getLastName(),
                 currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
                 currentLogin.getOptions(), currentLogin.getPermission(), currentLogin.getServiceAbility());
         logins.put(currentLogin.getUsername(), tempEmp);

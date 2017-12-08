@@ -66,7 +66,7 @@ public class TestRequestEntity {
 
         //cleans all employees
         List<Employee> employees = db.getAllEmployees();
-        for (Employee e : employees) db.removeEmployee(e.getLoginID());
+        for (Employee e : employees) db.removeEmployee(e.getID());
         //removes node
         db.removeNode(n1);
         db.removeNode(n2);

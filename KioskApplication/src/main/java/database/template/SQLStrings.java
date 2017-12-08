@@ -111,7 +111,7 @@ public class SQLStrings {
     public static final String NODE_NODETYPE_SELECT = "Select nodeID from T_nodes where xcoord=? and ycoord=? and floor=? and nodeType=?";
 
     public static final String CREATE_EMPLOYEE_TABLE = "create table t_employee("+
-            " loginID INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_employee_pk PRIMARY KEY,"+
+            " id INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_employee_pk PRIMARY KEY,"+
             " username Varchar(255) NOT NULL UNIQUE,"+
             " lastName Varchar(35) NOT NULL,"+
             " firstName Varchar(35) NOT NULL,"+
@@ -127,8 +127,8 @@ public class SQLStrings {
             "(username, lastName, firstName, password, options, permission, serviceAbility)"+
             " values(?, ?, ?, ?, ?, ?, ?)";
     public static final String EMPLOYEE_UPDATE = "update t_employee set username=?, lastName=?, firstName=?, password=?, options=?,"+
-            " permission=?, serviceAbility=? where loginID=?";
-    public static final String EMPLOYEE_SELECT = "select * from t_employee where loginID=?";
+            " permission=?, serviceAbility=? where id=?";
+    public static final String EMPLOYEE_SELECT = "select * from t_employee where id=?";
     public static final String EMPLOYEE_SELECT_ALL = "select * from t_employee";
-    public static final String EMPLOYEE_DELETE = "delete from t_employee where loginID=?";
+    public static final String EMPLOYEE_DELETE = "delete from t_employee where id=?";
 }

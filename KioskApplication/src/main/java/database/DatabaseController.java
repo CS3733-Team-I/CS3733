@@ -4,7 +4,6 @@ import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;
 import database.utility.*;
-import org.springframework.security.core.parameters.P;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -416,7 +415,7 @@ public class DatabaseController {
      * adds an employee to the database currently more expensive because it needs to return the ID as an identifier
      * @param employee
      * @param password
-     * @return their loginID
+     * @return their ID
      */
     public int addEmployee(Employee employee, String password){
         try{
@@ -430,12 +429,12 @@ public class DatabaseController {
             pstmt.setInt(6,employee.getPermission().ordinal());
             pstmt.setInt(7,employee.getServiceAbility().ordinal());
             pstmt.executeUpdate();
-            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT loginID FROM t_employee"+
+            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT id FROM t_employee"+
             " where username=?");
             pstmt2.setString(1,employee.getUsername());
             ResultSet rs = pstmt2.executeQuery();
             if(rs.next()){
-                return rs.getInt("loginID");
+                return rs.getInt("id");
             }
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -449,7 +448,7 @@ public class DatabaseController {
     public int updateEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
-            pstmt.setInt(8,employee.getLoginID());
+            pstmt.setInt(8,employee.getID());
             pstmt.setString(1,employee.getUsername());
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
@@ -489,7 +488,7 @@ public class DatabaseController {
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 employee = new Employee(
-                        rs.getInt("loginID"),
+                        rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("lastName"),
                         rs.getString("firstName"),
@@ -516,7 +515,7 @@ public class DatabaseController {
             while(rs.next()) {
                 Employee employee = null;
                 employee = new Employee(
-                        rs.getInt("loginID"),
+                        rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("lastName"),
                         rs.getString("firstName"),
