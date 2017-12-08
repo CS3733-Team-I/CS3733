@@ -32,7 +32,7 @@ public class FuzzySearch {
             allNodes.put(node.getNodeID(),node);
         }
         metaphone = new DoubleMetaphone();
-        //Node bestmatch = allNodes.get(allNodes.keySet().iterator().next());
+
         String[] input= inputtext.split("");
 
         if(input.length >0) {
