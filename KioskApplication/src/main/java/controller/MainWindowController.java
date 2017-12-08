@@ -14,6 +14,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import entity.SystemSettings;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -21,16 +22,15 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import utility.ApplicationScreen;
 import utility.KioskPermission;
+import utility.Memento.MainWindowMemento;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.beans.*;
 import javafx.beans.property.*;
@@ -56,6 +56,7 @@ public class MainWindowController {
     private LoginEntity loginEntity;
     private SystemSettings systemSettings;
 
+    private MainWindowMemento memento;
 
     private Timer timer = new Timer();
     int countdown;
@@ -186,10 +187,16 @@ public class MainWindowController {
         initializeLoginPopup();
         initializeTrackingTable();
         defZoom = mapController.getZoomSlider().getValue();
-        countdown = maxCountdown;
-        startTimer();
 
         checkPermissions();
+
+
+        ArrayList<Tab> tabs = new ArrayList<Tab>();
+        tabs.add(tabMap);
+        tabs.add(tabSettings);
+        memento = new MainWindowMemento(tabs);
+        countdown = maxCountdown;
+        startTimer();
     }
 
     private void initializeTrackingTable() throws IOException{
@@ -237,6 +244,21 @@ public class MainWindowController {
     }
 
     /**
+     * Sets the maxCountdown
+     * @param i maxcount to be set
+     */
+    public void setTimeout(int i){
+        maxCountdown = i;
+    }
+
+    /**
+     * Gets the maxCountdown value
+     */
+    public int getMaxcountdown(){
+        return maxCountdown;
+    }
+
+    /**
      * Reset time when countdown isnt at max or min values
      * (prevents from calling too often or when reset is occurring)
      */
@@ -274,14 +296,20 @@ public class MainWindowController {
         System.out.println("TIMEOUT");
         // Close the Login panel if open
         closeLoginPopup();
+        // Change language
+
+
         // Log out
         LoginEntity.getInstance().logOut();
         switchButton.setText("Staff Login");
         // Clears Tabs
         tabPane.getTabs().clear();
         // Reset tabs
-        tabPane.getTabs().add(tabMap);
-        tabPane.getTabs().add(tabSettings);
+        for (Tab t: memento.getState().tabs) {
+            tabPane.getTabs().add(t);
+        }
+        //tabPane.getTabs().add(tabMap);
+        //tabPane.getTabs().add(tabSettings);
 
         // Adjust node visability
         mapController.setNodesVisible(false);
@@ -450,5 +478,11 @@ public class MainWindowController {
     public void nodesConnected(String nodeID1, String nodeID2) {
         MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
         mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
+    }
+
+    @FXML
+    public void shutdown(){
+        System.out.println("SHUTDOWN");
+        timer.cancel();
     }
 }

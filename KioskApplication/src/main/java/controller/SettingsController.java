@@ -27,6 +27,7 @@ public class SettingsController extends ScreenController {
     @FXML private Tab languageTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;
+    @FXML private Tab generalTab;
 
     @FXML private Tab databaseTab;
     @FXML private Tab employeesTab;
@@ -46,6 +47,7 @@ public class SettingsController extends ScreenController {
     @FXML private AnchorPane employeesPane;
 
     @FXML private TextField beamWidth;
+    @FXML private TextField timeoutLength;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
     ToggleGroup languageSelectToggleGroup = new ToggleGroup();
@@ -92,6 +94,8 @@ public class SettingsController extends ScreenController {
         loader2.setRoot(userPane);
         loader2.load();
 
+        timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
+
         checkPermissions();
 
         // Listen for TextField text changes
@@ -127,6 +131,7 @@ public class SettingsController extends ScreenController {
 
             }
         });
+
     }
 
     /**
@@ -141,11 +146,11 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, generalTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, employeesTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
@@ -185,6 +190,19 @@ public class SettingsController extends ScreenController {
     @FXML
     void saveCSV() {
 
+    }
+
+    /**
+     * Save the settings in the general screen
+     */
+    @FXML
+    void saveGeneral(){
+        try{
+            getParent().setTimeout(Integer.parseInt(timeoutLength.getText()));
+        }catch(Exception e){
+            System.out.println("Exception caught");
+        }
+        timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
     }
 
     @Override

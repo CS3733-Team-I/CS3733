@@ -1,3 +1,4 @@
+import controller.MainWindowController;
 import email.*;
 import entity.MapEntity;
 import entity.SystemSettings;
@@ -19,7 +20,8 @@ public class Main extends Application {
 
         SystemSettings.getInstance();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Final Iteration");
 
         Scene mainScene = new Scene(root, 1280, 720);
@@ -27,6 +29,10 @@ public class Main extends Application {
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
 
         primaryStage.setScene(mainScene);
+
+        // Cleanup
+        MainWindowController controller = loader.getController();
+        primaryStage.setOnHidden(e -> controller.shutdown());
         primaryStage.show();
         /*
         EmailSystem.init();
