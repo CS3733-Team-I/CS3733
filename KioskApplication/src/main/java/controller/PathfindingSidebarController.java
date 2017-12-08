@@ -7,6 +7,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
 import entity.SystemSettings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -152,6 +154,13 @@ public class PathfindingSidebarController extends ScreenController {
             btNavigate.setText(resB.getString("navigate"));
             //waypointLabel.setText(resB.getString("waypoints"));
             btClearPath.setText(resB.getString("clearpath"));
+        });
+
+        searchController.getCBValueProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldValue, Node newValue) {
+                onMapNodeClicked(newValue);
+            }
         });
     }
 
