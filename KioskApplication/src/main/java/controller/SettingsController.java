@@ -10,7 +10,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -174,7 +173,7 @@ public class SettingsController extends ScreenController {
         try {
             MapEntity.getInstance().removeAll();
 
-            CsvFileUtil.getInstance().readAllCSVs();
+            CsvFileUtil.getInstance().readAllCsvs();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,7 +183,7 @@ public class SettingsController extends ScreenController {
 
     @FXML
     void saveCSV() {
-
+        CsvFileUtil.getInstance().writeAllCsvs();
     }
 
     @Override
