@@ -1,41 +1,42 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import controller.map.MapController;
-import database.objects.IEmployee;
 import database.objects.Employee;
 import entity.LoginEntity;
+import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.request.Language;
 import utility.request.RequestType;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class EmployeeSettingsController {
+
+    @FXML private Label employeesLabel;
 
     @FXML private JFXButton addUserButton;
     @FXML private JFXButton deleteUserButton;
 
-    @FXML private BorderPane userEditorPane;
-    @FXML private Label userDialogLabel;
+    @FXML private GridPane userEditorPane;
+    @FXML private Label registerEmployeeLabel;
     @FXML private Label errLabel;
     @FXML private JFXTextField firstNameBox;
     @FXML private JFXTextField lastNameBox;
     @FXML private JFXTextField usernameBox;
-    @FXML private JFXTextField passwordBox;
+    @FXML private JFXPasswordField passwordBox1;
+    @FXML private JFXPasswordField passwordBox2;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> typeSelect;
     @FXML private JFXButton userActionButton;
@@ -60,15 +61,29 @@ public class EmployeeSettingsController {
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
-        usernameColumn.setPrefWidth(175);
+        usernameColumn.setPrefWidth(200);
         usernameColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getUsername())
         );
+        TreeTableColumn<Employee, String> firstNameColumn = new TreeTableColumn<>("First Name");
+        firstNameColumn.setResizable(false);
+        firstNameColumn.setPrefWidth(175);
+        firstNameColumn.setCellValueFactory(
+                (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
+                        new ReadOnlyStringWrapper(param.getValue().getValue().getFirstName())
+        );
+        TreeTableColumn<Employee, String> lastNameColumn = new TreeTableColumn<>("Last Name");
+        lastNameColumn.setResizable(false);
+        lastNameColumn.setPrefWidth(175);
+        lastNameColumn.setCellValueFactory(
+                (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
+                        new ReadOnlyStringWrapper(param.getValue().getValue().getLastName())
+        );
 
         TreeTableColumn<Employee, String> permissionColumn = new TreeTableColumn<>("Permission");
         permissionColumn.setResizable(false);
-        permissionColumn.setPrefWidth(150);
+        permissionColumn.setPrefWidth(100);
         permissionColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getPermission().toString())
@@ -76,20 +91,20 @@ public class EmployeeSettingsController {
 
         TreeTableColumn<Employee, String> serviceColumn = new TreeTableColumn<>("Service Availability");
         serviceColumn.setResizable(false);
-        serviceColumn.setPrefWidth(175);
+        serviceColumn.setPrefWidth(150);
         serviceColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getServiceAbility().toString())
         );
         TreeTableColumn<Employee, String> optionsColumn = new TreeTableColumn<>("Options");
-        serviceColumn.setResizable(false);
-        serviceColumn.setPrefWidth(175);
-        serviceColumn.setCellValueFactory(
+        optionsColumn.setResizable(false);
+        optionsColumn.setPrefWidth(150);
+        optionsColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getOptions())
         );
 
-        usersList.getColumns().setAll(usernameColumn, permissionColumn, serviceColumn, optionsColumn);
+        usersList.getColumns().setAll(usernameColumn,firstNameColumn,lastNameColumn, permissionColumn, serviceColumn, optionsColumn);
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
@@ -121,6 +136,25 @@ public class EmployeeSettingsController {
                 interpreterLanguageBox.getChildren().add(langCheckBox);
             }
         }
+        //Internationalization listener
+        SystemSettings.getInstance().addObserver((o, arg) -> {
+            ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
+            employeesLabel.setText(rB.getString("employees"));
+            usernameColumn.setText(rB.getString("username"));
+            firstNameColumn.setText(rB.getString("firstName"));
+            lastNameColumn.setText(rB.getString("lastName"));
+            permissionColumn.setText(rB.getString("permission"));
+            serviceColumn.setText(rB.getString("serviceAbility"));
+            optionsColumn.setText(rB.getString("options"));
+            usernameBox.setPromptText(rB.getString("username"));
+            firstNameBox.setPromptText(rB.getString("firstName"));
+            lastNameBox.setPromptText(rB.getString("lastName"));
+            passwordBox1.setPromptText(rB.getString("password"));
+            passwordBox2.setPromptText(rB.getString("password"));
+            permissionSelect.setPromptText(rB.getString("permission"));
+            typeSelect.setPromptText(rB.getString("serviceAbility"));
+            registerEmployeeLabel.setText(rB.getString("registerEmployee"));
+        });
     }
 
     public void refreshUsers() {
@@ -144,7 +178,6 @@ public class EmployeeSettingsController {
         addUserButton.setVisible(false);
         deleteUserButton.setVisible(false);
         userActionButton.setText("Add");
-        userDialogLabel.setText("Add User");
         errLabel.setText("");
     }
 
@@ -174,12 +207,7 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserCancel(ActionEvent event) {
-        // Adjust visability
-        usersList.setVisible(true);
-        userEditorPane.setVisible(false);
-        deletePane.setVisible(false);
-        addUserButton.setVisible(true);
-        deleteUserButton.setVisible(true);
+        closeAddEmployee();
     }
 
     @FXML
@@ -187,8 +215,8 @@ public class EmployeeSettingsController {
         ArrayList<String> options = new ArrayList<>();
         // Check that all fields are filled in
         if (firstNameBox.getText() != null && lastNameBox.getText() != null &&
-                usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null &&
-                !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
+                usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox1.getText() != null &&
+                !passwordBox1.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
             switch (typeSelect.getValue()){
                 case INTERPRETER:
                     for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
@@ -207,14 +235,10 @@ public class EmployeeSettingsController {
             }
             // Add user
             if (LoginEntity.getInstance().addUser(usernameBox.getText(),lastNameBox.getText(),firstNameBox.getText(),
-                    passwordBox.getText(),options, permissionSelect.getValue(), typeSelect.getValue())) {
+                    passwordBox1.getText(),options, permissionSelect.getValue(), typeSelect.getValue())) {
                 refreshUsers();
                 // Adjust visability
-                usersList.setVisible(true);
-                userEditorPane.setVisible(false);
-                deletePane.setVisible(false);
-                addUserButton.setVisible(true);
-                deleteUserButton.setVisible(true);
+                closeAddEmployee();
                 errLabel.setText("User Added");
                 resetScreen();
             }
@@ -223,7 +247,7 @@ public class EmployeeSettingsController {
                 System.out.println("USER ERROR");
                 errLabel.setText("Username Required");
             }
-            else if(passwordBox.getText().equals("")){
+            else if(passwordBox1.getText().equals("")){
                 errLabel.setText("Password Required");
             }
             else if(permissionSelect.getValue() == null){
@@ -236,6 +260,25 @@ public class EmployeeSettingsController {
     }
 
     /**
+     * Helper method for closing the add employee menu
+     */
+    private void closeAddEmployee(){
+        usersList.setVisible(true);
+        userEditorPane.setVisible(false);
+        firstNameBox.clear();
+        lastNameBox.clear();
+        usernameBox.clear();
+        passwordBox1.clear();
+        passwordBox2.clear();
+        typeSelect.valueProperty().set(null);
+        permissionSelect.valueProperty().set(null);
+        deletePane.setVisible(false);
+        addUserButton.setVisible(true);
+        deleteUserButton.setVisible(true);
+
+    }
+
+    /**
      * Resets the timer in the MainWindowController
      */
     @FXML
@@ -245,7 +288,7 @@ public class EmployeeSettingsController {
 
     void resetScreen(){
         usernameBox.setText("");
-        passwordBox.setText("");
+        passwordBox1.setText("");
         permissionSelect.setValue(null);
         typeSelect.setValue(null);
     }

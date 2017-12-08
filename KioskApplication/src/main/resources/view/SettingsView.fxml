@@ -14,9 +14,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="600.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" maxWidth="Infinity">
    <children>
-      <JFXTabPane id="tab-header-area" fx:id="settingTabPane" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <JFXTabPane id="tab-header-area" fx:id="settingTabPane" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <tabs>
             <Tab fx:id="aboutTab" text="About">
               <content>
