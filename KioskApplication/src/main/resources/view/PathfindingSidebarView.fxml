@@ -28,16 +28,20 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <JFXButton fx:id="btNavigate" buttonType="RAISED" onAction="#btGeneratePathPressed" prefHeight="87.0" prefWidth="210.0" ripplerFill="#0090ad" style="-fx-background-color: #00589F;" text="Navigate" textFill="#ddded0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+            <JFXButton fx:id="btNavigate" buttonType="RAISED" onAction="#btGeneratePathPressed" prefHeight="87.0" prefWidth="210.0" ripplerFill="#0090ad" style="-fx-background-color: #00589F;" text="Navigate" textFill="#ddded0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="34.0" />
                </font></JFXButton>
-            <JFXButton fx:id="btClearPath" buttonType="RAISED" onAction="#onResetPressed" prefHeight="88.0" prefWidth="204.0" ripplerFill="#0090ad" style="-fx-background-color: #DDDED0;" text="Clear Path" textFill="#00589f" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+            <JFXButton fx:id="btClearPath" buttonType="RAISED" onAction="#onResetPressed" prefHeight="88.0" prefWidth="204.0" ripplerFill="#0090ad" style="-fx-background-color: #DDDED0;" text="Clear Path" textFill="#00589f" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="30.0" />
                </font></JFXButton>
             <Label fx:id="exceptionText" prefHeight="50.0" prefWidth="300.0" text="" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <JFXListView fx:id="waypointListView" prefHeight="118.0" prefWidth="400.0" stylesheets="@../css/listView.css" GridPane.columnSpan="4" GridPane.rowSpan="6" />
+            <JFXListView fx:id="waypointListView" prefHeight="118.0" prefWidth="400.0" stylesheets="@../css/listView.css" GridPane.columnSpan="4" GridPane.rowSpan="5" />
+            <JFXButton fx:id="btRestRoom" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btRestaurant" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btElevator" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btExit" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </children>

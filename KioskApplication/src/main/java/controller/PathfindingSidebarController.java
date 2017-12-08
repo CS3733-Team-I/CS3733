@@ -32,6 +32,7 @@ import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,12 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private ImageView removeIconView;
     @FXML private JFXButton btNavigate;
     @FXML private  JFXButton btClearPath;
+
+    @FXML private JFXButton btExit;
+    @FXML private JFXButton btRestRoom;
+    @FXML private JFXButton btRestaurant;
+    @FXML private JFXButton btElevator;
+
     private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentWaypoints;
@@ -85,6 +92,30 @@ public class PathfindingSidebarController extends ScreenController {
         ImageView removeView = new ImageView(removeIcon);
         removeView.setFitHeight(24);
         removeView.setFitWidth(24);
+
+        Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/food.png");
+        ImageView foodIconView = new ImageView(foodIcon);
+        foodIconView.setFitHeight(48);
+        foodIconView.setFitWidth(48);
+        btRestaurant.setGraphic(foodIconView);
+
+        Image exitIcon = ResourceManager.getInstance().getImage("/images/icons/exit.png");
+        ImageView exitView = new ImageView(exitIcon);
+        exitView.setFitHeight(48);
+        exitView.setFitWidth(48);
+        btExit.setGraphic(exitView);
+
+        Image elevIcon = ResourceManager.getInstance().getImage("/images/icons/elevator.png");
+        ImageView elevIconView = new ImageView(elevIcon);
+        elevIconView.setFitHeight(48);
+        elevIconView.setFitWidth(48);
+        btElevator.setGraphic(elevIconView);
+
+        Image restroomIcon = ResourceManager.getInstance().getImage("/images/icons/restroom.png");
+        ImageView restroomIconView = new ImageView(restroomIcon);
+        restroomIconView.setFitHeight(48);
+        restroomIconView.setFitWidth(48);
+        btRestRoom.setGraphic(restroomIconView);
 
         addWaypointBox();
 
@@ -148,7 +179,9 @@ public class PathfindingSidebarController extends ScreenController {
                 onMapNodeClicked(end);
             }
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+
             try{
+                Node node = pathfinder.findPathToNearestType(currentWaypoints.get(0), NodeType.ELEV, true);
                 Path path = pathfinder.generatePath(currentWaypoints);
                 getMapController().setPath(path);
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
