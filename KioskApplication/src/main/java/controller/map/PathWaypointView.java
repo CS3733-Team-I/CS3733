@@ -126,6 +126,7 @@ public class PathWaypointView extends AnchorPane {
     public void clearPath() {
         this.currentPath = null;
         pathView.getChildren().clear();
+        parent.getMiniMapController().clearPath();
     }
     /**
      * Clear drawn waypoints
@@ -143,6 +144,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
+        parent.getMiniMapController().clearPath();
         JFXButton switchFloor = null;
         segmentColorList.clear();
 
@@ -153,11 +155,11 @@ public class PathWaypointView extends AnchorPane {
         }
 
         for(int i = 0; i < waypointList.size()-1; i ++) {
-            NodeFloor a = parent.getCurrentFloor();
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
+            jfxPath.setStroke(Color.TRANSPARENT);
             MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
             jfxPath.getElements().add(moveTo);
 
@@ -183,6 +185,7 @@ public class PathWaypointView extends AnchorPane {
             }
 
             this.pathView.getChildren().add(jfxPath);
+            parent.getMiniMapController().showPath(jfxPath);
 
             Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);

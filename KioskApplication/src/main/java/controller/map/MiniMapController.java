@@ -2,6 +2,7 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
+import entity.Path;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
@@ -12,10 +13,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.util.Duration;
 import utility.ResourceManager;
+
+import java.util.LinkedList;
 
 public class MiniMapController {
 
@@ -207,6 +209,10 @@ public class MiniMapController {
         return Math.max(min, Math.min(max, val));
     }
 
+    /**
+     * Show the miniWayPoint on the miniMap
+     * @param node of th wayPoint
+     */
     public void showMiniWayPoint(Node node) {
         Circle miniMapWaypoint = new Circle(3);
         miniMapWaypoint.setAccessibleText(node.getNodeID());
@@ -219,8 +225,8 @@ public class MiniMapController {
         TranslateTransition miniWaypointPutTransition = new TranslateTransition();
         miniWaypointPutTransition.setDuration(Duration.millis(400));
         miniWaypointPutTransition.setNode(miniMapWaypoint);
-        miniWaypointPutTransition.setFromY(miniMapWaypoint.getCenterY()-10-50);
-        miniWaypointPutTransition.setToY(miniMapWaypoint.getCenterY()-50);
+        miniWaypointPutTransition.setFromY((miniMapWaypoint.getCenterY()-10)*RAHRatio);
+        miniWaypointPutTransition.setToY(miniMapWaypoint.getCenterY()*RAHRatio);
 
         miniWaypointPane.getChildren().add(miniMapWaypoint);
 
@@ -228,6 +234,10 @@ public class MiniMapController {
         miniWaypointPutTransition.play();
     }
 
+    /**
+     * Remove the miniWayPoint on the miniMap
+     * @param node of th wayPoint
+     */
     public void removeMiniWayPoint(Node node) {
         for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
             if(removedMiniWaypoint.getAccessibleText().equals(node.getNodeID())) {
@@ -243,6 +253,9 @@ public class MiniMapController {
         }
     }
 
+    /**
+     * Clear the miniWayPoints on the miniMap
+     */
     public void clearMiniWaypoint() {
         for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
             FadeTransition miniWaypointTransition = new FadeTransition();
@@ -256,13 +269,36 @@ public class MiniMapController {
         miniWaypointPane.getChildren().clear();
     }
 
-    public void showPath() {
-
+    /**
+     * draw the mini path on the miniMap
+     * @param path to draw
+     */
+    public void showPath(javafx.scene.shape.Path path) {
+        javafx.scene.shape.Path miniJFXPath = new javafx.scene.shape.Path();
+        for(PathElement element : path.getElements()) {
+            if(element instanceof MoveTo) {
+                MoveTo moveTo = new MoveTo();
+                moveTo.setX(((MoveTo) element).getX()*RAWRatio);
+                moveTo.setY(((MoveTo) element).getY()*RAHRatio);
+                miniJFXPath.getElements().add(moveTo);
+            }
+            else if(element instanceof LineTo) {
+                LineTo lineTo = new LineTo();
+                lineTo.setX(((LineTo) element).getX()*RAWRatio);
+                lineTo.setY(((LineTo) element).getY()*RAHRatio);
+                miniJFXPath.getElements().add(lineTo);
+            }
+        }
+        miniJFXPath.setFill(Color.TRANSPARENT);
+        miniJFXPath.setStroke(Color.BLUE);
+        miniJFXPath.setStrokeWidth(2);
+        miniPathPane.getChildren().add(miniJFXPath);
     }
 
-
-
+    /**
+     * clear mini paths on the miniMap
+     */
     public void clearPath() {
-
+        miniPathPane.getChildren().clear();
     }
 }
