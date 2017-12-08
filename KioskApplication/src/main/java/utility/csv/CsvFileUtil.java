@@ -13,10 +13,7 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -273,7 +270,15 @@ public class CsvFileUtil {
                     break;
             }
 
-            CsvWriter writer = new CsvWriter(new FileWriter(basePath + "csv/" + path, false), 'c');
+            // Create dir if it doesnt exist
+            System.out.println("Writing CSV " + basePath + "csv/" + path);
+            final File file = new File(basePath + "csv/" + path);
+            final File parent_directory = file.getParentFile();
+            if (!parent_directory.exists()) {
+                parent_directory.mkdirs();
+            }
+
+            CsvWriter writer = new CsvWriter(new FileWriter(file, false), ',');
 
             // Write header
             for (String header : NODE_CSV_HEAD.split(",")) {
@@ -291,7 +296,7 @@ public class CsvFileUtil {
                 writer.write(node.getNodeType().toString());
                 writer.write(node.getLongName());
                 writer.write(node.getShortName());
-                writer.write("Team " + node.getTeamAssigned());
+                writer.write(node.getTeamAssigned());
                 writer.endRecord();
             }
 
@@ -302,12 +307,18 @@ public class CsvFileUtil {
             alert.setTitle("Error writing nodes to SCV");
             alert.setHeaderText("Error occurred while getting path to JAR.");
             alert.setContentText(e.toString());
+
+            e.printStackTrace();
+
             alert.showAndWait();
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error adding nodes to CSV");
             alert.setHeaderText("Error creating file at path.");
             alert.setContentText(e.toString());
+
+            e.printStackTrace();
+
             alert.showAndWait();
         }
     }
