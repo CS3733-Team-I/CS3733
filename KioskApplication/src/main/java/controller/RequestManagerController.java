@@ -23,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import utility.KioskPermission;
+import utility.RequestListCell;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;

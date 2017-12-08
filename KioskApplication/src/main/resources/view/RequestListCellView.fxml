@@ -1,35 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.TextFlow?>
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="VBox" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
+      <HBox alignment="CENTER_LEFT" minHeight="10.0">
+         <children>
+            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label fx:id="timeLabel" text="&lt;&lt;timeStamp&gt;&gt;">
+               <font>
+                  <Font name="System Italic" size="11.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="25.0" right="50.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
         <HBox alignment="CENTER_LEFT">
             <children>
-                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="iconView" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                     <HBox.margin>
-                        <Insets right="10.0" />
+                        <Insets left="10.0" right="30.0" />
                     </HBox.margin>
                 </ImageView>
-                <Label text="&lt;&lt;request title&gt;&gt;" />
+                <Label fx:id="nameLabel" text="&lt;&lt;request title&gt;&gt;">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font></Label>
             </children>
         </HBox>
-        <TextFlow prefHeight="71.0" prefWidth="600.0" />
-        <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
+      <VBox fx:id="textFlow" minWidth="15.0">
+         <children>
+            <Label fx:id="extraField" text="Label">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="requestNotes" text="Label">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="locationOfRequest" text="Label">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="person" text="Label">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+        <HBox fx:id="buttonBox" alignment="CENTER_LEFT">
             <children>
-                <JFXButton text="Center" />
-                <JFXComboBox promptText="Assign to Employee" />
+                <JFXButton fx:id="locateNodeButton" text="GO TO">
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin></JFXButton>
             </children>
         </HBox>
     </children>
