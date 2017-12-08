@@ -613,8 +613,8 @@ public class MapController {
 
     @FXML
     public void recenterPressed() {
-        this.scrollPane.setHvalue(DEFAULT_HVALUE);
-        this.scrollPane.setVvalue(DEFAULT_VVALUE);
+        this.scrollPane.setHvalue(SystemSettings.getInstance().getDefaultnode().getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(SystemSettings.getInstance().getDefaultnode().getYcoord()/mapView.getFitHeight()-0.04);
     }
 
     public void setOptionsBoxVisible(boolean visible) {
