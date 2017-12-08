@@ -45,6 +45,8 @@ public class RequestListCellController {
         this.parent = parent;
         rootVbox = new VBox();
 
+
+        //TODO: should all this below be in initialize function?
         FXMLLoader loader = ResourceManager.getInstance().getFXMLLoader("/view/RequestListCellView.fxml");
         loader.setRoot(rootVbox);
         loader.setController(this);
@@ -115,30 +117,29 @@ public class RequestListCellController {
             public void handle(ActionEvent e) {
                 rEntity.deleteRequest(requestID);
                 parent.refreshRequests();
-                //TODO: refresh list of requests  ?
             }
         });
 
-        if(!lEntity.getCurrentPermission().equals(KioskPermission.EMPLOYEE) //Admin or super
-                && RPS.equals(RequestProgressStatus.TO_DO)) { //and still assignable
-            ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
-            listOfEmployees.clear();
-            listOfEmployees.addAll(lEntity.getAllEmployeeType(rEntity.checkRequestType(requestID)));
-            JFXComboBox employees = new JFXComboBox(listOfEmployees);
-            employees.setPromptText("Assign Employee");
-            employees.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if(employees.getValue().equals(null)){
-                    }else {
-                        rEntity.markInProgress((Integer) employees.getValue(),requestID);
-                        parent.refreshRequests();
-                        //TODO: refresh list of requests
+        if(!lEntity.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
+            if(RPS.equals(RequestProgressStatus.TO_DO)) { //and still assignable
+                ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
+                listOfEmployees.clear();
+                listOfEmployees.addAll(lEntity.getAllEmployeeType(rEntity.checkRequestType(requestID)));
+                JFXComboBox employees = new JFXComboBox(listOfEmployees);
+                employees.setPromptText("Assign Employee");
+                employees.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (employees.getValue().equals(null)) {
+                        } else {
+                            rEntity.markInProgress((Integer) employees.getValue(), requestID);
+                            parent.refreshRequests();
+                        }
                     }
-                }
-            });
+                });
 
-            buttonBox.getChildren().add(employees);
+                buttonBox.getChildren().add(employees);
+            }
         }else{
             JFXButton statusUpdater = new JFXButton();
             switch (RPS) {
@@ -148,7 +149,6 @@ public class RequestListCellController {
                         @Override
                         public void handle(ActionEvent e) {
                             rEntity.markInProgress(lEntity.getLoginID(), requestID);
-                            //TODO: refresh
                             parent.refreshRequests();
                         }
                     });
@@ -160,7 +160,6 @@ public class RequestListCellController {
                         @Override
                         public void handle(ActionEvent e) {
                             rEntity.completeRequest(requestID);
-                            //TODO: refresh
                             parent.refreshRequests();
                         }
                     });

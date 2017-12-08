@@ -191,6 +191,10 @@ public class RequestSubmitterController extends ScreenController {
         menuTable.setEditable(true);
     }
 
+    /**
+     * When the submit button is pressed this sends a request to the database
+     * @throws IOException
+     */
     @FXML
     public void addRequest() throws IOException{
         switch(currentRequestType){
@@ -206,6 +210,9 @@ public class RequestSubmitterController extends ScreenController {
         }
     }
 
+    /**
+     * Clears all the fields in the request submitter
+     */
     @FXML
     public void clearButton() {
         intLocation.setText("");
@@ -221,6 +228,9 @@ public class RequestSubmitterController extends ScreenController {
         priorityMenu.setValue(null);
     }
 
+    /**
+     * Adds an interpreter Request to the database
+     */
     public void addIntRequest() {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getLoginID(), intNotesArea.getText(), language);
@@ -228,6 +238,9 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    /**
+     * Adds a security Request to the database
+     */
     public void addSecRequest() {
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
@@ -236,6 +249,9 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    /**
+     * Adds a food Request to the database
+     */
     public void addFoodRequest(){
         String order = "Order:";
         for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {

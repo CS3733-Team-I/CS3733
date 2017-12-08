@@ -5,9 +5,6 @@ import controller.RequestListCellController;
 import controller.RequestManagerController;
 import database.connection.NotFoundException;
 import database.objects.Request;
-import entity.LoginEntity;
-import entity.RequestEntity;
-import javafx.scene.layout.VBox;
 
 public final class RequestListCell extends JFXListCell<Request> {
 
@@ -20,6 +17,12 @@ public final class RequestListCell extends JFXListCell<Request> {
         this.parent = parent;
     }
 
+    /**
+     * Updates the listCell to display all the information about a request
+     * Uses RequestListCellController to set all the information
+     * @param item the vbox created from RequestListCellController
+     * @param empty determines if there is a listCell to be filled
+     */
     @Override
     public void updateItem(Request item, boolean empty) {
         super.updateItem(item, empty);
@@ -34,25 +37,4 @@ public final class RequestListCell extends JFXListCell<Request> {
             setGraphic(controller.getView());
         }
     }
-
-
-
-    /*
-    public final class ConversationCell<Message> extends ListCell<Message> {
-
-    private final ConversationCellController ccc = new ConversationCellController(null);
-    private final Node view = ccc.getView();
-
-    @Override
-    protected void updateItem(Message item, boolean empty) {
-        super.updateItem(item, empty);
-        if (empty) {
-            setGraphic(null);
-        } else {
-            ccc.setItem(item);
-            setGraphic(view);
-        }
-    }
-}
-     */
 }
