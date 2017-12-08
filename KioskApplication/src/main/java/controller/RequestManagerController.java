@@ -42,21 +42,15 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
     RequestProgressStatus currentButton;
 
-@FXML private JFXListView<Request> activeRequests;
-    @FXML private Label totalRequests;
+    @FXML private Label totalRequests,filterLabel;
+    @FXML private JFXListView<Request> activeRequests;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
     @FXML private JFXPopup popup;
-    @FXML private HBox row8;
-    @FXML private HBox row9;
     //filter buttons
-    @FXML private JFXCheckBox foodFilter;
-    @FXML private JFXCheckBox janitorFilter;
-    @FXML private JFXCheckBox securityFilter;
-    @FXML private JFXCheckBox interpreterFilter;
-    @FXML private JFXCheckBox maintenanceFilter;
-    @FXML private JFXCheckBox itFilter;
-    @FXML private JFXCheckBox transportationFilter;
+    @FXML private JFXCheckBox foodFilter,janitorFilter,securityFilter,
+            interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
+
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -75,19 +69,20 @@ public class RequestManagerController extends ScreenController {
         RequestType employeeType = l.getServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
-            foodFilter.setDisable(true);
+            foodFilter.setVisible(false);
             janitorFilter.setSelected(false);
-            janitorFilter.setDisable(true);
+            janitorFilter.setVisible(false);
             securityFilter.setSelected(false);
-            securityFilter.setDisable(true);
+            securityFilter.setVisible(false);
             interpreterFilter.setSelected(false);
-            interpreterFilter.setDisable(true);
+            interpreterFilter.setVisible(false);
             maintenanceFilter.setSelected(false);
-            maintenanceFilter.setDisable(true);
+            maintenanceFilter.setVisible(false);
             itFilter.setSelected(false);
-            itFilter.setDisable(true);
+            itFilter.setVisible(false);
             transportationFilter.setSelected(false);
-            transportationFilter.setDisable(true);
+            transportationFilter.setVisible(false);
+            filterLabel.setVisible(false);
             switch (employeeType){
                 case FOOD:
                     foodFilter.setSelected(true);
@@ -103,13 +98,14 @@ public class RequestManagerController extends ScreenController {
                     break;
             }
         }else{
-            foodFilter.setDisable(false);
-            janitorFilter.setDisable(false);
-            securityFilter.setDisable(false);
-            interpreterFilter.setDisable(false);
-            maintenanceFilter.setDisable(false);
-            itFilter.setDisable(false);
-            transportationFilter.setDisable(false);
+            foodFilter.setVisible(true);
+            janitorFilter.setVisible(true);
+            securityFilter.setVisible(true);
+            interpreterFilter.setVisible(true);
+            maintenanceFilter.setVisible(true);
+            itFilter.setVisible(true);
+            transportationFilter.setVisible(true);
+            filterLabel.setVisible(true);
         }
     }
 

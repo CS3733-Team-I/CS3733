@@ -1,25 +1,29 @@
 package utility.csv;
 
 import com.csvreader.CsvReader;
+import com.csvreader.CsvWriter;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import database.utility.DatabaseExceptionType;
 import entity.MapEntity;
 import javafx.scene.control.Alert;
+import org.springframework.util.StringUtils;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.node.TeamAssigned;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CsvFileUtil {
 
-    private CsvFileUtil() {
-
-    }
+    private CsvFileUtil() { }
 
     private static class SingletonHelper {
         private static CsvFileUtil _instance = new CsvFileUtil();
@@ -30,7 +34,10 @@ public class CsvFileUtil {
     public static final String NODE_CSV_HEAD = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned";
     public static final String EDGE_CSV_HEAD = "edgeID,startNode,endNode";
 
-    public void readAllCSVs() {
+    /**
+     * Reads all CSVs from the jar package
+     */
+    public void readAllCsvs() {
         readNodesCSV("/csv/MapAnodes.csv");
         readNodesCSV("/csv/MapBnodes.csv");
         readNodesCSV("/csv/MapCnodes.csv");
@@ -54,6 +61,87 @@ public class CsvFileUtil {
         readEdgesCSV("/csv/MapWedges.csv");
     }
 
+    /**
+     * Writes all CSVs to files in [jar path]/csv/[filename].csv
+     */
+    public void writeAllCsvs() {
+        // Sort nodes by team
+        HashMap<TeamAssigned, List<Node>> nodesByTeam = new HashMap<>();
+        HashMap<String, Edge> allEdges = new HashMap<>();
+
+        for (Node node : MapEntity.getInstance().getAllNodes()) {
+            TeamAssigned team = TeamAssigned.fromString(node.getTeamAssigned());
+
+            // Check if this is a W node (special case)
+            if (node.getNodeID().charAt(0) == 'W') team = TeamAssigned.W;
+
+            // Create nodes list if doesnt exist
+            if (!nodesByTeam.containsKey(team)) {
+                nodesByTeam.put(team, new LinkedList<>());
+            }
+
+            nodesByTeam.get(team).add(node);
+
+            // Add connected edges to list
+            for (Edge edge : MapEntity.getInstance().getEdges(node)) {
+                allEdges.put(edge.getEdgeID(), edge);
+            }
+        }
+
+        // Save Nodes to CSV
+        for (TeamAssigned team : nodesByTeam.keySet()) {
+            writeNodesCSV(team, nodesByTeam.get(team));
+        }
+
+        // Sort Edges
+        HashMap<TeamAssigned, List<Edge>> edgesByTeam = new HashMap<>();
+        for (Edge edge : allEdges.values()) {
+            // Detect team assignment
+            TeamAssigned node1team =
+                    TeamAssigned.fromString(edge.getNode1ID().substring(0, 1));
+            TeamAssigned node2team =
+                    TeamAssigned.fromString(edge.getNode2ID().substring(0, 1));
+
+            // Take the lowest team assignment in order to sort edges from (n -> w) or (w -> n)
+            // into non-w edges files
+            TeamAssigned team;
+            if (node1team.ordinal() < node2team.ordinal())
+                team = node1team;
+            else
+                team = node2team;
+
+            // Special case for W edges
+            if (StringUtils.countOccurrencesOf(edge.getEdgeID(), "ELEV") == 2) {
+                team = TeamAssigned.W;
+            }
+
+            if (!edgesByTeam.containsKey(team)) {
+                edgesByTeam.put(team, new LinkedList<>());
+            }
+
+            edgesByTeam.get(team).add(edge);
+        }
+
+        // Save Edges to CSV
+        for (TeamAssigned team : edgesByTeam.keySet()) {
+            writeEdgesCSV(team, edgesByTeam.get(team));
+        }
+    }
+
+    /**
+     * Reads a CSV file from a given path into the MapEntity instance
+     * @param path
+     */
+    public void readNodesCSV(String path) {
+        MapEntity map = MapEntity.getInstance();
+        readNodesCSV(path, map);
+    }
+
+    /**
+     * Reads a CSV file from a given path and given MapEntity
+     * @param path
+     * @param map
+     */
     public void readNodesCSV(String path, MapEntity map) {
         CsvReader reader = null;
         InputStream input = CsvFileUtil.class.getResourceAsStream(path);
@@ -205,75 +293,115 @@ public class CsvFileUtil {
         }
     }
 
-    public void readNodesCSV(String path) {
+    /**
+     * Writes nodes to a CSV for a given team
+     * @param team the team
+     * @param nodes the nodes for said team
+     */
+    public void writeNodesCSV(TeamAssigned team, Collection<Node> nodes) {
+        try {
+            String basePath = CsvFileUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            String path = "";
+            switch (team) {
+                case A:
+                    path = "MapAnodes.csv";
+                    break;
+                case B:
+                    path = "MapBnodes.csv";
+                    break;
+                case C:
+                    path = "MapCnodes.csv";
+                    break;
+                case D:
+                    path = "MapDnodes.csv";
+                    break;
+                case E:
+                    path = "MapENodes.csv";
+                    break;
+                case F:
+                    path = "MapFNodes.csv";
+                    break;
+                case G:
+                    path = "MapGNodes.csv";
+                    break;
+                case H:
+                    path = "MapHnodes.csv";
+                    break;
+                case I:
+                    path = "MapInodes.csv";
+                    break;
+                case W:
+                    path = "MapWnodes.csv";
+                    break;
+            }
+
+            // Create dir if it doesnt exist
+            System.out.println("Writing CSV " + basePath + "csv/" + path);
+            final File file = new File(basePath + "csv/" + path);
+            final File parent_directory = file.getParentFile();
+            if (!parent_directory.exists()) {
+                parent_directory.mkdirs();
+            }
+
+            CsvWriter writer = new CsvWriter(new FileWriter(file, false), ',');
+
+            // Write header
+            for (String header : NODE_CSV_HEAD.split(",")) {
+                writer.write(header);
+            }
+            writer.endRecord();
+
+            // Write nodes
+            for (Node node : nodes) {
+                writer.write(node.getNodeID());
+                writer.write(Integer.toString(node.getXcoord()));
+                writer.write(Integer.toString(node.getYcoord()));
+                writer.write(node.getFloor().toCSVString());
+                writer.write(node.getBuilding().toString());
+                writer.write(node.getNodeType().toString());
+                writer.write(node.getLongName());
+                writer.write(node.getShortName());
+                writer.write(node.getTeamAssigned());
+                writer.endRecord();
+            }
+
+            writer.close();
+
+        } catch (URISyntaxException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error writing nodes to SCV");
+            alert.setHeaderText("Error occurred while getting path to JAR.");
+            alert.setContentText(e.toString());
+
+            e.printStackTrace();
+
+            alert.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding nodes to CSV");
+            alert.setHeaderText("Error creating file at path.");
+            alert.setContentText(e.toString());
+
+            e.printStackTrace();
+
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * Reads edges from a path into the MapEntity instance
+     * @param path
+     */
+    public void readEdgesCSV(String path) {
         MapEntity map = MapEntity.getInstance();
-        readNodesCSV(path, map);
+        readEdgesCSV(path, map);
     }
 
-    public void writeNodesCSV(String path, boolean global) {
-        // TODO implement this
-        /*
-                NodeFloor fl = NodeFloor.values()[rs.getInt("floor")];
-                String floor = "";
-                NodeBuilding bu = NodeBuilding.values()[rs.getInt("building")];
-                String building = "";
-                NodeType nt = NodeType.values()[rs.getInt("nodeType")];
-                String nodeType = "";
-
-                if(global) {
-                    if(!(rs.getString("NodeID").startsWith("W"))) {
-                        continue;
-                    }
-                } else {
-                    if(rs.getString("NodeID").startsWith("W")) {
-                        continue;
-                    }
-                }
-
-                switch(fl) {
-                    case LOWERLEVEL_2: floor = "L2"; break;
-                    case LOWERLEVEL_1: floor = "L1"; break;
-                    case GROUND: floor = "0"; break;
-                    case FIRST: floor = "1"; break;
-                    case SECOND: floor = "2"; break;
-                    case THIRD: floor = "3"; break;
-                }
-
-                switch(bu) {
-                    case FRANCIS45: building = "45 Francis"; break;
-                    case FRANCIS15: building = "15 Francis"; break;
-                    case TOWER: building = "Tower"; break;
-                    case SHAPIRO: building = "Shapiro"; break;
-                    case BTM: building = "BTM"; break;
-                }
-
-                switch(nt) {
-                    case ELEV: nodeType = "ELEV"; break;
-                    case HALL: nodeType = "HALL"; break;
-                    case REST: nodeType = "REST"; break;
-                    case DEPT: nodeType = "DEPT"; break;
-                    case STAI: nodeType = "STAI"; break;
-                    case LABS: nodeType = "LABS"; break;
-                    case INFO: nodeType = "INFO"; break;
-                    case CONF: nodeType = "CONF"; break;
-                    case EXIT: nodeType = "EXIT"; break;
-                    case RETL: nodeType = "RETL"; break;
-                    case SERV: nodeType = "SERV"; break;
-                }
-
-                bWriter.write(rs.getString("NodeID") + ",");
-                bWriter.write(rs.getInt("xcoord") + ",");
-                bWriter.write(rs.getInt("ycoord") + ",");
-                bWriter.write(floor + ",");
-                bWriter.write(building + ",");
-                bWriter.write(nodeType + ",");
-                bWriter.write(rs.getString("longName") + ",");
-                bWriter.write(rs.getString("shortName") + ",");
-                bWriter.write(rs.getString("teamAssigned"));
-                bWriter.newLine();
-            }*/
-    }
-
+    /**
+     * Reads edges from a given path into a MapEntity
+     * @param path
+     * @param map
+     */
     public void readEdgesCSV(String path, MapEntity map) {
         CsvReader reader = null;
         InputStream input = CsvFileUtil.class.getResourceAsStream(path);
@@ -340,70 +468,92 @@ public class CsvFileUtil {
         }
     }
 
-    public void readEdgesCSV(String path) {
-        MapEntity map = MapEntity.getInstance();
-        readEdgesCSV(path, map);
-    }
-
-    public void writeEdgesCSV(String path, boolean global) {
-        // TODO implement this
-        /*File csvFile = new File(path);
-        FileWriter write = null;
+    /**
+     * Writes edges to a CSV for a given team
+     * @param team the team
+     * @param edges the edges for the team
+     */
+    public void writeEdgesCSV(TeamAssigned team, Collection<Edge> edges) {
         try {
-            write = new FileWriter(csvFile, true);
-        } catch (IOException e) {
+            String basePath = CsvFileUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            String path = "";
+            switch (team) {
+                case A:
+                    path = "MapAedges.csv";
+                    break;
+                case B:
+                    path = "MapBedges.csv";
+                    break;
+                case C:
+                    path = "MapCedges.csv";
+                    break;
+                case D:
+                    path = "MapDedges.csv";
+                    break;
+                case E:
+                    path = "MapEEdges.csv";
+                    break;
+                case F:
+                    path = "MapFEdges.csv";
+                    break;
+                case G:
+                    path = "MapGEdges.csv";
+                    break;
+                case H:
+                    path = "MapHedges.csv";
+                    break;
+                case I:
+                    path = "MapIedges.csv";
+                    break;
+                case W:
+                    path = "MapWedges.csv";
+                    break;
+            }
+
+            // Create dir if it doesnt exist
+            System.out.println("Writing CSV " + basePath + "csv/" + path);
+            final File file = new File(basePath + "csv/" + path);
+            final File parent_directory = file.getParentFile();
+            if (!parent_directory.exists()) {
+                parent_directory.mkdirs();
+            }
+
+            CsvWriter writer = new CsvWriter(new FileWriter(file, false), ',');
+
+            // Write header
+            for (String header : EDGE_CSV_HEAD.split(",")) {
+                writer.write(header);
+            }
+            writer.endRecord();
+
+            // Write nodes
+            for (Edge edge : edges) {
+                writer.write(edge.getEdgeID());
+                writer.write(edge.getNode1ID());
+                writer.write(edge.getNode2ID());
+                writer.endRecord();
+            }
+
+            writer.close();
+
+        } catch (URISyntaxException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error writing edge to SCV");
+            alert.setHeaderText("Error occurred while getting path to JAR.");
+            alert.setContentText(e.toString());
+
             e.printStackTrace();
+
+            alert.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error writing edge to CSV");
+            alert.setHeaderText("Error creating file at path.");
+            alert.setContentText(e.toString());
+
+            e.printStackTrace();
+
+            alert.showAndWait();
         }
-
-        BufferedWriter bWriter = new BufferedWriter(write);
-        Connection con = null;
-        try {
-            bWriter.write(CSVFormat.EDGE_CSV_HEAD);
-            bWriter.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            con = DBUtil.getConnection();
-            PreparedStatement pstmt = con.prepareStatement(SQLStrings.EDGE_SELECT_ALL);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-
-                if(global) {
-                    if(!((rs.getString("startNode").startsWith("W")) && (rs.getString("endNode").startsWith("W")))) {
-                        continue;
-                    }
-                } else {
-                    if((rs.getString("startNode").startsWith("W")) && (rs.getString("endNode").startsWith("W"))) {
-                        continue;
-                    }
-                }
-
-                bWriter.write(rs.getString("edgeID") + ",");
-                bWriter.write(rs.getString("startNode") + ",");
-                bWriter.write(rs.getString("endNode") + ",");
-
-                bWriter.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bWriter.flush();
-                write.close();
-                bWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                DBUtil.closeConnection(con);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 }
