@@ -141,6 +141,8 @@ public class EmployeeSettingsController {
         usersList.setVisible(false);
         userEditorPane.setVisible(true);
         deletePane.setVisible(false);
+        addUserButton.setVisible(false);
+        deleteUserButton.setVisible(false);
         userActionButton.setText("Add");
         userDialogLabel.setText("Add User");
         errLabel.setText("");
@@ -176,6 +178,8 @@ public class EmployeeSettingsController {
         usersList.setVisible(true);
         userEditorPane.setVisible(false);
         deletePane.setVisible(false);
+        addUserButton.setVisible(true);
+        deleteUserButton.setVisible(true);
     }
 
     @FXML
@@ -209,6 +213,8 @@ public class EmployeeSettingsController {
                 usersList.setVisible(true);
                 userEditorPane.setVisible(false);
                 deletePane.setVisible(false);
+                addUserButton.setVisible(true);
+                deleteUserButton.setVisible(true);
                 errLabel.setText("User Added");
                 resetScreen();
             }
