@@ -112,7 +112,7 @@ public class EmployeeSettingsController {
             if (newValue != null) {
                 LoginEntity e = LoginEntity.getInstance();
                 // Don't allow deletion if the selected user is self
-                if (!newValue.getValue().getUsername().equals(e.getUsername())) {
+                if (!newValue.getValue().getUsername().equals(e.getCurrentUsername())) {
                     deleteUserButton.setDisable(false);
                     selectedEmployee = newValue.getValue();
                 }

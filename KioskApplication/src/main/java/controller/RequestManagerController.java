@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
+import database.objects.InterpreterRequest;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -13,11 +14,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
@@ -38,7 +37,7 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
     RequestProgressStatus currentButton;
 
-@FXML private JFXListView<String> activeRequests;
+    @FXML private JFXListView<String> activeRequests;
     @FXML private Label totalRequests,filterLabel;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
@@ -62,7 +61,7 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void setup(){
-        RequestType employeeType = l.getServiceAbility();
+        RequestType employeeType = l.getCurrentServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
             foodFilter.setVisible(false);
@@ -159,8 +158,12 @@ public class RequestManagerController extends ScreenController {
             }
         }
         if (interpreterFilter.isSelected()) {
-            for (Request iR : r.getAllinterpters()) {
-                allRequests.add(iR);
+            for (InterpreterRequest iR : r.getAllinterpters()) {
+                //If the person is an interpreter, then it adds only requests they can speak. Or shows all of them if ADMIN or above
+                if(l.getCurrentInterpreterLanguages().contains(iR.getLanguage())||l.getCurrentPermission()==KioskPermission.ADMIN
+                        ||l.getCurrentPermission()==KioskPermission.SUPER_USER) {
+                    allRequests.add(iR);
+                }
             }
         }
         if(foodFilter.isSelected()){
@@ -241,7 +244,7 @@ public class RequestManagerController extends ScreenController {
                     statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
-                            r.markInProgress(l.getLoginID(), requestID);
+                            r.markInProgress(l.getCurrentLoginID(), requestID);
                             refreshRequests();
                             popup.hide();
                         }

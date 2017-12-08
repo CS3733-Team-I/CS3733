@@ -69,7 +69,7 @@ public class LoginEntity {
         return currentLogin.getPermission();
     }
 
-    public String getUsername() {
+    public String getCurrentUsername() {
         return currentLogin.getUsername();
     }
 
@@ -77,7 +77,7 @@ public class LoginEntity {
      *
      * @return integer LoginID
      */
-    public int getLoginID(){
+    public int getCurrentLoginID(){
         return currentLogin.getID();
     }
 
@@ -227,7 +227,7 @@ public class LoginEntity {
      * only for the current login
      * @return the RequestType of the current log in
      */
-    public RequestType getServiceAbility() {
+    public RequestType getCurrentServiceAbility() {
         return currentLogin.getServiceAbility();
     }
 
@@ -264,11 +264,11 @@ public class LoginEntity {
 
     /**
      * Helper method for the methods that update the current login
-     * @param oldUsername can also be the current userName
+     * @param username can also be the current userName
      * @param password
      */
-    private void updateCurrentLogin(String password,String oldUsername) {
-        logins.remove(oldUsername);
+    private void updateCurrentLogin(String password,String username) {
+        logins.remove(username);
         Employee tempEmp = new Employee(currentLogin.getID(), currentLogin.getLastName(),
                 currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
                 currentLogin.getOptions(), currentLogin.getPermission(), currentLogin.getServiceAbility());
@@ -308,7 +308,7 @@ public class LoginEntity {
      * Used to return the list of languages an interpreter can speak for request filtering
      * @return ArrayList of Languages an interpreter can speak
      */
-    public ArrayList<Language> getInterpreterLanguages(){
+    public ArrayList<Language> getCurrentInterpreterLanguages(){
         ArrayList<Language> languages = new ArrayList<Language>();
         if(currentLogin.getServiceAbility()==INTERPRETER){
             String inLanguage="";
@@ -317,7 +317,7 @@ public class LoginEntity {
                     languages.add(Language.values()[Integer.parseInt(inLanguage)]);
                     inLanguage="";
                 }
-		else{
+		        else{
                     inLanguage=inLanguage+c;
                 }
             }
