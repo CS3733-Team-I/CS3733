@@ -5,7 +5,6 @@ import database.connection.NotFoundException;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.control.Alert;
-import utility.node.NodeFloor;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,12 +13,10 @@ public class MapFloorEntity implements IMapEntity {
 
     //Key is the nodeID or edgeID
     private HashMap<String, Node> nodes;
-    private NodeFloor floor;
 
     private DatabaseController dbController;
 
-    public MapFloorEntity(NodeFloor floor) {
-        this.floor = floor;
+    MapFloorEntity() {
         nodes = new HashMap<>();
 
         dbController = DatabaseController.getInstance();
@@ -35,7 +32,8 @@ public class MapFloorEntity implements IMapEntity {
 
     @Override
     public void addNode(Node node) throws DatabaseException {
-        dbController.addNode(node);
+        int nodeID = dbController.addNode(node);
+        node.setUniqueID(nodeID);
         nodes.put(node.getNodeID(), node);
     }
 
@@ -59,9 +57,7 @@ public class MapFloorEntity implements IMapEntity {
     public LinkedList<Node> getAllNodes() {
         LinkedList<Node> allNodes = new LinkedList<>();
 
-        for (Node node : nodes.values()) {
-            allNodes.add(node);
-        }
+        allNodes.addAll(nodes.values());
 
         return allNodes;
     }
@@ -81,7 +77,7 @@ public class MapFloorEntity implements IMapEntity {
     }
 
     @Override
-    public void removeAll() throws DatabaseException {
+    public void removeAll() {
         for (Node node : getAllNodes()) {
             removeNode(node);
         }

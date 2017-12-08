@@ -1,18 +1,30 @@
 package controller.map;
 
+import database.objects.Node;
+import entity.MapEntity;
+import entity.Path;
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
+import javafx.util.Duration;
 import utility.ResourceManager;
+
+import java.util.LinkedList;
 
 public class MiniMapController {
 
     @FXML public ImageView miniMapView;
     @FXML private Rectangle viewportRect;
+    @FXML private AnchorPane miniWaypointPane;
+    @FXML private AnchorPane miniPathPane;
 
     // Width and Height of the Floor Image (px)
     private double imageWidth;
@@ -56,6 +68,10 @@ public class MiniMapController {
         viewportRect.setX((MapController.DEFAULT_HVALUE * miniMapView.getFitWidth())*recXOffset);
         viewportRect.setY((MapController.DEFAULT_VVALUE * miniMapView.getFitHeight())*recYOffset);
 
+        //set the waypoint and path pane cannot be clicked
+        miniWaypointPane.setMouseTransparent(true);
+        miniPathPane.setMouseTransparent(true);
+
         // TODO this is bad oo, we should expose a way to add a listener not directly access scrollPane
         // sync navigation rectangle's position with viewable region(scroll pane)
         viewportRect.yProperty().addListener(new ChangeListener<Number>() {
@@ -86,6 +102,16 @@ public class MiniMapController {
 
         RAHRatio = miniMapView.getFitHeight()/imageHeight;
         RAWRatio = miniMapView.getFitWidth()/imageWidth;
+
+        //handle miniwaypoint display when switching floors
+        for(javafx.scene.Node miniWawypoint : miniWaypointPane.getChildren()){
+            if(!mapController.getCurrentFloor().toString().equals(miniWawypoint.getAccessibleHelp())) {
+                miniWawypoint.setVisible(false);
+            }
+            else {
+                miniWawypoint.setVisible(true);
+            }
+        }
     }
 
     /**
@@ -181,5 +207,98 @@ public class MiniMapController {
      */
     private double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
+    }
+
+    /**
+     * Show the miniWayPoint on the miniMap
+     * @param node of th wayPoint
+     */
+    public void showMiniWayPoint(Node node) {
+        Circle miniMapWaypoint = new Circle(3);
+        miniMapWaypoint.setAccessibleText(node.getNodeID());
+        miniMapWaypoint.setAccessibleHelp(node.getFloor().toString());
+        miniMapWaypoint.setFill(Color.RED);
+
+        miniMapWaypoint.setCenterX(node.getXcoord()*RAWRatio);
+        miniMapWaypoint.setCenterY(node.getYcoord()*RAHRatio);
+
+        TranslateTransition miniWaypointPutTransition = new TranslateTransition();
+        miniWaypointPutTransition.setDuration(Duration.millis(400));
+        miniWaypointPutTransition.setNode(miniMapWaypoint);
+        miniWaypointPutTransition.setFromY((miniMapWaypoint.getCenterY()-10)*RAHRatio);
+        miniWaypointPutTransition.setToY(miniMapWaypoint.getCenterY()*RAHRatio);
+
+        miniWaypointPane.getChildren().add(miniMapWaypoint);
+
+
+        miniWaypointPutTransition.play();
+    }
+
+    /**
+     * Remove the miniWayPoint on the miniMap
+     * @param node of th wayPoint
+     */
+    public void removeMiniWayPoint(Node node) {
+        for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
+            if(removedMiniWaypoint.getAccessibleText().equals(node.getNodeID())) {
+                FadeTransition miniWaypointTransition = new FadeTransition();
+                miniWaypointTransition.setNode(removedMiniWaypoint);
+                miniWaypointTransition.setDuration(Duration.millis(300));
+                miniWaypointTransition.setFromValue(1.0);
+                miniWaypointTransition.setFromValue(0.0);
+                miniWaypointTransition.setAutoReverse(false);
+                miniWaypointTransition.play();
+                miniWaypointPane.getChildren().remove(removedMiniWaypoint);
+            }
+        }
+    }
+
+    /**
+     * Clear the miniWayPoints on the miniMap
+     */
+    public void clearMiniWaypoint() {
+        for(javafx.scene.Node removedMiniWaypoint : miniWaypointPane.getChildren()) {
+            FadeTransition miniWaypointTransition = new FadeTransition();
+            miniWaypointTransition.setNode(removedMiniWaypoint);
+            miniWaypointTransition.setDuration(Duration.millis(300));
+            miniWaypointTransition.setFromValue(1.0);
+            miniWaypointTransition.setFromValue(0.0);
+            miniWaypointTransition.setAutoReverse(false);
+            miniWaypointTransition.play();
+        }
+        miniWaypointPane.getChildren().clear();
+    }
+
+    /**
+     * draw the mini path on the miniMap
+     * @param path to draw
+     */
+    public void showPath(javafx.scene.shape.Path path) {
+        javafx.scene.shape.Path miniJFXPath = new javafx.scene.shape.Path();
+        for(PathElement element : path.getElements()) {
+            if(element instanceof MoveTo) {
+                MoveTo moveTo = new MoveTo();
+                moveTo.setX(((MoveTo) element).getX()*RAWRatio);
+                moveTo.setY(((MoveTo) element).getY()*RAHRatio);
+                miniJFXPath.getElements().add(moveTo);
+            }
+            else if(element instanceof LineTo) {
+                LineTo lineTo = new LineTo();
+                lineTo.setX(((LineTo) element).getX()*RAWRatio);
+                lineTo.setY(((LineTo) element).getY()*RAHRatio);
+                miniJFXPath.getElements().add(lineTo);
+            }
+        }
+        miniJFXPath.setFill(Color.TRANSPARENT);
+        miniJFXPath.setStroke(Color.BLUE);
+        miniJFXPath.setStrokeWidth(2);
+        miniPathPane.getChildren().add(miniJFXPath);
+    }
+
+    /**
+     * clear mini paths on the miniMap
+     */
+    public void clearPath() {
+        miniPathPane.getChildren().clear();
     }
 }

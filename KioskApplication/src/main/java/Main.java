@@ -20,7 +20,7 @@ public class Main extends Application {
         SystemSettings.getInstance();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
-        primaryStage.setTitle("Iteration 2");
+        primaryStage.setTitle("Final Iteration");
 
         Scene mainScene = new Scene(root, 1280, 720);
         final ObservableList<String> stylesheets = mainScene.getStylesheets();

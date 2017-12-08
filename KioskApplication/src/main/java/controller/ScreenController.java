@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
+import utility.ResourceManager;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public abstract class ScreenController {
         javafx.scene.Node view;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = ResourceManager.getInstance().getFXMLLoader(path);
             loader.setController(this);
             view = loader.load();
         } catch (IOException e) {
@@ -45,16 +46,10 @@ public abstract class ScreenController {
         return view;
     }
 
-    public abstract void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location);
+    public abstract void onMapLocationClicked(javafx.scene.input.MouseEvent e);
     public abstract void onMapNodeClicked(Node node);
     public abstract void onMapEdgeClicked(Edge edge);
     public abstract void onMapFloorChanged(NodeFloor floor);
-    //TODO temporary: to be changed Override by Map Builder
-    public void addConnectionByNodes(String nodeXyz1, String nodeXyz2){}
-    public boolean isNewNodeEmpty() {
-        return true;
-    }
-    public void showFloors() {}
 
     public void onScreenChanged() {}
     public abstract void resetScreen();

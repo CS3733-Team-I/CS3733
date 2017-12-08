@@ -3,9 +3,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-
 <fx:root fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Line fx:id="line" endY="100.0" stroke="GREY" strokeWidth="10.0" />
+      <Line fx:id="line" endY="100.0" fill="TRANSPARENT" stroke="#1502e300" strokeWidth="16.0" />
    </children>
 </fx:root>

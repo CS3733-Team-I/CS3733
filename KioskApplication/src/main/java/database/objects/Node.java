@@ -7,6 +7,7 @@ import utility.node.NodeType;
 
 public class Node {
 
+    private int uniqueID;
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -73,6 +74,10 @@ public class Node {
             return false;
         }
     }
+
+    public int getUniqueID() { return uniqueID; }
+
+    public void setUniqueID(int uniqueID) { this.uniqueID = uniqueID; }
 
     public int getXcoord() {
         return xcoord;

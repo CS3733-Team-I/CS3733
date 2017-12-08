@@ -6,6 +6,7 @@ import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import org.junit.After;
 import org.junit.Before;
 import utility.node.NodeBuilding;
@@ -238,11 +239,14 @@ public class TestPathfinder {
     }
 
     @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathAstarWC(){
+    public void testFindPathAstarWC() throws NotFoundException{
 
         SearchAlgorithm alg = new A_star();
 
-        testFindPath(alg,true);
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
+
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
@@ -262,7 +266,7 @@ public class TestPathfinder {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathDF() throws PathfinderException{
+    public void testFindPathDF() {
 
         SearchAlgorithm alg = new DepthFirst();
 
@@ -270,11 +274,13 @@ public class TestPathfinder {
     }
 
     @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathDFWC() throws PathfinderException{
+    public void testFindPathDFWC() throws NotFoundException{
 
         SearchAlgorithm alg = new DepthFirst();
 
-        testFindPath(alg,true);
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
@@ -301,10 +307,12 @@ public class TestPathfinder {
     }
 
     @Test //Test the FindPath method by testing all possible paths
-    public void testFindPathBFWC() {
+    public void testFindPathBFWC() throws NotFoundException{
         SearchAlgorithm alg = new BreadthFirst();
 
-        testFindPath(alg,true);
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
@@ -331,10 +339,12 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testFindPathDWC() {
+    public void testFindPathDWC() throws NotFoundException{
         SearchAlgorithm alg = new Dijkstra();
 
-        testFindPath(alg, true);
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
@@ -356,24 +366,30 @@ public class TestPathfinder {
     @Test
     public void testFindPathBeam() {
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         testFindPath(alg, false);
     }
 
     @Test
-    public void testFindPathBeamWC() {
+    public void testFindPathBeamWC() throws NotFoundException{
         SearchAlgorithm alg = new Beam();
-        testFindPath(alg, true);
+        SystemSettings.getInstance().setBeamWidth("5");
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
     public void testPathfinderException1Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         alg.findPath(map.getNode("NODE18"),map.getNode("NODE19"),false);
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is a path but no connection
     public void testPathfinderException2Beam() throws PathfinderException,NotFoundException{
         SearchAlgorithm alg = new Beam();
+        SystemSettings.getInstance().setBeamWidth("4");
         alg.findPath(map.getNode("NODE01"),map.getNode("NODE19"),false);
     }
 
@@ -388,9 +404,11 @@ public class TestPathfinder {
     }
 
     @Test
-    public void testFindPathBestFirstWC(){
+    public void testFindPathBestFirstWC() throws NotFoundException{
         SearchAlgorithm alg = new BestFirst();
-        testFindPath(alg,true);
+        LinkedList<Edge> path = testFindPath(alg,true);
+
+        assertTrue(isValidPathWC(path));
     }
 
     @Test(expected = PathfinderException.class) //test that the exception is thrown when there is no path or connection
@@ -515,10 +533,23 @@ public class TestPathfinder {
         return false;
     }
 
-    //Helper method to test generating every possible path
-    private void testFindPath(SearchAlgorithm alg, boolean wheelchairAccessible) {
+    //helper method to make sure a path has no stairs
+    private boolean isValidPathWC(LinkedList<Edge> path) throws NotFoundException {
 
-        LinkedList<Edge> path;
+        MapEntity map = MapEntity.getInstance();
+
+        for(Edge e : path) {
+            if(map.getNode(e.getNode1ID()).getNodeType().equals(NodeType.ELEV) ||
+               map.getNode(e.getNode2ID()).getNodeType().equals(NodeType.ELEV))
+                return false;
+        }
+        return true;
+    }
+
+    //Helper method to test generating every possible path
+    private LinkedList<Edge> testFindPath(SearchAlgorithm alg, boolean wheelchairAccessible) {
+
+        LinkedList<Edge> path = null;
 
         // Try to test every possible path
         for(Node n1 : map.getAllNodes()) {
@@ -561,5 +592,6 @@ public class TestPathfinder {
                 }
             }
         }
+        return path;
     }
 }
