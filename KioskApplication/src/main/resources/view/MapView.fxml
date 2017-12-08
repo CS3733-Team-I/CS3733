@@ -3,48 +3,152 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDialog?>
+<?import com.jfoenix.controls.JFXDialogLayout?>
 <?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" hvalue="0.52" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" vvalue="0.3" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onScroll="#resetTimer" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT" prefHeight="455.0" prefWidth="470.0">
+            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
-                  <AnchorPane fx:id="nodesEdgesContainer" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="waypointPane" prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="nodesEdgesContainer" />
+                  <AnchorPane fx:id="pathWaypointContainer" />
                </children>
             </StackPane>
          </content>
       </ScrollPane>
       <JFXButton fx:id="recenterButton" buttonType="RAISED" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-      <JFXComboBox fx:id="floorSelector" onAction="#onFloorSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <VBox id="rounded-container" fx:id="optionsBox" alignment="CENTER_LEFT" prefHeight="75.0" prefWidth="125.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0">
+      <JFXComboBox fx:id="languageSelector" onAction="#onLanguageSelected" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="300.0" />
+      <JFXButton fx:id="recenterButton" buttonType="RAISED" focusTraversable="false" layoutX="123.0" layoutY="419.0" onAction="#recenterPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Recenter" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+       <JFXButton fx:id="keyButton" buttonType="RAISED" focusTraversable="false" layoutX="223.0" layoutY="419.0" onAction="#btKeyClicked" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="27.0" prefWidth="96.0" ripplerFill="BLACK" style="-fx-background-color: #005AA6;" text="Map Key" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="110.0" />
+       <JFXDialogLayout fx:id="keyDialogContainer" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="570.0" prefWidth="150.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0">
+       <JFXDialog fx:id="keyDialog" focusTraversable="false" onMouseClicked="#keyClosed" overlayClose="false" prefHeight="570.0" prefWidth="150.0">
+           <content>
+           </content>
          <children>
-            <JFXCheckBox fx:id="showNodesBox" onAction="#onNodeBoxToggled" text="Show Nodes" />
-            <JFXCheckBox fx:id="showEdgesBox" onAction="#onEdgeBoxToggled" text="Show Edges" />
+             <AnchorPane prefHeight="570.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: #efefef; -fx-border-width: 5;">
+            <GridPane AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="30.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="CENTER" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                       <image><Image url="@../images/mapKey/ATMIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="ATM" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                       <image><Image url="@../images/mapKey/BathroomIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Bathroom" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                       <image><Image url="@../images/mapKey/BicycleParkingIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Bicycle Parking" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                       <image><Image url="@../images/mapKey/CoffeeIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Cafe" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                       <image><Image url="@../images/mapKey/EmergencyIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Emergency Care" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                       <image><Image url="@../images/mapKey/EscalatorIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Escalator" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                       <image><Image url="@../images/mapKey/FoodIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Food" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                       <image><Image url="@../images/mapKey/GiftshopIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Gift Shop" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                       <image><Image url="@../images/mapKey/HandicapAccessibleIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Handicap Access" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                       <image><Image url="@../images/mapKey/InformationIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Information" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                       <image><Image url="@../images/mapKey/LockboxIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Lockbox" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="11">
+                       <image><Image url="@../images/mapKey/ParkingIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Parking" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                       <image><Image url="@../images/mapKey/PublicElevatorIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Public Elevator" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="13">
+                       <image><Image url="@../images/mapKey/ShieldIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Elevator Name" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="14">
+                       <image><Image url="@../images/mapKey/ShuttleIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Shuttle" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+                   <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="false" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="15">
+                       <image><Image url="@../images/mapKey/WaitingRoomIcon.png" /></image></ImageView>
+                   <Label focusTraversable="false" prefHeight="30.0" text="Waiting Room" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+               </children>
+                </GridPane>
+             </AnchorPane>
+         </children>
+       </JFXDialog>
+       </JFXDialogLayout>
+      <JFXComboBox fx:id="floorSelector" onAction="#onFloorSelected" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefWidth="150.0" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <VBox id="rounded-container" fx:id="optionsBox" alignment="CENTER_LEFT" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="75.0" prefWidth="125.0" spacing="5.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0">
+         <children>
+            <JFXCheckBox fx:id="showNodesBox" onAction="#onNodeBoxToggled" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" text="Show Nodes" />
+            <JFXCheckBox fx:id="showEdgesBox" onAction="#onEdgeBoxToggled" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" text="Show Edges" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </VBox>
-      <AnchorPane fx:id="miniMapPane" prefHeight="136.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane fx:id="miniMapPane" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="136.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding></AnchorPane>      <VBox alignment="CENTER" layoutX="425.0" layoutY="84.0" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+         </padding>
+      </AnchorPane>
+      <VBox alignment="CENTER" layoutX="425.0" layoutY="84.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
          <children>
-            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomInPressed" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
+            <JFXButton fx:id="aboutButton" focusTraversable="false" onAction="#onAboutAction" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5084d1;" text="i" textFill="WHITE">
+                <VBox.margin>
+                    <Insets left="5.0" />
+                </VBox.margin>
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font>
+            </JFXButton>
+            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomInPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="+" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin>
@@ -52,8 +156,8 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </JFXButton>
-            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" focusTraversable="false" majorTickUnit="0.1" max="1.0" min="0.001" minorTickCount="0" onMousePressed="#zoomWithSlider" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="0.5" />
-            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomOutPressed" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
+            <JFXSlider fx:id="zoomSlider" blockIncrement="0.1" focusTraversable="false" majorTickUnit="0.1" max="1.0" min="0.001" minorTickCount="0" onMouseMoved="#resetTimer" onMousePressed="#zoomWithSlider" onMouseReleased="#resetTimer" orientation="VERTICAL" prefHeight="170.0" prefWidth="33.0" value="0.5" />
+            <JFXButton buttonType="RAISED" focusTraversable="false" onAction="#zoomOutPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="25.0" prefWidth="25.0" ripplerFill="BLACK" style="-fx-background-color: #5084d1;" text="-" textFill="WHITE">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin>

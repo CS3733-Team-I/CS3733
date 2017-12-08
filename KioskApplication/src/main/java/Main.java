@@ -1,3 +1,4 @@
+import email.*;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
@@ -19,7 +20,7 @@ public class Main extends Application {
         SystemSettings.getInstance();
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
-        primaryStage.setTitle("Iteration 2");
+        primaryStage.setTitle("Final Iteration");
 
         Scene mainScene = new Scene(root, 1280, 720);
         final ObservableList<String> stylesheets = mainScene.getStylesheets();
@@ -27,6 +28,22 @@ public class Main extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
+        /*
+        EmailSystem.init();
+        /*Email email = new Email.Builder("jflparrick@gmail.com")
+                .setAttachment(null)
+                .setBody("THIS IS A TEST")
+                .setFrom("me")
+                .setSubject("TEST")
+                .build();
+        SMS sms = new SMS.Builder("2077455316", Providers.VERIZON)
+                .setAttachment(null)
+                .setBody("THIS IS A TEST")
+                .setSubject("TEST")
+                .setFrom("me")
+                .build();
+        EmailSender.sendEmail(sms);
+        */
     }
 
     public static void main(String[] args) {

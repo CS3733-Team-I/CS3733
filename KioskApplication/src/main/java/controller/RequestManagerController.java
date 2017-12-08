@@ -8,8 +8,6 @@ import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import utility.ApplicationScreen;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
@@ -42,20 +39,14 @@ public class RequestManagerController extends ScreenController {
     RequestProgressStatus currentButton;
 
 @FXML private JFXListView<String> activeRequests;
-    @FXML private Label totalRequests;
+    @FXML private Label totalRequests,filterLabel;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
     @FXML private JFXPopup popup;
-    @FXML private HBox row8;
-    @FXML private HBox row9;
     //filter buttons
-    @FXML private JFXCheckBox foodFilter;
-    @FXML private JFXCheckBox janitorFilter;
-    @FXML private JFXCheckBox securityFilter;
-    @FXML private JFXCheckBox interpreterFilter;
-    @FXML private JFXCheckBox maintenanceFilter;
-    @FXML private JFXCheckBox itFilter;
-    @FXML private JFXCheckBox transportationFilter;
+    @FXML private JFXCheckBox foodFilter,janitorFilter,securityFilter,
+            interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
+
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -74,19 +65,20 @@ public class RequestManagerController extends ScreenController {
         RequestType employeeType = l.getServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
-            foodFilter.setDisable(true);
+            foodFilter.setVisible(false);
             janitorFilter.setSelected(false);
-            janitorFilter.setDisable(true);
+            janitorFilter.setVisible(false);
             securityFilter.setSelected(false);
-            securityFilter.setDisable(true);
+            securityFilter.setVisible(false);
             interpreterFilter.setSelected(false);
-            interpreterFilter.setDisable(true);
+            interpreterFilter.setVisible(false);
             maintenanceFilter.setSelected(false);
-            maintenanceFilter.setDisable(true);
+            maintenanceFilter.setVisible(false);
             itFilter.setSelected(false);
-            itFilter.setDisable(true);
+            itFilter.setVisible(false);
             transportationFilter.setSelected(false);
-            transportationFilter.setDisable(true);
+            transportationFilter.setVisible(false);
+            filterLabel.setVisible(false);
             switch (employeeType){
                 case FOOD:
                     foodFilter.setSelected(true);
@@ -101,6 +93,15 @@ public class RequestManagerController extends ScreenController {
                     janitorFilter.setSelected(true);
                     break;
             }
+        }else{
+            foodFilter.setVisible(true);
+            janitorFilter.setVisible(true);
+            securityFilter.setVisible(true);
+            interpreterFilter.setVisible(true);
+            maintenanceFilter.setVisible(true);
+            itFilter.setVisible(true);
+            transportationFilter.setVisible(true);
+            filterLabel.setVisible(true);
         }
     }
 
@@ -162,6 +163,12 @@ public class RequestManagerController extends ScreenController {
                 allRequests.add(iR);
             }
         }
+        if(foodFilter.isSelected()){
+            for(Request fR : r.getAllFoodRequests()){
+                allRequests.add(fR);
+            }
+        }
+
         return allRequests;
     }
 
@@ -181,12 +188,19 @@ public class RequestManagerController extends ScreenController {
         activeRequests.setItems(requestids);
     }
 
-    //Creates what goes into the popup when a listview cell is selected
-    public void initializePopup(String requestID) {
+    /**
+     * Creates what goes into the popup when a listview cell is selected
+     * @param requestID To determine which request to display the information of
+     */
+    public void initializePopup(String requestID){
 
         JFXButton more = new JFXButton("More");
         JFXButton statusUpdater = new JFXButton();
         JFXButton delete = new JFXButton("Delete");
+        more.setOnMousePressed(e -> resetTimer());
+        more.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMousePressed(e -> resetTimer());
 
         ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
         JFXComboBox employees = new JFXComboBox(listOfEmployees);
@@ -273,7 +287,8 @@ public class RequestManagerController extends ScreenController {
     public VBox displayInformation(String requestID) throws NotFoundException {
         Request request = r.getRequest(requestID);
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        Label employee = new Label("Requested By: " + request.getAssignerID());
+        String assigner = r.getAssigner(requestID).getUsername();
+        Label employee = new Label("Requested By: " + assigner);
         Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
         Label locationOfRequest = new Label(location);
         Label requestNotes = new Label(request.getNote());
@@ -283,6 +298,11 @@ public class RequestManagerController extends ScreenController {
             case INTERPRETER:
                 String language = r.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField = new Label("Language: "+language);
+                break;
+            case FOOD:
+                String restaurantID = r.getFoodRequest(requestID).getDestinationID();
+                String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+                extraField = new Label("Restaurant: " + restaurant);
                 break;
             default: //security
                 int priority = r.getSecurityRequest(requestID).getPriority();
@@ -360,8 +380,16 @@ public class RequestManagerController extends ScreenController {
         }
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
+    }
+
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(database.objects.Node node) { }

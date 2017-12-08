@@ -15,14 +15,14 @@
 
 <fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeSettingsController">
    <children>
-      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
+      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
       <Label layoutX="61.0" layoutY="51.0" prefHeight="30.0" prefWidth="217.0" text="Users" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" text="Add User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="65.0" />
-      <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" text="Delete User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="95.0" />
+      <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Add User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="65.0" />
+      <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Delete User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="95.0" />
       <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
             <GridPane prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
