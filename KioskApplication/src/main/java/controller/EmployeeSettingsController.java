@@ -30,7 +30,7 @@ public class EmployeeSettingsController {
     @FXML private JFXButton deleteUserButton;
 
     @FXML private GridPane userEditorPane;
-    @FXML private Label registerEmployeeLabel;
+    @FXML private Label registerEmployeeLabel, interpreterLanguageLabel;
     @FXML private Label errLabel;
     @FXML private JFXTextField firstNameBox;
     @FXML private JFXTextField lastNameBox;
@@ -174,6 +174,7 @@ public class EmployeeSettingsController {
         // Adjust visability
         userCancelButton.setCancelButton(true);
         userActionButton.setDefaultButton(true);
+        firstNameBox.requestFocus();
         usersList.setVisible(false);
         userEditorPane.setVisible(true);
         deletePane.setVisible(false);
@@ -298,15 +299,25 @@ public class EmployeeSettingsController {
 
     /**
      * Called by the request type JFXComboBox
-     * Used currently to show or hide the interpreter language selection area
+     * Used currently to show or hide the interpreter language selection area and label
      */
     @FXML
     public void checkEmployeeType(){
         if(typeSelect.getValue()==RequestType.INTERPRETER){
             interpreterLanguageContainer.setVisible(true);
+            interpreterLanguageLabel.setVisible(true);
         }
         else {
             interpreterLanguageContainer.setVisible(false);
+            interpreterLanguageLabel.setVisible(false);
+            for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
+                if(intLangBoxItem instanceof JFXCheckBox) {
+                    JFXCheckBox langBox = ((JFXCheckBox) intLangBoxItem);
+                    if (langBox.isSelected()) {
+                        langBox.setSelected(false);
+                    }
+                }
+            }
         }
     }
 }

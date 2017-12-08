@@ -25,21 +25,14 @@
       </Label>
       <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Add User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
       <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Delete User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
-      <GridPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="612.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="15.0">
-         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" prefWidth="412.0" />
-            <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
-            <ColumnConstraints/>
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints prefHeight="400.0" />
-         </rowConstraints>
-            <GridPane prefHeight="400.0" prefWidth="412.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <GridPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="612.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="15.0">
                <columnConstraints>
                   <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="206.0" />
                   <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="206.0" />
+                  <ColumnConstraints halignment="CENTER" minWidth="10.0" prefWidth="150.0" />
                </columnConstraints>
                <rowConstraints>
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" valignment="BOTTOM"/>
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
@@ -55,7 +48,19 @@
                   <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                   <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                   <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                  <JFXComboBox fx:id="typeSelect" onAction="#checkEmployeeType" prefWidth="200" promptText="Service Abilty" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <JFXComboBox fx:id="typeSelect" onAction="#checkEmployeeType" prefWidth="200" promptText="Service Ability" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="interpreterLanguageLabel" prefWidth="100.0" text="Languages" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                         alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
+                              GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
+                  GridPane.valignment="TOP">
+                           <VBox fx:id="interpreterLanguageBox" prefHeight="300.0" prefWidth="100.0" GridPane.columnIndex="0"
+                                 GridPane.rowIndex="1" spacing="5.0" AnchorPane.leftAnchor="25" AnchorPane.rightAnchor="25"/>
+                  </AnchorPane>
                   <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
                   <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="2">
@@ -65,22 +70,6 @@
                   </Label>
                </children>
             </GridPane>
-            <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="400.0" prefWidth="100.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
-               <GridPane>
-                  <columnConstraints>
-                     <ColumnConstraints halignment="CENTER" prefWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                     <RowConstraints prefHeight="25.0" valignment="CENTER" />
-                     <RowConstraints prefHeight="375.0" valignment="TOP" />
-                  </rowConstraints>
-                  <children>
-                     <Label prefWidth="100.0" text="Languages" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                     <VBox fx:id="interpreterLanguageBox" prefHeight="375.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  </children>
-               </GridPane>
-            </AnchorPane>
-      </GridPane>
       <BorderPane fx:id="deletePane" layoutX="443.0" layoutY="221.0" prefHeight="200.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
             <GridPane BorderPane.alignment="CENTER">
