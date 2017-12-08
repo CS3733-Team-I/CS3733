@@ -117,6 +117,7 @@ public class PathfindingSidebarController extends ScreenController {
 
         getMapController().setPath(null);
         getMapController().clearMap();
+        getMapController().getMiniMapController().clearMiniWaypoint();
         getMapController().reloadDisplay();
     }
 

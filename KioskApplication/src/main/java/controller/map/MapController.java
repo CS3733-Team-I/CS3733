@@ -717,4 +717,7 @@ public class MapController {
         keyDialogContainer.setDisable(true);
     }
 
+    public MiniMapController getMiniMapController() {
+        return miniMapController;
+    }
 }
