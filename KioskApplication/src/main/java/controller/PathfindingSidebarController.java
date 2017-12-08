@@ -10,6 +10,7 @@ import entity.SystemSettings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -65,18 +66,26 @@ public class PathfindingSidebarController extends ScreenController {
 
     private SystemSettings systemSettings;
 
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
+
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentWaypoints = new LinkedList<>();
         systemSettings = SystemSettings.getInstance();
-
         isAddingWaypoint = true;
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException{
+        //initialize search
+        searchController = new SearchController(this);
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+
         // Set containers to be transparent to mouse events
-        System.out.println("initializing");
         ResourceBundle rB = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
@@ -453,21 +462,18 @@ public class PathfindingSidebarController extends ScreenController {
      * create add waypoint list cell
      */
     //TODO make addwaypointbox always the last one
-    private void addWaypointBox() {
+    private void addWaypointBox(){
         HBox addWaypointBox = new HBox();
 
         addWaypointBox.setAlignment(Pos.CENTER_LEFT);
 
-        TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText(
+//        TextField addWaypointLabel = new TextField();
+        searchController.setSearchFieldPromptText(
                 SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
-        addWaypointLabel.setPrefWidth(300);
-        addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
-        addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
-        addWaypointLabel.setOnMouseMoved(e -> resetTimer());
-        addWaypointLabel.setOnMousePressed(e -> resetTimer());
+        searchView.setOnMouseMoved(e -> resetTimer());
+        searchView.setOnMousePressed(e -> resetTimer());
         systemSettings.addObserver((o, arg) -> {
-            addWaypointLabel.setText(systemSettings.getResourceBundle().getString("my.searchprompt"));
+            searchController.setSearchFieldPromptText(systemSettings.getResourceBundle().getString("my.searchprompt"));
         });
 
         JFXButton btNewWayPoint = new JFXButton("");
@@ -478,7 +484,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
 
-        addWaypointBox.getChildren().addAll(btNewWayPoint, addWaypointLabel);
+        addWaypointBox.getChildren().addAll(btNewWayPoint, searchView);
         addWaypointBox.setAccessibleText("add waypoint");
 
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
