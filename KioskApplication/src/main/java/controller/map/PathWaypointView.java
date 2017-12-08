@@ -7,11 +7,17 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import javafx.animation.PathTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -110,6 +116,21 @@ public class PathWaypointView extends AnchorPane {
                 }
             }
         });
+
+        Image youarehereIcon = ResourceManager.getInstance().getImage("/images/crosshairs-gps.png");
+        ImageView youarehereView = new javafx.scene.image.ImageView(youarehereIcon);
+        youarehereView.setFitHeight(48);
+        youarehereView.setFitWidth(48);
+
+        Label youarehereLabel = new Label();
+        youarehereLabel.setGraphic(youarehereView);
+        youarehereLabel.setPrefHeight(48);
+        youarehereLabel.setPrefWidth(48);
+
+        youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
+        youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
+
+        getChildren().add(youarehereLabel);
     }
 
     /**
@@ -206,8 +227,7 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.playFrom(Duration.seconds(k));
             }
         }
-
-        if (switchFloor != null) this.pathView.getChildren().add(switchFloor);
+        this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -255,6 +275,9 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+//        waypointList.remove(index1);
+//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
