@@ -342,6 +342,16 @@ public class MapEntity implements IMapEntity {
         return connectedNodes;
     }
 
+    public HashMap<String, Node> getAllNodesHM() {
+        HashMap<String,Node> allNodes = new HashMap<>();
+        for(NodeFloor floor: floors.keySet()) {
+            for(Node n : floors.get(floor).getAllNodes()) {
+                allNodes.put(n.getNodeID(),n);
+            }
+        }
+        return allNodes;
+    }
+
     /**
      * Alternate call for getConnectedNodes.  If no wheelchair accessibility level is specified, default to false.
      * @param node
