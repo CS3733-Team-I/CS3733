@@ -13,6 +13,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 
 import java.util.function.Predicate;
@@ -20,13 +21,13 @@ import java.util.function.Predicate;
 public class SearchController {
 
     @FXML
-    private JFXTextField searchField;
-    @FXML
     private JFXComboBox<Node> cbNodes;
 
     private FilteredList<Node> filteredList;
 
     private ObservableList<Node> nodeData;
+
+    private SortedList<Node> sortedList;
 
     private ScreenController parent;
 
@@ -39,10 +40,18 @@ public class SearchController {
 
     @FXML
     void initialize() {
+
+        //initialize the lists
         nodeTable = new TableView<>();
         filteredList = new FilteredList<Node>(nodeData, e->true);
-        searchField.setOnKeyReleased(e -> {
-            searchField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+        //set the combo box style and editable
+        cbNodes.setTooltip(new Tooltip());
+        cbNodes.setEditable(true);
+        cbNodes.getEditor().setEditable(true);
+//        cbNodes.getTooltip().textProperty().bind(sortedList.comparatorProperty());
+
+        cbNodes.setOnKeyReleased(e -> {
+            cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
                 filteredList.setPredicate((Predicate<? super Node>) node-> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
@@ -59,11 +68,17 @@ public class SearchController {
                     return false;
                 });
             });
-            SortedList<Node> sortedList = new SortedList<>(filteredList);
+            sortedList = new SortedList<>(filteredList);
             sortedList.comparatorProperty().bind(nodeTable.comparatorProperty());
             nodeTable.setItems(sortedList);
             cbNodes.getItems().clear();
             cbNodes.getItems().addAll(sortedList);
+            if(!sortedList.isEmpty()) {
+                cbNodes.show();
+            }
+            else {
+                cbNodes.hide();
+            }
         });
     }
 
@@ -71,7 +86,7 @@ public class SearchController {
 
     @FXML
     void setSearchFieldPromptText(String string) {
-        this.searchField.setPromptText(string);
+        this.cbNodes.getEditor().setPromptText(string);
     }
 
 }
