@@ -94,6 +94,9 @@ public class PathfindingSidebarController extends ScreenController {
         waypointListView.setSelectionModel(new NoSelectionModel<>());
         exceptionText.setText("");
 
+        /**
+         * load images for nearest exit, elevatior, food and restroom
+         */
         Image addIcon = ResourceManager.getInstance().getImage("/images/icons/plus.png");
         ImageView infoIconView = new ImageView(addIcon);
         infoIconView.setFitHeight(24);
@@ -472,6 +475,7 @@ public class PathfindingSidebarController extends ScreenController {
                 SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
         searchView.setOnMouseMoved(e -> resetTimer());
         searchView.setOnMousePressed(e -> resetTimer());
+       /// searchView
         systemSettings.addObserver((o, arg) -> {
             searchController.setSearchFieldPromptText(systemSettings.getResourceBundle().getString("my.searchprompt"));
         });
@@ -507,7 +511,7 @@ public class PathfindingSidebarController extends ScreenController {
     private void handleButtonAction(ActionEvent e) throws  PathfinderException {
         Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
         Node node = new Node("");
-        if((JFXButton)e.getTarget() == btRestRoom) {
+        if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
             node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.REST, true);
         }
         else if((JFXButton)e.getTarget() == btElevator) {

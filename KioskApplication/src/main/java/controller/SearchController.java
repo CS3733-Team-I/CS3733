@@ -29,6 +29,7 @@ public class SearchController {
     @FXML
     void initialize() {
         filteredList = new FilteredList<Node>(nodeData, e->true);
+       // searchField.get
 //        searchField.
     }
 
@@ -37,4 +38,12 @@ public class SearchController {
         this.searchField.setPromptText(string);
     }
 
+    /*
+    when text has been inputed then execute fuzzy search
+     */
+    @FXML
+    void onActionSearch(){
+        // this is a test
+
+    }
 }
