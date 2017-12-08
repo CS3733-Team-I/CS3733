@@ -33,7 +33,7 @@ public class Main extends Application {
                 .setFrom("me")
                 .setSubject("TEST")
                 .build(); */
-        SMS sms = new SMS.Builder("2077455316", Providers.VERIZON)
+        SMS sms = new SMS.Builder("3108691781", Providers.PROJECTFI)
                 .setAttachment(null)
                 .setBody("THIS IS A TEST")
                 .setSubject("TEST")
