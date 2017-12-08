@@ -39,7 +39,7 @@ public class EmployeeSettingsController {
     @FXML private JFXPasswordField passwordBox2;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> typeSelect;
-    @FXML private JFXButton userActionButton;
+    @FXML private JFXButton userActionButton, userCancelButton;
     @FXML private AnchorPane interpreterLanguageContainer;
 
     @FXML private VBox interpreterLanguageBox;
@@ -172,6 +172,8 @@ public class EmployeeSettingsController {
     @FXML
     void onAddPressed(ActionEvent event) {
         // Adjust visability
+        userCancelButton.setCancelButton(true);
+        userActionButton.setDefaultButton(true);
         usersList.setVisible(false);
         userEditorPane.setVisible(true);
         deletePane.setVisible(false);
@@ -265,6 +267,8 @@ public class EmployeeSettingsController {
     private void closeAddEmployee(){
         usersList.setVisible(true);
         userEditorPane.setVisible(false);
+        userCancelButton.setCancelButton(false);
+        userActionButton.setDefaultButton(false);
         firstNameBox.clear();
         lastNameBox.clear();
         usernameBox.clear();
@@ -275,7 +279,6 @@ public class EmployeeSettingsController {
         deletePane.setVisible(false);
         addUserButton.setVisible(true);
         deleteUserButton.setVisible(true);
-
     }
 
     /**

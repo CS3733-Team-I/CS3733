@@ -25,7 +25,7 @@
       </Label>
       <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Add User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
       <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Delete User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
-      <GridPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="612.0" style="-fx-background-color: #F0F1EC;" visible="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="15.0">
+      <GridPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="612.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="15.0">
          <columnConstraints>
             <ColumnConstraints halignment="CENTER" prefWidth="412.0" />
             <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
@@ -57,7 +57,7 @@
                   <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                   <JFXComboBox fx:id="typeSelect" onAction="#checkEmployeeType" prefWidth="200" promptText="Service Abilty" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
-                  <JFXButton id="cancel-button" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="2">
                      <font>
                         <Font size="25.0" />
