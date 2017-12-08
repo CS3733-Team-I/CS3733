@@ -23,9 +23,7 @@ import java.util.List;
 
 public class CsvFileUtil {
 
-    private CsvFileUtil() {
-
-    }
+    private CsvFileUtil() { }
 
     private static class SingletonHelper {
         private static CsvFileUtil _instance = new CsvFileUtil();
@@ -36,6 +34,9 @@ public class CsvFileUtil {
     public static final String NODE_CSV_HEAD = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned";
     public static final String EDGE_CSV_HEAD = "edgeID,startNode,endNode";
 
+    /**
+     * Reads all CSVs from the jar package
+     */
     public void readAllCsvs() {
         readNodesCSV("/csv/MapAnodes.csv");
         readNodesCSV("/csv/MapBnodes.csv");
@@ -60,6 +61,9 @@ public class CsvFileUtil {
         readEdgesCSV("/csv/MapWedges.csv");
     }
 
+    /**
+     * Writes all CSVs to files in [jar path]/csv/[filename].csv
+     */
     public void writeAllCsvs() {
         // Sort nodes by team
         HashMap<TeamAssigned, List<Node>> nodesByTeam = new HashMap<>();
@@ -124,6 +128,20 @@ public class CsvFileUtil {
         }
     }
 
+    /**
+     * Reads a CSV file from a given path into the MapEntity instance
+     * @param path
+     */
+    public void readNodesCSV(String path) {
+        MapEntity map = MapEntity.getInstance();
+        readNodesCSV(path, map);
+    }
+
+    /**
+     * Reads a CSV file from a given path and given MapEntity
+     * @param path
+     * @param map
+     */
     public void readNodesCSV(String path, MapEntity map) {
         CsvReader reader = null;
         InputStream input = CsvFileUtil.class.getResourceAsStream(path);
@@ -275,11 +293,11 @@ public class CsvFileUtil {
         }
     }
 
-    public void readNodesCSV(String path) {
-        MapEntity map = MapEntity.getInstance();
-        readNodesCSV(path, map);
-    }
-
+    /**
+     * Writes nodes to a CSV for a given team
+     * @param team the team
+     * @param nodes the nodes for said team
+     */
     public void writeNodesCSV(TeamAssigned team, Collection<Node> nodes) {
         try {
             String basePath = CsvFileUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
@@ -370,6 +388,20 @@ public class CsvFileUtil {
         }
     }
 
+    /**
+     * Reads edges from a path into the MapEntity instance
+     * @param path
+     */
+    public void readEdgesCSV(String path) {
+        MapEntity map = MapEntity.getInstance();
+        readEdgesCSV(path, map);
+    }
+
+    /**
+     * Reads edges from a given path into a MapEntity
+     * @param path
+     * @param map
+     */
     public void readEdgesCSV(String path, MapEntity map) {
         CsvReader reader = null;
         InputStream input = CsvFileUtil.class.getResourceAsStream(path);
@@ -436,11 +468,11 @@ public class CsvFileUtil {
         }
     }
 
-    public void readEdgesCSV(String path) {
-        MapEntity map = MapEntity.getInstance();
-        readEdgesCSV(path, map);
-    }
-
+    /**
+     * Writes edges to a CSV for a given team
+     * @param team the team
+     * @param edges the edges for the team
+     */
     public void writeEdgesCSV(TeamAssigned team, Collection<Edge> edges) {
         try {
             String basePath = CsvFileUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
