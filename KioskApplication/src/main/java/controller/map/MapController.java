@@ -92,282 +92,6 @@ public class MapController {
     }
 
     /**
-     * Set the parent MainWindowController for this MapController
-     * @param controller parent MainWindowController
-     */
-    public void setParent(MainWindowController controller) {
-        parent = controller;
-    }
-
-    /**
-     * Tell the parent controller that a node was clicked
-     * @param node the clicked node
-     */
-    public void nodeClicked(Node node) {
-        if (!this.parent.equals(null)) {
-            this.parent.onMapNodeClicked(node);
-        }
-    }
-
-    /**
-     * Tell the parent controller that an edge was clicked
-     * @param edge the clicked edge
-     */
-    public void edgeClicked(Edge edge) {
-        if (!this.parent.equals(null)) {
-            this.parent.onMapEdgeClicked(edge);
-        }
-    }
-
-    /**
-     * Add a node to the map
-     * @param node the node to add
-     * @param type what selection state it is
-     */
-    public void addNode(Node node, NodeSelectionType type) {
-        nodesEdgesView.drawNodesOnMap(Arrays.asList(node));
-        setNodeSelected(node, type);
-    }
-
-    /**
-     * Remove a node from the map
-     * @param node the node to remove
-     */
-    public void removeNode(Node node) {
-        nodesEdgesView.removeNode(node);
-    }
-
-    /**
-     * Tell the NodesEdgesView to highlight a node
-     * @param node the Node to highlight
-     * @param type the type to set the selection to
-     */
-    public void setNodeSelected(Node node, NodeSelectionType type) {
-        nodesEdgesView.setNodeSelected(node, type);
-    }
-
-    /**
-     * Gets the current path
-     * @return the path
-     */
-    public Path getPath() {
-        return this.pathWaypointView.getPath();
-    }
-
-    /**
-     * Set the current path and draw it
-     * @param path the new path
-     */
-    public void setPath(Path path) {
-        if (path != null) {
-            this.showNodesBox.setDisable(true);
-            this.showEdgesBox.setDisable(true);
-            setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
-            pathWaypointView.drawPath(path);
-        }
-    }
-
-    /**
-     * Clear the path drawn
-     */
-    public void clearPath() {
-        this.pathWaypointView.clearPath();
-    }
-
-    public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
-    public boolean areNodesVisible(){ return this.showNodesBox.isSelected(); }
-
-    public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); onEdgeBoxToggled(); }
-    public boolean areEdgesVisible(){
-        return this.showEdgesBox.isSelected();
-    }
-
-    public boolean isEditMode() {
-        return editMode;
-    }
-    public void setEditMode(boolean editMode) {
-        this.editMode = editMode;
-    }
-
-    public void setFloorSelector(NodeFloor floorSelector) {
-        this.floorSelector.setValue(floorSelector);
-        onFloorSelected();
-    }
-
-    /**
-     * Gets the width of the map
-     * @return the map's width
-     */
-    public double getWidth() {
-        return container.getWidth();
-    }
-
-    /**
-     * Gets the height of the map
-     * @return the map's height
-     */
-    public double getHeight() {
-        return container.getHeight();
-    }
-
-    public void setScrollbarX(double x) {
-        scrollPane.setHvalue(x);
-    }
-
-    public void setScrollbarY(double y) {
-        scrollPane.setVvalue(y);
-    }
-
-    public void reloadDisplay() {
-        this.showNodesBox.setDisable(false);
-        this.showEdgesBox.setDisable(false);
-        nodesEdgesView.reloadDisplay();
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
-        pathWaypointView.reloadDisplay();
-
-        //hackey way to reset the comobobox
-        int floor = floorSelector.getValue().ordinal();
-        floorSelector.getItems().removeAll();
-        floorSelector.setValue(NodeFloor.values()[floor]);
-    }
-
-    /**
-     * Clear the map of waypoints, nodes, and edges
-     */
-    public void clearMap() {
-        this.pathWaypointView.clearAll();
-        clearPath();
-        this.nodesEdgesView.clear();
-    }
-
-    /**
-     * Add a waypoint indicator to the map
-     * @param location waypoint location
-     */
-    public void addWaypoint(Point2D location, Node node) {
-        this.pathWaypointView.addWaypoint(node);
-    }
-
-    public void removeWaypoint(Node node) {
-        this.pathWaypointView.removeWaypoint(node);
-    }
-    /**
-     * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
-     * @param floor the floor to load
-     */
-    private void loadFloor(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
-
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
-        mapView.setImage(floorImage);
-        mapView.setFitWidth(floorImage.getWidth());
-        mapView.setFitHeight(floorImage.getHeight());
-
-        pathWaypointView.reloadDisplay();
-
-        miniMapController.switchFloor(floorImageURL);
-    }
-
-    /**
-     * Gets the current floor the map is viewing
-     * @return the current floor
-     */
-    public NodeFloor getCurrentFloor() {
-        return floorSelector.getValue();
-    }
-
-    /**
-     * Sets the position of the map relative to the sides of the application window.
-     * @param top position relative to top
-     * @param left position relative to left
-     * @param bottom position relative to bottom
-     * @param right position relative to right
-     */
-    public void setAnchor(double top, double left, double bottom, double right) {
-        if (container != null) {
-            AnchorPane.setTopAnchor(container, top);
-            AnchorPane.setLeftAnchor(container, left);
-            AnchorPane.setRightAnchor(container, bottom);
-            AnchorPane.setBottomAnchor(container, right);
-        }
-    }
-
-    /**
-     * Sets the current zoom value
-     * Focal point is dependent on mouseZoom class-wide boolean
-     * if true: it will only change the scale of the map, letting the scrollEvent listener handle the repositioning
-     * if false: it will zoom in/out on the center of the screen
-     * @param scaleValue zoom value
-     */
-    private void setZoom(double scaleValue) {
-        if(!mouseZoom) {
-            Bounds viewPort = scrollPane.getViewportBounds();
-            zoomOnFocalPoint(scaleValue, viewPort.getWidth() / 2, viewPort.getHeight() / 2);
-        }
-    }
-
-    /**
-     * handles all zooming operations
-     * @param scaleValue
-     * @param focalX the x coordinate of the point to zoom on in container
-     * @param focalY the y coordinate of the point to zoom on in container
-     * @return scaleValue a double that can be modified by the operation
-     */
-    private double zoomOnFocalPoint(double scaleValue, double focalX, double focalY){
-        double widthRatio = container.getWidth() / mapView.getFitWidth();
-        double heightRatio = container.getHeight() / mapView.getFitHeight();
-        double minScrollValue = Math.max(widthRatio, heightRatio);
-        double maxScrollValue = zoomSlider.getMax();
-
-        //bounds the scaleValue within the min and max zoom values
-        scaleValue=Math.min(scaleValue,maxScrollValue);
-        scaleValue=Math.max(scaleValue,minScrollValue);
-
-        double scaleFactor = scaleValue/zoomGroup.getScaleX();
-
-        if(scaleFactor!=1) {
-            // got code from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
-            Bounds viewPort = scrollPane.getViewportBounds();
-            Bounds contentSize = zoomGroup.getBoundsInParent();
-
-            double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
-            double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
-
-            double scaledFocusX = focalPosX * scaleFactor;
-            double scaledFocusY = focalPosY * scaleFactor;
-
-            zoomGroup.setScaleX(scaleValue);
-            zoomGroup.setScaleY(scaleValue);
-
-            scrollPane.setHvalue((scaledFocusX - focalX) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
-            scrollPane.setVvalue((scaledFocusY - focalY) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
-
-            miniMapController.setViewportZoom(scaleValue);
-        }
-        return scaleValue;
-    }
-
-    /**
      * Initialize the MapController. Called when the FXML file for this is loaded
      */
     @FXML
@@ -519,6 +243,329 @@ public class MapController {
                 }
             }
         });
+    }
+
+    /**
+     * Set the parent MainWindowController for this MapController
+     * @param controller parent MainWindowController
+     */
+    public void setParent(MainWindowController controller) {
+        parent = controller;
+    }
+
+    /**
+     * Tell the parent controller that a node was clicked
+     * @param node the clicked node
+     */
+    public void nodeClicked(Node node) {
+        if (!this.parent.equals(null)) {
+            this.parent.onMapNodeClicked(node);
+        }
+    }
+
+    /**
+     * Tell the parent controller that an edge was clicked
+     * @param edge the clicked edge
+     */
+    public void edgeClicked(Edge edge) {
+        if (!this.parent.equals(null)) {
+            this.parent.onMapEdgeClicked(edge);
+        }
+    }
+
+    /**
+     * Add a node to the map
+     * @param node the node to add
+     * @param type what selection state it is
+     */
+    public void addNode(Node node, NodeSelectionType type) {
+        nodesEdgesView.drawNodesOnMap(Arrays.asList(node));
+        setNodeSelected(node, type);
+    }
+
+    /**
+     * Remove a node from the map
+     * @param node the node to remove
+     */
+    public void removeNode(Node node) {
+        nodesEdgesView.removeNode(node);
+    }
+
+    /**
+     * Tell the NodesEdgesView to highlight a node
+     * @param node the Node to highlight
+     * @param type the type to set the selection to
+     */
+    public void setNodeSelected(Node node, NodeSelectionType type) {
+        nodesEdgesView.setNodeSelected(node, type);
+    }
+
+    /**
+     * Gets the current path
+     * @return the path
+     */
+    public Path getPath() {
+        return this.pathWaypointView.getPath();
+    }
+
+    /**
+     * Set the current path and draw it
+     * @param path the new path
+     */
+    public void setPath(Path path) {
+        if (path != null) {
+            this.showNodesBox.setDisable(true);
+            this.showEdgesBox.setDisable(true);
+            setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
+            pathWaypointView.drawPath(path);
+        }
+    }
+
+    /**
+     * Clear the path drawn
+     */
+    public void clearPath() {
+        this.pathWaypointView.clearPath();
+    }
+    public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
+
+    public boolean areNodesVisible(){ return this.showNodesBox.isSelected(); }
+    public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); onEdgeBoxToggled(); }
+
+    public boolean areEdgesVisible(){
+        return this.showEdgesBox.isSelected();
+    }
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public void setFloorSelector(NodeFloor floorSelector) {
+        this.floorSelector.setValue(floorSelector);
+        onFloorSelected();
+    }
+
+    /**
+     * Gets the width of the map
+     * @return the map's width
+     */
+    public double getWidth() {
+        return container.getWidth();
+    }
+
+    /**
+     * Gets the height of the map
+     * @return the map's height
+     */
+    public double getHeight() {
+        return container.getHeight();
+    }
+
+    public void setScrollbarX(double x) {
+        scrollPane.setHvalue(x);
+    }
+
+    public void setScrollbarY(double y) {
+        scrollPane.setVvalue(y);
+    }
+
+    public void reloadDisplay() {
+        this.showNodesBox.setDisable(false);
+        this.showEdgesBox.setDisable(false);
+        nodesEdgesView.reloadDisplay();
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        pathWaypointView.reloadDisplay();
+
+        //hackey way to reset the comobobox
+        int floor = floorSelector.getValue().ordinal();
+        floorSelector.getItems().removeAll();
+        floorSelector.setValue(NodeFloor.values()[floor]);
+    }
+
+    /**
+     * Clear the map of waypoints, nodes, and edges
+     */
+    public void clearMap() {
+        this.pathWaypointView.clearAll();
+        clearPath();
+        this.nodesEdgesView.clear();
+    }
+
+    /**
+     * Add a waypoint indicator to the map
+     * @param location waypoint location
+     */
+    public void addWaypoint(Point2D location, Node node) {
+        this.pathWaypointView.addWaypoint(node);
+    }
+    public void removeWaypoint(Node node) {
+        this.pathWaypointView.removeWaypoint(node);
+    }
+
+    /**
+     * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
+     * @param floor the floor to load
+     */
+    private void loadFloor(NodeFloor floor) {
+        String floorImageURL = "";
+        switch (floor) {
+            case LOWERLEVEL_2:
+                floorImageURL = "/images/00_thelowerlevel2.png";
+                break;
+            case LOWERLEVEL_1:
+                floorImageURL = "/images/00_thelowerlevel1.png";
+                break;
+            case GROUND:
+                floorImageURL = "/images/00_thegroundfloor.png";
+                break;
+            case FIRST:
+                floorImageURL = "/images/01_thefirstfloor.png";
+                break;
+            case SECOND:
+                floorImageURL = "/images/02_thesecondfloor.png";
+                break;
+            case THIRD:
+                floorImageURL = "/images/03_thethirdfloor.png";
+                break;
+        }
+
+        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        mapView.setImage(floorImage);
+        mapView.setFitWidth(floorImage.getWidth());
+        mapView.setFitHeight(floorImage.getHeight());
+
+        pathWaypointView.reloadDisplay();
+
+        miniMapController.switchFloor(floorImageURL);
+    }
+
+    /**
+     * Gets the current floor the map is viewing
+     * @return the current floor
+     */
+    public NodeFloor getCurrentFloor() {
+        return floorSelector.getValue();
+    }
+
+    /**
+     * Sets the position of the map relative to the sides of the application window.
+     * @param top position relative to top
+     * @param left position relative to left
+     * @param bottom position relative to bottom
+     * @param right position relative to right
+     */
+    public void setAnchor(double top, double left, double bottom, double right) {
+        if (container != null) {
+            AnchorPane.setTopAnchor(container, top);
+            AnchorPane.setLeftAnchor(container, left);
+            AnchorPane.setRightAnchor(container, bottom);
+            AnchorPane.setBottomAnchor(container, right);
+        }
+    }
+
+    /**
+     * Sets the current zoom value
+     * Focal point is dependent on mouseZoom class-wide boolean
+     * if true: it will only change the scale of the map, letting the scrollEvent listener handle the repositioning
+     * if false: it will zoom in/out on the center of the screen
+     * @param scaleValue zoom value
+     */
+    private void setZoom(double scaleValue) {
+        if(!mouseZoom) {
+            Bounds viewPort = scrollPane.getViewportBounds();
+            zoomOnFocalPoint(scaleValue, viewPort.getWidth() / 2, viewPort.getHeight() / 2);
+        }
+    }
+
+    /**
+     * handles all zooming operations
+     * @param scaleValue
+     * @param focalX the x coordinate of the point to zoom on in container
+     * @param focalY the y coordinate of the point to zoom on in container
+     * @return scaleValue a double that can be modified by the operation
+     */
+    private double zoomOnFocalPoint(double scaleValue, double focalX, double focalY){
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+        double maxScrollValue = zoomSlider.getMax();
+
+        //bounds the scaleValue within the min and max zoom values
+        scaleValue=Math.min(scaleValue,maxScrollValue);
+        scaleValue=Math.max(scaleValue,minScrollValue);
+
+        double scaleFactor = scaleValue/zoomGroup.getScaleX();
+
+        if(scaleFactor!=1) {
+            // got code from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
+            Bounds viewPort = scrollPane.getViewportBounds();
+            Bounds contentSize = zoomGroup.getBoundsInParent();
+
+            double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
+            double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
+
+            double scaledFocusX = focalPosX * scaleFactor;
+            double scaledFocusY = focalPosY * scaleFactor;
+
+            zoomGroup.setScaleX(scaleValue);
+            zoomGroup.setScaleY(scaleValue);
+
+            scrollPane.setHvalue((scaledFocusX - focalX) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
+            scrollPane.setVvalue((scaledFocusY - focalY) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
+
+            miniMapController.setViewportZoom(scaleValue);
+        }
+        return scaleValue;
+    }
+
+    public void viewSelectedNodes(ObservableList<javafx.scene.Node> viewedNodes){
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+        double maxScrollValue = zoomSlider.getMax();
+        Bounds viewPort = scrollPane.getViewportBounds();
+        Bounds contentSize = zoomGroup.getBoundsInParent();
+
+        double minX=contentSize.getWidth();
+        double minY=contentSize.getHeight();
+        double maxX=0.0;
+        double maxY=0.0;
+        // Runs through all inserted nodes and gets the max bounds
+        for(javafx.scene.Node node: viewedNodes){
+            if(node.getLayoutX()>maxX){
+                maxX=node.getLayoutX();
+            }
+            if(node.getLayoutX()<minX){
+                minX=node.getLayoutX();
+            }
+            if(node.getLayoutY()>maxY){
+                maxY=node.getLayoutY();
+            }
+            if(node.getLayoutY()<minY){
+                minY=node.getLayoutY();
+            }
+        }
+        // adds a border of sorts to the viewed area
+        double border=5.0;
+        minX-=border;
+        Math.max(minX,0.0);
+        minY-=border;
+        Math.max(minY,0.0);
+        maxX+=border;
+        Math.min(maxX,contentSize.getWidth());
+        maxY+=border;
+        Math.min(maxY,contentSize.getHeight());
+        //zooming phase
+        double scale = viewPort.getWidth()/(maxX-minX);
+        double scaleFactor = scale/zoomGroup.getScaleX();
+        zoomGroup.setScaleX(scale);
+        zoomGroup.setScaleY(scale);
+        //scroll bar adjusting stage
+        double centerX=(minX+maxX)/2.0;
+        double centerY=(minY+minY)/2.0;
     }
 
     /**
