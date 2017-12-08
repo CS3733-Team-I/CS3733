@@ -159,7 +159,13 @@ public class PathfindingSidebarController extends ScreenController {
         searchController.getCBValueProperty().addListener(new ChangeListener<Node>() {
             @Override
             public void changed(ObservableValue<? extends Node> observable, Node oldValue, Node newValue) {
-                onMapNodeClicked(newValue);
+                if (newValue != null) {
+                    if(newValue.getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(newValue.getFloor());
+                    }
+                    getMapController().recenterAtNode(newValue);
+                    onMapNodeClicked(newValue);
+                }
             }
         });
     }

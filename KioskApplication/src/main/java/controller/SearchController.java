@@ -59,7 +59,7 @@ public class SearchController {
             @Override
             public String toString(Node object) {
                 if(object != null) {
-                    return object.getLongName();
+                    return object.getLongName() + " (" + object.getFloor() + ") ";
                 }
                 else return null;
             }
@@ -73,7 +73,7 @@ public class SearchController {
 //        cbNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
 //            @Override
 //            public ListCell<Node> call(ListView<Node> param) {
-////                param.setOnMouseEntered();
+//
 //            }
 //        });
         cbNodes.setOnKeyReleased(e -> {
