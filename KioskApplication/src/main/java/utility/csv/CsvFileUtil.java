@@ -1,6 +1,7 @@
 package utility.csv;
 
 import com.csvreader.CsvReader;
+import com.csvreader.CsvWriter;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
@@ -10,10 +11,16 @@ import javafx.scene.control.Alert;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.node.TeamAssigned;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CsvFileUtil {
 
@@ -30,7 +37,7 @@ public class CsvFileUtil {
     public static final String NODE_CSV_HEAD = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName,teamAssigned";
     public static final String EDGE_CSV_HEAD = "edgeID,startNode,endNode";
 
-    public void readAllCSVs() {
+    public void readAllCsvs() {
         readNodesCSV("/csv/MapAnodes.csv");
         readNodesCSV("/csv/MapBnodes.csv");
         readNodesCSV("/csv/MapCnodes.csv");
@@ -52,6 +59,25 @@ public class CsvFileUtil {
         readEdgesCSV("/csv/MapHedges.csv");
         readEdgesCSV("/csv/MapIedges.csv");
         readEdgesCSV("/csv/MapWedges.csv");
+    }
+
+    public void writeAllCsvs() {
+        // Sort nodes into lists by team
+        HashMap<TeamAssigned, List<Node>> nodesByTeam = new HashMap<>();
+        for (Node node : MapEntity.getInstance().getAllNodes()) {
+            TeamAssigned team = TeamAssigned.fromString(node.getTeamAssigned());
+            if (!nodesByTeam.containsKey(team)) {
+                nodesByTeam.put(team, new LinkedList<>());
+            }
+
+            List<Node> nodeList = nodesByTeam.get(team);
+            nodeList.add(node);
+        }
+
+        // Save CSVs
+        for (TeamAssigned team : nodesByTeam.keySet()) {
+            writeNodesCSV(team, nodesByTeam.get(team));
+        }
     }
 
     public void readNodesCSV(String path, MapEntity map) {
@@ -210,68 +236,80 @@ public class CsvFileUtil {
         readNodesCSV(path, map);
     }
 
-    public void writeNodesCSV(String path, boolean global) {
-        // TODO implement this
-        /*
-                NodeFloor fl = NodeFloor.values()[rs.getInt("floor")];
-                String floor = "";
-                NodeBuilding bu = NodeBuilding.values()[rs.getInt("building")];
-                String building = "";
-                NodeType nt = NodeType.values()[rs.getInt("nodeType")];
-                String nodeType = "";
+    public void writeNodesCSV(TeamAssigned team, List<Node> nodes) {
+        try {
+            String basePath = CsvFileUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            String path = "";
+            switch (team) {
+                case A:
+                    path = "MapAnodes.csv";
+                    break;
+                case B:
+                    path = "MapBnodes.csv";
+                    break;
+                case C:
+                    path = "MapCnodes.csv";
+                    break;
+                case D:
+                    path = "MapDnodes.csv";
+                    break;
+                case E:
+                    path = "MapENodes.csv";
+                    break;
+                case F:
+                    path = "MapFNodes.csv";
+                    break;
+                case G:
+                    path = "MapGNodes.csv";
+                    break;
+                case H:
+                    path = "MapHnodes.csv";
+                    break;
+                case I:
+                    path = "MapInodes.csv";
+                    break;
+                case W:
+                    path = "MapWnodes.csv";
+                    break;
+            }
 
-                if(global) {
-                    if(!(rs.getString("NodeID").startsWith("W"))) {
-                        continue;
-                    }
-                } else {
-                    if(rs.getString("NodeID").startsWith("W")) {
-                        continue;
-                    }
-                }
+            CsvWriter writer = new CsvWriter(new FileWriter(basePath + "csv/" + path, false), 'c');
 
-                switch(fl) {
-                    case LOWERLEVEL_2: floor = "L2"; break;
-                    case LOWERLEVEL_1: floor = "L1"; break;
-                    case GROUND: floor = "0"; break;
-                    case FIRST: floor = "1"; break;
-                    case SECOND: floor = "2"; break;
-                    case THIRD: floor = "3"; break;
-                }
+            // Write header
+            for (String header : NODE_CSV_HEAD.split(",")) {
+                writer.write(header);
+            }
+            writer.endRecord();
 
-                switch(bu) {
-                    case FRANCIS45: building = "45 Francis"; break;
-                    case FRANCIS15: building = "15 Francis"; break;
-                    case TOWER: building = "Tower"; break;
-                    case SHAPIRO: building = "Shapiro"; break;
-                    case BTM: building = "BTM"; break;
-                }
+            // Write nodes
+            for (Node node : nodes) {
+                writer.write(node.getNodeID());
+                writer.write(Integer.toString(node.getXcoord()));
+                writer.write(Integer.toString(node.getYcoord()));
+                writer.write(node.getFloor().toCSVString());
+                writer.write(node.getBuilding().toString());
+                writer.write(node.getNodeType().toString());
+                writer.write(node.getLongName());
+                writer.write(node.getShortName());
+                writer.write("Team " + node.getTeamAssigned());
+                writer.endRecord();
+            }
 
-                switch(nt) {
-                    case ELEV: nodeType = "ELEV"; break;
-                    case HALL: nodeType = "HALL"; break;
-                    case REST: nodeType = "REST"; break;
-                    case DEPT: nodeType = "DEPT"; break;
-                    case STAI: nodeType = "STAI"; break;
-                    case LABS: nodeType = "LABS"; break;
-                    case INFO: nodeType = "INFO"; break;
-                    case CONF: nodeType = "CONF"; break;
-                    case EXIT: nodeType = "EXIT"; break;
-                    case RETL: nodeType = "RETL"; break;
-                    case SERV: nodeType = "SERV"; break;
-                }
+            writer.close();
 
-                bWriter.write(rs.getString("NodeID") + ",");
-                bWriter.write(rs.getInt("xcoord") + ",");
-                bWriter.write(rs.getInt("ycoord") + ",");
-                bWriter.write(floor + ",");
-                bWriter.write(building + ",");
-                bWriter.write(nodeType + ",");
-                bWriter.write(rs.getString("longName") + ",");
-                bWriter.write(rs.getString("shortName") + ",");
-                bWriter.write(rs.getString("teamAssigned"));
-                bWriter.newLine();
-            }*/
+        } catch (URISyntaxException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error writing nodes to SCV");
+            alert.setHeaderText("Error occurred while getting path to JAR.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding nodes to CSV");
+            alert.setHeaderText("Error creating file at path.");
+            alert.setContentText(e.toString());
+            alert.showAndWait();
+        }
     }
 
     public void readEdgesCSV(String path, MapEntity map) {

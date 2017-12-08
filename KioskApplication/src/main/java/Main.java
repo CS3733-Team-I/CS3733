@@ -1,4 +1,3 @@
-import email.*;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
@@ -15,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         MapEntity.getInstance().readAllFromDatabase();
         if (MapEntity.getInstance().getAllNodes().size() == 0)
-            CsvFileUtil.getInstance().readAllCSVs();
+            CsvFileUtil.getInstance().readAllCsvs();
 
         SystemSettings.getInstance();
 
