@@ -8,6 +8,7 @@ import database.objects.Node;
 import entity.Path;
 import entity.SystemSettings;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -27,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.springframework.security.access.method.P;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
@@ -181,7 +183,6 @@ public class PathfindingSidebarController extends ScreenController {
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
 
             try{
-                Node node = pathfinder.findPathToNearestType(currentWaypoints.get(0), NodeType.ELEV, true);
                 Path path = pathfinder.generatePath(currentWaypoints);
                 getMapController().setPath(path);
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
@@ -490,5 +491,29 @@ public class PathfindingSidebarController extends ScreenController {
         waypointListView.getItems().add(addWaypointBox);
 //        addWaypointBoxIndex = waypointListView.getItems().indexOf(addWaypointBox);
 
+    }
+
+
+    /**
+     * get the nearest node of required type to the default kiosk location
+     */
+    @FXML
+    private void handleButtonAction(ActionEvent e) throws  PathfinderException {
+        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+        Node node = new Node("");
+        if((JFXButton)e.getTarget() == btRestRoom) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.REST, true);
+        }
+        else if((JFXButton)e.getTarget() == btElevator) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.ELEV, true);
+        }
+        else if((JFXButton)e.getTarget() == btRestaurant) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.SERV, true);
+        }
+        else if((JFXButton)e.getTarget() == btExit) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.EXIT, true);
+        }
+        isAddingWaypoint = true;
+        onMapNodeClicked(node);
     }
 }

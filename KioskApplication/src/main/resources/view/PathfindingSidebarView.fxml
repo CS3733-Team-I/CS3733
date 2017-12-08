@@ -38,10 +38,10 @@
                </font></JFXButton>
             <Label fx:id="exceptionText" prefHeight="50.0" prefWidth="300.0" text="" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <JFXListView fx:id="waypointListView" prefHeight="118.0" prefWidth="400.0" stylesheets="@../css/listView.css" GridPane.columnSpan="4" GridPane.rowSpan="5" />
-            <JFXButton fx:id="btRestRoom" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.rowIndex="6" />
-            <JFXButton fx:id="btRestaurant" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <JFXButton fx:id="btElevator" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <JFXButton fx:id="btExit" buttonType="RAISED" prefHeight="107.0" prefWidth="132.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btRestRoom" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="107.0" prefWidth="132.0" style="-fx-background-color: TRANSPARENT;" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btRestaurant" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="107.0" prefWidth="132.0" style="-fx-background-color: TRANSPARENT;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btElevator" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="107.0" prefWidth="132.0" style="-fx-background-color: TRANSPARENT;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <JFXButton fx:id="btExit" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="107.0" prefWidth="132.0" style="-fx-background-color: TRANSPARENT;" GridPane.columnIndex="3" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </children>
