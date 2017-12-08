@@ -27,7 +27,7 @@ public class Main extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
-        /*
+        
         EmailSystem.init();
         /*Email email = new Email.Builder("jflparrick@gmail.com")
                 .setAttachment(null)
