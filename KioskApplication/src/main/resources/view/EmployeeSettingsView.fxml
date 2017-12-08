@@ -13,6 +13,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.VBox?>
 <fx:root minHeight="0.0" minWidth="0.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeSettingsController">
    <children>
       <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" />
@@ -23,7 +26,7 @@
       </Label>
       <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Add User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="65.0" />
       <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Delete User" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="95.0" />
-      <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
+      <BorderPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
             <GridPane prefHeight="280.0" prefWidth="412.0" BorderPane.alignment="CENTER">
                <columnConstraints>
@@ -36,15 +39,18 @@
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <JFXTextField fx:id="usernameBox" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                  <JFXTextField fx:id="passwordBox" labelFloat="true" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                  <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" promptText="Permissions" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                  <JFXComboBox fx:id="typeSelect" promptText="Request Availablity" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                  <JFXButton id="confirm-button" fx:id="userActionButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="5" />
-                  <JFXButton id="cancel-button" onAction="#onUserCancel" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <JFXTextField fx:id="firstNameBox" labelFloat="true" promptText="First Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="lastNameBox" labelFloat="true" promptText="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <JFXTextField fx:id="usernameBox" labelFloat="true" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                  <JFXTextField fx:id="passwordBox" labelFloat="true" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" promptText="Permissions" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <JFXComboBox fx:id="typeSelect"  onAction="#checkEmployeeType" promptText="Service Abilty" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <JFXButton id="confirm-button" fx:id="userActionButton" onAction="#onUserSave" text="Save" GridPane.rowIndex="6" />
+                  <JFXButton id="cancel-button" onAction="#onUserCancel" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="userDialogLabel" prefHeight="30.0" text="Add User" GridPane.columnSpan="2">
                      <font>
                         <Font size="25.0" />
@@ -56,6 +62,23 @@
                </BorderPane.margin>
             </GridPane>
          </center>
+         <right>
+            <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="400.0" prefWidth="100.0" visible="false">
+               <GridPane>
+                  <columnConstraints>
+                     <ColumnConstraints prefWidth="100.0" halignment="CENTER"/>
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints prefHeight="25.0" valignment="CENTER"/>
+                     <RowConstraints prefHeight="375.0" valignment="TOP"/>
+                  </rowConstraints>
+                  <children>
+                     <Label prefWidth="100.0" text="Languages" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                     <VBox fx:id="interpreterLanguageBox" prefHeight="375.0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                  </children>
+               </GridPane>
+            </AnchorPane>
+         </right>
       </BorderPane>
       <BorderPane fx:id="deletePane" layoutX="443.0" layoutY="221.0" prefHeight="200.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>

@@ -1,9 +1,13 @@
 package entity;
 
+import com.jfoenix.controls.JFXCheckBox;
 import database.DatabaseController;
 import database.objects.IEmployee;
 import database.objects.Employee;
 import database.objects.NullEmployee;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import utility.KioskPermission;
 import utility.request.Language;
 import utility.request.RequestType;
@@ -152,11 +156,12 @@ public class LoginEntity {
      * @param lastName
      * @param firstName
      * @param password
+     * @param options a list of strings from EmployeeSettingsController
      * @param permission
      * @param serviceAbility
      * @return
      */
-    public boolean addUser(String userName, String lastName, String firstName, String password, String options,
+    public boolean addUser(String userName, String lastName, String firstName, String password, ArrayList<String> options,
                            KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
         if(currentLogin.getPermission()==NONEMPLOYEE||permission==NONEMPLOYEE){
@@ -164,17 +169,27 @@ public class LoginEntity {
         }
         // updates the hashmap in case a employee is missing
         // TODO: make reading from the database more efficient, when someone is adding a lot of users, we don't want this to take forever
-        readAllFromDatabase();
         if(logins.containsKey(userName)){
             return false;
         }
         // limits creating new logins to subordinates in the KioskPermission hierarchy
         else if(currentLogin.getPermission().ordinal()>permission.ordinal()||
                 currentLogin.getPermission() == SUPER_USER){
+            String optionsString = "";
             // fitting it into the table
             if(userName.length()<=50){
+                //different cases for different employee RequestTypes
+                switch (serviceAbility){
+                    case INTERPRETER:
+                        for(String language : options) {
+                            //converts the checkbox text to a string containing the ordinal value of the language
+                            String langOption = Language.valueOf(language).ordinal() + ":";
+                            optionsString = optionsString + langOption;
+                        }
+                        break;
+                }
                 //constructs a temporary employee for database insertion
-                Employee tempEmployee=new Employee(userName,lastName,firstName, password, options, permission,
+                Employee tempEmployee=new Employee(userName,lastName,firstName, password, optionsString, permission,
                         serviceAbility);
                 int ID = database.addEmployee(tempEmployee,password);
                 logins.put(userName,database.getEmployee(ID));

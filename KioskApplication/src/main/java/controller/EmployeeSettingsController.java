@@ -1,21 +1,25 @@
 package controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.objects.IEmployee;
 import database.objects.Employee;
 import entity.LoginEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import utility.KioskPermission;
+import utility.request.Language;
 import utility.request.RequestType;
 
 import java.util.ArrayList;
@@ -28,11 +32,16 @@ public class EmployeeSettingsController {
     @FXML private BorderPane userEditorPane;
     @FXML private Label userDialogLabel;
     @FXML private Label errLabel;
+    @FXML private JFXTextField firstNameBox;
+    @FXML private JFXTextField lastNameBox;
     @FXML private JFXTextField usernameBox;
     @FXML private JFXTextField passwordBox;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> typeSelect;
     @FXML private JFXButton userActionButton;
+    @FXML private AnchorPane interpreterLanguageContainer;
+
+    @FXML private VBox interpreterLanguageBox;
 
     @FXML private BorderPane deletePane;
     @FXML private Label deleteText;
@@ -95,6 +104,16 @@ public class EmployeeSettingsController {
         permissionSelect.getItems().addAll(KioskPermission.values());
         permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE); // Except NONEMPLOYEE
         typeSelect.getItems().addAll(RequestType.values());
+        //adds the language checkboxes to the language selection menu
+        for (Language language: Language.values()
+             ) {
+            if(language!=Language.NONE) {
+                JFXCheckBox langCheckBox = new JFXCheckBox(language.toString());
+                langCheckBox.setPrefWidth(100.0);
+                langCheckBox.setPrefHeight(25.0);
+                interpreterLanguageBox.getChildren().add(langCheckBox);
+            }
+        }
     }
 
     private void refreshUsers() {
@@ -154,16 +173,30 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserSave(ActionEvent event) {
+        ArrayList<String> options = new ArrayList<>();
         // Check that all fields are filled in
-        if (usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null && !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
+        if (firstNameBox.getText() != null && lastNameBox.getText() != null &&
+                usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox.getText() != null &&
+                !passwordBox.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
+            switch (typeSelect.getValue()){
+                case INTERPRETER:
+                    for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
+                        if(intLangBoxItem instanceof JFXCheckBox) {
+                            JFXCheckBox langBox = ((JFXCheckBox) intLangBoxItem);
+                            if (langBox.isSelected()) {
+                                options.add(langBox.getText());
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    options.add("");
+                    break;
+                }
+            }
             // Add user
-            if (LoginEntity.getInstance().addUser(usernameBox.getText(),"","", passwordBox.getText(),"", permissionSelect.getValue(), typeSelect.getValue())) {
-                System.out.println("Adding user ... ");
-                System.out.println("User: " + usernameBox.getText());
-                System.out.println("Pass: " + passwordBox.getText());
-                System.out.println("Permission: " + permissionSelect.getValue().toString());
-                System.out.println("Type: " + typeSelect.getValue().toString());
-
+            if (LoginEntity.getInstance().addUser(usernameBox.getText(),lastNameBox.getText(),firstNameBox.getText(),
+                    passwordBox.getText(),options, permissionSelect.getValue(), typeSelect.getValue())) {
                 refreshUsers();
                 // Adjust visability
                 usersList.setVisible(true);
@@ -172,7 +205,6 @@ public class EmployeeSettingsController {
                 errLabel.setText("User Added");
                 resetScreen();
             }
-        }
         else{
             if(usernameBox.getText().equals("")){
                 System.out.println("USER ERROR");
@@ -203,5 +235,19 @@ public class EmployeeSettingsController {
         passwordBox.setText("");
         permissionSelect.setValue(null);
         typeSelect.setValue(null);
+    }
+
+    /**
+     * Called by the request type JFXComboBox
+     * Used currently to show or hide the interpreter language selection area
+     */
+    @FXML
+    public void checkEmployeeType(){
+        if(typeSelect.getValue()==RequestType.INTERPRETER){
+            interpreterLanguageContainer.setVisible(true);
+        }
+        else {
+            interpreterLanguageContainer.setVisible(false);
+        }
     }
 }
