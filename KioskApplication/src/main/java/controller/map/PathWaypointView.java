@@ -7,11 +7,17 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import entity.SystemSettings;
 import javafx.animation.PathTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -89,23 +95,42 @@ public class PathWaypointView extends AnchorPane {
         waypointList.addListener((ListChangeListener<Node>) listener -> {
             while (listener.next()) {
                 if(listener.wasRemoved()) {
-                    for (Node node : listener.getRemoved()) {
-                        WaypointView view = this.wayPointViewsMap.get(node);
-                        this.wayPointViewsMap.remove(node);
-                        this.wayPointView.getChildren().remove(view);
+                    for (Node removedWaypoint : listener.getRemoved()) {
+                        WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
+                        this.wayPointViewsMap.remove(removedWaypoint);
+                        this.wayPointView.getChildren().remove(removedView);
+                        parent.getMiniMapController().removeMiniWayPoint(removedWaypoint);
                     }
                 }
                 if(listener.wasAdded()) {
-                    for(Node addedNode : listener.getAddedSubList()) {
-                        WaypointView waypointView = new WaypointView(this, addedNode, waypointList.indexOf(addedNode));
-                        this.wayPointViewsMap.put(addedNode, waypointView);
+                    for(Node addedWaypoint : listener.getAddedSubList()) {
+                        WaypointView waypointView = new WaypointView(this, addedWaypoint, waypointList.indexOf(addedWaypoint));
+                        this.wayPointViewsMap.put(addedWaypoint, waypointView);
 
                         this.wayPointView.getChildren().add(waypointView);
+                        //add the waypoint on the mini map
+                        parent.getMiniMapController().showMiniWayPoint(addedWaypoint);
+
                         waypointView.playWaypointPutTransition();
                     }
                 }
             }
         });
+
+        Image youarehereIcon = ResourceManager.getInstance().getImage("/images/crosshairs-gps.png");
+        ImageView youarehereView = new javafx.scene.image.ImageView(youarehereIcon);
+        youarehereView.setFitHeight(48);
+        youarehereView.setFitWidth(48);
+
+        Label youarehereLabel = new Label();
+        youarehereLabel.setGraphic(youarehereView);
+        youarehereLabel.setPrefHeight(48);
+        youarehereLabel.setPrefWidth(48);
+
+        youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
+        youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
+
+        getChildren().add(youarehereLabel);
     }
 
     /**
@@ -122,6 +147,7 @@ public class PathWaypointView extends AnchorPane {
     public void clearPath() {
         this.currentPath = null;
         pathView.getChildren().clear();
+        parent.getMiniMapController().clearPath();
     }
     /**
      * Clear drawn waypoints
@@ -139,6 +165,7 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
+        parent.getMiniMapController().clearPath();
         JFXButton switchFloor = null;
         segmentColorList.clear();
 
@@ -149,11 +176,11 @@ public class PathWaypointView extends AnchorPane {
         }
 
         for(int i = 0; i < waypointList.size()-1; i ++) {
-            NodeFloor a = parent.getCurrentFloor();
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
+            jfxPath.setStroke(Color.TRANSPARENT);
             MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
             jfxPath.getElements().add(moveTo);
 
@@ -161,8 +188,9 @@ public class PathWaypointView extends AnchorPane {
                 LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
                 jfxPath.getElements().add(lineTo);
 
+                NodeFloor targetFloor = waypointList.get(i+1).getFloor();
                 if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    /*switchFloor = new JFXButton();
+                    switchFloor = new JFXButton();
                     switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
                     switchFloor.setLayoutX(traversedNode.getXcoord()-48);
                     switchFloor.setLayoutY(traversedNode.getYcoord());
@@ -173,11 +201,12 @@ public class PathWaypointView extends AnchorPane {
                         switchFloor.setGraphic(upView);
                     } else {
                         switchFloor.setGraphic(downView);
-                    }*/
+                    }
                 }
             }
 
             this.pathView.getChildren().add(jfxPath);
+            parent.getMiniMapController().showPath(jfxPath);
 
             Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);
@@ -198,8 +227,7 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.playFrom(Duration.seconds(k));
             }
         }
-
-        if (switchFloor != null) this.pathView.getChildren().add(switchFloor);
+        this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -247,6 +275,9 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+//        waypointList.remove(index1);
+//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
