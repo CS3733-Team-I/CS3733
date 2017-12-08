@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import utility.node.NodeFloor;
@@ -15,19 +16,26 @@ public class TestMapFloorEntity {
 
     public TestMapFloorEntity() {
         DatabaseController.getInstance();
-        m = new MapFloorEntity(NodeFloor.LOWERLEVEL_1);
+        m = new MapFloorEntity();
         n1 = new Node("NODE1", NodeFloor.LOWERLEVEL_1);
     }
 
-    @Test
-    public void testAddRemoveNode() throws DatabaseException {
+    @Test(expected = NotFoundException.class)
+    public void testAddRemoveNode() throws DatabaseException, NotFoundException {
         //Add node to map
         m.addNode(n1);
         //Test that the node exists in the map
-        assertEquals(m.getNode(n1.getNodeID()), n1);
+        Node node;
+        try{
+            node = m.getNode(n1.getNodeID());
+        }
+        catch (NotFoundException exception){
+            node = null;
+        }
         //Remove the node
-        m.removeNode(n1);
-        //Test that the node is not in the map
-        assertEquals(m.getNode(n1.getNodeID()), null);
+        if(node != null)
+            m.removeNode(n1);
+        //Test that the node is not in the map (should throw an exception
+            m.getNode(n1.getNodeID());
     }
 }

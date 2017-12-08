@@ -47,6 +47,14 @@ public class RequestTrackingDataController {
         parent.closeRequestTrackingTable();
     }
 
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        parent.resetTimer();
+    }
+
     public void refreshPieChart(){
         pieChart.setLegendVisible(false);
         pieChart.setData(r.getRequestDistribution());

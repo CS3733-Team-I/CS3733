@@ -3,25 +3,54 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="600.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXTabPane id="tab-header-area" fx:id="settingTabPane" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <JFXTabPane onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" id="tab-header-area" fx:id="settingTabPane" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab fx:id="aboutTab" text="About">
+            <Tab fx:id="aboutTab"  text="About">
               <content>
-                <AnchorPane fx:id="s" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Text onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" layoutX="57.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About" wrappingWidth="88.13671875">
+                           <font>
+                              <Font size="28.0" />
+                           </font>
+                        </Text>
+                        <JFXTextArea onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" editable="false" layoutX="57.0" layoutY="91.0" prefHeight="329.0" prefWidth="464.0" text="Team Members:                                                     &#10;Benjamin Gillette - Project Manager/ Scrum Master &#10;Jerish Brown - Lead Software Engineer         &#10;John Parrick  - Assistant Lead Software Engineer&#10;Ziheng (Leo) L - Assistant Lead Software Engineer&#10;James Taylor - Product Owner&#10;Michael Sidler - Test Engineer&#10;Mary Hatfalvi - Documentation Analyst&#10;Henry Dunphy - Software Engineer&#10;Ryan Racine  - Software Engineer&#10;Da Xu - Software Engineer&#10;&#10;WPI Computer Science Department, &#10;CS3733 Software Engineering, Prof. Wilson Wong, &#10;Team Coach - Akshit (Axe) Soota &#10;We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.&#10;" />
+                     </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="displayTab" text="Display">
+            <Tab fx:id="languageTab" text="Language">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Text layoutX="30.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Languages" wrappingWidth="144.13671875">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
+                        <VBox layoutX="64.0" layoutY="100.0" prefHeight="200.0" prefWidth="181.0">
+                           <children>
+                              <JFXRadioButton fx:id="englishButton" lineSpacing="2.0" onAction="#onLanguageSelected" prefHeight="44.0" prefWidth="109.0" text="English">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="languageSelectToggleGroup" />
+                                 </toggleGroup>
+                              </JFXRadioButton>
+                              <JFXRadioButton fx:id="franceSelected" onAction="#onLanguageSelected" text="French" toggleGroup="$languageSelectToggleGroup" />
+                           </children>
+                        </VBox>
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="pathfindingTab" text="Pathfinding">
@@ -34,37 +63,41 @@
                               <Font size="25.0" />
                            </font>
                         </Label>
-                        <VBox layoutX="61.0" layoutY="110.0" prefHeight="227.0" prefWidth="155.0">
+                        <VBox layoutX="63.0" layoutY="89.0" prefHeight="227.0" prefWidth="155.0">
                            <children>
-                              <JFXRadioButton fx:id="dfsButton" onAction="#onSearchAlgorithmSelected" text="Depth-first Search">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="dfsButton" onAction="#onSearchAlgorithmSelected" text="Depth-first Search">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="bfsButton" onAction="#onSearchAlgorithmSelected" text="Breadth-first Search">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="bfsButton" onAction="#onSearchAlgorithmSelected" text="Breadth-first Search">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="dijkstraButton" onAction="#onSearchAlgorithmSelected" text="Dijkstras">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="dijkstraButton" onAction="#onSearchAlgorithmSelected" text="Dijkstras">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="astarButton" onAction="#onSearchAlgorithmSelected" text="A *">
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="astarButton" onAction="#onSearchAlgorithmSelected" text="A *">
                                  <VBox.margin>
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </JFXRadioButton>
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="beamButton" onAction="#onSearchAlgorithmSelected" text="Beam" />
+                              <JFXRadioButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="bestFirstButton" onAction="#onSearchAlgorithmSelected" prefHeight="57.0" prefWidth="105.0" text="Best-first Search" />
                            </children>
                         </VBox>
+                        <JFXTextField onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" fx:id="beamWidth" layoutX="289.0" layoutY="235.0" />
+                        <Label layoutX="289.0" layoutY="210.0" prefHeight="17.0" prefWidth="135.0" text="Select a Beam width" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="userTab" text="User">
                <content>
-                  <AnchorPane fx:id="userPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="userPane" onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </Tab>
             <Tab fx:id="databaseTab" text="Database">
@@ -89,8 +122,8 @@
                                     <Insets right="5.0" />
                                  </padding>
                               </Label>
-                              <JFXButton buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
-                              <JFXButton buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
+                              <JFXButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" buttonType="RAISED" onAction="#readCSV" text="Read CSVs" />
+                              <JFXButton onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" buttonType="RAISED" onAction="#saveCSV" text="Save Database" />
                            </children>
                         </VBox>
                      </children></AnchorPane>
@@ -98,7 +131,7 @@
             </Tab>
             <Tab fx:id="employeesTab" text="Employees">
               <content>
-                <AnchorPane fx:id="employeesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane fx:id="employeesPane" onMouseMoved="#resetTimer" onMouseClicked="#resetTimer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
          </tabs>

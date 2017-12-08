@@ -1,9 +1,7 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.InterpreterRequest;
-import database.objects.Request;
-import database.objects.SecurityRequest;
+import database.objects.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -14,6 +12,8 @@ import utility.request.RequestType;
 import utility.request.*;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 public class RequestEntity {
     private HashMap<String,InterpreterRequest> interpreterRequests;
     private HashMap<String,SecurityRequest> securityRequests;
-    //private HashMap<String,FoodRequest> foodRequests;
+    private HashMap<String,FoodRequest> foodRequests;
     //private HashMap<String,JanitorRequest> janitorRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
@@ -35,6 +35,7 @@ public class RequestEntity {
     protected RequestEntity(boolean test) {
         interpreterRequests=new HashMap<>();
         securityRequests=new HashMap<>();
+        foodRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getInstance();
@@ -57,7 +58,9 @@ public class RequestEntity {
         private static final RequestEntity testInstance = new RequestEntity(true);
     }
 
-    //reads all requests from the database
+    /**
+     * reads all requests from the database
+     */
     public void readAllFromDatabase(){
         LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
         for(InterpreterRequest iR:interpreterRequests) {
@@ -83,20 +86,22 @@ public class RequestEntity {
                 this.securityRequests.put(rID, sR);
             }
         }
+        LinkedList<FoodRequest> foodRequests = dbController.getAllFoodRequests();
+        for (FoodRequest fR: foodRequests){
+            String rID = fR.getRequestID();
+            if(this.foodRequests.containsKey(rID)){
+                this.foodRequests.replace(rID, fR);
+            }
+            else{
+                this.foodRequests.put(rID, fR);
+            }
+        }
     }
 
-
-    public LinkedList<Request> getAllRequests(){
-        LinkedList<Request> allRequests = new LinkedList<>();
-        for (InterpreterRequest iR: interpreterRequests.values()){
-            allRequests.add(iR);
-        }
-        for(SecurityRequest sR: securityRequests.values()){
-            allRequests.add(sR);
-        }
-        return allRequests;
-    }
-
+    /**
+     * Gets a list of all interpreter requests in the hashmaps
+     * @return list of all interpreterRequest found in interpreterRequests hashmap
+     */
     public LinkedList<Request> getAllinterpters(){
         LinkedList<Request> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
@@ -105,6 +110,10 @@ public class RequestEntity {
         return intRequests;
     }
 
+    /**
+     * Gets a list of all security requests in the hashmaps
+     * @return list of all securityRequest found in securityRequests hashmap
+     */
     public LinkedList<Request> getAllSecurity(){
         LinkedList<Request> secRequests = new LinkedList<>();
         for(SecurityRequest sR: securityRequests.values()){
@@ -114,15 +123,50 @@ public class RequestEntity {
     }
 
     /**
+     * Gets a list of all food requests in the hashmaps
+     * @return list of all foodRequest found in foodRequests hashmap
+     */
+    public LinkedList<Request> getAllFoodRequests(){
+        LinkedList<Request> fooRequests = new LinkedList<>();
+        for(FoodRequest fR: foodRequests.values()){
+            fooRequests.add(fR);
+        }
+        return fooRequests;
+    }
+
+    /**
      * Methods for all request types
      */
 
+    /**
+     * Generic method to get all requests in the hashmaps
+     * @return the requests from the hashmaps
+     */
+    public LinkedList<Request> getAllRequests(){
+        LinkedList<Request> allRequests = new LinkedList<>();
+        allRequests.addAll(getAllinterpters());
+        allRequests.addAll(getAllSecurity());
+        allRequests.addAll(getAllFoodRequests());
+        return allRequests;
+    }
+
+    /**
+     * Filters all the requests in the hashmaps by the inputted status
+     * @param status
+     * @return linkedList of requests that fall under the same request progress status
+     */
     public LinkedList<Request> getStatusRequests(RequestProgressStatus status){
         LinkedList<Request> requests = getAllRequests();
         LinkedList<Request> displayedRequests = filterByStatus(requests, status);
         return displayedRequests;
     }
 
+    /**
+     * Filters the requests from the inputted list by the inputted status
+     * @param requests
+     * @param status
+     * @return linkedList of requests that fall under the same request progress status
+     */
     public LinkedList<Request> filterByStatus(LinkedList<Request> requests, RequestProgressStatus status){
         LinkedList<Request> displayedRequests = new LinkedList<>();
         for (int i = 0; i < requests.size(); i++) {
@@ -143,12 +187,15 @@ public class RequestEntity {
                     }
                     break;
             }
-
-
         }
         return displayedRequests;
     }
 
+    /**
+     * Determines the type of request from a requestID
+     * @param requestID
+     * @return the requestType of a specific request
+     */
     public RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
         if (requestType.equals("Int")) {
@@ -167,29 +214,35 @@ public class RequestEntity {
         }
     }
 
-    //Generic request deleting method
+
+    /**
+     * Generic request for deleting a request from the database and hashmaps
+     * @param requestID
+     */
     public void deleteRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
             System.out.println("Deleting InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             securityRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
             System.out.println("Deleting SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
+            foodRequests.remove(requestID);
+            dbController.deleteFoodRequest(requestID);
             System.out.println("Deleting FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Deleting JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
+        else if(requestType.equals("Ins")){ //TODO: change to Enum
             System.out.println("Deleting InsideTransportationRequest");
         }
-        else if(requestType.equals("Out")){
+        else if(requestType.equals("Out")){ //TODO: change to Enum
             System.out.println("Deleting OutsideTransportationRequest");
         }
         else{
@@ -198,100 +251,192 @@ public class RequestEntity {
     }
 
     //Generic request in progress maker
-    public void markInProgress(String completer, String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+
+    /**
+     * Generic method to mark a request in progress from a requestID
+     * Also adds the completer to the request object completer field
+     * @param completerID
+     * @param requestID
+     */
+    public void markInProgress(int completerID, String requestID){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.markInProgress(completer);
+            iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
             System.out.println("In Progress InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.markInProgress(completer);
+            sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
             System.out.println("In Progress SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
+            FoodRequest fR = foodRequests.get(requestID);
+            fR.setInProgress(completerID);
+            dbController.updateFoodRequest(fR);
             System.out.println("In Progress FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("In Progress JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("In Progress InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("In Progress OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("In Progress InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("In Progress OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
     }
 
     //Generic request completing method
+
+    /**
+     * Generic method to complete a request and changes request status to DONE
+     * @param requestID
+     */
     public void completeRequest(String requestID){
-        String requestType = requestID.substring(0,3);
-        if(requestType.equals("Int")){
+        RequestType requestType = checkRequestType(requestID);
+        if(requestType.equals(RequestType.INTERPRETER)){
             InterpreterRequest iR = interpreterRequests.get(requestID);
-            iR.complete();
+            iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
             System.out.println("Complete InterpreterRequest");
         }
-        else if(requestType.equals("Sec")){
+        else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
-            sR.complete();
+            sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
             System.out.println("Complete SecurityRequest");
         }
-        else if(requestType.equals("Foo")){
+        else if(requestType.equals(RequestType.FOOD)){
+            FoodRequest fR = foodRequests.get(requestID);
+            fR.setComplete();
+            foodRequests.replace(requestID, fR);
+            dbController.updateFoodRequest(fR);
             System.out.println("Complete FoodRequest");
         }
-        else if(requestType.equals("Jan")){
+        else if(requestType.equals(RequestType.JANITOR)){
             System.out.println("Complete JanitorRequest");
         }
-        else if(requestType.equals("Ins")){
-            System.out.println("Complete InsideTransportationRequest");
-        }
-        else if(requestType.equals("Out")){
-            System.out.println("Complete OutsideTransportationRequest");
-        }
+//        else if(requestType.equals(RequestType"Ins")){
+//            System.out.println("Complete InsideTransportationRequest");
+//        }
+//        else if(requestType.equals(RequestType"Out")){
+//            System.out.println("Complete OutsideTransportationRequest");
+//        }
         else{
             System.out.println("Invalid requestID");
         }
     }
 
+    /**
+     * Generic method to get a request form a requestID
+     * @param requestID
+     * @return returns the request object attatched to the requestID
+     */
     public Request getRequest(String requestID){
         Request request;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
             request = getInterpreterRequest(requestID);
-        }else{
+        }else if(checkRequestType(requestID).equals(RequestType.FOOD)){
+            request = getFoodRequest(requestID);
+        }
+        else{ //security request
             request = getSecurityRequest(requestID);
         }
         return request;
     }
 
+    /**
+     *
+     * @param requestID
+     * @return
+     */
+    public Employee getAssigner(String requestID){
+        Request request = getRequest(requestID);
+        return dbController.getEmployee(request.getAssignerID());
+    }
 
     /**
-     * InterpreterRequest methods
+     * Updates a request that is already in the database with the given requestID
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
      */
+    public void updateRequest(String requestID, String nodeID, int assignerID, String note,
+                              Timestamp submittedTime, Timestamp completedTime,
+                              RequestProgressStatus status){
+        Request oldReq = getRequest(requestID);
+        oldReq.setNodeID(nodeID);
+        oldReq.setAssignerID(assignerID);
+        oldReq.setNote(note);
+        oldReq.setSubmittedTime(submittedTime);
+        oldReq.setCompletedTime(completedTime);
+        //not sure if editing the status is needed
+        oldReq.setStatus(status);
+        switch (checkRequestType(requestID)){
+            case INTERPRETER:
+                dbController.updateInterpreterRequest((InterpreterRequest) oldReq);
+                break;
+            case SECURITY:
+                dbController.updateSecurityRequest((SecurityRequest) oldReq);
+                break;
+            case FOOD:
+                dbController.updateFoodRequest((FoodRequest) oldReq);
+        }
 
-    public String submitInterpreterRequest(String nodeID, String assignee, String note,
+    }
+
+
+    /**
+     * Gets the completer of a request if it is in progress
+     * @param requestID
+     * @return employee
+     */
+    public IEmployee getCompleter(String requestID){
+        Request request = getRequest(requestID);
+        if(request.getStatus()!=RequestProgressStatus.TO_DO) return dbController.getEmployee(request.getCompleterID());
+        else return NullEmployee.getInstance();
+    }
+
+    /**
+     * Adds an interpreter request to the database
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param lang
+     * @return adds an interpreter request to the database and returns that request
+     */
+    public String submitInterpreterRequest(String nodeID, int assignerID, String note,
                                            Language lang){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
-        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignee, "", note,
+        InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
         return rID;
     }
 
+    /**
+     * gets an interpreter request from the database
+     * @param requestID
+     * @return gets an interpreter request from the database that matches the given requestID
+     * @throws NullPointerException
+     */
     public InterpreterRequest getInterpreterRequest(String requestID) throws NullPointerException{
         System.out.println("Getting InterpreterRequest");
         if(interpreterRequests.containsKey(requestID)) {
@@ -308,40 +453,54 @@ public class RequestEntity {
         }
     }
 
-    public void updateInterpreterRequest(String requestID, String nodeID, String assigner, String note,
+    /**
+     * updates an interpreterRequest that is currently
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param language
+     */
+    public void updateInterpreterRequest(String requestID, String nodeID, int assignerID, String note,
                                          Timestamp submittedTime, Timestamp completedTime,
                                          RequestProgressStatus status, Language language){
         InterpreterRequest oldReq = interpreterRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
         oldReq.setLanguage(language);
-        //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateInterpreterRequest(oldReq);
     }
 
     /**
-     * SecurityRequest methods
+     *
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param priority
+     * @return
      */
-
-    public String submitSecurityRequest(String nodeID, String assignee, String note,
+    public String submitSecurityRequest(String nodeID, int assignerID, String note,
                                         int priority){
         long currTime = System.currentTimeMillis();
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
-        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignee, "", note,
+        SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
         return rID;
     }
 
+    /**
+     * gets a security request from the database
+     * @param requestID
+     * @return gets a security request form the database that matches the requestID
+     * @throws NullPointerException
+     */
     public SecurityRequest getSecurityRequest(String requestID) throws NullPointerException{
         System.out.println("Getting Security request");
         if(securityRequests.containsKey(requestID)) {
@@ -353,29 +512,108 @@ public class RequestEntity {
                 return securityRequests.get(requestID);
             }
             else{
-                throw new NullPointerException("Unable to find SecurityReqest in database");
+                throw new NullPointerException("Unable to find SecurityRequest in database");
             }
         }
     }
 
-    public void updateSecurityRequest(String requestID, String nodeID, String assigner, String note,
+    /**
+     * updates a securityRequest that is currently in the database
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param priority
+     */
+    public void updateSecurityRequest(String requestID, String nodeID, int assignerID, String note,
                                       Timestamp submittedTime, Timestamp completedTime,
                                       RequestProgressStatus status, int priority){
         SecurityRequest oldReq = securityRequests.get(requestID);
-        oldReq.setNodeID(nodeID);
-        oldReq.setAssigner(assigner);
-        oldReq.setNote(note);
-        oldReq.setSubmittedTime(submittedTime);
-        oldReq.setCompletedTime(completedTime);
-        //not sure if editing the status is needed
-        oldReq.setStatus(status);
-        oldReq.setPriority(priority);
-        //TODO: figure out how to make update request a generic method
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateSecurityRequest(oldReq);
     }
 
+    /**
+     * Adds food request to the database and the hashmaps
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param destinationNodeID
+     * @param deliveryDate
+     * @return Adds food request to the database and the hashmaps
+     */
+    public String submitFoodRequest(String nodeID, int assignerID, String note,
+                                    String destinationNodeID, LocalTime deliveryDate){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Foo"+currTime;
+
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR, deliveryDate.getHour());
+        now.set(Calendar.MINUTE, deliveryDate.getMinute());
+        now.set(Calendar.SECOND, deliveryDate.getSecond());
+
+        Timestamp deliveryTime = new Timestamp(now.getTimeInMillis());
+
+        FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime);
+
+        foodRequests.put(rID, fR);
+        dbController.addFoodRequest(fR);
+        return rID;
+    }
 
     /**
+     * gets a food request form the database
+     * @param requestID
+     * @return gets a food request from the database that matches the given requestID
+     * @throws NullPointerException
+     */
+    public FoodRequest getFoodRequest(String requestID)throws NullPointerException{
+        System.out.println("Getting Food Request");
+        if (foodRequests.containsKey(requestID)){
+            return foodRequests.get(requestID);
+        }
+        else{
+            readAllFromDatabase();
+            if(foodRequests.containsKey(requestID)){
+                return foodRequests.get(requestID);
+            }
+            else{
+                throw new NullPointerException("Unable to find Food Request in database");
+            }
+        }
+    }
+
+    /**
+     * updates a foodRequest that is currently in the database
+     * @param requestID
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @param submittedTime
+     * @param completedTime
+     * @param status
+     * @param destinationNodeID
+     * @param deliveryDate
+     */
+    public void updateFoodRequest(String requestID, String nodeID, int assignerID, String note,
+                                  Timestamp submittedTime, Timestamp completedTime,
+                                  RequestProgressStatus status, String destinationNodeID,
+                                  Timestamp deliveryDate){
+        FoodRequest oldReq = foodRequests.get(requestID);
+        oldReq.setDestinationID(destinationNodeID);
+        oldReq.setDeliveryDate(deliveryDate);
+        updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
+        dbController.updateFoodRequest(oldReq);
+    }
+
+    /*
      * Tracking information
      * what we want:
      * Time from IN_PROGRESS to COMPLETE for requests
@@ -386,7 +624,9 @@ public class RequestEntity {
      * common IT request problems
      */
 
-    // gets mean time to complete a request from IN_PROGRESS to DONE
+    /**
+     * gets mean time to setComplete a request from IN_PROGRESS to DONE
+     */
     public void getMeanTimeToComplete(){
         long sum=0;
         int total=0;
@@ -407,7 +647,10 @@ public class RequestEntity {
         }
     }
 
-    // gives a frequency histogram for interpreter request languages
+    /**
+     * gives a frequency historgram for interpreter request langauges
+     * @return a linkedlist of number of interpreter languages requested
+     */
     public LinkedList<LanguageFrequency> getLanguageFrequency(){
         dbController.getAllInterpreterRequests();
         LinkedList<LanguageFrequency> freq = new LinkedList<>();
@@ -427,7 +670,10 @@ public class RequestEntity {
         return freq;
     }
 
-    //returns a hashmap of Strings and integers for a pie chart
+    /**
+     * creates a pie chart displaying the percentage of request types
+     * @return a hashmap of Strings and integers for a pie chart
+     */
     public ObservableList<PieChart.Data> getRequestDistribution(){
         ObservableList<PieChart.Data> reqs =
                 FXCollections.observableArrayList(

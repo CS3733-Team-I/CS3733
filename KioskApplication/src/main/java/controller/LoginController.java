@@ -63,12 +63,12 @@ public class LoginController {
                 tfEmail.requestFocus();
             }
         });
+        parent.resetTimer();
     }
 
     @FXML
     public void OnLoginClicked() throws IOException {
-        KioskPermission access = l.logIn(tfEmail.getText(),pfPassword.getText());
-        if(access != KioskPermission.NONEMPLOYEE) {
+        if(l.logIn(tfEmail.getText(),pfPassword.getText())) {
             resetFields();
             parent.closeLoginPopup();
             parent.checkPermissions();
@@ -76,6 +76,7 @@ public class LoginController {
         else {
             errorMsg.setVisible(true);
         }
+        parent.resetTimer();
     }
 
     @FXML
@@ -83,6 +84,15 @@ public class LoginController {
         resetFields();
         disableCancelButton(true);
         parent.closeLoginPopup();
+        parent.resetTimer();
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        parent.resetTimer();
     }
 
     //Helper function for resetting the internals of the employee popup

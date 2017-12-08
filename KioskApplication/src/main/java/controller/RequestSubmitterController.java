@@ -1,65 +1,67 @@
 package controller;
 
 import com.jfoenix.controls.*;
-import database.DatabaseController;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import database.objects.Request;
-import entity.MapEntity;
+import entity.FoodMenuItem;
 import entity.LoginEntity;
+import entity.MapEntity;
 import entity.RequestEntity;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import utility.ApplicationScreen;
+import javafx.util.Callback;
 import utility.ResourceManager;
-import utility.request.Language;
 import utility.node.NodeFloor;
+import utility.node.NodeType;
+import utility.request.Language;
 import utility.request.RequestType;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
 
     @FXML private JFXTabPane requestTypeTabs;
-
-    @FXML private JFXTextField intLocation;
-    @FXML private JFXTextField secLocationField;
-    @FXML private JFXComboBox priorityMenu;
     @FXML private Tab interpreterTab;
+    @FXML private JFXTextField intLocation;
     @FXML private JFXComboBox langMenu;
     @FXML private JFXTextArea intNotesArea;
+
     /*food related*/
     @FXML private Tab foodTab;
-    @FXML private JFXComboBox foodMenu;
+    @FXML private JFXComboBox<Node> restaurantComboBox;
+    @FXML private JFXTimePicker deliveryTimePicker;
+    @FXML private JFXTreeTableView<FoodMenuItem> menuTable;
+    @FXML private JFXTextField deliveryLocation;
+
     /*security related*/
     @FXML private Tab securityTab;
+    @FXML private JFXTextField secLocationField;
+    @FXML private JFXComboBox priorityMenu;
     @FXML private JFXTextArea secNoteField;
+
     /*janitor related*/
     @FXML private Tab janitorTab;
 
-    @FXML private JFXButton btnSubmit;
-
-    @FXML private JFXButton btnCancel;
-    @FXML private JFXTextField txtLocation;
-    @FXML private JFXDatePicker datePicker;
-    @FXML private JFXTimePicker timePicker;
     RequestType currentRequestType = RequestType.INTERPRETER;
 
-    LoginEntity l;
-    RequestEntity r;
+    LoginEntity loginEntity;
+    RequestEntity requestEntity;
 
     public RequestSubmitterController(MainWindowController parent, MapController map) {
         super(parent, map);
-        l = LoginEntity.getInstance();
-        r = RequestEntity.getInstance();
+        loginEntity = LoginEntity.getInstance();
+        requestEntity = RequestEntity.getInstance();
     }
 
     @FXML
@@ -92,67 +94,171 @@ public class RequestSubmitterController extends ScreenController {
         janitorIconView.setFitWidth(24);
         janitorTab.setGraphic(janitorIconView);
 
+        ObservableList<Node> restaurants = FXCollections.observableArrayList();
+        for (Node node : MapEntity.getInstance().getAllNodes()) {
+            if (node.getNodeType() == NodeType.RETL) restaurants.add(node);
+        }
+        restaurantComboBox.setItems(restaurants);
+
+        restaurantComboBox.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
+            @Override
+            public ListCell<Node> call(ListView<Node> param) {
+                final ListCell<Node> cell = new ListCell<Node>() {
+                    @Override
+                    public void updateItem(Node item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item.getLongName());
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
+
+                intNotesArea.clear();
+                intLocation.clear();
+
+                langMenu.setValue(null);
             } else if (newValue == foodTab) {
-                System.out.println("FOOD");
                 currentRequestType = RequestType.FOOD;
             } else if (newValue == securityTab) {
                 currentRequestType = RequestType.SECURITY;
+
+                secNoteField.clear();
+                secLocationField.clear();
+
+                priorityMenu.setValue(null);
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             }
+            resetTimer();
         });
+
+        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99));
+        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0));
+        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99));
+
+        //Creating the root element
+        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0));
+        root.setExpanded(true);
+
+        //Adding tree items to the root
+        root.getChildren().setAll(childNode1, childNode2, childNode3);
+
+        //Creating a column
+        TreeTableColumn<FoodMenuItem, String> nameColumn = new TreeTableColumn<>("Name");
+        nameColumn.setPrefWidth(200);
+        nameColumn.setResizable(false);
+        TreeTableColumn<FoodMenuItem, String> costColumn = new TreeTableColumn<>("Cost");
+        costColumn.setPrefWidth(75);
+        costColumn.setResizable(false);
+        TreeTableColumn<FoodMenuItem, Boolean> checkboxColumn = new TreeTableColumn<>("Selected");
+        checkboxColumn.setPrefWidth(70);
+        checkboxColumn.setResizable(false);
+
+        //Defining cell content
+        nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, String> p) ->
+            new ReadOnlyStringWrapper(p.getValue().getValue().getName()));
+
+        costColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, String> p) -> {
+            if (p.getValue().isLeaf()) {
+                String moneyValue = Double.toString(p.getValue().getValue().getCost());
+                if (moneyValue.length() == 2) moneyValue += "0";
+                return new ReadOnlyStringWrapper("$" + moneyValue);
+            } else {
+                return new ReadOnlyStringWrapper("");
+            }
+        });
+
+        checkboxColumn.setCellFactory( tc -> new CheckBoxTreeTableCell<>());
+        checkboxColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, Boolean> p) -> {
+            if (p.getValue().isLeaf()) {
+                return new ReadOnlyBooleanWrapper(false);
+            } else {
+                return p.getValue().getValue().selectedProperty();
+            }
+        });
+
+        //Creating a tree table view
+        menuTable.setRoot(root);
+        menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
+        menuTable.setShowRoot(true);
+        menuTable.setEditable(true);
     }
 
     @FXML
-    void onInterpreterPressed() throws IOException {
-        getParent().switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
-    }
-
-    // adds the request. TODO: make this generic and able to process any and all requests
-    @FXML
-    public void addIntRequest() throws IOException {
-        String location = intLocation.getText();
-        String assigner = l.getUserID();
-        String notes = intNotesArea.getText();
-        if (notes==null){
-            notes="";
+    public void addRequest() throws IOException{
+        switch(currentRequestType){
+            case INTERPRETER:
+                addIntRequest();
+                break;
+            case SECURITY:
+                addSecRequest();
+                break;
+            case FOOD:
+                addFoodRequest();
+                break;
         }
-        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        r.submitInterpreterRequest(location, assigner, notes, language);
-        System.out.println("location: " + location + ". language: " + language.toString() + ". Assigner: " + assigner);
-        intLocation.clear();
-        intNotesArea.clear();
-        langMenu.setValue("");
     }
 
     @FXML
-    public void intClear() {
-        intLocation.clear();
-        intNotesArea.clear();
-        langMenu.setValue("");
-    }
+    public void clearButton() {
+        intLocation.setText("");
+        intNotesArea.setText("");
+        langMenu.setValue(null);
 
-    @FXML
-    public void addSecRequest()throws IOException {
-        String location = secLocationField.getText();
-        String assigner = l.getUserID();
-        String notes = secNoteField.getText();
-        int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + location + ". priority: " + priority + ". Admin Email: " + assigner);
-        //node ID, employee, notes, priority
-        r.submitSecurityRequest(location, assigner, notes, priority);
-        secLocationField.clear();
-        secNoteField.clear();
-        priorityMenu.setValue("");
-    }
+        restaurantComboBox.setValue(null);
+        deliveryTimePicker.setValue(null);
+        deliveryLocation.setText("");
 
-    @FXML
-    public void clearSecPressed(){
         secLocationField.setText("");
+        secNoteField.setText("");
+        priorityMenu.setValue(null);
+    }
 
+    public void addIntRequest() {
+        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
+        requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getLoginID(), intNotesArea.getText(), language);
+        System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getLoginID());
+        clearButton();
+    }
+
+    public void addSecRequest() {
+        int priority = Integer.parseInt(priorityMenu.getValue().toString());
+        System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
+        //node ID, employee, notes, priority
+        requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getLoginID(), secNoteField.getText(), priority);
+        clearButton();
+    }
+
+    public void addFoodRequest(){
+        String order = "Order:";
+        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
+            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
+            if (item.isLeaf()) {
+                order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+            }
+        }
+
+        if (order.endsWith(",")) order.substring(0, order.length() - 1);
+
+        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getLoginID(),order,
+                restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
+        System.out.println(requestEntity.getAllFoodRequests());
+        clearButton();
+    }
+
+    /**
+     * Resets the timer in the MainWindowController
+     */
+    @FXML
+    public void resetTimer(){
+        getParent().resetTimer();
     }
 
     @Override
@@ -164,7 +270,7 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     @Override
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) { }
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) { }
 
     @Override
     public void onMapNodeClicked(Node n) {
@@ -176,7 +282,7 @@ public class RequestSubmitterController extends ScreenController {
                 secLocationField.setText(n.getNodeID());
                 break;
             case FOOD:
-                System.out.println("map clicked in Food tab");
+                deliveryLocation.setText(n.getNodeID());
                 break;
             case JANITOR:
                 System.out.println("map clicked in Janitor tab");
@@ -192,6 +298,15 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void resetScreen() {
-        getMapController().setAnchor(0,235,0,0);
+        getMapController().setAnchor(0,400,0,0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(false);
+
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(false);
     }
 }

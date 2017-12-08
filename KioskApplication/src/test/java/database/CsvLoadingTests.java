@@ -1,28 +1,17 @@
 package database;
 
-import controller.MapController;
-import database.objects.Edge;
-import database.objects.InterpreterRequest;
-import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import utility.csv.CsvFileUtil;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CsvLoadingTests {
 
-    DatabaseController dbController;
-
-    public CsvLoadingTests() {
-        dbController = DatabaseController.getInstance();
-    }
+    public CsvLoadingTests() { }
 
     @Test
     public void loadCSVs() throws URISyntaxException{

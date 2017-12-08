@@ -1,12 +1,12 @@
 package database;
 
 import database.connection.Connector;
-import database.objects.Edge;
-import database.objects.Employee;
-import database.objects.Node;
+import database.connection.NotFoundException;
+import database.objects.*;
 import database.utility.*;
 import database.objects.SecurityRequest;
 import database.objects.InterpreterRequest;
+//import org.springframework.security.core.parameters.P;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -34,7 +34,6 @@ public class DatabaseController {
         try {
             if(test) {
                 instanceConnection = DBUtil.getTestConnection();
-
             } else {
                 instanceConnection = DBUtil.getConnection();
             }
@@ -55,7 +54,7 @@ public class DatabaseController {
     }
 
     //returns null if node does not exist
-    public Node getNode(String id) throws DatabaseException {
+    public Node getNode(String id) throws DatabaseException, NotFoundException {
         try {
             return Connector.selectNode(instanceConnection, id);
         } catch (SQLException e) {
@@ -119,7 +118,7 @@ public class DatabaseController {
             return Connector.insertNode(instanceConnection, node);
         } catch (SQLException e) {
             DatabaseExceptionType type;
-            if (e.getSQLState() != "23505") {
+            if (e.getSQLState() == "23505") {
                 type = DatabaseExceptionType.DUPLICATE_ENTRY;
             } else {
                 e.printStackTrace();
@@ -132,6 +131,27 @@ public class DatabaseController {
     public  int updateNode(Node node) throws DatabaseException {
         try {
             return Connector.updateNode(instanceConnection, node);
+        } catch (SQLException e) {
+            DatabaseExceptionType type;
+            if (e.getSQLState() != "23505") {
+                type = DatabaseExceptionType.ID_ALREADY_EXISTS;
+            } else {
+                e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
+            }
+            throw new DatabaseNodeException(node, type);
+        }
+    }
+
+    /**
+     * update node with uniqueID
+     * @param node
+     * @return
+     * @throws DatabaseException
+     */
+    public int updateNodeWithID(Node node) throws DatabaseException {
+        try {
+            return Connector.updateNodeWithID(instanceConnection, node);
         } catch (SQLException e) {
             DatabaseExceptionType type;
             if (e.getSQLState() != "23505") {
@@ -229,6 +249,17 @@ public class DatabaseController {
         return 0;
     }
 
+    public int addFoodRequest(FoodRequest fR){
+        try{
+            return Connector.insertFood(instanceConnection, fR);
+        }catch(SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     //TODO: Update this method
     public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
@@ -253,6 +284,17 @@ public class DatabaseController {
         return 0;
     }
 
+    public int updateFoodRequest(FoodRequest fR){
+        try{
+            return Connector.updateFood(instanceConnection, fR);
+        }catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
 
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
@@ -268,6 +310,17 @@ public class DatabaseController {
     public  SecurityRequest getSecurityRequest(String requestID) {
         try {
             return Connector.selectSecurity(instanceConnection, requestID);
+        } catch(SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public FoodRequest getFoodRequest(String requestID){
+        try {
+            return Connector.selectFood(instanceConnection, requestID);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
@@ -300,7 +353,19 @@ public class DatabaseController {
         return false;
     }
 
-    public  LinkedList<InterpreterRequest> getAllInterpreterRequests() {
+    public boolean deleteFoodRequest(String requestID){
+        try {
+            Connector.deleteFood(instanceConnection, requestID);
+            return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
         } catch (SQLException e) {
@@ -311,7 +376,7 @@ public class DatabaseController {
         return new LinkedList<InterpreterRequest>();
     }
 
-    public  LinkedList<SecurityRequest> getAllSecurityRequests() {
+    public LinkedList<SecurityRequest> getAllSecurityRequests() {
         try {
             return Connector.selectAllSecurity(instanceConnection);
         } catch (SQLException e) {
@@ -322,24 +387,57 @@ public class DatabaseController {
         return new LinkedList<SecurityRequest>();
     }
 
+    public LinkedList<FoodRequest> getAllFoodRequests() {
+        try {
+            return Connector.selectAllFood(instanceConnection);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<FoodRequest>();
+    }
+
+    public LinkedList<FoodRequest> getAllFoodRequest(){
+        try {
+            return Connector.selectAllFood(instanceConnection);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<FoodRequest>();
+    }
+
     public void deleteTestTables() {
         DBUtil.dropAllTables(instanceConnection);
     }
 
+    //Employee section
     /**
-     * Employee database management
+     * adds an employee to the database currently more expensive because it needs to return the ID as an identifier
+     * @param employee
+     * @param password
+     * @return their loginID
      */
-
-    // adds an employee to the database
-    public int addEmployee(String loginID, String userName, String password, KioskPermission permission, RequestType serviceAbility){
+    public int addEmployee(Employee employee, String password){
         try{
-            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT);
-            pstmt.setString(1,loginID);
-            pstmt.setString(2,userName);
-            pstmt.setString(3,password);
-            pstmt.setInt(4,permission.ordinal());
-            pstmt.setInt(5,serviceAbility.ordinal());
-            return pstmt.executeUpdate();
+            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT,
+                    PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1,employee.getUsername());
+            pstmt.setString(2,employee.getLastName());
+            pstmt.setString(3,employee.getFirstName());
+            pstmt.setString(4,employee.getPassword(password));
+            pstmt.setInt(5,employee.getPermission().ordinal());
+            pstmt.setInt(6,employee.getServiceAbility().ordinal());
+            pstmt.executeUpdate();
+            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT loginID FROM t_employee"+
+            " where username=?");
+            pstmt2.setString(1,employee.getUsername());
+            ResultSet rs = pstmt2.executeQuery();
+            if(rs.next()){
+                return rs.getInt("loginID");
+            }
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
                 e.printStackTrace();
@@ -349,14 +447,16 @@ public class DatabaseController {
     }
 
     // updates all stored information on the employee except their loginID
-    public int updateEmployee(String loginID, String userName, String password, KioskPermission permission, RequestType serviceAbility){
+    public int updateEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
-            pstmt.setString(5,loginID);
-            pstmt.setString(1,userName);
-            pstmt.setString(2,password);
-            pstmt.setInt(3,permission.ordinal());
-            pstmt.setInt(4,serviceAbility.ordinal());
+            pstmt.setInt(7,employee.getLoginID());
+            pstmt.setString(1,employee.getUsername());
+            pstmt.setString(2,employee.getLastName());
+            pstmt.setString(3,employee.getFirstName());
+            pstmt.setString(4,employee.getPassword(password));
+            pstmt.setInt(5,employee.getPermission().ordinal());
+            pstmt.setInt(6,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -367,10 +467,10 @@ public class DatabaseController {
     }
 
     // Removes the employee from the database
-    public boolean removeEmployee(String loginID){
+    public boolean removeEmployee(int loginID){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_DELETE);
-            pstmt.setString(1, loginID);
+            pstmt.setInt(1, loginID);
             return pstmt.execute();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -381,20 +481,21 @@ public class DatabaseController {
     }
 
     // Gets a specific employee from the database
-    public Employee getEmployee(String loginID){
+    public Employee getEmployee(int loginID){
         Employee employee = null;
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_SELECT);
-            pstmt.setString(1,loginID);
+            pstmt.setInt(1,loginID);
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 employee = new Employee(
-                        loginID,
-                        rs.getString("userName"),
+                        rs.getInt("loginID"),
+                        rs.getString("username"),
+                        rs.getString("lastName"),
+                        rs.getString("firstName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
-                        RequestType.values()[rs.getInt("serviceAbility")],
-                        true);
+                        RequestType.values()[rs.getInt("serviceAbility")]);
             }
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
@@ -413,14 +514,14 @@ public class DatabaseController {
             LinkedList<Employee> employees = new LinkedList<>();
             while(rs.next()) {
                 Employee employee = null;
-                //for completed InterpreterRequests
                 employee = new Employee(
-                        rs.getString("loginID"),
-                        rs.getString("userName"),
+                        rs.getInt("loginID"),
+                        rs.getString("username"),
+                        rs.getString("lastName"),
+                        rs.getString("firstName"),
                         rs.getString("password"),
                         KioskPermission.values()[rs.getInt("permission")],
-                        RequestType.values()[rs.getInt("serviceAbility")],
-                        true);
+                        RequestType.values()[rs.getInt("serviceAbility")]);
                 employees.add(employee);
             }
             return employees;

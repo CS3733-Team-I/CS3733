@@ -2,20 +2,39 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
+import controller.map.MapBuilderController;
+import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import entity.SystemSettings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import utility.ApplicationScreen;
+import utility.KioskPermission;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javafx.beans.*;
+import javafx.beans.property.*;
+import javafx.beans.value.*;
 
 public class MainWindowController {
 
@@ -35,48 +54,130 @@ public class MainWindowController {
     @FXML private Tab tabSettings;
 
     private LoginEntity loginEntity;
+    private SystemSettings systemSettings;
+
+
+    private Timer timer = new Timer();
+    int countdown;
+    int maxCountdown = 30;
+    double defZoom;
+
+    Timeline timeline = new Timeline(new KeyFrame(
+            Duration.millis(10000),
+            ae -> timeout()));
+
+    public BooleanProperty timeout = new SimpleBooleanProperty(false);
 
     private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
     private AnchorPane mapView;
     private MapController mapController;
 
-    protected HashMap<ApplicationScreen, ScreenController> controllers;
+    private HashMap<ApplicationScreen, ScreenController> controllers;
 
     public MainWindowController() {
+        systemSettings = SystemSettings.getInstance();
         loginEntity = LoginEntity.getInstance();
         controllers = new HashMap<>();
         mapView = new AnchorPane();
     }
 
     @FXML
-    protected void initialize() throws IOException
-    {
+    protected void initialize() throws IOException {
         // Initialize MapView with MapController
         mapController = new MapController();
         mapController.setParent(this);
-
+        ResourceBundle languageBundle= systemSettings.getResourceBundle();
         FXMLLoader mapPaneLoader = new FXMLLoader(getClass().getResource("/view/MapView.fxml"));
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
 
+        // Default to third floor
+        mapController.setFloorSelector(NodeFloor.THIRD);
+
+        // Pre-load all controllers/views
+        for (ApplicationScreen screen : ApplicationScreen.values()) {
+            ScreenController controller = null;
+
+            switch (screen) {
+                case MAP_BUILDER:
+                    controller = new MapBuilderController(this, mapController);
+                    break;
+
+                case PATHFINDING:
+                    controller = new PathfindingSidebarController(this, mapController);
+                    break;
+
+                case REQUEST_MANAGER:
+                    controller = new RequestManagerController(this, mapController);
+                    break;
+
+                case REQUEST_SUBMITTER:
+                    controller = new RequestSubmitterController(this, mapController);
+                    break;
+
+                case ADMIN_SETTINGS:
+                    controller = new SettingsController(this, mapController);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (controller != null) {
+                // load content view
+                controller.getContentView();
+
+                // cache controller
+                controllers.put(screen, controller);
+            }
+        }
+
+        tabMap.setText(languageBundle.getString("my.map"));
+        tabMB.setText(languageBundle.getString("my.mapbuilder"));
+        tabRM.setText(languageBundle.getString("my.requestmanager"));
+        tabRS.setText(languageBundle.getString("my.requestsubmit"));
+        tabSettings.setText(languageBundle.getString("my.setting"));
+        // attaches observer to the systemSettings
+
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            switch (loginEntity.getCurrentPermission()) {
+                case NONEMPLOYEE:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
+                    break;
+
+                case EMPLOYEE:
+                case SUPER_USER:
+                case ADMIN:
+                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
+                    break;
+            }
+
+            tabMap.setText(languageBundle.getString("my.map"));
+            tabMB.setText(languageBundle.getString("my.mapbuilder"));
+            tabRM.setText(languageBundle.getString("my.requestmanager"));
+            tabRS.setText(languageBundle.getString("my.requestsubmit"));
+            tabSettings.setText(languageBundle.getString("my.setting"));
+        });
+
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
-            switch (newValue.getText()) { // TODO make this more modular/language independent
-                case "Map":
+            switch (newValue.getId().toString()) {
+                case "tabMap":
                     switchToScreen(ApplicationScreen.PATHFINDING);
                     break;
-                case "Map Builder":
+                case "tabMB":
                     switchToScreen(ApplicationScreen.MAP_BUILDER);
                     break;
-                case "Request Manager":
+                case "tabRM":
                     switchToScreen(ApplicationScreen.REQUEST_MANAGER);
                     break;
-                case "Request Submit":
+                case "tabRS":
                     switchToScreen(ApplicationScreen.REQUEST_SUBMITTER);
                     break;
-                case "Settings":
+                case "tabSettings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
             }
@@ -84,6 +185,9 @@ public class MainWindowController {
 
         initializeLoginPopup();
         initializeTrackingTable();
+        defZoom = mapController.getZoomSlider().getValue();
+        countdown = maxCountdown;
+        startTimer();
 
         checkPermissions();
     }
@@ -122,22 +226,96 @@ public class MainWindowController {
         this.mapView.setDisable(true);
     }
 
+    void startTimer(){
+        System.out.println("TIMER START");
+        timeline.stop();
+        timeline = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> perSec()));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+    }
+
+    /**
+     * Reset time when countdown isnt at max or min values
+     * (prevents from calling too often or when reset is occurring)
+     */
+    public void resetTimer(){
+        if(countdown != maxCountdown && countdown != 0) {
+            System.out.println("TIMER RESET");
+            countdown = maxCountdown;
+            timeline.stop();
+            timeline = new Timeline(new KeyFrame(
+                    Duration.millis(1000),
+                    ae -> perSec()));
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+        }
+    }
+
+    /**
+     * Called by the timeline each second
+     */
+    public void perSec(){
+        if(countdown == 0){
+            timeout();
+            countdown = maxCountdown;
+        }
+        else {
+            countdown--;
+            System.out.println(countdown);
+        }
+    }
+
+    /**
+     * Called by peSec when the countdown reaches 0
+     */
+    public void timeout() {
+        System.out.println("TIMEOUT");
+        // Close the Login panel if open
+        closeLoginPopup();
+        // Log out
+        LoginEntity.getInstance().logOut();
+        switchButton.setText("Staff Login");
+        // Clears Tabs
+        tabPane.getTabs().clear();
+        // Reset tabs
+        tabPane.getTabs().add(tabMap);
+        tabPane.getTabs().add(tabSettings);
+
+        // Adjust node visability
+        mapController.setNodesVisible(false);
+        mapController.setEdgesVisible(false);
+
+        // Reset floor
+        mapController.setFloorSelector(NodeFloor.THIRD);
+        // Recenter
+        mapController.recenterPressed();
+        // Adjust Zoom
+        mapController.getZoomSlider().setValue(defZoom);
+        // Icon key close
+        mapController.keyClosed();
+
+        System.out.println("TIMEOUT DONE");
+    }
+
     //checks permissions of user and adjusts visible tabs and screens
     void checkPermissions() {
         switch (loginEntity.getCurrentPermission()) {
             case NONEMPLOYEE:
-                switchButton.setText("Staff Login");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogin"));
 
                 //hides all but the Map tab from non logged in users
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
+                tabPane.getTabs().add(tabSettings);
 
-                mapController.showEdgesBox.setSelected(false);
-                mapController.showNodesBox.setSelected(false);
+                mapController.setNodesVisible(false);
+                mapController.setEdgesVisible(false);
                 break;
 
             case EMPLOYEE:
-                switchButton.setText("Logoff");
+                switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
@@ -145,11 +323,11 @@ public class MainWindowController {
 
             case SUPER_USER:
             case ADMIN:
-                switchButton.setText("Logoff");
+                switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
 
                 //default to showing all nodes and edges
-                mapController.showEdgesBox.setSelected(true);
-                mapController.showNodesBox.setSelected(true);
+                mapController.setNodesVisible(true);
+                mapController.setEdgesVisible(true);
 
                 tabPane.getTabs().clear();
                 tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
@@ -157,42 +335,13 @@ public class MainWindowController {
         }
     }
 
-    void switchToScreen(ApplicationScreen screen) {
+    public void switchToScreen(ApplicationScreen screen) {
         ScreenController currentScreen = controllers.get(this.currentScreen);
         if (currentScreen != null) {
             currentScreen.onScreenChanged();
         }
 
         ScreenController controller = controllers.get(screen);
-
-        // Initialize controller if it doesn't exist
-        if (controller == null) {
-            switch (screen) {
-                case MAP_BUILDER:
-                    controller = new MapBuilderController(this, mapController);
-                    break;
-
-                case PATHFINDING:
-                    controller = new PathfindingSidebarController(this, mapController);
-                    break;
-                case REQUEST_MANAGER:
-                    controller = new RequestManagerController(this, mapController);
-                    break;
-
-                case REQUEST_SUBMITTER:
-                    controller = new RequestSubmitterController(this, mapController);
-                    break;
-
-                case ADMIN_SETTINGS:
-                    controller = new SettingsController(this, mapController);
-                    break;
-
-                default:
-                    break;
-            }
-
-            controllers.put(screen, controller);
-        }
 
         contentNode = controller.getContentView();
 
@@ -266,27 +415,40 @@ public class MainWindowController {
         }
     }
 
-    public void displayTrackingData(){
-
+    /**
+     * Sets default Zoom
+     * @param defZoom is the default zoom
+     */
+    public void setDefZoom(double defZoom){
+        this.defZoom = defZoom;
     }
 
     public void onMapNodeClicked(Node n) {
-        controllers.get(currentScreen).onMapNodeClicked(n);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapNodeClicked(n);
     }
 
     public void onMapEdgeClicked(Edge e) {
-        controllers.get(currentScreen).onMapEdgeClicked(e);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapEdgeClicked(e);
     }
 
-    public void onMapLocationClicked(javafx.scene.input.MouseEvent e, Point2D location) {
-        controllers.get(currentScreen).onMapLocationClicked(e, location);
+    public void onMapLocationClicked(javafx.scene.input.MouseEvent e) {
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapLocationClicked(e);
     }
 
     public void onMapFloorChanged(NodeFloor selectedFloor) {
-        controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
+        if (controllers.containsKey(currentScreen))
+            controllers.get(currentScreen).onMapFloorChanged(selectedFloor);
     }
 
-    protected String getCreateTabName() {
+    protected String getCurrentTabName() {
         return tabPane.getSelectionModel().getSelectedItem().getText();
+    }
+
+    public void nodesConnected(String nodeID1, String nodeID2) {
+        MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
+        mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
     }
 }
