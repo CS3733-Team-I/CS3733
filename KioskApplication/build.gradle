@@ -48,8 +48,7 @@ dependencies {
             [group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.23.0'],
             [group: 'com.google.apis', name: 'google-api-services-gmail', version: 'v1-rev73-1.23.0']
     )
-    compile('org.springframework.boot:spring-boot-starter-artemis')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+
     testCompile(
             [group: 'junit', name: 'junit', version: '4.11'],
             [group: 'org.apache.derby', name: 'derby', version: '10.11.1.1'],
