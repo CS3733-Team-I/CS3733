@@ -168,13 +168,26 @@ public class PathWaypointView extends AnchorPane {
 
         this.currentPath = path;
 
+        // Create list of nodes to check for zooming and then zoom in on the first segment of nodes on the path that
+        // are on a the starting floor
+        LinkedList<Node> nodesOnFloor = new LinkedList<>();
+        LinkedList<Node> nodesToCheck = new LinkedList<>();
+        nodesToCheck.addAll(path.getWaypoints());
+        nodesToCheck.addAll(path.getListOfAllNodes());
+        for (Node node : nodesToCheck) {
+            if (node.getFloor().equals(parent.getCurrentFloor())) {
+                nodesOnFloor.add(node);
+            }
+        }
+        parent.zoomOnSelectedNodes(nodesOnFloor);
+
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);
         }
 
         for(int i = 0; i < waypointList.size()-1; i ++) {
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-            parent.zoomOnSelectedNodes(segmentNodes);
+
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
             jfxPath.setStroke(Color.TRANSPARENT);
