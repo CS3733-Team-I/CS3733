@@ -187,6 +187,12 @@ public class MainWindowController {
         startTimer();
 
         checkPermissions();
+    }
+
+    /**
+     * Used to run methods after the screen is displayed
+     */
+    public void postDisplaySetup(){
         mapController.recenterPressed();
     }
 
