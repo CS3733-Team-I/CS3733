@@ -10,8 +10,11 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import utility.node.NodeType;
 
@@ -68,29 +71,21 @@ public class SearchController {
                         searchNode.getSearchString().equals(string)).findFirst().orElse(null);
             }
         });
-        /*Don't remove this*/
-//        cbNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
+//        //DONT REMOVE THIS
+//        cbNodes.setCellFactory(listView -> new ListCell<SearchNode>() {
 //            @Override
-//            public ListCell<Node> call(ListView<Node> param) {
-//                final ListCell<Node> nodeCell = new ListCell<Node>(){
-//                    {
-//                        super.setOnMouseEntered(new EventHandler<MouseEvent>() {
-//                            @Override
-//                            public void handle(MouseEvent event) {
-//                                System.out.println("mouse entered");
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    protected void updateItem(Node item, boolean empty) {
-//                        System.out.println(item);
-//                        super.updateItem(item, empty);
-//                    }
-//                };
-//                return nodeCell;
+//            protected void updateItem(SearchNode item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(item.getSearchString());
+//                if(item == null || empty) {
+//                    setGraphic(null);
+//                }
+//                else {
+//                    setGraphic(item.getNodeIcon());
+//                }
 //            }
 //        });
+
         cbNodes.setOnKeyReleased(e -> {
             cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
                 filteredList.setPredicate((Predicate<? super SearchNode>) searchNode-> {
