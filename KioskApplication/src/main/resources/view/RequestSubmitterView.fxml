@@ -94,6 +94,15 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                 </Tab>
+                <Tab fx:id="transportTab">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <JFXButton prefHeight="50.0" prefWidth="100"/>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
             </tabs>
         </JFXTabPane>
     </children>

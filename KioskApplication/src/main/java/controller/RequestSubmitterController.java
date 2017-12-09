@@ -50,6 +50,9 @@ public class RequestSubmitterController extends ScreenController {
     /*janitor related*/
     @FXML private Tab janitorTab;
 
+    /*transport related*/
+    @FXML private Tab transportTab;
+
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     LoginEntity loginEntity;
@@ -132,6 +135,8 @@ public class RequestSubmitterController extends ScreenController {
                 priorityMenu.setValue(null);
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
+            } else if (newValue == transportTab){
+
             }
             resetTimer();
         });
