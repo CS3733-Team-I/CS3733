@@ -4,14 +4,12 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.FoodMenuItem;
+import entity.FoodEntities.FoodMenuItem;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +18,7 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import utility.FoodType;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -27,7 +26,6 @@ import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
-import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -139,12 +137,12 @@ public class RequestSubmitterController extends ScreenController {
             resetTimer();
         });
 
-        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99));
-        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0));
-        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99));
+        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99, FoodType.ENTREE));
+        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0, FoodType.DRINK));
+        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99, FoodType.SIDE));
 
         //Creating the root element
-        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0));
+        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0, FoodType.ENTREE));
         root.setExpanded(true);
 
         //Adding tree items to the root
