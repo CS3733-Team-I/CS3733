@@ -621,38 +621,6 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
-    public String convertFloor(String eString){
-        switch (eString){
-            case "THIRD":
-                return "03";
-            case "SECOND":
-                return "02";
-            case "FIRST":
-                return "01";
-            case "LOWERLEVEL_2":
-                return "L2";
-            case "LOWERLEVEL_1":
-                return "L1";
-            default:
-                return "03";
-        }
-    }
-
-//    public String convertToFloorEnumString(enumString) {
-//        switch ()
-//    }
-
-    private String formatInt(int nodeTypeCount) {
-        if (nodeTypeCount + 1 < 10) {
-            return "00" + (nodeTypeCount + 1);
-        } else if (nodeTypeCount + 1 < 100) {
-            return "0" + (nodeTypeCount + 1);
-        } else if (nodeTypeCount + 1 <= 999) {
-            return (nodeTypeCount + 1) + "";
-        } else {
-            return "";
-        }
-    }
 
     private void updateNodeID() {
         //System.out.println(selectedNode.get().getNodeID());
@@ -715,40 +683,6 @@ public class MapBuilderController extends ScreenController {
             clearFields();
         }
     }
-    public void clearFields(){
-        lName.setText("");
-        sName.setText("");
-        nodeID.setText("");
-        xcoord.setText("");
-        ycoord.setText("");
-    }
-
-    public TeamAssigned convertToTeamEnum(String DBTeamString){
-        switch (DBTeamString){
-            case "A":
-                return TeamAssigned.A;
-            case "B":
-                return TeamAssigned.B;
-            case "C":
-                return TeamAssigned.C;
-            case "D":
-                return TeamAssigned.D;
-            case "E":
-                return TeamAssigned.E;
-            case "F":
-                return TeamAssigned.F;
-            case "G":
-                return TeamAssigned.G;
-            case "H":
-                return TeamAssigned.H;
-            case "I":
-                return TeamAssigned.I;
-            default:
-                return TeamAssigned.I;
-        }
-    }
-
-
 
     @FXML
     private void SaveNode(ActionEvent event) {
@@ -1160,5 +1094,67 @@ public class MapBuilderController extends ScreenController {
         floorDialoglo.setActions(Dialog);
 
         Dialog.show();
+    }
+
+    public void clearFields(){
+        lName.setText("");
+        sName.setText("");
+        nodeID.setText("");
+        xcoord.setText("");
+        ycoord.setText("");
+    }
+
+    public TeamAssigned convertToTeamEnum(String DBTeamString){
+        switch (DBTeamString){
+            case "A":
+                return TeamAssigned.A;
+            case "B":
+                return TeamAssigned.B;
+            case "C":
+                return TeamAssigned.C;
+            case "D":
+                return TeamAssigned.D;
+            case "E":
+                return TeamAssigned.E;
+            case "F":
+                return TeamAssigned.F;
+            case "G":
+                return TeamAssigned.G;
+            case "H":
+                return TeamAssigned.H;
+            case "I":
+                return TeamAssigned.I;
+            default:
+                return TeamAssigned.I;
+        }
+    }
+
+    public String convertFloor(String eString){
+        switch (eString){
+            case "THIRD":
+                return "03";
+            case "SECOND":
+                return "02";
+            case "FIRST":
+                return "01";
+            case "LOWERLEVEL_2":
+                return "L2";
+            case "LOWERLEVEL_1":
+                return "L1";
+            default:
+                return "03";
+        }
+    }
+
+    private String formatInt(int nodeTypeCount) {
+        if (nodeTypeCount + 1 < 10) {
+            return "00" + (nodeTypeCount + 1);
+        } else if (nodeTypeCount + 1 < 100) {
+            return "0" + (nodeTypeCount + 1);
+        } else if (nodeTypeCount + 1 <= 999) {
+            return (nodeTypeCount + 1) + "";
+        } else {
+            return "";
+        }
     }
 }
