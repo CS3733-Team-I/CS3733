@@ -225,7 +225,12 @@ public class Path {
         return currentCost;
     }
 
+    //TODO
     private void setDistance(){
-        
+        distance = 0;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 }

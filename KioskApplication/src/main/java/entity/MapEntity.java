@@ -6,6 +6,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.layout.Pane;
+import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
@@ -368,12 +370,15 @@ public class MapEntity implements IMapEntity {
         return -1;
     }
 
-    //TODO
-    public void updateDistanceFromKisok(Node kioskNode) {
+    //TODO call this whenever the kiosk location is set
+    public void updateDistanceFromKisok(Node kioskNode) throws PathfinderException{
+        Pathfinder pathfinder = new Pathfinder();
         for(NodeFloor nf : floors.keySet()){
             for(Node n : floors.get(nf).getAllNodes()) {
                 if(!n.getNodeType().equals(NodeType.HALL)){
-                    distanceFromKiosk.put(n,1);
+                    LinkedList<Node> waypoints = new LinkedList<>();
+                    waypoints.add(kioskNode); waypoints.add(n);
+                    distanceFromKiosk.put(n,pathfinder.generatePath(waypoints).getDistance());
                 }
             }
         }
