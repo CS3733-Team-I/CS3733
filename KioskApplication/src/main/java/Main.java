@@ -23,7 +23,6 @@ public class Main extends Application {
 
         MainWindowController mainWindowController = new MainWindowController();
         FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
-        //mainWindowLoader.setRoot(root);
         mainWindowLoader.setController(mainWindowController);
         mainWindowLoader.load();
         primaryStage.setTitle("Final Iteration");
