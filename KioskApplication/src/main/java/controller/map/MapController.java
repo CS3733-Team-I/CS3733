@@ -542,6 +542,10 @@ public class MapController {
 
         scrollPane.setHvalue((centerXOnZoomGroup-viewPort.getWidth()/2)/(contentSize.getWidth()-viewPort.getWidth()));
         scrollPane.setVvalue((centerYOnZoomGroup-viewPort.getHeight()/2)/(contentSize.getHeight()-viewPort.getHeight()));
+        System.out.println("Hvalue: "+scrollPane.getHvalue());
+        System.out.println("Vvalue: "+scrollPane.getVvalue());
+        System.out.println("ZoomGroupWidth: "+contentSize.getWidth());
+        System.out.println("ZoomGroupHeight: "+contentSize.getHeight());
     }
 
     /**
@@ -661,6 +665,7 @@ public class MapController {
     @FXML
     public void recenterPressed() {
         setFloorSelector(systemSettings.getDefaultnode().getFloor());
+        onFloorSelected();
         LinkedList<Node> defaultNode = new LinkedList<Node>();
         defaultNode.add(systemSettings.getDefaultnode());
         zoomOnSelectedNodes(defaultNode);

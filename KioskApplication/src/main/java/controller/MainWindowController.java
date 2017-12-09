@@ -285,12 +285,8 @@ public class MainWindowController {
         mapController.setNodesVisible(false);
         mapController.setEdgesVisible(false);
 
-        // Reset floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
         // Recenter
         mapController.recenterPressed();
-        // Adjust Zoom
-        mapController.getZoomSlider().setValue(defZoom);
         // Icon key close
         mapController.keyClosed();
 
