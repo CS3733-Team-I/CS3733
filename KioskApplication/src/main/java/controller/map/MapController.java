@@ -20,7 +20,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -164,6 +163,7 @@ public class MapController {
             this.showEdgesBox.setDisable(true);
             setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
             pathWaypointView.drawPath(path);
+            miniMapController.showPath(path);
         }
     }
 
@@ -238,19 +238,27 @@ public class MapController {
         this.pathWaypointView.clearAll();
         clearPath();
         this.nodesEdgesView.clear();
+        this.miniMapController.clearWaypoints();
     }
 
     /**
-     * Add a waypoint indicator to the map
-     * @param location waypoint location
+     * Add a waypoint indicator to the map and minimap
+     * @param node the waypoint's node
      */
-    public void addWaypoint(Point2D location, Node node) {
+    public void addWaypoint(Node node) {
         this.pathWaypointView.addWaypoint(node);
+        this.miniMapController.addWaypoint(node);
     }
 
+    /**
+     * Remove a waypoint indicator from the map and minimap
+     * @param node the waypoint's node
+     */
     public void removeWaypoint(Node node) {
         this.pathWaypointView.removeWaypoint(node);
+        this.miniMapController.removeWaypoint(node);
     }
+
     /**
      * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
      * @param floor the floor to load
@@ -717,7 +725,4 @@ public class MapController {
         keyDialogContainer.setDisable(true);
     }
 
-    public MiniMapController getMiniMapController() {
-        return miniMapController;
-    }
 }

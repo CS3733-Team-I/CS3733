@@ -97,7 +97,6 @@ public class PathfindingSidebarController extends ScreenController {
 
         getMapController().setPath(null);
         getMapController().clearMap();
-        getMapController().getMiniMapController().clearMiniWaypoint();
         getMapController().reloadDisplay();
     }
 
@@ -178,7 +177,7 @@ public class PathfindingSidebarController extends ScreenController {
                 currentWaypoints.add(node);
                 insertWaypointCell(node);
 
-                getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
+                getMapController().addWaypoint(node);
 
                 isAddingWaypoint = false;
             }
@@ -189,7 +188,7 @@ public class PathfindingSidebarController extends ScreenController {
             //add new waypoint
             insertWaypointCell(node);
             currentWaypoints.add(node);
-            getMapController().addWaypoint(new Point2D(node.getXcoord(), node.getYcoord()), node);
+            getMapController().addWaypoint(node);
         }
     }
 

@@ -97,7 +97,6 @@ public class PathWaypointView extends AnchorPane {
                         WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
                         this.wayPointViewsMap.remove(removedWaypoint);
                         this.wayPointView.getChildren().remove(removedView);
-                        parent.getMiniMapController().removeMiniWayPoint(removedWaypoint);
                     }
                 }
                 if(listener.wasAdded()) {
@@ -106,8 +105,6 @@ public class PathWaypointView extends AnchorPane {
                         this.wayPointViewsMap.put(addedWaypoint, waypointView);
 
                         this.wayPointView.getChildren().add(waypointView);
-                        //add the waypoint on the mini map
-                        parent.getMiniMapController().showMiniWayPoint(addedWaypoint);
 
                         waypointView.playWaypointPutTransition();
                     }
@@ -145,7 +142,6 @@ public class PathWaypointView extends AnchorPane {
     public void clearPath() {
         this.currentPath = null;
         pathView.getChildren().clear();
-        parent.getMiniMapController().clearPath();
     }
     /**
      * Clear drawn waypoints
@@ -163,7 +159,6 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
-        parent.getMiniMapController().clearPath();
         JFXButton switchFloor = null;
         segmentColorList.clear();
 
@@ -204,7 +199,6 @@ public class PathWaypointView extends AnchorPane {
             }
 
             this.pathView.getChildren().add(jfxPath);
-            parent.getMiniMapController().showPath(jfxPath);
 
             Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
             segmentColorList.add(colorForPointers);
