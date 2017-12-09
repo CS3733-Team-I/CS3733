@@ -139,6 +139,7 @@ public class NodeView extends StackPane {
             parent.mapNodeClicked(node);
             e.consume();
         }
+
     }
 
     private void dragDropped(DragEvent e) {

@@ -14,9 +14,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -191,6 +188,19 @@ public class PathWaypointView extends AnchorPane {
         segmentColorList.clear();
 
         this.currentPath = path;
+
+        // Create list of nodes to check for zooming and then zoom in on the first segment of nodes on the path that
+        // are on a the starting floor
+        LinkedList<Node> nodesOnFloor = new LinkedList<>();
+        LinkedList<Node> nodesToCheck = new LinkedList<>();
+        nodesToCheck.addAll(path.getWaypoints());
+        nodesToCheck.addAll(path.getListOfAllNodes());
+        for (Node node : nodesToCheck) {
+            if (node.getFloor().equals(parent.getCurrentFloor())) {
+                nodesOnFloor.add(node);
+            }
+        }
+        parent.zoomOnSelectedNodes(nodesOnFloor);
 
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);
