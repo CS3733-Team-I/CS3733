@@ -20,25 +20,24 @@ public class FuzzySearch {
         //LinkedList<Node> mapAllNodes = map.getAllNodes();
         HashMap<String, Node> allNodes = map.getAllNodesHM();
 
-       // metaphone = new DoubleMetaphone();
-        // spit input text
         String[] input= inputtext.split("");
-        // check for
 
+            // go through all nodes and get hightest match in a hashmap with key of node
             Map<String,Integer> sortedMap = new HashMap<>();
             int matched = 0;
             for (String key : allNodes.keySet()) {
                 matched = 0;
-                String[] longname = allNodes.get(key).getLongName().split("");
-                for (int i = 0; i < longname.length; i++) {
+                String longname = allNodes.get(key).getLongName();
+                //for (int i = 0; i < longname.length; i++) {
                 for (String text : input) {
-                        if (text.equalsIgnoreCase(longname[i])) {
+                        if (longname.contains(text)) {
                             matched++;
                         }
-                    }
+                   // }
                 }
                 sortedMap.put(key, matched);
             }
+            // now sort hashmap from highest to lowest
             int min = 0;
             List<String> sorted = new ArrayList<>();
            for (String key: sortedMap.keySet()){
@@ -50,6 +49,7 @@ public class FuzzySearch {
                 sorted.add(sorted.size(),key);
                 }
             }
+            // get the top 5 from sorted arraylist
             LinkedList<Node> bestmatch = new LinkedList<>();
             for (int i=0;i<5;i++){
                 bestmatch.add(allNodes.get(sorted.get(i)));

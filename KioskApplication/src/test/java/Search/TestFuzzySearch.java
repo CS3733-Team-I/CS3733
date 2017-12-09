@@ -15,6 +15,7 @@ import utility.node.NodeType;
 
 import java.util.LinkedList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 public class TestFuzzySearch {
     FuzzySearch fuzzySearch;
@@ -244,6 +245,18 @@ public class TestFuzzySearch {
             LinkedList<Node> list = fuzzySearch.FuzzySearch(search);
             Node answer = map.getNode("NODE26");
             assertTrue(list.contains(answer));
+        }
+        catch(Exception e){
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void ListTestSearch2Onetext(){
+        String search = "E";
+        try{
+            LinkedList<Node> list = fuzzySearch.FuzzySearch(search);
+            assertEquals("Elevator B",list.getFirst().getLongName());
         }
         catch(Exception e){
             assertTrue(false);
