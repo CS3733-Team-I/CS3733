@@ -10,14 +10,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
+import pathfinder.FuzzySearch;
 import utility.node.NodeType;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class SearchController {
@@ -34,6 +34,8 @@ public class SearchController {
     private ScreenController parent;
 
     private TableView<SearchNode> nodeTable;
+    FuzzySearch fuzzySearch;
+    String value;
 
     public SearchController(ScreenController parent) {
         this.parent = parent;
@@ -49,8 +51,9 @@ public class SearchController {
     void initialize() {
 
         //initialize the lists
+        fuzzySearch = new FuzzySearch();
         nodeTable = new TableView<>();
-        filteredList = new FilteredList<SearchNode>(nodeData, e->true);
+        filteredList = new FilteredList<>(nodeData, e->true);
         //set the combo box style and editable
         cbNodes.setTooltip(new Tooltip());
         cbNodes.setEditable(true);
@@ -88,17 +91,27 @@ public class SearchController {
 
         cbNodes.setOnKeyReleased(e -> {
             cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
+                final List<Node> searchResults = new LinkedList<>();;
+                if (newValue != null && !newValue.equals("")) {
+                    try {
+                        searchResults.addAll(FuzzySearch.fuzzySearch(newValue));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
                 filteredList.setPredicate((Predicate<? super SearchNode>) searchNode-> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
-                    }
-                    else {
+                    } else {
                         cbNodes.setPromptText("");
                     }
-                    //also check its lower case
+
+                    /*//also check its lower case
                     String lowerCaseFilter = newValue.toLowerCase();
                     //also check its upper case
                     String upperCaseFilter = newValue.toUpperCase();
+                    value = newValue;
                     if((searchNode.getDatabaseNode().getNodeID().contains(newValue) || searchNode.getDatabaseNode().getLongName().contains(newValue) || searchNode.getDatabaseNode().getShortName().contains(newValue)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
                         return true;
                     }else if((searchNode.getDatabaseNode().getNodeID().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(lowerCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
@@ -106,11 +119,19 @@ public class SearchController {
                     }
                     else if((searchNode.getDatabaseNode().getNodeID().contains(upperCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(upperCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(upperCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
                         return true;
+                    }*/
+
+                    for (Node node : searchResults) {
+                        if (node.getNodeID().equalsIgnoreCase(searchNode.getDatabaseNode().getNodeID())) {
+                            return true;
+                        }
                     }
+
                     return false;
                 });
             });
             sortedList = new SortedList<>(filteredList);
+
             sortedList.comparatorProperty().bind(nodeTable.comparatorProperty());
             nodeTable.setItems(sortedList);
             cbNodes.getItems().clear();

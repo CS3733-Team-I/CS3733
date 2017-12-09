@@ -4,7 +4,6 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
-import entity.SystemSettings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +90,7 @@ public class TestFuzzySearch {
         map.addNode(new Node("NODE10", 40, 20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE10_LN", "NODE10_SN", "I"));
         map.addNode(new Node("NODE11", 60, 20, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE11_LN", "NODE11_SN", "I"));
         map.addNode(new Node("NODE12", 20, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE12_LN", "NODE12_SN", "I"));
-        map.addNode(new Node("NODE13", 30, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE13_LN", "NODE13_SN", "I"));
+        map.addNode(new Node("NODE13", 30, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "Gynecology Department", "NODE13_SN", "I"));
         map.addNode(new Node("NODE14", 40, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE14_LN", "NODE14_SN", "I"));
         map.addNode(new Node("NODE15", 50, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE15_LN", "NODE15_SN", "I"));
         map.addNode(new Node("NODE16", 60, 30, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B", "Elev B", "I"));
@@ -100,7 +99,7 @@ public class TestFuzzySearch {
         map.addNode(new Node("NODE19", 40, 50, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE19_LN", "NODE19_SN", "I"));
         map.addNode(new Node("NODE20", 30, 60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "General Suite", "NODE20_SN", "I"));
         map.addNode(new Node("NODE21", 40, 60, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE21_LN A", "NODE21_SN", "I"));
-        map.addNode(new Node("NODE22", 30, 70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE22_LN", "NODE22_SN", "I"));
+        map.addNode(new Node("NODE22", 30, 70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "Reproductive Endocrine Labs", "NODE22_SN", "I"));
         map.addNode(new Node("NODE23", 40, 70, NodeFloor.THIRD, NodeBuilding.FRANCIS45, NodeType.HALL, "Orthopedics and Rhemutalogy", "NODE23_SN", "I"));
         //Nodes for F2
         map.addNode(new Node("NODE24", 10, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A", "Elev A", "I"));
@@ -108,16 +107,16 @@ public class TestFuzzySearch {
         map.addNode(new Node("NODE26", 30, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "General Surgical Specialties Suite B", "NODE26_SN", "I"));
         map.addNode(new Node("NODE27", 40, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE27_LN", "NODE27_SN", "I"));
         map.addNode(new Node("NODE28", 60, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE28_LN", "NODE28_SN", "I"));
-        map.addNode(new Node("NODE29", 70, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE29_LN", "NODE29_SN", "I"));
+        map.addNode(new Node("NODE29", 70, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "Ambulatory X-Ray Floor 1", "NODE29_SN", "I"));
         map.addNode(new Node("NODE30", 80, 10, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A", "St A", "I"));
         map.addNode(new Node("NODE31", 20, 20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE31_LN", "NODE31_SN", "I"));
         map.addNode(new Node("NODE32", 30, 20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Handicapped", "RR - HC", "I"));
         map.addNode(new Node("NODE33", 40, 20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE33_LN", "NODE33_SN", "I"));
-        map.addNode(new Node("NODE34", 60, 20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE34_LN", "NODE34_SN", "I"));
+        map.addNode(new Node("NODE34", 60, 20, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "Ambulance Parking Exit Floor 1", "NODE34_SN", "I"));
         map.addNode(new Node("NODE35", 20, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE35_LN", "NODE35_SN", "I"));
         map.addNode(new Node("NODE36", 30, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE36_LN", "NODE36_SN", "I"));
-        map.addNode(new Node("NODE37", 40, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE37_LN", "NODE37_SN", "I"));
-        map.addNode(new Node("NODE38", 50, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE38_LN", "NODE38_SN", "I"));
+        map.addNode(new Node("NODE37", 40, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "Au Bon Pan", "NODE37_SN", "I"));
+        map.addNode(new Node("NODE38", 50, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.HALL, "Outpatient Speciman Collection Level 2", "NODE38_SN", "I"));
         map.addNode(new Node("NODE39", 60, 30, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator B", "Elev B", "I"));
         map.addNode(new Node("NODE40", 30, 40, NodeFloor.SECOND, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair B", "St B", "I"));
         //Nodes for F1
@@ -126,7 +125,7 @@ public class TestFuzzySearch {
         map.addNode(new Node("NODE49", 30, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE49_LN", "NODE49_SN", "I"));
         map.addNode(new Node("NODE50", 40, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE50_LN", "NODE50_SN", "I"));
         map.addNode(new Node("NODE51", 60, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE51_LN", "NODE51_SN", "I"));
-        map.addNode(new Node("NODE52", 70, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE52_LN", "NODE52_SN", "I"));
+        map.addNode(new Node("NODE52", 70, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "Au Bon Pain", "NODE52_SN", "I"));
         map.addNode(new Node("NODE53", 80, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A", "St A", "I"));
         map.addNode(new Node("NODE54", 20, 20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE54_LN", "NODE54_SN", "I"));
         map.addNode(new Node("NODE55", 30, 20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped", "RR - nHC", "I"));
@@ -228,7 +227,7 @@ public class TestFuzzySearch {
         String search = "Obstetrics Department";
 
         try{
-        LinkedList<Node> list = fuzzySearch.FuzzySearch(search);
+        LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
         Node answer = map.getNode("NODE61");
 
        assertTrue(list.contains(answer));
@@ -242,7 +241,7 @@ public class TestFuzzySearch {
         String search = "General Specialties B";
 
         try{
-            LinkedList<Node> list = fuzzySearch.FuzzySearch(search);
+            LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
             Node answer = map.getNode("NODE26");
             assertTrue(list.contains(answer));
         }
@@ -255,8 +254,30 @@ public class TestFuzzySearch {
     public void ListTestSearch2Onetext(){
         String search = "E";
         try{
-            LinkedList<Node> list = fuzzySearch.FuzzySearch(search);
+            LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
             assertEquals("Elevator B",list.getFirst().getLongName());
+        }
+        catch(Exception e){
+            assertTrue(false);
+        }
+    }
+    @Test
+    public void ListTestSearchlowercase(){
+        String search = "au bon pan";
+        try{
+            LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
+            assertEquals("Au Bon Pan",list.getFirst().getLongName());
+        }
+        catch(Exception e){
+            assertTrue(false);
+        }
+    }
+    @Test
+    public void ListTestSearchlowercase2(){
+        String search = "au bon";
+        try{
+            LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
+            assertEquals("Au Bon Pan",list.getFirst().getLongName());
         }
         catch(Exception e){
             assertTrue(false);
