@@ -6,6 +6,7 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
+import entity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -156,15 +157,15 @@ public class PathfindingSidebarController extends ScreenController {
             btClearPath.setText(resB.getString("clearpath"));
         });
 
-        searchController.getCBValueProperty().addListener(new ChangeListener<Node>() {
+        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
             @Override
-            public void changed(ObservableValue<? extends Node> observable, Node oldValue, Node newValue) {
+            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
                 if (newValue != null) {
-                    if(newValue.getFloor() != getMapController().getCurrentFloor()) {
-                        getMapController().setFloorSelector(newValue.getFloor());
+                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
                     }
-                    getMapController().recenterAtNode(newValue);
-                    onMapNodeClicked(newValue);
+                    getMapController().recenterAtNode(newValue.getDatabaseNode());
+                    onMapNodeClicked(newValue.getDatabaseNode());
                 }
             }
         });
@@ -529,7 +530,7 @@ public class PathfindingSidebarController extends ScreenController {
             node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.ELEV, true);
         }
         else if((JFXButton)e.getTarget() == btRestaurant) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.SERV, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.RETL, true);
         }
         else if((JFXButton)e.getTarget() == btExit) {
             node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.EXIT, true);

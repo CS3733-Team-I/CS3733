@@ -1,48 +1,45 @@
 package controller;
 
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SearchNode;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
+import utility.node.NodeType;
 
 import java.util.function.Predicate;
 
 public class SearchController {
 
     @FXML
-    private JFXComboBox<Node> cbNodes;
+    private JFXComboBox<SearchNode> cbNodes;
 
-    private FilteredList<Node> filteredList;
+    private FilteredList<SearchNode> filteredList;
 
-    private ObservableList<Node> nodeData;
+    private ObservableList<SearchNode> nodeData;
 
-    private SortedList<Node> sortedList;
+    private SortedList<SearchNode> sortedList;
 
     private ScreenController parent;
 
-    private TableView<Node> nodeTable;
+    private TableView<SearchNode> nodeTable;
 
     public SearchController(ScreenController parent) {
         this.parent = parent;
-        nodeData = FXCollections.observableArrayList(MapEntity.getInstance().getAllNodes());
+        nodeData = FXCollections.observableArrayList();
+        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
+            if(databaseNode.getNodeType() != NodeType.HALL) {
+                nodeData.add(new SearchNode(databaseNode));
+            }
+        }
     }
 
     @FXML
@@ -50,27 +47,28 @@ public class SearchController {
 
         //initialize the lists
         nodeTable = new TableView<>();
-        filteredList = new FilteredList<Node>(nodeData, e->true);
+        filteredList = new FilteredList<SearchNode>(nodeData, e->true);
         //set the combo box style and editable
         cbNodes.setTooltip(new Tooltip());
         cbNodes.setEditable(true);
-        cbNodes.setPromptText("Search");
+        cbNodes.setPromptText("Search by location, doctor or type");
         cbNodes.getEditor().setEditable(true);
-        cbNodes.setConverter(new StringConverter<Node>() {
+        cbNodes.setConverter(new StringConverter<SearchNode>() {
             @Override
-            public String toString(Node object) {
+            public String toString(SearchNode object) {
                 if(object != null) {
-                    return object.getLongName() + " (" + object.getFloor() + ")";
+                    return object.getSearchString();
                 }
                 else return null;
             }
 
             @Override
-            public Node fromString(String string) {
-                return cbNodes.getItems().stream().filter(node ->
-                node.getLongName().equals(string)).findFirst().orElse(null);
+            public SearchNode fromString(String string) {
+                return cbNodes.getItems().stream().filter(searchNode ->
+                        searchNode.getSearchString().equals(string)).findFirst().orElse(null);
             }
         });
+        /*Don't remove this*/
 //        cbNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
 //            @Override
 //            public ListCell<Node> call(ListView<Node> param) {
@@ -86,6 +84,7 @@ public class SearchController {
 //
 //                    @Override
 //                    protected void updateItem(Node item, boolean empty) {
+//                        System.out.println(item);
 //                        super.updateItem(item, empty);
 //                    }
 //                };
@@ -94,20 +93,23 @@ public class SearchController {
 //        });
         cbNodes.setOnKeyReleased(e -> {
             cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
-                filteredList.setPredicate((Predicate<? super Node>) node-> {
+                filteredList.setPredicate((Predicate<? super SearchNode>) searchNode-> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
+                    }
+                    else {
+                        cbNodes.setPromptText("");
                     }
                     //also check its lower case
                     String lowerCaseFilter = newValue.toLowerCase();
                     //also check its upper case
                     String upperCaseFilter = newValue.toUpperCase();
-                    if(node.getNodeID().contains(newValue) || node.getLongName().contains(newValue) || node.getShortName().contains(newValue)) {
+                    if((searchNode.getDatabaseNode().getNodeID().contains(newValue) || searchNode.getDatabaseNode().getLongName().contains(newValue) || searchNode.getDatabaseNode().getShortName().contains(newValue)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
                         return true;
-                    }else if(node.getNodeID().contains(lowerCaseFilter) || node.getLongName().contains(lowerCaseFilter) || node.getShortName().contains(lowerCaseFilter)) {
+                    }else if((searchNode.getDatabaseNode().getNodeID().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(lowerCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
                         return true;
                     }
-                    else if(node.getNodeID().contains(upperCaseFilter) || node.getLongName().contains(upperCaseFilter) || node.getShortName().contains(upperCaseFilter)) {
+                    else if((searchNode.getDatabaseNode().getNodeID().contains(upperCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(upperCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(upperCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
                         return true;
                     }
                     return false;
@@ -133,7 +135,7 @@ public class SearchController {
     }
 
     public Node getSelected() {
-        return cbNodes.getSelectionModel().getSelectedItem();
+        return cbNodes.getSelectionModel().getSelectedItem().getDatabaseNode();
     }
 
     public boolean isSelected() {
@@ -141,7 +143,7 @@ public class SearchController {
     }
 
 
-    public ObjectProperty<Node> getCBValueProperty() {
+    public ObjectProperty<SearchNode> getCBValueProperty() {
         return cbNodes.valueProperty();
     }
 
