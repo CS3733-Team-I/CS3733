@@ -227,10 +227,22 @@ public class Path {
 
     //TODO
     private void setDistance(){
+        LinkedList<Edge> edgeList = getEdgesAsOneList();
         distance = 0;
+        for(Edge e : edgeList) {
+            distance += e.getCost();
+        }
     }
 
     public int getDistance() {
         return distance;
+    }
+
+    private LinkedList<Edge> getEdgesAsOneList() {
+        LinkedList<Edge> returnList = new LinkedList<>();
+        for(LinkedList<Edge> edgeList : edges) {
+            returnList.addAll(edgeList);
+        }
+        return returnList;
     }
 }
