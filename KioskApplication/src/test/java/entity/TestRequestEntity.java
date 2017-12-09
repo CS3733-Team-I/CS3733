@@ -50,10 +50,10 @@ public class TestRequestEntity {
         db.addNode(n3);
 
         Employee testEmp1 = new Employee("boss@hospital.com","Wong","Wilson",
-                "123", KioskPermission.ADMIN, RequestType.GENERAL);
+                "123","", KioskPermission.ADMIN, RequestType.GENERAL);
         empID1=db.addEmployee(testEmp1,"123");
         Employee testEmp2 = new Employee("bobby@hospital.com","Bobby","Hill",
-                "123", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
+                "123","", KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         empID2=db.addEmployee(testEmp2,"123");
         String pIR = r.submitInterpreterRequest("NODE3", empID1,"Is Chinese or Japanese",Language.CHINESE);
         presetIR = r.getInterpreterRequest(pIR);
@@ -66,7 +66,7 @@ public class TestRequestEntity {
 
         //cleans all employees
         List<Employee> employees = db.getAllEmployees();
-        for (Employee e : employees) db.removeEmployee(e.getLoginID());
+        for (Employee e : employees) db.removeEmployee(e.getID());
         //removes node
         db.removeNode(n1);
         db.removeNode(n2);

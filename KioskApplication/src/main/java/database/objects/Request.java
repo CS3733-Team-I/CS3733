@@ -1,6 +1,7 @@
 package database.objects;
 
 import utility.request.RequestProgressStatus;
+import utility.request.RequestType;
 
 import java.sql.Timestamp;
 
@@ -112,6 +113,24 @@ public abstract class Request {
 
     public Timestamp getCompletedTime() {
         return completedTime;
+    }
+
+    public RequestType getRequestType(){
+        String requestType = requestID.substring(0, 3);
+        if (requestType.equals("Int")) {
+            return RequestType.INTERPRETER;
+        } else if (requestType.equals("Sec")) {
+            return RequestType.SECURITY;
+        } else if (requestType.equals("Foo")) {
+            return RequestType.FOOD;
+        } else if (requestType.equals("Jan")) {
+            return RequestType.JANITOR;
+            //} else if (requestType.equals("Ins")) {
+            //} else if (requestType.equals("Out")) {
+        } else {
+            System.out.println("Invalid requestID");
+            return null;
+        }
     }
 
     public RequestProgressStatus getStatus() {

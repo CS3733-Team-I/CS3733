@@ -185,4 +185,8 @@ public class NodesEdgesView extends AnchorPane {
     public void nodesConnected(String nodeID1, String nodeID2) {
         parent.nodesConnected(nodeID1, nodeID2);
     }
+
+    public HashMap<Node, NodeView> getNodeViewsMap() {
+        return nodeViewsMap;
+    }
 }
