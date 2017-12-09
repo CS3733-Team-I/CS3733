@@ -110,7 +110,7 @@ public class MapBuilderController extends ScreenController {
         //disable all fields
         btNodeSave.setDisable(true);
         setkiosklocation.setDisable(true);
-        setEditingDisabled();
+        setEditing(true);
 
         //add items into the combobox
         CBnodeType.getItems().addAll(NodeType.values());
@@ -264,9 +264,9 @@ public class MapBuilderController extends ScreenController {
             });
 
             if(newVal == null && newNode.get() == null) {
-                setEditingDisabled();
+                setEditing(true);
             } else {
-                setEditingEnabled();
+                setEditing(false);
             }
         });
 
@@ -308,7 +308,7 @@ public class MapBuilderController extends ScreenController {
             }
 
             if(selectedNode.get() == null && newVal == null) {
-                setEditingDisabled();
+                setEditing(true);
             }
         });
 
@@ -353,7 +353,11 @@ public class MapBuilderController extends ScreenController {
         initPopup();
     }
 
-
+    /**
+     * to update the combox
+     * @param comboBox
+     * @param category
+     */
     public void checkField(JFXComboBox comboBox, int category){
         switch(category) {
             case 1:
@@ -418,7 +422,7 @@ public class MapBuilderController extends ScreenController {
             case 3:
                 if(!comboBox.isDisable()) {
                     if(newNode.get() != null) {
-                        newNode.get().setTeamAssigned("Team " + comboBox.getValue().toString());
+                        newNode.get().setTeamAssigned("Team " + ((TeamAssigned)comboBox.getValue()).toString());
                         updateNodeID();
                         return;
                     }
@@ -426,12 +430,13 @@ public class MapBuilderController extends ScreenController {
                     if (observableChangedNodes.contains(selectedNode.get())) {
                         for(Node changingNode : observableChangedNodes) {
                             if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
-                                changingNode.setTeamAssigned("Team " + comboBox.getValue().toString());
+                                changingNode.setTeamAssigned("Team " + ((TeamAssigned)comboBox.getValue()).toString());
                                 updateNodeID();
                             }
                         }
                     } else {
-                        selectedNode.get().setTeamAssigned("Team " + comboBox.getValue().toString());
+                        selectedNode.get().setTeamAssigned("Team " + ((TeamAssigned)comboBox.getValue()).toString());
+
                         updateNodeID();
                         if(!observableChangedNodes.contains(selectedNode.get())){
                             observableChangedNodes.add(selectedNode.get());
@@ -443,7 +448,10 @@ public class MapBuilderController extends ScreenController {
         }
     }
 
-
+    /**
+     * to update the textField
+     * @param textField
+     */
     public void checkStringField(JFXTextField textField){
         if(!textField.isDisable()) {
             textField.resetValidation();
@@ -552,7 +560,7 @@ public class MapBuilderController extends ScreenController {
         getMapController().setNodesVisible(true);
         getMapController().setEdgesVisible(true);
 
-        setEditingDisabled();
+        setEditing(true);
 
         // Set if the options box is visible
         getMapController().setOptionsBoxVisible(true);
@@ -563,7 +571,7 @@ public class MapBuilderController extends ScreenController {
 
     //TODO REFACTOR THIS USING "CHANGE"
     private void updateNodeDisplay(NodeSelectionType nodeSelectionType) {
-        setEditingDisabled();
+        setEditing(true);
         switch (nodeSelectionType) {
             case SELECTED:
                 // If the selected node has already been changed set the values to the changed values
@@ -594,7 +602,7 @@ public class MapBuilderController extends ScreenController {
                 sName.setText(selectedNode.get().getShortName());
                 CBnodeTeamAssigned.setValue(convertToTeamEnum(selectedNode.get().getTeamAssigned()));
                 nodeID.setText(selectedNode.get().getNodeID());
-                setEditingEnabled();
+                setEditing(false);
                 break;
             case NEW:
                 lName.setText("");
@@ -607,7 +615,7 @@ public class MapBuilderController extends ScreenController {
                 CBnodeType.setValue(newNode.get().getNodeType());
                 CBnodeTeamAssigned.setValue(convertToTeamEnum(newNode.get().getTeamAssigned()));
 
-                setEditingEnabled();
+                setEditing(true);
                 updateNodeID();
                 break;
         }
@@ -659,6 +667,7 @@ public class MapBuilderController extends ScreenController {
                 String nodeTypeCount = MapEntity.getInstance().getNodeTypeCount(nodeType, nodeFloor, nodeTeamAssigned, "");
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
                 System.out.println(convertFloor(nodeFloor.toLiteralString()));
+                System.out.println(nodeTeamAssigned.name());
                 nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
 
             }
@@ -678,7 +687,6 @@ public class MapBuilderController extends ScreenController {
     }
 
     private String elevNameInChangedList(){
-
         String result = "";
         for(int i=0; i<observableChangedNodes.size(); i++){
             if(observableChangedNodes.get(i).getNodeType() == NodeType.ELEV){
@@ -689,53 +697,31 @@ public class MapBuilderController extends ScreenController {
         return preparedName;
     }
 
-    private void setEditingEnabled() {
-        CBnodeType.setDisable(false);
-        CBnodeBuilding.setDisable(false);
-        CBnodeTeamAssigned.setDisable(false);
-        lName.setDisable(false);
-        sName.setDisable(false);
-        nodeID.setDisable(false);
-        xcoord.setDisable(false);
-        ycoord.setDisable(false);
-        //turn off advanced options
-        //TODO change save, undo, redo disable/renable condition
-        btAdvance.setDisable(false);
-        btNodeUndo.setDisable(false);
-        btNodeRedo.setDisable(false);
-        btNodeDelete.setDisable(false);
-        setkiosklocation.setDisable(false);
+    public void setEditing(boolean b){
+        CBnodeType.setDisable(b);
+        CBnodeBuilding.setDisable(b);
+        CBnodeTeamAssigned.setDisable(b);
+        lName.setDisable(b);
+        sName.setDisable(b);
+        nodeID.setDisable(b);
+        xcoord.setDisable(b);
+        ycoord.setDisable(b);
+        btAdvance.setDisable(b);
+        btNodeUndo.setDisable(b);
+        btNodeRedo.setDisable(b);
+        btNodeDelete.setDisable(b);
+        setkiosklocation.setDisable(b);
+        if(b == true){
+            clearFields();
+        }
     }
-
-    private void setEditingDisabled() {
-        CBnodeType.setDisable(true);
-        CBnodeBuilding.setDisable(true);
-        CBnodeTeamAssigned.setDisable(true);
-
-        lName.setDisable(true);
+    public void clearFields(){
         lName.setText("");
-
-        sName.setDisable(true);
         sName.setText("");
-
-        nodeID.setDisable(true);
         nodeID.setText("");
-
-        xcoord.setDisable(true);
         xcoord.setText("");
-
-        ycoord.setDisable(true);
         ycoord.setText("");
-
-        //turn off advanced options
-        btAdvance.setDisable(true);
-        //disable node operation buttons
-        setkiosklocation.setDisable(true);
-        btNodeUndo.setDisable(true);
-        btNodeRedo.setDisable(true);
-        btNodeDelete.setDisable(true);
     }
-
 
     public TeamAssigned convertToTeamEnum(String DBTeamString){
         switch (DBTeamString){
