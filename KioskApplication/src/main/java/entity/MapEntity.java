@@ -371,6 +371,13 @@ public class MapEntity implements IMapEntity {
     }
 
     //TODO call this whenever the kiosk location is set
+    /**
+     * Method that should be called every time the kiosk location is set.
+     * Calculates the distance to every non-hallway node and stores it in a hashmap
+     * for use with search and find nearest.
+     * @param kioskNode
+     * @throws PathfinderException
+     */
     public void updateDistanceFromKisok(Node kioskNode) throws PathfinderException{
         Pathfinder pathfinder = new Pathfinder();
         for(NodeFloor nf : floors.keySet()){
