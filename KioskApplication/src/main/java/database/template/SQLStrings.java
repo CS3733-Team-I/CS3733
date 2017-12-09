@@ -116,7 +116,7 @@ public class SQLStrings {
             " lastName Varchar(35) NOT NULL,"+
             " firstName Varchar(35) NOT NULL,"+
             " password Varchar(60) NOT NULL,"+
-            " options CLOB(255),"+
+            " options LONG VARCHAR,"+
             " permission INT NOT NULL,"+
             " serviceAbility INT NOT NULL"+
             ")";
