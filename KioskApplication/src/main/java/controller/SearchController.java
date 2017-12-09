@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -59,7 +60,7 @@ public class SearchController {
             @Override
             public String toString(Node object) {
                 if(object != null) {
-                    return object.getLongName() + " (" + object.getFloor() + ") ";
+                    return object.getLongName() + " (" + object.getFloor() + ")";
                 }
                 else return null;
             }
@@ -73,7 +74,22 @@ public class SearchController {
 //        cbNodes.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
 //            @Override
 //            public ListCell<Node> call(ListView<Node> param) {
+//                final ListCell<Node> nodeCell = new ListCell<Node>(){
+//                    {
+//                        super.setOnMouseEntered(new EventHandler<MouseEvent>() {
+//                            @Override
+//                            public void handle(MouseEvent event) {
+//                                System.out.println("mouse entered");
+//                            }
+//                        });
+//                    }
 //
+//                    @Override
+//                    protected void updateItem(Node item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                    }
+//                };
+//                return nodeCell;
 //            }
 //        });
         cbNodes.setOnKeyReleased(e -> {
