@@ -167,7 +167,9 @@ public class PathfindingSidebarController extends ScreenController {
                     if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
                         getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
                     }
-                    getMapController().recenterAtNode(newValue.getDatabaseNode());
+                    LinkedList<Node> displayedNode = new LinkedList<>();
+                    displayedNode.add(newValue.getDatabaseNode());
+                    getMapController().zoomOnSelectedNodes(displayedNode);
                     onMapNodeClicked(newValue.getDatabaseNode());
                 }
             }

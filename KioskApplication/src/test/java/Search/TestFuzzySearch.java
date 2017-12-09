@@ -125,7 +125,7 @@ public class TestFuzzySearch {
         map.addNode(new Node("NODE49", 30, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE49_LN", "NODE49_SN", "I"));
         map.addNode(new Node("NODE50", 40, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE50_LN", "NODE50_SN", "I"));
         map.addNode(new Node("NODE51", 60, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE51_LN", "NODE51_SN", "I"));
-        map.addNode(new Node("NODE52", 70, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "Au Bon Pain", "NODE52_SN", "I"));
+        map.addNode(new Node("NODE52", 70, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "Au Xin Bun", "NODE52_SN", "I"));
         map.addNode(new Node("NODE53", 80, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A", "St A", "I"));
         map.addNode(new Node("NODE54", 20, 20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE54_LN", "NODE54_SN", "I"));
         map.addNode(new Node("NODE55", 30, 20, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.REST, "Restroom - Non Handicapped", "RR - nHC", "I"));

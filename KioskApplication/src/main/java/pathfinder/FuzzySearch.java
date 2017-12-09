@@ -33,15 +33,16 @@ public class FuzzySearch {
                String longname = allNodes.get(key).getLongName().replaceAll("\\s+","");
                 String[] longName = longname.split("");
                // for (int i = 0; i < longName.length; i++) {
-                    for (String text : input) {
-                        if (longname.toLowerCase().contains(text.toLowerCase()))
+                    for (int i=0; i<input.length;i++){
+                        if (longname.toLowerCase().contains(input[i].toLowerCase()))
                             if (matched < input.length) {
                                 matched++;
                             } else {
                                 // do nothing
                             }
-
-                 //   }
+                        if(longName[i].toLowerCase().equals(input[i].toLowerCase())){
+                            matched++;
+                        }
                 }
                 sortedMap.put(key, matched);
             }
