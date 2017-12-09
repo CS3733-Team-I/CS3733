@@ -177,7 +177,7 @@ public class PathWaypointView extends AnchorPane {
 
         for(int i = 0; i < waypointList.size()-1; i ++) {
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-
+            parent.viewSelectedNodes(segmentNodes);
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
             jfxPath.setStroke(Color.TRANSPARENT);

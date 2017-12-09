@@ -30,17 +30,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import sun.awt.image.ImageWatched;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeSelectionType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -521,31 +518,30 @@ public class MapController {
         return scaleValue;
     }
 
-    public void viewSelectedNodes(ObservableList<javafx.scene.Node> viewedNodes){
+    public void viewSelectedNodes(LinkedList<Node> viewedNodes){
         double widthRatio = container.getWidth() / mapView.getFitWidth();
         double heightRatio = container.getHeight() / mapView.getFitHeight();
         double minScrollValue = Math.max(widthRatio, heightRatio);
         double maxScrollValue = zoomSlider.getMax();
-        Bounds viewPort = scrollPane.getViewportBounds();
-        Bounds contentSize = zoomGroup.getBoundsInParent();
 
-        double minX=contentSize.getWidth();
-        double minY=contentSize.getHeight();
+        double minX=mapView.getImage().getWidth();
+        double minY=mapView.getImage().getHeight();
         double maxX=0.0;
         double maxY=0.0;
+        HashMap<Node, NodeView> nodesInScene = nodesEdgesView.getNodeViewsMap();
         // Runs through all inserted nodes and gets the max bounds
-        for(javafx.scene.Node node: viewedNodes){
-            if(node.getLayoutX()>maxX){
-                maxX=node.getLayoutX();
+        for(Node node: viewedNodes){
+            if(node.getXcoord()>maxX){
+                maxX=node.getXcoord();
             }
-            if(node.getLayoutX()<minX){
-                minX=node.getLayoutX();
+            if(node.getXcoord()<minX){
+                minX=node.getXcoord();
             }
-            if(node.getLayoutY()>maxY){
-                maxY=node.getLayoutY();
+            if(node.getYcoord()>maxY){
+                maxY=node.getYcoord();
             }
-            if(node.getLayoutY()<minY){
-                minY=node.getLayoutY();
+            if(node.getYcoord()<minY){
+                minY=node.getYcoord();
             }
         }
         // adds a border of sorts to the viewed area
@@ -555,17 +551,30 @@ public class MapController {
         minY-=border;
         Math.max(minY,0.0);
         maxX+=border;
-        Math.min(maxX,contentSize.getWidth());
+        Bounds viewPort = scrollPane.getViewportBounds();
+        Math.min(maxX,mapView.getImage().getWidth());
         maxY+=border;
-        Math.min(maxY,contentSize.getHeight());
+        Math.min(maxY,mapView.getImage().getHeight());
         //zooming phase
         double scale = viewPort.getWidth()/(maxX-minX);
-        double scaleFactor = scale/zoomGroup.getScaleX();
         zoomGroup.setScaleX(scale);
         zoomGroup.setScaleY(scale);
         //scroll bar adjusting stage
-        double centerX=(minX+maxX)/2.0;
-        double centerY=(minY+minY)/2.0;
+        double centerXOnImage=(minX+maxX)/2.0;
+        double centerYOnImage=(minY+maxY)/2.0;
+        System.out.println("MaxX: "+maxX);
+        System.out.println("MinX: "+minX);
+        //System.out.println("CenterX: "+centerX);
+        System.out.println("MaxY: "+maxY);
+        System.out.println("MinY: "+minY);
+
+        Bounds contentSize = zoomGroup.getBoundsInParent();
+        //System.out.println("CenterY: "+centerY);
+        double centerXOnZoomGroup=centerXOnImage*contentSize.getWidth()/mapView.getImage().getWidth();
+        double centerYOnZoomGroup=centerYOnImage*contentSize.getHeight()/mapView.getImage().getHeight();
+
+        scrollPane.setHvalue((centerXOnZoomGroup-viewPort.getWidth()/2)/(contentSize.getWidth()-viewPort.getWidth()));
+        scrollPane.setVvalue((centerYOnZoomGroup-viewPort.getHeight()/2)/(contentSize.getHeight()-viewPort.getHeight()));
     }
 
     /**
