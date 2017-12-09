@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
+import database.objects.InterpreterRequest;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -13,13 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import utility.KioskPermission;
@@ -66,7 +65,7 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void setup(){
-        RequestType employeeType = l.getServiceAbility();
+        RequestType employeeType = l.getCurrentServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
             foodFilter.setVisible(false);
@@ -163,8 +162,12 @@ public class RequestManagerController extends ScreenController {
             }
         }
         if (interpreterFilter.isSelected()) {
-            for (Request iR : r.getAllinterpters()) {
-                allRequests.add(iR);
+            for (InterpreterRequest iR : r.getAllinterpters()) {
+                //If the person is an interpreter, then it adds only requests they can speak. Or shows all of them if ADMIN or above
+                if(l.getCurrentInterpreterLanguages().contains(iR.getLanguage())||l.getCurrentPermission()==KioskPermission.ADMIN
+                        ||l.getCurrentPermission()==KioskPermission.SUPER_USER) {
+                    allRequests.add(iR);
+                }
             }
         }
         if(foodFilter.isSelected()){
@@ -190,7 +193,143 @@ public class RequestManagerController extends ScreenController {
     }
 
     /**
+<<<<<<< HEAD
      * Method when a list view cell is selected currently does nothing
+=======
+     * Creates what goes into the popup when a listview cell is selected
+     * @param requestID To determine which request to display the information of
+     */
+    public void initializePopup(String requestID){
+
+        JFXButton more = new JFXButton("More");
+        JFXButton statusUpdater = new JFXButton();
+        JFXButton delete = new JFXButton("Delete");
+        more.setOnMousePressed(e -> resetTimer());
+        more.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMouseMoved(e -> resetTimer());
+        delete.setOnMousePressed(e -> resetTimer());
+
+        ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
+        JFXComboBox employees = new JFXComboBox(listOfEmployees);
+        employees.setPromptText("Select Employee");
+
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                r.deleteRequest(requestID);
+                popup.hide();
+                refreshRequests();
+            }
+        });
+
+        VBox vbox = new VBox(more);
+
+        if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
+            listOfEmployees.clear();
+            listOfEmployees.addAll(l.getAllEmployeeType(r.getRequest(requestID)));
+            switch (currentButton){
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress((Integer) employees.getValue(),requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().addAll(employees, statusUpdater);
+                    break;
+            }
+        }else {
+            switch (currentButton) {
+                case TO_DO:
+                    statusUpdater = new JFXButton("Assign Me");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.markInProgress(l.getCurrentLoginID(), requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().add(statusUpdater);
+                    break;
+                case IN_PROGRESS:
+                    statusUpdater = new JFXButton("Completed");
+                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                            r.completeRequest(requestID);
+                            refreshRequests();
+                            popup.hide();
+                        }
+                    });
+                    vbox.getChildren().add(statusUpdater);
+                    break;
+            }
+        }
+        more.setPrefWidth(200);
+        delete.setPrefWidth(200);
+        statusUpdater.setPrefWidth(200);
+        employees.setPrefWidth(200);
+
+        vbox.getChildren().add(delete);
+        popup = new JFXPopup(vbox);
+
+        more.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                vbox.getChildren().clear();
+                try {
+                    vbox.getChildren().add(displayInformation(requestID));
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public VBox displayInformation(String requestID) throws NotFoundException {
+        Request request = r.getRequest(requestID);
+        String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
+        String assigner = r.getAssigner(requestID).getUsername();
+        Label employee = new Label("Requested By: " + assigner);
+        Label typeOfRequest = new Label(r.checkRequestType(requestID).toString());
+        Label locationOfRequest = new Label(location);
+        Label requestNotes = new Label(request.getNote());
+        Label extraField;
+        RequestType RT = r.checkRequestType(requestID);
+        switch (RT){
+            case INTERPRETER:
+                String language = r.getInterpreterRequest(requestID).getLanguage().toString();
+                extraField = new Label("Language: "+language);
+                break;
+            case FOOD:
+                String restaurantID = r.getFoodRequest(requestID).getDestinationID();
+                String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+                extraField = new Label("Restaurant: " + restaurant);
+                break;
+            default: //security
+                int priority = r.getSecurityRequest(requestID).getPriority();
+                extraField = new Label("Priority: "+ priority);
+                break;
+        }
+        JFXButton close = new JFXButton("close");
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popup.hide();
+            }
+        });
+        VBox vbox = new VBox(typeOfRequest,locationOfRequest,employee,extraField,requestNotes,close);
+        return vbox;
+    }
+
+    /**
+     * Method to display popup information when a list view cell is selected
+>>>>>>> 90f869c86b78207476f94c0cbe177c7325e28617
      * @param event the mouse click on an ID triggers this method
      */
     @FXML

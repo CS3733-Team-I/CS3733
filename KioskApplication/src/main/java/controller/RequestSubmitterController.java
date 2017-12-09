@@ -10,8 +10,6 @@ import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,7 +25,6 @@ import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
-import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
 
@@ -233,8 +230,8 @@ public class RequestSubmitterController extends ScreenController {
      */
     public void addIntRequest() {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getLoginID(), intNotesArea.getText(), language);
-        System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getLoginID());
+        requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), intNotesArea.getText(), language);
+        System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getCurrentLoginID());
         clearButton();
     }
 
@@ -243,9 +240,9 @@ public class RequestSubmitterController extends ScreenController {
      */
     public void addSecRequest() {
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getLoginID());
+        System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
         //node ID, employee, notes, priority
-        requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getLoginID(), secNoteField.getText(), priority);
+        requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getCurrentLoginID(), secNoteField.getText(), priority);
         clearButton();
     }
 
@@ -263,7 +260,7 @@ public class RequestSubmitterController extends ScreenController {
 
         if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
-        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getLoginID(),order,
+        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
                 restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
         System.out.println(requestEntity.getAllFoodRequests());
         clearButton();

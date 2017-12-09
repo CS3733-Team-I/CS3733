@@ -27,10 +27,7 @@ import utility.KioskPermission;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.beans.*;
 import javafx.beans.property.*;
@@ -59,7 +56,7 @@ public class MainWindowController {
 
     private Timer timer = new Timer();
     int countdown;
-    int maxCountdown = 30;
+    int maxCountdown = 500;
     double defZoom;
 
     Timeline timeline = new Timeline(new KeyFrame(
@@ -94,7 +91,7 @@ public class MainWindowController {
         mapPaneLoader.load();
 
         // Default to third floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
+        //mapController.setFloorSelector(NodeFloor.THIRD);
 
         // Pre-load all controllers/views
         for (ApplicationScreen screen : ApplicationScreen.values()) {
@@ -192,6 +189,13 @@ public class MainWindowController {
         checkPermissions();
     }
 
+    /**
+     * Used to run methods after the screen is displayed
+     */
+    public void postDisplaySetup(){
+        mapController.recenterPressed();
+    }
+
     private void initializeTrackingTable() throws IOException{
         reqTrackController = new RequestTrackingDataController(this);
         FXMLLoader reqTrackingLoader = new FXMLLoader(getClass().getResource("/view/RequestTrackingDataView.fxml"));
@@ -287,12 +291,8 @@ public class MainWindowController {
         mapController.setNodesVisible(false);
         mapController.setEdgesVisible(false);
 
-        // Reset floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
         // Recenter
         mapController.recenterPressed();
-        // Adjust Zoom
-        mapController.getZoomSlider().setValue(defZoom);
         // Icon key close
         mapController.keyClosed();
 
