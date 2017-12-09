@@ -155,35 +155,9 @@ public class MapBuilderController extends ScreenController {
         CBnodeType.valueProperty().addListener((observable, oldValue, newValue) -> {
             nodeType = newValue;
 
-            if (!CBnodeType.isDisable()) {
-                // If we're adding a new node, newNode will not be null
-                if (newNode.get() != null) {
-                    newNode.get().setNodeType(CBnodeType.getValue());
-                    updateNodeID();
-
-                    return;
-                }
-
-                // Otherwise look for the changed node and update the type
-                if (observableChangedNodes.contains(selectedNode.get())) {
-                    System.out.println("update changes in changed node");
-                    for (Node changingNode : observableChangedNodes) {
-                        if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
-                            changingNode.setNodeType(CBnodeType.getValue());
-                            updateNodeID();
-                        }
-                    }
-                } else {
-                    // And if we don't find the changed node, change the type and add it to the list of changed
-                    selectedNode.get().setNodeType(CBnodeType.getValue());
-                    updateNodeID();
-
-                    if (!observableChangedNodes.contains(selectedNode.get())){
-                        observableChangedNodes.add(selectedNode.get());
-                    }
-                }
-            }
+            checkField(CBnodeType);
         });
+
 
         CBnodeBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
             nodeBuilding = newValue;
@@ -466,6 +440,38 @@ public class MapBuilderController extends ScreenController {
         initPopup();
     }
 
+
+    public void checkField(JFXComboBox comboBox, ){
+        if (!comboBox.isDisable()) {
+            // If we're adding a new node, newNode will not be null
+            if (newNode.get() != null) {
+                newNode.get().setNodeType((NodeType)comboBox.getValue());
+                updateNodeID();
+
+                return;
+            }
+
+            // Otherwise look for the changed node and update the type
+            if (observableChangedNodes.contains(selectedNode.get())) {
+                System.out.println("update changes in changed node");
+                for (Node changingNode : observableChangedNodes) {
+                    if(changingNode.getUniqueID() == selectedNode.get().getUniqueID()) {
+                        changingNode.setNodeType((NodeType)comboBox.getValue());
+                        updateNodeID();
+                    }
+                }
+            } else {
+                // And if we don't find the changed node, change the type and add it to the list of changed
+                selectedNode.get().setNodeType((NodeType)comboBox.getValue());
+                updateNodeID();
+
+                if (!observableChangedNodes.contains(selectedNode.get())){
+                    observableChangedNodes.add(selectedNode.get());
+                }
+            }
+        }
+    }
+
     /**
      * Resets the timer in the MainWindowController
      */
@@ -675,15 +681,6 @@ public class MapBuilderController extends ScreenController {
         String preparedName = MapEntity.getInstance().generateElevName(nodeFloor, nodeTeamAssigned, result);
         return preparedName;
     }
-
-/*    public boolean checkExist(){
-        for(int i=0; i<observableChangedNodes.size(); i++) {
-            if (selectedNode.get().getNodeType() == observableChangedNodes.get(i).getNodeType() && selectedNode.get().getXyz() == observableChangedNodes.get(i).getXyz()){
-                return false;
-            }
-        }
-        return true;
-    }*/
 
     private void setEditingEnabled() {
         CBnodeType.setDisable(false);
