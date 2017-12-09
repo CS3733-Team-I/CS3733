@@ -1,3 +1,4 @@
+import email.EmailSender;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
