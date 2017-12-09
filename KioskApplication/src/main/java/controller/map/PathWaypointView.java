@@ -76,8 +76,6 @@ public class PathWaypointView extends AnchorPane {
         waypointList = FXCollections.observableArrayList();
         PathList = FXCollections.observableArrayList();
 
-        waypointList = FXCollections.observableArrayList();
-
         this.parent = parent;
 
         segmentColorList = new ArrayList<>();
@@ -243,7 +241,6 @@ public class PathWaypointView extends AnchorPane {
         while(waypointIterator.hasNext()) {
             Node removedWaypoint = waypointIterator.next();
             if(removedWaypoint.getNodeID().equals(node.getNodeID())) {
-                this.wayPointView.getChildren().remove(removedWaypoint);
                 waypointIterator.remove();
                 break;
             }
