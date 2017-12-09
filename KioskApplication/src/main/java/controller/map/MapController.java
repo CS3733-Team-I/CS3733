@@ -147,10 +147,6 @@ public class MapController {
         // Initializes the zoom slider to the current zoom scale
         //zoomSlider.setValue(zoomGroup.getScaleX());
 
-        // Initializes the Hvalue & Vvalue to the default values
-        //scrollPane.setHvalue(DEFAULT_HVALUE);
-        //scrollPane.setVvalue(DEFAULT_VVALUE);
-
         // zoomSlider value listener
         // zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
@@ -197,7 +193,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
-                //calculateMinZoom();
+                calculateMinZoom();
             }
         });
 
@@ -206,7 +202,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
-                //calculateMinZoom();
+                calculateMinZoom();
             }
         });
 
@@ -239,18 +235,9 @@ public class MapController {
         zoomGroup.scaleYProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double widthRatio = container.getWidth() / mapView.getFitWidth();
-                double heightRatio = container.getHeight() / mapView.getFitHeight();
-                double minScrollValue = Math.max(widthRatio, heightRatio);
-                zoomSlider.setValue(newValue.doubleValue()/(1-minScrollValue)*100);
+                zoomSlider.setValue(newValue.doubleValue()*100);
             }
         });
-
-
-        //initializes the view on the default Node
-        LinkedList<Node> defaultNode = new LinkedList<Node>();
-        defaultNode.add(systemSettings.getDefaultnode());
-        zoomOnSelectedNodes(defaultNode);
     }
 
     /**
@@ -510,7 +497,6 @@ public class MapController {
      */
     public void zoomOnSelectedNodes(LinkedList<Node> viewedNodes){
         //TODO: make the floor selection method more solid
-        loadFloor(viewedNodes.getFirst().getFloor());
         double minX=mapView.getImage().getWidth();
         double minY=mapView.getImage().getHeight();
         double maxX=0.0;
@@ -531,19 +517,19 @@ public class MapController {
             }
         }
         // adds a border of sorts to the viewed area
-        double border=5.0;
+        double border=Math.max((maxX-minX)/10,(maxY-minY)/10);
         minX-=border;
-        Math.max(minX,0.0);
         minY-=border;
-        Math.max(minY,0.0);
         maxX+=border;
-        Bounds viewPort = scrollPane.getViewportBounds();
-        Math.min(maxX,mapView.getImage().getWidth());
         maxY+=border;
-        Math.min(maxY,mapView.getImage().getHeight());
+        minX=Math.max(minX,0.0);
+        minY=Math.max(minY,0.0);
+        maxX=Math.min(maxX,mapView.getImage().getWidth());
+        maxY=Math.min(maxY,mapView.getImage().getHeight());
 
         //zooming phase
-        double scaleValue = viewPort.getWidth()/(maxX-minX);
+        Bounds viewPort = scrollPane.getViewportBounds();
+        double scaleValue = Math.min(viewPort.getWidth()/(maxX-minX), viewPort.getHeight()/(maxY-minY));
         zoomScreen(scaleValue);
 
         //scroll bar adjusting stage
@@ -674,6 +660,7 @@ public class MapController {
 
     @FXML
     public void recenterPressed() {
+        setFloorSelector(systemSettings.getDefaultnode().getFloor());
         LinkedList<Node> defaultNode = new LinkedList<Node>();
         defaultNode.add(systemSettings.getDefaultnode());
         zoomOnSelectedNodes(defaultNode);

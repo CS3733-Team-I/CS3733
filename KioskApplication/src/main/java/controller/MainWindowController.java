@@ -187,6 +187,7 @@ public class MainWindowController {
         startTimer();
 
         checkPermissions();
+        mapController.recenterPressed();
     }
 
     private void initializeTrackingTable() throws IOException{
