@@ -615,7 +615,7 @@ public class MapBuilderController extends ScreenController {
                 CBnodeType.setValue(newNode.get().getNodeType());
                 CBnodeTeamAssigned.setValue(convertToTeamEnum(newNode.get().getTeamAssigned()));
 
-                setEditing(true);
+                setEditing(false);
                 updateNodeID();
                 break;
         }
