@@ -36,6 +36,7 @@ import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -648,9 +649,13 @@ public class MapController {
     }
 
     @FXML
-    public void zoomOutPressed() {
-        Bounds viewPort = scrollPane.getViewportBounds();
-        zoomOnFocalPoint(zoomGroup.getScaleX() / 1.2,viewPort.getWidth()/2,viewPort.getHeight()/2);
+    public void zoomOutPressed() throws InterruptedException{
+        //laying the groundwork for a smooth zoom method
+        for (int i = 0; i < 10; i++) {
+            Bounds viewPort = scrollPane.getViewportBounds();
+            double currentScale = zoomGroup.getScaleX();
+            zoomOnFocalPoint(currentScale / 1.018,viewPort.getWidth()/2,viewPort.getHeight()/2);
+        }
     }
 
     /**
