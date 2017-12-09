@@ -36,11 +36,11 @@ public class DatabaseControllerTests {
     @Before
     public void statrtup(){
         Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
-                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+                "password","",KioskPermission.EMPLOYEE,RequestType.GENERAL);
         emp1ID=dbController.addEmployee(emp1,"password");
 
         Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
-                "password",KioskPermission.EMPLOYEE,RequestType.GENERAL);
+                "password","",KioskPermission.EMPLOYEE,RequestType.GENERAL);
         emp2ID=dbController.addEmployee(emp2,"password");
     }
 
@@ -61,7 +61,7 @@ public class DatabaseControllerTests {
 
         List<Employee> employees = dbController.getAllEmployees();
         for (Employee e : employees) {
-            dbController.removeEmployee(e.getLoginID());
+            dbController.removeEmployee(e.getID());
         }
 
         } catch (DatabaseException e) {
@@ -289,7 +289,7 @@ public class DatabaseControllerTests {
 
     @Test
     public void testEmployeeAdd(){
-        Employee testEmp = new Employee("Name","n","t","password",
+        Employee testEmp = new Employee("Name","n","t","password","",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         int ID = dbController.addEmployee(testEmp,"password");
         assertEquals("Name",dbController.getEmployee(ID).getUsername());
@@ -314,10 +314,10 @@ public class DatabaseControllerTests {
 
     @Test
     public void testEmployeeGetAll(){
-        Employee testEmp1=new Employee("Name1","ln1","fn1","password1",
+        Employee testEmp1=new Employee("Name1","ln1","fn1","password1","",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         dbController.addEmployee(testEmp1,"password1");
-        Employee testEmp2=new Employee("Name2","ln2","fn2","password2",
+        Employee testEmp2=new Employee("Name2","ln2","fn2","password2","",
                 KioskPermission.ADMIN, RequestType.GENERAL);
         dbController.addEmployee(testEmp2,"password2");
         LinkedList<Employee> employees = dbController.getAllEmployees();

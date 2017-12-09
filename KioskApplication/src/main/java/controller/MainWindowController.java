@@ -56,7 +56,7 @@ public class MainWindowController {
 
     private Timer timer = new Timer();
     int countdown;
-    int maxCountdown = 30;
+    int maxCountdown = 500;
     double defZoom;
 
     Timeline timeline = new Timeline(new KeyFrame(

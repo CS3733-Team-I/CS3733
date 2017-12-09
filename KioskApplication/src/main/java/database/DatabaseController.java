@@ -6,7 +6,7 @@ import database.objects.*;
 import database.utility.*;
 import database.objects.SecurityRequest;
 import database.objects.InterpreterRequest;
-//import org.springframework.security.core.parameters.P;
+
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -418,7 +418,7 @@ public class DatabaseController {
      * adds an employee to the database currently more expensive because it needs to return the ID as an identifier
      * @param employee
      * @param password
-     * @return their loginID
+     * @return their ID
      */
     public int addEmployee(Employee employee, String password){
         try{
@@ -428,15 +428,16 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setInt(5,employee.getPermission().ordinal());
-            pstmt.setInt(6,employee.getServiceAbility().ordinal());
+            pstmt.setString(5, employee.getOptions());
+            pstmt.setInt(6,employee.getPermission().ordinal());
+            pstmt.setInt(7,employee.getServiceAbility().ordinal());
             pstmt.executeUpdate();
-            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT loginID FROM t_employee"+
+            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT id FROM t_employee"+
             " where username=?");
             pstmt2.setString(1,employee.getUsername());
             ResultSet rs = pstmt2.executeQuery();
             if(rs.next()){
-                return rs.getInt("loginID");
+                return rs.getInt("id");
             }
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -450,13 +451,14 @@ public class DatabaseController {
     public int updateEmployee(Employee employee, String password){
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
-            pstmt.setInt(7,employee.getLoginID());
+            pstmt.setInt(8,employee.getID());
             pstmt.setString(1,employee.getUsername());
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setInt(5,employee.getPermission().ordinal());
-            pstmt.setInt(6,employee.getServiceAbility().ordinal());
+            pstmt.setString(5, employee.getOptions());
+            pstmt.setInt(6,employee.getPermission().ordinal());
+            pstmt.setInt(7,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
@@ -489,11 +491,12 @@ public class DatabaseController {
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 employee = new Employee(
-                        rs.getInt("loginID"),
+                        rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("lastName"),
                         rs.getString("firstName"),
                         rs.getString("password"),
+                        rs.getString("options"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
             }
@@ -515,11 +518,12 @@ public class DatabaseController {
             while(rs.next()) {
                 Employee employee = null;
                 employee = new Employee(
-                        rs.getInt("loginID"),
+                        rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("lastName"),
                         rs.getString("firstName"),
                         rs.getString("password"),
+                        rs.getString("options"),
                         KioskPermission.values()[rs.getInt("permission")],
                         RequestType.values()[rs.getInt("serviceAbility")]);
                 employees.add(employee);
