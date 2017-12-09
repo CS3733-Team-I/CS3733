@@ -34,6 +34,18 @@ public enum NodeFloor {
         return super.toString();
     }
 
+    public String toCSVString() {
+        switch (this) {
+            case LOWERLEVEL_2: return "L2";
+            case LOWERLEVEL_1: return "L1";
+            case GROUND: return "G";
+            case FIRST: return "1";
+            case SECOND: return "2";
+            case THIRD: return "3";
+            default: return "";
+        }
+    }
+
     public int toInt() {
         switch(this){
             case LOWERLEVEL_2:
