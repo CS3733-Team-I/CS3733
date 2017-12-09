@@ -4,17 +4,14 @@ import com.sun.deploy.util.StringUtils;
 import database.objects.Node;
 import entity.MapEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.lang.Object;
 import org.apache.commons.codec.language.DoubleMetaphone;
 
 public class FuzzySearch {
 
    // private DoubleMetaphone metaphone;
-    private DoubleMetaphone metaphone;
+   // private DoubleMetaphone metaphone;
     /**
      * Fuzzy search
      * using metaphone
@@ -28,7 +25,7 @@ public class FuzzySearch {
         //LinkedList<Node> mapAllNodes = map.getAllNodes();
         HashMap<String, Node> allNodes = map.getAllNodesHM();
 
-        metaphone = new DoubleMetaphone();
+       // metaphone = new DoubleMetaphone();
         // spit input text
         String[] input= inputtext.split("");
         // check for
@@ -36,31 +33,31 @@ public class FuzzySearch {
             Map<String,Integer> sortedMap = new HashMap<>();
             int matched = 0;
             for (String key : allNodes.keySet()) {
+                matched = 0;
                 String[] longname = allNodes.get(key).getLongName().split("");
                 for (int i = 0; i < longname.length; i++) {
-                    matched = 0;
-                    for (String text : input) {
-                        if (metaphone.isDoubleMetaphoneEqual(text, longname[i])) {
+                for (String text : input) {
+                        if (text.equalsIgnoreCase(longname[i])) {
                             matched++;
                         }
                     }
-                    sortedMap.put(key, matched);
                 }
+                sortedMap.put(key, matched);
             }
             int min = 0;
-            ArrayList<Node> sorted = new ArrayList<>();
+            List<String> sorted = new ArrayList<>();
            for (String key: sortedMap.keySet()){
-                if(sortedMap.get(key)>min){
-                    sorted.add(0,allNodes.get(key));
+                if(sortedMap.get(key)>=min){
+                    sorted.add(0,key);
                     min=sortedMap.get(key);
                 }
                 else{
-                sorted.add(allNodes.get(key));
+                sorted.add(sorted.size(),key);
                 }
             }
             LinkedList<Node> bestmatch = new LinkedList<>();
             for (int i=0;i<5;i++){
-                bestmatch.add(sorted.get(i));
+                bestmatch.add(allNodes.get(sorted.get(i)));
             }
             return bestmatch;
         }
