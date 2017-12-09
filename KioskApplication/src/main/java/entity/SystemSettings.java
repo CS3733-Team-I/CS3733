@@ -25,6 +25,7 @@ public class SystemSettings extends Observable {
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
         this.setDefaultnode(this.prefs.get("defaultNode","IHALL00303"));
+        MapEntity.getInstance().updateDistanceFromKisok(getDefaultnode());
         this.setBeamWidth(this.prefs.get("beamWidth", "3"));
         //this.setResourceBundle(this.prefs.get("Internationalization","English"));
         this.setResourceBundle("English");
