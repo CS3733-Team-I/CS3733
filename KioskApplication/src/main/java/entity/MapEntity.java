@@ -6,6 +6,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.layout.Pane;
+import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
@@ -16,6 +18,7 @@ public class MapEntity implements IMapEntity {
 
     private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
+    private HashMap<Node, Integer> distanceFromKiosk;
 
     private DatabaseController dbController;
 
@@ -85,7 +88,6 @@ public class MapEntity implements IMapEntity {
             floors.get(f).editNode(n);
         }
     }
-
 
     @Override
     public Node getNode(String s) throws NotFoundException{
@@ -186,8 +188,6 @@ public class MapEntity implements IMapEntity {
         return result;
     }
 
-
-
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
         ArrayList<Edge> edgesOnFloor = new ArrayList<>();
@@ -210,7 +210,6 @@ public class MapEntity implements IMapEntity {
 
         return edgesOnFloor;
     }
-
 
     @Override
     public void removeNode(Node node) throws DatabaseException {
@@ -359,5 +358,36 @@ public class MapEntity implements IMapEntity {
      */
     public LinkedList<Node> getConnectedNodes(Node node){
         return this.getConnectedNodes(node, false);
+    }
+
+    /**
+     * Get the distance from the kiosk to the given node
+     * @param n node to get distance to
+     * @return int distance in pixels
+     */
+    public int getDistanceFromKiosk(Node n) {
+        if(distanceFromKiosk.containsKey(n)) return distanceFromKiosk.get(n);
+        return -1;
+    }
+
+    //TODO call this whenever the kiosk location is set
+    /**
+     * Method that should be called every time the kiosk location is set.
+     * Calculates the distance to every non-hallway node and stores it in a hashmap
+     * for use with search and find nearest.
+     * @param kioskNode
+     * @throws PathfinderException
+     */
+    public void updateDistanceFromKisok(Node kioskNode) throws PathfinderException{
+        Pathfinder pathfinder = new Pathfinder();
+        for(NodeFloor nf : floors.keySet()){
+            for(Node n : floors.get(nf).getAllNodes()) {
+                if(!n.getNodeType().equals(NodeType.HALL)){
+                    LinkedList<Node> waypoints = new LinkedList<>();
+                    waypoints.add(kioskNode); waypoints.add(n);
+                    distanceFromKiosk.put(n,pathfinder.generatePath(waypoints).getDistance());
+                }
+            }
+        }
     }
 }
