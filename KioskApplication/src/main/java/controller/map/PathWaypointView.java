@@ -12,9 +12,6 @@ import javafx.animation.PathTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -177,7 +174,7 @@ public class PathWaypointView extends AnchorPane {
 
         for(int i = 0; i < waypointList.size()-1; i ++) {
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-            parent.viewSelectedNodes(segmentNodes);
+            parent.zoomOnSelectedNodes(segmentNodes);
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
             jfxPath.setFill(Color.TRANSPARENT);
             jfxPath.setStroke(Color.TRANSPARENT);

@@ -20,7 +20,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,7 +29,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import sun.awt.image.ImageWatched;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -44,7 +42,6 @@ public class MapController {
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
-    private boolean mouseZoom;
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
@@ -148,14 +145,14 @@ public class MapController {
         scrollPane.setContent(contentGroup);
 
         // Initializes the zoom slider to the current zoom scale
-        zoomSlider.setValue(zoomGroup.getScaleX());
+        //zoomSlider.setValue(zoomGroup.getScaleX());
 
         // Initializes the Hvalue & Vvalue to the default values
-        scrollPane.setHvalue(DEFAULT_HVALUE);
-        scrollPane.setVvalue(DEFAULT_VVALUE);
+        //scrollPane.setHvalue(DEFAULT_HVALUE);
+        //scrollPane.setVvalue(DEFAULT_VVALUE);
 
         // zoomSlider value listener
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
+        // zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
 
         // MouseWheel zooming event handler
         scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
@@ -164,9 +161,7 @@ public class MapController {
                 return;
             }
             double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
-            mouseZoom=true;
-            zoomSlider.setValue(zoomOnFocalPoint(scaleFactor*zoomSlider.getValue(),event.getX(),event.getY()));
-            mouseZoom=false;
+            zoomOnFocalPoint(scaleFactor*zoomGroup.getScaleX(),event.getX(),event.getY());
         });
 
 
@@ -202,7 +197,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
-                calculateMinZoom();
+                //calculateMinZoom();
             }
         });
 
@@ -211,7 +206,7 @@ public class MapController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
 
-                calculateMinZoom();
+                //calculateMinZoom();
             }
         });
 
@@ -240,6 +235,22 @@ public class MapController {
                 }
             }
         });
+
+        zoomGroup.scaleYProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                double widthRatio = container.getWidth() / mapView.getFitWidth();
+                double heightRatio = container.getHeight() / mapView.getFitHeight();
+                double minScrollValue = Math.max(widthRatio, heightRatio);
+                zoomSlider.setValue(newValue.doubleValue()/(1-minScrollValue)*100);
+            }
+        });
+
+
+        //initializes the view on the default Node
+        LinkedList<Node> defaultNode = new LinkedList<Node>();
+        defaultNode.add(systemSettings.getDefaultnode());
+        zoomOnSelectedNodes(defaultNode);
     }
 
     /**
@@ -464,20 +475,6 @@ public class MapController {
     }
 
     /**
-     * Sets the current zoom value
-     * Focal point is dependent on mouseZoom class-wide boolean
-     * if true: it will only change the scale of the map, letting the scrollEvent listener handle the repositioning
-     * if false: it will zoom in/out on the center of the screen
-     * @param scaleValue zoom value
-     */
-    private void setZoom(double scaleValue) {
-        if(!mouseZoom) {
-            Bounds viewPort = scrollPane.getViewportBounds();
-            zoomOnFocalPoint(scaleValue, viewPort.getWidth() / 2, viewPort.getHeight() / 2);
-        }
-    }
-
-    /**
      * handles all zooming operations
      * @param scaleValue
      * @param focalX the x coordinate of the point to zoom on in container
@@ -485,30 +482,19 @@ public class MapController {
      * @return scaleValue a double that can be modified by the operation
      */
     private double zoomOnFocalPoint(double scaleValue, double focalX, double focalY){
-        double widthRatio = container.getWidth() / mapView.getFitWidth();
-        double heightRatio = container.getHeight() / mapView.getFitHeight();
-        double minScrollValue = Math.max(widthRatio, heightRatio);
-        double maxScrollValue = zoomSlider.getMax();
-
-        //bounds the scaleValue within the min and max zoom values
-        scaleValue=Math.min(scaleValue,maxScrollValue);
-        scaleValue=Math.max(scaleValue,minScrollValue);
 
         double scaleFactor = scaleValue/zoomGroup.getScaleX();
+        Bounds viewPort = scrollPane.getViewportBounds();
+        Bounds contentSize = zoomGroup.getBoundsInParent();
 
-        if(scaleFactor!=1) {
+        double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
+        double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
+
+        if(zoomScreen(scaleValue)) {
             // got code from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
-            Bounds viewPort = scrollPane.getViewportBounds();
-            Bounds contentSize = zoomGroup.getBoundsInParent();
-
-            double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
-            double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
 
             double scaledFocusX = focalPosX * scaleFactor;
             double scaledFocusY = focalPosY * scaleFactor;
-
-            zoomGroup.setScaleX(scaleValue);
-            zoomGroup.setScaleY(scaleValue);
 
             scrollPane.setHvalue((scaledFocusX - focalX) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
             scrollPane.setVvalue((scaledFocusY - focalY) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
@@ -518,17 +504,17 @@ public class MapController {
         return scaleValue;
     }
 
-    public void viewSelectedNodes(LinkedList<Node> viewedNodes){
-        double widthRatio = container.getWidth() / mapView.getFitWidth();
-        double heightRatio = container.getHeight() / mapView.getFitHeight();
-        double minScrollValue = Math.max(widthRatio, heightRatio);
-        double maxScrollValue = zoomSlider.getMax();
-
+    /**
+     * Moves the map view and adjusts the zoom factor to contain the selected nodes
+     * @param viewedNodes sets the floor to the most common floor value
+     */
+    public void zoomOnSelectedNodes(LinkedList<Node> viewedNodes){
+        //TODO: make the floor selection method more solid
+        loadFloor(viewedNodes.getFirst().getFloor());
         double minX=mapView.getImage().getWidth();
         double minY=mapView.getImage().getHeight();
         double maxX=0.0;
         double maxY=0.0;
-        HashMap<Node, NodeView> nodesInScene = nodesEdgesView.getNodeViewsMap();
         // Runs through all inserted nodes and gets the max bounds
         for(Node node: viewedNodes){
             if(node.getXcoord()>maxX){
@@ -555,26 +541,46 @@ public class MapController {
         Math.min(maxX,mapView.getImage().getWidth());
         maxY+=border;
         Math.min(maxY,mapView.getImage().getHeight());
+
         //zooming phase
-        double scale = viewPort.getWidth()/(maxX-minX);
-        zoomGroup.setScaleX(scale);
-        zoomGroup.setScaleY(scale);
+        double scaleValue = viewPort.getWidth()/(maxX-minX);
+        zoomScreen(scaleValue);
+
         //scroll bar adjusting stage
         double centerXOnImage=(minX+maxX)/2.0;
         double centerYOnImage=(minY+maxY)/2.0;
-        System.out.println("MaxX: "+maxX);
-        System.out.println("MinX: "+minX);
-        //System.out.println("CenterX: "+centerX);
-        System.out.println("MaxY: "+maxY);
-        System.out.println("MinY: "+minY);
 
         Bounds contentSize = zoomGroup.getBoundsInParent();
-        //System.out.println("CenterY: "+centerY);
         double centerXOnZoomGroup=centerXOnImage*contentSize.getWidth()/mapView.getImage().getWidth();
         double centerYOnZoomGroup=centerYOnImage*contentSize.getHeight()/mapView.getImage().getHeight();
 
         scrollPane.setHvalue((centerXOnZoomGroup-viewPort.getWidth()/2)/(contentSize.getWidth()-viewPort.getWidth()));
         scrollPane.setVvalue((centerYOnZoomGroup-viewPort.getHeight()/2)/(contentSize.getHeight()-viewPort.getHeight()));
+    }
+
+    /**
+     * Helper method for the zoom methods
+     * @param scaleValue adjusts the screen size
+     * @return boolean to indicate if the scale has changed
+     */
+    private boolean zoomScreen(double scaleValue){
+        //calculates the farthest out someone can zoom
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+        //calculates the farthest in someone can zoom
+        double maxScrollValue = 1;
+
+        //bounds the scaleValue within the min and max zoom values
+        scaleValue=Math.min(scaleValue,maxScrollValue);
+        scaleValue=Math.max(scaleValue,minScrollValue);
+        //Checks if the scale value is different from the current scale
+        boolean zoomAdjusted= 1!=scaleValue/zoomGroup.getScaleX();
+        if(zoomAdjusted) {
+            zoomGroup.setScaleX(scaleValue);
+            zoomGroup.setScaleY(scaleValue);
+        }
+        return zoomAdjusted;
     }
 
     /**
@@ -647,16 +653,14 @@ public class MapController {
 
     @FXML
     public void zoomInPressed() {
-        mouseZoom=false;
-        double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal * 1.2);
+        Bounds viewPort = scrollPane.getViewportBounds();
+        zoomOnFocalPoint(zoomGroup.getScaleX() * 1.2,viewPort.getWidth()/2,viewPort.getHeight()/2);
     }
 
     @FXML
     public void zoomOutPressed() {
-        mouseZoom=false;
-        double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal / 1.2);
+        Bounds viewPort = scrollPane.getViewportBounds();
+        zoomOnFocalPoint(zoomGroup.getScaleX() / 1.2,viewPort.getWidth()/2,viewPort.getHeight()/2);
     }
 
     /**
@@ -664,13 +668,15 @@ public class MapController {
      */
     @FXML
     protected void zoomWithSlider(){
-        mouseZoom=false;
+        Bounds viewPort = scrollPane.getViewportBounds();
+        zoomOnFocalPoint(zoomSlider.getValue()/100,viewPort.getWidth()/2,viewPort.getHeight()/2);
     }
 
     @FXML
     public void recenterPressed() {
-        this.scrollPane.setHvalue(DEFAULT_HVALUE);
-        this.scrollPane.setVvalue(DEFAULT_VVALUE);
+        LinkedList<Node> defaultNode = new LinkedList<Node>();
+        defaultNode.add(systemSettings.getDefaultnode());
+        zoomOnSelectedNodes(defaultNode);
     }
 
     public void setOptionsBoxVisible(boolean visible) {

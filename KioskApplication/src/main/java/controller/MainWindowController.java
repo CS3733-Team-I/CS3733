@@ -27,10 +27,7 @@ import utility.KioskPermission;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import javafx.beans.*;
 import javafx.beans.property.*;
@@ -94,7 +91,7 @@ public class MainWindowController {
         mapPaneLoader.load();
 
         // Default to third floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
+        //mapController.setFloorSelector(NodeFloor.THIRD);
 
         // Pre-load all controllers/views
         for (ApplicationScreen screen : ApplicationScreen.values()) {
