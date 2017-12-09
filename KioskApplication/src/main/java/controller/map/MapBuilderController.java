@@ -441,7 +441,7 @@ public class MapBuilderController extends ScreenController {
     }
 
 
-    public void checkField(JFXComboBox comboBox, ){
+    public void checkField(JFXComboBox comboBox){
         if (!comboBox.isDisable()) {
             // If we're adding a new node, newNode will not be null
             if (newNode.get() != null) {
