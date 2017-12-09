@@ -16,6 +16,7 @@ public class MapEntity implements IMapEntity {
 
     private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
+    private HashMap<Node, Integer> distanceFromKiosk;
 
     private DatabaseController dbController;
 
@@ -85,7 +86,6 @@ public class MapEntity implements IMapEntity {
             floors.get(f).editNode(n);
         }
     }
-
 
     @Override
     public Node getNode(String s) throws NotFoundException{
@@ -186,8 +186,6 @@ public class MapEntity implements IMapEntity {
         return result;
     }
 
-
-
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
         ArrayList<Edge> edgesOnFloor = new ArrayList<>();
@@ -210,7 +208,6 @@ public class MapEntity implements IMapEntity {
 
         return edgesOnFloor;
     }
-
 
     @Override
     public void removeNode(Node node) throws DatabaseException {
@@ -359,5 +356,26 @@ public class MapEntity implements IMapEntity {
      */
     public LinkedList<Node> getConnectedNodes(Node node){
         return this.getConnectedNodes(node, false);
+    }
+
+    /**
+     * Get the distance from the kiosk to the given node
+     * @param n node to get distance to
+     * @return int distance in pixels
+     */
+    public int getDistanceFromKiosk(Node n) {
+        if(distanceFromKiosk.containsKey(n)) return distanceFromKiosk.get(n);
+        return -1;
+    }
+
+    //TODO
+    public void updateDistanceFromKisok(Node kioskNode) {
+        for(NodeFloor nf : floors.keySet()){
+            for(Node n : floors.get(nf).getAllNodes()) {
+                if(!n.getNodeType().equals(NodeType.HALL)){
+                    distanceFromKiosk.put(n,1);
+                }
+            }
+        }
     }
 }
