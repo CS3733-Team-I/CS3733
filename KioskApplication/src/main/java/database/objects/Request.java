@@ -99,6 +99,7 @@ public abstract class Request {
     }
 
     public String getNote() {
+        if (note.equals("")) return "";
         return note;
     }
 
