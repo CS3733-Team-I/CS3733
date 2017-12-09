@@ -219,7 +219,8 @@ public class PathWaypointView extends AnchorPane {
                 navigationTransition.playFrom(Duration.seconds(k));
             }
         }
-        this.pathView.getChildren().add(switchFloor);
+
+        //this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -266,9 +267,6 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-
-//        waypointList.remove(index1);
-//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
