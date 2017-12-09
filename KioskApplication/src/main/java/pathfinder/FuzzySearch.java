@@ -1,20 +1,15 @@
 package pathfinder;
 
-import com.sun.deploy.util.StringUtils;
 import database.objects.Node;
 import entity.MapEntity;
 
 import java.util.*;
-import java.lang.Object;
-import org.apache.commons.codec.language.DoubleMetaphone;
 
 public class FuzzySearch {
 
-   // private DoubleMetaphone metaphone;
-   // private DoubleMetaphone metaphone;
     /**
      * Fuzzy search
-     * using metaphone
+     * goes through all nodes long names and finds the top 5 matches to all nodes
      * @param inputtext
      * @return Linked list of 5 top search result nodes
      */
