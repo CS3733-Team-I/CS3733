@@ -34,6 +34,8 @@ public final class RequestListCell extends JFXListCell<Request> {
             } catch (NotFoundException e) {
                 e.printStackTrace();
             }
+            setText("");
+            setPrefWidth(300);
             setGraphic(controller.getView());
         }
     }

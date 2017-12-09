@@ -193,9 +193,7 @@ public class RequestManagerController extends ScreenController {
     }
 
     /**
-<<<<<<< HEAD
      * Method when a list view cell is selected currently does nothing
-=======
      * Creates what goes into the popup when a listview cell is selected
      * @param requestID To determine which request to display the information of
      */
@@ -329,7 +327,6 @@ public class RequestManagerController extends ScreenController {
 
     /**
      * Method to display popup information when a list view cell is selected
->>>>>>> 90f869c86b78207476f94c0cbe177c7325e28617
      * @param event the mouse click on an ID triggers this method
      */
     @FXML

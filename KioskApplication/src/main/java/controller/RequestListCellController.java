@@ -124,7 +124,7 @@ public class RequestListCellController {
             if(RPS.equals(RequestProgressStatus.TO_DO)) { //and still assignable
                 ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
                 listOfEmployees.clear();
-                listOfEmployees.addAll(lEntity.getAllEmployeeType(rEntity.checkRequestType(requestID)));
+                listOfEmployees.addAll(lEntity.getAllEmployeeType(request));
                 JFXComboBox employees = new JFXComboBox(listOfEmployees);
                 employees.setPromptText("Assign Employee");
                 employees.setOnAction(new EventHandler<ActionEvent>() {
@@ -148,7 +148,7 @@ public class RequestListCellController {
                     statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
-                            rEntity.markInProgress(lEntity.getLoginID(), requestID);
+                            rEntity.markInProgress(lEntity.getCurrentLoginID(), requestID);
                             parent.refreshRequests();
                         }
                     });
