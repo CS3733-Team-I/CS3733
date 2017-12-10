@@ -684,6 +684,17 @@ public class MapController {
         LinkedList<Node> defaultNode = new LinkedList<Node>();
         defaultNode.add(systemSettings.getDefaultnode());
         zoomOnSelectedNodes(defaultNode);
+        this.scrollPane.setHvalue(SystemSettings.getInstance().getDefaultnode().getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(SystemSettings.getInstance().getDefaultnode().getYcoord()/mapView.getFitHeight()-0.04);
+    }
+
+    /**
+     * center the view at input node
+     * @param node the node to recenter at
+     */
+    public void recenterAtNode(Node node) {
+        this.scrollPane.setHvalue(node.getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(node.getYcoord()/mapView.getFitHeight()-0.04);
     }
 
     public void setOptionsBoxVisible(boolean visible) {

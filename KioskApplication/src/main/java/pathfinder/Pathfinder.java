@@ -5,6 +5,7 @@ import database.objects.Node;
 import entity.Path;
 import entity.SystemSettings;
 import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.*;
 
@@ -92,5 +93,10 @@ public class Pathfinder {
 
     public void setWheelchairAccessible(boolean wheelchairAccessible) {
         this.wheelchairAccessible = wheelchairAccessible;
+    }
+
+    public Node findPathToNearestType(Node startNode, NodeType nodeType, boolean wheelchairAccessible)  throws PathfinderException{
+        BreadthFirst breadthFirst = new BreadthFirst();
+        return breadthFirst.findPathToNearestType(startNode, nodeType, wheelchairAccessible);
     }
 }
