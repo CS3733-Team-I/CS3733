@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utility.csv.CsvFileUtil;
 
+import javax.swing.*;
+
 public class Main extends Application {
 
     @Override
@@ -52,6 +54,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+      //  new SplashScreen(new ImageIcon());
         launch(args);
     }
 }
