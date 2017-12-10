@@ -71,7 +71,7 @@
       </VBox>
         <HBox fx:id="buttonBox" alignment="CENTER_LEFT">
             <children>
-                <JFXButton fx:id="locateNodeButton" text="GO TO">
+                <JFXButton fx:id="locateNodeButton" onAction="#goToLocation" text="GO TO">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin></JFXButton>
