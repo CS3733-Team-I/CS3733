@@ -1,86 +1,74 @@
+import utility.ResourceManager;
+
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * From https://alvinalexander.com/java/edu/SplashScreen/node9.shtml
+ * Splash screen class for implementation
+ */
+
 public class SplashScreen extends JWindow {
-    BorderLayout borderLayout1 = new BorderLayout();
-    JLabel imageLabel = new JLabel();
-    JPanel southPanel = new JPanel();
-    FlowLayout southPanelFlowLayout = new FlowLayout();
-    JProgressBar progressBar = new JProgressBar();
-    ImageIcon imageIcon;
 
-    public SplashScreen(ImageIcon imageIcon) {
-        this.imageIcon = imageIcon;
-        try {
-            jbInit();
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+    private int duration;
+
+    public SplashScreen(int d) {
+        duration = d;
     }
 
-    // note - this class created with JBuilder
-    void jbInit() throws Exception {
-        imageLabel.setIcon(imageIcon);
-        this.getContentPane().setLayout(borderLayout1);
-        southPanel.setLayout(southPanelFlowLayout);
-        southPanel.setBackground(Color.BLACK);
-        this.getContentPane().add(imageLabel, BorderLayout.CENTER);
-        this.getContentPane().add(southPanel, BorderLayout.SOUTH);
-        southPanel.add(progressBar, null);
-        this.pack();
+    // A simple little method to show a title screen in the center
+    // of the screen for the amount of time given in the constructor
+    public void showSplash(boolean visablility) {
+
+        JPanel content = (JPanel) getContentPane();
+        content.setBackground(Color.white);
+
+        // Set the window's bounds, centering the window
+        int width = 200;
+        int height = 200;
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screen.width - width) / 2;
+        int y = (screen.height - height) / 2;
+        setBounds(x, y, width, height);
+
+        // Build the splash screen
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("images/BWH_Logo.png")); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it
+        Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        imageIcon = new ImageIcon(newimg);  // transform it back
+        JLabel label = new JLabel(imageIcon);
+       // JLabel title = new JLabel("Team I's Kiosk");
+        //title.setFont(new Font("Sans-Serif", Font.BOLD, 24));
+        JLabel copyrt = new JLabel
+                ("© Brigham & Women’s Hospital 2017", JLabel.CENTER);
+        copyrt.setFont(new Font("Sans-Serif", Font.BOLD, 12));
+       // content.add(title,BorderLayout.NORTH);
+        content.add(label, BorderLayout.CENTER);
+        content.add(copyrt, BorderLayout.SOUTH);
+        //Color oraRed = new Color(156, 20, 20, 255);
+        //content.setBorder(BorderFactory.createLineBorder(oraRed, 10));
+
+        // Display it
+        setVisible(visablility);
+
+        // Wait a little while, maybe while loading resources
+        /*try {
+            Thread.sleep(duration);
+        } catch (Exception e) {
+        }*/
+        //setVisible(false);
+
     }
 
-    public void setProgressMax(int maxProgress)
-    {
-        progressBar.setMaximum(maxProgress);
+    public void showSplashAndExit() {
+
+        showSplash(true);
+        System.exit(0);
+
     }
 
-    public void setProgress(int progress)
-    {
-        final int theProgress = progress;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setValue(theProgress);
-            }
-        });
-    }
-
-    public void setProgress(String message, int progress)
-    {
-        final int theProgress = progress;
-        final String theMessage = message;
-        setProgress(progress);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                progressBar.setValue(theProgress);
-                setMessage(theMessage);
-            }
-        });
-    }
-
-    public void setScreenVisible(boolean b)
-    {
-        final boolean boo = b;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                setVisible(boo);
-            }
-        });
-    }
-
-    private void setMessage(String message)
-    {
-        if (message==null)
-        {
-            message = "";
-            progressBar.setStringPainted(false);
-        }
-        else
-        {
-            progressBar.setStringPainted(true);
-        }
-        progressBar.setString(message);
+    public void Exit(){
+        this.showSplash(false);
     }
 
 }
