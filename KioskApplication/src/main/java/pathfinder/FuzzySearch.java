@@ -3,7 +3,6 @@ package pathfinder;
 
 import database.objects.Node;
 import entity.MapEntity;
-import org.apache.commons.codec.language.DoubleMetaphone;
 
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class FuzzySearch {
             HashMap<String, Node> allNodes = map.getAllNodesHM();
             inputtext = inputtext.replaceAll("\\s+","");
             String[] input = inputtext.split("");
-            DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+            //DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
             // go through all nodes and get hightest match in a hashmap with key of node
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
@@ -40,8 +39,12 @@ public class FuzzySearch {
                             } else {
                                 // do nothing
                             }
-                        if(longName[i].toLowerCase().equals(input[i].toLowerCase())){
-                            matched++;
+                        if(i>=longName.length) {
+                            // do nothing
+                            }
+                        else{
+                            if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
+                                matched++;}
                         }
                 }
                 sortedMap.put(key, matched);
