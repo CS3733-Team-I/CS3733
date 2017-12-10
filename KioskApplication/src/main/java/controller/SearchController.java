@@ -160,6 +160,14 @@ public class SearchController {
         return cbNodes.getSelectionModel().isEmpty();
     }
 
+    public void reset() {
+        nodeData.clear();
+        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
+            if(databaseNode.getNodeType() != NodeType.HALL) {
+                nodeData.add(new SearchNode(databaseNode));
+            }
+        }
+    }
 
     public ObjectProperty<SearchNode> getCBValueProperty() {
         return cbNodes.valueProperty();

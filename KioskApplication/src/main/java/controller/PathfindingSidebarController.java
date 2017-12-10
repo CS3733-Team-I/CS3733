@@ -187,6 +187,9 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().clearMap();
         getMapController().getMiniMapController().clearMiniWaypoint();
         getMapController().reloadDisplay();
+
+        //reset search
+        searchController.reset();
     }
 
     public void enableNavBtn(){
