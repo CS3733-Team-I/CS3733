@@ -44,9 +44,45 @@ public class SearchNode {
                 nodeIcon.setFitHeight(48);
                 nodeIcon.setFitWidth(48);
                 break;
+            case CONF:
+                Image confIcon = ResourceManager.getInstance().getImage("/images/icons/conf.png");
+                nodeIcon = new ImageView(confIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
+            case DEPT:
+                Image deptIcon = ResourceManager.getInstance().getImage("/images/icons/department.png");
+                nodeIcon = new ImageView(deptIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
+            case LABS:
+                Image labIcon = ResourceManager.getInstance().getImage("/images/icons/lab.png");
+                nodeIcon = new ImageView(labIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
+            case INFO:
+                Image nodeInfoIcon = ResourceManager.getInstance().getImage("/images/icons/nodeInfo.png");
+                nodeIcon = new ImageView(nodeInfoIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
+            case SERV:
+                Image servIcon = ResourceManager.getInstance().getImage("/images/icons/service.png");
+                nodeIcon = new ImageView(servIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
+            case STAI:
+                Image staiIcon = ResourceManager.getInstance().getImage("/images/icons/stairs.png");
+                nodeIcon = new ImageView(staiIcon);
+                nodeIcon.setFitHeight(48);
+                nodeIcon.setFitWidth(48);
+                break;
             default:
                 //TODO change this
-                Image defaultIcon = ResourceManager.getInstance().getImage("/images/icons/food.png");
+                Image defaultIcon = ResourceManager.getInstance().getImage("/images/icons/nukeIcon.png");
                 nodeIcon = new ImageView(defaultIcon);
                 nodeIcon.setFitHeight(48);
                 nodeIcon.setFitWidth(48);

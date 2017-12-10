@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.util.StringConverter;
@@ -76,20 +77,24 @@ public class SearchController {
                         searchNode.getSearchString().equals(string)).findFirst().orElse(null);
             }
         });
-//        //DONT REMOVE THIS
-//        cbNodes.setCellFactory(listView -> new ListCell<SearchNode>() {
-//            @Override
-//            protected void updateItem(SearchNode item, boolean empty) {
-//                super.updateItem(item, empty);
-//                setText(item.getSearchString());
-//                if(item == null || empty) {
-//                    setGraphic(null);
-//                }
-//                else {
-//                    setGraphic(item.getNodeIcon());
-//                }
-//            }
-//        });
+
+        //DONT REMOVE THIS
+        cbNodes.setCellFactory(listView -> new ListCell<SearchNode>() {
+            @Override
+            protected void updateItem(SearchNode item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(item == null || empty) {
+                    setGraphic(null);
+                }
+                else {
+                    setGraphic(item.getNodeIcon());
+                    setText(item.getSearchString());
+                }
+            }
+        });
+
+        cbNodes.setButtonCell(cbNodes.getCellFactory().call(null));
 
         cbNodes.setOnKeyReleased(e -> {
             cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
