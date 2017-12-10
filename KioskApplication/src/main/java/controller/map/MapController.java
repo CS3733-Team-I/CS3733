@@ -401,6 +401,7 @@ public class MapController {
         pathWaypointView.clearAll();
         clearNodes();
         this.miniMapController.clearWaypoints();
+        this.miniMapController.clearPath();
     }
 
     public void clearNodes() {

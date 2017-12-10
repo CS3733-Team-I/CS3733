@@ -301,15 +301,13 @@ public class MiniMapController {
 
         int waypointIndex = 0;
         for (Node node : waypoints) {
-            if (node.getFloor() != mapController.getCurrentFloor()) continue;
-
             Node lastNode = node;
             for (Node thisNode : path.get().getNodesInSegment(node)) {
                 // Don't draw a line between the same nodes
-                if (thisNode.getUniqueID() == lastNode.getUniqueID()) continue;
+                if (thisNode.getUniqueID() != lastNode.getUniqueID() &&
+                    thisNode.getFloor() == mapController.getCurrentFloor() &&
+                    lastNode.getFloor() == mapController.getCurrentFloor()) {
 
-                if (thisNode.getFloor() == mapController.getCurrentFloor()
-                        && lastNode.getFloor() == mapController.getCurrentFloor()) {
                     Line line = new Line(lastNode.getXcoord() * RAWRatio, lastNode.getYcoord() * RAHRatio,
                                          thisNode.getXcoord() * RAWRatio, thisNode.getYcoord() * RAHRatio);
                     line.setStroke(path.get().getSegmentColor(waypointIndex));
