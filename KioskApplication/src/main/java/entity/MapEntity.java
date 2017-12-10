@@ -32,6 +32,7 @@ public class MapEntity implements IMapEntity {
         edges = new HashMap<>();
 
         dbController = DatabaseController.getInstance();
+        distanceFromKiosk = new HashMap<Node, Integer>();
     }
 
     public static MapEntity getInstance() {

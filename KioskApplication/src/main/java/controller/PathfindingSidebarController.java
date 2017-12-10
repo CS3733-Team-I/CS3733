@@ -78,12 +78,12 @@ public class PathfindingSidebarController extends ScreenController {
         currentWaypoints = new LinkedList<>();
         systemSettings = SystemSettings.getInstance();
         isAddingWaypoint = true;
+        searchController = new SearchController(this);
     }
 
     @FXML
     void initialize() throws IOException{
         //initialize search
-        searchController = new SearchController(this);
         FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
         searchLoader.setController(searchController);
         searchView = searchLoader.load();

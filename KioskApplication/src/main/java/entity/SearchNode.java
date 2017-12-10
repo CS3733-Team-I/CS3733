@@ -1,6 +1,7 @@
 package entity;
 
 import database.objects.Node;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
@@ -10,10 +11,12 @@ public class SearchNode {
     Node databaseNode;
     String searchString;
     ImageView nodeIcon;
+    SimpleIntegerProperty distance;
 
     public SearchNode(Node node) {
         this.databaseNode = node;
         this.searchString = node.getLongName() + " (" + node.getFloor() + ")";
+        this.distance = new SimpleIntegerProperty(MapEntity.getInstance().getDistanceFromKiosk(node));
 
         switch (node.getNodeType()) {
             case REST:

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.SearchNode;
+import entity.SystemSettings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,6 +41,7 @@ public class SearchController {
     public SearchController(ScreenController parent) {
         this.parent = parent;
         nodeData = FXCollections.observableArrayList();
+        SystemSettings.getInstance().updateDistance();
         for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
             if(databaseNode.getNodeType() != NodeType.HALL) {
                 nodeData.add(new SearchNode(databaseNode));
