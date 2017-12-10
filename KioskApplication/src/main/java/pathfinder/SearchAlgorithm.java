@@ -2,6 +2,7 @@ package pathfinder;
 
 import database.objects.Edge;
 import database.objects.Node;
+import utility.node.NodeType;
 
 import java.util.LinkedList;
 
