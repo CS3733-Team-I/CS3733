@@ -256,6 +256,43 @@ public class MapController {
                 }
             }
         });
+
+        mapView.setOnDragOver(e -> {
+            if(e.getDragboard().hasString()) {
+                System.out.println("Drag node over map.");
+
+                int uniqueID = Integer.parseInt(e.getDragboard().getString());
+                Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
+
+                Point2D point2D = new Point2D(e.getX(), e.getY());
+                nodesEdgesView.setNodePosition(selectNode, point2D);
+
+                e.acceptTransferModes(TransferMode.MOVE);
+                e.consume();
+            }
+        });
+
+        mapView.setOnDragDropped(e ->{
+            System.out.println("Node Dropped");
+            double xcoord = e.getX();
+            double ycoord = e.getY();
+            int uniqueID = Integer.parseInt(e.getDragboard().getString());
+
+            Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
+            selectNode.setXcoord((int)xcoord);
+            selectNode.setYcoord((int)ycoord);
+
+            try {
+                MapEntity.getInstance().editNodeByUK(selectNode);
+            } catch (DatabaseException e1) {
+                e1.printStackTrace();
+            }
+
+            reloadDisplay();
+
+            e.setDropCompleted(true);
+            e.consume();
+        });
     }
 
     /**
