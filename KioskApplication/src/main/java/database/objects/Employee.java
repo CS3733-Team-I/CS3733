@@ -5,13 +5,15 @@ import utility.KioskPermission;
 import utility.request.RequestType;
 import org.springframework.security.crypto.bcrypt.*;
 
+import java.util.ArrayList;
+
 public class Employee extends RecursiveTreeObject<Employee> implements IEmployee {
     private int id;
     private String username;
     private String lastName;
     private String firstName;
     private String password;
-    private String options;
+    private ArrayList<String> options;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
@@ -25,7 +27,7 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param permission if nonEmployee, it changes to employee
      * @param serviceAbility
      */
-    public Employee(String username, String lastName, String firstName, String password, String options, KioskPermission permission, RequestType serviceAbility){
+    public Employee(String username, String lastName, String firstName, String password, ArrayList<String> options, KioskPermission permission, RequestType serviceAbility){
         this.username = username;
         this.lastName=lastName;
         this.firstName=firstName;
@@ -45,18 +47,28 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param lastName
      * @param firstName
      * @param password
-     * @param options
+     * @param optionsString
      * @param permission
      * @param serviceAbility
      */
-    public Employee(int id, String username, String lastName, String firstName, String password, String options,
+    public Employee(int id, String username, String lastName, String firstName, String password, String optionsString,
                     KioskPermission permission, RequestType serviceAbility){
         this.id = id;
         this.username = username;
         this.lastName=lastName;
         this.firstName=firstName;
         this.password = password;
-        this.options = options;
+        this.options = new ArrayList<String>();
+            String subOption="";
+            for(char c : optionsString.toCharArray()){
+                if(c==':'){
+                    options.add(subOption);
+                    subOption="";
+                }
+                else{
+                    subOption=subOption+c;
+                }
+            }
         this.permission=permission;
         this.serviceAbility = serviceAbility;
     }
@@ -142,7 +154,28 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
         this.lastName = lastName;
     }
 
-    public String getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
+        /*ArrayList<String> optionsList = new ArrayList<String>();
+            String inLanguage="";
+            for(char c : options.toCharArray()){
+                if(c==':'){
+                    optionsList.add(inLanguage);
+                    inLanguage="";
+                }
+                else{
+                    inLanguage=inLanguage+c;
+                }
+            }
+        return optionsList;*/
+    }
+
+    public String getOptionsForDatabase(){
+        String optionsString = "";
+        for (String subOption :
+                options) {
+            optionsString=optionsString+subOption+":";
+        }
+        return optionsString;
     }
 }

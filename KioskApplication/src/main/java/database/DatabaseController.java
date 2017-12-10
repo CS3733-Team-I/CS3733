@@ -428,7 +428,7 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setString(5, employee.getOptions());
+            pstmt.setString(5, employee.getOptionsForDatabase());
             pstmt.setInt(6,employee.getPermission().ordinal());
             pstmt.setInt(7,employee.getServiceAbility().ordinal());
             pstmt.executeUpdate();
@@ -456,7 +456,7 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setString(5, employee.getOptions());
+            pstmt.setString(5, employee.getOptionsForDatabase());
             pstmt.setInt(6,employee.getPermission().ordinal());
             pstmt.setInt(7,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
