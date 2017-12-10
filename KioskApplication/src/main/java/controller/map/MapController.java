@@ -39,6 +39,7 @@ import java.util.*;
 
 public class MapController {
     @FXML private AnchorPane container;
+    @FXML private AnchorPane contentPane;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
@@ -485,6 +486,12 @@ public class MapController {
         }
     }
 
+    public void setContentLeftAnchor(double left) {
+        if (container != null) {
+            AnchorPane.setLeftAnchor(contentPane, left);
+        }
+    }
+
     /**
      * handles all zooming operations
      * @param scaleValue
@@ -749,10 +756,6 @@ public class MapController {
 
     public PathWaypointView getPathWaypointView() {
         return pathWaypointView;
-    }
-
-    public ArrayList<Color> getsSegmentColorList() {
-        return pathWaypointView.getsSegmentColorList();
     }
 
     @FXML

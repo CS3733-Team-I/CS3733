@@ -5,6 +5,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,6 +31,8 @@ public class MiniMapController {
     @FXML private Rectangle viewportRect;
     @FXML private AnchorPane waypointPane;
     @FXML private AnchorPane pathPane;
+
+    private SimpleObjectProperty<Path> path;
 
     private ObservableList<Node> waypoints;
     private HashMap<Node, Circle> waypointMap;
@@ -79,6 +82,16 @@ public class MiniMapController {
         waypoints = FXCollections.observableArrayList();
         waypointMap = new HashMap<>();
 
+        path = new SimpleObjectProperty<>();
+        path.set(null);
+
+        path.addListener((obj, oldValue, newValue) -> {
+            pathPane.getChildren().clear();
+            if (newValue != null) {
+                drawPath();
+            }
+        });
+
         //set the waypoint and path pane cannot be clicked
         waypointPane.setMouseTransparent(true);
         pathPane.setMouseTransparent(true);
@@ -109,7 +122,7 @@ public class MiniMapController {
                 }
                 if (listener.wasAdded()) {
                     for (Node waypoint : listener.getAddedSubList()) {
-                        Circle waypointIndicator = new Circle(3);
+                        Circle waypointIndicator = new Circle(2);
                         waypointIndicator.setFill(Color.RED);
 
                         waypointIndicator.setCenterX(waypoint.getXcoord() * RAWRatio);
@@ -148,6 +161,8 @@ public class MiniMapController {
                 waypointMap.get(node).setVisible(false);
             }
         }
+
+        drawPath();
     }
 
     /**
@@ -273,21 +288,39 @@ public class MiniMapController {
      * @param path the path to draw
      */
     public void showPath(Path path) {
-        for (LinkedList<Edge> edgeList : path.getEdges()) {
-            for (Edge edge : edgeList) {
-                try {
-                    Node node1 = MapEntity.getInstance().getNode(edge.getNode1ID());
-                    Node node2 = MapEntity.getInstance().getNode(edge.getNode2ID());
+        this.path.set(path);
+    }
 
-                    Line line = new Line(node1.getXcoord(), node1.getYcoord(), node2.getXcoord(), node2.getYcoord());
-                    line.setFill(Color.TRANSPARENT);
-                    line.setStroke(Color.BLUE);
-                    line.setStrokeWidth(2);
+    /**
+     * Draw the current path on the map
+     */
+    public void drawPath() {
+        pathPane.getChildren().clear();
+
+        if (path.get() == null) return;
+
+        int waypointIndex = 0;
+        for (Node node : waypoints) {
+            if (node.getFloor() != mapController.getCurrentFloor()) continue;
+
+            Node lastNode = node;
+            for (Node thisNode : path.get().getNodesInSegment(node)) {
+                // Don't draw a line between the same nodes
+                if (thisNode.getUniqueID() == lastNode.getUniqueID()) continue;
+
+                if (thisNode.getFloor() == mapController.getCurrentFloor()
+                        && lastNode.getFloor() == mapController.getCurrentFloor()) {
+                    Line line = new Line(lastNode.getXcoord() * RAWRatio, lastNode.getYcoord() * RAHRatio,
+                                         thisNode.getXcoord() * RAWRatio, thisNode.getYcoord() * RAHRatio);
+                    line.setStroke(path.get().getSegmentColor(waypointIndex));
+                    line.setStrokeWidth(1);
                     pathPane.getChildren().add(line);
-                } catch (NotFoundException e) {
-                    e.printStackTrace();;
                 }
+
+                lastNode = thisNode;
             }
+
+            waypointIndex++;
         }
     }
 
@@ -295,6 +328,6 @@ public class MiniMapController {
      * clear mini paths on the miniMap
      */
     public void clearPath() {
-        pathPane.getChildren().clear();
+        this.path.set(null);
     }
 }

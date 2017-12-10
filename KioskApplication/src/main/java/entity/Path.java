@@ -3,6 +3,7 @@ package entity;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
+import javafx.scene.paint.Color;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
@@ -14,6 +15,8 @@ public class Path {
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
     private int currentCost = 0;
+
+    private static LinkedList<Color> segmentColorList = new LinkedList<>();
 
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
@@ -221,5 +224,15 @@ public class Path {
 
     public int getPathCost(){
         return currentCost;
+    }
+
+    public Color getSegmentColor(int index) {
+        if (segmentColorList.size() < index + 1) {
+            Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
+            segmentColorList.add(colorForPointers);
+            return colorForPointers;
+        } else {
+            return segmentColorList.get(index);
+        }
     }
 }

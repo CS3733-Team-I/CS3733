@@ -157,7 +157,6 @@ public class PathWaypointView extends AnchorPane {
 
     public void drawPath(Path path) {
         JFXButton switchFloor = null;
-        segmentColorList.clear();
 
         this.currentPath = path;
 
@@ -178,7 +177,7 @@ public class PathWaypointView extends AnchorPane {
             PathList.addAll(segment);
         }
 
-        for(int i = 0; i < waypointList.size()-1; i ++) {
+        for(int i = 0; i < waypointList.size() - 1; i ++) {
             LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
 
             javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
@@ -210,11 +209,10 @@ public class PathWaypointView extends AnchorPane {
 
             this.pathView.getChildren().add(jfxPath);
 
-            Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
-            segmentColorList.add(colorForPointers);
+
             for(int k = 0; k < currentPath.getPathCost()/20; k++) {
                 Circle circle = new Circle(10);
-                circle.setFill(colorForPointers);
+                circle.setFill(path.getSegmentColor(i));
                 circle.setAccessibleHelp("path pointer");
                 this.pathView.getChildren().add(circle);
 
@@ -318,13 +316,5 @@ public class PathWaypointView extends AnchorPane {
             return currentPath.getDirectionsList().get(i);
         }
         else return null;
-    }
-
-    public ArrayList<Color> getsSegmentColorList() {
-        return segmentColorList;
-    }
-
-    public void setSidebarController(PathfindingSidebarController sidebarController) {
-        this.sidebarController = sidebarController;
     }
 }

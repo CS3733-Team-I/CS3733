@@ -109,7 +109,7 @@ public class PathfindingSidebarController extends ScreenController {
                     }
                 }
 
-                if (currentWaypoints.size() > 1) generatePath();
+                generatePath();
             }
         });
     }
@@ -221,6 +221,7 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Set the map size
         getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setContentLeftAnchor(400);
 
         // Reset mapcontroller
         onResetPressed();
@@ -428,7 +429,7 @@ public class PathfindingSidebarController extends ScreenController {
 
                     Label waypointLabel = new Label(waypointListView.getItems().indexOf(waypointCell)+1 + ". " + waypointCell.getAccessibleRoleDescription());
                     try {
-                        waypointLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
+                        //waypointLabel.setTextFill(getMapController().getsSegmentColorList().get(waypointListView.getItems().indexOf(waypointCell)));
                     } catch (IndexOutOfBoundsException e) {
                         waypointLabel.setTextFill(Color.BLACK);
                     }
