@@ -2,6 +2,7 @@ package entity;
 
 import entity.FoodEntities.AuBonPain;
 import entity.FoodEntities.FoodMenuItem;
+import entity.FoodEntities.VendingMachine;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.Test;
@@ -21,6 +22,16 @@ public class TestFoodEntity {
     FoodMenuItem pastis = new FoodMenuItem("Pastis", 2.00, FoodType.DRINK);
     FoodMenuItem waterBottle = new FoodMenuItem("Water Bottle", 1.50, FoodType.DRINK);
     FoodMenuItem wine = new FoodMenuItem("Chateau Peymouton", 21.99, FoodType.DRINK);
+
+    //vending
+    FoodMenuItem chips = new FoodMenuItem("Chips", 1.50, FoodType.SIDE);
+    FoodMenuItem candyBar = new FoodMenuItem("Candy Bar", 0.99, FoodType.SIDE);
+    FoodMenuItem skittles = new FoodMenuItem("Skittles", 0.99, FoodType.SIDE);
+    FoodMenuItem pretzels = new FoodMenuItem("Pretzels",0.99,FoodType.SIDE);
+    FoodMenuItem penuts = new FoodMenuItem("Penuts", 0.75, FoodType.SIDE);
+    FoodMenuItem granolaBar = new FoodMenuItem("Granola Bar", 1.00,FoodType.SIDE);
+
+
 
     @Test
     public void testABPMenu(){
@@ -59,6 +70,29 @@ public class TestFoodEntity {
         for(FoodMenuItem item: menuItems){
             menuNames.add(item.getName());
         }
+
+        assertEquals(menuNames,abpNames);
+    }
+
+    @Test
+    public void testvendingMenu(){
+        VendingMachine vendingMachine = new VendingMachine();
+        ObservableList<FoodMenuItem> vMenu = vendingMachine.getMenu();
+        ObservableList<FoodMenuItem> menuItems = FXCollections.observableArrayList();
+
+        LinkedList<String> abpNames = new LinkedList<>();
+        for(FoodMenuItem item: vMenu){
+            abpNames.add(item.getName());
+        }
+
+        LinkedList<String> menuNames = new LinkedList<>();
+        menuNames.add("Chips");
+        menuNames.add("Candy Bar");
+        menuNames.add("Skittles");
+        menuNames.add("Pretzels");
+        menuNames.add("Penuts");
+        menuNames.add("Granola Bar");
+
 
         assertEquals(menuNames,abpNames);
     }

@@ -155,6 +155,7 @@ public class RequestSubmitterController extends ScreenController {
             if (newValue == null) return;
             Node restNode = newValue;
             if(restNode.getLongName().toLowerCase().contains("caf")) {
+                System.out.println("Cafe reached");
                 Cafe menu = new Cafe();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
@@ -172,15 +173,17 @@ public class RequestSubmitterController extends ScreenController {
                     drinks.getChildren().add(fooditem);
                 }
             }else if(restNode.getLongName().toLowerCase().contains("vending")){
+                System.out.println("Vending reached");
                 VendingMachine menu = new VendingMachine();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
                 drinks.getChildren().clear();
                 for(FoodMenuItem item: menu.getMenu()){
                     TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
-                    sides.getChildren().setAll(fooditem);
+                    sides.getChildren().add(fooditem);
                 }
             }else if(restNode.getLongName().toLowerCase().contains("pain")){
+                System.out.println("Au Bon Pain reached");
                 AuBonPain menu = new AuBonPain();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
@@ -197,7 +200,8 @@ public class RequestSubmitterController extends ScreenController {
                     TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
                     drinks.getChildren().add(fooditem);
                 }
-            }else if(restNode.getLongName().toLowerCase().contains("pats")){
+            }else if(restNode.getLongName().toLowerCase().contains("pat")){
+                System.out.println("Pats Place reached");
                 PatsPlace menu = new PatsPlace();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
@@ -215,6 +219,7 @@ public class RequestSubmitterController extends ScreenController {
                     drinks.getChildren().add(fooditem);
                 }
             }else if(restNode.getLongName().toLowerCase().contains("gift")){
+                System.out.println("Gift Shop reached");
                 GiftShop menu = new GiftShop();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
@@ -346,6 +351,7 @@ public class RequestSubmitterController extends ScreenController {
                 order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
             }
         }
+
 
         if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
