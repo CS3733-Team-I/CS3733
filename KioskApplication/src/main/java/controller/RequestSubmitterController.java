@@ -4,13 +4,15 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.FoodEntities.FoodMenuItem;
+import entity.FoodEntities.*;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -114,6 +116,7 @@ public class RequestSubmitterController extends ScreenController {
             }
         });
 
+        //TODO: is this still necessary?
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
@@ -137,16 +140,101 @@ public class RequestSubmitterController extends ScreenController {
             resetTimer();
         });
 
-        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99, FoodType.ENTREE));
-        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0, FoodType.DRINK));
-        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99, FoodType.SIDE));
+
+        final TreeItem<FoodMenuItem> entrees = new TreeItem<>(new FoodMenuItem("Entrees", 0.0, FoodType.ENTREE));
+        final TreeItem<FoodMenuItem> drinks = new TreeItem<>(new FoodMenuItem("Drinks", 0.0, FoodType.DRINK));
+        final TreeItem<FoodMenuItem> sides = new TreeItem<>(new FoodMenuItem("Sides", 0.0, FoodType.SIDE));
 
         //Creating the root element
-        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0, FoodType.ENTREE));
+        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Menu", 0.0, FoodType.ENTREE));
         root.setExpanded(true);
 
-        //Adding tree items to the root
-        root.getChildren().setAll(childNode1, childNode2, childNode3);
+        root.getChildren().setAll(entrees,drinks,sides);
+
+        restaurantComboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) return;
+            Node restNode = newValue;
+            if(restNode.getLongName().toLowerCase().contains("caf")) {
+                Cafe menu = new Cafe();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("vending")){
+                VendingMachine menu = new VendingMachine();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getMenu()){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().setAll(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("pain")){
+                AuBonPain menu = new AuBonPain();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("pats")){
+                PatsPlace menu = new PatsPlace();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("gift")){
+                GiftShop menu = new GiftShop();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else {
+                System.out.println("No restaurant/restaurant missing");
+            }
+        });
 
         //Creating a column
         TreeTableColumn<FoodMenuItem, String> nameColumn = new TreeTableColumn<>("Name");
@@ -185,7 +273,7 @@ public class RequestSubmitterController extends ScreenController {
         //Creating a tree table view
         menuTable.setRoot(root);
         menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
-        menuTable.setShowRoot(true);
+        menuTable.setShowRoot(false);
         menuTable.setEditable(true);
     }
 
