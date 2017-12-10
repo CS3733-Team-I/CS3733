@@ -17,7 +17,7 @@ public class SearchNode {
         this.databaseNode = node;
         this.distance = new SimpleIntegerProperty(MapEntity.getInstance().getDistanceFromKiosk(node));
         //TODO implement distance
-        this.searchString = distance.get() + " " + node.getLongName() + "ft" + " (" + node.getFloor() + ")";
+        this.searchString = distance.get() + "ft " + node.getLongName() + " (" + node.getFloor() + ")";
 
         switch (node.getNodeType()) {
             case REST:
