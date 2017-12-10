@@ -1,22 +1,43 @@
 package utility.Memento;
 
 import javafx.scene.control.Tab;
+import utility.node.NodeFloor;
 
 import java.util.ArrayList;
 
 public class MainWindowMemento {
-    public ArrayList<Tab> tabs;
+    private ArrayList<Tab> tabs;
+    private NodeFloor floor;
+    double zoom;
+    String language;
 
-    public MainWindowMemento(ArrayList<Tab> tabs) {
+    public MainWindowMemento(ArrayList<Tab> tabs, NodeFloor floor, double zoom, String language) {
         this.tabs = tabs;
+        this.floor = floor;
+        this.zoom = zoom;
+        this.language = language;
     }
 
-    public MainWindowMemento getState(){
-        return this;
-    }
-
-    public void setState(ArrayList<Tab> tabs){
+    public void setState(ArrayList<Tab> tabs, NodeFloor floor, double zoom, String language){
         this.tabs = tabs;
+        this.floor = floor;
+        this.zoom = zoom;
+        this.language = language;
     }
 
+    public NodeFloor getFloor() {
+        return floor;
+    }
+
+    public ArrayList<Tab> getTabs(){
+        return tabs;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
 }

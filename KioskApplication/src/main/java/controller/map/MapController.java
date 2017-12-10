@@ -195,6 +195,14 @@ public class MapController {
     }
 
     /**
+     * Sets the selected value for the language combobox
+     * @param lang value to set
+     */
+    public void setLanguageSelector(String lang){
+        languageSelector.setValue(lang);
+    }
+
+    /**
      * Gets the width of the map
      * @return the map's width
      */

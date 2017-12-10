@@ -190,11 +190,14 @@ public class MainWindowController {
 
         checkPermissions();
 
-
+        // Create Memento for reversion
         ArrayList<Tab> tabs = new ArrayList<Tab>();
         tabs.add(tabMap);
         tabs.add(tabSettings);
-        memento = new MainWindowMemento(tabs);
+        String lang = "English";
+        memento = new MainWindowMemento(tabs, NodeFloor.THIRD, defZoom, lang);
+
+        // Timer initialization
         countdown = maxCountdown;
         startTimer();
     }
@@ -233,6 +236,9 @@ public class MainWindowController {
         this.mapView.setDisable(true);
     }
 
+    /**
+     * Initial timer start function
+     */
     void startTimer(){
         System.out.println("TIMER START");
         timeline.stop();
@@ -297,7 +303,7 @@ public class MainWindowController {
         // Close the Login panel if open
         closeLoginPopup();
         // Change language
-
+        SystemSettings.getInstance().setResourceBundle(memento.getLanguage());
 
         // Log out
         LoginEntity.getInstance().logOut();
@@ -305,22 +311,20 @@ public class MainWindowController {
         // Clears Tabs
         tabPane.getTabs().clear();
         // Reset tabs
-        for (Tab t: memento.getState().tabs) {
+        for (Tab t: memento.getTabs()) {
             tabPane.getTabs().add(t);
         }
-        //tabPane.getTabs().add(tabMap);
-        //tabPane.getTabs().add(tabSettings);
 
         // Adjust node visability
         mapController.setNodesVisible(false);
         mapController.setEdgesVisible(false);
 
         // Reset floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
+        mapController.setFloorSelector(memento.getFloor());
         // Recenter
         mapController.recenterPressed();
         // Adjust Zoom
-        mapController.getZoomSlider().setValue(defZoom);
+        mapController.getZoomSlider().setValue(memento.getZoom());
         // Icon key close
         mapController.keyClosed();
 
@@ -480,6 +484,9 @@ public class MainWindowController {
         mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
     }
 
+    /**
+     * Will run on program close by X in top right
+     */
     @FXML
     public void shutdown(){
         System.out.println("SHUTDOWN");

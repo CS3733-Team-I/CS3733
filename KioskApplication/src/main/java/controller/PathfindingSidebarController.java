@@ -107,9 +107,6 @@ public class PathfindingSidebarController extends ScreenController {
             btNavigate.setText(resB.getString("my.navigate"));
             //btClear.setText(resB.getString("clear"));
 
-            btNavigate.setText(resB.getString("navigate"));
-            //waypointLabel.setText(resB.getString("waypoints"));
-            btClearPath.setText(resB.getString("clearpath"));
         });
     }
 
