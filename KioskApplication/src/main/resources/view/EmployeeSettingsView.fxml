@@ -61,6 +61,16 @@
                            <VBox fx:id="interpreterLanguageBox" prefHeight="300.0" prefWidth="100.0" GridPane.columnIndex="0"
                                  GridPane.rowIndex="1" spacing="5.0" AnchorPane.leftAnchor="25" AnchorPane.rightAnchor="25"/>
                   </AnchorPane>
+                  <Label fx:id="doctorOfficeLabel" prefWidth="100.0" text="Departments" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                         alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane fx:id="doctorOfficeContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
+                              GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
+                              GridPane.valignment="TOP">
+                  </AnchorPane>
                   <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
                   <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="2">

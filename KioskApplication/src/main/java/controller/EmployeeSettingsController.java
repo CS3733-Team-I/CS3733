@@ -7,6 +7,7 @@ import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -22,6 +23,9 @@ import utility.request.RequestType;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static utility.request.RequestType.DOCTOR;
+import static utility.request.RequestType.INTERPRETER;
+
 public class EmployeeSettingsController {
 
     @FXML private Label employeesLabel;
@@ -30,7 +34,7 @@ public class EmployeeSettingsController {
     @FXML private JFXButton deleteUserButton;
 
     @FXML private GridPane userEditorPane;
-    @FXML private Label registerEmployeeLabel, interpreterLanguageLabel;
+    @FXML private Label registerEmployeeLabel, interpreterLanguageLabel, doctorOfficeLabel;
     @FXML private Label errLabel;
     @FXML private JFXTextField firstNameBox;
     @FXML private JFXTextField lastNameBox;
@@ -40,7 +44,7 @@ public class EmployeeSettingsController {
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> typeSelect;
     @FXML private JFXButton userActionButton, userCancelButton;
-    @FXML private AnchorPane interpreterLanguageContainer;
+    @FXML private AnchorPane interpreterLanguageContainer, doctorOfficeContainer;
 
     @FXML private VBox interpreterLanguageBox;
 
@@ -154,7 +158,15 @@ public class EmployeeSettingsController {
             permissionSelect.setPromptText(rB.getString("permission"));
             typeSelect.setPromptText(rB.getString("serviceAbility"));
             registerEmployeeLabel.setText(rB.getString("registerEmployee"));
+            doctorOfficeLabel.setText(rB.getString("office"));
         });
+    }
+
+    private void setChildrenVisible(Group group, boolean visible){
+        for (Node node :
+                group.getChildren()) {
+            node.setVisible(visible);
+        }
     }
 
     public void refreshUsers() {
@@ -303,19 +315,40 @@ public class EmployeeSettingsController {
      */
     @FXML
     public void checkEmployeeType(){
-        if(typeSelect.getValue()==RequestType.INTERPRETER){
+        RequestType employeeType = typeSelect.getValue();
+        if(employeeType==INTERPRETER) {
+            System.out.println(typeSelect.getValue());
+            doctorOfficeContainer.setVisible(false);
+            doctorOfficeLabel.setVisible(false);
             interpreterLanguageContainer.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
+        }
+        else if(employeeType==DOCTOR) {
+            System.out.println(typeSelect.getValue());
+            interpreterLanguageContainer.setVisible(false);
+            interpreterLanguageLabel.setVisible(false);
+            clearInterpreterLanguageBox();
+            doctorOfficeContainer.setVisible(true);
+            doctorOfficeLabel.setVisible(true);
         }
         else {
             interpreterLanguageContainer.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
-            for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
-                if(intLangBoxItem instanceof JFXCheckBox) {
-                    JFXCheckBox langBox = ((JFXCheckBox) intLangBoxItem);
-                    if (langBox.isSelected()) {
-                        langBox.setSelected(false);
-                    }
+            clearInterpreterLanguageBox();
+            doctorOfficeContainer.setVisible(false);
+            doctorOfficeLabel.setVisible(false);
+        }
+    }
+
+    /**
+     * Helper method to clear the languages selected for interpreters
+     */
+    private void clearInterpreterLanguageBox(){
+        for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
+            if (intLangBoxItem instanceof JFXCheckBox) {
+                JFXCheckBox langBox = ((JFXCheckBox) intLangBoxItem);
+                if (langBox.isSelected()) {
+                    langBox.setSelected(false);
                 }
             }
         }
