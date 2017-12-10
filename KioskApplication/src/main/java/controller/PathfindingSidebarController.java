@@ -108,6 +108,8 @@ public class PathfindingSidebarController extends ScreenController {
                         waypointViews.remove(node);
                     }
                 }
+
+                if (currentWaypoints.size() > 1) generatePath();
             }
         });
     }
@@ -127,8 +129,9 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     void generatePath() {
-        if(getMapController().isPathShowing()) {
-            onResetPressed();
+        if (getMapController().isPathShowing()) {
+            getMapController().clearNodes();
+            getMapController().clearPath();
         }
 
         if (currentWaypoints.size() >= 2) {
@@ -196,8 +199,6 @@ public class PathfindingSidebarController extends ScreenController {
             //add new waypoint
             currentWaypoints.add(node);
         }
-
-        generatePath();
     }
 
     @Override

@@ -397,10 +397,13 @@ public class MapController {
      * Clear the map of waypoints, nodes, and edges
      */
     public void clearMap() {
-        this.pathWaypointView.clearAll();
-        clearPath();
-        this.nodesEdgesView.clear();
+        pathWaypointView.clearAll();
+        clearNodes();
         this.miniMapController.clearWaypoints();
+    }
+
+    public void clearNodes() {
+        this.nodesEdgesView.clear();
     }
 
     /**
