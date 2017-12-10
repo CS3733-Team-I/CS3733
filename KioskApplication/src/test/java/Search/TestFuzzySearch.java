@@ -122,8 +122,8 @@ public class TestFuzzySearch {
         //Nodes for F1
         map.addNode(new Node("NODE47", 10, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.ELEV, "Elevator A", "Elev A", "I"));
         map.addNode(new Node("NODE48", 20, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE48_LN", "NODE48_SN", "I"));
-        map.addNode(new Node("NODE49", 30, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE49_LN", "NODE49_SN", "I"));
-        map.addNode(new Node("NODE50", 40, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE50_LN", "NODE50_SN", "I"));
+        map.addNode(new Node("NODE49", 30, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NOD", "NODE49_SN", "I"));
+        map.addNode(new Node("NODE50", 40, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NO", "NODE50_SN", "I"));
         map.addNode(new Node("NODE51", 60, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "NODE51_LN", "NODE51_SN", "I"));
         map.addNode(new Node("NODE52", 70, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.HALL, "Au Xin Bun", "NODE52_SN", "I"));
         map.addNode(new Node("NODE53", 80, 10, NodeFloor.FIRST, NodeBuilding.FRANCIS45, NodeType.STAI, "Stair A", "St A", "I"));
