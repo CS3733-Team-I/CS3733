@@ -106,7 +106,7 @@ public class SearchController {
                     }
                 }
 
-                filteredList.setPredicate((Predicate<? super ISearchEntity>) ISearchEntity-> {
+                filteredList.setPredicate((Predicate<? super ISearchEntity>) iSearchEntity-> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
                     } else {
@@ -129,7 +129,7 @@ public class SearchController {
 
                     for (ISearchEntity searchEntity : searchResults) {
                         //TODO Search String vs Node ID?
-                        if (searchEntity.getSearchString().equalsIgnoreCase(ISearchEntity.getSearchString())) {
+                        if (searchEntity.getSearchString().equalsIgnoreCase(iSearchEntity.getSearchString())) {
                             return true;
                         }
                     }
