@@ -97,7 +97,7 @@ public class SearchController {
 
         cbSearchData.setOnKeyReleased(e -> {
             cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
-                final List<ISearchEntity> searchResults = new LinkedList<>();;
+                final List<ISearchEntity> searchResults = new LinkedList<>();
                 if (newValue != null && !newValue.equals("")) {
                     try {
                         searchResults.addAll(NodeFuzzySearch.fuzzySearch(newValue));
