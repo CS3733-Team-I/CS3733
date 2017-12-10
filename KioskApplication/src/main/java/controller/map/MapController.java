@@ -5,6 +5,7 @@ import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
@@ -23,8 +24,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -33,6 +33,7 @@ import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeSelectionType;
+import utility.node.NodeType;
 
 import java.io.IOException;
 import java.util.*;
@@ -81,9 +82,14 @@ public class MapController {
 
     private MainWindowController parent = null;
 
+
+
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
+
+
+
     }
 
     /**
@@ -564,6 +570,11 @@ public class MapController {
         System.out.println("ZoomGroupHeight: "+contentSize.getHeight());
     }
 
+    /**
+     * Helper method for the zoom methods
+     * @param scaleValue adjusts the screen size
+     * @return boolean to indicate if the scale has changed
+     */
     /**
      * Helper method for the zoom methods
      * @param scaleValue adjusts the screen size

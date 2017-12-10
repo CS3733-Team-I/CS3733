@@ -86,6 +86,13 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+    @Override
+    public void editNodeByUK(Node n)throws DatabaseException{
+        NodeFloor f = n.getFloor();
+        if(floorExists(f)) {
+            floors.get(f).editNodeByUK(n);
+        }
+    }
 
     @Override
     public Node getNode(String s) throws NotFoundException{
@@ -116,6 +123,17 @@ public class MapEntity implements IMapEntity {
         }
         //If you reach this point, something's gone wrong.
         return thisNode;
+    }
+
+    public Node getNodeByID(int Id){
+        try {
+            return dbController.getNodeByUniqueID(Id);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -271,6 +289,7 @@ public class MapEntity implements IMapEntity {
         edges.remove(edge.getEdgeID());
     }
 
+    // TODO use unique ids
     public ArrayList<Edge> getEdges(Node n) {
         ArrayList<Edge> returnList = new ArrayList<>();
 

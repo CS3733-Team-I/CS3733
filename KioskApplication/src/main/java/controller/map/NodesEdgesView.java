@@ -20,7 +20,7 @@ public class NodesEdgesView extends AnchorPane {
     private ObservableList<Node> nodesList;
     private ObservableList<Edge> edgesList;
 
-    private HashMap<Node, NodeView> nodeViewsMap;
+    private HashMap<Integer, NodeView> nodeViewsMap;
     private HashMap<Edge, EdgeView> edgeViewsMap;
 
     private AnchorPane nodesView;
@@ -67,13 +67,13 @@ public class NodesEdgesView extends AnchorPane {
                         view.setPickOnBounds(false);
                         if(SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID()))
                             view.setImage(node);
-                        this.nodeViewsMap.put(node, view);
+                        this.nodeViewsMap.put(node.getUniqueID(), view);
                         this.nodesView.getChildren().add(view);
                     }
                 } else if (listener.wasRemoved()) {
                     for (Node node : listener.getRemoved()) {
-                        NodeView view = this.nodeViewsMap.get(node);
-                        this.nodeViewsMap.remove(node);
+                        NodeView view = this.nodeViewsMap.get(node.getUniqueID());
+                        this.nodeViewsMap.remove(node.getUniqueID());
                         this.nodesView.getChildren().remove(view);
                     }
                 }
@@ -129,7 +129,7 @@ public class NodesEdgesView extends AnchorPane {
      * @param type the type to set the selection to
      */
     public void setNodeSelected(Node node, NodeSelectionType type) {
-        NodeView view = this.nodeViewsMap.get(node);
+        NodeView view = this.nodeViewsMap.get(node.getUniqueID());
         if (view != null) view.setSelectionType(type);
     }
 
@@ -156,9 +156,29 @@ public class NodesEdgesView extends AnchorPane {
 
     /**
      * Draw a list of nodes on the map
-     * @param nodes the list of nodes to draw
+     * @param nodes the list of nodes to draw601
      */
     protected void drawNodesOnMap(List<Node> nodes) { nodesList.addAll(nodes); }
+
+    public void setNodePosition(Node node, Point2D position) {
+        if (nodeViewsMap.containsKey(node.getUniqueID())) {
+            nodeViewsMap.get(node.getUniqueID()).setPosition(position);
+            nodeViewsMap.get(node.getUniqueID()).layout();
+
+            for (Edge edge : MapEntity.getInstance().getEdges(node)) {
+                if (edgeViewsMap.containsKey(edge)) {
+                    try {
+                        Node thisNode = MapEntity.getInstance().getNodeByID(node.getUniqueID());
+                        Node otherNode = MapEntity.getInstance().getNode(edge.getOtherNodeID(thisNode.getNodeID()));
+
+                        edgeViewsMap.get(edge).setPosition(position, new Point2D(otherNode.getXcoord(), otherNode.getYcoord()));
+                    } catch (NotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Draw a list of edges on the map
@@ -184,9 +204,5 @@ public class NodesEdgesView extends AnchorPane {
 
     public void nodesConnected(String nodeID1, String nodeID2) {
         parent.nodesConnected(nodeID1, nodeID2);
-    }
-
-    public HashMap<Node, NodeView> getNodeViewsMap() {
-        return nodeViewsMap;
     }
 }

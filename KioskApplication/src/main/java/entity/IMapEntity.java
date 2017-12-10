@@ -18,4 +18,6 @@ public interface IMapEntity {
     public void removeNode(Node node) throws DatabaseException;
 
     public void removeAll() throws DatabaseException;
+
+    public void editNodeByUK(Node node) throws DatabaseException;
 }

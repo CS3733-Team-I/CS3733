@@ -63,6 +63,15 @@ public class DatabaseController {
         }
     }
 
+    public Node getNodeByUniqueID(int uniqueID) throws DatabaseException, NotFoundException{
+        try{
+            return Connector.selectNodeByUniqueID(instanceConnection, uniqueID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
+        }
+    }
+
     public ArrayList<Node> getAllNodes() throws DatabaseException {
         try{
             return Connector.selectAllNodes(instanceConnection);

@@ -4,6 +4,7 @@ import database.objects.Node;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +22,7 @@ public class NodeView extends StackPane {
 
     Node node;
     NodeSelectionType selectionType;
-    boolean editable;
+    boolean editable, dragging;
 
     private Circle circle;
     private ImageView imageView;
@@ -32,6 +33,7 @@ public class NodeView extends StackPane {
         this.node = node;
         this.selectionType = NodeSelectionType.NORMAL;
         this.editable = editable;
+        this.dragging = false;
 
         this.setPrefWidth(28);
         this.setPrefHeight(28);
@@ -69,6 +71,7 @@ public class NodeView extends StackPane {
         this.circle.setOnDragEntered(this::dragEntered);
         this.circle.setOnDragExited(this::dragExited);
         this.circle.setOnDragDropped(this::dragDropped);
+        this.circle.setOnDragDone(this::dragDone);
 
         this.getChildren().addAll(circle, imageView);
     }
@@ -111,17 +114,20 @@ public class NodeView extends StackPane {
     }
 
     private void dragDetected(MouseEvent e) {
-        System.out.println("DRAG DETECTED");
-        if (this.editable) {
+        if (this.editable && !dragging) {
             if (node.getNodeType() == NodeType.ELEV) {
                 // do something
                 // parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
             }
 
-            Dragboard db = this.startDragAndDrop(TransferMode.COPY);
+            this.setMouseTransparent(true);
+
+            Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString(Integer.toString(this.node.getUniqueID()));
             db.setContent(content);
+
+            dragging = true;
 
             circle.setFill(Color.GREEN);
             e.consume();
@@ -129,44 +135,46 @@ public class NodeView extends StackPane {
     }
 
     private void dragOver(DragEvent event) {
-        System.out.println("DRAG OVER");
-        if (this.editable && event.getDragboard().hasString()) {
-            event.acceptTransferModes(TransferMode.COPY);
+        if (this.editable && !dragging && event.getDragboard().hasString()) {
+            System.out.println("Node DragOver");
+            event.acceptTransferModes(TransferMode.MOVE);
             event.consume();
         }
     }
 
     private void dragDone(DragEvent e) {
-        System.out.println("DRAG DONE");
+        System.out.println("Drag done on node.");
         if (this.editable) {
             setSelectionType(selectionType);
             parent.mapNodeClicked(node);
+            this.setMouseTransparent(false);
+            dragging = false;
             e.consume();
         }
-
     }
 
     private void dragDropped(DragEvent e) {
-        System.out.println("DRAG DROPPED");
-        if (this.editable) {
+        if (this.editable && !dragging) {
             setSelectionType(selectionType);
 
             boolean success = false;
-            if(e.getDragboard().hasString()){
+
+            if(e.getDragboard().hasString() && !e.getDragboard().getString().equals(this.node.getUniqueID())) {
                 success = true;
 
                 System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() +'_'+ node.getNodeID());
 
                 parent.nodesConnected(Integer.toString(this.node.getUniqueID()), e.getDragboard().getString());
             }
+
             e.setDropCompleted(success);
             e.consume();
         }
     }
 
     private void dragEntered(DragEvent event) {
-        System.out.println("DRAG ENTERED");
-        if (this.editable && event.getDragboard().hasString()) {
+        if (this.editable && !dragging && event.getDragboard().hasString()) {
+            System.out.println("Node DragEntered");
             if (event.getDragboard().getString().equals(node.getNodeID())) {
                 return;
             }
@@ -177,8 +185,9 @@ public class NodeView extends StackPane {
     }
 
     private void dragExited(DragEvent event) {
-        System.out.println("DRAG EXITED");
-        if (this.editable) {
+        if (this.editable && !dragging) {
+            System.out.println("Node DragExit");
+
             if (event.getDragboard().hasString()) {
                 if (event.getDragboard().getString().equals(node.getNodeID())) {
                     return;
@@ -201,5 +210,10 @@ public class NodeView extends StackPane {
         imageView.setImage(img);
         imageView.setX(node.getXcoord());
         imageView.setY(node.getYcoord());
+    }
+
+    public void setPosition(Point2D point) {
+        this.setLayoutX(point.getX() - circle.getRadius());
+        this.setLayoutY(point.getY() - circle.getRadius());
     }
 }
