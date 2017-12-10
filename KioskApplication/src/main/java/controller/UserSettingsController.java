@@ -21,7 +21,7 @@ public class UserSettingsController {
 
     @FXML
     void initialize(){
-        usernameBox.setText(LoginEntity.getInstance().getUsername());
+        usernameBox.setText(LoginEntity.getInstance().getCurrentUsername());
         errLabel.setText("");
     }
 

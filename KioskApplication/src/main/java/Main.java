@@ -1,3 +1,5 @@
+import controller.MainWindowController;
+import email.EmailSender;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.application.Application;
@@ -18,17 +20,21 @@ public class Main extends Application {
 
         SystemSettings.getInstance();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
+        MainWindowController mainWindowController = new MainWindowController();
+        FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
+        mainWindowLoader.setController(mainWindowController);
+        mainWindowLoader.load();
         primaryStage.setTitle("Final Iteration");
 
-        Scene mainScene = new Scene(root, 1280, 720);
+        Scene mainScene = new Scene(mainWindowLoader.getRoot(), 1280, 720);
         final ObservableList<String> stylesheets = mainScene.getStylesheets();
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
-        
-//        EmailSender.init();
+        mainWindowController.postDisplaySetup();
+
+        EmailSender.init();
         /*Email email = new Email.Builder("jflparrick@gmail.com")
                 .setAttachment(null)
                 .setBody("THIS IS A TEST")
