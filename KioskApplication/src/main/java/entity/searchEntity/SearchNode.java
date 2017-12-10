@@ -1,13 +1,14 @@
-package entity;
+package entity.searchEntity;
 
 import database.objects.Node;
+import entity.MapEntity;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
 
 
-public class SearchNode {
+public class SearchNode implements ISearchEntity{
     Node databaseNode;
     String searchString;
     ImageView nodeIcon;
@@ -89,15 +90,16 @@ public class SearchNode {
         }
     }
 
-    public Node getDatabaseNode() {
-        return databaseNode;
+    public ImageView getIcon()
+    {
+        return nodeIcon;
     }
 
     public String getSearchString() {
         return searchString;
     }
 
-    public ImageView getNodeIcon() {
-        return nodeIcon;
+    public Object getData() {
+        return databaseNode;
     }
 }
