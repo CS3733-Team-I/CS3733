@@ -12,8 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
@@ -35,7 +33,7 @@ public class EmployeeSettingsController {
     @FXML private JFXButton addUserButton;
     @FXML private JFXButton deleteUserButton;
 
-    @FXML private GridPane userEditorPane;
+    @FXML private GridPane addUserPane;
     @FXML private Label registerEmployeeLabel, interpreterLanguageLabel, doctorOfficeLabel;
     @FXML private Label errLabel;
     @FXML private JFXTextField firstNameBox;
@@ -45,13 +43,17 @@ public class EmployeeSettingsController {
     @FXML private JFXPasswordField passwordBox2;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> serviceSelect;
-    @FXML private JFXButton userActionButton, userCancelButton;
+    @FXML private JFXButton addUserActionButton, addUserCancelButton;
 
     @FXML private VBox interpreterLanguageBox;
     @FXML private JFXComboBox doctorOfficeBox;
 
-    @FXML private BorderPane deletePane;
+    @FXML private GridPane deletePane;
     @FXML private Label deleteText;
+    @FXML private JFXButton deleteUserActionButton, deleteUserCancelButton;
+
+    @FXML private GridPane additionalInformationPane;
+    @FXML private VBox additionalInformationBox;
 
     @FXML private JFXTreeTableView<Employee> usersList;
     private final TreeItem<Employee> root = new TreeItem<>();
@@ -114,13 +116,37 @@ public class EmployeeSettingsController {
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
+        //Tree Table listener
         usersList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 LoginEntity e = LoginEntity.getInstance();
+                selectedEmployee = newValue.getValue();
+                additionalInformationBox.getChildren().clear();
+                if (selectedEmployee.getServiceAbility()==INTERPRETER){
+                    for (String language :
+                            selectedEmployee.getOptions()) {
+                        Label langLabel = new Label(Language.values()[Integer.parseInt(language)].toString());
+                        additionalInformationBox.getChildren().add(langLabel);
+                    }
+                    additionalInformationPane.setVisible(true);
+                }
+                else if(selectedEmployee.getServiceAbility()==DOCTOR){
+                    for (String office :
+                            selectedEmployee.getOptions()) {
+                        Label officeLabel = new Label(office);
+                        additionalInformationBox.getChildren().add(officeLabel);
+                    }
+                    additionalInformationPane.setVisible(true);
+                }
+                else {
+                    additionalInformationPane.setVisible(false);
+                }
                 // Don't allow deletion if the selected user is self
-                if (!newValue.getValue().getUsername().equals(e.getCurrentUsername())) {
+                if (selectedEmployee.getUsername().equals(e.getCurrentUsername())) {
+                    deleteUserButton.setDisable(true);
+                }
+                else {
                     deleteUserButton.setDisable(false);
-                    selectedEmployee = newValue.getValue();
                 }
             }
         });
@@ -187,14 +213,9 @@ public class EmployeeSettingsController {
     @FXML
     void onAddPressed(ActionEvent event) {
         // Adjust visability
-        userCancelButton.setCancelButton(true);
-        userActionButton.setDefaultButton(true);
-        firstNameBox.requestFocus();
-        userEditorPane.setVisible(true);
-        deletePane.setVisible(false);
-        addUserButton.setVisible(false);
-        deleteUserButton.setVisible(false);
-        userActionButton.setText("Add");
+        closeAdditionalInformationPane();
+        openAddUserPane();
+        addUserActionButton.setText("Add");
         errLabel.setText("");
     }
 
@@ -204,8 +225,8 @@ public class EmployeeSettingsController {
         deleteText.setText("Delete " + selectedEmployee.getUsername() + "?");
 
         // Adjust visability
-        userEditorPane.setVisible(false);
-        deletePane.setVisible(true);
+        closeAdditionalInformationPane();
+        openDeleteUserPane();
     }
 
     @FXML
@@ -216,13 +237,13 @@ public class EmployeeSettingsController {
         refreshUsers();
 
         // Adjust visability
-        userEditorPane.setVisible(false);
-        deletePane.setVisible(false);
+        closeDeleteUserPane();
     }
 
     @FXML
     void onUserCancel(ActionEvent event) {
-        closeAddEmployee();
+        closeAddUserPane();
+        closeDeleteUserPane();
     }
 
     @FXML
@@ -270,9 +291,8 @@ public class EmployeeSettingsController {
                     passwordBox1.getText(),options, permissionSelect.getValue(), serviceAbility)) {
                 refreshUsers();
                 // Adjust visability
-                closeAddEmployee();
+                closeAddUserPane();
                 errLabel.setText("User Added");
-                resetScreen();
             }
         else{
             if(usernameBox.getText().equals("")){
@@ -288,25 +308,6 @@ public class EmployeeSettingsController {
                 errLabel.setText("User Type Select Required");
             }
         }
-    }
-
-    /**
-     * Helper method for closing the add employee menu
-     */
-    private void closeAddEmployee(){
-        userEditorPane.setVisible(false);
-        userCancelButton.setCancelButton(false);
-        userActionButton.setDefaultButton(false);
-        firstNameBox.clear();
-        lastNameBox.clear();
-        usernameBox.clear();
-        passwordBox1.clear();
-        passwordBox2.clear();
-        serviceSelect.valueProperty().set(null);
-        permissionSelect.valueProperty().set(null);
-        deletePane.setVisible(false);
-        addUserButton.setVisible(true);
-        deleteUserButton.setVisible(true);
     }
 
     /**
@@ -379,5 +380,80 @@ public class EmployeeSettingsController {
                 }
             }
         }
+    }
+
+    /**
+     * Helper method for opening the add user pane
+     * All actions to properly open the pane reside here
+     * This includes focus requests, disable and cancel button setting, and disabling the table view
+     */
+    private void openAddUserPane(){
+        usersList.setDisable(true);
+        addUserButton.setVisible(false);
+        deleteUserButton.setVisible(false);
+        addUserActionButton.setDefaultButton(true);
+        addUserCancelButton.setCancelButton(true);
+        addUserPane.setVisible(true);
+        firstNameBox.requestFocus();
+    }
+
+    /**
+     * Helper method for closing the add user pane
+     * Includes clearing the input fields
+     */
+    private void closeAddUserPane(){
+        addUserButton.setVisible(true);
+        deleteUserButton.setVisible(true);
+        addUserActionButton.setDefaultButton(false);
+        addUserCancelButton.setCancelButton(false);
+        addUserPane.setVisible(false);
+        firstNameBox.clear();
+        lastNameBox.clear();
+        usernameBox.clear();
+        passwordBox1.clear();
+        passwordBox2.clear();
+        serviceSelect.valueProperty().set(null);
+        permissionSelect.valueProperty().set(null);
+        usersList.setDisable(false);
+        usersList.requestFocus();
+    }
+
+    /**
+     * Helper method for opening the delete user pane
+     */
+    private void openDeleteUserPane(){
+        usersList.setDisable(true);
+        addUserButton.setVisible(false);
+        deleteUserButton.setVisible(false);
+        deleteUserActionButton.setDefaultButton(true);
+        deleteUserCancelButton.setCancelButton(true);
+        deletePane.setVisible(true);
+    }
+
+    /**
+     * Helper method for closing the delete user pane
+     */
+    private void closeDeleteUserPane(){
+        addUserButton.setVisible(true);
+        deleteUserButton.setVisible(true);
+        deleteUserActionButton.setDefaultButton(false);
+        deleteUserCancelButton.setCancelButton(false);
+        deletePane.setVisible(false);
+        usersList.setDisable(false);
+        usersList.requestFocus();
+    }
+
+    /**
+     * Helper method for opening the additional information pane
+     */
+    private void openAdditionalInformationPane(){
+        additionalInformationPane.setVisible(true);
+    }
+
+    /**
+     * Helper method for closing the additional information pane
+     */
+    private void closeAdditionalInformationPane(){
+        additionalInformationPane.setVisible(false);
     }
 }
