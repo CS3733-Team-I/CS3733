@@ -109,25 +109,9 @@ public class RequestManagerController extends ScreenController {
                     break;
             }
             reqManagerPane.setLeftAnchor(listAPane,0.0);
-//            foodFilter.setVisible(false);
-//            janitorFilter.setVisible(false);
-//            securityFilter.setVisible(false);
-//            interpreterFilter.setVisible(false);
-//            itFilter.setVisible(false);
-//            maintenanceFilter.setVisible(false);
-//            transportationFilter.setVisible(false);
-//            filterLabel.setVisible(false);
         }else{
             reqManagerPane.setLeftAnchor(listAPane, 150.0);
             sideBar.setVisible(true);
-//            foodFilter.setVisible(true);
-//            janitorFilter.setVisible(true);
-//            securityFilter.setVisible(true);
-//            interpreterFilter.setVisible(true);
-//            maintenanceFilter.setVisible(true);
-//            itFilter.setVisible(true);
-//            transportationFilter.setVisible(true);
-//            filterLabel.setVisible(true);
         }
     }
 
@@ -237,15 +221,12 @@ public class RequestManagerController extends ScreenController {
     public void refreshRequests() {
         switch (currentButton){
             case TO_DO:
-//                inProgressRequests();
                 buttonAction(RequestProgressStatus.TO_DO, newRequestList);
                 break;
             case IN_PROGRESS:
-//                newRequests();
                 buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
                 break;
             case DONE:
-//                doneRequests();
                 buttonAction(RequestProgressStatus.DONE, doneRequestList);
                 break;
         }
