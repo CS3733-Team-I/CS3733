@@ -17,7 +17,7 @@ public class SearchRequest implements ISearchEntity{
     public SearchRequest(Request request){
         this.databaseRequest = request;
         try{
-            this.searchString = "Status:" + request.getStatus().toString() + " At"+ MapEntity.getInstance().getNode(request.getNodeID()).getLongName() + " Assigned by" + request.getAssignerID()
+            this.searchString = "Status:" + request.getStatus().toString() + "  At"+ MapEntity.getInstance().getNode(request.getNodeID()).getLongName() + " Assigned by" + request.getAssignerID()
                 + " Submitted at" + request.getSubmittedTime().toString();
         }catch (NotFoundException e) {
             e.printStackTrace();
