@@ -829,9 +829,9 @@ public class MapBuilderController extends ScreenController {
 
     @FXML
     private void setKioskDefaultLocation(ActionEvent event) throws PathfinderException{
-        SystemSettings.getInstance().setDefaultnode(selectedNode.get().getNodeID());
+        SystemSettings.getInstance().setKioskLocation(selectedNode.get().getNodeID());
         MapEntity map = MapEntity.getInstance();
-        map.updateDistanceFromKisok(SystemSettings.getInstance().getDefaultnode());
+        map.updateDistanceFromKisok(SystemSettings.getInstance().getKioskLocation());
     }
 
     @FXML
