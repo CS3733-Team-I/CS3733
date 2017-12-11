@@ -1,6 +1,9 @@
 package entity;
 
+import database.DatabaseController;
 import database.connection.NotFoundException;
+import database.objects.Employee;
+import database.utility.DatabaseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,25 +21,29 @@ import static utility.request.Language.SPANISH;
 
 public class TestLoginEntity {
     private LoginEntity l;
+    private int bossID;
 
     @Before
-    public void setup(){
+    public void setup()throws DatabaseException{
         l = LoginEntity.getTestInstance();
-        l.addUser("boss@hospital.com","","", "123",new ArrayList<>(),
+        Employee boss = new Employee("boss@hospital.com","","", "123",new ArrayList<>(),
                 SUPER_USER, RequestType.GENERAL);
+        bossID=DatabaseController.getInstance().addEmployee(boss,"123");
         ArrayList<String> options = new ArrayList<>();
         options.add(Language.SPANISH.toString());
         options.add(Language.CHINESE.toString());
         l.addUser("emp@hospital.com", "","","12",
                 options,EMPLOYEE,RequestType.INTERPRETER);
+        l.readAllFromDatabase();
         becomeSuperUser();
     }
 
     @After
-    public void cleanup(){
+    public void cleanup() throws DatabaseException{
         becomeSuperUser();
         l.deleteLogin("emp@hospital.com");
         l.deleteLogin("boss@hospital.com");
+        DatabaseController.getInstance().removeEmployee(bossID);
     }
 
     private void becomeSuperUser(){

@@ -81,7 +81,7 @@ public class LoginEntity {
      * Adds every employee from the database to the logins hashmap
      * @return
      */
-    private void readAllFromDatabase(){
+    public void readAllFromDatabase(){
         try {
             LinkedList<Employee> employees = database.getAllEmployees();
             for (Employee emp : employees) {
