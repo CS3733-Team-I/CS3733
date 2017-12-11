@@ -3,10 +3,12 @@ package pathfinder;
 
 import database.objects.Node;
 import entity.MapEntity;
+import entity.searchEntity.ISearchEntity;
+import entity.searchEntity.SearchNode;
 
 import java.util.*;
 
-public class FuzzySearch {
+public class NodeFuzzySearch {
 
     /**
      * Fuzzy search
@@ -15,7 +17,7 @@ public class FuzzySearch {
      * @param inputtext
      * @return Linked list of 5 top search result nodes
      */
-    public static LinkedList<Node> fuzzySearch(String inputtext) throws Exception {
+    public static LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {
         if (!inputtext.isEmpty()) {
             // put all nodes in hash map
             MapEntity map = MapEntity.getInstance();
@@ -65,7 +67,11 @@ public class FuzzySearch {
             for (int i = 0; i < 5; i++) {
                 bestmatch.add(allNodes.get(sorted.get(i)));
             }
-            return bestmatch;
+            LinkedList<ISearchEntity> searchMatch = new LinkedList<>();
+            for(Node matchedNode : bestmatch) {
+                searchMatch.add(new SearchNode(matchedNode));
+            }
+            return searchMatch;
         } else {
             // input is 0 return exceptipon
             throw new Exception("No Input Text");
