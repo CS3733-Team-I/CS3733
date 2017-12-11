@@ -1,8 +1,5 @@
 package utility.elbonian;
 
-import utility.elbonian.MalformedNumberException;
-import utility.elbonian.ValueOutOfBoundsException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -231,7 +228,7 @@ public class ElbonianArabicConverter {
         return false;
     }
 
-    static boolean checkOrder(String s){
+    private static boolean checkOrder(String s){
 
         if(s.equals("")) return true;
 
