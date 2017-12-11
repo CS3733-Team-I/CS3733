@@ -3,7 +3,6 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import controller.map.MapController;
-import controller.map.WaypointView;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
@@ -12,13 +11,15 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -34,10 +35,11 @@ import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -50,6 +52,12 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private ImageView removeIconView;
     @FXML private JFXButton showDirectionsButton;
     @FXML private  JFXButton btClearPath;
+
+    @FXML private JFXButton btExit;
+    @FXML private JFXButton btRestRoom;
+    @FXML private JFXButton btRestaurant;
+    @FXML private JFXButton btElevator;
+
     private Boolean isAddingWaypoint;
 
     private ObservableList<Node> currentWaypoints;
@@ -57,21 +65,29 @@ public class PathfindingSidebarController extends ScreenController {
 
     private SystemSettings systemSettings;
 
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
+
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentWaypoints = FXCollections.observableArrayList();
         waypointViews = new HashMap<>();
 
         systemSettings = SystemSettings.getInstance();
-
         isAddingWaypoint = true;
+        searchController = new SearchController(this);
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException{
+        //initialize search
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+
         // Set containers to be transparent to mouse events
-        System.out.println("initializing");
-        ResourceBundle rB = systemSettings.getResourceBundle();
+        ResourceBundle lang = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
 
         waypointListView.setPickOnBounds(false);
@@ -81,18 +97,59 @@ public class PathfindingSidebarController extends ScreenController {
 
         showDirectionsButton.setVisible(false);
 
+        /**
+         * load images for nearest exit, elevatior, food and restroom
+         */
+        Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/food.png");
+        ImageView foodIconView = new ImageView(foodIcon);
+        foodIconView.setFitHeight(48);
+        foodIconView.setFitWidth(48);
+        btRestaurant.setGraphic(foodIconView);
+
+        Image exitIcon = ResourceManager.getInstance().getImage("/images/icons/exit.png");
+        ImageView exitView = new ImageView(exitIcon);
+        exitView.setFitHeight(48);
+        exitView.setFitWidth(48);
+        btExit.setGraphic(exitView);
+
+        Image elevIcon = ResourceManager.getInstance().getImage("/images/icons/elevator.png");
+        ImageView elevIconView = new ImageView(elevIcon);
+        elevIconView.setFitHeight(48);
+        elevIconView.setFitWidth(48);
+        btElevator.setGraphic(elevIconView);
+
+        Image restroomIcon = ResourceManager.getInstance().getImage("/images/icons/restroom.png");
+        ImageView restroomIconView = new ImageView(restroomIcon);
+        restroomIconView.setFitHeight(48);
+        restroomIconView.setFitWidth(48);
+        btRestRoom.setGraphic(restroomIconView);
+
         insertAddNewWaypointCell();
 
         // TODO redo localization for this screen
         systemSettings.addObserver((o, arg) -> {
-            ResourceBundle resB = systemSettings.getResourceBundle();
-            //btnSubmit.setText(resB.getString("search"));
-            //searchBar.setPromptText(resB.getString("search"));
-            btClearPath.setText(resB.getString("my.clear"));
-            //btClear.setText(resB.getString("clear"));
+            btClearPath.setText(SystemSettings.getInstance().getResourceBundle().getString("clearpath"));
+        });
 
-            //waypointLabel.setText(resB.getString("waypoints"));
-            btClearPath.setText(resB.getString("clearpath"));
+        searchController.setSearchFieldPromptText(lang.getString("my.searchprompt"));
+        searchView.setOnMouseMoved(e -> resetTimer());
+        searchView.setOnMousePressed(e -> resetTimer());
+
+        systemSettings.addObserver((o, arg) ->
+                searchController.setSearchFieldPromptText(
+                    SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt")
+                )
+        );
+
+        searchController.getCBValueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
+                    getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                }
+
+                getMapController().zoomOnSelectedNodes(Arrays.asList(newValue.getDatabaseNode()));
+                onMapNodeClicked(newValue.getDatabaseNode());
+            }
         });
 
         currentWaypoints.addListener((ListChangeListener<Node>) listener -> {
@@ -141,10 +198,13 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().clearMap();
         getMapController().reloadDisplay();
 
+        //reset search
+        searchController.reset();
+
         showDirectionsButton.setVisible(false);
 
         currentWaypoints.clear();
-        currentWaypoints.add(SystemSettings.getInstance().getDefaultnode());
+        currentWaypoints.add(SystemSettings.getInstance().getKioskLocation());
     }
 
     public void disableClearBtn(){
@@ -275,7 +335,7 @@ public class PathfindingSidebarController extends ScreenController {
         waypointBox.setAlignment(Pos.CENTER_LEFT);
 
         // Check if the waypoint is the default node
-        if (SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID())) {
+        if (SystemSettings.getInstance().getKioskLocation().getNodeID().equals(node.getNodeID())) {
             Label label = new Label("Current Location");
             label.setStyle("-fx-font-weight:bold;" + "-fx-font-size: 12pt; ");
             label.setPrefWidth(350);
@@ -398,18 +458,6 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointBox.setAlignment(Pos.CENTER_LEFT);
         addWaypointBox.setOnMouseClicked(event -> isAddingWaypoint = true);
 
-        TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText(
-                SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
-        addWaypointLabel.setPrefWidth(350);
-        addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
-        addWaypointLabel.setOnMouseMoved(e -> resetTimer());
-        addWaypointLabel.setOnMousePressed(e -> resetTimer());
-
-        systemSettings.addObserver((o, arg) -> {
-            addWaypointLabel.setText(systemSettings.getResourceBundle().getString("my.searchprompt"));
-        });
-
         ImageView addWaypointIconView = new ImageView(
                 ResourceManager.getInstance().getImage("/images/icons/pathfinding/plus-circle.png")
         );
@@ -418,10 +466,10 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointIconView.setFitHeight(24);
         addWaypointIconView.setCursor(Cursor.HAND);
 
-        addWaypointBox.getChildren().addAll(addWaypointIconView, addWaypointLabel);
+        addWaypointBox.getChildren().addAll(addWaypointIconView, searchView);
 
         // Set margins
-        HBox.setMargin(addWaypointLabel, new Insets(0, 34, 0, 10));
+        HBox.setMargin(searchView, new Insets(0, 34, 0, 10));
 
         waypointListView.getItems().add(addWaypointBox);
     }
@@ -491,5 +539,28 @@ public class PathfindingSidebarController extends ScreenController {
                 }
             }
         }
+    }
+
+    /**
+     * get the nearest node of required type to the default kiosk location
+     */
+    @FXML
+    private void handleButtonAction(ActionEvent e) throws  PathfinderException {
+        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+        Node node = new Node("");
+        if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);
+        }
+        else if((JFXButton)e.getTarget() == btElevator) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.ELEV, true);
+        }
+        else if((JFXButton)e.getTarget() == btRestaurant) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.RETL, true);
+        }
+        else if((JFXButton)e.getTarget() == btExit) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.EXIT, true);
+        }
+        isAddingWaypoint = true;
+        onMapNodeClicked(node);
     }
 }
