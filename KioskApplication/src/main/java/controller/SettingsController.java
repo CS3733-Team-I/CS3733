@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTabPane;
 import controller.map.MapController;
 import database.objects.Edge;
@@ -31,6 +32,8 @@ public class SettingsController extends ScreenController {
     @FXML private Tab databaseTab;
     @FXML private Tab employeesTab;
 
+    @FXML private Tab unitTab;
+
 
     @FXML private RadioButton astarButton;
     @FXML private RadioButton dijkstraButton;
@@ -42,6 +45,12 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton englishButton;
     @FXML private RadioButton franceSelected;
 
+    @FXML private JFXRadioButton rbArabic;
+    @FXML private JFXRadioButton rbElbonian;
+
+    @FXML private JFXRadioButton rbMetric;
+    @FXML private JFXRadioButton rbEnglish;
+
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
 
@@ -52,6 +61,11 @@ public class SettingsController extends ScreenController {
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
     ToggleGroup languageSelectToggleGroup = new ToggleGroup();
+
+    //unit toggle group
+    ToggleGroup unitToggleGroup = new ToggleGroup();
+    ToggleGroup numberSystemToggleGroup = new ToggleGroup();
+
     public SettingsController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
     }
@@ -98,6 +112,19 @@ public class SettingsController extends ScreenController {
         timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
 
         checkPermissions();
+
+        //unit and number system
+        rbMetric.setToggleGroup(unitToggleGroup);
+        rbEnglish.setToggleGroup(unitToggleGroup);
+
+        rbArabic.setToggleGroup(numberSystemToggleGroup);
+        rbElbonian.setToggleGroup(numberSystemToggleGroup);
+
+        rbMetric.setSelected(true);
+        rbArabic.setSelected(true);
+
+        systemSettings.setIsMetric(true);
+        systemSettings.setIsArabic(true);
 
         // Listen for TextField text changes
         beamWidth.textProperty().addListener(new ChangeListener<String>() {
@@ -158,15 +185,15 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab);
                 break;
         }
     }
@@ -184,6 +211,34 @@ public class SettingsController extends ScreenController {
     void onLanguageSelected(){
         SystemSettings systemSettings = SystemSettings.getInstance();
         systemSettings.setResourceBundle(languageSelectToggleGroup.getSelectedToggle().getUserData().toString());
+    }
+
+    /**
+     * select unit
+     */
+    @FXML
+    void onUnitSelected() {
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        if(unitToggleGroup.getSelectedToggle() == rbMetric) {
+            systemSettings.setIsMetric(true);
+        }
+        else if(unitToggleGroup.getSelectedToggle() == rbEnglish) {
+            systemSettings.setIsMetric(false);
+        }
+    }
+
+    /**
+     * select number system
+     */
+    @FXML
+    void onNumberSystemSelected() {
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        if(numberSystemToggleGroup.getSelectedToggle() == rbArabic) {
+            systemSettings.setIsMetric(true);
+        }
+        else if(numberSystemToggleGroup.getSelectedToggle() ==rbElbonian) {
+            systemSettings.setIsArabic(false);
+        }
     }
 
     @FXML

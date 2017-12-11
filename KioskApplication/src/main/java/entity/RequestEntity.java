@@ -151,6 +151,18 @@ public class RequestEntity {
     }
 
     /**
+     * method that returns all requests in hashmap
+     * @return the requests in hashmap form
+     */
+    public HashMap<String, Request> getallRequestsHM() {
+        HashMap<String,Request> all = new HashMap<>();
+            all.putAll(interpreterRequests);
+            all.putAll(foodRequests);
+           all.putAll(securityRequests);
+        return all;
+    }
+
+    /**
      * Filters all the requests in the hashmaps by the inputted status
      * @param status
      * @return linkedList of requests that fall under the same request progress status
