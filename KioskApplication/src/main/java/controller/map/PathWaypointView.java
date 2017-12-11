@@ -22,6 +22,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import utility.ResourceManager;
+import utility.node.NodeFloor;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -193,7 +194,23 @@ public class PathWaypointView extends AnchorPane {
                     circle.setCenterX(thisNode.getXcoord());
                     circle.setCenterY(thisNode.getYcoord());
 
-                    circle.setOnMouseClicked(e -> System.out.println("FC Clicked!"));
+                    final NodeFloor thisFloor = thisNode.getFloor();
+                    final NodeFloor lastFloor = lastNode.getFloor();
+
+                    circle.setOnMouseClicked(e -> {
+                        System.out.println("FC Clicked!");
+                        if(thisFloor == parent.getCurrentFloor()) {
+                            parent.setFloorSelector(lastFloor);
+                        } else {
+                            parent.setFloorSelector(thisFloor);
+                        }
+                    });
+                    circle.setOnMouseEntered(e -> {
+                        System.out.println("Open Tooltip");
+                    });
+                    circle.setOnMouseExited(e -> {
+                        System.out.println("Close Tooltip");
+                    });
 
                     floorChangeView.getChildren().add(circle);
                 }
