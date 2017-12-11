@@ -523,7 +523,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
 
-        addWaypointBox.getChildren().addAll(btNewWayPoint, btNewWayPoint);
+        addWaypointBox.getChildren().addAll(btNewWayPoint, searchView);
         addWaypointBox.setAccessibleText("add waypoint");
 
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
