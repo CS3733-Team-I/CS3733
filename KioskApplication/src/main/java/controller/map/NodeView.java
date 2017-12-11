@@ -75,6 +75,7 @@ public class NodeView extends StackPane {
 
     /**
      * Set the selection type of the node and update the view to match
+     *
      * @param type the selection type
      */
     public void setSelectionType(NodeSelectionType type) {
@@ -87,11 +88,10 @@ public class NodeView extends StackPane {
                 circle.setFill(Color.RED);
                 break;
             case NORMAL:
-                if(this.node.getNodeID().equals(SystemSettings.getInstance().getDefaultnode().getNodeID()))
+                if (this.node.getNodeID().equals(SystemSettings.getInstance().getDefaultnode().getNodeID()))
                     circle.setFill(Color.GREEN);
                 else
-                circle.setFill(Color.GRAY);
-                //circle.setFill(Color.GREEN);
+                    circle.setFill(Color.GRAY);
                 break;
             case SELECTEDANDCHANGED:
                 circle.setFill(Color.PURPLE);
@@ -104,6 +104,7 @@ public class NodeView extends StackPane {
 
     /**
      * Get the current selection type
+     *
      * @return selection type
      */
     public NodeSelectionType getSelectionType() {
@@ -152,10 +153,10 @@ public class NodeView extends StackPane {
             setSelectionType(selectionType);
 
             boolean success = false;
-            if(e.getDragboard().hasString()){
+            if (e.getDragboard().hasString()) {
                 success = true;
 
-                System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() +'_'+ node.getNodeID());
+                System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() + '_' + node.getNodeID());
 
                 parent.nodesConnected(Integer.toString(this.node.getUniqueID()), e.getDragboard().getString());
             }
@@ -190,16 +191,5 @@ public class NodeView extends StackPane {
             setSelectionType(selectionType);
             event.consume();
         }
-    }
-
-    /**
-     * sets an image for default location
-     * @param node
-     */
-    public void setImage(Node node){
-       Image img = ResourceManager.getInstance().getImage("/images/crosshairs-gps2x.png");
-        imageView.setImage(img);
-        imageView.setX(node.getXcoord());
-        imageView.setY(node.getYcoord());
     }
 }

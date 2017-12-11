@@ -1,6 +1,7 @@
 package entity;
 
 import database.objects.Node;
+import javafx.beans.property.SimpleObjectProperty;
 import pathfinder.*;
 
 import java.util.Locale;
@@ -11,9 +12,10 @@ import java.util.prefs.Preferences;
 public class SystemSettings extends Observable {
     private Preferences prefs;
     private SearchAlgorithm algorithm;
-    private Node defaultnode;
     private int beamWidth;
     private ResourceBundle resourceBundle;
+
+    private SimpleObjectProperty<Node> defaultNode;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -22,6 +24,7 @@ public class SystemSettings extends Observable {
 
     private SystemSettings () {
         super();
+        defaultNode = new SimpleObjectProperty<>();
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
         this.setDefaultnode(this.prefs.get("defaultNode","IHALL00303"));
@@ -79,7 +82,7 @@ public class SystemSettings extends Observable {
         MapEntity map = MapEntity.getInstance();
         for(Node node:map.getAllNodes()){
             if(defaultnodeID.equals(node.getNodeID())) {
-                this.defaultnode = node;
+                this.defaultNode.set(node);
                 this.prefs.put("defaultNode", node.getNodeID());
                 return;
             }
@@ -87,7 +90,11 @@ public class SystemSettings extends Observable {
     }
 
     public Node getDefaultnode() {
-        return defaultnode;
+        return this.defaultNode.get();
+    }
+
+    public SimpleObjectProperty<Node> defaultNodeProperty() {
+        return defaultNode;
     }
 
     /**

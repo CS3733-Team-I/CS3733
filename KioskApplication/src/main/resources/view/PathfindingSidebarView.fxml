@@ -21,7 +21,7 @@
                   </JFXListView>
                   <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <JFXButton id="submit-button" fx:id="showDirectionsButton" buttonType="RAISED" onAction="#showDirections" text="Directions">
+                        <JFXButton id="confirm-button" fx:id="showDirectionsButton" buttonType="RAISED" onAction="#showDirections" text="Directions">
                            <font>
                               <Font size="18.0" />
                            </font>

@@ -101,7 +101,6 @@ public class PathWaypointView extends AnchorPane {
                     for(Node addedWaypoint : listener.getAddedSubList()) {
                         WaypointView waypointView = new WaypointView(this, addedWaypoint, waypointList.indexOf(addedWaypoint));
                         this.wayPointViewsMap.put(addedWaypoint, waypointView);
-
                         this.wayPointView.getChildren().add(waypointView);
 
                         waypointView.playWaypointPutTransition();
@@ -110,20 +109,32 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
+        SystemSettings.getInstance().defaultNodeProperty().addListener((obj, oldValue, newValue) -> {
+            if (newValue == null) return;
+
+            ImageView youarehereView = getYouAreHereIcon(newValue);
+
+            getChildren().clear();
+            getChildren().addAll(pathView, wayPointView, youarehereView, floorChangeView);
+        });
+
+        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getDefaultnode()));
+
+        clearPath();
+        clearWaypoint();
+    }
+
+    private ImageView getYouAreHereIcon(Node node) {
         Image youarehereIcon = ResourceManager.getInstance().getImage("/images/crosshairs-gps.png");
         ImageView youarehereView = new javafx.scene.image.ImageView(youarehereIcon);
         youarehereView.setFitHeight(48);
         youarehereView.setFitWidth(48);
+        youarehereView.setMouseTransparent(true);
 
-        Label youarehereLabel = new Label();
-        youarehereLabel.setGraphic(youarehereView);
-        youarehereLabel.setPrefHeight(48);
-        youarehereLabel.setPrefWidth(48);
+        youarehereView.setLayoutX(node.getXcoord() - (youarehereIcon.getWidth() / 2));
+        youarehereView.setLayoutY(node.getYcoord() - (youarehereIcon.getHeight() / 2));
 
-        youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
-        youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
-
-        getChildren().add(youarehereLabel);
+        return youarehereView;
     }
 
     /**

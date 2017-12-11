@@ -117,7 +117,7 @@
 
 #confirm-button {
     -fx-background-color: #4caf50;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 
 #delete-button {
