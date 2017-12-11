@@ -79,6 +79,7 @@ public class PathfindingSidebarController extends ScreenController {
         systemSettings = SystemSettings.getInstance();
         isAddingWaypoint = true;
         ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        SystemSettings.getInstance().updateDistance();
         for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
                 if(targetNode.getNodeType() != NodeType.HALL) {
                     searchNode.add(new SearchNode(targetNode));
@@ -330,6 +331,7 @@ public class PathfindingSidebarController extends ScreenController {
         //waypointLabel.setText(rB.getString("my.waypoints"));
 
         //reset search
+        SystemSettings.getInstance().updateDistance();
         ArrayList<ISearchEntity> searchNode = new ArrayList<>();
         for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
             if(targetNode.getNodeType() != NodeType.HALL) {

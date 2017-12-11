@@ -42,7 +42,6 @@ public class SearchController {
         this.parent = parent;
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
-        SystemSettings.getInstance().updateDistance();
 //        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
 //            if(databaseNode.getNodeType() != NodeType.HALL) {
 //                searchData.add(new SearchNode(databaseNode));
