@@ -9,6 +9,8 @@ import entity.SystemSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -24,7 +26,6 @@ import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,10 +45,7 @@ public class PathWaypointView extends AnchorPane {
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
 
-    private ArrayList<Color> segmentColorList;
-
     MapController parent;
-    PathfindingSidebarController sidebarController;
 
     public PathWaypointView(MapController parent) throws NotFoundException {
         this.setPickOnBounds(false);
@@ -76,8 +74,6 @@ public class PathWaypointView extends AnchorPane {
         waypointList = FXCollections.observableArrayList();
 
         this.parent = parent;
-
-        segmentColorList = new ArrayList<>();
 
         Image arrowButtonIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-button.png");
         upView = new javafx.scene.image.ImageView(arrowButtonIcon);
@@ -110,7 +106,7 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
-        SystemSettings.getInstance().defaultNodeProperty().addListener((obj, oldValue, newValue) -> {
+        SystemSettings.getInstance().kioskLocationPropertyProperty().addListener((obj, oldValue, newValue) -> {
             if (newValue == null) return;
 
             ImageView youarehereView = getYouAreHereIcon(newValue);
@@ -119,7 +115,7 @@ public class PathWaypointView extends AnchorPane {
             getChildren().addAll(pathView, wayPointView, youarehereView, floorChangeView);
         });
 
-        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getDefaultnode()));
+        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getKioskLocation()));
 
         clearPath();
         clearWaypoint();
@@ -134,6 +130,32 @@ public class PathWaypointView extends AnchorPane {
 
         youarehereView.setLayoutX(node.getXcoord() - (youarehereIcon.getWidth() / 2));
         youarehereView.setLayoutY(node.getYcoord() - (youarehereIcon.getHeight() / 2));
+
+        /*youarehereLabel = new Label();
+        youarehereLabel.setGraphic(youarehereView);
+        youarehereLabel.setPrefHeight(48);
+        youarehereLabel.setPrefWidth(48);
+
+        youarehereLabel.setLayoutX(SystemSettings.getInstance().getKioskLocation().getXcoord()-24);
+        youarehereLabel.setLayoutY(SystemSettings.getInstance().getKioskLocation().getYcoord()-24);
+
+        SystemSettings.getInstance().getKioskLocation().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutX(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });
+
+        SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutY(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });*/
 
         return youarehereView;
     }

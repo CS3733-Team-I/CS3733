@@ -88,10 +88,7 @@ public class NodeView extends StackPane {
                 circle.setFill(Color.RED);
                 break;
             case NORMAL:
-                if (this.node.getNodeID().equals(SystemSettings.getInstance().getDefaultnode().getNodeID()))
-                    circle.setFill(Color.GREEN);
-                else
-                    circle.setFill(Color.GRAY);
+                circle.setFill(Color.GRAY);
                 break;
             case SELECTEDANDCHANGED:
                 circle.setFill(Color.PURPLE);

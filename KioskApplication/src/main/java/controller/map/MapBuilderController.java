@@ -30,6 +30,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import pathfinder.PathfinderException;
 import utility.ResourceManager;
 import utility.node.*;
 
@@ -827,8 +828,10 @@ public class MapBuilderController extends ScreenController {
     }
 
     @FXML
-    private void setKioskDefaultLocation(ActionEvent event){
-        SystemSettings.getInstance().setDefaultnode(selectedNode.get().getNodeID());
+    private void setKioskDefaultLocation(ActionEvent event) throws PathfinderException{
+        SystemSettings.getInstance().setKioskLocation(selectedNode.get().getNodeID());
+        MapEntity map = MapEntity.getInstance();
+        map.updateDistanceFromKisok(SystemSettings.getInstance().getKioskLocation());
     }
 
     @FXML

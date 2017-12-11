@@ -378,6 +378,14 @@ public class MapController {
     }
 
     /**
+     * Sets the selected value for the language combobox
+     * @param lang value to set
+     */
+    public void setLanguageSelector(String lang){
+        languageSelector.setValue(lang);
+    }
+
+    /**
      * Gets the width of the map
      * @return the map's width
      */
@@ -548,7 +556,7 @@ public class MapController {
      * Moves the map view and adjusts the zoom factor to contain the selected nodes
      * @param viewedNodes sets the floor to the most common floor value
      */
-    public void zoomOnSelectedNodes(LinkedList<Node> viewedNodes){
+    public void zoomOnSelectedNodes(List<Node> viewedNodes){
         //TODO: make the floor selection method more solid
         double minX=mapView.getImage().getWidth();
         double minY=mapView.getImage().getHeight();
@@ -719,11 +727,22 @@ public class MapController {
 
     @FXML
     public void recenterPressed() {
-        setFloorSelector(systemSettings.getDefaultnode().getFloor());
+        setFloorSelector(systemSettings.getKioskLocation().getFloor());
         onFloorSelected();
         LinkedList<Node> defaultNode = new LinkedList<Node>();
-        defaultNode.add(systemSettings.getDefaultnode());
+        defaultNode.add(systemSettings.getKioskLocation());
         zoomOnSelectedNodes(defaultNode);
+        this.scrollPane.setHvalue(SystemSettings.getInstance().getKioskLocation().getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(SystemSettings.getInstance().getKioskLocation().getYcoord()/mapView.getFitHeight()-0.04);
+    }
+
+    /**
+     * center the view at input node
+     * @param node the node to recenter at
+     */
+    public void recenterAtNode(Node node) {
+        this.scrollPane.setHvalue(node.getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(node.getYcoord()/mapView.getFitHeight()-0.04);
     }
 
     public void setOptionsBoxVisible(boolean visible) {

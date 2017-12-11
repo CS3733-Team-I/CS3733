@@ -4,7 +4,7 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
 import entity.SystemSettings;
-import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.util.*;
 
@@ -45,7 +45,7 @@ public class Pathfinder {
 
         //Check to see if the start node is valid; if not, use a default starting position.
         if (waypoints.size() == 1){
-            startNode = SystemSettings.getInstance().getDefaultnode();  //TODO: behavior for if default start node is deleted
+            startNode = SystemSettings.getInstance().getKioskLocation();  //TODO: behavior for if default start node is deleted
             if (startNode == null)
                 throw new PathfinderException("No default start location. \n Please see an administrator.");
             waypoints.addLast(waypoints.removeFirst());
@@ -92,5 +92,10 @@ public class Pathfinder {
 
     public void setWheelchairAccessible(boolean wheelchairAccessible) {
         this.wheelchairAccessible = wheelchairAccessible;
+    }
+
+    public Node findPathToNearestType(Node startNode, NodeType nodeType, boolean wheelchairAccessible)  throws PathfinderException{
+        BreadthFirst breadthFirst = new BreadthFirst();
+        return breadthFirst.findPathToNearestType(startNode, nodeType, wheelchairAccessible);
     }
 }

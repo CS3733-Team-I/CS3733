@@ -21,6 +21,33 @@
                   </JFXListView>
                   <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
                      <children>
+                        <JFXButton id="confirm-button" fx:id="btRestaurant" buttonType="RAISED" onAction="#handleButtonAction">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton id="blue-button" fx:id="btExit" buttonType="RAISED" onAction="#handleButtonAction">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton id="delete-button" fx:id="btElevator" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton id="delete-button" fx:id="btRestRoom" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
+                     <children>
                         <JFXButton id="confirm-button" fx:id="showDirectionsButton" buttonType="RAISED" onAction="#showDirections" text="Directions">
                            <font>
                               <Font size="18.0" />
