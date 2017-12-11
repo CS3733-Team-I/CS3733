@@ -129,3 +129,8 @@
     -fx-background-color: #DDDED0;
     -fx-text-fill: black;
 }
+
+#blue-button {
+    -fx-background-color: #03a9f4;
+    -fx-text-fill: white;
+}

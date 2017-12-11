@@ -43,7 +43,6 @@ import java.util.ResourceBundle;
 
 public class PathfindingSidebarController extends ScreenController {
 
-    @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
     @FXML private JFXListView<HBox> waypointListView;
 
@@ -73,7 +72,7 @@ public class PathfindingSidebarController extends ScreenController {
         System.out.println("initializing");
         ResourceBundle rB = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
-        container.setPickOnBounds(false);
+
         waypointListView.setPickOnBounds(false);
         waypointListView.setSelectionModel(new NoSelectionModel<>());
         waypointListView.setFixedCellSize(50);
@@ -112,6 +111,19 @@ public class PathfindingSidebarController extends ScreenController {
                 generatePath();
             }
         });
+    }
+
+    @FXML
+    void showPathButton() {
+        if (currentWaypoints.size() == 0) return;
+
+        getMapController().setFloorSelector(currentWaypoints.get(0).getFloor());
+
+        LinkedList<Node> waypointsOnFloor = new LinkedList<>();
+        for (Node node : currentWaypoints)
+            if (node.getFloor().equals(getMapController().getCurrentFloor())) waypointsOnFloor.add(node);
+
+        getMapController().zoomOnSelectedNodes(waypointsOnFloor);
     }
 
     @FXML
