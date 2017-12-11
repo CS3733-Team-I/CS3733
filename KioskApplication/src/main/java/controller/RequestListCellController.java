@@ -63,8 +63,8 @@ public class RequestListCellController {
 
         String requestID = request.getRequestID();
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        String assigner = rEntity.getAssigner(requestID).getFirstName();
-        String completer = rEntity.getCompleter(requestID).getFirstName();
+        String assigner = rEntity.getAssigner(requestID).getUsername();
+        String completer = rEntity.getCompleter(requestID).getUsername();
         RequestType RT = rEntity.checkRequestType(requestID);
         RequestProgressStatus RPS = request.getStatus();
 
