@@ -17,70 +17,120 @@
 <?import com.jfoenix.controls.JFXPasswordField?>
 <fx:root maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefWidth="800.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeSettingsController">
    <children>
-      <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" maxWidth="Infinity" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="65.0" />
-      <Label fx:id="employeesLabel" layoutX="61.0" layoutY="51.0" prefHeight="30.0" prefWidth="217.0" text="Employees" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <JFXButton fx:id="addUserButton" layoutX="427.0" layoutY="65.0" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Add User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
-      <JFXButton fx:id="deleteUserButton" layoutX="515.0" layoutY="90.0" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="80.0" text="Delete User" textAlignment="LEFT" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
-            <GridPane fx:id="userEditorPane" prefHeight="400.0" prefWidth="612.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="15.0">
-               <columnConstraints>
-                  <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="206.0" />
-                  <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="206.0" />
-                  <ColumnConstraints halignment="CENTER" minWidth="10.0" prefWidth="150.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" valignment="BOTTOM"/>
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-               </rowConstraints>
+      <GridPane AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+         <columnConstraints>
+            <ColumnConstraints prefWidth="800"/>
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints fx:id="titleRow" prefHeight="65.0"/>
+            <RowConstraints fx:id="treeTableRow" prefHeight="300"/>
+            <RowConstraints fx:id="editorRow" prefHeight="300"/>
+         </rowConstraints>
+         <children>
+            <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0" prefHeight="65" prefWidth="800">
                <children>
-                  <JFXTextField fx:id="firstNameBox" labelFloat="true" prefHeight="25.0" prefWidth="196.0" promptText="First Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  <JFXTextField fx:id="lastNameBox" labelFloat="true" prefHeight="25.0" prefWidth="196.0" promptText="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <JFXTextField fx:id="usernameBox" labelFloat="true" prefWidth="412" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                  <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                  <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                  <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                  <JFXComboBox fx:id="typeSelect" onAction="#checkEmployeeType" prefWidth="200" promptText="Service Ability" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Label fx:id="interpreterLanguageLabel" prefWidth="100.0" text="Languages" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
-                         alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
-                              GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
-                  GridPane.valignment="TOP">
-                           <VBox fx:id="interpreterLanguageBox" prefHeight="300.0" prefWidth="100.0"
-                                 spacing="5.0" AnchorPane.leftAnchor="25" AnchorPane.rightAnchor="25"/>
-                  </AnchorPane>
-                  <Label fx:id="doctorOfficeLabel" prefWidth="100.0" text="Departments" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
-                         alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <AnchorPane fx:id="doctorOfficeContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
-                              GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
-                              GridPane.valignment="TOP">
-                     <JFXComboBox fx:id="doctorOfficeBox" prefWidth="100.0" prefHeight="50"/>
-                  </AnchorPane>
-                  <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
-                  <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="2">
+                  <Label fx:id="employeesLabel" prefHeight="30.0" prefWidth="217.0" text="Employees" AnchorPane.bottomAnchor="0"
+                         AnchorPane.leftAnchor="10" alignment="CENTER_LEFT">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
+                  <JFXButton fx:id="addUserButton" onAction="#onAddPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer"
+                             prefWidth="80.0" text="Add User" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="200"/>
+                  <JFXButton fx:id="deleteUserButton" onAction="#onDeletePressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer"
+                             prefWidth="80.0" text="Delete User" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="300"/>
                </children>
-            </GridPane>
+            </AnchorPane>
+            <JFXTreeTableView fx:id="usersList" layoutX="14.0" layoutY="8.0" maxWidth="Infinity"
+                              onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="400.0"
+                              prefWidth="800.0" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <AnchorPane prefWidth="800" prefHeight="300" GridPane.columnIndex="0" GridPane.rowIndex="2">
+               <children>
+                  <GridPane fx:id="userEditorPane" prefHeight="300.0" minHeight="150" prefWidth="800.0" AnchorPane.bottomAnchor="0"
+                            AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="200.0"/>
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints prefHeight="30"/>
+                        <RowConstraints minHeight="50.0" prefHeight="270" />
+                     </rowConstraints>
+                     <children>
+                        <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="4"
+                        GridPane.rowIndex="0" GridPane.columnIndex="0">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints prefWidth="200"/>
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Personal Information" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <JFXTextField fx:id="firstNameBox" labelFloat="true" prefHeight="25.0" prefWidth="196.0"
+                                                  promptText="First Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                    <JFXTextField fx:id="lastNameBox" labelFloat="true" prefHeight="25.0" prefWidth="196.0"
+                                                  promptText="Last Name" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefWidth="200" prefHeight="300">
+
+                        </AnchorPane>
+                        <AnchorPane prefWidth="200" prefHeight="300">
+
+                        </AnchorPane>
+                        <AnchorPane prefWidth="200" prefHeight="300">
+
+                        </AnchorPane>
+                        <JFXTextField fx:id="usernameBox" labelFloat="true" prefWidth="412" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                        <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="5" onAction="#checkEmployeePermission" />
+                        <JFXComboBox fx:id="serviceSelect" onAction="#checkEmployeeServiceType" prefWidth="200" promptText="Service Ability" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="interpreterLanguageLabel" prefWidth="100.0" text="Languages" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                               alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
+                                    GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
+                                    GridPane.valignment="TOP">
+                           <VBox fx:id="interpreterLanguageBox" prefHeight="300.0" prefWidth="100.0"
+                                 spacing="5.0" AnchorPane.leftAnchor="25" AnchorPane.rightAnchor="25"/>
+                        </AnchorPane>
+                        <Label fx:id="doctorOfficeLabel" prefWidth="100.0" text="Departments" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                               alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <AnchorPane fx:id="doctorOfficeContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
+                                    GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
+                                    GridPane.valignment="TOP">
+                           <JFXComboBox fx:id="doctorOfficeBox" prefWidth="100.0" prefHeight="50"/>
+                        </AnchorPane>
+                        <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
+                        <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </children>
       <BorderPane fx:id="deletePane" layoutX="443.0" layoutY="221.0" prefHeight="200.0" prefWidth="500.0" style="-fx-background-color: #F0F1EC;" visible="false" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="65.0">
          <center>
             <GridPane BorderPane.alignment="CENTER">
@@ -116,5 +166,6 @@
          </center>
       </BorderPane>
       <Label fx:id="errLabel" alignment="TOP_LEFT" layoutX="520.0" layoutY="370.0" prefHeight="95.0" prefWidth="78.0" wrapText="true" />
+      </GridPane>
    </children>
 </fx:root>

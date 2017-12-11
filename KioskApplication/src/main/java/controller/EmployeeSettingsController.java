@@ -4,12 +4,10 @@ import com.jfoenix.controls.*;
 import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
-import entity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -27,6 +25,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static utility.request.RequestType.DOCTOR;
+import static utility.request.RequestType.GENERAL;
 import static utility.request.RequestType.INTERPRETER;
 
 public class EmployeeSettingsController {
@@ -45,7 +44,7 @@ public class EmployeeSettingsController {
     @FXML private JFXPasswordField passwordBox1;
     @FXML private JFXPasswordField passwordBox2;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
-    @FXML private JFXComboBox<RequestType> typeSelect;
+    @FXML private JFXComboBox<RequestType> serviceSelect;
     @FXML private JFXButton userActionButton, userCancelButton;
     @FXML private AnchorPane interpreterLanguageContainer, doctorOfficeContainer;
 
@@ -133,7 +132,8 @@ public class EmployeeSettingsController {
         //add items into the combobox
         permissionSelect.getItems().addAll(KioskPermission.values());
         permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE); // Except NONEMPLOYEE
-        typeSelect.getItems().addAll(RequestType.values());
+        serviceSelect.getItems().addAll(RequestType.values());
+        serviceSelect.getItems().remove(RequestType.GENERAL);
         //Interpreter language selector setup
         //adds the language checkboxes to the language selection menu
         for (Language language: Language.values()
@@ -167,17 +167,10 @@ public class EmployeeSettingsController {
             passwordBox1.setPromptText(rB.getString("password"));
             passwordBox2.setPromptText(rB.getString("password"));
             permissionSelect.setPromptText(rB.getString("permission"));
-            typeSelect.setPromptText(rB.getString("serviceAbility"));
+            serviceSelect.setPromptText(rB.getString("serviceAbility"));
             registerEmployeeLabel.setText(rB.getString("registerEmployee"));
             doctorOfficeLabel.setText(rB.getString("office"));
         });
-    }
-
-    private void setChildrenVisible(Group group, boolean visible){
-        for (Node node :
-                group.getChildren()) {
-            node.setVisible(visible);
-        }
     }
 
     public void refreshUsers() {
@@ -198,7 +191,6 @@ public class EmployeeSettingsController {
         userCancelButton.setCancelButton(true);
         userActionButton.setDefaultButton(true);
         firstNameBox.requestFocus();
-        usersList.setVisible(false);
         userEditorPane.setVisible(true);
         deletePane.setVisible(false);
         addUserButton.setVisible(false);
@@ -213,7 +205,6 @@ public class EmployeeSettingsController {
         deleteText.setText("Delete " + selectedEmployee.getUsername() + "?");
 
         // Adjust visability
-        usersList.setVisible(false);
         userEditorPane.setVisible(false);
         deletePane.setVisible(true);
     }
@@ -226,7 +217,6 @@ public class EmployeeSettingsController {
         refreshUsers();
 
         // Adjust visability
-        usersList.setVisible(true);
         userEditorPane.setVisible(false);
         deletePane.setVisible(false);
     }
@@ -242,8 +232,8 @@ public class EmployeeSettingsController {
         // Check that all fields are filled in
         if (firstNameBox.getText() != null && lastNameBox.getText() != null &&
                 usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox1.getText() != null &&
-                !passwordBox1.getText().equals("") && permissionSelect.getValue() != null && typeSelect.getValue() != null) {
-            switch (typeSelect.getValue()){
+                !passwordBox1.getText().equals("") && permissionSelect.getValue() != null && serviceSelect.getValue() != null) {
+            switch (serviceSelect.getValue()){
                 case INTERPRETER:
                     for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
                         if(intLangBoxItem instanceof JFXCheckBox) {
@@ -272,9 +262,13 @@ public class EmployeeSettingsController {
                     break;
                 }
             }
+            RequestType serviceAbility = GENERAL;
+            if(permissionSelect.getValue()==KioskPermission.EMPLOYEE){
+                serviceAbility=serviceSelect.getValue();
+            }
             // Add user
             if (LoginEntity.getInstance().addUser(usernameBox.getText(),lastNameBox.getText(),firstNameBox.getText(),
-                    passwordBox1.getText(),options, permissionSelect.getValue(), typeSelect.getValue())) {
+                    passwordBox1.getText(),options, permissionSelect.getValue(), serviceAbility)) {
                 refreshUsers();
                 // Adjust visability
                 closeAddEmployee();
@@ -291,7 +285,7 @@ public class EmployeeSettingsController {
             else if(permissionSelect.getValue() == null){
                 errLabel.setText("Permission Selection Required");
             }
-            else if(typeSelect.getValue() == null){
+            else if(serviceSelect.getValue() == null){
                 errLabel.setText("User Type Select Required");
             }
         }
@@ -301,7 +295,6 @@ public class EmployeeSettingsController {
      * Helper method for closing the add employee menu
      */
     private void closeAddEmployee(){
-        usersList.setVisible(true);
         userEditorPane.setVisible(false);
         userCancelButton.setCancelButton(false);
         userActionButton.setDefaultButton(false);
@@ -310,7 +303,7 @@ public class EmployeeSettingsController {
         usernameBox.clear();
         passwordBox1.clear();
         passwordBox2.clear();
-        typeSelect.valueProperty().set(null);
+        serviceSelect.valueProperty().set(null);
         permissionSelect.valueProperty().set(null);
         deletePane.setVisible(false);
         addUserButton.setVisible(true);
@@ -329,7 +322,7 @@ public class EmployeeSettingsController {
         usernameBox.setText("");
         passwordBox1.setText("");
         permissionSelect.setValue(null);
-        typeSelect.setValue(null);
+        serviceSelect.setValue(null);
     }
 
     /**
@@ -337,17 +330,17 @@ public class EmployeeSettingsController {
      * Used currently to show or hide the interpreter language selection area and label
      */
     @FXML
-    public void checkEmployeeType(){
-        RequestType employeeType = typeSelect.getValue();
+    public void checkEmployeeServiceType(){
+        RequestType employeeType = serviceSelect.getValue();
         if(employeeType==INTERPRETER) {
-            System.out.println(typeSelect.getValue());
+            System.out.println(serviceSelect.getValue());
             doctorOfficeContainer.setVisible(false);
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageContainer.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
         }
         else if(employeeType==DOCTOR) {
-            System.out.println(typeSelect.getValue());
+            System.out.println(serviceSelect.getValue());
             interpreterLanguageContainer.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
@@ -360,6 +353,18 @@ public class EmployeeSettingsController {
             clearInterpreterLanguageBox();
             doctorOfficeContainer.setVisible(false);
             doctorOfficeLabel.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void checkEmployeePermission(){
+        KioskPermission permission = permissionSelect.getValue();
+        if(permission==KioskPermission.EMPLOYEE) {
+            serviceSelect.setVisible(true);
+        }
+        else {
+            serviceSelect.setVisible(false);
+            serviceSelect.setValue(null);
         }
     }
 
