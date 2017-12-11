@@ -3,6 +3,8 @@ package controller;
 import com.jfoenix.controls.*;
 import database.objects.Employee;
 import entity.LoginEntity;
+import entity.MapEntity;
+import entity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -17,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
+import utility.node.NodeType;
 import utility.request.Language;
 import utility.request.RequestType;
 
@@ -47,6 +50,7 @@ public class EmployeeSettingsController {
     @FXML private AnchorPane interpreterLanguageContainer, doctorOfficeContainer;
 
     @FXML private VBox interpreterLanguageBox;
+    @FXML private JFXComboBox doctorOfficeBox;
 
     @FXML private BorderPane deletePane;
     @FXML private Label deleteText;
@@ -100,15 +104,15 @@ public class EmployeeSettingsController {
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getServiceAbility().toString())
         );
-        TreeTableColumn<Employee, String> optionsColumn = new TreeTableColumn<>("Options");
+        /*TreeTableColumn<Employee, String> optionsColumn = new TreeTableColumn<>("Options");
         optionsColumn.setResizable(false);
         optionsColumn.setPrefWidth(150);
         optionsColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<Employee, String> param) ->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getOptions())
-        );
+        );*/
 
-        usersList.getColumns().setAll(usernameColumn,firstNameColumn,lastNameColumn, permissionColumn, serviceColumn, optionsColumn);
+        usersList.getColumns().setAll(usernameColumn,firstNameColumn,lastNameColumn, permissionColumn, serviceColumn);
         usersList.setRoot(root);
         usersList.setShowRoot(false);
 
@@ -130,6 +134,7 @@ public class EmployeeSettingsController {
         permissionSelect.getItems().addAll(KioskPermission.values());
         permissionSelect.getItems().remove(KioskPermission.NONEMPLOYEE); // Except NONEMPLOYEE
         typeSelect.getItems().addAll(RequestType.values());
+        //Interpreter language selector setup
         //adds the language checkboxes to the language selection menu
         for (Language language: Language.values()
              ) {
@@ -138,6 +143,12 @@ public class EmployeeSettingsController {
                 langCheckBox.setPrefWidth(100.0);
                 langCheckBox.setPrefHeight(25.0);
                 interpreterLanguageBox.getChildren().add(langCheckBox);
+            }
+        }
+        //Doctor's office selector setup
+        for(database.objects.Node databaseNode : MapEntity.getInstance().getAllNodes()) {
+            if(databaseNode.getNodeType() == NodeType.DEPT) {
+                doctorOfficeBox.getItems().add(databaseNode.getLongName());
             }
         }
         //Internationalization listener
@@ -149,7 +160,7 @@ public class EmployeeSettingsController {
             lastNameColumn.setText(rB.getString("lastName"));
             permissionColumn.setText(rB.getString("permission"));
             serviceColumn.setText(rB.getString("serviceAbility"));
-            optionsColumn.setText(rB.getString("options"));
+            //optionsColumn.setText(rB.getString("options"));
             usernameBox.setPromptText(rB.getString("username"));
             firstNameBox.setPromptText(rB.getString("firstName"));
             lastNameBox.setPromptText(rB.getString("lastName"));
@@ -242,9 +253,22 @@ public class EmployeeSettingsController {
                             }
                         }
                     }
+                    //if there are no languages selected  it'll fail
+                    if(options.size()==0) {
+                        errLabel.setText("No languages selected for this interpreter");
+                        return;
+                    }
+                    break;
+                case DOCTOR:
+                    if (doctorOfficeBox.getValue()==null){
+                        errLabel.setText("No office selected");
+                        return;
+                    }
+                    else {
+                        options.add(doctorOfficeBox.getValue().toString());
+                    }
                     break;
                 default:
-                    options.add("");
                     break;
                 }
             }
@@ -259,7 +283,6 @@ public class EmployeeSettingsController {
             }
         else{
             if(usernameBox.getText().equals("")){
-                System.out.println("USER ERROR");
                 errLabel.setText("Username Required");
             }
             else if(passwordBox1.getText().equals("")){

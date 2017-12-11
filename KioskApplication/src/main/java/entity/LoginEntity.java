@@ -1,6 +1,7 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.*;
 import database.utility.DatabaseException;
 import utility.KioskPermission;
@@ -254,15 +255,19 @@ public class LoginEntity {
     }
 
     // Method for users to update only their passwords, and no one else's
-    public boolean updatePassword(String newPassword, String oldPassword)throws DatabaseException{
+    public boolean updatePassword(String newPassword, String oldPassword)throws NotFoundException{
         boolean updated = false;
-        if (this.currentLogin.setPassword(newPassword, oldPassword)) {
-            if (currentLogin instanceof Employee) {
-                Employee currentLogin = ((Employee) this.currentLogin);
-                database.updateEmployee(currentLogin,newPassword);
-                logins.replace(currentLogin.getUsername(),currentLogin);
-                updated = true;
+        try {
+            if (this.currentLogin.setPassword(newPassword, oldPassword)) {
+                if (currentLogin instanceof Employee) {
+                    Employee currentLogin = ((Employee) this.currentLogin);
+                    database.updateEmployee(currentLogin, newPassword);
+                    logins.replace(currentLogin.getUsername(), currentLogin);
+                    updated = true;
+                }
             }
+        } catch (DatabaseException e){
+            new NotFoundException("Employee not found");
         }
         return updated;
     }
