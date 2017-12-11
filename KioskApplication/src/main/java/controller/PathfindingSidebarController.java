@@ -18,7 +18,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,7 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import org.springframework.security.access.method.P;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
@@ -41,7 +39,6 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -221,7 +218,7 @@ public class PathfindingSidebarController extends ScreenController {
             if(currentWaypoints.size() == 1) {
                 isAddingWaypoint = true;
                 Node end = removeWaypoint(currentWaypoints.get(0));
-                onMapNodeClicked(SystemSettings.getInstance().getDefaultnode());
+                onMapNodeClicked(SystemSettings.getInstance().getKioskLocation());
                 isAddingWaypoint = true;
                 onMapNodeClicked(end);
             }
@@ -545,16 +542,16 @@ public class PathfindingSidebarController extends ScreenController {
         Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
         Node node = new Node("");
         if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.REST, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);
         }
         else if((JFXButton)e.getTarget() == btElevator) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.ELEV, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.ELEV, true);
         }
         else if((JFXButton)e.getTarget() == btRestaurant) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.RETL, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.RETL, true);
         }
         else if((JFXButton)e.getTarget() == btExit) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.EXIT, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.EXIT, true);
         }
         isAddingWaypoint = true;
         onMapNodeClicked(node);
