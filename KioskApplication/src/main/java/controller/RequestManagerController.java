@@ -2,23 +2,19 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
-import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import entity.LoginEntity;
-import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import utility.KioskPermission;
 import utility.RequestListCell;
 import utility.node.NodeFloor;
@@ -28,9 +24,7 @@ import utility.request.RequestType;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import static utility.request.RequestProgressStatus.DONE;
-import static utility.request.RequestProgressStatus.IN_PROGRESS;
-import static utility.request.RequestProgressStatus.TO_DO;
+import static utility.request.RequestProgressStatus.*;
 
 public class RequestManagerController extends ScreenController {
 
@@ -60,6 +54,9 @@ public class RequestManagerController extends ScreenController {
         currentButton = TO_DO;
     }
 
+    /**
+     * Sets up the list views in each tab
+     */
     @FXML
     public void initialize() {
         setup();
@@ -174,7 +171,15 @@ public class RequestManagerController extends ScreenController {
                 allRequests.add(fR);
             }
         }
-
+        LinkedList<Request> inprogressReq = new LinkedList<>();
+        if(currentButton == IN_PROGRESS && l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){
+            for(Request item: allRequests){
+                if(item.getCompleterID() == (l.getCurrentLoginID())){
+                    inprogressReq.add(item);
+                }
+            }
+            allRequests = inprogressReq;
+        }
         return allRequests;
     }
 
