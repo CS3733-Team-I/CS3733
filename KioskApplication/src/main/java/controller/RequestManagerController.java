@@ -14,10 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -42,13 +39,15 @@ public class RequestManagerController extends ScreenController {
     RequestProgressStatus currentButton;
 
     @FXML private Label totalRequests,filterLabel;
-    @FXML private JFXListView<Request> activeRequests;
+    @FXML private JFXListView<Request> newRequestList, activeRequests, doneRequestList;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
     @FXML private JFXPopup popup;
     //filter buttons
     @FXML private JFXCheckBox foodFilter,janitorFilter,securityFilter,
             interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
+    @FXML private Tab newTab, progressTab, doneTab;
+    @FXML private JFXTabPane listTabPane;
 
 
     public RequestManagerController(MainWindowController parent, MapController map) {
@@ -57,6 +56,38 @@ public class RequestManagerController extends ScreenController {
         l = LoginEntity.getInstance();
         r.readAllFromDatabase();
         currentButton = TO_DO;
+    }
+
+    @FXML
+    public void initialize() {
+
+//        LinkedList<Request> allRequests = filterRequests();
+//        newRequestList.setItems(null);
+//        ObservableList<Request> requests = FXCollections.observableArrayList();
+//        requests.addAll(r.filterByStatus(allRequests,RequestProgressStatus.TO_DO));
+//        newRequestList.setItems(requests);
+//        newRequestList.setCellFactory(param -> new RequestListCell(this));
+
+        buttonAction(RequestProgressStatus.TO_DO, newRequestList);
+        buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
+        buttonAction(RequestProgressStatus.DONE, doneRequestList);
+
+        setup();
+//
+//        refreshRequests();
+
+        listTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == newTab) {
+                currentButton = TO_DO;
+                refreshRequests();
+            } else if (newValue == progressTab) {
+                currentButton = IN_PROGRESS;
+                refreshRequests();
+            } else if (newValue == doneTab) {
+                currentButton = DONE;
+                refreshRequests();
+            }
+        });
     }
 
     /**
@@ -113,8 +144,8 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     void newRequests(){
-        buttonAction(RequestProgressStatus.TO_DO);
-        currentButton = TO_DO;
+//        buttonAction(RequestProgressStatus.TO_DO);
+//        currentButton = TO_DO;
     }
 
     /**
@@ -122,8 +153,8 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     void inProgressRequests(){
-        buttonAction(RequestProgressStatus.IN_PROGRESS);
-        currentButton = IN_PROGRESS;
+//        buttonAction(RequestProgressStatus.IN_PROGRESS);
+//        currentButton = IN_PROGRESS;
     }
 
     /**
@@ -131,8 +162,8 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     void doneRequests(){
-        buttonAction(RequestProgressStatus.DONE);
-        currentButton = DONE;
+//        buttonAction(RequestProgressStatus.DONE);
+//        currentButton = DONE;
     }
 
     /**
@@ -140,10 +171,10 @@ public class RequestManagerController extends ScreenController {
      * @param status RequestProgressStatus is passed through to determine which requests to display
      */
     @FXML
-    void buttonAction(RequestProgressStatus status){
-        setup();
+    void buttonAction(RequestProgressStatus status, JFXListView listView){
+//        setup();
         LinkedList<Request> allRequests = filterRequests();
-        showRequests(status, allRequests);
+        showRequests(status, allRequests, listView);
     }
 
     /**
@@ -184,12 +215,12 @@ public class RequestManagerController extends ScreenController {
      * @param status RequestProgressStatus so the method knows which requests it is displaying
      * @param allRequests the list from which the method will filter to display a list of requestIDs
      */
-    private void showRequests(RequestProgressStatus status, LinkedList<Request> allRequests) {
-        activeRequests.setItems(null);
+    private void showRequests(RequestProgressStatus status, LinkedList<Request> allRequests, JFXListView listView) {
+        listView.setItems(null);
         ObservableList<Request> requests = FXCollections.observableArrayList();
         requests.addAll(r.filterByStatus(allRequests,status));
-        activeRequests.setItems(requests);
-        activeRequests.setCellFactory(param -> new RequestListCell(this));
+        listView.setItems(requests);
+        listView.setCellFactory(param -> new RequestListCell(this));
     }
 
     /**
@@ -219,7 +250,8 @@ public class RequestManagerController extends ScreenController {
             contentView = loadView("/view/RequestManagerView.fxml");
         }
 
-        newRequests();
+        initialize();
+//        newRequests();
 
         return contentView;
     }
@@ -231,16 +263,20 @@ public class RequestManagerController extends ScreenController {
     @FXML
     public void refreshRequests() {
         switch (currentButton){
-            case IN_PROGRESS:
-                inProgressRequests();
-                break;
             case TO_DO:
-                newRequests();
+//                inProgressRequests();
+                buttonAction(RequestProgressStatus.TO_DO, newRequestList);
+                break;
+            case IN_PROGRESS:
+//                newRequests();
+                buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
                 break;
             case DONE:
-                doneRequests();
+//                doneRequests();
+                buttonAction(RequestProgressStatus.DONE, doneRequestList);
                 break;
         }
+        setup();
     }
 
     /**
