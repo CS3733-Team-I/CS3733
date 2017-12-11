@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -75,6 +76,7 @@ public class MapController {
     private boolean editMode = false;
 
     private PathWaypointView pathWaypointView;
+    @FXML private JFXPopup popup;
 
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
@@ -124,6 +126,8 @@ public class MapController {
 
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
+
+        initializePopup();
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
@@ -259,6 +263,22 @@ public class MapController {
      */
     public void setParent(MainWindowController controller) {
         parent = controller;
+    }
+
+    public void initializePopup(){
+        System.out.println("intializePopup");
+        HBox hbox = new HBox();
+        JFXButton btn = new JFXButton();
+        hbox.getChildren().add(btn);
+
+        popup = new JFXPopup(hbox);
+    }
+
+    public void showPopup(Node node){ // Add mouse event to get offset
+        System.out.println("Show Popup");
+        AnchorPane pane = new AnchorPane();
+
+        popup.show(container, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
 
     /**

@@ -207,6 +207,7 @@ public class PathWaypointView extends AnchorPane {
 
                     final NodeFloor thisFloor = thisNode.getFloor();
                     final NodeFloor lastFloor = lastNode.getFloor();
+                    final Node lNode = lastNode;
 
                     circle.setOnMouseClicked(e -> {
                         System.out.println("FC Clicked!");
@@ -218,6 +219,11 @@ public class PathWaypointView extends AnchorPane {
                     });
                     circle.setOnMouseEntered(e -> {
                         System.out.println("Open Tooltip");
+                        if(thisFloor == parent.getCurrentFloor()) {
+                            parent.showPopup(thisNode);
+                        } else {
+                            parent.showPopup(lNode);
+                        }
                     });
                     circle.setOnMouseExited(e -> {
                         System.out.println("Close Tooltip");
