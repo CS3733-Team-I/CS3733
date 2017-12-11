@@ -19,7 +19,7 @@ public class Path {
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
         this.edges = new LinkedList<>(edges);
-      //  generateDirections();
+        generateDirections();
         setDistance();
     }
 
