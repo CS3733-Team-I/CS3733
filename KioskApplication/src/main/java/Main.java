@@ -31,6 +31,10 @@ public class Main extends Application {
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
 
         primaryStage.setScene(mainScene);
+
+        // Cleanup
+        MainWindowController controller = mainWindowLoader.getController();
+        primaryStage.setOnHidden(e -> controller.shutdown());
         primaryStage.show();
         mainWindowController.postDisplaySetup();
 
