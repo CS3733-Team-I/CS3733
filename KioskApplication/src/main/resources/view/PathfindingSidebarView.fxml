@@ -4,28 +4,43 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="waypointsContainer" layoutX="264.0" layoutY="17.0" pickOnBounds="false" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+      <AnchorPane fx:id="waypointsContainer" layoutX="264.0" layoutY="17.0" pickOnBounds="false" prefHeight="76.0" prefWidth="370.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
-            <VBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXListView fx:id="waypointListView" maxHeight="1.7976931348623157E308" style="-fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;">
+                  <JFXListView fx:id="waypointListView" maxHeight="1.7976931348623157E308" pickOnBounds="false" style="-fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </JFXListView>
-                  <JFXButton id="delete-button" fx:id="btClearPath" buttonType="RAISED" onAction="#onResetPressed" prefHeight="39.0" ripplerFill="#0090ad" text="Clear Path">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <VBox.margin>
+                  <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <JFXButton id="confirm-button" fx:id="showDirectionsButton" buttonType="RAISED" onAction="#showDirections" text="Directions">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton id="blue-button" buttonType="RAISED" onAction="#showPathButton" text="Show Path">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton id="delete-button" fx:id="btClearPath" buttonType="RAISED" onAction="#onResetPressed" prefHeight="39.0" ripplerFill="#0090ad" text="Clear Path">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                     <padding>
                         <Insets top="10.0" />
-                     </VBox.margin>
-                  </JFXButton>
+                     </padding>
+                  </HBox>
                </children>
             </VBox>
          </children>

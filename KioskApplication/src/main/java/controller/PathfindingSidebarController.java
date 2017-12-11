@@ -43,12 +43,12 @@ import java.util.ResourceBundle;
 
 public class PathfindingSidebarController extends ScreenController {
 
-    @FXML private AnchorPane container;
     @FXML private AnchorPane waypointsContainer;
     @FXML private JFXListView<HBox> waypointListView;
 
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
+    @FXML private JFXButton showDirectionsButton;
     @FXML private  JFXButton btClearPath;
     private Boolean isAddingWaypoint;
 
@@ -73,14 +73,17 @@ public class PathfindingSidebarController extends ScreenController {
         System.out.println("initializing");
         ResourceBundle rB = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
-        container.setPickOnBounds(false);
+
         waypointListView.setPickOnBounds(false);
         waypointListView.setSelectionModel(new NoSelectionModel<>());
         waypointListView.setFixedCellSize(50);
         waypointListView.prefHeightProperty().bind(Bindings.size(waypointListView.getItems()).multiply(waypointListView.getFixedCellSize()).add(15));
 
+        showDirectionsButton.setVisible(false);
+
         insertAddNewWaypointCell();
 
+        // TODO redo localization for this screen
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle resB = systemSettings.getResourceBundle();
             //btnSubmit.setText(resB.getString("search"));
@@ -115,10 +118,30 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     @FXML
+    void showPathButton() {
+        if (currentWaypoints.size() == 0) return;
+
+        getMapController().setFloorSelector(currentWaypoints.get(0).getFloor());
+
+        LinkedList<Node> waypointsOnFloor = new LinkedList<>();
+        for (Node node : currentWaypoints)
+            if (node.getFloor().equals(getMapController().getCurrentFloor())) waypointsOnFloor.add(node);
+
+        getMapController().zoomOnSelectedNodes(waypointsOnFloor);
+    }
+
+    @FXML
+    void showDirections() {
+
+    }
+
+    @FXML
     void onResetPressed() {
         getMapController().setPath(null);
         getMapController().clearMap();
         getMapController().reloadDisplay();
+
+        showDirectionsButton.setVisible(false);
 
         currentWaypoints.clear();
         currentWaypoints.add(SystemSettings.getInstance().getDefaultnode());
@@ -153,6 +176,8 @@ public class PathfindingSidebarController extends ScreenController {
                 exception.printStackTrace();
                 //exceptionText.setText("ERROR! "+ exception.getMessage());
             }
+
+            showDirectionsButton.setVisible(true);
         }
 
         //addTextDirection();

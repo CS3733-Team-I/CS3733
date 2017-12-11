@@ -311,7 +311,7 @@ public class MiniMapController {
                     Line line = new Line(lastNode.getXcoord() * RAWRatio, lastNode.getYcoord() * RAHRatio,
                                          thisNode.getXcoord() * RAWRatio, thisNode.getYcoord() * RAHRatio);
                     line.setStroke(path.get().getSegmentColor(waypointIndex));
-                    line.setStrokeWidth(1);
+                    line.setStrokeWidth(2);
                     pathPane.getChildren().add(line);
                 }
 
