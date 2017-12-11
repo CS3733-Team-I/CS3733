@@ -220,8 +220,6 @@ public class ElbonianArabicConverter {
         temp = temp.replaceFirst("w", "");
         if(temp.contains("w")) return false;
 
-
-
         input = temp;
         if(input.equals("") && checkOrder(s)) return true;
 
