@@ -22,27 +22,33 @@ public class FuzzySearch {
             MapEntity map = MapEntity.getInstance();
             //LinkedList<Node> mapAllNodes = map.getAllNodes();
             HashMap<String, Node> allNodes = map.getAllNodesHM();
-            inputtext = inputtext.replaceAll("\\s+","");
+            inputtext = inputtext.replaceAll("\\s+", "");
             String[] input = inputtext.split("");
+
             DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
             // go through all nodes and get hightest match in a hashmap with key of node
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
             for (String key : allNodes.keySet()) {
                 matched = 0;
-               String longname = allNodes.get(key).getLongName().replaceAll("\\s+","");
+                String longname = allNodes.get(key).getLongName().replaceAll("\\s+", "");
                 String[] longName = longname.split("");
-               // for (int i = 0; i < longName.length; i++) {
-                    for (int i=0; i<input.length;i++){
-                        if (longname.toLowerCase().contains(input[i].toLowerCase()))
-                            if (matched < input.length) {
-                                matched++;
-                            } else {
-                                // do nothing
-                            }
-                        if(longName[i].toLowerCase().equals(input[i].toLowerCase())){
+                // for (int i = 0; i < longName.length; i++) {
+                for (int i = 0; i < input.length; i++) {
+                    if (longname.toLowerCase().contains(input[i].toLowerCase()))
+                        if (matched < input.length) {
+                            matched++;
+                        } else {
+                            // do nothing
+                        }
+
+                    if (i >= longName.length) {
+                        // do nothing
+                    } else {
+                        if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
                             matched++;
                         }
+                    }
                 }
                 sortedMap.put(key, matched);
             }
@@ -68,6 +74,4 @@ public class FuzzySearch {
             throw new Exception("No Input Text");
         }
     }
-
-
-    }
+}
