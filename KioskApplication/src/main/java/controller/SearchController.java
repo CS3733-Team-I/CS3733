@@ -158,8 +158,8 @@ public class SearchController {
     }
 
     public void reset(ArrayList<ISearchEntity> searchData) {
-        searchData.clear();
-        searchData.addAll(searchData);
+        this.searchData.clear();
+        this.searchData.addAll(searchData);
         for(ISearchEntity searchEntity : searchData) {
             searchMap.put(searchEntity.getComparingString(), searchEntity);
         }
