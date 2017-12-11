@@ -87,45 +87,87 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefWidth="200" prefHeight="300">
-
+                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints prefWidth="100"/>
+                                    <ColumnConstraints prefWidth="100"/>
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Account Information" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+                                    <JFXTextField fx:id="usernameBox" labelFloat="true" prefWidth="412" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                    <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                    <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                                                 onAction="#checkEmployeePermission" GridPane.columnSpan="2"/>
+                                    <JFXComboBox fx:id="serviceSelect" onAction="#checkEmployeeServiceType" prefWidth="200"
+                                                 promptText="Service Ability" GridPane.columnSpan="2" GridPane.rowIndex="5"/>
+                                 </children>
+                              </GridPane>
+                           </children>
                         </AnchorPane>
-                        <AnchorPane prefWidth="200" prefHeight="300">
-
+                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints prefWidth="200"/>
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints prefHeight="30" minHeight="30"/>
+                                    <RowConstraints prefHeight="30" minHeight="30"/>
+                                    <RowConstraints prefHeight="100"/>
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Extra Information" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="interpreterLanguageLabel" prefWidth="100.0" text="Languages"
+                                           visible="true" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </Label>
+                                       <VBox fx:id="interpreterLanguageBox" prefHeight="100.0" prefWidth="100.0"
+                                             spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                    <Label fx:id="doctorOfficeLabel" prefWidth="100.0" text="Departments" textAlignment="LEFT"
+                                           visible="false" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                           alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                       <JFXComboBox fx:id="doctorOfficeBox" prefWidth="100.0" prefHeight="50" GridPane.rowIndex="2"/>
+                                 </children>
+                              </GridPane>
+                           </children>
                         </AnchorPane>
-                        <AnchorPane prefWidth="200" prefHeight="300">
-
+                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints prefWidth="200"/>
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="30"/>
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Confirm Information" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                    <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </children>
                         </AnchorPane>
-                        <JFXTextField fx:id="usernameBox" labelFloat="true" prefWidth="412" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                        <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                        <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="412" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                        <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="5" onAction="#checkEmployeePermission" />
-                        <JFXComboBox fx:id="serviceSelect" onAction="#checkEmployeeServiceType" prefWidth="200" promptText="Service Ability" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label fx:id="interpreterLanguageLabel" prefWidth="100.0" text="Languages" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
-                               alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <AnchorPane fx:id="interpreterLanguageContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
-                                    GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
-                                    GridPane.valignment="TOP">
-                           <VBox fx:id="interpreterLanguageBox" prefHeight="300.0" prefWidth="100.0"
-                                 spacing="5.0" AnchorPane.leftAnchor="25" AnchorPane.rightAnchor="25"/>
-                        </AnchorPane>
-                        <Label fx:id="doctorOfficeLabel" prefWidth="100.0" text="Departments" textAlignment="LEFT" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="0"
-                               alignment="BOTTOM_LEFT" GridPane.valignment="BOTTOM" prefHeight="30">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <AnchorPane fx:id="doctorOfficeContainer" prefHeight="300.0" prefWidth="150.0" visible="false"
-                                    GridPane.columnIndex="2" GridPane.rowSpan="6" GridPane.rowIndex="1" GridPane.halignment="CENTER"
-                                    GridPane.valignment="TOP">
-                           <JFXComboBox fx:id="doctorOfficeBox" prefWidth="100.0" prefHeight="50"/>
-                        </AnchorPane>
-                        <JFXButton id="confirm-button" fx:id="userActionButton" defaultButton="true" onAction="#onUserSave" prefWidth="200" text="Save" GridPane.rowIndex="6" />
-                        <JFXButton id="cancel-button" fx:id="userCancelButton" cancelButton="true" onAction="#onUserCancel" prefWidth="200" ripplerFill="red" styleClass="cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                      </children>
                   </GridPane>
                </children>

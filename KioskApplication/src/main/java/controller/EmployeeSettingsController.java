@@ -46,7 +46,6 @@ public class EmployeeSettingsController {
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> serviceSelect;
     @FXML private JFXButton userActionButton, userCancelButton;
-    @FXML private AnchorPane interpreterLanguageContainer, doctorOfficeContainer;
 
     @FXML private VBox interpreterLanguageBox;
     @FXML private JFXComboBox doctorOfficeBox;
@@ -334,24 +333,24 @@ public class EmployeeSettingsController {
         RequestType employeeType = serviceSelect.getValue();
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
-            doctorOfficeContainer.setVisible(false);
+            doctorOfficeBox.setVisible(false);
             doctorOfficeLabel.setVisible(false);
-            interpreterLanguageContainer.setVisible(true);
+            interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
         }
         else if(employeeType==DOCTOR) {
             System.out.println(serviceSelect.getValue());
-            interpreterLanguageContainer.setVisible(false);
+            interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeContainer.setVisible(true);
+            doctorOfficeBox.setVisible(true);
             doctorOfficeLabel.setVisible(true);
         }
         else {
-            interpreterLanguageContainer.setVisible(false);
+            interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeContainer.setVisible(false);
+            doctorOfficeBox.setVisible(false);
             doctorOfficeLabel.setVisible(false);
         }
     }
