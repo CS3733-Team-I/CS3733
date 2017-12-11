@@ -87,6 +87,7 @@ public class SearchController {
 
         cbSearchData.setButtonCell(cbSearchData.getCellFactory().call(null));
 
+
         cbSearchData.setOnKeyReleased(e -> {
             cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
                 final List<ISearchEntity> searchResults = new LinkedList<>();
@@ -181,7 +182,7 @@ public class SearchController {
 
     /**
      * Fuzzy search
-     * goes through all nodes long names and finds the top 5 matches to all nodes
+     * goes through all ISearchEntity long names and returns the top 5 matches
      *
      * @param inputtext
      * @return Linked list of 5 top search result nodes
@@ -195,8 +196,6 @@ public class SearchController {
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
             // put all nodes in hash map
-            //RequestEntity request = RequestEntity.getInstance();
-            //HashMap<String, Request> allsearch = request.getallRequestsHM();
             // go through all nodes and get hightest match in a hashmap with key of node
             for (String key : allsearch.keySet()) {
                 matched = 0;
