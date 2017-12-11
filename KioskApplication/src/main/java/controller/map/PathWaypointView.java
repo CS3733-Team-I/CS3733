@@ -38,6 +38,7 @@ public class PathWaypointView extends AnchorPane {
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
+    private AnchorPane floorChangeView;
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
@@ -66,7 +67,10 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
-        this.getChildren().addAll(pathView, wayPointView);
+        floorChangeView = new AnchorPane();
+        floorChangeView.setPickOnBounds(false);
+
+        this.getChildren().addAll(pathView, wayPointView, floorChangeView);
 
         waypointList = FXCollections.observableArrayList();
 
@@ -150,9 +154,12 @@ public class PathWaypointView extends AnchorPane {
     public void clearAll() {
         clearWaypoint();
         clearPath();
+        floorChangeView.getChildren().clear();
     }
 
     public void drawPath(Path path) {
+        floorChangeView.getChildren().clear();
+
         this.currentPath = path;
 
         double totalDistance = 0;
@@ -186,7 +193,9 @@ public class PathWaypointView extends AnchorPane {
                     circle.setCenterX(thisNode.getXcoord());
                     circle.setCenterY(thisNode.getYcoord());
 
-                    wayPointView.getChildren().add(circle);
+                    circle.setOnMouseClicked(e -> System.out.println("FC Clicked!"));
+
+                    floorChangeView.getChildren().add(circle);
                 }
 
                 lastNode = thisNode;
@@ -212,17 +221,19 @@ public class PathWaypointView extends AnchorPane {
             Node lastNode = null;
             LinkedList<Node> nodesOnPath = path.getListOfAllNodes();
             for (Node node : nodesOnPath) {
-                if (lastNode != null) {
-                    double distance = Math.sqrt(Math.pow(lastNode.getXcoord() - node.getXcoord(), 2.0)
-                                                + Math.pow(lastNode.getYcoord() - node.getYcoord(), 2.0));
-                    time = time.add(new Duration(distance / speed));
+                if (node.getFloor().equals(parent.getCurrentFloor())) {
+                    if (lastNode != null) {
+                        double distance = Math.sqrt(Math.pow(lastNode.getXcoord() - node.getXcoord(), 2.0)
+                                + Math.pow(lastNode.getYcoord() - node.getYcoord(), 2.0));
+                        time = time.add(new Duration(distance / speed));
+                    }
+
+                    timeline.getKeyFrames().add(new KeyFrame(time,
+                            new KeyValue(circle.centerXProperty(), node.getXcoord()),
+                            new KeyValue(circle.centerYProperty(), node.getYcoord())));
+
+                    lastNode = node;
                 }
-
-                timeline.getKeyFrames().add(new KeyFrame(time,
-                        new KeyValue(circle.centerXProperty(), node.getXcoord()),
-                        new KeyValue(circle.centerYProperty(), node.getYcoord())));
-
-                lastNode = node;
             }
 
             Duration offset = timeline.getCycleDuration().divide((double)totalCircles);
