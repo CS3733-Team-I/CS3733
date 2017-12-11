@@ -10,8 +10,8 @@ public class FoodRequest extends Request{
 
     public FoodRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                        Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                       RequestProgressStatus status, String destinationID, Timestamp deliveryDate){
-        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
+                       RequestProgressStatus status, String destinationID, Timestamp deliveryDate, int uRequestID){
+        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status, uRequestID);
         this.destinationID = destinationID;
         this.deliveryDate = deliveryDate;
     }

@@ -38,7 +38,6 @@ public class Main extends Application {
         /*Email email = new Email.Builder("jflparrick@gmail.com")
                 .setAttachment(null)
                 .setBody("THIS IS A TEST")
-                .setFrom("me")
                 .setSubject("TEST")
                 .build();
         SMS sms = new SMS.Builder("2077455316", Providers.VERIZON)
