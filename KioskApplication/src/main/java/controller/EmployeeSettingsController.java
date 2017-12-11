@@ -1,6 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.*;
+import com.jfoenix.validation.RequiredFieldValidator;
 import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -18,6 +19,7 @@ import utility.KioskPermission;
 import utility.node.NodeType;
 import utility.request.Language;
 import utility.request.RequestType;
+import utility.validators.MatchingFieldValidator;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -39,8 +41,8 @@ public class EmployeeSettingsController {
     @FXML private JFXTextField firstNameBox;
     @FXML private JFXTextField lastNameBox;
     @FXML private JFXTextField usernameBox;
-    @FXML private JFXPasswordField passwordBox1;
-    @FXML private JFXPasswordField passwordBox2;
+    @FXML private JFXPasswordField passwordBox;
+    @FXML private JFXPasswordField passwordConfirmBox;
     @FXML private JFXComboBox<KioskPermission> permissionSelect;
     @FXML private JFXComboBox<RequestType> serviceSelect;
     @FXML private JFXButton addUserActionButton, addUserCancelButton;
@@ -176,6 +178,7 @@ public class EmployeeSettingsController {
                 doctorOfficeBox.getItems().add(databaseNode.getLongName());
             }
         }
+        setupValidatorsForAddUserPane();
         //Internationalization listener
         SystemSettings.getInstance().addObserver((o, arg) -> {
             ResourceBundle rB = SystemSettings.getInstance().getResourceBundle();
@@ -189,8 +192,8 @@ public class EmployeeSettingsController {
             usernameBox.setPromptText(rB.getString("username"));
             firstNameBox.setPromptText(rB.getString("firstName"));
             lastNameBox.setPromptText(rB.getString("lastName"));
-            passwordBox1.setPromptText(rB.getString("password"));
-            passwordBox2.setPromptText(rB.getString("password"));
+            passwordBox.setPromptText(rB.getString("password"));
+            passwordConfirmBox.setPromptText(rB.getString("password"));
             permissionSelect.setPromptText(rB.getString("permission"));
             serviceSelect.setPromptText(rB.getString("serviceAbility"));
             registerEmployeeLabel.setText(rB.getString("registerEmployee"));
@@ -208,6 +211,63 @@ public class EmployeeSettingsController {
         });
 
         deleteUserButton.setDisable(true);
+    }
+
+    /**
+     * Sets up input validators for the add user pane
+     */
+    private void setupValidatorsForAddUserPane(){
+        RequiredFieldValidator firstNameVal = new RequiredFieldValidator();
+        firstNameVal.setMessage("First Name Required");
+        firstNameBox.getValidators().add(firstNameVal);
+        firstNameBox.focusedProperty().addListener((o,oldVal,newVal)->{
+            if(!newVal) firstNameBox.validate();
+        });
+        RequiredFieldValidator lastNameVal = new RequiredFieldValidator();
+        lastNameVal.setMessage("Last Name Required");
+        lastNameBox.getValidators().add(lastNameVal);
+        lastNameBox.focusedProperty().addListener((o,oldVal,newVal)->{
+            if(!newVal) lastNameBox.validate();
+        });
+        RequiredFieldValidator usernameVal = new RequiredFieldValidator();
+        usernameVal.setMessage("Username Required");
+        usernameBox.getValidators().add(usernameVal);
+        usernameBox.focusedProperty().addListener((o,oldVal,newVal)->{
+            if (!newVal) usernameBox.validate();
+        });
+        MatchingFieldValidator passwordConfirmVal = new MatchingFieldValidator();
+        passwordConfirmVal.setMessage("Passwords not matching");
+        passwordConfirmBox.getValidators().add(passwordConfirmVal);
+        passwordConfirmBox.focusedProperty().addListener((o,oldVal,newVal)->{
+            if (!newVal) {
+                passwordConfirmVal.compareTo(passwordBox.getText());
+                passwordConfirmBox.validate();
+            }
+        });
+        RequiredFieldValidator passwordReqVal = new RequiredFieldValidator();
+        passwordReqVal.setMessage("Password Required");
+        passwordBox.getValidators().add(passwordReqVal);
+        passwordBox.focusedProperty().addListener((o,oldVal,newVal)->{
+            if (!newVal) {
+                passwordBox.validate();
+                passwordConfirmVal.compareTo(passwordBox.getText());
+                passwordConfirmBox.validate();
+            }
+        });
+        addUserActionButton.disableProperty().bind(
+                firstNameVal.hasErrorsProperty().or(
+                lastNameVal.hasErrorsProperty().or(
+                usernameVal.hasErrorsProperty().or(
+                passwordReqVal.hasErrorsProperty().or(
+                passwordConfirmVal.hasErrorsProperty()
+                )))));/*
+        addUserActionButton.disableProperty().bind((firstNameBox.textProperty().isNotEmpty().and(
+                lastNameBox.textProperty().isNotEmpty().and(
+                usernameBox.textProperty().isNotEmpty().and(
+                passwordBox.textProperty().isNotEmpty().and(
+                permissionSelect.valueProperty().isNotNull().and(
+                passwordConfirmBox.textProperty().isEqualTo(passwordBox.textProperty()))))))).not()
+        );*/
     }
 
     @FXML
@@ -248,11 +308,23 @@ public class EmployeeSettingsController {
 
     @FXML
     void onUserSave(ActionEvent event) {
+        if(lastNameBox.validate() &&
+                firstNameBox.validate() &&
+                usernameBox.validate() &&
+                passwordBox.validate()){
+
+        }
         ArrayList<String> options = new ArrayList<>();
         // Check that all fields are filled in
-        if (firstNameBox.getText() != null && lastNameBox.getText() != null &&
-                usernameBox.getText() != null && !usernameBox.getText().equals("") && passwordBox1.getText() != null &&
-                !passwordBox1.getText().equals("") && permissionSelect.getValue() != null && serviceSelect.getValue() != null) {
+        if (firstNameBox.getText() != null &&
+                !firstNameBox.getText().equals("") &&
+                !lastNameBox.getText().equals("")&&
+                !usernameBox.getText().equals("") &&
+                !passwordBox.getText().equals("") &&
+                permissionSelect.getValue() != null &&
+                //usernameBox.getText() != null &&
+                //passwordBox.getText() != null &&
+                serviceSelect.getValue() != null) {
             switch (serviceSelect.getValue()){
                 case INTERPRETER:
                     for (Node intLangBoxItem: interpreterLanguageBox.getChildren()) {
@@ -288,7 +360,7 @@ public class EmployeeSettingsController {
             }
             // Add user
             if (LoginEntity.getInstance().addUser(usernameBox.getText(),lastNameBox.getText(),firstNameBox.getText(),
-                    passwordBox1.getText(),options, permissionSelect.getValue(), serviceAbility)) {
+                    passwordBox.getText(),options, permissionSelect.getValue(), serviceAbility)) {
                 refreshUsers();
                 // Adjust visability
                 closeAddUserPane();
@@ -298,7 +370,7 @@ public class EmployeeSettingsController {
             if(usernameBox.getText().equals("")){
                 errLabel.setText("Username Required");
             }
-            else if(passwordBox1.getText().equals("")){
+            else if(passwordBox.getText().equals("")){
                 errLabel.setText("Password Required");
             }
             else if(permissionSelect.getValue() == null){
@@ -320,7 +392,7 @@ public class EmployeeSettingsController {
 
     void resetScreen(){
         usernameBox.setText("");
-        passwordBox1.setText("");
+        passwordBox.setText("");
         permissionSelect.setValue(null);
         serviceSelect.setValue(null);
     }
@@ -391,6 +463,9 @@ public class EmployeeSettingsController {
         usersList.setDisable(true);
         addUserButton.setVisible(false);
         deleteUserButton.setVisible(false);
+        //defaults the submit button to a disabled state
+        firstNameBox.validate();
+        firstNameBox.resetValidation();
         addUserActionButton.setDefaultButton(true);
         addUserCancelButton.setCancelButton(true);
         addUserPane.setVisible(true);
@@ -407,15 +482,20 @@ public class EmployeeSettingsController {
         addUserActionButton.setDefaultButton(false);
         addUserCancelButton.setCancelButton(false);
         addUserPane.setVisible(false);
-        firstNameBox.clear();
-        lastNameBox.clear();
-        usernameBox.clear();
-        passwordBox1.clear();
-        passwordBox2.clear();
-        serviceSelect.valueProperty().set(null);
-        permissionSelect.valueProperty().set(null);
         usersList.setDisable(false);
         usersList.requestFocus();
+        firstNameBox.clear();
+        firstNameBox.resetValidation();
+        lastNameBox.clear();
+        lastNameBox.resetValidation();
+        usernameBox.clear();
+        usernameBox.resetValidation();
+        passwordBox.clear();
+        passwordBox.resetValidation();
+        passwordConfirmBox.clear();
+        passwordConfirmBox.resetValidation();
+        serviceSelect.valueProperty().set(null);
+        permissionSelect.valueProperty().set(null);
     }
 
     /**

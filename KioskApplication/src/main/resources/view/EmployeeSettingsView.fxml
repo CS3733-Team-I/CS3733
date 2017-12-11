@@ -25,7 +25,7 @@
          <rowConstraints>
             <RowConstraints fx:id="titleRow" prefHeight="65.0"/>
             <RowConstraints fx:id="treeTableRow" prefHeight="300"/>
-            <RowConstraints fx:id="editorRow" prefHeight="300"/>
+            <RowConstraints fx:id="editorRow" prefHeight="400" valignment="TOP"/>
          </rowConstraints>
          <children>
             <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0" prefHeight="65" prefWidth="800">
@@ -45,9 +45,9 @@
             <JFXTreeTableView fx:id="usersList" maxWidth="Infinity"
                               onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="300.0"
                               prefWidth="800.0" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <AnchorPane prefWidth="800" prefHeight="300" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <AnchorPane prefWidth="800" prefHeight="400" GridPane.columnIndex="0" GridPane.rowIndex="2">
                <children>
-                  <GridPane fx:id="addUserPane" prefHeight="300.0" minHeight="150" prefWidth="800.0" AnchorPane.bottomAnchor="0"
+                  <GridPane fx:id="addUserPane" prefHeight="400.0" minHeight="150" prefWidth="800.0"
                             AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" visible="false">
                      <columnConstraints>
                         <ColumnConstraints halignment="LEFT" minWidth="10.0" prefWidth="200.0" />
@@ -57,7 +57,7 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints prefHeight="30"/>
-                        <RowConstraints minHeight="50.0" prefHeight="270" />
+                        <RowConstraints minHeight="50.0" prefHeight="270"  valignment="TOP"/>
                      </rowConstraints>
                      <children>
                         <Label fx:id="registerEmployeeLabel" prefHeight="30.0" text="Register Employee" GridPane.columnSpan="4"
@@ -74,9 +74,9 @@
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
                                  </rowConstraints>
                                  <children>
                                     <Label text="Personal Information" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -88,26 +88,26 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
                            <children>
-                              <GridPane>
+                              <GridPane AnchorPane.topAnchor="0">
                                  <columnConstraints>
                                     <ColumnConstraints prefWidth="100"/>
                                     <ColumnConstraints prefWidth="100"/>
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
-                                    <RowConstraints prefHeight="30"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
+                                    <RowConstraints prefHeight="60" valignment="TOP"/>
                                  </rowConstraints>
                                  <children>
                                     <Label text="Account Information" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
                                     <JFXTextField fx:id="usernameBox" labelFloat="true" prefWidth="412" promptText="Username" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                    <JFXPasswordField fx:id="passwordBox1" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                    <JFXPasswordField fx:id="passwordBox2" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                    <JFXPasswordField fx:id="passwordBox" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <JFXPasswordField fx:id="passwordConfirmBox" labelFloat="true" prefWidth="200" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                     <JFXComboBox fx:id="permissionSelect" prefHeight="25.0" prefWidth="200" promptText="Permissions" GridPane.columnIndex="0" GridPane.rowIndex="4"
                                                  onAction="#checkEmployeePermission" GridPane.columnSpan="2"/>
                                     <JFXComboBox fx:id="serviceSelect" onAction="#checkEmployeeServiceType" prefWidth="200"
@@ -118,14 +118,14 @@
                         </AnchorPane>
                         <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <GridPane>
+                              <GridPane AnchorPane.topAnchor="0">
                                  <columnConstraints>
                                     <ColumnConstraints prefWidth="200"/>
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints prefHeight="30" minHeight="30"/>
                                     <RowConstraints prefHeight="30" minHeight="30"/>
-                                    <RowConstraints prefHeight="100"/>
+                                    <RowConstraints prefHeight="300"/>
                                  </rowConstraints>
                                  <children>
                                     <Label text="Extra Information" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
@@ -149,7 +149,7 @@
                               </GridPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefWidth="200" prefHeight="300" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <AnchorPane prefWidth="200" prefHeight="400" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <children>
                               <GridPane>
                                  <columnConstraints>
