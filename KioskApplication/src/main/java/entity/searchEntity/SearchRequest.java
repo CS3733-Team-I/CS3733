@@ -23,11 +23,11 @@ public class SearchRequest implements ISearchEntity{
             e.printStackTrace();
         }
         if(request.getStatus() == RequestProgressStatus.IN_PROGRESS) {
-            searchString += "\nStarted at " + request.getStartedTime().toString() + " by " + request.getCompleterID();
+            searchString += "; Started at " + request.getStartedTime().toString() + " by " + request.getCompleterID();
         }
         if(request.getStatus() == RequestProgressStatus.DONE) {
-            searchString += "\nStarted at " + request.getStartedTime().toString() + " by " + request.getCompleterID();
-            searchString += "\nCompleted at " + request.getCompletedTime().toString() + " by " + request.getCompleterID();
+            searchString += "; Started at " + request.getStartedTime().toString() + " by " + request.getCompleterID();
+            searchString += "; Completed at " + request.getCompletedTime().toString() + " by " + request.getCompleterID();
         }
 
         switch (request.getRequestType()) {
