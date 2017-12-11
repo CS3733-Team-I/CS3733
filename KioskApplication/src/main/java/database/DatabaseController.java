@@ -1,5 +1,6 @@
 package database;
 
+import com.sun.org.apache.regexp.internal.RE;
 import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;
@@ -536,6 +537,111 @@ public class DatabaseController {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
+        }
+    }
+
+    public void insertEmployeeIntoView(IEmployee employee) {
+        try {
+            Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteEmployeeFromView(IEmployee employee) {
+        try {
+            Connector.deleteEmployeeFromView(instanceConnection, employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void insertRequestIntoView(Request request) {
+        try {
+            Connector.addRequestToTable(instanceConnection, request);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void insertRequestIntoView(String requestID) {
+        int uRequestID;
+        try {
+            uRequestID = Connector.getURequestIDFromRequestID(instanceConnection, requestID);
+
+            Connector.addRequestToTable(instanceConnection, uRequestID);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteRequestFromView(Request request) {
+        try {
+            Connector.deleteRequestFromView(instanceConnection, request.getuRequestID());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteRequestFromView(int uRequestID) {
+        try {
+            Connector.deleteRequestFromView(instanceConnection, uRequestID);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isRequestViewed(IEmployee employee, Request request) {
+        try {
+            return Connector.selectRequestViewEmployee(instanceConnection, request.getuRequestID(), employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean isRequestViewed(IEmployee employee, int uRequestID) {
+        try {
+            return Connector.selectRequestViewEmployee(instanceConnection, uRequestID, employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public void setRequestViewed(IEmployee employee, Request request, boolean isViewed) {
+        try {
+            Connector.updateRequestViewTable(instanceConnection, request.getuRequestID(), employee.getUsername(), isViewed);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setRequestViewed(IEmployee employee, int uRequestID, boolean isViewed) {
+        try {
+            Connector.updateRequestViewTable(instanceConnection, uRequestID, employee.getUsername(), isViewed);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
         }
     }
 }

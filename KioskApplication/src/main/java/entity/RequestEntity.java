@@ -28,6 +28,8 @@ public class RequestEntity {
     //private HashMap<String,SecurityRequest> securityRequests;
     //private HashMap<String,SecurityRequest> securityRequests;
 
+    private int uRequestID = 0;
+
     private long meanTimeToComplete;
 
     private static RequestEntity instance = null;
@@ -153,6 +155,18 @@ public class RequestEntity {
     }
 
     /**
+     * method that returns all requests in hashmap
+     * @return the requests in hashmap form
+     */
+    public HashMap<String, Request> getallRequestsHM() {
+        HashMap<String,Request> all = new HashMap<>();
+            all.putAll(interpreterRequests);
+            all.putAll(foodRequests);
+           all.putAll(securityRequests);
+        return all;
+    }
+
+    /**
      * Filters all the requests in the hashmaps by the inputted status
      * @param status
      * @return linkedList of requests that fall under the same request progress status
@@ -217,12 +231,14 @@ public class RequestEntity {
     }
 
 
+
     /**
      * Generic request for deleting a request from the database and hashmaps
      * @param requestID
      */
     public void deleteRequest(String requestID){
         RequestType requestType = checkRequestType(requestID);
+        uRequestID--;
         if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
@@ -230,11 +246,13 @@ public class RequestEntity {
         }
         else if(requestType.equals(RequestType.SECURITY)){
             securityRequests.remove(requestID);
+            interpreterRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
             System.out.println("Deleting SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
             foodRequests.remove(requestID);
+            interpreterRequests.remove(requestID);
             dbController.deleteFoodRequest(requestID);
             System.out.println("Deleting FoodRequest");
         }
@@ -438,7 +456,9 @@ public class RequestEntity {
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
         InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang, uRequestID);
+        dbController.insertRequestIntoView(iR);
+        uRequestID++;
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
         return rID;
@@ -502,7 +522,9 @@ public class RequestEntity {
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
         SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
+                submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority, uRequestID);
+        dbController.insertRequestIntoView(sR);
+        uRequestID++;
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
         return rID;
@@ -574,7 +596,10 @@ public class RequestEntity {
         Timestamp deliveryTime = new Timestamp(now.getTimeInMillis());
 
         FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime, uRequestID);
+
+        dbController.insertRequestIntoView(fR);
+        uRequestID++;
 
         foodRequests.put(rID, fR);
         dbController.addFoodRequest(fR);

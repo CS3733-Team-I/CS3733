@@ -22,6 +22,8 @@ public class SystemSettings extends Observable {
     private String defaultKioskLocationID = "IHALL00303";
     private String defaultBeamWidth = "3";
     private String defaultSearchAlgorithm = "A*";
+    private boolean isMetric;
+    private boolean isArabic;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -62,6 +64,9 @@ public class SystemSettings extends Observable {
         this.setResourceBundle("English");
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
+        //unit system
+        isMetric = true;
+        isArabic = true;
     }
 
     public static SystemSettings getInstance() {
@@ -166,5 +171,21 @@ public class SystemSettings extends Observable {
 
     public void updateDistance() {
         MapEntity.getInstance().updateDistanceFromKisok(getKioskLocation());
+    }
+
+    public void setIsMetric(boolean b) {
+        this.isMetric = b;
+    }
+
+    public void setIsArabic(boolean b) {
+        this.isArabic = b;
+    }
+
+    public boolean isMetric() {
+        return isMetric;
+    }
+
+    public boolean isArabic() {
+        return isArabic;
     }
 }

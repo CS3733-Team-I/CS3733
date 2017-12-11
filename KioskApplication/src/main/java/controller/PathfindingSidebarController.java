@@ -5,8 +5,10 @@ import com.jfoenix.controls.JFXListView;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
+import entity.MapEntity;
 import entity.Path;
-import entity.SearchNode;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +41,7 @@ import utility.node.NodeFloor;
 import utility.node.NodeType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -75,7 +78,14 @@ public class PathfindingSidebarController extends ScreenController {
         currentWaypoints = new LinkedList<>();
         systemSettings = SystemSettings.getInstance();
         isAddingWaypoint = true;
-        searchController = new SearchController(this);
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        SystemSettings.getInstance().updateDistance();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+                if(targetNode.getNodeType() != NodeType.HALL) {
+                    searchNode.add(new SearchNode(targetNode));
+                }
+        }
+        searchController = new SearchController(this, searchNode);
     }
 
     @FXML
@@ -152,34 +162,22 @@ public class PathfindingSidebarController extends ScreenController {
             btNavigate.setText(resB.getString("my.navigate"));
             //btClear.setText(resB.getString("clear"));
 
+            btNavigate.setText(resB.getString("navigate"));
+            //waypointLabel.setText(resB.getString("waypoints"));
+            btClearPath.setText(resB.getString("clearpath"));
         });
 
-        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
+        searchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
             @Override
-            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
+            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
                 if (newValue != null) {
-                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
-                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                    if(((Node) newValue.getData()).getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(((Node)newValue.getData()).getFloor());
                     }
                     LinkedList<Node> displayedNode = new LinkedList<>();
-                    displayedNode.add(newValue.getDatabaseNode());
+                    displayedNode.add(((Node)newValue.getData()));
                     getMapController().zoomOnSelectedNodes(displayedNode);
-                    onMapNodeClicked(newValue.getDatabaseNode());
-                }
-            }
-        });
-
-        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
-            @Override
-            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
-                if (newValue != null) {
-                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
-                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
-                    }
-                    LinkedList<Node> displayedNode = new LinkedList<>();
-                    displayedNode.add(newValue.getDatabaseNode());
-                    getMapController().zoomOnSelectedNodes(displayedNode);
-                    onMapNodeClicked(newValue.getDatabaseNode());
+                    onMapNodeClicked(((Node)newValue.getData()));
                 }
             }
         });
@@ -196,9 +194,6 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().clearMap();
         getMapController().getMiniMapController().clearMiniWaypoint();
         getMapController().reloadDisplay();
-
-        //reset search
-        searchController.reset();
     }
 
     public void enableNavBtn(){
@@ -334,6 +329,16 @@ public class PathfindingSidebarController extends ScreenController {
         btClearPath.setText(rB.getString("my.clear"));
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
+
+        //reset search
+        SystemSettings.getInstance().updateDistance();
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNode.add(new SearchNode(targetNode));
+            }
+        }
+        searchController.reset(searchNode);
     }
 
     /**
