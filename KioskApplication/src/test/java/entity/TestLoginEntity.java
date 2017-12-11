@@ -1,5 +1,6 @@
 package entity;
 
+import database.connection.NotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,7 +134,7 @@ public class TestLoginEntity {
     }
 
     @Test
-    public void testUpdatePassword(){
+    public void testUpdatePassword() throws NotFoundException{
         l.addUser("employee","Wong","Wilson","456",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         l.logIn("employee","456");
         l.updatePassword("789","456");

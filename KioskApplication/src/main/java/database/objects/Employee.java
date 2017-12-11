@@ -158,6 +158,10 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
         this.id = id;
     }
 
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
+    }
+
     public ArrayList<String> getOptions() {
         return options;
         /*ArrayList<String> optionsList = new ArrayList<String>();

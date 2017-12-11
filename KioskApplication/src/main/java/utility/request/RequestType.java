@@ -2,8 +2,8 @@ package utility.request;
 
 // NOTE don't change the order of these it'll mess up the database
 public enum RequestType {
-    NONE,
     GENERAL,
+    DOCTOR,
     INTERPRETER,
     FOOD,
     SECURITY,
@@ -11,6 +11,5 @@ public enum RequestType {
     IT,
     MAINTENANCE,
     INTERNAL_TRANSPORTATION,
-    EXTERNAL_TRANSPORTATION,
-    DOCTOR
+    EXTERNAL_TRANSPORTATION
 }

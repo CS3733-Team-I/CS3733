@@ -6,6 +6,8 @@ import org.junit.Test;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 /**
@@ -77,6 +79,6 @@ public class TestNullEmployee {
 
     @Test
     public void testGetOptions(){
-        assertEquals("",nullEmployee.getOptions());
+        assertEquals(new ArrayList<>(),nullEmployee.getOptions());
     }
 }
