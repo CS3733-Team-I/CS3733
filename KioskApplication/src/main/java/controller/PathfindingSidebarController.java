@@ -7,8 +7,8 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
-import entity.searchEntity.ISearchEntity;
-import entity.searchEntity.SearchNode;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -213,7 +213,7 @@ public class PathfindingSidebarController extends ScreenController {
             if(currentWaypoints.size() == 1) {
                 isAddingWaypoint = true;
                 Node end = removeWaypoint(currentWaypoints.get(0));
-                onMapNodeClicked(SystemSettings.getInstance().getDefaultnode());
+                onMapNodeClicked(SystemSettings.getInstance().getKioskLocation());
                 isAddingWaypoint = true;
                 onMapNodeClicked(end);
             }
@@ -523,7 +523,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
 
-        addWaypointBox.getChildren().addAll(btNewWayPoint, searchView);
+        addWaypointBox.getChildren().addAll(btNewWayPoint, btNewWayPoint);
         addWaypointBox.setAccessibleText("add waypoint");
 
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
@@ -547,16 +547,16 @@ public class PathfindingSidebarController extends ScreenController {
         Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
         Node node = new Node("");
         if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.REST, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);
         }
         else if((JFXButton)e.getTarget() == btElevator) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.ELEV, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.ELEV, true);
         }
         else if((JFXButton)e.getTarget() == btRestaurant) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.RETL, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.RETL, true);
         }
         else if((JFXButton)e.getTarget() == btExit) {
-            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getDefaultnode(), NodeType.EXIT, true);
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.EXIT, true);
         }
         isAddingWaypoint = true;
         onMapNodeClicked(node);

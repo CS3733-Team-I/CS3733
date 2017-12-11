@@ -371,6 +371,14 @@ public class MapEntity implements IMapEntity {
         return -1;
     }
 
+    public double getDistanceFromKioskFeet(Node n) {
+        return getDistanceFromKiosk(n)*Edge.COST_TO_FEET;
+    }
+
+    public double getDistanceFromKioskMeters(Node n) {
+        return getDistanceFromKioskFeet(n)*Edge.FEET_TO_METERS;
+    }
+
     /**
      * Method that should be called every time the kiosk location is set.
      * Calculates the distance to every non-hallway node and stores it in a hashmap

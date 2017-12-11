@@ -1,9 +1,7 @@
 package controller;
 
 import com.jfoenix.controls.JFXComboBox;
-import database.objects.Node;
-import entity.searchEntity.ISearchEntity;
-import entity.SystemSettings;
+import entity.SearchEntity.ISearchEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,11 +12,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.util.StringConverter;
-import pathfinder.NodeFuzzySearch;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class SearchController {
@@ -35,25 +30,23 @@ public class SearchController {
     private ScreenController parent;
 
     private TableView<ISearchEntity> searchTable;
-    NodeFuzzySearch nodeFuzzySearch;
-    String value;
+
+    private HashMap<String, ISearchEntity> searchMap;
 
     public SearchController(ScreenController parent, ArrayList<ISearchEntity> searchData) {
         this.parent = parent;
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
-//        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
-//            if(databaseNode.getNodeType() != NodeType.HALL) {
-//                searchData.add(new SearchNode(databaseNode));
-//            }
-//        }
+        searchMap = new HashMap<>();
+        for(ISearchEntity searchEntity : searchData) {
+            searchMap.put(searchEntity.getComparingString(), searchEntity);
+        }
     }
 
     @FXML
     void initialize() {
 
         //initialize the lists
-        nodeFuzzySearch = new NodeFuzzySearch();
         searchTable = new TableView<>();
         this.filteredList = new FilteredList<>(this.searchData, e->true);
         //set the combo box style and editable
@@ -94,12 +87,13 @@ public class SearchController {
 
         cbSearchData.setButtonCell(cbSearchData.getCellFactory().call(null));
 
+
         cbSearchData.setOnKeyReleased(e -> {
             cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
                 final List<ISearchEntity> searchResults = new LinkedList<>();
                 if (newValue != null && !newValue.equals("")) {
                     try {
-                        searchResults.addAll(NodeFuzzySearch.fuzzySearch(newValue));
+                        searchResults.addAll(fuzzySearch(newValue));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -165,8 +159,11 @@ public class SearchController {
     }
 
     public void reset(ArrayList<ISearchEntity> searchData) {
-        searchData.clear();
-        searchData.addAll(searchData);
+        this.searchData.clear();
+        this.searchData.addAll(searchData);
+        for(ISearchEntity searchEntity : searchData) {
+            searchMap.put(searchEntity.getComparingString(), searchEntity);
+        }
     }
 
     public ObjectProperty<ISearchEntity> getCBValueProperty() {
@@ -181,5 +178,73 @@ public class SearchController {
         cbSearchData.getItems().clear();
         sortedList.clear();
         searchTable.getItems().clear();
+    }
+
+    /**
+     * Fuzzy search
+     * goes through all ISearchEntity long names and returns the top 5 matches
+     *
+     * @param inputtext
+     * @return Linked list of 5 top search result nodes
+     */
+     private LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {// add boolean
+        if (!inputtext.isEmpty()) {
+            HashMap<String,ISearchEntity> allsearch = new HashMap<>();
+            allsearch.putAll(searchMap);
+            inputtext = inputtext.replaceAll("\\s+","");
+            String[] input = inputtext.split("");
+            Map<String, Integer> sortedMap = new HashMap<>();
+            int matched = 0;
+            // put all nodes in hash map
+            // go through all nodes and get hightest match in a hashmap with key of node
+            for (String key : allsearch.keySet()) {
+                matched = 0;
+                String longname = allsearch.get(key).getName().replaceAll("\\s+","");
+                String[] longName = longname.split("");
+                // for (int i = 0; i < longName.length; i++) {
+                for (int i=0; i<input.length;i++){
+                    if (longname.toLowerCase().contains(input[i].toLowerCase()))
+                        if (matched < input.length) {
+                            matched++;
+                        } else {
+                            // do nothing
+                        }
+                    if(i>=longName.length){}
+                    else{
+                        if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
+                            matched++;}
+                    }
+                }
+                sortedMap.put(key, matched);
+            }
+            // now sort hashmap from highest to lowest
+            int min = 0;
+            List<String> sorted = new ArrayList<>();
+            for (String key : sortedMap.keySet()) {
+                if (sortedMap.get(key) >= min) {
+                    sorted.add(0, key);
+                    min = sortedMap.get(key);
+                } else {
+                    sorted.add(sorted.size(), key);
+                }
+            }
+            LinkedList<ISearchEntity> bestmatch = new LinkedList<>();
+            if(sorted.size()>5) {
+                // get the top 5 from sorted arraylist
+                for (int i = 0; i < 5; i++) {
+                    bestmatch.add(allsearch.get(sorted.get(i)));
+                }
+                return bestmatch;
+            }
+            else{
+                for(int i=0; i<sorted.size();i++){
+                    bestmatch.add(allsearch.get(sorted.get(i)));
+                }
+                return  bestmatch;
+            }
+        } else {
+            // input is 0 return exceptipon
+            throw new Exception("No Input Text");
+        }
     }
 }

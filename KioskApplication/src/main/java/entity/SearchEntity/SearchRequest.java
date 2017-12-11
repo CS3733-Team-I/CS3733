@@ -1,8 +1,7 @@
-package entity.searchEntity;
+package entity.SearchEntity;
 
 import database.connection.NotFoundException;
 import database.objects.Request;
-import database.utility.DatabaseException;
 import entity.MapEntity;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +16,7 @@ public class SearchRequest implements ISearchEntity{
     public SearchRequest(Request request){
         this.databaseRequest = request;
         try{
-            this.searchString = "Status:" + request.getStatus().toString() + " At"+ MapEntity.getInstance().getNode(request.getNodeID()).getLongName() + " Assigned by" + request.getAssignerID()
+            this.searchString = "Status:" + request.getStatus().toString() + "  At"+ MapEntity.getInstance().getNode(request.getNodeID()).getLongName() + " Assigned by" + request.getAssignerID()
                 + " Submitted at" + request.getSubmittedTime().toString();
         }catch (NotFoundException e) {
             e.printStackTrace();
@@ -32,19 +31,19 @@ public class SearchRequest implements ISearchEntity{
 
         switch (request.getRequestType()) {
             case FOOD:
-                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIcon.png");
+                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodBlue.png");
                 requestIcon = new ImageView(foodIcon);
                 break;
             case INTERPRETER:
-                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
+                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/translateBlue.png");
                 requestIcon = new ImageView(interpreterIcon);
                 break;
             case SECURITY:
-                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIcon.png");
+                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityBlue.png");
                 requestIcon = new ImageView(securityIcon);
                 break;
             case JANITOR:
-                Image janitorIcon = ResourceManager.getInstance().getImage("/images/icons/janitor.png");
+                Image janitorIcon = ResourceManager.getInstance().getImage("/images/icons/janitorBlue.png");
                 requestIcon = new ImageView(janitorIcon);
                 break;
             default:
@@ -66,5 +65,8 @@ public class SearchRequest implements ISearchEntity{
     }
     public String getComparingString() {
         return databaseRequest.getRequestID();
+    }
+    public String getName() {
+        return searchString;
     }
 }
