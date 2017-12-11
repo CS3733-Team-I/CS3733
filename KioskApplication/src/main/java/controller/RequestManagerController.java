@@ -16,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import utility.KioskPermission;
@@ -48,6 +49,7 @@ public class RequestManagerController extends ScreenController {
             interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
     @FXML private Tab newTab, progressTab, doneTab;
     @FXML private JFXTabPane listTabPane;
+    @FXML private AnchorPane sideBar,listAPane,reqManagerPane;
 
 
     public RequestManagerController(MainWindowController parent, MapController map) {
@@ -60,21 +62,10 @@ public class RequestManagerController extends ScreenController {
 
     @FXML
     public void initialize() {
-
-//        LinkedList<Request> allRequests = filterRequests();
-//        newRequestList.setItems(null);
-//        ObservableList<Request> requests = FXCollections.observableArrayList();
-//        requests.addAll(r.filterByStatus(allRequests,RequestProgressStatus.TO_DO));
-//        newRequestList.setItems(requests);
-//        newRequestList.setCellFactory(param -> new RequestListCell(this));
-
+        setup();
         buttonAction(RequestProgressStatus.TO_DO, newRequestList);
         buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
         buttonAction(RequestProgressStatus.DONE, doneRequestList);
-
-        setup();
-//
-//        refreshRequests();
 
         listTabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == newTab) {
@@ -98,21 +89,14 @@ public class RequestManagerController extends ScreenController {
     public void setup(){
         RequestType employeeType = l.getCurrentServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
+            sideBar.setVisible(false);
             foodFilter.setSelected(false);
-            foodFilter.setVisible(false);
             janitorFilter.setSelected(false);
-            janitorFilter.setVisible(false);
             securityFilter.setSelected(false);
-            securityFilter.setVisible(false);
             interpreterFilter.setSelected(false);
-            interpreterFilter.setVisible(false);
             maintenanceFilter.setSelected(false);
-            maintenanceFilter.setVisible(false);
             itFilter.setSelected(false);
-            itFilter.setVisible(false);
             transportationFilter.setSelected(false);
-            transportationFilter.setVisible(false);
-            filterLabel.setVisible(false);
             switch (employeeType){
                 case FOOD:
                     foodFilter.setSelected(true);
@@ -127,43 +111,27 @@ public class RequestManagerController extends ScreenController {
                     janitorFilter.setSelected(true);
                     break;
             }
+            reqManagerPane.setLeftAnchor(listAPane,0.0);
+//            foodFilter.setVisible(false);
+//            janitorFilter.setVisible(false);
+//            securityFilter.setVisible(false);
+//            interpreterFilter.setVisible(false);
+//            itFilter.setVisible(false);
+//            maintenanceFilter.setVisible(false);
+//            transportationFilter.setVisible(false);
+//            filterLabel.setVisible(false);
         }else{
-            foodFilter.setVisible(true);
-            janitorFilter.setVisible(true);
-            securityFilter.setVisible(true);
-            interpreterFilter.setVisible(true);
-            maintenanceFilter.setVisible(true);
-            itFilter.setVisible(true);
-            transportationFilter.setVisible(true);
-            filterLabel.setVisible(true);
+            reqManagerPane.setLeftAnchor(listAPane, 150.0);
+            sideBar.setVisible(true);
+//            foodFilter.setVisible(true);
+//            janitorFilter.setVisible(true);
+//            securityFilter.setVisible(true);
+//            interpreterFilter.setVisible(true);
+//            maintenanceFilter.setVisible(true);
+//            itFilter.setVisible(true);
+//            transportationFilter.setVisible(true);
+//            filterLabel.setVisible(true);
         }
-    }
-
-    /**
-     * unopened request button. Displays all of the new requests
-     */
-    @FXML
-    void newRequests(){
-//        buttonAction(RequestProgressStatus.TO_DO);
-//        currentButton = TO_DO;
-    }
-
-    /**
-     * in Progress request button. Displays all of the current requests
-     */
-    @FXML
-    void inProgressRequests(){
-//        buttonAction(RequestProgressStatus.IN_PROGRESS);
-//        currentButton = IN_PROGRESS;
-    }
-
-    /**
-     * Completed request button. Displays all of the finished requests
-     */
-    @FXML
-    void doneRequests(){
-//        buttonAction(RequestProgressStatus.DONE);
-//        currentButton = DONE;
     }
 
     /**

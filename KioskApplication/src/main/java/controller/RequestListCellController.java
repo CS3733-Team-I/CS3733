@@ -3,6 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import database.connection.NotFoundException;
+import database.objects.Employee;
 import database.objects.Node;
 import database.objects.Request;
 import entity.LoginEntity;
@@ -15,9 +16,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import utility.KioskPermission;
 import utility.ResourceManager;
 import utility.request.RequestProgressStatus;
@@ -127,17 +131,33 @@ public class RequestListCellController {
 
         if(!lEntity.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
             if(RPS.equals(RequestProgressStatus.TO_DO)) { //and still assignable
-                ObservableList<Integer> listOfEmployees = FXCollections.observableArrayList();
+                ObservableList<Employee> listOfEmployees = FXCollections.observableArrayList();
                 listOfEmployees.clear();
                 listOfEmployees.addAll(lEntity.getAllEmployeeType(request));
                 JFXComboBox employees = new JFXComboBox(listOfEmployees);
+                employees.setCellFactory(new Callback<ListView, ListCell>() {
+                    @Override
+                    public ListCell call(ListView param) {
+                        final ListCell<Employee> cell = new ListCell<Employee>(){
+                            @Override
+                            public void updateItem(Employee item, boolean empty){
+                                super.updateItem(item,empty);
+                                if(item != null){
+                                    setText(item.getUsername());
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                });
+
                 employees.setPromptText("Assign Employee");
                 employees.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         if (employees.getValue().equals(null)) {
                         } else {
-                            rEntity.markInProgress((Integer) employees.getValue(), requestID);
+                            rEntity.markInProgress(( (Employee) employees.getValue()).getID(), requestID);
                             parent.refreshRequests();
                         }
                     }
