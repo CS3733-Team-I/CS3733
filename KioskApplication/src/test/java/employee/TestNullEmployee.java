@@ -67,12 +67,12 @@ public class TestNullEmployee {
 
     @Test
     public void testUpdatePassword(){
-        assertFalse(nullEmployee.updatePassword("",""));
+        assertFalse(nullEmployee.setPassword("",""));
     }
 
     @Test
     public void testUpdateUsername(){
-        assertFalse(nullEmployee.updateUsername("",""));
+        assertFalse(nullEmployee.setUsername("",""));
     }
 
     @Test

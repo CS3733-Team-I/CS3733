@@ -304,8 +304,8 @@ public class DatabaseControllerTests {
     @Test
     public void testEmployeeUpdate(){
         Employee upEmp = dbController.getEmployee(emp2ID);
-        upEmp.updateUsername("NewName","password");
-        upEmp.updatePassword("NewPassword","password");
+        upEmp.setUsername("NewName","password");
+        upEmp.setPassword("NewPassword","password");
         dbController.updateEmployee(upEmp,"NewPassword");
         Employee updatedEmployee=dbController.getEmployee(emp2ID);
         assertEquals("NewName",updatedEmployee.getUsername());

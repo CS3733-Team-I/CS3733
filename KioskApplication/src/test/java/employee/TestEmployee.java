@@ -45,7 +45,7 @@ public class TestEmployee {
     public void testUpdatePassword(){
         Employee testEmp = new Employee("TestEmp","Wong","Wilson","abcdefghijklmnoppqrstuvwxyz","1:2:",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        testEmp.updatePassword("abc","abcdefghijklmnoppqrstuvwxyz");
+        testEmp.setPassword("abc","abcdefghijklmnoppqrstuvwxyz");
         assertTrue(testEmp.validatePassword("abc"));
         assertFalse(testEmp.validatePassword("abcdefghijklmnoppqrstuvwxyz"));
     }
@@ -54,7 +54,7 @@ public class TestEmployee {
     public void testUpdateUserName(){
         Employee testEmp = new Employee("TestEmp","Wong","Wilson","abcdefghijklmnoppqrstuvwxyz","1:2:",
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
-        testEmp.updateUsername("UpdatedName","abcdefghijklmnoppqrstuvwxyz");
+        testEmp.setUsername("UpdatedName","abcdefghijklmnoppqrstuvwxyz");
         assertEquals("UpdatedName",testEmp.getUsername());
     }
 }

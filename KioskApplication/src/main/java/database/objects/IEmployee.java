@@ -15,9 +15,9 @@ public interface IEmployee {
 
     boolean validatePassword(String password);
 
-    boolean updatePassword(String newPassword, String oldPassword);
+    boolean setPassword(String newPassword, String oldPassword);
 
-    boolean updateUsername(String newUsername, String password);
+    boolean setUsername(String newUsername, String password);
 
     int getID();
 

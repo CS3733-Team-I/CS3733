@@ -63,11 +63,11 @@ public class NullEmployee implements IEmployee {
         return false;
     }
 
-    public boolean updatePassword(String newPassword, String oldPassword){
+    public boolean setPassword(String newPassword, String oldPassword){
         return false;
     }
 
-    public boolean updateUsername(String newUsername, String password){
+    public boolean setUsername(String newUsername, String password){
         return false;
     }
 }

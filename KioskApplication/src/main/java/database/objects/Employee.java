@@ -124,7 +124,7 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param oldPassword
      * @return true = Old Password is correct and Password has been updated
      */
-    public boolean updatePassword(String newPassword, String oldPassword){
+    public boolean setPassword(String newPassword, String oldPassword){
         boolean valid = validatePassword(oldPassword);
         if(valid){
             password=BCrypt.hashpw(newPassword, BCrypt.gensalt());
@@ -138,7 +138,7 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
      * @param password
      * @return true = password is correct and username is changed
      */
-    public boolean updateUsername(String newUsername, String password){
+    public boolean setUsername(String newUsername, String password){
         boolean updated = validatePassword(password);
         if (updated){
             this.username =newUsername;
@@ -152,6 +152,10 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public ArrayList<String> getOptions() {
