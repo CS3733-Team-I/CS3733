@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utility.csv.CsvFileUtil;
 
+import javax.swing.*;
+
 public class Main extends Application {
 
     @Override
@@ -31,6 +33,10 @@ public class Main extends Application {
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
 
         primaryStage.setScene(mainScene);
+
+        // Cleanup
+        MainWindowController controller = mainWindowLoader.getController();
+        primaryStage.setOnHidden(e -> controller.shutdown());
         primaryStage.show();
         mainWindowController.postDisplaySetup();
 
@@ -52,6 +58,12 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        // Throw a nice little title page up on the screen first
+        SplashScreen splash = new SplashScreen(10000);
+
+        // Normally, we'd call splash.showSplash() and get on
+        // with the program. But, since this is only a test...
+        splash.showSplash(true);
         launch(args);
     }
 }

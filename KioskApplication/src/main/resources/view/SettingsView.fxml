@@ -6,8 +6,10 @@
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -133,6 +135,17 @@
               <content>
                 <AnchorPane fx:id="employeesPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="800.0" prefWidth="800.0" />
               </content>
+            </Tab>
+            <Tab fx:id="generalTab" text="General">
+               <content>
+                  <AnchorPane fx:id="generalPane" minHeight="0.0" minWidth="0.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="33.0" layoutY="82.0" text="Timeout Length" />
+                        <TextField fx:id="timeoutLength" layoutX="124.0" layoutY="78.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="25.0" prefWidth="57.0" />
+                        <Button layoutX="237.0" layoutY="225.0" mnemonicParsing="false" onAction="#saveGeneral" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" text="Save" />
+                     </children>
+                  </AnchorPane>
+               </content>
             </Tab>
          </tabs>
       </JFXTabPane>

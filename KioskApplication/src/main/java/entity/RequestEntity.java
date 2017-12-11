@@ -2,6 +2,7 @@ package entity;
 
 import database.DatabaseController;
 import database.objects.*;
+import entity.searchEntity.ISearchEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -148,6 +149,18 @@ public class RequestEntity {
         allRequests.addAll(getAllSecurity());
         allRequests.addAll(getAllFoodRequests());
         return allRequests;
+    }
+
+    /**
+     * method that returns all requests in hashmap
+     * @return the requests in hashmap form
+     */
+    public HashMap<String, Request> getallRequestsHM() {
+        HashMap<String,Request> all = new HashMap<>();
+            all.putAll(interpreterRequests);
+            all.putAll(foodRequests);
+           all.putAll(securityRequests);
+        return all;
     }
 
     /**

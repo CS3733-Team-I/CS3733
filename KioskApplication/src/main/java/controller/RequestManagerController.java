@@ -9,16 +9,22 @@ import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
+import entity.SystemSettings;
+import entity.searchEntity.ISearchEntity;
+import entity.searchEntity.SearchNode;
+import entity.searchEntity.SearchRequest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import utility.KioskPermission;
@@ -28,6 +34,7 @@ import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static utility.request.RequestProgressStatus.DONE;
@@ -50,6 +57,27 @@ public class RequestManagerController extends ScreenController {
     @FXML private JFXCheckBox foodFilter,janitorFilter,securityFilter,
             interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
 
+    //Anchor Pane to contain the search bar
+    @FXML private AnchorPane searchAnchor;
+    private SearchController searchController;
+    private javafx.scene.Node searchView;
+
+
+    @FXML
+    public void initialize() throws IOException{
+        //search related
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        ArrayList<ISearchEntity> searchRequest = new ArrayList<>();
+        for(Request targetRequest : r.getAllRequests()) {
+            searchRequest.add(new SearchRequest(targetRequest));
+        }
+        searchController = new SearchController(this, searchRequest);
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+        this.searchAnchor.getChildren().add(searchView);
+        searchController.setSearchFieldPromptText("Search Request");
+        searchController.resizeSearchbarWidth(160.0);
+    }
 
     public RequestManagerController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -197,7 +225,7 @@ public class RequestManagerController extends ScreenController {
      * Creates what goes into the popup when a listview cell is selected
      * @param requestID To determine which request to display the information of
      */
-    public void initializePopup(String requestID){
+    public void initializePopup(String requestID) throws IOException{
 
         JFXButton more = new JFXButton("More");
         JFXButton statusUpdater = new JFXButton();
@@ -374,6 +402,12 @@ public class RequestManagerController extends ScreenController {
                 doneRequests();
                 break;
         }
+        //update search
+        ArrayList<ISearchEntity> searchRequest = new ArrayList<>();
+        for(Request targetRequest : r.getAllRequests()) {
+            searchRequest.add(new SearchRequest(targetRequest));
+        }
+        searchController.reset(searchRequest);
     }
 
     /**

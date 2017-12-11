@@ -128,10 +128,10 @@ public class PathWaypointView extends AnchorPane {
         youarehereLabel.setPrefHeight(48);
         youarehereLabel.setPrefWidth(48);
 
-        youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
-        youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
+        youarehereLabel.setLayoutX(SystemSettings.getInstance().getKioskLocation().getXcoord()-24);
+        youarehereLabel.setLayoutY(SystemSettings.getInstance().getKioskLocation().getYcoord()-24);
 
-        SystemSettings.getInstance().getDefaultnode().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
+        SystemSettings.getInstance().getKioskLocation().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 getChildren().remove(youarehereLabel);
@@ -139,7 +139,7 @@ public class PathWaypointView extends AnchorPane {
                 getChildren().add(youarehereLabel);
             }
         });
-        SystemSettings.getInstance().getDefaultnode().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
+        SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 getChildren().remove(youarehereLabel);
