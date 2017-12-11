@@ -687,13 +687,13 @@ public class MapController {
 
     @FXML
     public void recenterPressed() {
-        setFloorSelector(systemSettings.getDefaultnode().getFloor());
+        setFloorSelector(systemSettings.getKioskLocation().getFloor());
         onFloorSelected();
         LinkedList<Node> defaultNode = new LinkedList<Node>();
-        defaultNode.add(systemSettings.getDefaultnode());
+        defaultNode.add(systemSettings.getKioskLocation());
         zoomOnSelectedNodes(defaultNode);
-        this.scrollPane.setHvalue(SystemSettings.getInstance().getDefaultnode().getXcoord()/mapView.getFitWidth()-0.04);
-        this.scrollPane.setVvalue(SystemSettings.getInstance().getDefaultnode().getYcoord()/mapView.getFitHeight()-0.04);
+        this.scrollPane.setHvalue(SystemSettings.getInstance().getKioskLocation().getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(SystemSettings.getInstance().getKioskLocation().getYcoord()/mapView.getFitHeight()-0.04);
     }
 
     /**
