@@ -34,6 +34,11 @@ public class SMS extends Email implements MessageTemplate {
         if(phoneNumber.length() == 9) {
             phoneNumber = "1" + phoneNumber;
         }
+        else {
+            if(!phoneNumber.startsWith("1")) {
+                throw new InvalidPhoneNumberException();
+            }
+        }
         return phoneNumber;
     }
 

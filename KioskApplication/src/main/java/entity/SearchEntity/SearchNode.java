@@ -21,6 +21,14 @@ public class SearchNode implements ISearchEntity{
     public SearchNode(Node node) {
         this.databaseNode = node;
         this.distance = new SimpleIntegerProperty(MapEntity.getInstance().getDistanceFromKiosk(node));
+
+        if(SystemSettings.getInstance().isMetric()) {
+            distance.set((int)MapEntity.getInstance().getDistanceFromKioskMeters(node));
+        }
+        else {
+            distance.set((int)MapEntity.getInstance().getDistanceFromKioskFeet(node));
+        }
+
         String distanceString = "";
         //Check for number System
         if(SystemSettings.getInstance().isArabic()) {

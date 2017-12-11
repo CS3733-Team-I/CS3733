@@ -214,6 +214,7 @@ public class LoginEntity {
                 Employee tempEmployee=new Employee(userName,lastName,firstName, password, optionsString, permission,
                         serviceAbility);
                 int ID = database.addEmployee(tempEmployee,password);
+                database.insertEmployeeIntoView(tempEmployee);
                 logins.put(userName,database.getEmployee(ID));
                 // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
                 return true;
@@ -238,6 +239,7 @@ public class LoginEntity {
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
                 logins.remove(username);
+                database.deleteEmployeeFromView(delEmp);
                 database.removeEmployee(delEmp.getID());
                 return true;
             }
