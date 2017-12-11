@@ -47,9 +47,7 @@ public class SettingsController extends ScreenController {
 
     @FXML private TextField beamWidth;
     @FXML private TextField timeoutLength;
-
-    private FXMLLoader employeeLoader;
-
+    
     private FXMLLoader employeeLoader;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
@@ -146,10 +144,6 @@ public class SettingsController extends ScreenController {
                 }
             }
         });
-<<<<<<< HEAD
-
-=======
->>>>>>> 3ba7e9d5c67e5a8b4b96792a9b868509ad7c578d
     }
 
     /**
