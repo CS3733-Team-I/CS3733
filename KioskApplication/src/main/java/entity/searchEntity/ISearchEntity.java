@@ -6,4 +6,5 @@ public interface ISearchEntity {
     public Object getData();
     public String getSearchString();
     public ImageView getIcon();
+    public String getComparingString();
 }

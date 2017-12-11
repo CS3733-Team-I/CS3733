@@ -102,4 +102,8 @@ public class SearchNode implements ISearchEntity{
     public Object getData() {
         return databaseNode;
     }
+
+    public String getComparingString() {
+        return databaseNode.getNodeID();
+    }
 }

@@ -128,7 +128,7 @@ public class SearchController {
 
                     for (ISearchEntity searchEntity : searchResults) {
                         //TODO Search String vs Node ID?
-                        if (searchEntity.getSearchString().equalsIgnoreCase(iSearchEntity.getSearchString())) {
+                        if (searchEntity.getComparingString().equalsIgnoreCase(iSearchEntity.getComparingString())) {
                             return true;
                         }
                     }
