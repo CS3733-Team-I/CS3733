@@ -12,7 +12,10 @@ import java.util.Set;
 
 public class Beam implements SearchAlgorithm {
     /**
-     * beam search  TODO: expand this comment so it actually explains the algorithm
+     * beam search
+     * searchs connected nodes in beam map checks if they are the end node, if not then add those nodes to set.
+     * compare the heristic values nodes in set and put the lowest heristic values in beam list
+     * beamwidth = controls the beam size to search from set in admin ui system settings
      * @param startNode node that the path should start at
      * @param endNode node that the path should end at
      * @return

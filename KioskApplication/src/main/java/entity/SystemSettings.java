@@ -1,8 +1,10 @@
 package entity;
 
+import database.connection.NotFoundException;
 import database.objects.Node;
 import pathfinder.*;
 
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -11,9 +13,15 @@ import java.util.prefs.Preferences;
 public class SystemSettings extends Observable {
     private Preferences prefs;
     private SearchAlgorithm algorithm;
-    private Node defaultnode;
+    private Node kioskLocation;
     private int beamWidth;
     private ResourceBundle resourceBundle;
+    private static final String kioskLocationKey = "kioskLocation";
+    private static final String searchAlgorithmKey = "searchAlgorithm";
+    private static final String beamWidthKey = "beamWidth";
+    private String defaultKioskLocationID = "IHALL00303";
+    private String defaultBeamWidth = "3";
+    private String defaultSearchAlgorithm = "A*";
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -22,10 +30,34 @@ public class SystemSettings extends Observable {
 
     private SystemSettings () {
         super();
+        MapEntity map = MapEntity.getInstance();
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
-        this.setAlgorithm(this.prefs.get("searchAlgorithm", "A*"));   //Retrieve saved algorithm setting;
-        this.setDefaultnode(this.prefs.get("defaultNode","IHALL00303"));
-        this.setBeamWidth(this.prefs.get("beamWidth", "3"));
+        this.setAlgorithm(this.prefs.get(this.searchAlgorithmKey, "A*"));   //Retrieve saved algorithm setting;
+        //Retrieve saved kiosk location
+        try{
+            this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+        }
+        catch(NotFoundException exception){
+            //If the saved location is not valid, clear it and try again with the default location
+            try {
+                System.err.println("Error: saved kiosk location does not exist.  Resetting kiosk location to default.");
+                this.prefs.remove(this.kioskLocationKey);
+                this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+            } catch (NotFoundException e) {
+                //If the default node doesn't exist either, print an error and reset the default to something that does exist.
+                System.err.println("Error: default kiosk location does not exist.  Getting a new default from the map.");
+                //Change the default node to the first node in the map.
+                this.defaultKioskLocationID = map.getAllNodes().getFirst().getNodeID();
+                //Now, we should be able to get the new default location.
+                try {
+                    this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+                } catch (NotFoundException e1) {
+                    //If THAT doesn't work, something very strange is happening.
+                    e1.printStackTrace();
+                }
+            }
+        }
+        this.setBeamWidth(this.prefs.get(this.beamWidthKey, "3"));
         //this.setResourceBundle(this.prefs.get("Internationalization","English"));
         this.setResourceBundle("English");
         //if not set, default to A*
@@ -75,19 +107,18 @@ public class SystemSettings extends Observable {
         return prefs;
     }
 
-    public void setDefaultnode(String defaultnodeID){
+    public void setKioskLocation(String kioskLocationID){
         MapEntity map = MapEntity.getInstance();
-        for(Node node:map.getAllNodes()){
-            if(defaultnodeID.equals(node.getNodeID())) {
-                this.defaultnode = node;
-                this.prefs.put("defaultNode", node.getNodeID());
-                return;
-            }
+        try {
+            this.kioskLocation = map.getNode(kioskLocationID);
+            this.prefs.put(this.kioskLocationKey, kioskLocationID);
+        } catch (NotFoundException e) {
+            System.err.println("Error: specified kiosk location does not exist.  Kiosk location not changed.");
         }
     }
 
-    public Node getDefaultnode() {
-        return defaultnode;
+    public Node getKioskLocation() {
+        return kioskLocation;
     }
 
     /**
@@ -96,7 +127,7 @@ public class SystemSettings extends Observable {
      */
     public void setBeamWidth(String beamWidth) {
         this.beamWidth = Integer.parseInt(beamWidth);
-        this.prefs.put("beamWidth",beamWidth);
+        this.prefs.put(this.beamWidthKey,beamWidth);
     }
 
     /**
@@ -131,5 +162,9 @@ public class SystemSettings extends Observable {
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void updateDistance() {
+        MapEntity.getInstance().updateDistanceFromKisok(getKioskLocation());
     }
 }

@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import utility.node.NodeSelectionType;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class NodesEdgesView extends AnchorPane {
@@ -65,7 +64,7 @@ public class NodesEdgesView extends AnchorPane {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
 
                         view.setPickOnBounds(false);
-                        if(SystemSettings.getInstance().getDefaultnode().getNodeID().equals(node.getNodeID()))
+                        if(SystemSettings.getInstance().getKioskLocation().getNodeID().equals(node.getNodeID()))
                             view.setImage(node);
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);

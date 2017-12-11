@@ -6,14 +6,18 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
+import entity.SearchNode;
 import entity.SystemSettings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,9 +36,9 @@ import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
+import utility.node.NodeType;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -50,24 +54,38 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private ImageView removeIconView;
     @FXML private JFXButton btNavigate;
     @FXML private  JFXButton btClearPath;
+
+    @FXML private JFXButton btExit;
+    @FXML private JFXButton btRestRoom;
+    @FXML private JFXButton btRestaurant;
+    @FXML private JFXButton btElevator;
+
     private Boolean isAddingWaypoint;
 
     private LinkedList<Node> currentWaypoints;
 
     private SystemSettings systemSettings;
 
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
+
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
         currentWaypoints = new LinkedList<>();
         systemSettings = SystemSettings.getInstance();
-
         isAddingWaypoint = true;
+        searchController = new SearchController(this);
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException{
+        //initialize search
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+
         // Set containers to be transparent to mouse events
-        System.out.println("initializing");
         ResourceBundle rB = systemSettings.getResourceBundle();
         getMapController().setFloorSelector(NodeFloor.THIRD);
         container.setPickOnBounds(false);
@@ -76,6 +94,9 @@ public class PathfindingSidebarController extends ScreenController {
         waypointListView.setSelectionModel(new NoSelectionModel<>());
         exceptionText.setText("");
 
+        /**
+         * load images for nearest exit, elevatior, food and restroom
+         */
         Image addIcon = ResourceManager.getInstance().getImage("/images/icons/plus.png");
         ImageView infoIconView = new ImageView(addIcon);
         infoIconView.setFitHeight(24);
@@ -85,6 +106,30 @@ public class PathfindingSidebarController extends ScreenController {
         ImageView removeView = new ImageView(removeIcon);
         removeView.setFitHeight(24);
         removeView.setFitWidth(24);
+
+        Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/food.png");
+        ImageView foodIconView = new ImageView(foodIcon);
+        foodIconView.setFitHeight(48);
+        foodIconView.setFitWidth(48);
+        btRestaurant.setGraphic(foodIconView);
+
+        Image exitIcon = ResourceManager.getInstance().getImage("/images/icons/exit.png");
+        ImageView exitView = new ImageView(exitIcon);
+        exitView.setFitHeight(48);
+        exitView.setFitWidth(48);
+        btExit.setGraphic(exitView);
+
+        Image elevIcon = ResourceManager.getInstance().getImage("/images/icons/elevator.png");
+        ImageView elevIconView = new ImageView(elevIcon);
+        elevIconView.setFitHeight(48);
+        elevIconView.setFitWidth(48);
+        btElevator.setGraphic(elevIconView);
+
+        Image restroomIcon = ResourceManager.getInstance().getImage("/images/icons/restroom.png");
+        ImageView restroomIconView = new ImageView(restroomIcon);
+        restroomIconView.setFitHeight(48);
+        restroomIconView.setFitWidth(48);
+        btRestRoom.setGraphic(restroomIconView);
 
         addWaypointBox();
 
@@ -107,9 +152,36 @@ public class PathfindingSidebarController extends ScreenController {
             btNavigate.setText(resB.getString("my.navigate"));
             //btClear.setText(resB.getString("clear"));
 
-            btNavigate.setText(resB.getString("navigate"));
-            //waypointLabel.setText(resB.getString("waypoints"));
-            btClearPath.setText(resB.getString("clearpath"));
+        });
+
+        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
+            @Override
+            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
+                if (newValue != null) {
+                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                    }
+                    LinkedList<Node> displayedNode = new LinkedList<>();
+                    displayedNode.add(newValue.getDatabaseNode());
+                    getMapController().zoomOnSelectedNodes(displayedNode);
+                    onMapNodeClicked(newValue.getDatabaseNode());
+                }
+            }
+        });
+
+        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
+            @Override
+            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
+                if (newValue != null) {
+                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                    }
+                    LinkedList<Node> displayedNode = new LinkedList<>();
+                    displayedNode.add(newValue.getDatabaseNode());
+                    getMapController().zoomOnSelectedNodes(displayedNode);
+                    onMapNodeClicked(newValue.getDatabaseNode());
+                }
+            }
         });
     }
 
@@ -124,6 +196,9 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().clearMap();
         getMapController().getMiniMapController().clearMiniWaypoint();
         getMapController().reloadDisplay();
+
+        //reset search
+        searchController.reset();
     }
 
     public void enableNavBtn(){
@@ -143,11 +218,12 @@ public class PathfindingSidebarController extends ScreenController {
             if(currentWaypoints.size() == 1) {
                 isAddingWaypoint = true;
                 Node end = removeWaypoint(currentWaypoints.get(0));
-                onMapNodeClicked(SystemSettings.getInstance().getDefaultnode());
+                onMapNodeClicked(SystemSettings.getInstance().getKioskLocation());
                 isAddingWaypoint = true;
                 onMapNodeClicked(end);
             }
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+
             try{
                 Path path = pathfinder.generatePath(currentWaypoints);
                 getMapController().setPath(path);
@@ -419,21 +495,19 @@ public class PathfindingSidebarController extends ScreenController {
      * create add waypoint list cell
      */
     //TODO make addwaypointbox always the last one
-    private void addWaypointBox() {
+    private void addWaypointBox(){
         HBox addWaypointBox = new HBox();
 
         addWaypointBox.setAlignment(Pos.CENTER_LEFT);
 
-        TextField addWaypointLabel = new TextField();
-        addWaypointLabel.setPromptText(
+//        TextField addWaypointLabel = new TextField();
+        searchController.setSearchFieldPromptText(
                 SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
-        addWaypointLabel.setPrefWidth(300);
-        addWaypointLabel.setStyle("-fx-font-weight:bold; -fx-font-size: 12pt; ");
-        addWaypointLabel.setPadding(new Insets(0, 0, 0, 10));
-        addWaypointLabel.setOnMouseMoved(e -> resetTimer());
-        addWaypointLabel.setOnMousePressed(e -> resetTimer());
+        searchView.setOnMouseMoved(e -> resetTimer());
+        searchView.setOnMousePressed(e -> resetTimer());
+       /// searchView
         systemSettings.addObserver((o, arg) -> {
-            addWaypointLabel.setText(systemSettings.getResourceBundle().getString("my.searchprompt"));
+            searchController.setSearchFieldPromptText(systemSettings.getResourceBundle().getString("my.searchprompt"));
         });
 
         JFXButton btNewWayPoint = new JFXButton("");
@@ -444,7 +518,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNewWayPoint.setOnAction(event -> isAddingWaypoint = true);
         btNewWayPoint.setTooltip(new Tooltip("Add Waypoint"));
 
-        addWaypointBox.getChildren().addAll(btNewWayPoint, addWaypointLabel);
+        addWaypointBox.getChildren().addAll(btNewWayPoint, searchView);
         addWaypointBox.setAccessibleText("add waypoint");
 
         Iterator<HBox> addwaypointIterator = waypointListView.getItems().iterator();
@@ -457,5 +531,29 @@ public class PathfindingSidebarController extends ScreenController {
         waypointListView.getItems().add(addWaypointBox);
 //        addWaypointBoxIndex = waypointListView.getItems().indexOf(addWaypointBox);
 
+    }
+
+
+    /**
+     * get the nearest node of required type to the default kiosk location
+     */
+    @FXML
+    private void handleButtonAction(ActionEvent e) throws  PathfinderException {
+        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+        Node node = new Node("");
+        if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);
+        }
+        else if((JFXButton)e.getTarget() == btElevator) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.ELEV, true);
+        }
+        else if((JFXButton)e.getTarget() == btRestaurant) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.RETL, true);
+        }
+        else if((JFXButton)e.getTarget() == btExit) {
+            node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.EXIT, true);
+        }
+        isAddingWaypoint = true;
+        onMapNodeClicked(node);
     }
 }

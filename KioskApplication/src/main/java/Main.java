@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import utility.csv.CsvFileUtil;
 
@@ -32,9 +31,13 @@ public class Main extends Application {
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
 
         primaryStage.setScene(mainScene);
+
+        // Cleanup
+        MainWindowController controller = mainWindowLoader.getController();
+        primaryStage.setOnHidden(e -> controller.shutdown());
         primaryStage.show();
         mainWindowController.postDisplaySetup();
-        
+
         EmailSender.init();
         /*Email email = new Email.Builder("jflparrick@gmail.com")
                 .setAttachment(null)

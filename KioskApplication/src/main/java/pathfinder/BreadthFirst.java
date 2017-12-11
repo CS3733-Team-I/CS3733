@@ -3,6 +3,7 @@ package pathfinder;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
+import utility.node.NodeType;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -79,6 +80,49 @@ public class BreadthFirst implements SearchAlgorithm{
             }
         }
         return holder;
+    }
+
+    /**
+     * Uses the Breadth First search algorithm to find a nearest node of required type
+     * @param startNode node to start navigation from
+     * @param nodeType  required nodeType
+     * @return nearest node of required type
+     * @throws PathfinderException if there are errors
+     */
+    public Node findPathToNearestType(Node startNode, NodeType nodeType, boolean wheelchairAccessible) throws PathfinderException {
+        MapEntity map = MapEntity.getInstance();
+
+        StartNode startingNode = new StartNode(startNode);
+
+        if(startingNode.getNode().getNodeType() == nodeType) {
+            return startingNode.getNode();
+        }
+
+        // make linked list for queue and explored
+        LinkedList<PathfinderNode> queue = new LinkedList<>();
+        ArrayList<PathfinderNode> explored = new ArrayList<>();
+        queue.add(startingNode);
+
+        while(!queue.isEmpty()){
+            // remove first in index
+            PathfinderNode current = queue.remove(0);
+            if(current.node.getNodeType() == nodeType) {
+                // we found our path now generate it
+                return current.node;
+            }
+            else{
+                if(getAndCheckForConnectedNodes(explored, current, wheelchairAccessible).isEmpty()){
+                    // no path is found throw excepetion
+                }
+                else{
+                    // add connected nodes not explored in queue
+                    queue.addAll(getAndCheckForConnectedNodes(explored, current, wheelchairAccessible));
+                }
+            }
+            // add to explored list
+            explored.add(current);
+        }
+        return null;
     }
 }
 

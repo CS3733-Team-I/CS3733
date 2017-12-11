@@ -9,6 +9,8 @@ import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
 import javafx.animation.PathTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -43,6 +45,8 @@ public class PathWaypointView extends AnchorPane {
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
+
+    private Label youarehereLabel;
 
     private ArrayList<Color> segmentColorList;
 
@@ -119,13 +123,30 @@ public class PathWaypointView extends AnchorPane {
         youarehereView.setFitHeight(48);
         youarehereView.setFitWidth(48);
 
-        Label youarehereLabel = new Label();
+        youarehereLabel = new Label();
         youarehereLabel.setGraphic(youarehereView);
         youarehereLabel.setPrefHeight(48);
         youarehereLabel.setPrefWidth(48);
 
-        youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
-        youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
+        youarehereLabel.setLayoutX(SystemSettings.getInstance().getKioskLocation().getXcoord()-24);
+        youarehereLabel.setLayoutY(SystemSettings.getInstance().getKioskLocation().getYcoord()-24);
+
+        SystemSettings.getInstance().getKioskLocation().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutX(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });
+        SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutY(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });
 
         getChildren().add(youarehereLabel);
     }
