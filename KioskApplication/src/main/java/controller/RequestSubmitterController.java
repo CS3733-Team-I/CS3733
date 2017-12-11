@@ -268,7 +268,7 @@ public class RequestSubmitterController extends ScreenController {
 
         checkboxColumn.setCellFactory( tc -> new CheckBoxTreeTableCell<>());
         checkboxColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, Boolean> p) -> {
-            if (p.getValue().isLeaf()) {
+            if (!p.getValue().isLeaf()) {
                 return new ReadOnlyBooleanWrapper(false);
             } else {
                 return p.getValue().getValue().selectedProperty();
@@ -345,13 +345,20 @@ public class RequestSubmitterController extends ScreenController {
      */
     public void addFoodRequest(){
         String order = "Order:";
-        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
-            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
-            if (item.isLeaf()) {
-                order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+//        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
+        for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
+            for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
+                String fooditem = item.getValue().getName();
+                if (item.isLeaf() && item.getValue().selectedProperty().get() &&
+                        !(item.getValue().getName().equals("Drinks") ||
+                                item.getValue().getName().equals("Entrees") ||
+                                item.getValue().getName().equals("Sides"))){
+                    order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+                }
+//            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
             }
         }
-
+        order = order.trim();
         if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
         requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,

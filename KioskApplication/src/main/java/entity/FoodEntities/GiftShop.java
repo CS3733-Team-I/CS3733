@@ -6,7 +6,6 @@ import utility.FoodType;
 
 public class GiftShop extends IFoodMenu {
 
-
     public GiftShop() {
         FoodMenuItem chips = new FoodMenuItem("Chips", 1.50, FoodType.SIDE);
         FoodMenuItem candyBar = new FoodMenuItem("Candy Bar", 0.99, FoodType.SIDE);
@@ -16,6 +15,6 @@ public class GiftShop extends IFoodMenu {
         FoodMenuItem gatorade = new FoodMenuItem("Gatorade", 1.99, FoodType.DRINK);
         FoodMenuItem lemonade = new FoodMenuItem("Lemonade", 2.50, FoodType.DRINK);
 
-
+        menuItems.addAll(chips,candyBar,popcorn,bigPretz,water,gatorade,lemonade);
     }
 }
