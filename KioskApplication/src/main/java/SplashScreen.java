@@ -2,6 +2,7 @@ import utility.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 
 /**
  * From https://alvinalexander.com/java/edu/SplashScreen/node9.shtml
@@ -10,21 +11,23 @@ import java.awt.*;
 
 public class SplashScreen extends JWindow {
 
-    private int duration;
+    private JProgressBar jProgressBar;
 
-    public SplashScreen(int d) {
-        duration = d;
-    }
+    public SplashScreen() { }
 
     // A simple little method to show a title screen in the center
     // of the screen for the amount of time given in the constructor
-    public void showSplash(boolean visablility) {
+    public void showSplash() {
 
         JPanel content = (JPanel) getContentPane();
         content.setBackground(Color.white);
 
+        jProgressBar = new JProgressBar(0,100);
+        jProgressBar.setValue(0);
+        jProgressBar.setStringPainted(true);
+
         // Set the window's bounds, centering the window
-        int width = 200;
+        int width = 650;
         int height = 200;
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - width) / 2;
@@ -32,9 +35,9 @@ public class SplashScreen extends JWindow {
         setBounds(x, y, width, height);
 
         // Build the splash screen
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("images/BWH_Logo.png")); // load the image to a imageIcon
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("images/BWH_logo_rgb_pos.jpg")); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
-        Image newimg = image.getScaledInstance(120, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        Image newimg = image.getScaledInstance(590, 120,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);  // transform it back
         JLabel label = new JLabel(imageIcon);
        // JLabel title = new JLabel("Team I's Kiosk");
@@ -43,32 +46,32 @@ public class SplashScreen extends JWindow {
                 ("© Brigham & Women’s Hospital 2017", JLabel.CENTER);
         copyrt.setFont(new Font("Sans-Serif", Font.BOLD, 12));
        // content.add(title,BorderLayout.NORTH);
+        content.add(jProgressBar, BorderLayout.PAGE_START);
         content.add(label, BorderLayout.CENTER);
         content.add(copyrt, BorderLayout.SOUTH);
-        //Color oraRed = new Color(156, 20, 20, 255);
-        //content.setBorder(BorderFactory.createLineBorder(oraRed, 10));
+        Color borderblue = new Color(0, 88, 159, 255);
+        content.setBorder(BorderFactory.createLineBorder(borderblue, 10));
 
         // Display it
-        setVisible(visablility);
-
-        // Wait a little while, maybe while loading resources
-        /*try {
-            Thread.sleep(duration);
-        } catch (Exception e) {
-        }*/
-        //setVisible(false);
+        setVisible(true);
 
     }
 
     public void showSplashAndExit() {
 
-        showSplash(true);
+        showSplash();
         System.exit(0);
 
     }
+    /**
+     * Invoked when task's progress property changes.
+     */
+    public void propertyChange(int progress) {
+            jProgressBar.setValue(progress);
+    }
 
     public void Exit(){
-        this.showSplash(false);
+        setVisible(false);
     }
 
 }

@@ -13,29 +13,38 @@ import utility.csv.CsvFileUtil;
 import javax.swing.*;
 
 public class Main extends Application {
-
     @Override
     public void start(Stage primaryStage) throws Exception{
+        int progress =0;
+        // Throw a nice little title page up on the screen first
+        SplashScreen splash = new SplashScreen();
+        //Splash Screen
+        splash.showSplash();
         MapEntity.getInstance().readAllFromDatabase();
+        splash.propertyChange(10);
         if (MapEntity.getInstance().getAllNodes().size() == 0)
             CsvFileUtil.getInstance().readAllCsvs();
-
+        splash.propertyChange(20);
         SystemSettings.getInstance();
-
         MainWindowController mainWindowController = new MainWindowController();
+        splash.propertyChange(30);
         FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
+        splash.propertyChange(40);
         mainWindowLoader.setController(mainWindowController);
+        splash.propertyChange(50);
         mainWindowLoader.load();
+        splash.propertyChange(60);
         primaryStage.setTitle("Final Iteration");
-
+        splash.propertyChange(70);
         Scene mainScene = new Scene(mainWindowLoader.getRoot(), 1280, 720);
         final ObservableList<String> stylesheets = mainScene.getStylesheets();
+        splash.propertyChange(80);
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
-
+        splash.propertyChange(90);
         primaryStage.setScene(mainScene);
+        splash.propertyChange(100);
         primaryStage.show();
         mainWindowController.postDisplaySetup();
-
         EmailSender.init();
         /*Email email = new Email.Builder("jflparrick@gmail.com")
                 .setAttachment(null)
@@ -51,15 +60,11 @@ public class Main extends Application {
                 .build();
         EmailSender.sendEmail(sms);
         */
+        //splash.propertyChange(progress++);
+        splash.Exit();
     }
 
     public static void main(String[] args) {
-        // Throw a nice little title page up on the screen first
-        SplashScreen splash = new SplashScreen(10000);
-
-        // Normally, we'd call splash.showSplash() and get on
-        // with the program. But, since this is only a test...
-        splash.showSplash(true);
         launch(args);
     }
 }
