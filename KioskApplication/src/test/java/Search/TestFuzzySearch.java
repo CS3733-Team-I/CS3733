@@ -227,12 +227,12 @@ public class TestFuzzySearch {
         String search = "Obstetrics Department";
 
         try{
-        LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
-        Node answer = map.getNode("NODE61");
+            LinkedList<Node> list = fuzzySearch.fuzzySearch(search);
+            Node answer = map.getNode("NODE61");
 
-       assertTrue(list.contains(answer));
+            assertTrue(list.contains(answer));
         }
-       catch(Exception e){
+        catch(Exception e){
             assertTrue(false);
         }
     }

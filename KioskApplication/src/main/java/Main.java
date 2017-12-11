@@ -42,6 +42,10 @@ public class Main extends Application {
         stylesheets.addAll(getClass().getResource("/css/application.css").toExternalForm());
         splash.propertyChange(90);
         primaryStage.setScene(mainScene);
+
+        // Cleanup
+        MainWindowController controller = mainWindowLoader.getController();
+        primaryStage.setOnHidden(e -> controller.shutdown());
         splash.propertyChange(100);
         primaryStage.show();
         mainWindowController.postDisplaySetup();
