@@ -50,6 +50,8 @@ public class SettingsController extends ScreenController {
 
     private FXMLLoader employeeLoader;
 
+    private FXMLLoader employeeLoader;
+
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
     ToggleGroup languageSelectToggleGroup = new ToggleGroup();
     public SettingsController(MainWindowController parent, MapController mapController) {
@@ -144,7 +146,10 @@ public class SettingsController extends ScreenController {
                 }
             }
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3ba7e9d5c67e5a8b4b96792a9b868509ad7c578d
     }
 
     /**

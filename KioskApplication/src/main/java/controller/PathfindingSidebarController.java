@@ -171,6 +171,21 @@ public class PathfindingSidebarController extends ScreenController {
                 }
             }
         });
+
+        searchController.getCBValueProperty().addListener(new ChangeListener<SearchNode>() {
+            @Override
+            public void changed(ObservableValue<? extends SearchNode> observable, SearchNode oldValue, SearchNode newValue) {
+                if (newValue != null) {
+                    if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
+                        getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                    }
+                    LinkedList<Node> displayedNode = new LinkedList<>();
+                    displayedNode.add(newValue.getDatabaseNode());
+                    getMapController().zoomOnSelectedNodes(displayedNode);
+                    onMapNodeClicked(newValue.getDatabaseNode());
+                }
+            }
+        });
     }
 
     @FXML
