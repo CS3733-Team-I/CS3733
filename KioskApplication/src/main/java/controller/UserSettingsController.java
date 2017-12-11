@@ -3,6 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
+import database.connection.NotFoundException;
 import entity.LoginEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -29,14 +30,21 @@ public class UserSettingsController {
     void onUserSave() {
         if(passwordBoxOld.getText() == null || passwordBoxOld.getText().equals("")){
             errLabel.setText("Old Password Required");
+            return;
         }
         else if(passwordBoxNew.getText() == null || passwordBoxNew.getText().equals("")){
             errLabel.setText("New Password Required");
+            return;
         }
-        else if (LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())){
-            errLabel.setText("Password Changed!");
-            passwordBoxOld.setText("");
-            passwordBoxNew.setText("");
+        try {
+            if(LoginEntity.getInstance().updatePassword(passwordBoxNew.getText(), passwordBoxOld.getText())) {
+                errLabel.setText("Password Changed!");
+                passwordBoxOld.clear();
+                passwordBoxNew.clear();
+            }
+            else {errLabel.setText("Incorrect Password");}
+        } catch (NotFoundException e){
+            errLabel.setText("Unable to find current login, complete kiosk setup");
         }
     }
 

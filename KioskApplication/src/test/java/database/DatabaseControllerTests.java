@@ -16,6 +16,7 @@ import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,17 +32,6 @@ public class DatabaseControllerTests {
 
     public DatabaseControllerTests() {
         dbController = DatabaseController.getInstance();
-    }
-
-    @Before
-    public void statrtup(){
-        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
-                "password","",KioskPermission.EMPLOYEE,RequestType.GENERAL);
-        emp1ID=dbController.addEmployee(emp1,"password");
-
-        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
-                "password","",KioskPermission.EMPLOYEE,RequestType.GENERAL);
-        emp2ID=dbController.addEmployee(emp2,"password");
     }
 
     @After
@@ -199,6 +189,9 @@ public class DatabaseControllerTests {
 
     @Test
     public void testInterpreterRequestAdd() throws DatabaseException{
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp1ID=dbController.addEmployee(emp1,"password");
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -213,6 +206,13 @@ public class DatabaseControllerTests {
 
     @Test
     public void testInterpreterRequestUpdate() throws DatabaseException{
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp1ID=dbController.addEmployee(emp1,"password");
+
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp2ID=dbController.addEmployee(emp2,"password");
         Node node1 = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -244,6 +244,9 @@ public class DatabaseControllerTests {
 
     @Test
     public void testInterpreterRequestDelete() throws DatabaseException {
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp1ID=dbController.addEmployee(emp1,"password");
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -261,6 +264,9 @@ public class DatabaseControllerTests {
 
     @Test
     public void testInterpreterRequestRemoveAssociatedNode() throws DatabaseException {
+        Employee emp1 = new Employee("boss@hospital.com","Wong","Wilson",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp1ID=dbController.addEmployee(emp1,"password");
         Node node = new Node("NODE1", 123, 472,
                 NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
                 "Test node", "TN1", "I");
@@ -288,24 +294,30 @@ public class DatabaseControllerTests {
      */
 
     @Test
-    public void testEmployeeAdd(){
-        Employee testEmp = new Employee("Name","n","t","password","",
+    public void testEmployeeAdd() throws DatabaseException{
+        Employee testEmp = new Employee("Name","n","t","password",new ArrayList<>(),
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         int ID = dbController.addEmployee(testEmp,"password");
         assertEquals("Name",dbController.getEmployee(ID).getUsername());
     }
 
     @Test
-    public void testEmployeeRemove(){
+    public void testEmployeeRemove() throws DatabaseException{
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp2ID=dbController.addEmployee(emp2,"password");
         dbController.removeEmployee(emp2ID);
         assertNull(dbController.getEmployee(emp2ID));
     }
 
     @Test
-    public void testEmployeeUpdate(){
+    public void testEmployeeUpdate() throws DatabaseException{
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.GENERAL);
+        emp2ID=dbController.addEmployee(emp2,"password");
         Employee upEmp = dbController.getEmployee(emp2ID);
-        upEmp.updateUsername("NewName","password");
-        upEmp.updatePassword("NewPassword","password");
+        upEmp.setUsername("NewName","password");
+        upEmp.setPassword("NewPassword","password");
         dbController.updateEmployee(upEmp,"NewPassword");
         Employee updatedEmployee=dbController.getEmployee(emp2ID);
         assertEquals("NewName",updatedEmployee.getUsername());
@@ -313,11 +325,11 @@ public class DatabaseControllerTests {
     }
 
     @Test
-    public void testEmployeeGetAll(){
-        Employee testEmp1=new Employee("Name1","ln1","fn1","password1","",
+    public void testEmployeeGetAll()throws DatabaseException{
+        Employee testEmp1=new Employee("Name1","ln1","fn1","password1",new ArrayList<>(),
                 KioskPermission.EMPLOYEE, RequestType.INTERPRETER);
         dbController.addEmployee(testEmp1,"password1");
-        Employee testEmp2=new Employee("Name2","ln2","fn2","password2","",
+        Employee testEmp2=new Employee("Name2","ln2","fn2","password2",new ArrayList<>(),
                 KioskPermission.ADMIN, RequestType.GENERAL);
         dbController.addEmployee(testEmp2,"password2");
         LinkedList<Employee> employees = dbController.getAllEmployees();
