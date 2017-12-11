@@ -19,13 +19,12 @@ public class NodeFuzzySearch {
      * @param inputtext
      * @return Linked list of 5 top search result nodes
      */
-    public static LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {
+    public static LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {// add boolean
         if (!inputtext.isEmpty()) {
             // put all nodes in hash map
             MapEntity map = MapEntity.getInstance();
             //LinkedList<Node> mapAllNodes = map.getAllNodes();
             HashMap<String, Node> allNodes = map.getAllNodesHM();
-            //TODO figure out permissions
             RequestEntity request = RequestEntity.getInstance();
             HashMap<String, Request> all = request.getallRequestsHM();
             inputtext = inputtext.replaceAll("\\s+","");
