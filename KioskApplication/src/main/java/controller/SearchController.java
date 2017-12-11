@@ -2,8 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import database.objects.Node;
-import entity.MapEntity;
-import entity.SearchNode;
+import entity.searchEntity.ISearchEntity;
 import entity.SystemSettings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -15,9 +14,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.util.StringConverter;
-import pathfinder.FuzzySearch;
-import utility.node.NodeType;
+import pathfinder.NodeFuzzySearch;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,46 +24,46 @@ import java.util.function.Predicate;
 public class SearchController {
 
     @FXML
-    private JFXComboBox<SearchNode> cbNodes;
+    private JFXComboBox<ISearchEntity> cbSearchData;
 
-    private FilteredList<SearchNode> filteredList;
+    private FilteredList<ISearchEntity> filteredList;
 
-    private ObservableList<SearchNode> nodeData;
+    private ObservableList<ISearchEntity> searchData;
 
-    private SortedList<SearchNode> sortedList;
+    private SortedList<ISearchEntity> sortedList;
 
     private ScreenController parent;
 
-    private TableView<SearchNode> nodeTable;
-    FuzzySearch fuzzySearch;
+    private TableView<ISearchEntity> searchTable;
+    NodeFuzzySearch nodeFuzzySearch;
     String value;
 
-    public SearchController(ScreenController parent) {
+    public SearchController(ScreenController parent, ArrayList<ISearchEntity> searchData) {
         this.parent = parent;
-        nodeData = FXCollections.observableArrayList();
-        SystemSettings.getInstance().updateDistance();
-        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
-            if(databaseNode.getNodeType() != NodeType.HALL) {
-                nodeData.add(new SearchNode(databaseNode));
-            }
-        }
+        this.searchData = FXCollections.observableArrayList();
+        this.searchData.addAll(searchData);
+//        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
+//            if(databaseNode.getNodeType() != NodeType.HALL) {
+//                searchData.add(new SearchNode(databaseNode));
+//            }
+//        }
     }
 
     @FXML
     void initialize() {
 
         //initialize the lists
-        fuzzySearch = new FuzzySearch();
-        nodeTable = new TableView<>();
-        filteredList = new FilteredList<>(nodeData, e->true);
+        nodeFuzzySearch = new NodeFuzzySearch();
+        searchTable = new TableView<>();
+        this.filteredList = new FilteredList<>(this.searchData, e->true);
         //set the combo box style and editable
-        cbNodes.setTooltip(new Tooltip());
-        cbNodes.setEditable(true);
-        cbNodes.setPromptText("Search by location, doctor or type");
-        cbNodes.getEditor().setEditable(true);
-        cbNodes.setConverter(new StringConverter<SearchNode>() {
+        cbSearchData.setTooltip(new Tooltip());
+        cbSearchData.setEditable(true);
+        cbSearchData.setPromptText("Search by location, doctor or type");
+        cbSearchData.getEditor().setEditable(true);
+        cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
-            public String toString(SearchNode object) {
+            public String toString(ISearchEntity object) {
                 if(object != null) {
                     return object.getSearchString();
                 }
@@ -72,46 +71,45 @@ public class SearchController {
             }
 
             @Override
-            public SearchNode fromString(String string) {
-                return cbNodes.getItems().stream().filter(searchNode ->
-                        searchNode.getSearchString().equals(string)).findFirst().orElse(null);
+            public ISearchEntity fromString(String string) {
+                return cbSearchData.getItems().stream().filter(ISearchEntity ->
+                        ISearchEntity.getSearchString().equals(string)).findFirst().orElse(null);
             }
         });
 
-        //DONT REMOVE THIS
-        cbNodes.setCellFactory(listView -> new ListCell<SearchNode>() {
+        cbSearchData.setCellFactory(listView -> new ListCell<ISearchEntity>() {
             @Override
-            protected void updateItem(SearchNode item, boolean empty) {
+            protected void updateItem(ISearchEntity item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(item == null || empty) {
                     setGraphic(null);
                 }
                 else {
-                    setGraphic(item.getNodeIcon());
+                    setGraphic(item.getIcon());
                     setText(item.getSearchString());
                 }
             }
         });
 
-        cbNodes.setButtonCell(cbNodes.getCellFactory().call(null));
+        cbSearchData.setButtonCell(cbSearchData.getCellFactory().call(null));
 
-        cbNodes.setOnKeyReleased(e -> {
-            cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
-                final List<Node> searchResults = new LinkedList<>();;
+        cbSearchData.setOnKeyReleased(e -> {
+            cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
+                final List<ISearchEntity> searchResults = new LinkedList<>();
                 if (newValue != null && !newValue.equals("")) {
                     try {
-                        searchResults.addAll(FuzzySearch.fuzzySearch(newValue));
+                        searchResults.addAll(NodeFuzzySearch.fuzzySearch(newValue));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
 
-                filteredList.setPredicate((Predicate<? super SearchNode>) searchNode-> {
+                filteredList.setPredicate((Predicate<? super ISearchEntity>) iSearchEntity-> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
                     } else {
-                        cbNodes.setPromptText("");
+                        cbSearchData.setPromptText("");
                     }
 
                     /*//also check its lower case
@@ -128,8 +126,9 @@ public class SearchController {
                         return true;
                     }*/
 
-                    for (Node node : searchResults) {
-                        if (node.getNodeID().equalsIgnoreCase(searchNode.getDatabaseNode().getNodeID())) {
+                    for (ISearchEntity searchEntity : searchResults) {
+                        //TODO Search String vs Node ID?
+                        if (searchEntity.getComparingString().equalsIgnoreCase(iSearchEntity.getComparingString())) {
                             return true;
                         }
                     }
@@ -139,48 +138,48 @@ public class SearchController {
             });
             sortedList = new SortedList<>(filteredList);
 
-            sortedList.comparatorProperty().bind(nodeTable.comparatorProperty());
-            nodeTable.setItems(sortedList);
-            cbNodes.getItems().clear();
-            cbNodes.getItems().addAll(sortedList);
+            sortedList.comparatorProperty().bind(searchTable.comparatorProperty());
+            searchTable.setItems(sortedList);
+            cbSearchData.getItems().clear();
+            cbSearchData.getItems().addAll(sortedList);
             if(!sortedList.isEmpty()) {
-                cbNodes.show();
+                cbSearchData.show();
             }
             else {
-                cbNodes.hide();
+                cbSearchData.hide();
             }
         });
     }
 
     @FXML
     void setSearchFieldPromptText(String string) {
-        this.cbNodes.getEditor().setPromptText(string);
-    }
+        this.cbSearchData.getEditor().setPromptText(string);
+        this.cbSearchData.setPromptText(string);}
 
-    public Node getSelected() {
-        return cbNodes.getSelectionModel().getSelectedItem().getDatabaseNode();
+    public Object getSelected() {
+        return cbSearchData.getSelectionModel().getSelectedItem().getData();
     }
 
     public boolean isSelected() {
-        return cbNodes.getSelectionModel().isEmpty();
+        return cbSearchData.getSelectionModel().isEmpty();
     }
 
-    public void reset() {
-        nodeData.clear();
-        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
-            if(databaseNode.getNodeType() != NodeType.HALL) {
-                nodeData.add(new SearchNode(databaseNode));
-            }
-        }
+    public void reset(ArrayList<ISearchEntity> searchData) {
+        searchData.clear();
+        searchData.addAll(searchData);
     }
 
-    public ObjectProperty<SearchNode> getCBValueProperty() {
-        return cbNodes.valueProperty();
+    public ObjectProperty<ISearchEntity> getCBValueProperty() {
+        return cbSearchData.valueProperty();
+    }
+
+    public void resizeSearchbarWidth(double width) {
+        this.cbSearchData.setPrefWidth(width);
     }
 
     public void clearSearch() {
-        cbNodes.getItems().clear();
+        cbSearchData.getItems().clear();
         sortedList.clear();
-        nodeTable.getItems().clear();
+        searchTable.getItems().clear();
     }
 }
