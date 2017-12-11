@@ -600,7 +600,7 @@ public class MapBuilderController extends ScreenController {
                 CBnodeType.setValue(selectedNode.get().getNodeType());
                 lName.setText(selectedNode.get().getLongName());
                 sName.setText(selectedNode.get().getShortName());
-                CBnodeTeamAssigned.setValue(convertToTeamEnum(selectedNode.get().getTeamAssigned()));
+                CBnodeTeamAssigned.setValue(convertToTeamEnum(String.valueOf(selectedNode.get().getTeamAssigned().charAt(5))));
                 nodeID.setText(selectedNode.get().getNodeID());
                 setEditing(false);
                 break;
