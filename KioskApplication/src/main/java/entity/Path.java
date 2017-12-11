@@ -14,11 +14,13 @@ public class Path {
     private LinkedList<LinkedList<Edge>> edges;
     private LinkedList<LinkedList<String>> directions;
     private int currentCost = 0;
+    private int distance;
 
     public Path(List<Node> waypoints, LinkedList<LinkedList<Edge>> edges) {
         this.waypoints = new LinkedList<>(waypoints);
         this.edges = new LinkedList<>(edges);
         generateDirections();
+        setDistance();
     }
 
     public LinkedList<Node> getWaypoints() {
@@ -221,5 +223,25 @@ public class Path {
 
     public int getPathCost(){
         return currentCost;
+    }
+
+    private void setDistance(){
+        LinkedList<Edge> edgeList = getEdgesAsOneList();
+        distance = 0;
+        for(Edge e : edgeList) {
+            distance += e.getCost();
+        }
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    private LinkedList<Edge> getEdgesAsOneList() {
+        LinkedList<Edge> returnList = new LinkedList<>();
+        for(LinkedList<Edge> edgeList : edges) {
+            returnList.addAll(edgeList);
+        }
+        return returnList;
     }
 }

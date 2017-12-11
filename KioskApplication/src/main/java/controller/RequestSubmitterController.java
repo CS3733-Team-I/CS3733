@@ -4,13 +4,15 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
-import entity.FoodMenuItem;
+import entity.FoodEntities.*;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,6 +20,7 @@ import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
+import utility.FoodType;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -116,6 +119,7 @@ public class RequestSubmitterController extends ScreenController {
             }
         });
 
+        //TODO: is this still necessary?
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == interpreterTab) {
                 currentRequestType = RequestType.INTERPRETER;
@@ -141,16 +145,106 @@ public class RequestSubmitterController extends ScreenController {
             resetTimer();
         });
 
-        final TreeItem<FoodMenuItem> childNode1 = new TreeItem<>(new FoodMenuItem("Burger", 4.99));
-        final TreeItem<FoodMenuItem> childNode2 = new TreeItem<>(new FoodMenuItem("Soda", 1.0));
-        final TreeItem<FoodMenuItem> childNode3 = new TreeItem<>(new FoodMenuItem("Fries", 1.99));
+
+        final TreeItem<FoodMenuItem> entrees = new TreeItem<>(new FoodMenuItem("Entrees", 0.0, FoodType.ENTREE));
+        final TreeItem<FoodMenuItem> drinks = new TreeItem<>(new FoodMenuItem("Drinks", 0.0, FoodType.DRINK));
+        final TreeItem<FoodMenuItem> sides = new TreeItem<>(new FoodMenuItem("Sides", 0.0, FoodType.SIDE));
 
         //Creating the root element
-        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Burgers", 0.0));
+        final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Menu", 0.0, FoodType.ENTREE));
         root.setExpanded(true);
 
-        //Adding tree items to the root
-        root.getChildren().setAll(childNode1, childNode2, childNode3);
+        root.getChildren().setAll(entrees,drinks,sides);
+
+        restaurantComboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) return;
+            Node restNode = newValue;
+            if(restNode.getLongName().toLowerCase().contains("caf")) {
+                System.out.println("Cafe reached");
+                Cafe menu = new Cafe();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("vending")){
+                System.out.println("Vending reached");
+                VendingMachine menu = new VendingMachine();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getMenu()){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("pain")){
+                System.out.println("Au Bon Pain reached");
+                AuBonPain menu = new AuBonPain();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("pat")){
+                System.out.println("Pats Place reached");
+                PatsPlace menu = new PatsPlace();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else if(restNode.getLongName().toLowerCase().contains("gift")){
+                System.out.println("Gift Shop reached");
+                GiftShop menu = new GiftShop();
+                sides.getChildren().clear();
+                entrees.getChildren().clear();
+                drinks.getChildren().clear();
+                for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    sides.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    entrees.getChildren().add(fooditem);
+                }
+                for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
+                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
+                    drinks.getChildren().add(fooditem);
+                }
+            }else {
+                System.out.println("No restaurant/restaurant missing");
+            }
+        });
 
         //Creating a column
         TreeTableColumn<FoodMenuItem, String> nameColumn = new TreeTableColumn<>("Name");
@@ -179,7 +273,7 @@ public class RequestSubmitterController extends ScreenController {
 
         checkboxColumn.setCellFactory( tc -> new CheckBoxTreeTableCell<>());
         checkboxColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<FoodMenuItem, Boolean> p) -> {
-            if (p.getValue().isLeaf()) {
+            if (!p.getValue().isLeaf()) {
                 return new ReadOnlyBooleanWrapper(false);
             } else {
                 return p.getValue().getValue().selectedProperty();
@@ -189,10 +283,14 @@ public class RequestSubmitterController extends ScreenController {
         //Creating a tree table view
         menuTable.setRoot(root);
         menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
-        menuTable.setShowRoot(true);
+        menuTable.setShowRoot(false);
         menuTable.setEditable(true);
     }
 
+    /**
+     * When the submit button is pressed this sends a request to the database
+     * @throws IOException
+     */
     @FXML
     public void addRequest() throws IOException{
         switch(currentRequestType){
@@ -208,6 +306,9 @@ public class RequestSubmitterController extends ScreenController {
         }
     }
 
+    /**
+     * Clears all the fields in the request submitter
+     */
     @FXML
     public void clearButton() {
         intLocation.setText("");
@@ -223,6 +324,9 @@ public class RequestSubmitterController extends ScreenController {
         priorityMenu.setValue(null);
     }
 
+    /**
+     * Adds an interpreter Request to the database
+     */
     public void addIntRequest() {
         Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
         requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), intNotesArea.getText(), language);
@@ -230,6 +334,9 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    /**
+     * Adds a security Request to the database
+     */
     public void addSecRequest() {
         int priority = Integer.parseInt(priorityMenu.getValue().toString());
         System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
@@ -238,15 +345,25 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    /**
+     * Adds a food Request to the database
+     */
     public void addFoodRequest(){
         String order = "Order:";
-        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
-            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
-            if (item.isLeaf()) {
-                order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+//        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
+        for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
+            for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
+                String fooditem = item.getValue().getName();
+                if (item.isLeaf() && item.getValue().selectedProperty().get() &&
+                        !(item.getValue().getName().equals("Drinks") ||
+                                item.getValue().getName().equals("Entrees") ||
+                                item.getValue().getName().equals("Sides"))){
+                    order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+                }
+//            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
             }
         }
-
+        order = order.trim();
         if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
         requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
