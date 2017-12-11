@@ -54,7 +54,7 @@ public class Path {
         int segmentIndex = 0;
         for(LinkedList<Edge> edgeSegment: edges) {
             LinkedList<String> directionSegment = new LinkedList<>();
-            LinkedList<Node> nodes = getListOfNodes(edgeSegment, this.waypoints.get(segmentIndex++));
+            LinkedList<Node> nodes = getNodesForSegment(edgeSegment, this.waypoints.get(segmentIndex++));
             directionSegment.add(findStartDirectionInstructions(nodes));
             for (int i = 0; i < nodes.size(); i++) {
                 if (i != 0 && i != nodes.size() - 1)
@@ -134,19 +134,25 @@ public class Path {
         return returnStr + (int)map.getConnectingEdge(thisNode,nextNode).getCostFeet() + " "+ SystemSettings.getInstance().getResourceBundle().getString("my.feet"); //" feet."
     }
 
-     public LinkedList<Node> getListOfNodes(LinkedList<Edge> segment, Node segmentStart) {
-
-        MapEntity map = MapEntity.getInstance();
-
+    /**
+     * Get list of nodes for a segment in the path
+     * @param segment a list of edges representing the path from one waypoint to the other
+     * @param segmentStart the start node of the segments
+     * @return a list of nodes that are contained within that segment
+     */
+    public LinkedList<Node> getNodesForSegment(LinkedList<Edge> segment, Node segmentStart) {
         LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(segmentStart);
 
-        for (Edge e : segment) {
+        MapEntity map = MapEntity.getInstance();
+        for (Edge edge : segment) {
             try {
-                nodes.add(map.getNode(e.getOtherNodeID(nodes.getLast().getNodeID())));
+                nodes.add(map.getNode(edge.getOtherNodeID(nodes.getLast().getNodeID())));
+            } catch (NotFoundException exception){
+                exception.printStackTrace();
             }
-            catch (NotFoundException exception){}
         }
+
         return nodes;
     }
 
@@ -193,17 +199,13 @@ public class Path {
      * Returns an ordered list of all nodes along the path.
      * @return a list of nodes containing in a path segment
      */
-    public LinkedList<Node> getNodesInSegment(Node Start) {
-        LinkedList<Node> retVal= new LinkedList<>();
-        for(LinkedList<Edge> edges : this.edges) {
-            for(Edge edge : edges) {
-                if(edge.hasNode(Start)){
-                    retVal.addAll(getListOfNodes(edges, Start));
-                    break;
-                }
+    public LinkedList<Node> getNodesInSegment(Node startNode) {
+        for (LinkedList<Edge> segment : edges) {
+            if (segment.getFirst().hasNode(startNode)) {
+                return getNodesForSegment(segment, startNode);
             }
         }
-        return retVal;
+        return new LinkedList<>();
     }
 
     /**
@@ -212,13 +214,18 @@ public class Path {
      */
     public LinkedList<Node> getListOfAllNodes(){
         LinkedList<Node> allNodes = new LinkedList<>();
+
         Node startNode = this.waypoints.getFirst();
         allNodes.add(startNode);
-        for(LinkedList<Edge> segment: this.edges){
-            LinkedList<Node> segmentNodes = this.getListOfNodes(segment, startNode);
-            segmentNodes.removeFirst();
-            allNodes.addAll(segmentNodes);
+
+        for (Node node : this.waypoints) {
+            LinkedList<Node> nodes = getNodesInSegment(node);
+            if (nodes.size() > 1) {
+                nodes.removeFirst();
+                allNodes.addAll(nodes);
+            }
         }
+
         return(allNodes);
     }
 

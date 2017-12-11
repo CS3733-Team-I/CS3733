@@ -1,14 +1,14 @@
 package controller.map;
 
-import com.jfoenix.controls.JFXButton;
 import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
-import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
-import javafx.animation.PathTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -18,13 +18,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import utility.ResourceManager;
-import utility.node.NodeFloor;
-import utility.node.NodeType;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +31,6 @@ import java.util.LinkedList;
 
 public class PathWaypointView extends AnchorPane {
 
-    private ObservableList<Edge> PathList;
     private ObservableList<Node> waypointList;
     protected Path currentPath;
 
@@ -71,7 +69,6 @@ public class PathWaypointView extends AnchorPane {
         this.getChildren().addAll(pathView, wayPointView);
 
         waypointList = FXCollections.observableArrayList();
-        PathList = FXCollections.observableArrayList();
 
         this.parent = parent;
 
@@ -156,79 +153,83 @@ public class PathWaypointView extends AnchorPane {
     }
 
     public void drawPath(Path path) {
-        JFXButton switchFloor = null;
-
         this.currentPath = path;
 
-        // Create list of nodes to check for zooming and then zoom in on the first segment of nodes on the path that
-        // are on a the starting floor
-        LinkedList<Node> nodesOnFloor = new LinkedList<>();
-        LinkedList<Node> nodesToCheck = new LinkedList<>();
-        nodesToCheck.addAll(path.getWaypoints());
-        nodesToCheck.addAll(path.getListOfAllNodes());
-        for (Node node : nodesToCheck) {
-            if (node.getFloor().equals(parent.getCurrentFloor())) {
-                nodesOnFloor.add(node);
-            }
-        }
-        parent.zoomOnSelectedNodes(nodesOnFloor);
+        double totalDistance = 0;
 
-        for (LinkedList<Edge> segment : currentPath.getEdges()) {
-            PathList.addAll(segment);
-        }
-
-        for(int i = 0; i < waypointList.size() - 1; i ++) {
-            LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
-
-            javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
-            jfxPath.setFill(Color.TRANSPARENT);
-            jfxPath.setStroke(Color.TRANSPARENT);
-            MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
-            jfxPath.getElements().add(moveTo);
-
-            for(Node traversedNode : segmentNodes) {
-                LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
-                jfxPath.getElements().add(lineTo);
-
-                NodeFloor targetFloor = waypointList.get(i+1).getFloor();
-                if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    switchFloor = new JFXButton();
-                    switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
-                    switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                    switchFloor.setLayoutY(traversedNode.getYcoord());
-                    switchFloor.setPrefHeight(48);
-                    switchFloor.setPrefWidth(48);
-
-                    if (traversedNode.getFloor().toInt() > targetFloor.toInt()) {
-                        switchFloor.setGraphic(upView);
-                    } else {
-                        switchFloor.setGraphic(downView);
-                    }
+        int waypointIndex = 0;
+        for (Node node : waypointList) {
+            Node lastNode = node;
+            for (Node thisNode : path.getNodesInSegment(node)) {
+                // Don't draw a line between the same nodes
+                if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
+                    lastNode = thisNode;
+                    continue;
                 }
+
+                if (thisNode.getFloor() == parent.getCurrentFloor() &&
+                        lastNode.getFloor() == parent.getCurrentFloor()) {
+
+                    Line line = new Line(lastNode.getXcoord(), lastNode.getYcoord(),
+                                         thisNode.getXcoord(), thisNode.getYcoord());
+                    line.setStroke(path.getSegmentColor(waypointIndex));
+                    line.setStrokeWidth(8);
+                    line.setStrokeLineCap(StrokeLineCap.ROUND);
+                    pathView.getChildren().add(line);
+
+                    totalDistance += Math.sqrt(Math.pow(thisNode.getXcoord() - lastNode.getXcoord(), 2.0)
+                                                + Math.pow(thisNode.getYcoord() - lastNode.getYcoord(), 2.0));
+                } else if (thisNode.getFloor() != lastNode.getFloor() &&
+                            (thisNode.getFloor() == parent.getCurrentFloor() ||
+                            lastNode.getFloor() == parent.getCurrentFloor())) {
+                    Circle circle = new Circle(20, Color.RED);
+                    circle.setCenterX(thisNode.getXcoord());
+                    circle.setCenterY(thisNode.getYcoord());
+
+                    wayPointView.getChildren().add(circle);
+                }
+
+                lastNode = thisNode;
             }
-
-            this.pathView.getChildren().add(jfxPath);
-
-
-            for(int k = 0; k < currentPath.getPathCost()/20; k++) {
-                Circle circle = new Circle(10);
-                circle.setFill(path.getSegmentColor(i));
-                circle.setAccessibleHelp("path pointer");
-                this.pathView.getChildren().add(circle);
-
-                PathTransition navigationTransition = new PathTransition();
-                navigationTransition.setNode(circle);
-                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/20));
-                navigationTransition.setPath(jfxPath);
-                navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-                navigationTransition.setAutoReverse(false);
-                navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-
-                navigationTransition.playFrom(Duration.seconds(k));
-            }
+            waypointIndex++;
         }
 
-        //this.pathView.getChildren().add(switchFloor);
+        // Animate circles
+        int distCont = 30;
+        int totalCircles = (int)Math.ceil(totalDistance / (double)distCont);
+
+        Node firstNode = waypointList.get(0);
+        for(int i = 0; i < totalCircles; i++) {
+            Circle circle = new Circle(5.0D, new Color(1, 1, 1, 0.5));
+            circle.setCenterX(firstNode.getXcoord());
+            circle.setCenterY(firstNode.getYcoord());
+
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(-1);
+            Duration time = Duration.ZERO;
+            double speed = 0.1D;
+
+            Node lastNode = null;
+            LinkedList<Node> nodesOnPath = path.getListOfAllNodes();
+            for (Node node : nodesOnPath) {
+                if (lastNode != null) {
+                    double distance = Math.sqrt(Math.pow(lastNode.getXcoord() - node.getXcoord(), 2.0)
+                                                + Math.pow(lastNode.getYcoord() - node.getYcoord(), 2.0));
+                    time = time.add(new Duration(distance / speed));
+                }
+
+                timeline.getKeyFrames().add(new KeyFrame(time,
+                        new KeyValue(circle.centerXProperty(), node.getXcoord()),
+                        new KeyValue(circle.centerYProperty(), node.getYcoord())));
+
+                lastNode = node;
+            }
+
+            Duration offset = timeline.getCycleDuration().divide((double)totalCircles);
+            timeline.playFrom(offset.multiply((double)i));
+
+            pathView.getChildren().add(circle);
+        }
     }
 
     public Path getPath() {
