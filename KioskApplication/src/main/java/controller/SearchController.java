@@ -154,7 +154,7 @@ public class SearchController {
     @FXML
     void setSearchFieldPromptText(String string) {
         this.cbSearchData.getEditor().setPromptText(string);
-    }
+        this.cbSearchData.setPromptText(string);}
 
     public Object getSelected() {
         return cbSearchData.getSelectionModel().getSelectedItem().getData();
@@ -171,6 +171,10 @@ public class SearchController {
 
     public ObjectProperty<ISearchEntity> getCBValueProperty() {
         return cbSearchData.valueProperty();
+    }
+
+    public void resizeSearchbarWidth(double width) {
+        this.cbSearchData.setPrefWidth(width);
     }
 
     public void clearSearch() {
