@@ -1,3 +1,4 @@
+import controller.MainWindowController;
 import email.*;
 import entity.MapEntity;
 import entity.SystemSettings;
@@ -19,7 +20,8 @@ public class Main extends Application {
 
         SystemSettings.getInstance();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindowView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Final Iteration");
 
         Scene mainScene = new Scene(root, 1280, 720);
@@ -28,22 +30,7 @@ public class Main extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
-        /*
-        EmailSystem.init();
-        /*Email email = new Email.Builder("jflparrick@gmail.com")
-                .setAttachment(null)
-                .setBody("THIS IS A TEST")
-                .setFrom("me")
-                .setSubject("TEST")
-                .build();
-        SMS sms = new SMS.Builder("2077455316", Providers.VERIZON)
-                .setAttachment(null)
-                .setBody("THIS IS A TEST")
-                .setSubject("TEST")
-                .setFrom("me")
-                .build();
-        EmailSender.sendEmail(sms);
-        */
+        primaryStage.setOnHidden(e -> ((MainWindowController)loader.getController()).shutdown());
     }
 
     public static void main(String[] args) {
