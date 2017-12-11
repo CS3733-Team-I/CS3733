@@ -4,11 +4,10 @@ import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
-import entity.searchEntity.ISearchEntity;
+import entity.SearchEntity.ISearchEntity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import pathfinder.NodeFuzzySearch;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
@@ -18,7 +17,6 @@ import java.util.LinkedList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 public class TestNodeFuzzySearch {
-    NodeFuzzySearch nodeFuzzySearch;
     private static MapEntity map;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,10 +210,6 @@ public class TestNodeFuzzySearch {
         map.addEdge(new Edge("EDGE74", "NODE30", "NODE53"));
         map.addEdge(new Edge("EDGE75", "NODE17", "NODE40"));
         map.addEdge(new Edge("EDGE76", "NODE40", "NODE63"));
-
-
-        nodeFuzzySearch = new NodeFuzzySearch();
-
     }
 
     @After //remove things from database

@@ -1,8 +1,7 @@
-package entity.searchEntity;
+package entity.SearchEntity;
 
 import database.connection.NotFoundException;
 import database.objects.Request;
-import database.utility.DatabaseException;
 import entity.MapEntity;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,5 +65,8 @@ public class SearchRequest implements ISearchEntity{
     }
     public String getComparingString() {
         return databaseRequest.getRequestID();
+    }
+    public String getName() {
+        return searchString;
     }
 }

@@ -2,7 +2,6 @@ package entity;
 
 import database.DatabaseController;
 import database.objects.*;
-import entity.searchEntity.ISearchEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;

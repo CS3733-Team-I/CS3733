@@ -1,4 +1,4 @@
-package entity.searchEntity;
+package entity.SearchEntity;
 
 import database.objects.Node;
 import entity.MapEntity;
@@ -85,5 +85,9 @@ public class SearchNode implements ISearchEntity{
 
     public String getComparingString() {
         return databaseNode.getNodeID();
+    }
+
+    public String getName() {
+        return this.databaseNode.getLongName();
     }
 }
