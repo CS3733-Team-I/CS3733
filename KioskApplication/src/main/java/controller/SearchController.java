@@ -42,7 +42,6 @@ public class SearchController {
         this.parent = parent;
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
-        this.filteredList = new FilteredList<ISearchEntity>(this.searchData, e->true);
         SystemSettings.getInstance().updateDistance();
 //        for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
 //            if(databaseNode.getNodeType() != NodeType.HALL) {
@@ -57,6 +56,7 @@ public class SearchController {
         //initialize the lists
         nodeFuzzySearch = new NodeFuzzySearch();
         searchTable = new TableView<>();
+        this.filteredList = new FilteredList<>(this.searchData, e->true);
         //set the combo box style and editable
         cbSearchData.setTooltip(new Tooltip());
         cbSearchData.setEditable(true);
