@@ -9,12 +9,11 @@ import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
 import javafx.animation.PathTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,6 +45,8 @@ public class PathWaypointView extends AnchorPane {
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
+
+    private Label youarehereLabel;
 
     private ArrayList<Color> segmentColorList;
 
@@ -122,13 +123,30 @@ public class PathWaypointView extends AnchorPane {
         youarehereView.setFitHeight(48);
         youarehereView.setFitWidth(48);
 
-        Label youarehereLabel = new Label();
+        youarehereLabel = new Label();
         youarehereLabel.setGraphic(youarehereView);
         youarehereLabel.setPrefHeight(48);
         youarehereLabel.setPrefWidth(48);
 
         youarehereLabel.setLayoutX(SystemSettings.getInstance().getDefaultnode().getXcoord()-24);
         youarehereLabel.setLayoutY(SystemSettings.getInstance().getDefaultnode().getYcoord()-24);
+
+        SystemSettings.getInstance().getDefaultnode().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutX(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });
+        SystemSettings.getInstance().getDefaultnode().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                getChildren().remove(youarehereLabel);
+                youarehereLabel.setLayoutY(newValue.doubleValue()-24);
+                getChildren().add(youarehereLabel);
+            }
+        });
 
         getChildren().add(youarehereLabel);
     }
@@ -170,6 +188,19 @@ public class PathWaypointView extends AnchorPane {
         segmentColorList.clear();
 
         this.currentPath = path;
+
+        // Create list of nodes to check for zooming and then zoom in on the first segment of nodes on the path that
+        // are on a the starting floor
+        LinkedList<Node> nodesOnFloor = new LinkedList<>();
+        LinkedList<Node> nodesToCheck = new LinkedList<>();
+        nodesToCheck.addAll(path.getWaypoints());
+        nodesToCheck.addAll(path.getListOfAllNodes());
+        for (Node node : nodesToCheck) {
+            if (node.getFloor().equals(parent.getCurrentFloor())) {
+                nodesOnFloor.add(node);
+            }
+        }
+        parent.zoomOnSelectedNodes(nodesOnFloor);
 
         for (LinkedList<Edge> segment : currentPath.getEdges()) {
             PathList.addAll(segment);

@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import controller.map.MapController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
+import database.objects.InterpreterRequest;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -13,13 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import utility.KioskPermission;
+import utility.RequestListCell;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
@@ -38,8 +41,8 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
     RequestProgressStatus currentButton;
 
-@FXML private JFXListView<String> activeRequests;
     @FXML private Label totalRequests,filterLabel;
+    @FXML private JFXListView<Request> activeRequests;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
     @FXML private JFXPopup popup;
@@ -62,7 +65,7 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void setup(){
-        RequestType employeeType = l.getServiceAbility();
+        RequestType employeeType = l.getCurrentServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
             foodFilter.setSelected(false);
             foodFilter.setVisible(false);
@@ -159,8 +162,12 @@ public class RequestManagerController extends ScreenController {
             }
         }
         if (interpreterFilter.isSelected()) {
-            for (Request iR : r.getAllinterpters()) {
-                allRequests.add(iR);
+            for (InterpreterRequest iR : r.getAllinterpters()) {
+                //If the person is an interpreter, then it adds only requests they can speak. Or shows all of them if ADMIN or above
+                if(l.getCurrentInterpreterLanguages().contains(iR.getLanguage())||l.getCurrentPermission()==KioskPermission.ADMIN
+                        ||l.getCurrentPermission()==KioskPermission.SUPER_USER) {
+                    allRequests.add(iR);
+                }
             }
         }
         if(foodFilter.isSelected()){
@@ -179,16 +186,14 @@ public class RequestManagerController extends ScreenController {
      */
     private void showRequests(RequestProgressStatus status, LinkedList<Request> allRequests) {
         activeRequests.setItems(null);
-        ObservableList<String> requestids = FXCollections.observableArrayList();
-        LinkedList<Request> requests = r.filterByStatus(allRequests,status);
-        for (int i = 0; i < requests.size(); i++) {
-            String id = requests.get(i).getRequestID();
-            requestids.add(id);
-        }
-        activeRequests.setItems(requestids);
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        requests.addAll(r.filterByStatus(allRequests,status));
+        activeRequests.setItems(requests);
+        activeRequests.setCellFactory(param -> new RequestListCell(this));
     }
 
     /**
+     * Method when a list view cell is selected currently does nothing
      * Creates what goes into the popup when a listview cell is selected
      * @param requestID To determine which request to display the information of
      */
@@ -219,7 +224,7 @@ public class RequestManagerController extends ScreenController {
 
         if(!l.getCurrentPermission().equals(KioskPermission.EMPLOYEE)){ //Admin or super
             listOfEmployees.clear();
-            listOfEmployees.addAll(l.getAllEmployeeType(r.checkRequestType(requestID)));
+            listOfEmployees.addAll(l.getAllEmployeeType(r.getRequest(requestID)));
             switch (currentButton){
                 case TO_DO:
                     statusUpdater = new JFXButton("Assign");
@@ -241,7 +246,7 @@ public class RequestManagerController extends ScreenController {
                     statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent e) {
-                            r.markInProgress(l.getLoginID(), requestID);
+                            r.markInProgress(l.getCurrentLoginID(), requestID);
                             refreshRequests();
                             popup.hide();
                         }
@@ -326,15 +331,6 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void displayInfo(MouseEvent event){
-        if(activeRequests.getSelectionModel().isEmpty()){
-            event.consume();
-        }else{
-            String requestID = activeRequests.getSelectionModel().getSelectedItem();
-            initializePopup(requestID); //Don't like that this is here
-            popup.show(activeRequests,JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, event.getX(),event.getY());
-            activeRequests.getSelectionModel().clearSelection();
-
-        }
     }
 
     /**

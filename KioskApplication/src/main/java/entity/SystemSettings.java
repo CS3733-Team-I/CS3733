@@ -79,6 +79,10 @@ public class SystemSettings extends Observable {
         MapEntity map = MapEntity.getInstance();
         for(Node node:map.getAllNodes()){
             if(defaultnodeID.equals(node.getNodeID())) {
+                if(defaultnode != null) {
+                    defaultnode.setXcoordProperty(node.getXcoord());
+                    defaultnode.setYcoordProperty(node.getYcoord());
+                }
                 this.defaultnode = node;
                 this.prefs.put("defaultNode", node.getNodeID());
                 return;
@@ -131,5 +135,9 @@ public class SystemSettings extends Observable {
 
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
+    }
+
+    public void updateDistance() {
+        MapEntity.getInstance().updateDistanceFromKisok(getDefaultnode());
     }
 }

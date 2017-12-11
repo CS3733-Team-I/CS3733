@@ -1,16 +1,19 @@
 package entity;
 
-import database.DatabaseController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import utility.KioskPermission;
+import utility.request.Language;
 import utility.request.RequestType;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static utility.KioskPermission.ADMIN;
 import static utility.KioskPermission.EMPLOYEE;
 import static utility.KioskPermission.SUPER_USER;
+import static utility.request.Language.CHINESE;
+import static utility.request.Language.SPANISH;
 
 public class TestLoginEntity {
     private LoginEntity l;
@@ -18,8 +21,13 @@ public class TestLoginEntity {
     @Before
     public void setup(){
         l = LoginEntity.getTestInstance();
-        l.addUser("boss@hospital.com","","", "123",SUPER_USER, RequestType.GENERAL);
-        l.addUser("emp@hospital.com", "","","12",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("boss@hospital.com","","", "123",new ArrayList<>(),
+                SUPER_USER, RequestType.GENERAL);
+        ArrayList<String> options = new ArrayList<>();
+        options.add(Language.SPANISH.toString());
+        options.add(Language.CHINESE.toString());
+        l.addUser("emp@hospital.com", "","","12",
+                options,EMPLOYEE,RequestType.INTERPRETER);
         becomeSuperUser();
     }
 
@@ -38,37 +46,37 @@ public class TestLoginEntity {
     public void testValidatePermissionToAdmin(){
         l.logIn("hgskhgjh","sghvnjdkhgr");
         assertEquals(true,l.logIn("boss@hospital.com","123"));
-        assertEquals("boss@hospital.com",l.getUsername());
+        assertEquals("boss@hospital.com",l.getCurrentUsername());
     }
 
     @Test
     public void testValidatePermissionEmployee(){
         assertEquals(true, l.logIn("emp@hospital.com","12"));
-        assertEquals("emp@hospital.com",l.getUsername());
+        assertEquals("emp@hospital.com",l.getCurrentUsername());
     }
 
     @Test
     public void testValidatePermissionToNonEmployee(){
         assertEquals(false, l.logIn("nonemp@hospital.com","1"));
-        assertEquals("",l.getUsername());
+        assertEquals("",l.getCurrentUsername());
     }
 
     @Test
     public void testInvalidAdminPassword(){
         assertEquals(false,l.logIn("boss@hospital.com","12"));
-        assertEquals("",l.getUsername());
+        assertEquals("",l.getCurrentUsername());
     }
 
     @Test
     public void testInvalidEmployeePassword(){
         assertEquals(false,l.logIn("emp@hospital.com","123"));
-        assertEquals("",l.getUsername());
+        assertEquals("",l.getCurrentUsername());
     }
 
     //Employees should not delete the admin login
     @Test
     public void testDeleteLoginEmployeeDeleteAdmin(){
-        l.addUser("admin","Wong","Wilson","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","Wong","Wilson","345",new ArrayList<>(),ADMIN,RequestType.GENERAL);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("admin");
         assertEquals(true,l.logIn("admin","345"));
@@ -79,7 +87,7 @@ public class TestLoginEntity {
     //Employees should not delete the employee login
     @Test
     public void testDeleteLoginEmployeeDeleteEmployee(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         l.logIn("emp@hospital.com","12");
         l.deleteLogin("employee");
         assertEquals(true,l.logIn("employee","456"));
@@ -90,7 +98,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the admin login
     @Test
     public void testDeleteLoginNonemployeeDeleteAdmin(){
-        l.addUser("admin","Wong","Wilson","345",ADMIN,RequestType.GENERAL);
+        l.addUser("admin","Wong","Wilson","345", new ArrayList<>(),ADMIN,RequestType.FOOD);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("admin");
         assertEquals(true,l.logIn("admin","345"));
@@ -101,7 +109,7 @@ public class TestLoginEntity {
     //Nonemployees should not delete the employee login
     @Test
     public void testDeleteLoginNonemployeeDeleteEmployee(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         l.logIn("emp@otherhospital.com","1");
         l.deleteLogin("employee");
         assertEquals(true,l.logIn("employee","456"));
@@ -113,20 +121,20 @@ public class TestLoginEntity {
     @Test
     public void testAddLoginEmployee(){
         l.logIn("emp@hospital.com","12");
-        l.addUser("test","Wong","Wilson","pass",EMPLOYEE,RequestType.GENERAL);
+        l.addUser("test","Wong","Wilson","pass",new ArrayList<>(),EMPLOYEE,RequestType.GENERAL);
         assertEquals(false,l.logIn("test","pass"));
     }
 
     @Test
     public void testAddLoginNonemployee(){
         l.logIn("emp@otherhospital.com","1");
-        l.addUser("test","Wong","Wilson","pass",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("test","Wong","Wilson","pass",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         assertEquals(false,l.logIn("test","pass"));
     }
 
     @Test
     public void testUpdatePassword(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         l.logIn("employee","456");
         l.updatePassword("789","456");
         assertEquals(true,l.logIn("employee","789"));
@@ -136,11 +144,22 @@ public class TestLoginEntity {
 
     @Test
     public void testUpdateUserName(){
-        l.addUser("employee","Wong","Wilson","456",EMPLOYEE,RequestType.INTERPRETER);
+        l.addUser("employee","Wong","Wilson","456",new ArrayList<>(),EMPLOYEE,RequestType.FOOD);
         l.logIn("employee","456");
         l.updateUsername("emp1","456");
-        assertEquals("emp1",l.getUsername());
+        assertEquals("emp1",l.getCurrentUsername());
         becomeSuperUser();
         l.deleteLogin("emp1");
+    }
+
+    /**
+     * Tests that the method returns a list of Languages containing Spanish (1) and Chinese (2)
+     */
+    @Test
+    public void testGetInterpreterLanguages(){
+        l.logIn("emp@hospital.com","12");
+        ArrayList<Language> languages = l.getCurrentInterpreterLanguages();
+        assertEquals(SPANISH,languages.get(0));
+        assertEquals(CHINESE,languages.get(1));
     }
 }

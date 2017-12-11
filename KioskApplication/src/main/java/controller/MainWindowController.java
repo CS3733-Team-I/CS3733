@@ -95,7 +95,7 @@ public class MainWindowController {
         mapPaneLoader.load();
 
         // Default to third floor
-        mapController.setFloorSelector(NodeFloor.THIRD);
+        //mapController.setFloorSelector(NodeFloor.THIRD);
 
         // Pre-load all controllers/views
         for (ApplicationScreen screen : ApplicationScreen.values()) {
@@ -200,6 +200,13 @@ public class MainWindowController {
         // Timer initialization
         countdown = maxCountdown;
         startTimer();
+    }
+
+    /**
+     * Used to run methods after the screen is displayed
+     */
+    public void postDisplaySetup(){
+        mapController.recenterPressed();
     }
 
     private void initializeTrackingTable() throws IOException{

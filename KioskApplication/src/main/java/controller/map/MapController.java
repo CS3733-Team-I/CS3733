@@ -20,7 +20,6 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,18 +35,13 @@ import utility.node.NodeFloor;
 import utility.node.NodeSelectionType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MapController {
     @FXML private AnchorPane container;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
-    private boolean mouseZoom;
 
     public static final double DEFAULT_HVALUE = 0.52;
     public static final double DEFAULT_VVALUE = 0.3;
@@ -62,6 +56,7 @@ public class MapController {
     @FXML private JFXComboBox<NodeFloor> floorSelector;
     @FXML private JFXSlider zoomSlider;
     @FXML private JFXButton recenterButton;
+    private boolean ignoreZoomSliderListener;
 
     @FXML private VBox optionsBox;
     @FXML private JFXCheckBox showNodesBox;
@@ -89,6 +84,172 @@ public class MapController {
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
+    }
+
+    /**
+     * Initialize the MapController. Called when the FXML file for this is loaded
+     */
+    @FXML
+    protected void initialize() throws NotFoundException{
+        floorSelector.getItems().addAll(NodeFloor.values());
+        aboutButton.setVisible(true);
+        languageSelector.getItems().addAll("English","French");
+
+        miniMapController = new MiniMapController(this);
+
+        //initialize paths and waypoints view
+        pathWaypointView = new PathWaypointView(this);
+        pathWaypointView.setPickOnBounds(false);
+        //initialize nodes and egdes view
+        nodesEdgesView = new NodesEdgesView(this);
+        nodesEdgesView.setPickOnBounds(false);
+
+        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
+        AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
+
+        nodesEdgesContainer.getChildren().add(nodesEdgesView);
+        nodesEdgesContainer.setPickOnBounds(false);
+
+        AnchorPane.setTopAnchor(pathWaypointView, 0.0);
+        AnchorPane.setLeftAnchor(pathWaypointView, 0.0);
+        AnchorPane.setBottomAnchor(pathWaypointView, 0.0);
+        AnchorPane.setRightAnchor(pathWaypointView, 0.0);
+
+        pathWaypointContainer.getChildren().add(pathWaypointView);
+        pathWaypointContainer.setPickOnBounds(false);
+
+        keyDialog.setDialogContainer(keyDialogContainer);
+        keyDialogContainer.setDisable(true);
+
+        // Controller-wide localization observer
+        systemSettings.addObserver((o, arg) -> {
+            ResourceBundle rB = systemSettings.getResourceBundle();
+            recenterButton.setText(rB.getString("my.recenter"));
+        });
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
+            loader.setController(miniMapController);
+            miniMapPane.getChildren().clear();
+            miniMapPane.getChildren().add(loader.load());
+        } catch (IOException e) {
+            System.err.println("Loading MiniMapView failed.");
+        }
+
+        // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
+        zoomGroup = new Group();
+        zoomGroup.getChildren().add(scrollPane.getContent());
+        Group contentGroup = new Group(zoomGroup);
+        scrollPane.setContent(contentGroup);
+
+        // Initializes the zoom slider to the current zoom scale
+        //zoomSlider.setValue(zoomGroup.getScaleX());
+
+        // zoomSlider value listener
+        zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                double widthRatio = container.getWidth() / mapView.getFitWidth();
+                double heightRatio = container.getHeight() / mapView.getFitHeight();
+                double minScrollValue = Math.max(widthRatio, heightRatio);
+                zoomSlider.setMin(minScrollValue);
+                if(!ignoreZoomSliderListener){
+                    Bounds viewPort = scrollPane.getViewportBounds();
+                    zoomOnFocalPoint(newValue.doubleValue(),viewPort.getWidth()/2,viewPort.getHeight()/2);
+                }
+                else {
+                }
+            }
+        });
+
+        // MouseWheel zooming event handler
+        scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
+            event.consume();
+            if(event.getDeltaY() == 0){
+                return;
+            }
+            double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
+            ignoreZoomSliderListener=true;
+            double scaleValue= scaleFactor*zoomSlider.getValue();
+            zoomSlider.setValue(scaleValue);
+            zoomOnFocalPoint(scaleValue,event.getX(),event.getY());
+            ignoreZoomSliderListener=false;
+        });
+
+
+
+        // Update MiniMap on scroll
+        scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                double value = newValue.doubleValue() / scrollPane.getHmax();
+                if (Double.isNaN(value)) value = 0.0;
+                //fixes a bug where the scrollPane gets stuck on the left of the screen
+                if(Double.isNaN(scrollPane.getHvalue())) scrollPane.setHvalue(0.0);
+
+                miniMapController.setNavigationRecX(value);
+            }
+        });
+
+        scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                double value = newValue.doubleValue() / scrollPane.getVmax();
+                if (Double.isNaN(value)) value = 0.0;
+                //fixes a bug where the scrollPane gets stuck on the top of the screen
+                if (Double.isNaN(scrollPane.getVvalue())) scrollPane.setVvalue(0.0);
+
+                miniMapController.setNavigationRecY(value);
+            }
+        });
+
+        // Update MiniMap size when the container gets larger/smaller
+        container.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
+
+                calculateMinZoom();
+            }
+        });
+
+        container.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
+
+                calculateMinZoom();
+            }
+        });
+
+        scrollPane.vvalueProperty().addListener((obs) -> {
+            checkWaypointVisible(scrollPane);
+//            System.out.println(visibleWaypoints);
+        });
+        scrollPane.hvalueProperty().addListener((obs) -> {
+            checkWaypointVisible(scrollPane);
+//            System.out.println(visibleWaypoints);
+        });
+        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
+            @Override
+            public void onChanged(Change<? extends javafx.scene.Node> c) {
+                while(c.next()) {
+                    if(c.wasRemoved()) {
+                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
+                            //TODO handle lose sight action
+                        }
+                    }
+                    else if(c.wasAdded()) {
+                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
+                            //TODO regain lose sight action
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -173,18 +334,18 @@ public class MapController {
     public void clearPath() {
         this.pathWaypointView.clearPath();
     }
-
     public void setNodesVisible(boolean visible) { this.showNodesBox.setSelected(visible); onNodeBoxToggled(); }
-    public boolean areNodesVisible(){ return this.showNodesBox.isSelected(); }
 
+    public boolean areNodesVisible(){ return this.showNodesBox.isSelected(); }
     public void setEdgesVisible(boolean visible) { this.showEdgesBox.setSelected(visible); onEdgeBoxToggled(); }
+
     public boolean areEdgesVisible(){
         return this.showEdgesBox.isSelected();
     }
-
     public boolean isEditMode() {
         return editMode;
     }
+
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
     }
@@ -255,10 +416,10 @@ public class MapController {
     public void addWaypoint(Point2D location, Node node) {
         this.pathWaypointView.addWaypoint(node);
     }
-
     public void removeWaypoint(Node node) {
         this.pathWaypointView.removeWaypoint(node);
     }
+
     /**
      * Load a new floor image and display it. Additionally re-renders the current path based on the floor being viewed
      * @param floor the floor to load
@@ -321,20 +482,6 @@ public class MapController {
     }
 
     /**
-     * Sets the current zoom value
-     * Focal point is dependent on mouseZoom class-wide boolean
-     * if true: it will only change the scale of the map, letting the scrollEvent listener handle the repositioning
-     * if false: it will zoom in/out on the center of the screen
-     * @param scaleValue zoom value
-     */
-    private void setZoom(double scaleValue) {
-        if(!mouseZoom) {
-            Bounds viewPort = scrollPane.getViewportBounds();
-            zoomOnFocalPoint(scaleValue, viewPort.getWidth() / 2, viewPort.getHeight() / 2);
-        }
-    }
-
-    /**
      * handles all zooming operations
      * @param scaleValue
      * @param focalX the x coordinate of the point to zoom on in container
@@ -342,30 +489,20 @@ public class MapController {
      * @return scaleValue a double that can be modified by the operation
      */
     private double zoomOnFocalPoint(double scaleValue, double focalX, double focalY){
-        double widthRatio = container.getWidth() / mapView.getFitWidth();
-        double heightRatio = container.getHeight() / mapView.getFitHeight();
-        double minScrollValue = Math.max(widthRatio, heightRatio);
-        double maxScrollValue = zoomSlider.getMax();
+        double oldScale, scaleFactor;
+        Bounds viewPort = scrollPane.getViewportBounds();
+        Bounds contentSize = zoomGroup.getBoundsInParent();
 
-        //bounds the scaleValue within the min and max zoom values
-        scaleValue=Math.min(scaleValue,maxScrollValue);
-        scaleValue=Math.max(scaleValue,minScrollValue);
+        double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
+        double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
+        oldScale = zoomGroup.getScaleX();
+        scaleFactor = scaleValue / oldScale;
 
-        double scaleFactor = scaleValue/zoomGroup.getScaleX();
-
-        if(scaleFactor!=1) {
+        if(setZoom(scaleValue)) {
             // got code from Fabian at https://stackoverflow.com/questions/39529840/javafx-setfitheight-setfitwidth-for-an-image-used-within-a-scrollpane-disabl
-            Bounds viewPort = scrollPane.getViewportBounds();
-            Bounds contentSize = zoomGroup.getBoundsInParent();
-
-            double focalPosX = (contentSize.getWidth() - viewPort.getWidth()) * scrollPane.getHvalue() + focalX;
-            double focalPosY = (contentSize.getHeight() - viewPort.getHeight()) * scrollPane.getVvalue() + focalY;
 
             double scaledFocusX = focalPosX * scaleFactor;
             double scaledFocusY = focalPosY * scaleFactor;
-
-            zoomGroup.setScaleX(scaleValue);
-            zoomGroup.setScaleY(scaleValue);
 
             scrollPane.setHvalue((scaledFocusX - focalX) / (contentSize.getWidth() * scaleFactor - viewPort.getWidth()));
             scrollPane.setVvalue((scaledFocusY - focalY) / (contentSize.getHeight() * scaleFactor - viewPort.getHeight()));
@@ -376,157 +513,88 @@ public class MapController {
     }
 
     /**
-     * Initialize the MapController. Called when the FXML file for this is loaded
+     * Moves the map view and adjusts the zoom factor to contain the selected nodes
+     * @param viewedNodes sets the floor to the most common floor value
      */
-    @FXML
-    protected void initialize() throws NotFoundException{
-        floorSelector.getItems().addAll(NodeFloor.values());
-        aboutButton.setVisible(true);
-        languageSelector.getItems().addAll("English","French");
-
-        miniMapController = new MiniMapController(this);
-
-        //initialize paths and waypoints view
-        pathWaypointView = new PathWaypointView(this);
-        pathWaypointView.setPickOnBounds(false);
-        //initialize nodes and egdes view
-        nodesEdgesView = new NodesEdgesView(this);
-        nodesEdgesView.setPickOnBounds(false);
-
-        recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
-        AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
-        AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
-        AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
-        AnchorPane.setRightAnchor(nodesEdgesView, 0.0);
-
-        nodesEdgesContainer.getChildren().add(nodesEdgesView);
-        nodesEdgesContainer.setPickOnBounds(false);
-
-        AnchorPane.setTopAnchor(pathWaypointView, 0.0);
-        AnchorPane.setLeftAnchor(pathWaypointView, 0.0);
-        AnchorPane.setBottomAnchor(pathWaypointView, 0.0);
-        AnchorPane.setRightAnchor(pathWaypointView, 0.0);
-
-        pathWaypointContainer.getChildren().add(pathWaypointView);
-        pathWaypointContainer.setPickOnBounds(false);
-
-        keyDialog.setDialogContainer(keyDialogContainer);
-        keyDialogContainer.setDisable(true);
-
-        // Controller-wide localization observer
-        systemSettings.addObserver((o, arg) -> {
-            ResourceBundle rB = systemSettings.getResourceBundle();
-            recenterButton.setText(rB.getString("my.recenter"));
-        });
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MiniMapView.fxml"));
-            loader.setController(miniMapController);
-            miniMapPane.getChildren().clear();
-            miniMapPane.getChildren().add(loader.load());
-        } catch (IOException e) {
-            System.err.println("Loading MiniMapView failed.");
+    public void zoomOnSelectedNodes(LinkedList<Node> viewedNodes){
+        //TODO: make the floor selection method more solid
+        double minX=mapView.getImage().getWidth();
+        double minY=mapView.getImage().getHeight();
+        double maxX=0.0;
+        double maxY=0.0;
+        // Runs through all inserted nodes and gets the max bounds
+        for(Node node: viewedNodes){
+            if(node.getXcoord()>maxX){
+                maxX=node.getXcoord();
+            }
+            if(node.getXcoord()<minX){
+                minX=node.getXcoord();
+            }
+            if(node.getYcoord()>maxY){
+                maxY=node.getYcoord();
+            }
+            if(node.getYcoord()<minY){
+                minY=node.getYcoord();
+            }
         }
+        // adds a border of sorts to the viewed area
+        double border=Math.max((maxX-minX)/10,(maxY-minY)/10);
+        minX-=border;
+        minY-=border;
+        maxX+=border;
+        maxY+=border;
+        minX=Math.max(minX,0.0);
+        minY=Math.max(minY,0.0);
+        maxX=Math.min(maxX,mapView.getImage().getWidth());
+        maxY=Math.min(maxY,mapView.getImage().getHeight());
 
-        // Wrap scroll content in a Group so ScrollPane re-computes scroll bars
-        zoomGroup = new Group();
-        zoomGroup.getChildren().add(scrollPane.getContent());
-        Group contentGroup = new Group(zoomGroup);
-        scrollPane.setContent(contentGroup);
+        //zooming phase
+        Bounds viewPort = scrollPane.getViewportBounds();
+        double scaleValue = Math.min(viewPort.getWidth()/(maxX-minX), viewPort.getHeight()/(maxY-minY));
+        setZoom(scaleValue);
+        ignoreZoomSliderListener=true;
+        zoomSlider.setValue(scaleValue);
+        ignoreZoomSliderListener=false;
 
-        // Initializes the zoom slider to the current zoom scale
-        zoomSlider.setValue(zoomGroup.getScaleX());
+        //scroll bar adjusting stage
+        double centerXOnImage=(minX+maxX)/2.0;
+        double centerYOnImage=(minY+maxY)/2.0;
 
-        // Initializes the Hvalue & Vvalue to the default values
-        scrollPane.setHvalue(DEFAULT_HVALUE);
-        scrollPane.setVvalue(DEFAULT_VVALUE);
+        Bounds contentSize = zoomGroup.getBoundsInParent();
+        double centerXOnZoomGroup=centerXOnImage*contentSize.getWidth()/mapView.getImage().getWidth();
+        double centerYOnZoomGroup=centerYOnImage*contentSize.getHeight()/mapView.getImage().getHeight();
 
-        // zoomSlider value listener
-        zoomSlider.valueProperty().addListener((o, oldVal, newVal) -> setZoom((Double) newVal));
+        scrollPane.setHvalue((centerXOnZoomGroup-viewPort.getWidth()/2)/(contentSize.getWidth()-viewPort.getWidth()));
+        scrollPane.setVvalue((centerYOnZoomGroup-viewPort.getHeight()/2)/(contentSize.getHeight()-viewPort.getHeight()));
+        System.out.println("Hvalue: "+scrollPane.getHvalue());
+        System.out.println("Vvalue: "+scrollPane.getVvalue());
+        System.out.println("ZoomGroupWidth: "+contentSize.getWidth());
+        System.out.println("ZoomGroupHeight: "+contentSize.getHeight());
+    }
 
-        // MouseWheel zooming event handler
-        scrollPane.addEventFilter(ScrollEvent.ANY, event ->  {
-            event.consume();
-            if(event.getDeltaY() == 0){
-                return;
-            }
-            double scaleFactor = (event.getDeltaY()>0) ? 1.1 : 1/1.1;
-            mouseZoom=true;
-            zoomSlider.setValue(zoomOnFocalPoint(scaleFactor*zoomSlider.getValue(),event.getX(),event.getY()));
-            mouseZoom=false;
-        });
+    /**
+     * Helper method for the zoom methods
+     * @param scaleValue adjusts the screen size
+     * @return boolean to indicate if the scale has changed
+     */
+    private boolean setZoom(double scaleValue){
+        //calculates the farthest out someone can zoom
+        double widthRatio = container.getWidth() / mapView.getFitWidth();
+        double heightRatio = container.getHeight() / mapView.getFitHeight();
+        double minScrollValue = Math.max(widthRatio, heightRatio);
+        //calculates the farthest in someone can zoom
+        double maxScrollValue = 1;
 
-
-
-        // Update MiniMap on scroll
-        scrollPane.hvalueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double value = newValue.doubleValue() / scrollPane.getHmax();
-                if (Double.isNaN(value)) value = 0.0;
-                //fixes a bug where the scrollPane gets stuck on the left of the screen
-                if(Double.isNaN(scrollPane.getHvalue())) scrollPane.setHvalue(0.0);
-
-                miniMapController.setNavigationRecX(value);
-            }
-        });
-
-        scrollPane.vvalueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double value = newValue.doubleValue() / scrollPane.getVmax();
-                if (Double.isNaN(value)) value = 0.0;
-                //fixes a bug where the scrollPane gets stuck on the top of the screen
-                if (Double.isNaN(scrollPane.getVvalue())) scrollPane.setVvalue(0.0);
-
-                miniMapController.setNavigationRecY(value);
-            }
-        });
-
-        // Update MiniMap size when the container gets larger/smaller
-        container.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setViewportWidth(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
-
-                calculateMinZoom();
-            }
-        });
-
-        container.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                miniMapController.setViewportHeight(Double.isNaN(newValue.doubleValue()) ? 0 : newValue.doubleValue());
-
-                calculateMinZoom();
-            }
-        });
-
-        scrollPane.vvalueProperty().addListener((obs) -> {
-            checkWaypointVisible(scrollPane);
-//            System.out.println(visibleWaypoints);
-        });
-        scrollPane.hvalueProperty().addListener((obs) -> {
-            checkWaypointVisible(scrollPane);
-//            System.out.println(visibleWaypoints);
-        });
-        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
-            @Override
-            public void onChanged(Change<? extends javafx.scene.Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
-                            //TODO handle lose sight action
-                        }
-                    }
-                    else if(c.wasAdded()) {
-                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
-                            //TODO regain lose sight action
-                        }
-                    }
-                }
-            }
-        });
+        //bounds the scaleValue within the min and max zoom values
+        scaleValue=Math.min(scaleValue,maxScrollValue);
+        scaleValue=Math.max(scaleValue,minScrollValue);
+        //Checks if the scale value is different from the current scale
+        boolean zoomAdjusted= 1!=scaleValue/zoomGroup.getScaleX();
+        if(zoomAdjusted) {
+            zoomGroup.setScaleX(scaleValue);
+            zoomGroup.setScaleY(scaleValue);
+        }
+        return zoomAdjusted;
     }
 
     /**
@@ -599,16 +667,14 @@ public class MapController {
 
     @FXML
     public void zoomInPressed() {
-        mouseZoom=false;
-        double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal * 1.2);
+        ignoreZoomSliderListener = false;
+        zoomSlider.setValue(zoomSlider.getValue()*1.2);
     }
 
     @FXML
-    public void zoomOutPressed() {
-        mouseZoom=false;
-        double sliderVal = zoomSlider.getValue();
-        zoomSlider.setValue(sliderVal / 1.2);
+    public void zoomOutPressed() throws InterruptedException{
+        ignoreZoomSliderListener = false;
+        zoomSlider.setValue(zoomSlider.getValue()/1.2);
     }
 
     /**
@@ -616,13 +682,27 @@ public class MapController {
      */
     @FXML
     protected void zoomWithSlider(){
-        mouseZoom=false;
+        ignoreZoomSliderListener = false;
     }
 
     @FXML
     public void recenterPressed() {
-        this.scrollPane.setHvalue(DEFAULT_HVALUE);
-        this.scrollPane.setVvalue(DEFAULT_VVALUE);
+        setFloorSelector(systemSettings.getDefaultnode().getFloor());
+        onFloorSelected();
+        LinkedList<Node> defaultNode = new LinkedList<Node>();
+        defaultNode.add(systemSettings.getDefaultnode());
+        zoomOnSelectedNodes(defaultNode);
+        this.scrollPane.setHvalue(SystemSettings.getInstance().getDefaultnode().getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(SystemSettings.getInstance().getDefaultnode().getYcoord()/mapView.getFitHeight()-0.04);
+    }
+
+    /**
+     * center the view at input node
+     * @param node the node to recenter at
+     */
+    public void recenterAtNode(Node node) {
+        this.scrollPane.setHvalue(node.getXcoord()/mapView.getFitWidth()-0.04);
+        this.scrollPane.setVvalue(node.getYcoord()/mapView.getFitHeight()-0.04);
     }
 
     public void setOptionsBoxVisible(boolean visible) {
