@@ -225,7 +225,6 @@ public class Path {
         return currentCost;
     }
 
-    //TODO
     private void setDistance(){
         LinkedList<Edge> edgeList = getEdgesAsOneList();
         distance = 0;
