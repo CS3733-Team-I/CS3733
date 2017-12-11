@@ -2,7 +2,9 @@ package pathfinder;
 
 
 import database.objects.Node;
+import database.objects.Request;
 import entity.MapEntity;
+import entity.RequestEntity;
 import entity.searchEntity.ISearchEntity;
 import entity.searchEntity.SearchNode;
 
@@ -23,9 +25,12 @@ public class NodeFuzzySearch {
             MapEntity map = MapEntity.getInstance();
             //LinkedList<Node> mapAllNodes = map.getAllNodes();
             HashMap<String, Node> allNodes = map.getAllNodesHM();
+            //TODO figure out permissions
+            RequestEntity request = RequestEntity.getInstance();
+            HashMap<String, Request> all = request.getallRequestsHM();
             inputtext = inputtext.replaceAll("\\s+","");
             String[] input = inputtext.split("");
-            //DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
+
             // go through all nodes and get hightest match in a hashmap with key of node
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
@@ -77,6 +82,5 @@ public class NodeFuzzySearch {
             throw new Exception("No Input Text");
         }
     }
-
 
     }
