@@ -518,11 +518,6 @@ public class Connector {
             case JANITOR:
                 table="";
                 break;
-
-            case NONE:
-                table="";
-                break;
-
             default:
                 table="";
         }
