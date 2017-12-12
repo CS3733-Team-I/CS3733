@@ -11,8 +11,8 @@ public class InterpreterRequest extends Request {
 
     public InterpreterRequest(String requestID, String nodeID, int assignerID, int completerID,
                               String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                              RequestProgressStatus status, Language language, int uRequestID) {
-        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status, uRequestID);
+                              RequestProgressStatus status, Language language) {
+        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
         this.language = language;
     }
 

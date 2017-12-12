@@ -539,6 +539,7 @@ public class DatabaseController {
         }
     }
 
+    /*
     public void insertEmployeeIntoView(IEmployee employee) {
         try {
             Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
@@ -642,5 +643,5 @@ public class DatabaseController {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

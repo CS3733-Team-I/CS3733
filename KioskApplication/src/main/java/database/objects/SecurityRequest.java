@@ -9,8 +9,8 @@ public class SecurityRequest extends Request {
 
     public SecurityRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                            Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                           RequestProgressStatus status, int priority, int uRequestID) {
-        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status, uRequestID);
+                           RequestProgressStatus status, int priority) {
+        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
         this.priority = priority;
     }
 
