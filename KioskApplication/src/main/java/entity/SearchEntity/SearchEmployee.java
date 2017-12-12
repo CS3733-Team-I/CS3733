@@ -4,6 +4,7 @@ import database.connection.NotFoundException;
 import database.objects.Employee;
 import database.objects.Node;
 import entity.MapEntity;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
@@ -66,15 +67,16 @@ public class SearchEmployee implements ISearchEntity{
         employeeIcon.setFitHeight(48);
         employeeIcon.setFitWidth(48);
 
-        if(databaseEmploy.getServiceAbility() == RequestType.DOCTOR) {
-            try{
-                String nodeID = databaseEmploy.getOptions().get(0);
-                this.officeLocation = MapEntity.getInstance().getNode(nodeID);
-            }catch (NotFoundException e) {
-                e.printStackTrace();
-            }
+        String nodeID = databaseEmploy.getOptions().get(0);
+        try{
+            this.officeLocation = MapEntity.getInstance().getNode(nodeID);
+        }catch (NotFoundException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Can't found Location" + nodeID);
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
-        else this.officeLocation = null;
+
     }
 
     public Object getData() {
@@ -98,11 +100,15 @@ public class SearchEmployee implements ISearchEntity{
     }
 
     public Node getLocation() {
+        String nodeID = databaseEmploy.getOptions().get(0);
         try {
             return MapEntity.getInstance().getNode(databaseEmploy.getOptions().get(0));
         }
         catch (NotFoundException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Can't found Location" + nodeID);
+            alert.setContentText(e.toString());
+            alert.showAndWait();
         }
         return null;
     }

@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import database.connection.NotFoundException;
 import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -13,9 +14,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
@@ -54,6 +57,8 @@ public class EmployeeSettingsController {
 
     @FXML private VBox interpreterLanguageBox;
 
+    @FXML private AnchorPane officePane;
+
     private SearchController searchController;
 
     private javafx.scene.Node searchView;
@@ -89,6 +94,9 @@ public class EmployeeSettingsController {
         FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
         searchLoader.setController(searchController);
         searchView = searchLoader.load();
+        searchController.resizeSearchbarWidth(150.0);
+        searchController.setSearchFieldPromptText("Search office");
+        officePane.getChildren().add(searchView);
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -145,25 +153,29 @@ public class EmployeeSettingsController {
                 LoginEntity e = LoginEntity.getInstance();
                 selectedEmployee = newValue.getValue();
                 additionalInformationBox.getChildren().clear();
-                additionalInformationBox.getChildren().add(searchView);
+                for (String office : selectedEmployee.getOptions()) {
+                    String officeName = "Not Found";
+                    try {
+                        officeName = MapEntity.getInstance().getNode(office).getLongName();
+                    }catch(NotFoundException ex) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Can't found Location" + office);
+                        alert.setHeaderText("Error occured while looking for office");
+                        alert.setContentText(ex.toString());
+                        alert.showAndWait();
+                    }
+                    Label officeLabel = new Label(officeName);
+
+                    additionalInformationBox.getChildren().add(officeLabel);
+                }
+                additionalInformationPane.setVisible(true);
                 if (selectedEmployee.getServiceAbility()==INTERPRETER){
                     for (String language :
                             selectedEmployee.getOptions()) {
                         Label langLabel = new Label(Language.values()[Integer.parseInt(language)].toString());
                         additionalInformationBox.getChildren().add(langLabel);
                     }
-                    additionalInformationPane.setVisible(true);
-                }
-                else if(selectedEmployee.getServiceAbility()==DOCTOR){
-                    for (String office :
-                            selectedEmployee.getOptions()) {
-                        Label officeLabel = new Label(office);
-                        additionalInformationBox.getChildren().add(officeLabel);
-                    }
-                    additionalInformationPane.setVisible(true);
-                }
-                else {
-                    additionalInformationPane.setVisible(false);
+
                 }
                 // Don't allow deletion if the selected user is self
                 if (selectedEmployee.getUsername().equals(e.getCurrentUsername())) {
@@ -428,9 +440,10 @@ public class EmployeeSettingsController {
     @FXML
     public void checkEmployeeServiceType(){
         RequestType employeeType = serviceSelect.getValue();
+        officePane.setVisible(true);
+        searchController.setVisible(true);
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
-            searchController.setVisible(false);
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
@@ -440,14 +453,12 @@ public class EmployeeSettingsController {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            searchController.setVisible(true);
             doctorOfficeLabel.setVisible(true);
         }
         else {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            searchController.setVisible(false);
             doctorOfficeLabel.setVisible(false);
         }
     }
