@@ -441,8 +441,8 @@ public class RequestEntity {
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Int"+currTime;
         InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang, uRequestID);
-        dbController.insertRequestIntoView(iR);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
+        //dbController.insertRequestIntoView(iR);
         uRequestID++;
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
@@ -507,8 +507,8 @@ public class RequestEntity {
         Timestamp completedTime = new Timestamp(currTime-1);
         String rID = "Sec"+currTime;
         SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority, uRequestID);
-        dbController.insertRequestIntoView(sR);
+                submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
+        //dbController.insertRequestIntoView(sR);
         uRequestID++;
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
@@ -581,9 +581,9 @@ public class RequestEntity {
         Timestamp deliveryTime = new Timestamp(now.getTimeInMillis());
 
         FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime, uRequestID);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime);
 
-        dbController.insertRequestIntoView(fR);
+        //dbController.insertRequestIntoView(fR);
         uRequestID++;
 
         foodRequests.put(rID, fR);

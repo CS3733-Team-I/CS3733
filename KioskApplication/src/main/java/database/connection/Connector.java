@@ -226,7 +226,7 @@ public class Connector {
         pstmt.setTimestamp(8, iR.getStartedTime());
         pstmt.setTimestamp(9, iR.getCompletedTime());
         pstmt.setInt(10, iR.getStatus().ordinal());
-        pstmt.setInt(11, iR.getuRequestID());
+        //pstmt.setInt(11, iR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -244,7 +244,7 @@ public class Connector {
         pstmt.setInt(9, iR.getStatus().ordinal());
         //search parameter below
         pstmt.setString(10, iR.getRequestID());
-        pstmt.setInt(11, iR.getuRequestID());
+        //pstmt.setInt(11, iR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -267,8 +267,9 @@ public class Connector {
                 rs.getTimestamp("startedTime"),
                 rs.getTimestamp("completedTime"),
                 RequestProgressStatus.values()[rs.getInt("status")],
-                Language.values()[rs.getInt("language")],
-                   rs.getInt("uRequestID"));
+                Language.values()[rs.getInt("language")]//,
+                   //rs.getInt("uRequestID")
+           );
         }
         return interpreterRequest;
     }
@@ -298,8 +299,9 @@ public class Connector {
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
-                    Language.values()[rs.getInt("language")],
-                    rs.getInt("uRequestID"));
+                    Language.values()[rs.getInt("language")]//,
+                    //rs.getInt("uRequestID")
+            );
 
             interpreterRequests.add(interpreterRequest);
         }
@@ -319,7 +321,7 @@ public class Connector {
         pstmt.setTimestamp(8, sR.getStartedTime());
         pstmt.setTimestamp(9, sR.getCompletedTime());
         pstmt.setInt(10, sR.getStatus().ordinal());
-        pstmt.setInt(11, sR.getuRequestID());
+        //pstmt.setInt(11, sR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -337,7 +339,7 @@ public class Connector {
         pstmt.setInt(9, sR.getStatus().ordinal());
         //search parameter below
         pstmt.setString(10, sR.getRequestID());
-        pstmt.setInt(11, sR.getuRequestID());
+        //pstmt.setInt(11, sR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -360,8 +362,9 @@ public class Connector {
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getInt("priority"),
-                    rs.getInt("uRequestID"));
+                    rs.getInt("priority")//,
+                    //rs.getInt("uRequestID")
+            );
         }
         return securityRequest;
     }
@@ -391,8 +394,9 @@ public class Connector {
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getInt("priority"),
-                    rs.getInt("uRequestID"));
+                    rs.getInt("priority")//,
+                    //rs.getInt("uRequestID")
+            );
 
             securityRequests.add(securityRequest);
         }
@@ -412,7 +416,7 @@ public class Connector {
         pstmt.setTimestamp(9, fR.getStartedTime());
         pstmt.setTimestamp(10, fR.getCompletedTime());
         pstmt.setInt(11, fR.getStatus().ordinal());
-        pstmt.setInt(12, fR.getuRequestID());
+        //pstmt.setInt(12, fR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -431,7 +435,7 @@ public class Connector {
         pstmt.setInt(10, fR.getStatus().ordinal());
         //search parameter below
         pstmt.setString(11, fR.getRequestID());
-        pstmt.setInt(12, fR.getuRequestID());
+        //pstmt.setInt(12, fR.getuRequestID());
         return pstmt.executeUpdate();
 
     }
@@ -456,8 +460,8 @@ public class Connector {
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     rs.getString("destinationID"),
-                    rs.getTimestamp("deliveryTime"),
-                    rs.getInt("uRequestID")
+                    rs.getTimestamp("deliveryTime")//,
+                    //rs.getInt("uRequestID")
             );
         }
         return  foodRequest;
@@ -487,8 +491,8 @@ public class Connector {
                     rs.getTimestamp("completedTime"),
                     RequestProgressStatus.values()[rs.getInt("status")],
                     rs.getString("destinationID"),
-                    rs.getTimestamp("deliveryTime"),
-                    rs.getInt("uRequestID")
+                    rs.getTimestamp("deliveryTime")//,
+                    //rs.getInt("uRequestID")
             );
 
             foodRequests.add(foodRequest);
@@ -611,7 +615,7 @@ public class Connector {
         return janitorRequests;
     }
 
-    public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
+    /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
         String sql = SELECT_REQUEST_UID;
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -632,7 +636,6 @@ public class Connector {
             case JANITOR:
                 table="t_janitor";
                 break;
-
             default:
                 table="";
         }
@@ -646,7 +649,7 @@ public class Connector {
         }
 
         return -1;
-    }
+    }*/
 
     private static RequestType checkRequestType(String requestID) {
         String requestType = requestID.substring(0, 3);
@@ -666,7 +669,7 @@ public class Connector {
         }
     }
 
-    public static boolean addEmployeeToRequestTable(Connection conn,  String employeeID) throws SQLException {
+    /*public static boolean addEmployeeToRequestTable(Connection conn,  String employeeID) throws SQLException {
         String sql = ADD_COLUMN_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
@@ -733,5 +736,5 @@ public class Connector {
 
         return pstmt.executeUpdate();
 
-    }
+    }*/
 }
