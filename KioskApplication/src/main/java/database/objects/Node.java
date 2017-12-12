@@ -18,6 +18,12 @@ public class Node {
     private String shortName;
     private String teamAssigned;
 
+    public Node(Node node) {
+        this(node.getNodeID(), node.getXcoord(), node.getYcoord(), node.getFloor(), node.getBuilding(), node.getNodeType(),
+                node.getLongName(), node.getShortName(), node.getTeamAssigned());
+        this.setUniqueID(node.uniqueID);
+    }
+
     public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
                 String longName, String shortName, String teamAssigned) {
         this.nodeID = nodeID;

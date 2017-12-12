@@ -195,28 +195,6 @@ public class MapBuilderController extends ScreenController {
                     selectedNode.get().setNodeID(nodeID.getText());
                     observableChangedNodes.add(selectedNode.get());
                 }
-
-                //reflect node ID changes in mapEntity also in edges
-                for(Node node : MapEntity.getInstance().getAllNodes()) {
-                    if(node.getUniqueID() == selectedNode.get().getUniqueID()) {
-                        for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
-                            System.out.println("3. Begin Updating edge ID");
-
-                            if(edge.getNode1ID().equals(oldValue)) {
-                                edge.setNode1ID(nodeID.getText());
-                            }
-                            if(edge.getNode2ID().equals(oldValue)) {
-                                edge.setNode2ID(nodeID.getText());
-                            }
-
-                            // TODO make this update the database, currently doesnt
-
-                            System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
-                        }
-
-                        node.setNodeID(nodeID.getText());
-                    }
-                }
             }
         });
 
@@ -737,7 +715,7 @@ public class MapBuilderController extends ScreenController {
 
         for (Node changedNode : observableChangedNodes) {
             try {
-                map.editNode(changedNode);
+                map.editNodeByUK(changedNode);
                 nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
             } catch (DatabaseException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -746,6 +724,8 @@ public class MapBuilderController extends ScreenController {
                 alert.setContentText(ex.toString());
                 alert.showAndWait();
 
+                ex.printStackTrace();
+
                 nodeDialogString += "ERROR: node " + changedNode.getNodeID() + " was not edited to database.\n";
             }
         }
@@ -753,6 +733,8 @@ public class MapBuilderController extends ScreenController {
         System.out.println(nodeDialogString);
         loadDialog(event);
         nodeDialogString = "";
+
+        getMapController().reloadDisplay();
     }
 
 
@@ -917,7 +899,7 @@ public class MapBuilderController extends ScreenController {
             getMapController().removeNode(newNode.get());
             newNode.set(null);
         }
-        selectedNode.set(node);
+        selectedNode.set(new Node(node));
     }
 
     @FXML
