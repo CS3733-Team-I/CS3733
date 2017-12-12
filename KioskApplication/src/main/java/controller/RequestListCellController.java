@@ -3,6 +3,7 @@ package controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import database.connection.NotFoundException;
+import database.objects.Node;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -23,12 +24,16 @@ import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 import javafx.scene.image.Image;
 
+import java.util.LinkedList;
+
 public class RequestListCellController {
 
     LoginEntity lEntity;
     RequestEntity rEntity;
     Request request;
     RequestManagerController parent;
+
+    MapEntity mapEntity;
 
     @FXML private ImageView iconView,readView;
     @FXML private Label nameLabel,timeLabel,extraField,requestNotes,locationOfRequest,person;
@@ -44,7 +49,7 @@ public class RequestListCellController {
         this.request = request;
         this.parent = parent;
         rootVbox = new VBox();
-
+        mapEntity = MapEntity.getInstance();
 
         //TODO: should all this below be in initialize function?
         FXMLLoader loader = ResourceManager.getInstance().getFXMLLoader("/view/RequestListCellView.fxml");
@@ -58,8 +63,8 @@ public class RequestListCellController {
 
         String requestID = request.getRequestID();
         String location = MapEntity.getInstance().getNode(request.getNodeID()).getLongName();
-        String assigner = rEntity.getAssigner(requestID).getFirstName();
-        String completer = rEntity.getCompleter(requestID).getFirstName();
+        String assigner = rEntity.getAssigner(requestID).getUsername();
+        String completer = rEntity.getCompleter(requestID).getUsername();
         RequestType RT = rEntity.checkRequestType(requestID);
         RequestProgressStatus RPS = request.getStatus();
 
@@ -167,6 +172,16 @@ public class RequestListCellController {
                     break;
             }
         }
+    }
+
+    public void goToLocation(){
+        LinkedList<Node> location = new LinkedList<>();
+        try {
+            location.add(mapEntity.getNode(request.getNodeID()));
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        this.parent.getMapController().zoomOnSelectedNodes(location);
     }
 
 

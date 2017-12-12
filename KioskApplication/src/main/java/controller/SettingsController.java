@@ -1,5 +1,6 @@
 package controller;
 
+import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTabPane;
 import controller.map.MapController;
 import database.objects.Edge;
@@ -26,9 +27,12 @@ public class SettingsController extends ScreenController {
     @FXML private Tab languageTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;
+    @FXML private Tab generalTab;
 
     @FXML private Tab databaseTab;
     @FXML private Tab employeesTab;
+
+    @FXML private Tab unitTab;
 
 
     @FXML private RadioButton astarButton;
@@ -41,15 +45,27 @@ public class SettingsController extends ScreenController {
     @FXML private RadioButton englishButton;
     @FXML private RadioButton franceSelected;
 
+    @FXML private JFXRadioButton rbArabic;
+    @FXML private JFXRadioButton rbElbonian;
+
+    @FXML private JFXRadioButton rbMetric;
+    @FXML private JFXRadioButton rbEnglish;
+
     @FXML private AnchorPane userPane;
     @FXML private AnchorPane employeesPane;
 
     @FXML private TextField beamWidth;
+    @FXML private TextField timeoutLength;
 
     private FXMLLoader employeeLoader;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
     ToggleGroup languageSelectToggleGroup = new ToggleGroup();
+
+    //unit toggle group
+    ToggleGroup unitToggleGroup = new ToggleGroup();
+    ToggleGroup numberSystemToggleGroup = new ToggleGroup();
+
     public SettingsController(MainWindowController parent, MapController mapController) {
         super(parent, mapController);
     }
@@ -93,7 +109,22 @@ public class SettingsController extends ScreenController {
         loader2.setRoot(userPane);
         loader2.load();
 
+        timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
+
         checkPermissions();
+
+        //unit and number system
+        rbMetric.setToggleGroup(unitToggleGroup);
+        rbEnglish.setToggleGroup(unitToggleGroup);
+
+        rbArabic.setToggleGroup(numberSystemToggleGroup);
+        rbElbonian.setToggleGroup(numberSystemToggleGroup);
+
+        rbMetric.setSelected(true);
+        rbArabic.setSelected(true);
+
+        systemSettings.setIsMetric(true);
+        systemSettings.setIsArabic(true);
 
         // Listen for TextField text changes
         beamWidth.textProperty().addListener(new ChangeListener<String>() {
@@ -154,15 +185,15 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, pathfindingTab, userTab, databaseTab, employeesTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab);
+                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab);
                 break;
         }
     }
@@ -182,6 +213,34 @@ public class SettingsController extends ScreenController {
         systemSettings.setResourceBundle(languageSelectToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
+    /**
+     * select unit
+     */
+    @FXML
+    void onUnitSelected() {
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        if(unitToggleGroup.getSelectedToggle() == rbMetric) {
+            systemSettings.setIsMetric(true);
+        }
+        else if(unitToggleGroup.getSelectedToggle() == rbEnglish) {
+            systemSettings.setIsMetric(false);
+        }
+    }
+
+    /**
+     * select number system
+     */
+    @FXML
+    void onNumberSystemSelected() {
+        SystemSettings systemSettings = SystemSettings.getInstance();
+        if(numberSystemToggleGroup.getSelectedToggle() == rbArabic) {
+            systemSettings.setIsMetric(true);
+        }
+        else if(numberSystemToggleGroup.getSelectedToggle() ==rbElbonian) {
+            systemSettings.setIsArabic(false);
+        }
+    }
+
     @FXML
     void readCSV() {
         try {
@@ -198,6 +257,19 @@ public class SettingsController extends ScreenController {
     @FXML
     void saveCSV() {
         CsvFileUtil.getInstance().writeAllCsvs();
+    }
+
+    /**
+     * Save the settings in the general screen
+     */
+    @FXML
+    void saveGeneral(){
+        try{
+            getParent().setTimeout(Integer.parseInt(timeoutLength.getText()));
+        }catch(Exception e){
+            System.out.println("Exception caught");
+        }
+        timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
     }
 
     @Override

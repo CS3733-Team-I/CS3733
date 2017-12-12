@@ -3,6 +3,8 @@ package database.objects;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
+import java.util.ArrayList;
+
 public class NullEmployee implements IEmployee {
 
     private static NullEmployee instance = null;
@@ -41,8 +43,8 @@ public class NullEmployee implements IEmployee {
         return "";
     }
 
-    public String getOptions(){
-        return "";
+    public ArrayList<String> getOptions(){
+        return new ArrayList<String>();
     }
 
     public KioskPermission getPermission() {
@@ -61,11 +63,11 @@ public class NullEmployee implements IEmployee {
         return false;
     }
 
-    public boolean updatePassword(String newPassword, String oldPassword){
+    public boolean setPassword(String newPassword, String oldPassword){
         return false;
     }
 
-    public boolean updateUsername(String newUsername, String password){
+    public boolean setUsername(String newUsername, String password){
         return false;
     }
 }
