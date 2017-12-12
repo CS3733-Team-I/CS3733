@@ -519,10 +519,6 @@ public class Connector {
                 table="";
                 break;
 
-            case NONE:
-                table="";
-                break;
-
             default:
                 table="";
         }

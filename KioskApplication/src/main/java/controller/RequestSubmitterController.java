@@ -59,6 +59,7 @@ public class RequestSubmitterController extends ScreenController {
 
     /*transport related*/
     @FXML private Tab transportTab;
+    @FXML private JFXTextField startNode, endNode;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -144,12 +145,7 @@ public class RequestSubmitterController extends ScreenController {
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
             } else if (newValue == transportTab) {
-                try {
-                    APIApp.run(50, 50, 500, 500,
-                            "", "", "");
-                } catch (APIApp.ServiceException e){
-                    e.printStackTrace();
-                }
+                currentRequestType = RequestType.INTERNAL_TRANSPORTATION;
             }
             resetTimer();
         });
@@ -312,6 +308,19 @@ public class RequestSubmitterController extends ScreenController {
             case FOOD:
                 addFoodRequest();
                 break;
+            case INTERNAL_TRANSPORTATION:
+                System.out.println("Trying to start");
+                if(!startNode.getText().equals("") && !endNode.getText().equals("")) {
+                    try {
+                        APIApp.run(50, 50, 500, 500,
+                                "/css/application.css", endNode.getText(),startNode.getText());
+                        System.out.println("Starting");
+                    } catch (APIApp.ServiceException e) {
+                        System.out.println("Whoops");
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
 
@@ -415,6 +424,12 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 System.out.println("map clicked in Janitor tab");
                 break;
+            case INTERNAL_TRANSPORTATION:
+                if(startNode.getText().equals("")){
+                    startNode.setText(n.getNodeID());
+                } else {
+                    endNode.setText(n.getNodeID());
+                }
         }
     }
 
