@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXProgressBar;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Employee;
@@ -16,6 +17,7 @@ import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +25,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -76,6 +80,8 @@ public class PathfindingSidebarController extends ScreenController {
     private SearchController searchController;
 
     private javafx.scene.Node searchView;
+
+    Task<Void> searchResetTask;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -190,6 +196,26 @@ public class PathfindingSidebarController extends ScreenController {
                 }
             }
         });
+
+        //reset search
+        this.searchResetTask = new Task<Void>() {
+            @Override protected Void call() throws Exception {
+                SystemSettings.getInstance().updateDistance();
+                ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+                for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+                    if(targetNode.getNodeType() != NodeType.HALL) {
+                        searchNodeAndDoctor.add(new SearchNode(targetNode));
+                    }
+                }
+                for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+                    if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                        searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+                    }
+                }
+                searchController.reset(searchNodeAndDoctor);
+                return null;
+            }
+        };
     }
 
     @FXML
@@ -339,20 +365,7 @@ public class PathfindingSidebarController extends ScreenController {
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
 
-        //reset search
-        SystemSettings.getInstance().updateDistance();
-        ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
-        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
-            if(targetNode.getNodeType() != NodeType.HALL) {
-                searchNodeAndDoctor.add(new SearchNode(targetNode));
-            }
-        }
-        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
-            if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
-                searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
-            }
-        }
-        searchController.reset(searchNodeAndDoctor);
+        new Thread(searchResetTask).start();
     }
 
     /**
