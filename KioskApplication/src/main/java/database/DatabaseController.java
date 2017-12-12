@@ -351,7 +351,7 @@ public class DatabaseController {
      * @param requestID
      * @return
      */
-    public JanitorRequest getJanitorReqeuest(String requestID) {
+    public JanitorRequest getJanitorRequest(String requestID) {
         try{
             return Connector.selectJanitor(instanceConnection, requestID);
         } catch (SQLException e){

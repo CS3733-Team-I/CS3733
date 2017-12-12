@@ -73,7 +73,8 @@ public class DBUtil {
         PreparedStatement createSecurityTable = conn.prepareStatement(CREATE_SECURITY_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createSecurityTable.execute();
-        PreparedStatement createJanitorTable = conn.prepareStatement(CREATE_JANITOR_TABLE+WITH_SHARED_REQUEST_ATTRIBUTES);
+        PreparedStatement createJanitorTable = conn.prepareStatement(CREATE_JANITOR_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES);
         createJanitorTable.execute();
     }
 

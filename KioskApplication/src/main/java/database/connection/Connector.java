@@ -509,7 +509,7 @@ public class Connector {
      * @throws SQLException
      */
     public static int insertJanitor(Connection conn, JanitorRequest jR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_INSERT+REQUEST_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_INSERT);
         pstmt.setString(1, jR.getRequestID());
         pstmt.setString(2, jR.getNodeID());
         pstmt.setInt(3, jR.getAssignerID());
@@ -519,7 +519,7 @@ public class Connector {
         pstmt.setTimestamp(7, jR.getStartedTime());
         pstmt.setTimestamp(8, jR.getCompletedTime());
         pstmt.setInt(9, jR.getStatus().ordinal());
-        pstmt.setInt(10, jR.getuRequestID());
+        //pstmt.setInt(10, jR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -542,7 +542,7 @@ public class Connector {
         pstmt.setInt(8, jR.getStatus().ordinal());
         //search parameter below
         pstmt.setString(9, jR.getRequestID());
-        pstmt.setInt(10, jR.getuRequestID());
+        //pstmt.setInt(10, jR.getuRequestID());
         return pstmt.executeUpdate();
     }
 
@@ -568,8 +568,9 @@ public class Connector {
                     rs.getTimestamp("submittedTime"),
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
-                    RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getInt("uRequestID"));
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
         }
         return janitorRequest;
     }
@@ -608,8 +609,9 @@ public class Connector {
                     rs.getTimestamp("submittedTime"),
                     rs.getTimestamp("startedTime"),
                     rs.getTimestamp("completedTime"),
-                    RequestProgressStatus.values()[rs.getInt("status")],
-                    rs.getInt("uRequestID"));
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
             janitorRequests.add(janitorRequest);
         }
         return janitorRequests;

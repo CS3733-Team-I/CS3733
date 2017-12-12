@@ -651,9 +651,9 @@ public class RequestEntity {
         String rID = "Jan"+currTime;
 
         JanitorRequest janitorRequest = new JanitorRequest(rID, nodeID, assignerID, assignerID, note,
-                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, uRequestID);
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO);
 
-        dbController.insertRequestIntoView(janitorRequest);
+        //dbController.insertRequestIntoView(janitorRequest);
         uRequestID++;
 
         janitorRequests.put(rID, janitorRequest);
