@@ -18,6 +18,7 @@ public class SearchEmployee implements ISearchEntity{
     ImageView employeeIcon;
     String searchString;
     Node officeLocation;
+    String officeName;
 
     public SearchEmployee(Employee databaseEmploy) {
         this.databaseEmploy = databaseEmploy;
@@ -70,13 +71,14 @@ public class SearchEmployee implements ISearchEntity{
         String nodeID = databaseEmploy.getOptions().get(0);
         try{
             this.officeLocation = MapEntity.getInstance().getNode(nodeID);
+            this.officeName = officeLocation.getLongName();
         }catch (NotFoundException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Can't found Location" + nodeID);
             alert.setContentText(e.toString());
             alert.showAndWait();
         }
-
+        this.searchString = databaseEmploy.getLastName() + ", " + databaseEmploy.getFirstName() + " (" + officeName + ")";
     }
 
     public Object getData() {
@@ -100,16 +102,6 @@ public class SearchEmployee implements ISearchEntity{
     }
 
     public Node getLocation() {
-        String nodeID = databaseEmploy.getOptions().get(0);
-        try {
-            return MapEntity.getInstance().getNode(databaseEmploy.getOptions().get(0));
-        }
-        catch (NotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Can't found Location" + nodeID);
-            alert.setContentText(e.toString());
-            alert.showAndWait();
-        }
-        return null;
+        return officeLocation;
     }
 }

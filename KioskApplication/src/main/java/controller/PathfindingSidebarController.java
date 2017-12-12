@@ -181,12 +181,12 @@ public class PathfindingSidebarController extends ScreenController {
             public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
                 if (newValue != null) {
                     if(((Node) newValue.getLocation()).getFloor() != getMapController().getCurrentFloor()) {
-                        getMapController().setFloorSelector(((Node)newValue.getData()).getFloor());
+                        getMapController().setFloorSelector(((Node)newValue.getLocation()).getFloor());
                     }
                     LinkedList<Node> displayedNode = new LinkedList<>();
-                    displayedNode.add(((Node)newValue.getData()));
+                    displayedNode.add((newValue.getLocation()));
                     getMapController().zoomOnSelectedNodes(displayedNode);
-                    onMapNodeClicked(((Node)newValue.getData()));
+                    onMapNodeClicked((newValue.getLocation()));
                 }
             }
         });
