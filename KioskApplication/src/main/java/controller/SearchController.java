@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,11 +26,7 @@ public class SearchController {
 
     private ObservableList<ISearchEntity> searchData;
 
-    private SortedList<ISearchEntity> sortedList;
-
     private Object parent;
-
-    private TableView<ISearchEntity> searchTable;
 
     private HashMap<String, ISearchEntity> searchMap;
 
@@ -45,15 +42,11 @@ public class SearchController {
 
     @FXML
     void initialize() {
-
         //initialize the lists
-        searchTable = new TableView<>();
-        this.filteredList = new FilteredList<>(this.searchData, e->true);
+        filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
-        cbSearchData.setTooltip(new Tooltip());
         cbSearchData.setEditable(true);
         cbSearchData.setPromptText("Search by location, doctor or type");
-        cbSearchData.getEditor().setEditable(true);
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {
@@ -70,79 +63,70 @@ public class SearchController {
             }
         });
 
+        //DONT REMOVE THIS
         cbSearchData.setCellFactory(listView -> new ListCell<ISearchEntity>() {
             @Override
             protected void updateItem(ISearchEntity item, boolean empty) {
                 super.updateItem(item, empty);
 
-                if(item == null || empty) {
+                getListView().setMaxWidth(750);
+                if(empty || item == null) {
+                    setText(null);
                     setGraphic(null);
-                }
-                else {
+                } else {
                     setGraphic(item.getIcon());
                     setText(item.getSearchString());
                 }
             }
         });
 
-        cbSearchData.setButtonCell(cbSearchData.getCellFactory().call(null));
-
-
-        cbSearchData.setOnKeyReleased(e -> {
-            cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
-                final List<ISearchEntity> searchResults = new LinkedList<>();
-                if (newValue != null && !newValue.equals("")) {
-                    try {
-                        searchResults.addAll(fuzzySearch(newValue));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-                filteredList.setPredicate((Predicate<? super ISearchEntity>) iSearchEntity-> {
-                    if(newValue == null || newValue.isEmpty()) {
-                        return true;
-                    } else {
-                        cbSearchData.setPromptText("");
-                    }
-
-                    /*//also check its lower case
-                    String lowerCaseFilter = newValue.toLowerCase();
-                    //also check its upper case
-                    String upperCaseFilter = newValue.toUpperCase();
-                    value = newValue;
-                    if((searchNode.getDatabaseNode().getNodeID().contains(newValue) || searchNode.getDatabaseNode().getLongName().contains(newValue) || searchNode.getDatabaseNode().getShortName().contains(newValue)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }else if((searchNode.getDatabaseNode().getNodeID().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(lowerCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }
-                    else if((searchNode.getDatabaseNode().getNodeID().contains(upperCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(upperCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(upperCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }*/
-
-                    for (ISearchEntity searchEntity : searchResults) {
-                        //TODO Search String vs Node ID?
-                        if (searchEntity.getComparingString().equalsIgnoreCase(iSearchEntity.getComparingString())) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
-            });
-            sortedList = new SortedList<>(filteredList);
-
-            sortedList.comparatorProperty().bind(searchTable.comparatorProperty());
-            searchTable.setItems(sortedList);
-            cbSearchData.getItems().clear();
-            cbSearchData.getItems().addAll(sortedList);
-            if(!sortedList.isEmpty()) {
+        cbSearchData.getEditor().focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
                 cbSearchData.show();
-            }
-            else {
+                cbSearchData.setPromptText("");
+            } else {
                 cbSearchData.hide();
+                cbSearchData.setPromptText("Search by location, doctor or type"); // TODO use language string
             }
+        }));
+
+        cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+
+        updateSearch("");
+        cbSearchData.hide();
+    }
+
+    private void updateSearch(String searchText) {
+        final List<ISearchEntity> searchResults = new LinkedList<>();
+        if (searchText != null && !searchText.equals("")) {
+            try {
+                searchResults.addAll(fuzzySearch(searchText));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        filteredList.setPredicate((Predicate<? super ISearchEntity>) entity -> {
+            if(searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+
+            for (ISearchEntity searchEntity : searchResults) {
+                if (searchEntity.getComparingString().equalsIgnoreCase(entity.getComparingString())) {
+                    return true;
+                }
+            }
+
+            return false;
         });
+
+        cbSearchData.getItems().clear();
+        cbSearchData.getItems().addAll(searchResults);
+        if(!searchResults.isEmpty()) {
+            cbSearchData.show();
+        } else {
+            cbSearchData.hide();
+        }
     }
 
     @FXML
@@ -176,8 +160,6 @@ public class SearchController {
 
     public void clearSearch() {
         cbSearchData.getItems().clear();
-        sortedList.clear();
-        searchTable.getItems().clear();
     }
 
     public void setVisible(boolean b) {
@@ -236,13 +218,13 @@ public class SearchController {
             if(sorted.size()>5) {
                 // get the top 5 from sorted arraylist
                 for (int i = 0; i < 5; i++) {
-                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
+                    bestmatch.addLast(allsearch.get(sorted.get(i).getKey()));
                 }
                 return bestmatch;
             }
             else{
                 for(int i=0; i<sorted.size();i++){
-                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
+                    bestmatch.addLast(allsearch.get(sorted.get(i).getKey()));
                 }
                 return  bestmatch;
             }
