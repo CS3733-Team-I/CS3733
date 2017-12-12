@@ -325,6 +325,9 @@ public class RequestSubmitterController extends ScreenController {
         secLocationField.setText("");
         secNoteField.setText("");
         priorityMenu.setValue(null);
+
+        janLocationField.setText("");
+        janNotesField.setText("");
     }
 
     /**

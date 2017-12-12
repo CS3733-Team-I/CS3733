@@ -12,11 +12,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <JFXTabPane fx:id="requestTypeTabs" layoutX="44.0" layoutY="161.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="400.0" side="LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -95,24 +95,29 @@
                 </Tab>
                 <Tab fx:id="janitorTab">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0" />
-                        <GridPane>
-                            <columnConstraints>
-                                <ColumnConstraints prefWidth="100"/>
-                                <ColumnConstraints prefWidth="100"/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints prefHeight="60"/>
-                                <RowConstraints prefHeight="60"/>
-                                <RowConstraints prefHeight="60"/>
-                            </rowConstraints>
+                        <AnchorPane maxHeight="Infinity" maxWidth="Infinity" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="400">
                             <children>
-                                <JFXTextField fx:id="janLocationField" prefHeight="30" prefWidth="200" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
-                                <JFXTextArea fx:id="janNotesField" prefHeight="60" prefWidth="200" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
-                                <JFXButton prefHeight="30" prefWidth="100" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="cancel-button" onAction="#clearButton" text="Clear"/>
-                                <JFXButton prefHeight="30" prefWidth="100" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#addRequest" text="Submit" />
+                                <GridPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                                    <columnConstraints>
+                                        <ColumnConstraints maxWidth="Infinity" minWidth="100.0" prefWidth="200" halignment="LEFT"/>
+                                        <ColumnConstraints maxWidth="Infinity" minWidth="100.0" prefWidth="200" halignment="RIGHT"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints prefHeight="100"/>
+                                        <RowConstraints prefHeight="200"/>
+                                        <RowConstraints prefHeight="100"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <JFXTextField fx:id="janLocationField" prefHeight="30" prefWidth="200" promptText="Location" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <JFXTextArea fx:id="janNotesField" prefHeight="200" prefWidth="200" promptText="Notes"
+                                                     GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                                     GridPane.vgrow="ALWAYS" styleClass="request-notes"/>
+                                        <JFXButton onAction="#clearButton" prefHeight="30" prefWidth="150" styleClass="cancel-button" text="Clear" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <JFXButton onAction="#addRequest" prefHeight="30" prefWidth="150" text="Submit" id="confirm-button" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass=""/>
+                                    </children>
+                                </GridPane>
                             </children>
-                        </GridPane>
+                        </AnchorPane>
                     </content>
                 </Tab>
             </tabs>

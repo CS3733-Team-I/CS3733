@@ -757,7 +757,9 @@ public class RequestEntity {
         ObservableList<PieChart.Data> reqs =
                 FXCollections.observableArrayList(
                         new PieChart.Data(RequestType.INTERPRETER.toString(),interpreterRequests.size()),
-                        new PieChart.Data(RequestType.SECURITY.toString(),securityRequests.size()));
+                        new PieChart.Data(RequestType.SECURITY.toString(),securityRequests.size()),
+                        new PieChart.Data(RequestType.FOOD.toString(),foodRequests.size()),
+                        new PieChart.Data(RequestType.JANITOR.toString(),janitorRequests.size()));
         return reqs;
     }
 }
