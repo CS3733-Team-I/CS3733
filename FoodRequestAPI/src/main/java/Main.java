@@ -40,7 +40,8 @@ public class Main extends Application {
 
         Tab managerTab = new Tab();
         managerTab.setText("Request Manager");
-        managerTab.setContent(new RequestManagerController().getContentView());
+        RequestManagerController managerController = new RequestManagerController();
+        managerTab.setContent(managerController.getContentView());
 
         tabPane.getTabs().addAll(managerTab, requestTab);
 
@@ -52,6 +53,10 @@ public class Main extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.show();
+
+        managerTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(managerTab.isSelected()) managerController.refreshRequests();
+        });
     }
 
     public void run(int xcoord, int ycoord, int windowWidth, int windowLength, String cssPath, String destNodeID, String originNodeID) throws Exception {

@@ -105,6 +105,7 @@ public class RequestSubmitterController {
             }
         });
 
+        //TODO: fix this?
 //        try {
 //            restaurantComboBox.setValue(MapEntity.getInstance().getNode(restaurantID));
 //        } catch (NotFoundException e) {
@@ -121,7 +122,6 @@ public class RequestSubmitterController {
         final TreeItem<FoodMenuItem> root = new TreeItem<>(new FoodMenuItem("Menu", 0.0, FoodType.ENTREE));
         root.setExpanded(true);
 
-        root.getChildren().setAll(entrees,drinks,sides);
 
         restaurantComboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
@@ -129,6 +129,8 @@ public class RequestSubmitterController {
             if(restNode.getLongName().toLowerCase().contains("caf")) {
                 System.out.println("Cafe reached");
                 Cafe menu = new Cafe();
+                root.getChildren().removeAll();
+                root.getChildren().setAll(entrees,drinks,sides);
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
                 drinks.getChildren().clear();
@@ -147,6 +149,8 @@ public class RequestSubmitterController {
             }else if(restNode.getLongName().toLowerCase().contains("vending")){
                 System.out.println("Vending reached");
                 VendingMachine menu = new VendingMachine();
+                root.getChildren().removeAll();
+                root.getChildren().setAll(sides);
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
                 drinks.getChildren().clear();
@@ -157,6 +161,8 @@ public class RequestSubmitterController {
             }else if(restNode.getLongName().toLowerCase().contains("pain")){
                 System.out.println("Au Bon Pain reached");
                 AuBonPain menu = new AuBonPain();
+                root.getChildren().removeAll();
+                root.getChildren().setAll(entrees,drinks,sides);
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
                 drinks.getChildren().clear();
@@ -175,6 +181,8 @@ public class RequestSubmitterController {
             }else if(restNode.getLongName().toLowerCase().contains("pat")){
                 System.out.println("Pats Place reached");
                 PatsPlace menu = new PatsPlace();
+                root.getChildren().removeAll();
+                root.getChildren().setAll(entrees,drinks,sides);
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
                 drinks.getChildren().clear();
@@ -192,6 +200,8 @@ public class RequestSubmitterController {
                 }
             }else if(restNode.getLongName().toLowerCase().contains("gift")){
                 System.out.println("Gift Shop reached");
+                root.getChildren().removeAll();
+                root.getChildren().setAll(drinks,sides);
                 GiftShop menu = new GiftShop();
                 sides.getChildren().clear();
                 entrees.getChildren().clear();
@@ -199,10 +209,6 @@ public class RequestSubmitterController {
                 for(FoodMenuItem item: menu.getFoodType(FoodType.SIDE)){
                     TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
                     sides.getChildren().add(fooditem);
-                }
-                for(FoodMenuItem item: menu.getFoodType(FoodType.ENTREE)){
-                    TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
-                    entrees.getChildren().add(fooditem);
                 }
                 for(FoodMenuItem item: menu.getFoodType(FoodType.DRINK)){
                     TreeItem<FoodMenuItem> fooditem = new TreeItem<>(item);
@@ -278,7 +284,6 @@ public class RequestSubmitterController {
      */
     public void addFoodRequest(){
         String order = "Order:";
-//        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
         for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
             for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
                 String fooditem = item.getValue().getName();
@@ -288,7 +293,6 @@ public class RequestSubmitterController {
                                 item.getValue().getName().equals("Sides"))){
                     order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
                 }
-//            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
             }
         }
         order = order.trim();

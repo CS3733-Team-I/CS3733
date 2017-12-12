@@ -83,33 +83,14 @@ public class RequestListCellController {
         readView.setFitWidth(24);
         readView.setFitHeight(24);
 
-        switch (RT){
-            case INTERPRETER:
-                String language = rEntity.getInterpreterRequest(requestID).getLanguage().toString();
-                extraField.setText("Language: "+language);
-                Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIconBlack.png");
-                iconView.setImage(interpreterIcon);
-                iconView.setFitHeight(48);
-                iconView.setFitWidth(48);
-                break;
-            case FOOD:
-                String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
-                String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
-                extraField.setText("Restaurant: " + restaurant);
-                Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
-                iconView.setImage(foodIcon);
-                iconView.setFitHeight(48);
-                iconView.setFitWidth(48);
-                break;
-            default: //security
-                int priority = rEntity.getSecurityRequest(requestID).getPriority();
-                extraField.setText("Priority: "+ priority);
-                Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIconBlack.png");
-                iconView.setImage(securityIcon);
-                iconView.setFitHeight(48);
-                iconView.setFitWidth(48);
-                break;
-        }
+        String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
+        String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
+        extraField.setText("Restaurant: " + restaurant);
+        Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
+        iconView.setImage(foodIcon);
+        iconView.setFitHeight(48);
+        iconView.setFitWidth(48);
+
         switch(RPS){
             case TO_DO:
                 person.setText("Requested by: " + assigner);
@@ -164,32 +145,17 @@ public class RequestListCellController {
                 });
 
                 buttonBox.getChildren().add(employees);
-            }
-        }else{
-            JFXButton statusUpdater = new JFXButton();
-            switch (RPS) {
-                case TO_DO:
-                    statusUpdater = new JFXButton("Assign Myself");
-                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            rEntity.markInProgress(lEntity.getCurrentLoginID(), requestID);
-                            parent.refreshRequests();
-                        }
-                    });
-                    buttonBox.getChildren().add(statusUpdater);
-                    break;
-                case IN_PROGRESS:
-                    statusUpdater = new JFXButton("Completed");
-                    statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent e) {
-                            rEntity.completeRequest(requestID);
-                            parent.refreshRequests();
-                        }
-                    });
-                    buttonBox.getChildren().add(statusUpdater);
-                    break;
+            }else if(RPS.equals(RequestProgressStatus.IN_PROGRESS)){
+                JFXButton statusUpdater = new JFXButton();
+                statusUpdater = new JFXButton("Completed");
+                statusUpdater.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        rEntity.completeRequest(requestID);
+                        parent.refreshRequests();
+                    }
+                });
+                buttonBox.getChildren().add(statusUpdater);
             }
         }
     }
