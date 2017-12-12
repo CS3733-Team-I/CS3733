@@ -27,13 +27,13 @@ public class SearchController {
 
     private SortedList<ISearchEntity> sortedList;
 
-    private ScreenController parent;
+    private Object parent;
 
     private TableView<ISearchEntity> searchTable;
 
     private HashMap<String, ISearchEntity> searchMap;
 
-    public SearchController(ScreenController parent, ArrayList<ISearchEntity> searchData) {
+    public SearchController(Object parent, ArrayList<ISearchEntity> searchData) {
         this.parent = parent;
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
@@ -86,6 +86,7 @@ public class SearchController {
         });
 
         cbSearchData.setButtonCell(cbSearchData.getCellFactory().call(null));
+
 
         cbSearchData.setOnKeyReleased(e -> {
             cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -158,8 +159,8 @@ public class SearchController {
     }
 
     public void reset(ArrayList<ISearchEntity> searchData) {
-        searchData.clear();
-        searchData.addAll(searchData);
+        this.searchData.clear();
+        this.searchData.addAll(searchData);
         for(ISearchEntity searchEntity : searchData) {
             searchMap.put(searchEntity.getComparingString(), searchEntity);
         }
@@ -179,9 +180,13 @@ public class SearchController {
         searchTable.getItems().clear();
     }
 
+    public void setVisible(boolean b) {
+        this.cbSearchData.setVisible(b);
+    }
+
     /**
      * Fuzzy search
-     * goes through all nodes long names and finds the top 5 matches to all nodes
+     * goes through all ISearchEntity long names and returns the top 5 matches
      *
      * @param inputtext
      * @return Linked list of 5 top search result nodes
@@ -195,51 +200,49 @@ public class SearchController {
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
             // put all nodes in hash map
-            //RequestEntity request = RequestEntity.getInstance();
-            //HashMap<String, Request> allsearch = request.getallRequestsHM();
             // go through all nodes and get hightest match in a hashmap with key of node
             for (String key : allsearch.keySet()) {
                 matched = 0;
                 String longname = allsearch.get(key).getName().replaceAll("\\s+","");
                 String[] longName = longname.split("");
-                // for (int i = 0; i < longName.length; i++) {
-                for (int i=0; i<input.length;i++){
-                    if (longname.toLowerCase().contains(input[i].toLowerCase()))
-                        if (matched < input.length) {
-                            matched++;
-                        } else {
-                            // do nothing
-                        }
-                    if(i>=longName.length){}
-                    else{
+                for(int i = 0; i<input.length; i++){
+                    if(longName.length>i) {
                         if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
-                            matched++;}
+                            matched=matched+20; }
+                    }
+                    else{
+                        if (input[i].toLowerCase().equals(longName[longName.length - 1].toLowerCase())) {
+                            matched++;
+                        }
                     }
                 }
                 sortedMap.put(key, matched);
             }
-            // now sort hashmap from highest to lowest
-            int min = 0;
-            List<String> sorted = new ArrayList<>();
+            // now sort hashmap from highest to lowest using array list sort and compare
+            ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>(sortedMap.entrySet());
+            Collections.sort(sorted, new Comparator<Map.Entry<String, Integer>>() {
+                        @Override
+                        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                            return o2.getValue().compareTo(o1.getValue());
+                        }
+                    }
+            );
+          /*ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>();
+           // List<String> sorted = new ArrayList<>();
             for (String key : sortedMap.keySet()) {
-                if (sortedMap.get(key) >= min) {
-                    sorted.add(0, key);
-                    min = sortedMap.get(key);
-                } else {
-                    sorted.add(sorted.size(), key);
-                }
-            }
+               sorted.add(sortedMap.get(key),key);
+            }*/
             LinkedList<ISearchEntity> bestmatch = new LinkedList<>();
             if(sorted.size()>5) {
                 // get the top 5 from sorted arraylist
                 for (int i = 0; i < 5; i++) {
-                    bestmatch.add(allsearch.get(sorted.get(i)));
+                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
                 }
                 return bestmatch;
             }
             else{
                 for(int i=0; i<sorted.size();i++){
-                    bestmatch.add(allsearch.get(sorted.get(i)));
+                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
                 }
                 return  bestmatch;
             }

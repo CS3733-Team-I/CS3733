@@ -201,4 +201,9 @@ public class Node {
     public void setYcoordProperty(int ycoordProperty) {
         this.ycoordProperty.set(ycoordProperty);
     }
+
+    @Override
+    public String toString() {
+        return this.longName;
+    }
 }

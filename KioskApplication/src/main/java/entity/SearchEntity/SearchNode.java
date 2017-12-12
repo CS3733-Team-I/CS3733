@@ -2,10 +2,14 @@ package entity.SearchEntity;
 
 import database.objects.Node;
 import entity.MapEntity;
+import entity.SystemSettings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
+import utility.elbonian.ElbonianArabicConverter;
+import utility.elbonian.MalformedNumberException;
+import utility.elbonian.ValueOutOfBoundsException;
 
 
 public class SearchNode implements ISearchEntity{
@@ -17,8 +21,41 @@ public class SearchNode implements ISearchEntity{
     public SearchNode(Node node) {
         this.databaseNode = node;
         this.distance = new SimpleIntegerProperty(MapEntity.getInstance().getDistanceFromKiosk(node));
-        //TODO implement distance
-        this.searchString = distance.get() + "ft " + node.getLongName() + " (" + node.getFloor() + ")";
+
+        if(SystemSettings.getInstance().isMetric()) {
+            distance.set((int)MapEntity.getInstance().getDistanceFromKioskMeters(node));
+        }
+        else {
+            distance.set((int)MapEntity.getInstance().getDistanceFromKioskFeet(node));
+        }
+
+        String distanceString = "";
+        //Check for number System
+        if(SystemSettings.getInstance().isArabic()) {
+            distanceString = Integer.toString(distance.get());
+        }
+        else {
+
+            try{
+                try{
+                    ElbonianArabicConverter converter = new ElbonianArabicConverter(Integer.toString(distance.get()));
+                    distanceString = converter.toElbonian();
+                }catch (ValueOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+            }catch(MalformedNumberException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(SystemSettings.getInstance().isMetric()) {
+            distanceString += " m ";
+        }
+        else {
+            distanceString += " ft ";
+        }
+
+        this.searchString =  distanceString + node.getLongName() + " (" + node.getFloor() + ")";
 
         switch (node.getNodeType()) {
             case REST:
@@ -89,5 +126,9 @@ public class SearchNode implements ISearchEntity{
 
     public String getName() {
         return this.databaseNode.getLongName();
+    }
+
+    public Node getLocation() {
+        return this.databaseNode;
     }
 }
