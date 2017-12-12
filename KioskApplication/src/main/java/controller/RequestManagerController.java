@@ -72,7 +72,7 @@ public class RequestManagerController extends ScreenController {
      * Sets up the list views in each tab
      */
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         setup();
         buttonAction(RequestProgressStatus.TO_DO, newRequestList);
         buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
@@ -234,7 +234,11 @@ public class RequestManagerController extends ScreenController {
             contentView = loadView("/view/RequestManagerView.fxml");
         }
 
-//        initialize();
+        try {
+            initialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return contentView;
     }
