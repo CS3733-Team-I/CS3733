@@ -2,19 +2,27 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.InterpreterRequest;
 import database.objects.Request;
 import entity.LoginEntity;
+import entity.MapEntity;
 import entity.RequestEntity;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchRequest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.RequestListCell;
 import utility.node.NodeFloor;
@@ -22,6 +30,7 @@ import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static utility.request.RequestProgressStatus.*;
@@ -44,6 +53,11 @@ public class RequestManagerController extends ScreenController {
     @FXML private Tab newTab, progressTab, doneTab;
     @FXML private JFXTabPane listTabPane;
     @FXML private AnchorPane sideBar,listAPane,reqManagerPane;
+
+    //Anchor Pane to contain the search bar
+    @FXML private AnchorPane searchAnchor;
+    private SearchController searchController;
+    private javafx.scene.Node searchView;
 
 
     public RequestManagerController(MainWindowController parent, MapController map) {
@@ -76,6 +90,19 @@ public class RequestManagerController extends ScreenController {
                 refreshRequests();
             }
         });
+
+        //search related
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        ArrayList<ISearchEntity> searchRequest = new ArrayList<>();
+        for(Request targetRequest : r.getAllRequests()) {
+            searchRequest.add(new SearchRequest(targetRequest));
+        }
+        searchController = new SearchController(this, searchRequest);
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+        this.searchAnchor.getChildren().add(searchView);
+        searchController.setSearchFieldPromptText("Search Request");
+        searchController.resizeSearchbarWidth(160.0);
     }
 
     /**
@@ -207,8 +234,7 @@ public class RequestManagerController extends ScreenController {
             contentView = loadView("/view/RequestManagerView.fxml");
         }
 
-        initialize();
-//        newRequests();
+//        initialize();
 
         return contentView;
     }
@@ -230,6 +256,12 @@ public class RequestManagerController extends ScreenController {
                 buttonAction(RequestProgressStatus.DONE, doneRequestList);
                 break;
         }
+        //update search
+        ArrayList<ISearchEntity> searchRequest = new ArrayList<>();
+        for(Request targetRequest : r.getAllRequests()) {
+            searchRequest.add(new SearchRequest(targetRequest));
+        }
+        searchController.reset(searchRequest);
         setup();
     }
 
