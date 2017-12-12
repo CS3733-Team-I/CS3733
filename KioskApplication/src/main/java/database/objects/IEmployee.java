@@ -4,6 +4,8 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import utility.KioskPermission;
 import utility.request.RequestType;
 
+import java.util.ArrayList;
+
 /**
  * This Interface lets us implement the null object pattern for the loginEntity
  */
@@ -13,9 +15,9 @@ public interface IEmployee {
 
     boolean validatePassword(String password);
 
-    boolean updatePassword(String newPassword, String oldPassword);
+    boolean setPassword(String newPassword, String oldPassword);
 
-    boolean updateUsername(String newUsername, String password);
+    boolean setUsername(String newUsername, String password);
 
     int getID();
 
@@ -25,7 +27,7 @@ public interface IEmployee {
 
     String getFirstName();
 
-    String getOptions();
+    ArrayList<String> getOptions();
 
     KioskPermission getPermission();
 

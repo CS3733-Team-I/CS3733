@@ -1,7 +1,9 @@
 package entity;
 
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.*;
+import database.utility.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
@@ -376,9 +378,14 @@ public class RequestEntity {
      * @param requestID
      * @return
      */
-    public Employee getAssigner(String requestID){
-        Request request = getRequest(requestID);
-        return dbController.getEmployee(request.getAssignerID());
+    public IEmployee getAssigner(String requestID) throws NotFoundException{
+        try {
+            Request request = getRequest(requestID);
+            return dbController.getEmployee(request.getAssignerID());
+        } catch (DatabaseException e){
+            new NotFoundException("Employee not found");
+        }
+        return NullEmployee.getInstance();
     }
 
     /**
@@ -421,10 +428,16 @@ public class RequestEntity {
      * @param requestID
      * @return employee
      */
-    public IEmployee getCompleter(String requestID){
-        Request request = getRequest(requestID);
-        if(request.getStatus()!=RequestProgressStatus.TO_DO) return dbController.getEmployee(request.getCompleterID());
-        else return NullEmployee.getInstance();
+    public IEmployee getCompleter(String requestID) {
+        try {
+            Request request = getRequest(requestID);
+            if(request.getStatus()!=RequestProgressStatus.TO_DO) {
+                return dbController.getEmployee(request.getCompleterID());
+            }
+        } catch (DatabaseException e){
+
+        }
+        return NullEmployee.getInstance();
     }
 
     /**
