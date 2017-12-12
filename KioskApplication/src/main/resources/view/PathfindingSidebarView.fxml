@@ -3,9 +3,13 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
@@ -74,6 +78,51 @@
                   </HBox>
                </children>
             </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="directionsContainer" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #1e90ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ScrollPane hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+               <content>
+                  <VBox fx:id="textDirectionsBox">
+                     <children>
+                        <AnchorPane prefHeight="80.0" prefWidth="400.0">
+                           <children>
+                              <Line endX="40.0" endY="80.0" startX="40.0" startY="40.0" strokeWidth="2.0" />
+                              <Circle fill="DODGERBLUE" layoutX="40.0" layoutY="40.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Label layoutX="73.0" prefHeight="58.0" prefWidth="56.0" text="Label" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="40.0" prefWidth="400.0">
+                           <children>
+                              <Line endY="40.0" layoutX="40.0" strokeWidth="2.0" />
+                              <Circle fill="DODGERBLUE" layoutX="40.0" layoutY="21.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Label layoutX="73.0" prefHeight="58.0" prefWidth="56.0" text="Turn left at the node and then do the thing  for 2000 feet" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <JFXButton fx:id="emailButton" buttonType="RAISED" layoutX="326.0" layoutY="170.0" onAction="#onEmailPressed" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: orange; -fx-background-radius: 60;" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="170.0" />
+            <Label fx:id="directionsLabel" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="370.0" text="Directons to &lt;&lt;label&gt;&gt;" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="299.0" layoutY="27.0" onAction="#hideDirections" style="-fx-background-color: transparent;" text="X" textFill="WHITE" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXButton>
          </children>
       </AnchorPane>
    </children>
