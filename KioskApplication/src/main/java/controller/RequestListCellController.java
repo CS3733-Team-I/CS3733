@@ -7,16 +7,14 @@ import database.objects.Employee;
 import database.objects.FoodRequest;
 import database.objects.Node;
 import database.objects.Request;
-import entity.LoginEntity;
-import entity.MapEntity;
-import entity.Path;
-import entity.RequestEntity;
+import entity.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -200,42 +198,40 @@ public class RequestListCellController {
 
     public void goToLocation(){
         LinkedList<Node> location = new LinkedList<>();
-        try {
-            location.add(mapEntity.getNode(request.getNodeID()));
-        } catch (NotFoundException e) {
-            e.printStackTrace();
+
+        //TODO: implement path finding from food Request restaurant to destination
+        if(this.parent.getMapController().isPathShowing()) {
+            this.parent.getMapController().clearPath();
+        }
+        if(request.getRequestType().equals(RequestType.FOOD)){
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+            try {
+                Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());
+                Node destination = mapEntity.getNode(request.getNodeID());
+                this.parent.getMapController().addWaypoint(new Point2D(restaurant.getXcoord(),restaurant.getYcoord()),restaurant);
+                location.addFirst(restaurant);
+                this.parent.getMapController().addWaypoint(new Point2D(destination.getXcoord(),destination.getYcoord()),destination);
+                location.addLast(destination);
+                Path path = pathfinder.generatePath(location);
+                this.parent.getMapController().setPath(path);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+            catch (PathfinderException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            try {
+                location.add(mapEntity.getNode(request.getNodeID()));
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+
+            this.parent.getMapController().zoomOnSelectedNodes(location);
         }
 
         this.parent.getMapController().zoomOnSelectedNodes(location);
-
-        //TODO: implement pathfinding from food Request restaurant to destination
-//        if(request.getRequestType().equals(RequestType.FOOD)){
-//            Pathfinder pathfinder = new Pathfinder();
-//
-//            try {
-//                Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());
-//                location.add(restaurant);
-//                location.add(mapEntity.getNode(request.getNodeID()));
-//            } catch (NotFoundException e) {
-//                e.printStackTrace();
-//            }
-//
-//            try {
-//                Path path = pathfinder.generatePath(location);
-//                this.parent.getMapController().setPath(path);
-//            } catch (PathfinderException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }else{
-//            try {
-//                location.add(mapEntity.getNode(request.getNodeID()));
-//            } catch (NotFoundException e) {
-//                e.printStackTrace();
-//            }
-//
-//            this.parent.getMapController().zoomOnSelectedNodes(location);
-//        }
     }
 
 

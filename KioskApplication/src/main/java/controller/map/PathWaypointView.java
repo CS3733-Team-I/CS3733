@@ -50,6 +50,7 @@ public class PathWaypointView extends AnchorPane {
 
     private ArrayList<Color> segmentColorList;
 
+
     MapController parent;
     PathfindingSidebarController sidebarController;
 
@@ -163,6 +164,10 @@ public class PathWaypointView extends AnchorPane {
      * Clear drawn path
      */
     public void clearPath() {
+        LinkedList<Node> allNodes = this.currentPath.getListOfAllNodes();
+        for(Node node: allNodes){
+            this.parent.removeWaypoint(node);
+        }
         this.currentPath = null;
         pathView.getChildren().clear();
         parent.getMiniMapController().clearPath();
