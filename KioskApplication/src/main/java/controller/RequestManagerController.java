@@ -20,11 +20,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.RequestListCell;
+import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
@@ -73,6 +76,27 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void initialize() throws IOException {
+        Image newRequestIcon = ResourceManager.getInstance().getImage("/images/icons/newReqBlack.png");
+        ImageView newReqIconView = new ImageView(newRequestIcon);
+//        newReqIconView.setRotate(90);
+        newReqIconView.setFitHeight(48);
+        newReqIconView.setFitWidth(48);
+        newTab.setGraphic(newReqIconView);
+
+        Image progRequestIcon = ResourceManager.getInstance().getImage("/images/icons/progressReqBlack.png");
+        ImageView progRequestIconView = new ImageView(progRequestIcon);
+//        progRequestIconView.setRotate(90);
+        progRequestIconView.setFitHeight(48);
+        progRequestIconView.setFitWidth(48);
+        progressTab.setGraphic(progRequestIconView);
+
+        Image doneRequestIcon = ResourceManager.getInstance().getImage("/images/icons/doneReqBlack.png");
+        ImageView doneRequestIconView = new ImageView(doneRequestIcon);
+//        doneRequestIconView.setRotate(90);
+        doneRequestIconView.setFitHeight(48);
+        doneRequestIconView.setFitWidth(48);
+        doneTab.setGraphic(doneRequestIconView);
+
         setup();
         buttonAction(RequestProgressStatus.TO_DO, newRequestList);
         buttonAction(RequestProgressStatus.IN_PROGRESS, activeRequests);
