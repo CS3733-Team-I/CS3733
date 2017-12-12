@@ -61,7 +61,7 @@
                         <JFXComboBox fx:id="restaurantComboBox" layoutX="14.0" layoutY="22.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Restaurant" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <JFXTreeTableView fx:id="menuTable" layoutX="22.0" layoutY="108.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="427.0" prefWidth="180.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
                         <JFXTimePicker fx:id="deliveryTimePicker" layoutX="10.0" layoutY="35.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Delivery Time" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
-                        <JFXButton id="confirm-button" layoutX="100.0" layoutY="521.0" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <JFXButton id="confirm-button" fx:id="btnSubmit" layoutX="100.0" layoutY="521.0" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                         <JFXButton id="cancel-button" layoutX="29.0" layoutY="513.0" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
                         <JFXTextField fx:id="deliveryLocation" editable="false" layoutX="14.0" layoutY="94.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Delivery Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
                      </children></AnchorPane>
@@ -84,7 +84,7 @@
                                       </items>
                                   </JFXComboBox>
                                   <JFXTextArea fx:id="secNoteField" layoutY="72.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="439.0" prefWidth="180.0" promptText="Notes" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
-                                  <JFXButton id="confirm-button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                  <JFXButton id="confirm-button" fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                   <JFXButton layoutX="6.0" layoutY="554.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="cancel-button" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
                             </children></AnchorPane>
                     </content>
