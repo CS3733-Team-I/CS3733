@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
@@ -231,6 +232,51 @@ public class SearchController {
         } else {
             // input is 0 return exceptipon
             throw new Exception("No Input Text");
+        }
+    }
+
+    public void addSearchData(ISearchEntity iSearchEntity) {
+        this.searchData.add(iSearchEntity);
+        this.searchMap.put(iSearchEntity.getComparingString(), iSearchEntity);
+    }
+
+    public void changeSearchData(String comparingString, ISearchEntity iSearchEntity) {
+        ListIterator<ISearchEntity> iterator = searchData.listIterator();
+        while (iterator.hasNext()) {
+            ISearchEntity next = iterator.next();
+            if (next.getComparingString().equals(comparingString)) {
+                //Replace element
+                iterator.set(iSearchEntity);
+            }
+        }
+        //update hashmap
+         if(searchMap.containsKey(comparingString)) {
+             this.searchMap.put(comparingString, iSearchEntity);
+         }
+         else {
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Can't Match Search Data while updating search data" + comparingString);
+             alert.showAndWait();
+         }
+    }
+
+    public void removeSearchData(String comparingString) {
+        ListIterator<ISearchEntity> iterator = searchData.listIterator();
+        while (iterator.hasNext()) {
+            ISearchEntity next = iterator.next();
+            if (next.getComparingString().equals(comparingString)) {
+                //Replace element
+                iterator.remove();
+            }
+        }
+        //update hashmap
+        if(searchMap.containsKey(comparingString)) {
+            this.searchMap.remove(comparingString);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Can't Match Search Data while removing search data" + comparingString);
+            alert.showAndWait();
         }
     }
 }
