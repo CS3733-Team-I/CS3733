@@ -460,17 +460,6 @@ public class DatabaseController {
         return new LinkedList<FoodRequest>();
     }
 
-    public LinkedList<FoodRequest> getAllFoodRequest(){
-        try {
-            return Connector.selectAllFood(instanceConnection);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
-        }
-        return new LinkedList<FoodRequest>();
-    }
-
     /**
      * Gets all JanitorRequests from the database
      * @return

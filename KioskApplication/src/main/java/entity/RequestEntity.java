@@ -24,9 +24,7 @@ public class RequestEntity {
     private HashMap<String,InterpreterRequest> interpreterRequests;
     private HashMap<String,SecurityRequest> securityRequests;
     private HashMap<String,FoodRequest> foodRequests;
-    //private HashMap<String,JanitorRequest> janitorRequests;
-    //private HashMap<String,SecurityRequest> securityRequests;
-    //private HashMap<String,SecurityRequest> securityRequests;
+    private HashMap<String,JanitorRequest> janitorRequests;
 
     private int uRequestID = 0;
 
@@ -66,39 +64,23 @@ public class RequestEntity {
      * reads all requests from the database
      */
     public void readAllFromDatabase(){
-        LinkedList<InterpreterRequest> interpreterRequests = dbController.getAllInterpreterRequests();
-        for(InterpreterRequest iR:interpreterRequests) {
-            String rID = iR.getRequestID();
-            //updates the entire hashmap when called
-            if (this.interpreterRequests.containsKey(rID)) {
-                this.interpreterRequests.replace(rID, iR);
-            }
-            //adds new InterpreterRequests
-            else{
-                this.interpreterRequests.put(rID,iR);
-            }
+        // Clears the hashmaps
+        interpreterRequests.clear();
+        securityRequests.clear();
+        foodRequests.clear();
+        janitorRequests.clear();
+        // Refills the hashmaps from the database
+        for(InterpreterRequest interpreterRequest:dbController.getAllInterpreterRequests()){
+            interpreterRequests.put(interpreterRequest.getRequestID(),interpreterRequest);
         }
-        LinkedList<SecurityRequest> securityRequests = dbController.getAllSecurityRequests();
-        for(SecurityRequest sR: securityRequests) {
-            String rID = sR.getRequestID();
-            //updates the entire hashmap when called
-            if (this.securityRequests.containsKey(rID)) {
-                this.securityRequests.replace(rID, sR);
-            }
-            //adds new SecurityRequests
-            else{
-                this.securityRequests.put(rID, sR);
-            }
+        for(SecurityRequest securityRequest:dbController.getAllSecurityRequests()){
+            securityRequests.put(securityRequest.getRequestID(),securityRequest);
         }
-        LinkedList<FoodRequest> foodRequests = dbController.getAllFoodRequests();
-        for (FoodRequest fR: foodRequests){
-            String rID = fR.getRequestID();
-            if(this.foodRequests.containsKey(rID)){
-                this.foodRequests.replace(rID, fR);
-            }
-            else{
-                this.foodRequests.put(rID, fR);
-            }
+        for(FoodRequest foodRequest: dbController.getAllFoodRequests()){
+            foodRequests.put(foodRequest.getRequestID(),foodRequest);
+        }
+        for (JanitorRequest janitorRequest:dbController.getAllJanitorRequests()){
+            janitorRequests.put(janitorRequest.getRequestID(),janitorRequest);
         }
     }
 
@@ -138,9 +120,13 @@ public class RequestEntity {
         return fooRequests;
     }
 
-    /**
-     * Methods for all request types
-     */
+    public LinkedList<Request> getAllJanitorRequests(){
+        LinkedList<Request> janRequests = new LinkedList<>();
+        for(JanitorRequest janitorRequest:janitorRequests.values()){
+            janRequests.add(janitorRequest);
+        }
+        return janRequests;
+    }
 
     /**
      * Generic method to get all requests in the hashmaps
@@ -151,6 +137,7 @@ public class RequestEntity {
         allRequests.addAll(getAllinterpters());
         allRequests.addAll(getAllSecurity());
         allRequests.addAll(getAllFoodRequests());
+        allRequests.addAll(getAllJanitorRequests());
         return allRequests;
     }
 
@@ -163,6 +150,7 @@ public class RequestEntity {
             all.putAll(interpreterRequests);
             all.putAll(foodRequests);
            all.putAll(securityRequests);
+           all.putAll(janitorRequests);
         return all;
     }
 
@@ -242,22 +230,18 @@ public class RequestEntity {
         if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
-            System.out.println("Deleting InterpreterRequest");
         }
         else if(requestType.equals(RequestType.SECURITY)){
             securityRequests.remove(requestID);
-            interpreterRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
-            System.out.println("Deleting SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
             foodRequests.remove(requestID);
-            interpreterRequests.remove(requestID);
             dbController.deleteFoodRequest(requestID);
-            System.out.println("Deleting FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
-            System.out.println("Deleting JanitorRequest");
+            janitorRequests.remove(requestID);
+            dbController.deleteJanitorRequest(requestID);
         }
         else if(requestType.equals("Ins")){ //TODO: change to Enum
             System.out.println("Deleting InsideTransportationRequest");
@@ -284,22 +268,21 @@ public class RequestEntity {
             InterpreterRequest iR = interpreterRequests.get(requestID);
             iR.setInProgress(completerID);
             dbController.updateInterpreterRequest(iR);
-            System.out.println("In Progress InterpreterRequest");
         }
         else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.setInProgress(completerID);
             dbController.updateSecurityRequest(sR);
-            System.out.println("In Progress SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
             FoodRequest fR = foodRequests.get(requestID);
             fR.setInProgress(completerID);
             dbController.updateFoodRequest(fR);
-            System.out.println("In Progress FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
-            System.out.println("In Progress JanitorRequest");
+            JanitorRequest janitorRequest = janitorRequests.get(requestID);
+            janitorRequest.setInProgress(completerID);
+            dbController.updateJanitorRequest(janitorRequest);
         }
 //        else if(requestType.equals(RequestType"Ins")){
 //            System.out.println("In Progress InsideTransportationRequest");
@@ -325,24 +308,24 @@ public class RequestEntity {
             iR.setComplete();
             interpreterRequests.replace(requestID,iR);
             dbController.updateInterpreterRequest(iR);
-            System.out.println("Complete InterpreterRequest");
         }
         else if(requestType.equals(RequestType.SECURITY)){
             SecurityRequest sR = securityRequests.get(requestID);
             sR.setComplete();
             securityRequests.replace(requestID, sR);
             dbController.updateSecurityRequest(sR);
-            System.out.println("Complete SecurityRequest");
         }
         else if(requestType.equals(RequestType.FOOD)){
             FoodRequest fR = foodRequests.get(requestID);
             fR.setComplete();
             foodRequests.replace(requestID, fR);
             dbController.updateFoodRequest(fR);
-            System.out.println("Complete FoodRequest");
         }
         else if(requestType.equals(RequestType.JANITOR)){
-            System.out.println("Complete JanitorRequest");
+            JanitorRequest janitorRequest = janitorRequests.get(requestID);
+            janitorRequest.setComplete();
+            janitorRequests.replace(requestID,janitorRequest);
+            dbController.updateJanitorRequest(janitorRequest);
         }
 //        else if(requestType.equals(RequestType"Ins")){
 //            System.out.println("Complete InsideTransportationRequest");
@@ -418,6 +401,8 @@ public class RequestEntity {
                 break;
             case FOOD:
                 dbController.updateFoodRequest((FoodRequest) oldReq);
+            case JANITOR:
+                dbController.updateJanitorRequest((JanitorRequest) oldReq);
         }
 
     }
@@ -649,6 +634,61 @@ public class RequestEntity {
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);
+    }
+
+    /**
+     * For submitting JanitorRequests
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @return
+     */
+    public String submitJanitorRequest(String nodeID, int assignerID, String note){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Jan"+currTime;
+
+        JanitorRequest janitorRequest = new JanitorRequest(rID, nodeID, assignerID, assignerID, note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, uRequestID);
+
+        dbController.insertRequestIntoView(janitorRequest);
+        uRequestID++;
+
+        janitorRequests.put(rID, janitorRequest);
+        dbController.addJanitorRequest(janitorRequest);
+        return rID;
+    }
+
+    /**
+     *
+     * @param requestID
+     * @return
+     * @throws NullPointerException
+     */
+    public JanitorRequest getJanitorRequest(String requestID) throws NullPointerException{
+        if(janitorRequests.containsKey(requestID)){
+            return janitorRequests.get(requestID);
+        }
+        else {
+            readAllFromDatabase();
+            if(janitorRequests.containsKey(requestID)){
+                return janitorRequests.get(requestID);
+            }
+            else {
+                throw new NullPointerException("Unable to find Janitor request in the database");
+            }
+        }
+    }
+
+    /**
+     * Vastly simplified updating method
+     * @param janitorRequest
+     */
+    public void updateJanitorRequest(JanitorRequest janitorRequest){
+        janitorRequests.replace(janitorRequest.getRequestID(),janitorRequest);
+        dbController.updateJanitorRequest(janitorRequest);
     }
 
     /*
