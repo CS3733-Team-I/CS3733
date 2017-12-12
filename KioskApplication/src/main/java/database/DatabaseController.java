@@ -1,6 +1,5 @@
 package database;
 
-import com.sun.org.apache.regexp.internal.RE;
 import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;
@@ -540,6 +539,7 @@ public class DatabaseController {
         }
     }
 
+    /*
     public void insertEmployeeIntoView(IEmployee employee) {
         try {
             Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
@@ -643,5 +643,5 @@ public class DatabaseController {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }
