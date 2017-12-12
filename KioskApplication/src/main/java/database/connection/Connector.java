@@ -497,6 +497,120 @@ public class Connector {
         return foodRequests;
     }
 
+    /**
+     * for inserting Janitor requests into the database
+     * @param conn the connection to the database
+     * @param jR the JanitorRequest
+     * @return
+     * @throws SQLException
+     */
+    public static int insertJanitor(Connection conn, JanitorRequest jR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_INSERT+REQUEST_INSERT);
+        pstmt.setString(1, jR.getRequestID());
+        pstmt.setString(2, jR.getNodeID());
+        pstmt.setInt(3, jR.getAssignerID());
+        pstmt.setInt(4, jR.getCompleterID());
+        pstmt.setString(5, jR.getNote());
+        pstmt.setTimestamp(6, jR.getSubmittedTime());
+        pstmt.setTimestamp(7, jR.getStartedTime());
+        pstmt.setTimestamp(8, jR.getCompletedTime());
+        pstmt.setInt(9, jR.getStatus().ordinal());
+        pstmt.setInt(10, jR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    /**
+     * For updating a stored JanitorRequest
+     * @param conn
+     * @param jR the updated request
+     * @return
+     * @throws SQLException
+     */
+    public static int updateJanitor(Connection conn, JanitorRequest jR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_UPDATE+REQUEST_UPDATE);
+        pstmt.setString(1, jR.getNodeID());
+        pstmt.setInt(2, jR.getAssignerID());
+        pstmt.setInt(3, jR.getCompleterID());
+        pstmt.setString(4, jR.getNote());
+        pstmt.setTimestamp(5, jR.getSubmittedTime());
+        pstmt.setTimestamp(6, jR.getStartedTime());
+        pstmt.setTimestamp(7, jR.getCompletedTime());
+        pstmt.setInt(8, jR.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(9, jR.getRequestID());
+        pstmt.setInt(10, jR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    /**
+     * for retrieving JanitorRequests from the database
+     * @param conn
+     * @param requestID
+     * @return
+     * @throws SQLException
+     */
+    public static JanitorRequest selectJanitor(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT);
+        pstmt.setString(1, requestID);
+        JanitorRequest janitorRequest = null;
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            janitorRequest = new JanitorRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("uRequestID"));
+        }
+        return janitorRequest;
+    }
+
+    /**
+     * Returns true if the request has been found and deleted
+     * @param conn
+     * @param requestID
+     * @return
+     * @throws SQLException
+     */
+    public static boolean deleteJanitor(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    /**
+     * For retrieving all JanitorRequests from the database
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+    public static LinkedList<JanitorRequest> selectAllJanitor(Connection conn) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT_ALL);
+        ResultSet rs = pstmt.executeQuery();
+        LinkedList<JanitorRequest> janitorRequests = new LinkedList<>();
+        while(rs.next()) {
+            JanitorRequest janitorRequest = null;
+            janitorRequest = new JanitorRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("uRequestID"));
+            janitorRequests.add(janitorRequest);
+        }
+        return janitorRequests;
+    }
+
     public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
         String sql = SELECT_REQUEST_UID;
 
@@ -516,11 +630,7 @@ public class Connector {
                 table="";
                 break;
             case JANITOR:
-                table="";
-                break;
-
-            case NONE:
-                table="";
+                table="t_janitor";
                 break;
 
             default:
