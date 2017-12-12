@@ -607,7 +607,7 @@ public class RequestEntity {
                                   RequestProgressStatus status, String destinationNodeID,
                                   Timestamp deliveryDate){
         FoodRequest oldReq = foodRequests.get(requestID);
-        oldReq.setDestinationID(destinationNodeID);
+        oldReq.setRestaurantID(destinationNodeID);
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);

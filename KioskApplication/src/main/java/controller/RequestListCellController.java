@@ -4,10 +4,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import database.connection.NotFoundException;
 import database.objects.Employee;
+import database.objects.FoodRequest;
 import database.objects.Node;
 import database.objects.Request;
 import entity.LoginEntity;
 import entity.MapEntity;
+import entity.Path;
 import entity.RequestEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.KioskPermission;
 import utility.ResourceManager;
 import utility.request.RequestProgressStatus;
@@ -93,7 +97,7 @@ public class RequestListCellController {
                 iconView.setFitWidth(48);
                 break;
             case FOOD:
-                String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
+                String restaurantID = rEntity.getFoodRequest(requestID).getRestaurantID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField.setText("Restaurant: " + restaurant);
                 Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
@@ -201,7 +205,37 @@ public class RequestListCellController {
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
+
         this.parent.getMapController().zoomOnSelectedNodes(location);
+
+        //TODO: implement pathfinding from food Request restaurant to destination
+//        if(request.getRequestType().equals(RequestType.FOOD)){
+//            Pathfinder pathfinder = new Pathfinder();
+//
+//            try {
+//                Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());
+//                location.add(restaurant);
+//                location.add(mapEntity.getNode(request.getNodeID()));
+//            } catch (NotFoundException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                Path path = pathfinder.generatePath(location);
+//                this.parent.getMapController().setPath(path);
+//            } catch (PathfinderException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }else{
+//            try {
+//                location.add(mapEntity.getNode(request.getNodeID()));
+//            } catch (NotFoundException e) {
+//                e.printStackTrace();
+//            }
+//
+//            this.parent.getMapController().zoomOnSelectedNodes(location);
+//        }
     }
 
 

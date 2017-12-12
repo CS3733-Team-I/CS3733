@@ -5,14 +5,14 @@ import utility.request.RequestProgressStatus;
 import java.sql.Timestamp;
 
 public class FoodRequest extends Request{
-    private String destinationID;
+    private String restaurantID;
     private Timestamp deliveryDate;
 
     public FoodRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                        Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                       RequestProgressStatus status, String destinationID, Timestamp deliveryDate){
+                       RequestProgressStatus status, String restaurantID, Timestamp deliveryDate){
         super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
-        this.destinationID = destinationID;
+        this.restaurantID = restaurantID;
         this.deliveryDate = deliveryDate;
     }
 
@@ -29,7 +29,7 @@ public class FoodRequest extends Request{
                     this.getSubmittedTime().equals(other.getSubmittedTime())&&
                     this.getCompletedTime().equals(other.getCompletedTime())&&
                     this.getStatus().equals(other.getStatus())&&
-                    this.destinationID.equals(other.getDestinationID()) &&
+                    this.restaurantID.equals(other.getRestaurantID()) &&
                     this.deliveryDate.equals(other.getDeliveryDate());
         }
         else{
@@ -37,12 +37,12 @@ public class FoodRequest extends Request{
         }
     }
 
-    public String getDestinationID() {
-        return destinationID;
+    public String getRestaurantID() {
+        return restaurantID;
     }
 
-    public void setDestinationID(String destinationID) {
-        this.destinationID = destinationID;
+    public void setRestaurantID(String restaurantID) {
+        this.restaurantID = restaurantID;
     }
 
     public Timestamp getDeliveryDate() {

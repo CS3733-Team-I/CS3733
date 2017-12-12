@@ -393,7 +393,7 @@ public class Connector {
     public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT);
         pstmt.setString(1, fR.getRequestID());
-        pstmt.setString(2,fR.getDestinationID());
+        pstmt.setString(2,fR.getRestaurantID());
         pstmt.setTimestamp(3, fR.getDeliveryDate());
         pstmt.setString(4, fR.getNodeID());
         pstmt.setInt(5, fR.getAssignerID());
@@ -409,7 +409,7 @@ public class Connector {
     public static int updateFood(Connection conn, FoodRequest fR) throws SQLException{
         String sql = FOOD_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1,fR.getDestinationID());
+        pstmt.setString(1,fR.getRestaurantID());
         pstmt.setTimestamp(2, fR.getDeliveryDate());
         pstmt.setString(3, fR.getNodeID());
         pstmt.setInt(4, fR.getAssignerID());
