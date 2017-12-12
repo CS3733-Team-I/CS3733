@@ -1,6 +1,5 @@
 package database;
 
-import com.sun.org.apache.regexp.internal.RE;
 import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;

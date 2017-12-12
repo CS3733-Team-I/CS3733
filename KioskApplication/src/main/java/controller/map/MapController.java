@@ -29,6 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -630,17 +631,33 @@ public class MapController {
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
         if (parent != null) {
+            Point2D clickPosition = new Point2D(event.getX(), event.getY());
+            LinkedList<Node> nearestNodes = new LinkedList<>();
+            double radius = 150.0;
             // Check if clicked location is a node
             LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue());
             for (Node node : floorNodes) {
-                Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
-                        30, 30); // TODO magic numbers
-                Point2D clickPosition = new Point2D(event.getX(), event.getY());
+                Circle nodeArea = new Circle(node.getXcoord(), node.getYcoord(),
+                        radius); // TODO magic numbers
 
                 if (nodeArea.contains(clickPosition)) {
-                    parent.onMapNodeClicked(node);
-                    return;
+                    nearestNodes.add(node);
                 }
+            }
+            // Nearest neighbor calculation
+            double shortestDistance = radius+1;
+            Node nearestNode = null;
+            for (Node node : nearestNodes){
+                double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
+                if(distance < shortestDistance){
+                    shortestDistance=distance;
+                    nearestNode = node;
+                }
+            }
+            if(nearestNode!=null){
+                //System.out.println("Shortest Distance: "+shortestDistance);
+                parent.onMapNodeClicked(nearestNode);
+                return;
             }
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event);
