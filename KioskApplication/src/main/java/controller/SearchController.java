@@ -201,44 +201,44 @@ public class SearchController {
                 matched = 0;
                 String longname = allsearch.get(key).getName().replaceAll("\\s+","");
                 String[] longName = longname.split("");
-                // for (int i = 0; i < longName.length; i++) {
-                for (int i=0; i<input.length;i++){
-                    if (longname.toLowerCase().contains(input[i].toLowerCase()))
-                        if (matched < input.length) {
-                            matched++;
-                        } else {
-                            // do nothing
-                        }
-                    if(i>=longName.length){}
-                    else{
+                for(int i = 0; i<input.length; i++){
+                    if(longName.length>i) {
                         if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
-                            matched++;}
+                            matched=matched+20; }
+                    }
+                    else{
+                        if (input[i].toLowerCase().equals(longName[longName.length - 1].toLowerCase())) {
+                            matched++;
+                        }
                     }
                 }
                 sortedMap.put(key, matched);
             }
-            // now sort hashmap from highest to lowest
-            int min = 0;
-            List<String> sorted = new ArrayList<>();
+            // now sort hashmap from highest to lowest using array list sort and compare
+            ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>(sortedMap.entrySet());
+            Collections.sort(sorted, new Comparator<Map.Entry<String, Integer>>() {
+                        @Override
+                        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                            return o2.getValue().compareTo(o1.getValue());
+                        }
+                    }
+            );
+          /*ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>();
+           // List<String> sorted = new ArrayList<>();
             for (String key : sortedMap.keySet()) {
-                if (sortedMap.get(key) >= min) {
-                    sorted.add(0, key);
-                    min = sortedMap.get(key);
-                } else {
-                    sorted.add(sorted.size(), key);
-                }
-            }
+               sorted.add(sortedMap.get(key),key);
+            }*/
             LinkedList<ISearchEntity> bestmatch = new LinkedList<>();
             if(sorted.size()>5) {
                 // get the top 5 from sorted arraylist
                 for (int i = 0; i < 5; i++) {
-                    bestmatch.add(allsearch.get(sorted.get(i)));
+                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
                 }
                 return bestmatch;
             }
             else{
                 for(int i=0; i<sorted.size();i++){
-                    bestmatch.add(allsearch.get(sorted.get(i)));
+                    bestmatch.add(allsearch.get(sorted.get(i).getKey()));
                 }
                 return  bestmatch;
             }
