@@ -7,5 +7,19 @@ public enum RequestType {
     FOOD,
     SECURITY,
     JANITOR,
-    NONE
+    NONE;
+
+    //TODO: language support
+    @Override
+    public String toString() {
+        switch(this) {
+            case GENERAL: return "General";
+            case INTERPRETER: return "Interpreter";
+            case FOOD: return "Food";
+            case SECURITY: return "Security";
+            case JANITOR: return "Janitorial";
+            case NONE: return "None";
+            default: return "Not Set: Contact Programmer";
+        }
+    }
 }
