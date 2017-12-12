@@ -81,7 +81,7 @@ public class PathfindingSidebarController extends ScreenController {
 
     private javafx.scene.Node searchView;
 
-    Task<Void> searchResetTask;
+    private Task<Void> searchResetTask;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
