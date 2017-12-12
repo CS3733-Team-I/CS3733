@@ -33,4 +33,8 @@ public enum NodeType {
             default: return "Not Set: Contact Programmer";
         }
     }
+
+    public String toLiteralString() {
+        return super.toString();
+    }
 }
