@@ -1,5 +1,6 @@
 package entity.SearchEntity;
 
+import database.objects.Node;
 import javafx.scene.image.ImageView;
 
 public interface ISearchEntity {
@@ -28,5 +29,5 @@ public interface ISearchEntity {
      */
     String getName();
 
-    Object getLocation();
+    Node getLocation();
 }
