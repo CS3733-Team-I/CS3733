@@ -41,7 +41,9 @@ public class MainWindowController {
     @FXML private AnchorPane contentWindow;
           private javafx.scene.Node contentNode;
           private LoginController loginController;
+        //  private HelpController helpController;
     @FXML private BorderPane loginPopup;
+  //  @FXML private BorderPane helpPopup;
           private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
@@ -187,6 +189,7 @@ public class MainWindowController {
         });
 
         initializeLoginPopup();
+        //initalizeHelpPopup();
         initializeTrackingTable();
         defZoom = mapController.getZoomSlider().getValue();
 
@@ -390,6 +393,7 @@ public class MainWindowController {
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(loginPopup);
+       // contentWindow.getChildren().add(helpPopup);
         contentWindow.getChildren().add(contentNode);
         contentWindow.getChildren().add(histogram);
 
@@ -408,9 +412,21 @@ public class MainWindowController {
      * initalizes the help plan view
      * @throws IOException
      */
-    private void initalizeHelpPopup() throws IOException{
+  /*  private void initalizeHelpPopup() throws IOException{
+        helpController = new HelpController(this);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HelpScreen.fxml"));
+        loader.setController(helpController);
+        javafx.scene.Node view = loader.load();
 
-    }
+        this.helpPopup = new BorderPane();
+        AnchorPane.setTopAnchor(helpPopup, 0.0);
+        AnchorPane.setLeftAnchor(helpPopup, 0.0);
+        AnchorPane.setBottomAnchor(helpPopup, 0.0);
+        AnchorPane.setRightAnchor(helpPopup, 0.0);
+        helpPopup.setRight(view);
+        //hides the popup
+        helpPopup.setVisible(false);
+    }*/
 
 
     /**
@@ -471,15 +487,14 @@ public class MainWindowController {
 
     @FXML
     public void helpButtonClicked() throws IOException{
-        //loginController.disableCancelButton(false);
-       /* this.loginPopup.setVisible(true);
+ /*       //loginController.disableCancelButton(false);
+       this.helpPopup.setVisible(true);
         this.switchButton.setDisable(true);
         this.tabPane.setDisable(true);
         this.tabMap.setDisable(true);
         this.contentNode.setDisable(true);
-        this.mapView.setDisable(true);*/
-
-
+        this.mapView.setDisable(true);
+*/
     }
 
     /**
