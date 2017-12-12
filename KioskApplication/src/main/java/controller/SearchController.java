@@ -27,13 +27,13 @@ public class SearchController {
 
     private SortedList<ISearchEntity> sortedList;
 
-    private ScreenController parent;
+    private Object parent;
 
     private TableView<ISearchEntity> searchTable;
 
     private HashMap<String, ISearchEntity> searchMap;
 
-    public SearchController(ScreenController parent, ArrayList<ISearchEntity> searchData) {
+    public SearchController(Object parent, ArrayList<ISearchEntity> searchData) {
         this.parent = parent;
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
@@ -178,6 +178,10 @@ public class SearchController {
         cbSearchData.getItems().clear();
         sortedList.clear();
         searchTable.getItems().clear();
+    }
+
+    public void setVisible(boolean b) {
+        this.cbSearchData.setVisible(b);
     }
 
     /**

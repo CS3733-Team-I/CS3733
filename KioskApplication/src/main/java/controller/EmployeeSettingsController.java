@@ -5,10 +5,13 @@ import com.jfoenix.validation.RequiredFieldValidator;
 import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -22,6 +25,7 @@ import utility.request.Language;
 import utility.request.RequestType;
 import utility.validators.MatchingFieldValidator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -49,7 +53,10 @@ public class EmployeeSettingsController {
     @FXML private JFXButton addUserActionButton, addUserCancelButton;
 
     @FXML private VBox interpreterLanguageBox;
-    @FXML private JFXComboBox<database.objects.Node> doctorOfficeBox;
+
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
 
     @FXML private GridPane deletePane;
     @FXML private Label deleteText;
@@ -67,8 +74,21 @@ public class EmployeeSettingsController {
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException{
         root.setExpanded(true);
+
+        //initialize search
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        SystemSettings.getInstance().updateDistance();
+        for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNode.add(new SearchNode(targetNode));
+            }
+        }
+        searchController = new SearchController(this, searchNode);
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -125,6 +145,7 @@ public class EmployeeSettingsController {
                 LoginEntity e = LoginEntity.getInstance();
                 selectedEmployee = newValue.getValue();
                 additionalInformationBox.getChildren().clear();
+                additionalInformationBox.getChildren().add(searchView);
                 if (selectedEmployee.getServiceAbility()==INTERPRETER){
                     for (String language :
                             selectedEmployee.getOptions()) {
@@ -173,12 +194,6 @@ public class EmployeeSettingsController {
                 interpreterLanguageBox.getChildren().add(langCheckBox);
             }
         }
-        //Doctor's office selector setup
-        for(database.objects.Node databaseNode : MapEntity.getInstance().getAllNodes()) {
-            if(databaseNode.getNodeType() == NodeType.DEPT) {
-                doctorOfficeBox.getItems().add(databaseNode);
-            }
-        }
         setupValidatorsForAddUserPane();
         //Internationalization listener
         SystemSettings.getInstance().addObserver((o, arg) -> {
@@ -199,21 +214,6 @@ public class EmployeeSettingsController {
             serviceSelect.setPromptText(rB.getString("serviceAbility"));
             registerEmployeeLabel.setText(rB.getString("registerEmployee"));
             doctorOfficeLabel.setText(rB.getString("office"));
-        });
-
-        doctorOfficeBox.setConverter(new StringConverter<database.objects.Node>() {
-            @Override
-            public String toString(database.objects.Node node) {
-                if(node != null) {
-                    return node.getLongName();
-                }
-                else return null;
-            }
-
-            @Override
-            public database.objects.Node fromString(String string) {
-                return doctorOfficeBox.getItems().stream().filter(item -> item.getLongName().startsWith(string)).findFirst().orElse(null);
-            }
         });
     }
 
@@ -357,16 +357,14 @@ public class EmployeeSettingsController {
                         return;
                     }
                     break;
-                case DOCTOR:
-                    if (doctorOfficeBox.getValue()==null){
+                default:
+                    if (searchController.getSelected()==null){
                         errLabel.setText("No office selected");
                         return;
                     }
                     else {
-                        options.add(doctorOfficeBox.getValue().toString());
+                        options.add(((database.objects.Node)(searchController.getSelected())).getNodeID());
                     }
-                    break;
-                default:
                     break;
                 }
             }
@@ -411,6 +409,16 @@ public class EmployeeSettingsController {
         passwordBox.setText("");
         permissionSelect.setValue(null);
         serviceSelect.setValue(null);
+
+        //reset search
+        SystemSettings.getInstance().updateDistance();
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNode.add(new SearchNode(targetNode));
+            }
+        }
+        searchController.reset(searchNode);
     }
 
     /**
@@ -422,7 +430,7 @@ public class EmployeeSettingsController {
         RequestType employeeType = serviceSelect.getValue();
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
-            doctorOfficeBox.setVisible(false);
+            searchController.setVisible(false);
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
@@ -432,14 +440,14 @@ public class EmployeeSettingsController {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeBox.setVisible(true);
+            searchController.setVisible(true);
             doctorOfficeLabel.setVisible(true);
         }
         else {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeBox.setVisible(false);
+            searchController.setVisible(false);
             doctorOfficeLabel.setVisible(false);
         }
     }
