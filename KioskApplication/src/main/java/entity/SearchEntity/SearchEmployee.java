@@ -98,7 +98,7 @@ public class SearchEmployee implements ISearchEntity{
     }
 
     public String getName() {
-        return this.databaseEmploy.getServiceAbility().toString() + this.databaseEmploy.getFirstName() + this.databaseEmploy.getLastName();
+        return this.databaseEmploy.getFirstName() + this.databaseEmploy.getLastName();
     }
 
     public Node getLocation() {
