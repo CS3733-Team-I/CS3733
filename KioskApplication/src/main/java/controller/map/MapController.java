@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -37,6 +38,7 @@ import utility.node.NodeType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -257,14 +259,31 @@ public class MapController {
             }
         });
 
+
+
         mapView.setOnDragOver(e -> {
+            /*String message = e.getDragboard().getString();
+            String condition = String.valueOf(message.charAt(message.length()-1));
+            if(condition.equals("T")){e.consume();}*/
+
             if(e.getDragboard().hasString()) {
                 System.out.println("Drag node over map.");
+                String content = e.getDragboard().getString();
+                int length = content.length();
 
-                int uniqueID = Integer.parseInt(e.getDragboard().getString());
+                int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+                String condition = String.valueOf(content.charAt(length-1));
+                if(condition.equals("T")){
+                    return;
+                }
                 Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
 
                 Point2D point2D = new Point2D(e.getX(), e.getY());
+
+                /*if (shift) {
+                    point2D = new Point2D(e.getX() )
+                }*/
+
                 nodesEdgesView.setNodePosition(selectNode, point2D);
 
                 e.acceptTransferModes(TransferMode.MOVE);
@@ -272,12 +291,19 @@ public class MapController {
             }
         });
 
+
         mapView.setOnDragDropped(e ->{
             System.out.println("Node Dropped");
+
+            String content = e.getDragboard().getString();
+            int length = content.length();
+            int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+            String condition = String.valueOf(content.charAt(length-1));
+            if(condition.equals("T")){
+                return;
+            }
             double xcoord = e.getX();
             double ycoord = e.getY();
-            int uniqueID = Integer.parseInt(e.getDragboard().getString());
-
             Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
             selectNode.setXcoord((int)xcoord);
             selectNode.setYcoord((int)ycoord);

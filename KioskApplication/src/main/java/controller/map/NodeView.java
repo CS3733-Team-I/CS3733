@@ -114,6 +114,7 @@ public class NodeView extends StackPane {
     }
 
     private void dragDetected(MouseEvent e) {
+
         if (this.editable && !dragging) {
             if (node.getNodeType() == NodeType.ELEV) {
                 // do something
@@ -124,14 +125,21 @@ public class NodeView extends StackPane {
 
             Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString(Integer.toString(this.node.getUniqueID()));
+
+            if(e.isShiftDown()){
+                content.putString(Integer.toString(this.node.getUniqueID()) + "T");
+            }
+            else{
+                content.putString(Integer.toString(this.node.getUniqueID()) + "F");
+            }
             db.setContent(content);
 
             dragging = true;
-
             circle.setFill(Color.GREEN);
             e.consume();
         }
+
+
     }
 
     private void dragOver(DragEvent event) {
@@ -158,13 +166,18 @@ public class NodeView extends StackPane {
             setSelectionType(selectionType);
 
             boolean success = false;
+            String content = e.getDragboard().getString();
+            int length = content.length();
 
-            if(e.getDragboard().hasString() && !e.getDragboard().getString().equals(this.node.getUniqueID())) {
+            int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+            String condition = String.valueOf(content.charAt(length-1));
+
+            if(e.getDragboard().hasString() && uniqueID != (this.node.getUniqueID())) {
                 success = true;
 
-                System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() +'_'+ node.getNodeID());
+                System.out.println("ADDING CONNECTION: " + uniqueID +'_'+ node.getNodeID());
 
-                parent.nodesConnected(Integer.toString(this.node.getUniqueID()), e.getDragboard().getString());
+                parent.nodesConnected(Integer.toString(this.node.getUniqueID()), uniqueID+"");
             }
 
             e.setDropCompleted(success);

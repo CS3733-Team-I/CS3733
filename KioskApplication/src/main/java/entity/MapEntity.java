@@ -86,6 +86,10 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+    public void updateNodewithID(Node n)throws DatabaseException{
+        dbController.updateNodeWithID(n);
+    }
+
     @Override
     public void editNodeByUK(Node n)throws DatabaseException{
         NodeFloor f = n.getFloor();

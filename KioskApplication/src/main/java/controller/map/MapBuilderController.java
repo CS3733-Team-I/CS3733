@@ -738,6 +738,7 @@ public class MapBuilderController extends ScreenController {
         for (Node changedNode : observableChangedNodes) {
             try {
                 map.editNode(changedNode);
+                //MapEntity.getInstance().editNodeByUK(changedNode);
                 nodeDialogString += "node ID " + changedNode.getNodeID() + "\n" + " edited.\n\n";
             } catch (DatabaseException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -753,6 +754,7 @@ public class MapBuilderController extends ScreenController {
         System.out.println(nodeDialogString);
         loadDialog(event);
         nodeDialogString = "";
+        getMapController().reloadDisplay();
     }
 
 
