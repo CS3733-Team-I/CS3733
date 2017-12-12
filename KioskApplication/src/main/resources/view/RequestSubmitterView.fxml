@@ -86,7 +86,8 @@
                                   <JFXTextArea fx:id="secNoteField" layoutY="72.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="439.0" prefWidth="180.0" promptText="Notes" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
                                   <JFXButton id="confirm-button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                   <JFXButton layoutX="6.0" layoutY="554.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="cancel-button" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-                            </children></AnchorPane>
+                            </children>
+                        </AnchorPane>
                     </content>
                 </Tab>
                 <Tab fx:id="janitorTab">

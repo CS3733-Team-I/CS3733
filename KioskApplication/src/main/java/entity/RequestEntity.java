@@ -38,6 +38,7 @@ public class RequestEntity {
         interpreterRequests=new HashMap<>();
         securityRequests=new HashMap<>();
         foodRequests=new HashMap<>();
+        janitorRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getInstance();
@@ -149,8 +150,8 @@ public class RequestEntity {
         HashMap<String,Request> all = new HashMap<>();
             all.putAll(interpreterRequests);
             all.putAll(foodRequests);
-           all.putAll(securityRequests);
-           all.putAll(janitorRequests);
+            all.putAll(securityRequests);
+            all.putAll(janitorRequests);
         return all;
     }
 
