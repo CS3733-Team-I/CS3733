@@ -1,11 +1,9 @@
 package entity;
 
-import com.jfoenix.controls.JFXCheckBox;
 import database.DatabaseController;
+import database.connection.NotFoundException;
 import database.objects.*;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
+import database.utility.DatabaseException;
 import utility.KioskPermission;
 import utility.request.Language;
 import utility.request.RequestType;
@@ -47,14 +45,14 @@ public class LoginEntity {
         logins = new HashMap<>();
         if (test){
             // so tests can add and remove logins as needed
-            currentLogin = new Employee("firstTimeSetup","","","root","",
+            currentLogin = new Employee("firstTimeSetup","","","root",new ArrayList<>(),
                     SUPER_USER,RequestType.GENERAL);
         } else {
             readAllFromDatabase();
 
-            if (database.getAllEmployees().size() == 0) {
+            if (logins.size()==0) {
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee("firstTimeSetup","","","root","",
+                currentLogin = new Employee("firstTimeSetup","","","root",new ArrayList<>(),
                         SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
@@ -83,11 +81,15 @@ public class LoginEntity {
      * Adds every employee from the database to the logins hashmap
      * @return
      */
-    private void readAllFromDatabase(){
-        LinkedList<Employee> employees = database.getAllEmployees();
-        for (Employee emp : employees) {
-            // the employee hashmap is linked to usernames because of their uniqueness and ease of accessing
-            this.logins.putIfAbsent(emp.getUsername(),emp);
+    public void readAllFromDatabase(){
+        try {
+            LinkedList<Employee> employees = database.getAllEmployees();
+            for (Employee emp : employees) {
+                // the employee hashmap is linked to usernames because of their uniqueness and ease of accessing
+                this.logins.putIfAbsent(emp.getUsername(),emp);
+            }
+        } catch (DatabaseException e){
+
         }
     }
 
@@ -141,15 +143,8 @@ public class LoginEntity {
             for(Employee employee: employees){
                 if(employee.getServiceAbility()==INTERPRETER){
                     ArrayList<Language> interpretersLanguages = new ArrayList<Language>();
-                    String inLanguage="";
-                    for(char c : employee.getOptions().toCharArray()){
-                        if(c==':'){
-                            interpretersLanguages.add(Language.values()[Integer.parseInt(inLanguage)]);
-                            inLanguage="";
-                        }
-                        else{
-                            inLanguage=inLanguage+c;
-                        }
+                    for(String language : employee.getOptions()){
+                            interpretersLanguages.add(Language.values()[Integer.parseInt(language)]);
                     }
                     if(interpretersLanguages.contains(iRequest.getLanguage())){
                         loginIDs.add(employee.getID());
@@ -190,33 +185,34 @@ public class LoginEntity {
             return false;
         }
         // updates the hashmap in case a employee is missing
-        // TODO: make reading from the database more efficient, when someone is adding a lot of users, we don't want this to take forever
         if(logins.containsKey(userName)){
             return false;
         }
         // limits creating new logins to subordinates in the KioskPermission hierarchy
         else if(currentLogin.getPermission().ordinal()>permission.ordinal()||
                 currentLogin.getPermission() == SUPER_USER){
-            String optionsString = "";
             // fitting it into the table
             if(userName.length()<=50){
                 //different cases for different employee RequestTypes
                 switch (serviceAbility){
                     case INTERPRETER:
-                        for(String language : options) {
-                            //converts the checkbox text to a string containing the ordinal value of the language
-                            String langOption = Language.valueOf(language).ordinal() + ":";
-                            optionsString = optionsString + langOption;
+                        for (int i = 0; i < options.size(); i++) {
+                            String language = options.get(i);
+                            language = String.valueOf(Language.valueOf(language).ordinal());
+                            options.set(i,language);
                         }
                         break;
                 }
                 //constructs a temporary employee for database insertion
-                Employee tempEmployee=new Employee(userName,lastName,firstName, password, optionsString, permission,
+                Employee newEmployee=new Employee(userName,lastName,firstName, password, options, permission,
                         serviceAbility);
-                int ID = database.addEmployee(tempEmployee,password);
-                database.insertEmployeeIntoView(tempEmployee);
-                logins.put(userName,database.getEmployee(ID));
-                // TODO: Idea, create custom exception to inform the user on errors related to creating their employee
+                try {
+                    int ID = database.addEmployee(newEmployee,password);
+                    newEmployee.setId(ID);
+                    logins.put(userName, newEmployee);
+                } catch (DatabaseException e){
+                    return false;
+                }
                 return true;
             }
         }
@@ -238,9 +234,12 @@ public class LoginEntity {
             // checks to see if the current user permissions are higher than the one they are deleting
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
-                logins.remove(username);
-                database.deleteEmployeeFromView(delEmp);
-                database.removeEmployee(delEmp.getID());
+                try {
+                    database.removeEmployee(delEmp.getID());
+                    logins.remove(username);
+                } catch (DatabaseException e){
+                    return false;
+                }
                 return true;
             }
         }
@@ -256,11 +255,19 @@ public class LoginEntity {
     }
 
     // Method for users to update only their passwords, and no one else's
-    public boolean updatePassword(String newPassword, String oldPassword){
+    public boolean updatePassword(String newPassword, String oldPassword)throws NotFoundException{
         boolean updated = false;
-        if (currentLogin.updatePassword(newPassword, oldPassword)) {
-            updateCurrentLogin(newPassword,currentLogin.getUsername());
-            updated = true;
+        try {
+            if (this.currentLogin.setPassword(newPassword, oldPassword)) {
+                if (currentLogin instanceof Employee) {
+                    Employee currentLogin = ((Employee) this.currentLogin);
+                    database.updateEmployee(currentLogin, newPassword);
+                    logins.replace(currentLogin.getUsername(), currentLogin);
+                    updated = true;
+                }
+            }
+        } catch (DatabaseException e){
+            new NotFoundException("Employee not found");
         }
         return updated;
     }
@@ -271,42 +278,33 @@ public class LoginEntity {
      * @param password
      * @return
      */
-    public boolean updateUsername(String newUsername, String password){
+    public boolean updateUsername(String newUsername, String password) {
         boolean updated=false;
         String oldUsername = currentLogin.getUsername();
         //pulling the user from the database seems cumbersome, but this avoids the problem associated with nonemployees
         //checks if the current user name is already in active use
         if(!logins.containsKey(newUsername)){
-            updated=currentLogin.updateUsername(newUsername,password);
+            updated=currentLogin.setUsername(newUsername,password);
         }
-        if(updated){
-            //updates internal hashmap
-            updateCurrentLogin(password,oldUsername);
+        if(updated) {
+            if (currentLogin instanceof Employee) {
+                try{
+                Employee currentLogin = ((Employee) this.currentLogin);
+                database.updateEmployee(currentLogin, password);
+                logins.remove(oldUsername);
+                logins.put(currentLogin.getUsername(), currentLogin);
+                updated = true;
+                } catch (DatabaseException e){
+                    updated=false;
+                }
+            }
         }
         return updated;
     }
 
     /**
-     * Helper method for the methods that update the current login
-     * @param username can also be the current userName
-     * @param password
-     */
-    private void updateCurrentLogin(String password,String username) {
-        logins.remove(username);
-        Employee tempEmp = new Employee(currentLogin.getID(), currentLogin.getLastName(),
-                currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
-                currentLogin.getOptions(), currentLogin.getPermission(), currentLogin.getServiceAbility());
-        logins.put(currentLogin.getUsername(), tempEmp);
-                //haven't figured out how to safely get things from an interface to the class
-                //so yeah...
-        database.updateEmployee(tempEmp,password);
-    }
-
-    // For checking log in credentials
-    // THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
-
-    /**
-     *
+     * For checking log in credentials
+     * THIS IS THE ONLY WAY FOR A USER TO UPGRADE THEIR ACTIVE PERMISSIONS
      * @param username
      * @param password
      * @return returns true if valid login, and sets the current login as that employee
@@ -333,17 +331,11 @@ public class LoginEntity {
      * @return ArrayList of Languages an interpreter can speak
      */
     public ArrayList<Language> getCurrentInterpreterLanguages(){
-        ArrayList<Language> languages = new ArrayList<Language>();
-        if(currentLogin.getServiceAbility()==INTERPRETER){
-            String inLanguage="";
-            for(char c : currentLogin.getOptions().toCharArray()){
-                if(c==':'){
-                    languages.add(Language.values()[Integer.parseInt(inLanguage)]);
-                    inLanguage="";
-                }
-		        else{
-                    inLanguage=inLanguage+c;
-                }
+        ArrayList<Language> languages = new ArrayList<>();
+        if(currentLogin.getServiceAbility()==INTERPRETER) {
+            //parses the list of strings representing the ordinal language values into languages
+            for (String languageValueOption : currentLogin.getOptions()) {
+                languages.add(Language.values()[Integer.parseInt(languageValueOption)]);
             }
         }
         return languages;
