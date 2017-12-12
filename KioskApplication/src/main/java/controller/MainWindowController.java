@@ -45,6 +45,7 @@ public class MainWindowController {
           private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
+    @FXML private JFXButton HelpButton;
 
     @FXML protected JFXTabPane tabPane;
     @FXML private Tab tabMap;
@@ -140,6 +141,7 @@ public class MainWindowController {
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
         tabSettings.setText(languageBundle.getString("my.setting"));
+        HelpButton.setText(languageBundle.getString("help"));
         // attaches observer to the systemSettings
 
         systemSettings.addObserver((o, arg) -> {
@@ -452,6 +454,19 @@ public class MainWindowController {
                 this.openLoginPopup();
                 break;
         }
+    }
+
+    @FXML
+    public void helpButtonClicked() throws IOException{
+        //loginController.disableCancelButton(false);
+       /* this.loginPopup.setVisible(true);
+        this.switchButton.setDisable(true);
+        this.tabPane.setDisable(true);
+        this.tabMap.setDisable(true);
+        this.contentNode.setDisable(true);
+        this.mapView.setDisable(true);*/
+
+
     }
 
     /**
