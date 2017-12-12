@@ -27,4 +27,6 @@ public interface ISearchEntity {
      * SearchRequest = getSearchString()
      */
     String getName();
+
+    Object getLocation();
 }

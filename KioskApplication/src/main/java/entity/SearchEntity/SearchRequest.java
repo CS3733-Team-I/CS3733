@@ -1,6 +1,7 @@
 package entity.SearchEntity;
 
 import database.connection.NotFoundException;
+import database.objects.Node;
 import database.objects.Request;
 import entity.MapEntity;
 import javafx.scene.image.Image;
@@ -68,5 +69,14 @@ public class SearchRequest implements ISearchEntity{
     }
     public String getName() {
         return searchString;
+    }
+    public Node getLocation() {
+        try {
+            return MapEntity.getInstance().getNode(databaseRequest.getNodeID());
+        }
+        catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

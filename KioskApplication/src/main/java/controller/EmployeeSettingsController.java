@@ -15,6 +15,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import utility.KioskPermission;
 import utility.node.NodeType;
 import utility.request.Language;
@@ -48,7 +49,7 @@ public class EmployeeSettingsController {
     @FXML private JFXButton addUserActionButton, addUserCancelButton;
 
     @FXML private VBox interpreterLanguageBox;
-    @FXML private JFXComboBox doctorOfficeBox;
+    @FXML private JFXComboBox<database.objects.Node> doctorOfficeBox;
 
     @FXML private GridPane deletePane;
     @FXML private Label deleteText;
@@ -175,7 +176,7 @@ public class EmployeeSettingsController {
         //Doctor's office selector setup
         for(database.objects.Node databaseNode : MapEntity.getInstance().getAllNodes()) {
             if(databaseNode.getNodeType() == NodeType.DEPT) {
-                doctorOfficeBox.getItems().add(databaseNode.getLongName());
+                doctorOfficeBox.getItems().add(databaseNode);
             }
         }
         setupValidatorsForAddUserPane();
@@ -198,6 +199,21 @@ public class EmployeeSettingsController {
             serviceSelect.setPromptText(rB.getString("serviceAbility"));
             registerEmployeeLabel.setText(rB.getString("registerEmployee"));
             doctorOfficeLabel.setText(rB.getString("office"));
+        });
+
+        doctorOfficeBox.setConverter(new StringConverter<database.objects.Node>() {
+            @Override
+            public String toString(database.objects.Node node) {
+                if(node != null) {
+                    return node.getLongName();
+                }
+                else return null;
+            }
+
+            @Override
+            public database.objects.Node fromString(String string) {
+                return doctorOfficeBox.getItems().stream().filter(item -> item.getLongName().startsWith(string)).findFirst().orElse(null);
+            }
         });
     }
 
