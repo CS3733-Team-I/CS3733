@@ -29,6 +29,10 @@ import utility.request.RequestType;
 
 import java.io.IOException;
 
+import controllers.API.APIApp;
+
+import javax.xml.ws.Service;
+
 public class RequestSubmitterController extends ScreenController {
 
     @FXML private JFXTabPane requestTypeTabs;
@@ -139,8 +143,13 @@ public class RequestSubmitterController extends ScreenController {
                 priorityMenu.setValue(null);
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
-            } else if (newValue == transportTab){
-
+            } else if (newValue == transportTab) {
+                try {
+                    APIApp.run(50, 50, 500, 500,
+                            "", "", "");
+                } catch (APIApp.ServiceException e){
+                    e.printStackTrace();
+                }
             }
             resetTimer();
         });
