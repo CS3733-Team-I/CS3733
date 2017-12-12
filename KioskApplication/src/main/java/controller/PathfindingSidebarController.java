@@ -6,6 +6,7 @@ import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Node;
 import entity.Path;
+import entity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -73,10 +75,9 @@ public class PathfindingSidebarController extends ScreenController {
         super(parent, map);
         currentWaypoints = FXCollections.observableArrayList();
         waypointViews = new HashMap<>();
-
         systemSettings = SystemSettings.getInstance();
         isAddingWaypoint = true;
-        searchController = new SearchController(this);
+        searchController = new SearchController();
     }
 
     @FXML
@@ -143,6 +144,8 @@ public class PathfindingSidebarController extends ScreenController {
 
         searchController.getCBValueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                isAddingWaypoint = true;
+
                 if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
                     getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
                 }

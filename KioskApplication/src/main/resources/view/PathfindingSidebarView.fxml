@@ -14,38 +14,42 @@
          <children>
             <VBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXListView fx:id="waypointListView" maxHeight="1.7976931348623157E308" pickOnBounds="false" style="-fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10;">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </JFXListView>
-                  <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
+                  <VBox style="-fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 2; -fx-background-radius: 10; -fx-background-color: white;">
                      <children>
-                        <JFXButton id="confirm-button" fx:id="btRestaurant" buttonType="RAISED" onAction="#handleButtonAction">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </JFXButton>
-                        <JFXButton id="blue-button" fx:id="btExit" buttonType="RAISED" onAction="#handleButtonAction">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </JFXButton>
-                        <JFXButton id="delete-button" fx:id="btElevator" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </JFXButton>
-                        <JFXButton id="delete-button" fx:id="btRestRoom" buttonType="RAISED" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </JFXButton>
+                        <JFXListView fx:id="waypointListView" maxHeight="1.7976931348623157E308" pickOnBounds="false" style="-fx-background-radius: 10; -fx-background-color: transparent;">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </JFXListView>
+                        <HBox alignment="CENTER" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <JFXButton fx:id="btRestaurant" onAction="#handleButtonAction" styleClass="transparent-button">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btExit" onAction="#handleButtonAction" styleClass="transparent-button">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btElevator" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad" styleClass="transparent-button">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btRestRoom" onAction="#handleButtonAction" prefHeight="39.0" ripplerFill="#0090ad" styleClass="transparent-button">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
+                           </padding>
+                        </HBox>
                      </children>
-                     <padding>
-                        <Insets top="10.0" />
-                     </padding>
-                  </HBox>
+                  </VBox>
                   <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefWidth="200.0" spacing="10.0">
                      <children>
                         <JFXButton id="confirm-button" fx:id="showDirectionsButton" buttonType="RAISED" onAction="#showDirections" text="Directions">

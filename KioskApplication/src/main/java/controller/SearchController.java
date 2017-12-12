@@ -33,14 +33,9 @@ public class SearchController {
 
     private SortedList<SearchNode> sortedList;
 
-    private ScreenController parent;
-
-    private TableView<SearchNode> nodeTable;
     FuzzySearch fuzzySearch;
-    String value;
 
-    public SearchController(ScreenController parent) {
-        this.parent = parent;
+    public SearchController() {
         nodeData = FXCollections.observableArrayList();
         SystemSettings.getInstance().updateDistance();
         for(Node databaseNode :MapEntity.getInstance().getAllNodes()) {
@@ -52,16 +47,12 @@ public class SearchController {
 
     @FXML
     void initialize() {
-
         //initialize the lists
         fuzzySearch = new FuzzySearch();
-        nodeTable = new TableView<>();
-        filteredList = new FilteredList<>(nodeData, e->true);
+        filteredList = new FilteredList<>(nodeData, event -> true);
         //set the combo box style and editable
-        cbNodes.setTooltip(new Tooltip());
         cbNodes.setEditable(true);
         cbNodes.setPromptText("Search by location, doctor or type");
-        cbNodes.getEditor().setEditable(true);
         cbNodes.setConverter(new StringConverter<SearchNode>() {
             @Override
             public String toString(SearchNode object) {
@@ -84,72 +75,67 @@ public class SearchController {
             protected void updateItem(SearchNode item, boolean empty) {
                 super.updateItem(item, empty);
 
-                if(item == null || empty) {
+                getListView().setMaxWidth(750);
+                if(empty || item == null) {
+                    setText(null);
                     setGraphic(null);
-                }
-                else {
+                } else {
                     setGraphic(item.getNodeIcon());
                     setText(item.getSearchString());
                 }
             }
         });
 
-        cbNodes.setButtonCell(cbNodes.getCellFactory().call(null));
-
-        cbNodes.setOnKeyReleased(e -> {
-            cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> {
-                final List<Node> searchResults = new LinkedList<>();;
-                if (newValue != null && !newValue.equals("")) {
-                    try {
-                        searchResults.addAll(FuzzySearch.fuzzySearch(newValue));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-                filteredList.setPredicate((Predicate<? super SearchNode>) searchNode-> {
-                    if(newValue == null || newValue.isEmpty()) {
-                        return true;
-                    } else {
-                        cbNodes.setPromptText("");
-                    }
-
-                    /*//also check its lower case
-                    String lowerCaseFilter = newValue.toLowerCase();
-                    //also check its upper case
-                    String upperCaseFilter = newValue.toUpperCase();
-                    value = newValue;
-                    if((searchNode.getDatabaseNode().getNodeID().contains(newValue) || searchNode.getDatabaseNode().getLongName().contains(newValue) || searchNode.getDatabaseNode().getShortName().contains(newValue)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }else if((searchNode.getDatabaseNode().getNodeID().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(lowerCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(lowerCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }
-                    else if((searchNode.getDatabaseNode().getNodeID().contains(upperCaseFilter) || searchNode.getDatabaseNode().getLongName().contains(upperCaseFilter) || searchNode.getDatabaseNode().getShortName().contains(upperCaseFilter)) && searchNode.getDatabaseNode().getNodeType() != NodeType.HALL) {
-                        return true;
-                    }*/
-
-                    for (Node node : searchResults) {
-                        if (node.getNodeID().equalsIgnoreCase(searchNode.getDatabaseNode().getNodeID())) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
-            });
-            sortedList = new SortedList<>(filteredList);
-
-            sortedList.comparatorProperty().bind(nodeTable.comparatorProperty());
-            nodeTable.setItems(sortedList);
-            cbNodes.getItems().clear();
-            cbNodes.getItems().addAll(sortedList);
-            if(!sortedList.isEmpty()) {
+        cbNodes.getEditor().focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue) {
                 cbNodes.show();
-            }
-            else {
+                cbNodes.setPromptText("");
+            } else {
                 cbNodes.hide();
+                cbNodes.setPromptText("Search by location, doctor or type");
             }
+        }));
+
+        cbNodes.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+
+        updateSearch("");
+        cbNodes.hide();
+    }
+
+    private void updateSearch(String searchText) {
+        final List<Node> searchResults = new LinkedList<>();
+        if (searchText != null && !searchText.equals("")) {
+            try {
+                searchResults.addAll(FuzzySearch.fuzzySearch(searchText));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        filteredList.setPredicate((Predicate<? super SearchNode>) searchNode -> {
+            if(searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+
+            for (Node node : searchResults) {
+                if (node.getNodeID().equalsIgnoreCase(searchNode.getDatabaseNode().getNodeID())) {
+                    return true;
+                }
+            }
+
+            return false;
         });
+
+        sortedList = new SortedList<>(filteredList);
+
+        cbNodes.getItems().clear();
+        cbNodes.getItems().addAll(sortedList);
+        if(!sortedList.isEmpty()) {
+            cbNodes.show();
+        }
+        else {
+            cbNodes.hide();
+        }
     }
 
     @FXML
@@ -181,6 +167,5 @@ public class SearchController {
     public void clearSearch() {
         cbNodes.getItems().clear();
         sortedList.clear();
-        nodeTable.getItems().clear();
     }
 }
