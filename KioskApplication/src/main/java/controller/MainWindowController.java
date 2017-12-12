@@ -404,6 +404,19 @@ public class MainWindowController {
         this.currentScreen = screen;
     }
 
+    /**
+     * initalizes the help plan view
+     * @throws IOException
+     */
+    private void initalizeHelpPopup() throws IOException{
+
+    }
+
+
+    /**
+     * initalizes the login pop up window using FXML loader and setting as the top anchor plane
+     * @throws IOException
+     */
     private void initializeLoginPopup() throws IOException{
         loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
