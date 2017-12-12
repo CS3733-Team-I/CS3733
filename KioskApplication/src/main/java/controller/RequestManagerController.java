@@ -207,9 +207,6 @@ public class RequestManagerController extends ScreenController {
             contentView = loadView("/view/RequestManagerView.fxml");
         }
 
-        initialize();
-//        newRequests();
-
         return contentView;
     }
 
