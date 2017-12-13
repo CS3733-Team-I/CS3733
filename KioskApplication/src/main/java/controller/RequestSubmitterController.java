@@ -52,6 +52,8 @@ public class RequestSubmitterController extends ScreenController {
 
     /*janitor related*/
     @FXML private Tab janitorTab;
+    @FXML private JFXTextField janLocationField;
+    @FXML private JFXTextArea janNotesField;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -138,6 +140,9 @@ public class RequestSubmitterController extends ScreenController {
                 priorityMenu.setValue(null);
             } else if (newValue == janitorTab) {
                 currentRequestType = RequestType.JANITOR;
+
+                janNotesField.clear();
+                janLocationField.clear();
             }
             resetTimer();
         });
@@ -300,6 +305,9 @@ public class RequestSubmitterController extends ScreenController {
             case FOOD:
                 addFoodRequest();
                 break;
+            case JANITOR:
+                addJanitorRequest();
+                break;
         }
     }
 
@@ -319,6 +327,9 @@ public class RequestSubmitterController extends ScreenController {
         secLocationField.setText("");
         secNoteField.setText("");
         priorityMenu.setValue(null);
+
+        janLocationField.setText("");
+        janNotesField.setText("");
     }
 
     /**
@@ -393,6 +404,11 @@ public class RequestSubmitterController extends ScreenController {
         }
     }
 
+    private void addJanitorRequest(){
+        requestEntity.submitJanitorRequest(janLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText());
+        clearButton();
+    }
+
     /**
      * Resets the timer in the MainWindowController
      */
@@ -425,7 +441,7 @@ public class RequestSubmitterController extends ScreenController {
                 deliveryLocation.setText(n.getNodeID());
                 break;
             case JANITOR:
-                System.out.println("map clicked in Janitor tab");
+                janLocationField.setText(n.getNodeID());
                 break;
         }
     }

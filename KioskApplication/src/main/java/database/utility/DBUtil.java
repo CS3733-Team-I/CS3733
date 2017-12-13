@@ -73,12 +73,16 @@ public class DBUtil {
         PreparedStatement createSecurityTable = conn.prepareStatement(CREATE_SECURITY_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createSecurityTable.execute();
+        PreparedStatement createJanitorTable = conn.prepareStatement(CREATE_JANITOR_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES);
+        createJanitorTable.execute();
     }
 
     public static void dropAllTables(Connection conn) {
         String drop1 = DROP_EDGE_TABLE;
         String drop2 = DROP_INTERPRETER_TABLE;
         String dropSecReq = DROP_SECURITY_TABLE;
+        String dropJanReq = DROP_JANITOR_TABLE;
         String drop3 = DROP_NODE_TABLE;
         String drop4 = DROP_EMPLOYEE_TABLE;
 
@@ -103,6 +107,13 @@ public class DBUtil {
             preparedStatement5 = conn.prepareStatement(dropSecReq);
             preparedStatement5.execute();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            PreparedStatement dropJanStmt = conn.prepareStatement(dropJanReq);
+            dropJanStmt.execute();
+        } catch (SQLException e){
             e.printStackTrace();
         }
 
