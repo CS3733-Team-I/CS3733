@@ -3,6 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.*;
+import database.objects.requests.ITRequest;
 import database.utility.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,7 @@ public class RequestEntity {
     private HashMap<String,SecurityRequest> securityRequests;
     private HashMap<String,FoodRequest> foodRequests;
     private HashMap<String,JanitorRequest> janitorRequests;
+    private HashMap<String,ITRequest> itRequests;
 
     private int uRequestID = 0;
 
@@ -39,6 +41,7 @@ public class RequestEntity {
         securityRequests=new HashMap<>();
         foodRequests=new HashMap<>();
         janitorRequests=new HashMap<>();
+        itRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getInstance();
@@ -70,6 +73,7 @@ public class RequestEntity {
         securityRequests.clear();
         foodRequests.clear();
         janitorRequests.clear();
+        itRequests.clear();
         // Refills the hashmaps from the database
         for(InterpreterRequest interpreterRequest:dbController.getAllInterpreterRequests()){
             interpreterRequests.put(interpreterRequest.getRequestID(),interpreterRequest);
@@ -82,6 +86,9 @@ public class RequestEntity {
         }
         for (JanitorRequest janitorRequest:dbController.getAllJanitorRequests()){
             janitorRequests.put(janitorRequest.getRequestID(),janitorRequest);
+        }
+        for (ITRequest itRequest:dbController.getAllITRequests()){
+            itRequests.put(itRequest.getRequestID(),itRequest);
         }
     }
 
@@ -129,6 +136,14 @@ public class RequestEntity {
         return janRequests;
     }
 
+    public LinkedList<Request> getAllITRequests(){
+        LinkedList<Request> itRequests = new LinkedList<>();
+        for(ITRequest itRequest:this.itRequests.values()){
+            itRequests.add(itRequest);
+        }
+        return itRequests;
+    }
+
     /**
      * Generic method to get all requests in the hashmaps
      * @return the requests from the hashmaps
@@ -139,6 +154,7 @@ public class RequestEntity {
         allRequests.addAll(getAllSecurity());
         allRequests.addAll(getAllFoodRequests());
         allRequests.addAll(getAllJanitorRequests());
+        allRequests.addAll(getAllITRequests());
         return allRequests;
     }
 
@@ -285,6 +301,11 @@ public class RequestEntity {
             janitorRequest.setInProgress(completerID);
             dbController.updateJanitorRequest(janitorRequest);
         }
+        else if(requestType.equals(RequestType.IT)){
+            ITRequest itRequest = itRequests.get(requestID);
+            itRequest.setInProgress(completerID);
+            dbController.updateITRequest(itRequest);
+        }
 //        else if(requestType.equals(RequestType"Ins")){
 //            System.out.println("In Progress InsideTransportationRequest");
 //        }
@@ -328,7 +349,13 @@ public class RequestEntity {
             janitorRequests.replace(requestID,janitorRequest);
             dbController.updateJanitorRequest(janitorRequest);
         }
-//        else if(requestType.equals(RequestType"Ins")){
+        else if(requestType.equals(RequestType.IT)) {
+            ITRequest itRequest = itRequests.get(requestID);
+            itRequest.setComplete();
+            itRequests.replace(requestID,itRequest);
+            dbController.updateITRequest(itRequest);
+        }
+//        else if(requestType.equals(RequestType"Ins"))
 //            System.out.println("Complete InsideTransportationRequest");
 //        }
 //        else if(requestType.equals(RequestType"Out")){
@@ -348,13 +375,20 @@ public class RequestEntity {
         Request request = null;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
             request = getInterpreterRequest(requestID);
-        }else if(checkRequestType(requestID).equals(RequestType.FOOD)){
+        }
+        else if(checkRequestType(requestID).equals(RequestType.FOOD)){
             request = getFoodRequest(requestID);
         }else if(checkRequestType(requestID).equals(RequestType.JANITOR)){
             request = getJanitorRequest(requestID);
         }
-        else if(checkRequestType(requestID).equals(RequestType.SECURITY)){ //security request
+      else if (checkRequestType(requestID).equals(RequestType.SECURITY)){
             request = getSecurityRequest(requestID);
+        }
+        else if (checkRequestType(requestID).equals(RequestType.JANITOR)){
+            request = getJanitorRequest(requestID);
+        }
+        else if (checkRequestType(requestID).equals(RequestType.IT)){
+            request = getITRequest(requestID);
         }
         return request;
     }
@@ -384,7 +418,7 @@ public class RequestEntity {
      * @param completedTime
      * @param status
      */
-    public void updateRequest(String requestID, String nodeID, int assignerID, String note,
+    private void updateRequest(String requestID, String nodeID, int assignerID, String note,
                               Timestamp submittedTime, Timestamp completedTime,
                               RequestProgressStatus status){
         Request oldReq = getRequest(requestID);
@@ -404,8 +438,13 @@ public class RequestEntity {
                 break;
             case FOOD:
                 dbController.updateFoodRequest((FoodRequest) oldReq);
+                break;
             case JANITOR:
                 dbController.updateJanitorRequest((JanitorRequest) oldReq);
+                break;
+            case IT:
+                dbController.updateITRequest((ITRequest) oldReq);
+                break;
         }
 
     }
@@ -692,6 +731,61 @@ public class RequestEntity {
     public void updateJanitorRequest(JanitorRequest janitorRequest){
         janitorRequests.replace(janitorRequest.getRequestID(),janitorRequest);
         dbController.updateJanitorRequest(janitorRequest);
+    }
+
+    /**
+     * For submitting ITRequests
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @return
+     */
+    public String submitITRequest(String nodeID, int assignerID, String note, ITService itService){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "IT"+currTime;
+
+        ITRequest itRequest = new ITRequest(rID, nodeID, assignerID, assignerID, note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, itService);
+
+        //dbController.insertRequestIntoView(itRequest);
+        uRequestID++;
+
+        itRequests.put(rID, itRequest);
+        dbController.addITRequest(itRequest);
+        return rID;
+    }
+
+    /**
+     *
+     * @param requestID
+     * @return
+     * @throws NullPointerException
+     */
+    public ITRequest getITRequest(String requestID) throws NullPointerException{
+        if(itRequests.containsKey(requestID)){
+            return itRequests.get(requestID);
+        }
+        else {
+            readAllFromDatabase();
+            if(itRequests.containsKey(requestID)){
+                return itRequests.get(requestID);
+            }
+            else {
+                throw new NullPointerException("Unable to find IT request in the database");
+            }
+        }
+    }
+
+    /**
+     * Vastly simplified updating method
+     * @param itRequest
+     */
+    public void updateITRequest(ITRequest itRequest){
+        itRequests.replace(itRequest.getRequestID(),itRequest);
+        dbController.updateITRequest(itRequest);
     }
 
     /*

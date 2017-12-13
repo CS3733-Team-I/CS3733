@@ -1,11 +1,13 @@
 package database.connection;
 
 import database.objects.*;
+import database.objects.requests.ITRequest;
 import database.template.SQLStrings;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
+import utility.request.ITService;
 import utility.request.Language;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
@@ -615,6 +617,98 @@ public class Connector {
             janitorRequests.add(janitorRequest);
         }
         return janitorRequests;
+    }
+
+    public static int insertIT(Connection conn, ITRequest itRequest) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_INSERT);
+        pstmt.setString(1, itRequest.getRequestID());
+        pstmt.setInt(2,itRequest.getItService().ordinal());
+        pstmt.setString(3, itRequest.getNodeID());
+        pstmt.setInt(4, itRequest.getAssignerID());
+        pstmt.setInt(5, itRequest.getCompleterID());
+        pstmt.setString(6, itRequest.getNote());
+        pstmt.setTimestamp(7, itRequest.getSubmittedTime());
+        pstmt.setTimestamp(8, itRequest.getStartedTime());
+        pstmt.setTimestamp(9, itRequest.getCompletedTime());
+        pstmt.setInt(10, itRequest.getStatus().ordinal());
+        //pstmt.setInt(11, itRequest.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateIT(Connection conn, ITRequest itRequest) throws SQLException {
+        String sql = IT_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,itRequest.getItService().ordinal());
+        pstmt.setString(2, itRequest.getNodeID());
+        pstmt.setInt(3, itRequest.getAssignerID());
+        pstmt.setInt(4, itRequest.getCompleterID());
+        pstmt.setString(5, itRequest.getNote());
+        pstmt.setTimestamp(6, itRequest.getSubmittedTime());
+        pstmt.setTimestamp(7, itRequest.getStartedTime());
+        pstmt.setTimestamp(8, itRequest.getCompletedTime());
+        pstmt.setInt(9, itRequest.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(10, itRequest.getRequestID());
+        //pstmt.setInt(11, itRequest.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static ITRequest selectIT(Connection conn, String requestID) throws SQLException {
+        String sql = IT_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        ITRequest itRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            itRequest = new ITRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    ITService.values()[rs.getInt("itService")]
+                    //rs.getInt("uRequestID")
+            );
+        }
+        return itRequest;
+    }
+
+    public static boolean deleteIT(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<ITRequest> selectAllIT(Connection conn) throws SQLException {
+        String sql = IT_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<ITRequest> itRequests = new LinkedList<>();
+        while(rs.next()) {
+            ITRequest itRequest = null;
+            itRequest = new ITRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    ITService.values()[rs.getInt("itService")]
+                    //rs.getInt("uRequestID")
+            );
+
+            itRequests.add(itRequest);
+        }
+        return itRequests;
     }
 
     /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
