@@ -643,7 +643,7 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node n) {
-        System.out.println("Map clicked");
+        System.out.println("Map clicked"+n.getLongName());
         switch (currentRequestType){
             case INTERPRETER:
                 intLocation.setText(n.getNodeID());
