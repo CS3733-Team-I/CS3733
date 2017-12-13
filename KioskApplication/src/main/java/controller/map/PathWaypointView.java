@@ -14,9 +14,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -239,17 +241,24 @@ public class PathWaypointView extends AnchorPane {
                             parent.setFloorSelector(thisFloor);
                         }
                     });
-                    circle.setOnMouseEntered(e -> {
-                        System.out.println("Open Tooltip");
-                        if(thisFloor == parent.getCurrentFloor()) {
-                            parent.showPopup(thisNode);
-                        } else {
-                            parent.showPopup(lNode);
+                    circle.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            System.out.println("Open Tooltip");
+                            if (thisFloor == parent.getCurrentFloor()) {
+                                parent.showPopup(thisNode, lastFloor, event);
+                                parent.setPopupFloor(lastFloor);
+                            } else {
+                                parent.showPopup(lNode, thisFloor, event);
+                                parent.setPopupFloor(thisFloor);
+                            }
                         }
                     });
-                    circle.setOnMouseExited(e -> {
-                        System.out.println("Close Tooltip");
-                    });
+
+                    //circle.setOnMouseExited(e -> {
+                    //    System.out.println("Close Tooltip");
+                    //    parent.closePopup();
+                    //});
 
                     floorChangeView.getChildren().add(circle);
                 }
