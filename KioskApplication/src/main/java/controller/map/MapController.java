@@ -14,6 +14,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -33,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -40,6 +43,8 @@ import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.*;
+
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -52,7 +57,7 @@ public class MapController {
     public static final double DEFAULT_VVALUE = 0.3;
     public static final double DEFAULT_ZOOM = 0.75;
 
-    @FXML private StackPane stackPane;
+    @FXML private StackPane mapStackPane;
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane pathWaypointContainer;
@@ -820,7 +825,39 @@ public class MapController {
 
     @FXML
     private void onAboutAction(){
-        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+        JFXDialogLayout aboutDialogLayout = new JFXDialogLayout();
+        aboutDialogLayout.setHeading(new Text("About"));
+        aboutDialogLayout.setBody(new Text("Team Members:                                                     \n" +
+                "Benjamin Gillette - Project Manager/ Scrum Master \n" +
+                "Jerish Brown - Lead Software Engineer         \n" +
+                "John Parrick  - Assistant Lead Software Engineer\n" +
+                "Ziheng (Leo) L - Assistant Lead Software Engineer\n" +
+                "James Taylor - Product Owner\n" +
+                "Michael Sidler - Test Engineer\n" +
+                "Mary Hatfalvi - Documentation Analyst\n" +
+                "Henry Dunphy - Software Engineer\n" +
+                "Ryan Racine  - Software Engineer\n" +
+                "Da Xu - Software Engineer\n" +
+                "\n" +
+                "WPI Computer Science Department, \n" +
+                "CS3733 Software Engineering, Prof. Wilson Wong, \n" +
+                "Team Coach - Akshit (Axe) Soota \n" +
+                "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"));
+        JFXDialog dialog = new JFXDialog(mapStackPane, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
+        dialog.setLayoutX(1000);
+        dialog.setLayoutY(500);
+        JFXButton btnodeDialog= new JFXButton("OK");
+        btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                dialog.close();
+                mapStackPane.getChildren().remove(dialog);
+                mapStackPane.getChildren().remove(aboutDialogLayout);
+            }
+        });
+        aboutDialogLayout.setActions(btnodeDialog);
+
+        dialog.show();
     }
 
     public void nodesConnected(String nodeID1, String nodeID2) {

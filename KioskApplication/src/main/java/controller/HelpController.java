@@ -33,22 +33,21 @@ public class HelpController extends ScreenController{
 
     @FXML
     protected void initialize() throws IOException {
-
-//        helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-//            if (newValue == null) return;
-//            switch (newValue.getId().toString()) {
-//                case "Map Help":
-//                    break;
-//                case "tabMB":
-//                    break;
-//                case "tabRM":
-//                    break;
-//                case "tabRS":
-//                    break;
-//                case "tabSettings":
-//                    break;
-//            }
-//        });
+        helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) return;
+            switch (newValue.getId().toString()) {
+                case "Map Help":
+                    break;
+                case "tabMB":
+                    break;
+                case "tabRM":
+                    break;
+                case "tabRS":
+                    break;
+                case "tabSettings":
+                    break;
+            }
+        });
     }
 
     @FXML
