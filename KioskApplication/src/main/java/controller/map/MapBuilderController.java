@@ -555,6 +555,8 @@ public class MapBuilderController extends ScreenController {
         getMapController().setEditMode(true);
 
         getMapController().setAnchor(0, 450, 0, 0);
+
+        getMapController().clearMap();
         getMapController().reloadDisplay();
 
         // Set default nodes/edges visibility

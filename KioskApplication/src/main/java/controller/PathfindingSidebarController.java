@@ -256,15 +256,6 @@ public class PathfindingSidebarController extends ScreenController {
             try{
                 Path path = pathfinder.generatePath(new LinkedList<>(currentWaypoints));
                 getMapController().setPath(path);
-
-                LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
-                for(LinkedList<String> directionSegment: directionsList) {
-                    for (String direction : directionSegment) {
-                        Label label = new Label(direction);
-                        label.setTextFill(Color.BLACK);
-                        //TODO FIX THIS
-                    }
-                }
             } catch(PathfinderException exception){
                 exception.printStackTrace();
                 //exceptionText.setText("ERROR! "+ exception.getMessage());
@@ -342,6 +333,8 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        directionsContainer.setVisible(false);
+
         getMapController().setEditMode(false);
 
         // Set the map size
