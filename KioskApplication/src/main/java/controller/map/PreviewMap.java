@@ -31,7 +31,7 @@ public class PreviewMap extends AnchorPane {
         this.mapImage.setImage(resourceManager.getImage(this.floor.toImagePath()));
         this.getChildren().add(this.mapImage);
         this.mapImage.setSmooth(true);
-        this.mapImage.setPreserveRatio(true);
+//        this.mapImage.setPreserveRatio(true);
         this.mapImage.setFitHeight(200);
         this.mapImage.setFitWidth(356);
 
