@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXProgressBar;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Employee;
@@ -17,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -56,7 +61,8 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private ImageView addIconView;
     @FXML private ImageView removeIconView;
     @FXML private JFXButton showDirectionsButton;
-    @FXML private  JFXButton btClearPath;
+    @FXML private JFXButton btClearPath;
+    @FXML private JFXButton showPathBtn;
 
     @FXML private JFXButton btExit;
     @FXML private JFXButton btRestRoom;
@@ -73,11 +79,12 @@ public class PathfindingSidebarController extends ScreenController {
 
     private javafx.scene.Node searchView;
 
+    private Task<Void> searchResetTask;
+
     // Direction Screen
     @FXML private AnchorPane directionsContainer;
     @FXML private Label directionsLabel;
     @FXML private VBox textDirectionsBox;
-    @FXML private JFXButton emailButton;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -108,8 +115,6 @@ public class PathfindingSidebarController extends ScreenController {
         searchView = searchLoader.load();
 
         directionsContainer.setVisible(false);
-
-        emailButton.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/mail.png")));
 
         // Set containers to be transparent to mouse events
         ResourceBundle lang = systemSettings.getResourceBundle();
@@ -153,7 +158,16 @@ public class PathfindingSidebarController extends ScreenController {
 
         // TODO redo localization for this screen
         systemSettings.addObserver((o, arg) -> {
-            btClearPath.setText(SystemSettings.getInstance().getResourceBundle().getString("clearpath"));
+            btClearPath.setText(SystemSettings.getInstance().getResourceBundle().getString("my.clear"));
+
+        });
+
+        systemSettings.addObserver((o, arg) ->{
+            showPathBtn.setText(SystemSettings.getInstance().getResourceBundle().getString("showPath"));
+        });
+
+        systemSettings.addObserver((o, arg) ->{
+            showDirectionsButton.setText(SystemSettings.getInstance().getResourceBundle().getString("directions"));
         });
 
         searchController.setSearchFieldPromptText(lang.getString("my.searchprompt"));
@@ -175,6 +189,8 @@ public class PathfindingSidebarController extends ScreenController {
                 displayedNode.add((newValue.getLocation()));
                 getMapController().zoomOnSelectedNodes(displayedNode);
                 onMapNodeClicked((newValue.getLocation()));
+
+                this.waypointListView.requestFocus();
             }
         });
 
@@ -198,6 +214,26 @@ public class PathfindingSidebarController extends ScreenController {
                 generatePath();
             }
         });
+
+        //reset search
+        this.searchResetTask = new Task<Void>() {
+            @Override protected Void call() throws Exception {
+                SystemSettings.getInstance().updateDistance();
+                ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+                for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+                    if(targetNode.getNodeType() != NodeType.HALL) {
+                        searchNodeAndDoctor.add(new SearchNode(targetNode));
+                    }
+                }
+                for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+                    if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                        searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+                    }
+                }
+                searchController.reset(searchNodeAndDoctor);
+                return null;
+            }
+        };
     }
 
     @FXML
@@ -238,6 +274,10 @@ public class PathfindingSidebarController extends ScreenController {
 
         currentWaypoints.clear();
         currentWaypoints.add(SystemSettings.getInstance().getKioskLocation());
+
+        showPathButton();
+
+        isAddingWaypoint = true;
     }
 
     public void disableClearBtn(){
@@ -256,15 +296,6 @@ public class PathfindingSidebarController extends ScreenController {
             try{
                 Path path = pathfinder.generatePath(new LinkedList<>(currentWaypoints));
                 getMapController().setPath(path);
-
-                LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
-                for(LinkedList<String> directionSegment: directionsList) {
-                    for (String direction : directionSegment) {
-                        Label label = new Label(direction);
-                        label.setTextFill(Color.BLACK);
-                        //TODO FIX THIS
-                    }
-                }
             } catch(PathfinderException exception){
                 exception.printStackTrace();
                 //exceptionText.setText("ERROR! "+ exception.getMessage());
@@ -277,11 +308,6 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     /* TEXT DIRECTIONS */
-
-    @FXML
-    private void onEmailPressed() {
-
-    }
 
     /**
      * Resets the timer in the MainWindowController
@@ -320,6 +346,7 @@ public class PathfindingSidebarController extends ScreenController {
         } else {
             //remove last node
             removeWaypoint(currentWaypoints.get(currentWaypoints.size() - 1));
+            // TODO update any waypoints with a greater number
 
             //add new waypoint
             currentWaypoints.add(node);
@@ -342,6 +369,8 @@ public class PathfindingSidebarController extends ScreenController {
 
     @Override
     public void resetScreen() {
+        directionsContainer.setVisible(false);
+
         getMapController().setEditMode(false);
 
         // Set the map size
@@ -376,7 +405,10 @@ public class PathfindingSidebarController extends ScreenController {
 
         // Check if the waypoint is the default node
         if (SystemSettings.getInstance().getKioskLocation().getNodeID().equals(node.getNodeID())) {
-            Label label = new Label("Current Location");
+            Label label = new Label(SystemSettings.getInstance().getResourceBundle().getString("currentLocation"));
+            SystemSettings.getInstance().addObserver((o, arg) ->{
+               label.setText(SystemSettings.getInstance().getResourceBundle().getString("currentLocation"));
+            });
             label.setStyle("-fx-font-weight:bold;" + "-fx-font-size: 12pt; ");
             label.setPrefWidth(350);
 
@@ -468,11 +500,13 @@ public class PathfindingSidebarController extends ScreenController {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasString()) {
-                getMapController().swapWaypoint(waypointListView.getItems().indexOf(waypointBox), Integer.parseInt(db.getString()));
                 HBox temp = waypointBox;
-                waypointListView.getItems().set(waypointListView.getItems().indexOf(waypointBox),
-                        waypointListView.getItems().get(Integer.parseInt(db.getString())));
+                waypointListView.getItems().set(
+                        waypointListView.getItems().indexOf(waypointBox),
+                        waypointListView.getItems().get(Integer.parseInt(db.getString()))
+                );
                 waypointListView.getItems().set(Integer.parseInt(db.getString()), temp);
+
                 success = true;
             }
             event.setDropCompleted(success);
@@ -505,6 +539,9 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointIconView.setFitWidth(24);
         addWaypointIconView.setFitHeight(24);
         addWaypointIconView.setCursor(Cursor.HAND);
+
+        addWaypointIconView.setOnMouseMoved(e -> resetTimer());
+        addWaypointBox.setOnMouseMoved(e -> resetTimer());
 
         addWaypointBox.getChildren().addAll(addWaypointIconView, searchView);
 
@@ -576,7 +613,11 @@ public class PathfindingSidebarController extends ScreenController {
     private void addTextDirection() {
         textDirectionsBox.getChildren().clear();
 
-        directionsLabel.setText("Directions to " + currentWaypoints.get(currentWaypoints.size() - 1).getLongName());
+        String temp = currentWaypoints.get(currentWaypoints.size() - 1).getLongName();
+        directionsLabel.setText(SystemSettings.getInstance().getResourceBundle().getString("directionsTo") + temp);
+        SystemSettings.getInstance().addObserver((o, arg) -> {
+            directionsLabel.setText(SystemSettings.getInstance().getResourceBundle().getString("directionsTo") + temp);
+        });
 
         for (int waypointIndex = 0; waypointIndex < currentWaypoints.size(); waypointIndex++) {
             AnchorPane waypointBox = new AnchorPane();

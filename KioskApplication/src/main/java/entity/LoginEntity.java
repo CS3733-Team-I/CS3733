@@ -3,6 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.*;
+import database.objects.requests.InterpreterRequest;
+import database.objects.requests.Request;
 import database.utility.DatabaseException;
 import utility.KioskPermission;
 import utility.request.Language;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static utility.KioskPermission.*;
+import static utility.request.RequestType.FOOD;
+import static utility.request.RequestType.GENERAL;
 import static utility.request.RequestType.INTERPRETER;
 
 /**
@@ -22,6 +26,7 @@ import static utility.request.RequestType.INTERPRETER;
  */
 public class LoginEntity {
     private DatabaseController database;
+    private ActivityLogger activityLogger;
     // holds all relevant information for the current user
     private IEmployee currentLogin;
     private HashMap<String,Employee> logins;
@@ -41,6 +46,7 @@ public class LoginEntity {
 
     private LoginEntity(Boolean test){
         database = DatabaseController.getInstance();
+        activityLogger = ActivityLogger.getInstance();
 
         logins = new HashMap<>();
         if (test){
@@ -51,9 +57,19 @@ public class LoginEntity {
             readAllFromDatabase();
 
             if (logins.size()==0) {
+                Employee admin = new Employee("admin","Wong","Wilson","admin",new ArrayList<>(),SUPER_USER,GENERAL);
+                Employee employee = new Employee("employee","Taylor","James","employee",new ArrayList<>(),EMPLOYEE,FOOD);
+                try {
+                    database.addEmployee(admin,"admin");
+                    database.addEmployee(employee,"employee");
+                } catch (DatabaseException e){
+                    e.printStackTrace();
+                }
+                readAllFromDatabase();
+                logIn("admin","admin");
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee("firstTimeSetup","","","root",new ArrayList<>(),
-                        SUPER_USER,RequestType.GENERAL);
+                //currentLogin = new Employee("firstTimeSetup","","","root",new ArrayList<>(),
+                //        SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
                 currentLogin = NullEmployee.getInstance();
@@ -204,6 +220,7 @@ public class LoginEntity {
                     int ID = database.addEmployee(newEmployee,password);
                     newEmployee.setId(ID);
                     logins.put(userName, newEmployee);
+                    activityLogger.logEmployeeAdd(currentLogin, newEmployee);
                 } catch (DatabaseException e){
                     return false;
                 }
@@ -224,13 +241,14 @@ public class LoginEntity {
     public boolean deleteLogin(String username){
         // Idiot resistance to prevent people from removing themselves (for non-tests) and checks if the name is in the hashmap
         if(logins.containsKey(username)&&(username!=currentLogin.getUsername())) {
-            IEmployee delEmp = logins.get(username);
+            Employee delEmp = logins.get(username);
             // checks to see if the current user permissions are higher than the one they are deleting
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
                 try {
                     database.removeEmployee(delEmp.getID());
                     logins.remove(username);
+                    activityLogger.logEmployeeDelete(currentLogin,delEmp);
                 } catch (DatabaseException e){
                     return false;
                 }
@@ -249,19 +267,21 @@ public class LoginEntity {
     }
 
     // Method for users to update only their passwords, and no one else's
-    public boolean updatePassword(String newPassword, String oldPassword)throws NotFoundException{
+    public boolean updatePassword(String newPassword, String oldPassword)throws NotFoundException {
         boolean updated = false;
-        try {
-            if (this.currentLogin.setPassword(newPassword, oldPassword)) {
-                if (currentLogin instanceof Employee) {
-                    Employee currentLogin = ((Employee) this.currentLogin);
-                    database.updateEmployee(currentLogin, newPassword);
-                    logins.replace(currentLogin.getUsername(), currentLogin);
+        if (currentLogin instanceof Employee) {
+            Employee oldLogin = ((Employee) this.currentLogin);
+            try {
+                if (this.currentLogin.setPassword(newPassword, oldPassword)) {
+                    Employee newLogin = ((Employee) this.currentLogin);
+                    database.updateEmployee(newLogin, newPassword);
+                    logins.replace(newLogin.getUsername(), newLogin);
+                    activityLogger.logEmployeeUpdate(currentLogin,newLogin,oldLogin);
                     updated = true;
                 }
+            } catch (DatabaseException e) {
+                new NotFoundException("Employee not found");
             }
-        } catch (DatabaseException e){
-            new NotFoundException("Employee not found");
         }
         return updated;
     }
@@ -307,6 +327,7 @@ public class LoginEntity {
         if(logins.containsKey(username)) {
             if (logins.get(username).validatePassword(password)) {
                 currentLogin = logins.get(username);
+                activityLogger.logLogin(logins.get(username));
                 return true;
             }
         }
@@ -317,6 +338,7 @@ public class LoginEntity {
 
     // Logout method
     public void logOut(){
+        activityLogger.logLogout(currentLogin);
         currentLogin=NullEmployee.getInstance();
     }
 
@@ -333,5 +355,9 @@ public class LoginEntity {
             }
         }
         return languages;
+    }
+
+    public IEmployee getCurrentLogin() {
+        return currentLogin;
     }
 }

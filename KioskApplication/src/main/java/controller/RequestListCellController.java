@@ -4,11 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import database.connection.NotFoundException;
 import database.objects.Employee;
+import database.objects.requests.FoodRequest;
 import database.objects.Node;
-import database.objects.Request;
-import entity.LoginEntity;
-import entity.MapEntity;
-import entity.RequestEntity;
+import database.objects.requests.Request;
+import entity.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,8 +21,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import pathfinder.Pathfinder;
+import pathfinder.PathfinderException;
 import utility.KioskPermission;
 import utility.ResourceManager;
+import utility.request.ITService;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 import javafx.scene.image.Image;
@@ -40,7 +42,7 @@ public class RequestListCellController {
     MapEntity mapEntity;
 
     @FXML private ImageView iconView,readView;
-    @FXML private Label nameLabel,timeLabel,extraField,requestNotes,locationOfRequest,person;
+    @FXML private Label nameLabel,timeLabel,requestNotes,locationOfRequest,person,extraField;
     @FXML private JFXButton locateNodeButton,delete;
     @FXML private HBox buttonBox;
     @FXML private VBox textFlow;
@@ -75,35 +77,63 @@ public class RequestListCellController {
         nameLabel.setText(RT.toString());
         timeLabel.setText(request.getSubmittedTime().toString());
         person.setText("No One?"); //had to initialize it
-        requestNotes.setText(request.getNote());
+        if(RT.equals(RequestType.FOOD)){
+            requestNotes.setText(request.getNote());
+        }else{
+            requestNotes.setText("Notes: "+request.getNote());
+        }
         locationOfRequest.setText(location);
 
-        Image readIcon = ResourceManager.getInstance().getImage("/images/icons/readIcon.png");
-        readView.setImage(readIcon);
-        readView.setFitWidth(24);
-        readView.setFitHeight(24);
+//        Label extraField = new Label();
 
         switch (RT){
             case INTERPRETER:
                 String language = rEntity.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField.setText("Language: "+language);
+//                textFlow.getChildren().add(0,extraField);
                 Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIconBlack.png");
                 iconView.setImage(interpreterIcon);
                 iconView.setFitHeight(48);
                 iconView.setFitWidth(48);
                 break;
             case FOOD:
-                String restaurantID = rEntity.getFoodRequest(requestID).getDestinationID();
+                String restaurantID = rEntity.getFoodRequest(requestID).getRestaurantID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField.setText("Restaurant: " + restaurant);
+//                textFlow.getChildren().add(0,extraField);
                 Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
                 iconView.setImage(foodIcon);
                 iconView.setFitHeight(48);
                 iconView.setFitWidth(48);
                 break;
-            default: //security
+            case JANITOR:
+                Image janitorIcon = ResourceManager.getInstance().getImage("/images/icons/janitorBlack.png");
+                iconView.setImage(janitorIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
+                break;
+            case IT:
+                String service = rEntity.getITRequest(requestID).getItService().toString().toLowerCase();
+                extraField.setText(service);
+//                textFlow.getChildren().add(0,extraField);
+                Image itIcon = ResourceManager.getInstance().getImage("/images/icons/itIconBlack.png");
+                iconView.setImage(itIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
+                break;
+            case MAINTENANCE:
+                int prioritym = rEntity.getMaintenanceRequest(requestID).getPriority();
+                extraField.setText("Priority: "+ prioritym);
+//                textFlow.getChildren().add(0,extraField);
+                Image maintIcon = ResourceManager.getInstance().getImage("/images/icons/maintenanceIconBlack.png");
+                iconView.setImage(maintIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
+                break;
+            case SECURITY:
                 int priority = rEntity.getSecurityRequest(requestID).getPriority();
                 extraField.setText("Priority: "+ priority);
+//                textFlow.getChildren().add(0,extraField);
                 Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIconBlack.png");
                 iconView.setImage(securityIcon);
                 iconView.setFitHeight(48);
@@ -196,11 +226,37 @@ public class RequestListCellController {
 
     public void goToLocation(){
         LinkedList<Node> location = new LinkedList<>();
-        try {
-            location.add(mapEntity.getNode(request.getNodeID()));
-        } catch (NotFoundException e) {
-            e.printStackTrace();
+        this.parent.getMapController().clearMap();
+
+        if(request.getRequestType().equals(RequestType.FOOD)){
+            parent.clearPathsButton();
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+            try {
+                Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());
+                Node destination = mapEntity.getNode(request.getNodeID());
+                this.parent.getMapController().addWaypoint(restaurant);
+                location.addFirst(restaurant);
+                this.parent.getMapController().addWaypoint(destination);
+                location.addLast(destination);
+                Path path = pathfinder.generatePath(location);
+                this.parent.getMapController().setPath(path);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+            catch (PathfinderException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            try {
+                location.add(mapEntity.getNode(request.getNodeID()));
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+
+            this.parent.getMapController().zoomOnSelectedNodes(location);
         }
+
         this.parent.getMapController().zoomOnSelectedNodes(location);
     }
 

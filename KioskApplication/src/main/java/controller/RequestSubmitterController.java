@@ -2,8 +2,12 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
+import controllers.API.APIApp;
+import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
+import email.Email;
+import email.EmailSender;
 import entity.FoodEntities.*;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -22,12 +26,15 @@ import utility.FoodType;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.request.ITService;
 import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
+    @FXML private JFXButton btnSubmit;
 
     @FXML private JFXTabPane requestTypeTabs;
     @FXML private Tab interpreterTab;
@@ -50,8 +57,30 @@ public class RequestSubmitterController extends ScreenController {
 
     /*janitor related*/
     @FXML private Tab janitorTab;
+
+    /* janitor */
     @FXML private JFXTextField janLocationField;
     @FXML private JFXTextArea janNotesField;
+
+    /*transport related*/
+    @FXML private Tab transportTab;
+    @FXML private JFXTextField startNode, endNode;
+    @FXML private Label transportErrorLabel;
+
+    /*it related*/
+    @FXML private Tab itTab;
+    @FXML private JFXTextField itLocationField;
+    @FXML private JFXComboBox<ITService> itServiceTypeSelector;
+    @FXML private JFXTextArea itNotesField;
+
+    /*Maintenance related*/
+    @FXML private Tab maintenanceTab;
+    @FXML private JFXTextField maintLocationField;
+    @FXML private JFXComboBox maintMenu;
+    @FXML private JFXTextArea maintNoteField;
+
+    /*Email field*/
+    @FXML private JFXTextField intEmail, secEmail, foodEmail, janEmail,itEmail, mtEmail;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -66,6 +95,8 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     public void initialize() {
+        clearButton();
+
         Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
         ImageView interpreterIconView = new ImageView(interpreterIcon);
         interpreterIconView.setRotate(90);
@@ -93,6 +124,27 @@ public class RequestSubmitterController extends ScreenController {
         janitorIconView.setFitHeight(24);
         janitorIconView.setFitWidth(24);
         janitorTab.setGraphic(janitorIconView);
+
+        Image itIcon = ResourceManager.getInstance().getImage("/images/icons/itIcon.png");
+        ImageView itIconView = new ImageView(itIcon);
+        itIconView.setRotate(90);
+        itIconView.setFitHeight(24);
+        itIconView.setFitWidth(24);
+        itTab.setGraphic(itIconView);
+
+        Image mtIcon = ResourceManager.getInstance().getImage("/images/icons/maintenanceIcon.png");
+        ImageView mtIconView = new ImageView(mtIcon);
+        mtIconView.setRotate(90);
+        mtIconView.setFitHeight(24);
+        mtIconView.setFitWidth(24);
+        maintenanceTab.setGraphic(mtIconView);
+
+        Image transportIcon = ResourceManager.getInstance().getImage("/images/icons/car.png");
+        ImageView transportIconView = new ImageView(transportIcon);
+        transportIconView .setRotate(90);
+        transportIconView .setFitHeight(24);
+        transportIconView .setFitWidth(24);
+        transportTab.setGraphic(transportIconView);
 
         ObservableList<Node> restaurants = FXCollections.observableArrayList();
         for (Node node : MapEntity.getInstance().getAllNodes()) {
@@ -139,7 +191,22 @@ public class RequestSubmitterController extends ScreenController {
 
                 janNotesField.clear();
                 janLocationField.clear();
+            } else if (newValue == transportTab) {
+                currentRequestType = RequestType.INTERNAL_TRANSPORTATION;
+            } else if(newValue == itTab){
+                currentRequestType = RequestType.IT;
+
+                itLocationField.clear();
+                itServiceTypeSelector.setValue(null);
+                itNotesField.clear();
+            } else if(newValue == maintenanceTab){
+                currentRequestType = RequestType.MAINTENANCE;
+
+                maintLocationField.clear();
+                maintMenu.setValue(null);
+                maintNoteField.clear();
             }
+            clearButton();
             resetTimer();
         });
 
@@ -283,6 +350,13 @@ public class RequestSubmitterController extends ScreenController {
         menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
         menuTable.setShowRoot(false);
         menuTable.setEditable(true);
+
+        //IT setup
+        ObservableList<ITService> itServiceTypes = FXCollections.observableArrayList();
+        for(ITService itService:ITService.values()){
+            itServiceTypes.add(itService);
+        }
+        itServiceTypeSelector.setItems(itServiceTypes);
     }
 
     /**
@@ -301,8 +375,30 @@ public class RequestSubmitterController extends ScreenController {
             case FOOD:
                 addFoodRequest();
                 break;
+            case INTERNAL_TRANSPORTATION:
+                System.out.println("Trying to start");
+                if(!startNode.getText().equals("") && !endNode.getText().equals("")) {
+                    transportErrorLabel.setVisible(false);
+                    try {
+                        APIApp.run(50, 50, 500, 500,
+                                "/css/application.css", endNode.getText(),startNode.getText());
+                    } catch (APIApp.ServiceException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(startNode.getText().equals("")||endNode.getText().equals("")) {
+                    transportErrorLabel.setText("Locations Required");
+                    transportErrorLabel.setVisible(true);
+                }
+                break;
             case JANITOR:
                 addJanitorRequest();
+                break;
+            case IT:
+                addITRequest();
+                break;
+            case MAINTENANCE:
+                addMaintenanceRequest();
                 break;
         }
     }
@@ -317,7 +413,7 @@ public class RequestSubmitterController extends ScreenController {
         langMenu.setValue(null);
 
         restaurantComboBox.setValue(null);
-        deliveryTimePicker.setValue(null);
+        deliveryTimePicker.setValue(LocalTime.now());
         deliveryLocation.setText("");
 
         secLocationField.setText("");
@@ -326,59 +422,238 @@ public class RequestSubmitterController extends ScreenController {
 
         janLocationField.setText("");
         janNotesField.setText("");
+
+        itLocationField.setText("");
+        itServiceTypeSelector.setValue(null);
+        itNotesField.setText("");
+
+        maintLocationField.setText("");
+        maintMenu.setValue(null);
+        maintNoteField.setText("");
+
+        foodEmail.setText("");
+        intEmail.setText("");
+        itEmail.setText("");
+        janEmail.setText("");
+        secEmail.setText("");
+        mtEmail.setText("");
     }
 
     /**
      * Adds an interpreter Request to the database
      */
     public void addIntRequest() {
-        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), intNotesArea.getText(), language);
-        System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getCurrentLoginID());
-        clearButton();
+        if(intLocation.getText().isEmpty() || langMenu.equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Interpreter Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            String notes = "";
+            if(!intNotesArea.getText().isEmpty()){
+                notes = intNotesArea.getText();
+            }
+            Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
+            requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), notes, language);
+            System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getCurrentLoginID());
+            if(!intEmail.getText().isEmpty()){
+                String location = "";
+                try {
+                    location = MapEntity.getInstance().getNode(intLocation.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(intEmail.getText());
+                builder.setSubject("New Interpreter Request");
+                builder.setBody("Language: " + langMenu.getValue().toString()+ "\nAt: "+ location+
+                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
+
     }
 
     /**
      * Adds a security Request to the database
      */
     public void addSecRequest() {
-        int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
-        //node ID, employee, notes, priority
-        requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getCurrentLoginID(), secNoteField.getText(), priority);
-        clearButton();
+        if(secLocationField.getText().isEmpty() || priorityMenu.equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Security Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            String notes = "";
+            if(!secNoteField.getText().isEmpty()){
+                notes = secNoteField.getText();
+            }
+            int priority = Integer.parseInt(priorityMenu.getValue().toString());
+            System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
+            //node ID, employee, notes, priority
+            requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getCurrentLoginID(), notes, priority);
+            if(!secEmail.getText().isEmpty()){
+                String location = "";
+                try {
+                    location = MapEntity.getInstance().getNode(secLocationField.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(secEmail.getText());
+                builder.setSubject("New Security Request");
+                builder.setBody("Priority: " + priorityMenu.getValue().toString()+ "\nAt: "+ location+
+                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
     }
 
     /**
      * Adds a food Request to the database
      */
     public void addFoodRequest(){
-        String order = "Order:";
-//        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
-        for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
-            for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
-                String fooditem = item.getValue().getName();
-                if (item.isLeaf() && item.getValue().selectedProperty().get() &&
-                        !(item.getValue().getName().equals("Drinks") ||
-                                item.getValue().getName().equals("Entrees") ||
-                                item.getValue().getName().equals("Sides"))){
-                    order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+        if(deliveryLocation.getText().isEmpty() || restaurantComboBox.equals(null)
+                || deliveryTimePicker.getValue().equals("")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Food Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            String order = "Order:";
+            for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
+                for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
+                    String fooditem = item.getValue().getName();
+                    if (item.isLeaf() && item.getValue().selectedProperty().get() &&
+                            !(item.getValue().getName().equals("Drinks") ||
+                                    item.getValue().getName().equals("Entrees") ||
+                                    item.getValue().getName().equals("Sides"))){
+                        order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+                    }
                 }
-//            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
             }
-        }
-        order = order.trim();
-        if (order.endsWith(",")) order.substring(0, order.length() - 1);
+            order = order.trim();
+            if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
-        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
-                restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
-        System.out.println(requestEntity.getAllFoodRequests());
-        clearButton();
+            requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
+                    restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
+            System.out.println(requestEntity.getAllFoodRequests());
+            if(!foodEmail.getText().isEmpty()){
+                String location = "";
+                String restaurant = restaurantComboBox.getValue().getLongName();
+                try {
+                    location = MapEntity.getInstance().getNode(deliveryLocation.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(foodEmail.getText());
+                builder.setSubject("New Food Request");
+                builder.setBody("From Restaurant: " + restaurant+ "\nAt: "+ location+
+                        "\n"+order+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
     }
 
     private void addJanitorRequest(){
-        requestEntity.submitJanitorRequest(janLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText());
-        clearButton();
+        if(janLocationField.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Janitor Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else {
+            String notes = "";
+            if(!janNotesField.getText().isEmpty()){
+                notes = janNotesField.getText();
+            }
+            requestEntity.submitJanitorRequest(janLocationField.getText(), loginEntity.getCurrentLoginID(), janNotesField.getText());
+            if(!janEmail.getText().isEmpty()){
+                String location = "";
+                try {
+                    location = MapEntity.getInstance().getNode(janLocationField.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(janEmail.getText());
+                builder.setSubject("New Janitor Request");
+                builder.setBody("At: "+ location+
+                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
+    }
+
+    private void addITRequest(){
+        if(itLocationField.getText().isEmpty() || itServiceTypeSelector.equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting IT Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            String notes = "";
+            if(!itNotesField.getText().isEmpty()){
+                notes = itNotesField.getText();
+            }
+            requestEntity.submitITRequest(itLocationField.getText(),loginEntity.getCurrentLoginID(),itNotesField.getText(),itServiceTypeSelector.getValue());
+            if(!itEmail.getText().isEmpty()){
+                String location = "";
+                try {
+                    location = MapEntity.getInstance().getNode(itLocationField.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(itEmail.getText());
+                builder.setSubject("New IT Request");
+                builder.setBody("Service: " + itServiceTypeSelector.getValue().toString().toLowerCase()+ "\nAt: "+ location+
+                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
+    }
+
+    private void addMaintenanceRequest() {
+        if(maintLocationField.getText().isEmpty() || maintMenu.equals(null)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Maintenance Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else {
+            String notes ="";
+            if(!maintNoteField.getText().isEmpty()){
+                notes = maintNoteField.getText();
+            }
+            int priority = Integer.parseInt(maintMenu.getValue().toString());
+            requestEntity.submitMaintenanceRequest(maintLocationField.getText(), loginEntity.getCurrentLoginID(), maintNoteField.getText(), priority);
+            if(!mtEmail.getText().isEmpty()){
+                String location = "";
+                try {
+                    location = MapEntity.getInstance().getNode(maintLocationField.getText()).getLongName();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+                Email.Builder builder = new Email.Builder(mtEmail.getText());
+                builder.setSubject("New Maintenance Request");
+                builder.setBody("Priority: " + maintMenu.getValue().toString()+ "\nAt: "+ location+
+                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
+                Email email = new Email(builder);
+                EmailSender.sendEmail(email);
+            }
+            clearButton();
+        }
     }
 
     /**
@@ -415,6 +690,18 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 janLocationField.setText(n.getNodeID());
                 break;
+            case IT:
+                itLocationField.setText(n.getNodeID());
+                break;
+            case MAINTENANCE:
+                maintLocationField.setText(n.getNodeID());
+                break;
+            case INTERNAL_TRANSPORTATION:
+                if(startNode.getText().equals("")){
+                    startNode.setText(n.getLongName());
+                } else {
+                    endNode.setText(n.getLongName());
+                }
         }
     }
 

@@ -51,9 +51,22 @@ public class SQLStrings {
 
     public static final String DELETE_REQUEST_VIEW = "DELETE FROM t_requestView WHERE uRequestID=?";*/
 
-
-
     public static final String CREATE_EDGE_UINDEX =  "CREATE UNIQUE INDEX t_edges_id_uindex ON t_edges (id)";
+
+    // Activity logging
+    public static final String CREATE_ACTIVITY_TABLE = "CREATE TABLE t_activityLog("+
+            " activityID INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_activityLog_pk PRIMARY KEY,"+
+            " time TIMESTAMP NOT NULL,"+
+            " changeType INT NOT NULL,"+
+            " employee INT NOT NULL CONSTRAINT t_activityLog_fk REFERENCES t_employee ON DELETE CASCADE,"+
+            " details LONG VARCHAR"+
+            ")";
+    public static final String ACTIVITY_INSERT = "INSERT INTO t_activityLog"+
+            "(time,changeType,employee,details)"+
+            " VALUES(?,?,?,?)";
+    public static final String ACTIVITY_SELECT = "SELECT * FROM t_activityLog WHERE activityID=?";
+    public static final String ACTIVITY_SELECT_ALL = "SELECT * FROM t_activityLog";
+    public static final String ACTIVITY_DELETE = "DELETE FROM t_activityLog WHERE activityID=?";
 
     public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?)";
 
@@ -88,6 +101,20 @@ public class SQLStrings {
             " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_janitor_node_fk REFERENCES t_nodes ON DELETE CASCADE,"+
             " assigner INT NOT NULL CONSTRAINT t_janitor_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,"+
             " completer INT NOT NULL CONSTRAINT t_janitor_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,";
+
+    public static final String CREATE_IT_TABLE = "create table t_it("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_it_pk PRIMARY KEY,"+
+            " itService INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_it_fk_nodeID REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_it_fk_assigner REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_it_fk_completer REFERENCES t_employee ON DELETE CASCADE,";
+
+    public static final String CREATE_MAINTENANCE_TABLE = "create table t_maintenance("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_maintenance_pk PRIMARY KEY,"+
+            " priority INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_mt_fk_nodeID REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_mt_fk_assigner REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_mt_fk_completer REFERENCES t_employee ON DELETE CASCADE,";
 
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
             " note LONG VARCHAR," +
@@ -128,12 +155,30 @@ public class SQLStrings {
     public static final String JANITOR_DELETE = "DELETE FROM t_janitor WHERE requestID=?";
     public static final String JANITOR_SELECT_ALL = "SELECT * FROM t_janitor";
 
+    // IT
+    public static final String IT_INSERT = "INSERT INTO t_it values(?,?,?,?,?,?,?,?,?,?)";
+    public static final String IT_UPDATE = "UPDATE t_it set itService=?,";
+    public static final String IT_SELECT = "SELECT * FROM t_it WHERE requestID=?";
+    public static final String IT_DELETE = "DELETE FROM t_it WHERE requestID=?";
+    public static final String IT_SELECT_ALL = "SELECT * FROM t_it";
+
+    // Maintenance
+    public static final String MT_INSERT = "insert into t_maintenance values(?, ?, ?, ?, ?,";
+    public static final String MT_UPDATE = "update t_maintenance set priority=?,";
+    public static final String MT_SELECT = "select * from t_maintenance where requestID=?";
+    public static final String MT_DELETE = "DELETE FROM t_maintenance WHERE requestID = ?";
+    public static final String MT_SELECT_ALL = "select * from t_maintenance";
+
     // Dropping
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
     public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
     public static final String DROP_JANITOR_TABLE = "DROP TABLE t_janitor";
+    public static final String DROP_ACTIVITY_TABLE = "DROP TABLE t_activityLog";
+
+    public static final String DROP_IT_TABLE = "DROP TABLE t_it";
+    public static final String DROP_MAINTENANCE_TABLE = "DROP TABLE t_maintenance";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 
@@ -147,6 +192,7 @@ public class SQLStrings {
     public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where nodeID=?";
     public static final String NODE_UPDATE_WITHID = "update t_nodes set nodeID=?, xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where id=?";
     public static final String NODE_SELECT = "SELECT * FROM t_nodes where nodeID=?";
+    public static final String NODE_SELECT_UNIQUEID = "Select * from t_nodes where id=?";
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";

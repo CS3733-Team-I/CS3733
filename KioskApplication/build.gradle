@@ -25,6 +25,10 @@ buildscript {
 mainClassName = "Main"
 
 repositories {
+    flatDir {
+        dirs 'libs'
+    }
+
     mavenCentral()
     maven {
         url "https://maven.atlassian.com/3rdparty/"
@@ -35,6 +39,7 @@ repositories {
 }
 
 dependencies {
+    compile name: 'TeamBApi-4.0-sources'
     compile(
             [group: 'org.apache.derby', name: 'derby', version: '10.11.1.1'],
             [group: 'org.apache.derby', name: 'derbyclient', version: '10.11.1.1'],
