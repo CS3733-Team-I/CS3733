@@ -117,7 +117,7 @@
 
 #confirm-button {
     -fx-background-color: #4caf50;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 
 #delete-button {
@@ -155,4 +155,14 @@
 .tree-table-row-cell:selected:odd {
     -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-focus-color;
     -fx-background-insets: 0, 1, 2;
+}
+
+#blue-button {
+    -fx-background-color: #03a9f4;
+    -fx-text-fill: white;
+}
+
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
 }

@@ -638,6 +638,7 @@ public class Connector {
             case JANITOR:
                 table="t_janitor";
                 break;
+
             default:
                 table="";
         }
