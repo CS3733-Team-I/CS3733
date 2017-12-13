@@ -162,8 +162,11 @@ public class RequestManagerController extends ScreenController {
                     break;
             }
             reqManagerPane.setLeftAnchor(listAPane,0.0);
+
+//            searchController.resizeSearchbarWidth(500.0);
         }else{
             reqManagerPane.setLeftAnchor(listAPane, 150.0);
+//            searchController.resizeSearchbarWidth(350.0);
             sideBar.setVisible(true);
         }
     }
@@ -206,6 +209,11 @@ public class RequestManagerController extends ScreenController {
         if(foodFilter.isSelected()){
             for(Request fR : r.getAllFoodRequests()){
                 allRequests.add(fR);
+            }
+        }
+        if(janitorFilter.isSelected()){
+            for(Request jR: r.getAllJanitorRequests()){
+                allRequests.add(jR);
             }
         }
         LinkedList<Request> inprogressReq = new LinkedList<>();

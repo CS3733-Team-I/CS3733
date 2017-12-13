@@ -44,11 +44,6 @@
         </HBox>
       <VBox fx:id="textFlow" minWidth="15.0">
          <children>
-            <Label fx:id="extraField" text="Label">
-               <VBox.margin>
-                  <Insets left="5.0" />
-               </VBox.margin>
-            </Label>
             <Label fx:id="requestNotes" text="Label" wrapText="true">
                <VBox.margin>
                   <Insets left="5.0" />

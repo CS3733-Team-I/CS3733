@@ -345,13 +345,15 @@ public class RequestEntity {
      * @return returns the request object attatched to the requestID
      */
     public Request getRequest(String requestID){
-        Request request;
+        Request request = null;
         if(checkRequestType(requestID).equals(RequestType.INTERPRETER)){
             request = getInterpreterRequest(requestID);
         }else if(checkRequestType(requestID).equals(RequestType.FOOD)){
             request = getFoodRequest(requestID);
+        }else if(checkRequestType(requestID).equals(RequestType.JANITOR)){
+            request = getJanitorRequest(requestID);
         }
-        else{ //security request
+        else if(checkRequestType(requestID).equals(RequestType.SECURITY)){ //security request
             request = getSecurityRequest(requestID);
         }
         return request;
