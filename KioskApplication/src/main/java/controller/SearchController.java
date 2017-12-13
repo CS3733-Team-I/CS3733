@@ -2,7 +2,10 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -39,6 +42,7 @@ public class SearchController {
 
     @FXML
     void initialize() {
+        Platform.runLater(() -> cbSearchData.getSelectionModel().select(0));
         //initialize the lists
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
