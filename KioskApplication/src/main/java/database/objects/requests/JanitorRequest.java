@@ -1,4 +1,4 @@
-package database.objects;
+package database.objects.requests;
 
 import utility.request.RequestProgressStatus;
 

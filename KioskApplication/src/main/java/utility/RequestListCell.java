@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXListCell;
 import controller.RequestListCellController;
 import controller.RequestManagerController;
 import database.connection.NotFoundException;
-import database.objects.Request;
+import database.objects.requests.Request;
 
 public final class RequestListCell extends JFXListCell<Request> {
 

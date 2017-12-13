@@ -3,7 +3,7 @@ package database;
 import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;
-import database.objects.requests.ITRequest;
+import database.objects.requests.*;
 import database.utility.*;
 import utility.KioskPermission;
 import utility.node.NodeFloor;
@@ -283,6 +283,18 @@ public class DatabaseController {
         return 0;
     }
 
+    public int addMaintenanceRequest(MaintenanceRequest mtRequest){
+        try{
+            return Connector.insertMT(instanceConnection, mtRequest);
+        }
+        catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     //TODO: Update this method
 
     public int updateInterpreterRequest(InterpreterRequest iR) {
@@ -345,6 +357,17 @@ public class DatabaseController {
         return 0;
     }
 
+    public int updateMaintenanceRequest(MaintenanceRequest mtRequest){
+        try{
+            return Connector.updateMT(instanceConnection, mtRequest);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
             return Connector.selectInterpreter(instanceConnection, requestID);
@@ -398,6 +421,17 @@ public class DatabaseController {
     public ITRequest getITRequest(String requestID){
         try{
             return Connector.selectIT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public MaintenanceRequest getMaintenanceRequest(String requestID){
+        try{
+            return Connector.selectMT(instanceConnection,requestID);
         } catch (SQLException e){
             if(e.getSQLState() != "23505"){
                 e.printStackTrace();
@@ -470,6 +504,17 @@ public class DatabaseController {
         return false;
     }
 
+    public boolean deleteMaintenanceRequest(String requestID){
+        try {
+            return Connector.deleteMT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
@@ -526,6 +571,17 @@ public class DatabaseController {
             }
         }
         return new LinkedList<ITRequest>();
+    }
+
+    public LinkedList<MaintenanceRequest> getAllmtRequest(){
+        try{
+            return Connector.selectAllMT(instanceConnection);
+        }catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<MaintenanceRequest>();
     }
 
     public void deleteTestTables() {

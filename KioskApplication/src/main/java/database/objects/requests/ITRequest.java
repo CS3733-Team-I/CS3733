@@ -1,6 +1,5 @@
 package database.objects.requests;
 
-import database.objects.Request;
 import utility.request.ITService;
 import utility.request.RequestProgressStatus;
 

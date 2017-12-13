@@ -1,4 +1,4 @@
-package database.objects;
+package database.objects.requests;
 
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
@@ -131,9 +131,14 @@ public abstract class Request {
             return RequestType.FOOD;
         } else if (requestType.equals("Jan")) {
             return RequestType.JANITOR;
+        }else if(requestType.equals("Man")) {
+            return RequestType.MAINTENANCE;
+        }else if(requestType.equals("ITT")){
+            return RequestType.IT;
             //} else if (requestType.equals("Ins")) {
             //} else if (requestType.equals("Out")) {
-        } else {
+        }
+        else {
             System.out.println("Invalid requestID");
             return null;
         }
