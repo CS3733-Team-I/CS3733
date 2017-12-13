@@ -365,7 +365,20 @@ public class PathfindingSidebarController extends ScreenController {
         btNavigate.setText(rB.getString("my.navigate"));
         //waypointLabel.setText(rB.getString("my.waypoints"));
 
-        new Thread(searchResetTask).start();
+        //reset search
+        SystemSettings.getInstance().updateDistance();
+        ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNodeAndDoctor.add(new SearchNode(targetNode));
+            }
+        }
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+            }
+        }
+        searchController.reset(searchNodeAndDoctor);
     }
 
     /**

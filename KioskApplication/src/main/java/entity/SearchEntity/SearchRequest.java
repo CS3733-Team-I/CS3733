@@ -1,7 +1,6 @@
 package entity.SearchEntity;
 
 import database.connection.NotFoundException;
-import database.objects.Node;
 import database.objects.Request;
 import entity.MapEntity;
 import javafx.beans.property.SimpleObjectProperty;

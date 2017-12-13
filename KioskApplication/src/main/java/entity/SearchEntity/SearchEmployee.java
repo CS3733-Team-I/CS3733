@@ -96,6 +96,7 @@ public class SearchEmployee implements ISearchEntity{
         });
     }
 
+
     public Object getData() {
         return databaseEmployee;
     }
