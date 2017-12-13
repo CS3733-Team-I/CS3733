@@ -273,19 +273,18 @@ public class MapController {
 
                 int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
                 String condition = String.valueOf(content.charAt(length-1));
-                if(condition.equals("T")){
+                if(condition.equals("S")){
                     return;
                 }
+
                 Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
 
                 Point2D point2D = new Point2D(e.getX(), e.getY());
-
-                /*if (shift) {
-                    point2D = new Point2D(e.getX() )
-                }*/
+                if(condition.equals("C")){
+                    point2D = new Point2D(roundToFive((int)e.getX()), roundToFive((int)e.getY()));
+                }
 
                 nodesEdgesView.setNodePosition(selectNode, point2D);
-
                 e.acceptTransferModes(TransferMode.MOVE);
                 e.consume();
             }
@@ -315,10 +314,22 @@ public class MapController {
             }
 
             reloadDisplay();
-
             e.setDropCompleted(true);
             e.consume();
         });
+    }
+
+    /**
+     * round to 5
+     * @param num
+     * @return
+     */
+    public static int roundToFive(int num){
+        int a = num % 5;
+        int b = num / 5;
+
+        int result = b*5;
+        return result;
     }
 
     /**

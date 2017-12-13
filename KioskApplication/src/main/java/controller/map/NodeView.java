@@ -127,7 +127,11 @@ public class NodeView extends StackPane {
             ClipboardContent content = new ClipboardContent();
 
             if(e.isShiftDown()){
-                content.putString(Integer.toString(this.node.getUniqueID()) + "T");
+                content.putString(Integer.toString(this.node.getUniqueID()) + "S");
+            }
+            else if (e.isControlDown()){
+                System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+                content.putString(Integer.toString(this.node.getUniqueID()) + "C");
             }
             else{
                 content.putString(Integer.toString(this.node.getUniqueID()) + "F");
