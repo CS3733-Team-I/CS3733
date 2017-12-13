@@ -849,14 +849,9 @@ public class Connector {
                 table="";
                 break;
             case JANITOR:
-<<<<<<< HEAD
-                table="";
-                break;
-
-=======
                 table="t_janitor";
                 break;
->>>>>>> 09097fcdb80193a73bb4e9a1943caec8123c081e
+
             default:
                 table="";
         }

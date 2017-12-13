@@ -58,13 +58,13 @@ public class RequestSubmitterController extends ScreenController {
     /*janitor related*/
     @FXML private Tab janitorTab;
 
-    /*transport related*/
-    @FXML private Tab transportTab;
-    @FXML private JFXTextField startNode, endNode;
-
     /* janitor */
     @FXML private JFXTextField janLocationField;
     @FXML private JFXTextArea janNotesField;
+
+    /*transport related*/
+    @FXML private Tab transportTab;
+    @FXML private JFXTextField startNode, endNode;
 
     /*it related*/
     @FXML private Tab itTab;
@@ -685,16 +685,18 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 janLocationField.setText(n.getNodeID());
                 break;
+            case IT:
+                itLocationField.setText(n.getNodeID());
+                break;
+            case MAINTENANCE:
+                maintLocationField.setText(n.getNodeID());
+                break;
             case INTERNAL_TRANSPORTATION:
                 if(startNode.getText().equals("")){
                     startNode.setText(n.getNodeID());
                 } else {
                     endNode.setText(n.getNodeID());
                 }
-            case IT:
-                itLocationField.setText(n.getNodeID());
-            case MAINTENANCE:
-                maintLocationField.setText(n.getNodeID());
         }
     }
 
