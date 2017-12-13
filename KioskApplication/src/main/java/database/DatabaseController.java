@@ -521,7 +521,7 @@ public class DatabaseController {
     }
 
 
-    public LinkedList<ITRequest> getAllITRequest(){
+    public LinkedList<ITRequest> getAllITRequests(){
         try{
             return Connector.selectAllIT(instanceConnection);
         } catch (SQLException e){

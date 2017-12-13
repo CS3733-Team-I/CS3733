@@ -67,7 +67,7 @@ public class DatabaseControllerTests {
         List<JanitorRequest> jRs = dbController.getAllJanitorRequests();
         for (JanitorRequest jR: jRs) dbController.deleteJanitorRequest(jR.getRequestID());
 
-        List<ITRequest> itRequests = dbController.getAllITRequest();
+        List<ITRequest> itRequests = dbController.getAllITRequests();
         for (ITRequest itRequest: itRequests) dbController.deleteITRequest(itRequest.getRequestID());
 
         List<Employee> employees = dbController.getAllEmployees();
