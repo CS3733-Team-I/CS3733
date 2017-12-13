@@ -183,7 +183,6 @@ public class PathfindingSidebarController extends ScreenController {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         getMapController().addWaypoint(node);
-
                         insertWaypointCell(node);
                     }
                 } else if (listener.wasRemoved()) {
@@ -248,9 +247,10 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     void generatePath() {
-        if (getMapController().isPathShowing()) {
-            getMapController().clearNodes();
-            getMapController().clearPath();
+        MapController map = getMapController();
+        if (map.isPathShowing()) {
+            map.clearNodes();
+            map.clearPath();
         }
 
         if (currentWaypoints.size() >= 2) {
@@ -258,7 +258,7 @@ public class PathfindingSidebarController extends ScreenController {
 
             try{
                 Path path = pathfinder.generatePath(new LinkedList<>(currentWaypoints));
-                MapController map = getMapController();
+
                 map.setPath(path);
                 map.showTray();
                 LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
@@ -266,7 +266,6 @@ public class PathfindingSidebarController extends ScreenController {
                 exception.printStackTrace();
                 //exceptionText.setText("ERROR! "+ exception.getMessage());
             }
-
             showDirectionsButton.setVisible(true);
         }
 

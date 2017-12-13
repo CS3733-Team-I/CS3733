@@ -109,10 +109,10 @@ public class PathWaypointView extends AnchorPane {
         SystemSettings.getInstance().kioskLocationPropertyProperty().addListener((obj, oldValue, newValue) -> {
             if (newValue == null) return;
 
-            ImageView youarehereView = getYouAreHereIcon(newValue);
+            ImageView youAreHereView = getYouAreHereIcon(newValue);
 
             getChildren().clear();
-            getChildren().addAll(pathView, wayPointView, youarehereView, floorChangeView);
+            getChildren().addAll(pathView, wayPointView, youAreHereView, floorChangeView);
         });
 
         getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getKioskLocation()));

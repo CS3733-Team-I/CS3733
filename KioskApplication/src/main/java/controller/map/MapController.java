@@ -5,20 +5,17 @@ import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
-import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -27,9 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -74,7 +69,6 @@ public class MapController {
     @FXML private JFXDialog keyDialog;
     @FXML private JFXDialogLayout keyDialogContainer;
 
-    private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
 
@@ -243,25 +237,6 @@ public class MapController {
 //            System.out.println(visibleWaypoints);
         });
 
-        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
-            @Override
-            public void onChanged(Change<? extends javafx.scene.Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
-                            //TODO handle lose sight action
-                        }
-                    }
-
-                    else if(c.wasAdded()) {
-                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
-                            //TODO regain lose sight action
-                        }
-                    }
-                }
-            }
-        });
-
         this.previewTray = new FloorPreviewTray();
         this.trayContainer.getChildren().add(previewTray);
         this.trayContainer.setPrefHeight(220);
@@ -269,10 +244,10 @@ public class MapController {
         AnchorPane.setBottomAnchor(previewTray, 0.0);
         AnchorPane.setLeftAnchor(previewTray, 0.0);
         AnchorPane.setRightAnchor(previewTray, 0.0);
-//        this.previewTray.addFloor(NodeFloor.GROUND);  //TODO: remove after debugging
-//        this.previewTray.addFloor(NodeFloor.FIRST);  //TODO: remove after debugging
-//        this.previewTray.addFloor(NodeFloor.THIRD);  //TODO: remove after debugging
-//        this.previewTray.addFloor(NodeFloor.SECOND);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.GROUND);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.FIRST);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.THIRD);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.SECOND);  //TODO: remove after debugging
         this.hideTray(); //TODO: after debugging, start tray hidden
     }
 
@@ -286,11 +261,7 @@ public class MapController {
 
     //TODO: not sure how good it is to be using the control to just pass through commands
     public void clearTray(){
-        this.previewTray.clearTray();
-    }
-
-    public void addFloorPreview(NodeFloor floor){
-        this.previewTray.addFloor(floor);
+        this.previewTray.clearPreviews();
     }
 
     /**
@@ -381,7 +352,7 @@ public class MapController {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
 
-            this.previewTray.clearTray();   //remove old previews
+            this.previewTray.clearPreviews();   //remove old previews
             this.previewTray.generatePreviews(path);
             pathWaypointView.drawPath(path);
             miniMapController.showPath(path);

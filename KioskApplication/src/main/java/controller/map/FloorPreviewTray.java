@@ -1,5 +1,6 @@
 package controller.map;
 
+import database.objects.Node;
 import entity.Path;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -13,21 +14,19 @@ import javafx.scene.layout.HBox;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Given a list of floors, displays previews of those floors.
  */
 public class FloorPreviewTray extends ScrollPane {
-
+    private ObservableList<PreviewMap> previews;
     private static final double MAP_SPACING = 20;  //Distance between PreviewMaps
-    ObservableList<NodeFloor> displayedFloors;  //The floors to display
-    HashMap<NodeFloor, PreviewMap> floorMap;    //A map to connect the name of a floor to that floor's display object
     HBox tray;
 
     public FloorPreviewTray() {
+        this.previews = FXCollections.observableArrayList();
         this.setPrefHeight(220);
-        this.displayedFloors = FXCollections.observableArrayList();
         this.tray = new HBox();
         this.tray.setAlignment(Pos.CENTER);
         this.setContent(this.tray);
@@ -35,33 +34,10 @@ public class FloorPreviewTray extends ScrollPane {
         this.setFitToHeight(true);
         this.setFitToWidth(true);
 
-        this.floorMap = new HashMap<>();
-
-        this.displayedFloors.addListener((ListChangeListener<NodeFloor>) listener -> {
+        this.previews.addListener((ListChangeListener<PreviewMap>) listener -> {
             while(listener.next()){
-                if(listener.wasPermutated()){
-                    //do stuff
-                }
-                else if(listener.wasUpdated()){
-                    //do stuff
-                }
-                else if(listener.wasRemoved()) {
-                    for (NodeFloor floor : listener.getRemoved()) {
-                        int floorIndex = this.tray.getChildren().indexOf(floorMap.get(floor));
-                        //If there's more than one
-                        this.tray.getChildren().remove(floorMap.get(floor));
-                        this.floorMap.remove(floor);
-                        //If floor wasn't the first element , then the element right before it is an arrow that
-                        //is now pointing to nothing.  That needs to get removed, too.
-                        if(floorIndex != 0)
-                            this.tray.getChildren().remove(floorIndex - 1);
-                            //If floor was the 1st element, the extra arrow is afterwards (if there were multiple elements)
-                        else if((floorIndex == 0) && !this.tray.getChildren().isEmpty())
-                            this.tray.getChildren().remove(floorIndex);//since floor was removed, arrow should now be 0.
-                    }
-                }
-                else{
-                    for(NodeFloor floor: listener.getAddedSubList()){
+                if(listener.wasAdded()){
+                    for(PreviewMap preview: listener.getAddedSubList()){
                         //If this isn't the first floor in the tray, put an arrow before it.
                         if(!this.tray.getChildren().isEmpty()) {
                             ResourceManager resourceManager = ResourceManager.getInstance();
@@ -71,42 +47,91 @@ public class FloorPreviewTray extends ScrollPane {
                             HBox.setMargin(arrow, new Insets(this.MAP_SPACING / 2));
                             this.tray.getChildren().add(arrow);
                         }
-                        //TODO: make sure the order of the maps is always correct.
-                        PreviewMap map = new PreviewMap(floor);
-                        HBox.setMargin(map, new Insets(this.MAP_SPACING / 2));
-                        this.floorMap.put(floor, map);
-                        this.tray.getChildren().add(map);
+                        HBox.setMargin(preview, new Insets(this.MAP_SPACING / 2));
+                        this.tray.getChildren().add(preview);//TODO: add floor labels
                     }
                 }
+                else if(listener.wasRemoved()) {
+                    for (PreviewMap preview : listener.getRemoved()) {
+                        //If this is the only element, just remove it.
+                        if(this.tray.getChildren().size() == 1){
+                            this.tray.getChildren().remove(preview);
+                            continue;
+                        }
+                        //If preview is not the only element, there's an arrow to remove.
+                        int previewIndex = this.tray.getChildren().indexOf(preview);
+                        //If preview is the last element, remove it and the arrow before it.
+                        if(this.tray.getChildren().size() == (previewIndex + 1)){
+                            this.tray.getChildren().remove(previewIndex--);
+                            this.tray.getChildren().remove(previewIndex);
+                            continue;
+                        }
+                        //Otherwise, remove preview and the arrow after it.
+                        this.tray.getChildren().remove(previewIndex);
+                        //Removing preview should shift the arrow into preview's index.
+                        this.tray.getChildren().remove(previewIndex);
+                    }
+                }
+                else{
+                    //list updated or permutated
+                }
             }
-        });
-    }
-
-    /**
-     * Add a new floor to the floors being displayed in the preview tray
-     * @param floor
-     */
-    public void addFloor(NodeFloor floor){
-        this.displayedFloors.add(floor);
-    }
-
-    /**
-     * Stop remove a floor from the preview display.
-     * @param floor
-     */
-    public void removeFloor(NodeFloor floor){
-        if(this.displayedFloors.contains(floor))
-            this.displayedFloors.remove(floor);
+        });//TODO: fix listener (add previews to HBox)
     }
 
     /**
      * Remove all floors from the display.
      */
-    public void clearTray(){
-        this.displayedFloors.clear();
+    public void clearPreviews(){
+        this.previews.clear();
     }
 
+    /**
+     * Splits the path into continuous sections on single floors.
+     * Some clarification: a "segment" is a path between two waypoints; a "section" is a continuous section of a
+     * segment in which all nodes are on the same floor.  A floorGroup is a continuous set of sections that are all
+     * on the same floor.
+     */
     public void generatePreviews(Path path) {
-        this.displayedFloors.addAll(path.getFloorsOccurrences());
+        LinkedList<Node> waypoints = path.getWaypoints();
+        LinkedList<Node> nodes = path.getListOfAllNodes();
+        NodeFloor currentFloor = path.getWaypoints().getFirst().getFloor();
+
+        int numNodes = nodes.size();
+        int segmentIndex = 0;
+
+        LinkedList<Node> nodesInSection = new LinkedList<>();
+        PreviewMap currentPreview = new PreviewMap(currentFloor); //Path sections on the current floor
+
+        for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++) {
+            Node currentNode = nodes.get(nodeIndex);
+
+            //If we've changed floors, end the section and move to a new floor group.
+            if (!currentNode.getFloor().equals(currentFloor)) {
+                //Use the accumulated nodes to build a path section, then clear the list for the next section.
+                currentPreview.addPathSection(new PathSection(nodesInSection, path.getSegmentColor(segmentIndex)));
+                nodesInSection = new LinkedList<>();
+
+                //Use the accumulated sections to create a Preview, then clear the list for the next preview.
+                this.previews.add(currentPreview);
+                currentFloor = currentNode.getFloor();  //update floor
+                currentPreview = new PreviewMap(currentFloor);
+            }
+            nodesInSection.add(currentNode);
+
+            //If we've reached the next waypoint, we're at the end of a section.
+            if (currentNode.equals(waypoints.get(segmentIndex + 1))) {
+                //We've reached the end of the segment, so split into a new section.
+                //Use the accumulated nodes to build a path section, then clear the list for the next section.
+                currentPreview.addPathSection(new PathSection(nodesInSection, path.getSegmentColor(segmentIndex++)));
+                nodesInSection = new LinkedList<>();
+            }
+        }
+        //We've reached the end of the path.
+        //Add remaining nodes to a section, any remaining sections to a preview, & any remaining previews to the list.
+        if (!nodesInSection.isEmpty())
+            currentPreview.addPathSection(new PathSection(nodesInSection, path.getSegmentColor(waypoints.size() - 1)));
+        if (!currentPreview.getPathSections().isEmpty())
+            this.previews.add(currentPreview);
     }
 }

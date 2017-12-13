@@ -1,21 +1,26 @@
 package controller.map;
 
+import database.objects.Node;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
+import java.util.LinkedList;
 
 
 public class PreviewMap extends StackPane {
     NodeFloor floor;
     ImageView mapImage;
+    LinkedList<PathSection> pathSections;
 
     public PreviewMap(NodeFloor floor) {
+        this.pathSections = new LinkedList<>();
         this.floor = floor;
         ResourceManager resourceManager = ResourceManager.getInstance();
         this.mapImage = new ImageView();
@@ -50,5 +55,33 @@ public class PreviewMap extends StackPane {
                 //TODO: remove mouseover effect when mouse is no longer hovering
             }
         });
+
+//        int waypointIndex = 0;
+//        for (Node node : waypoints) {
+//            Node lastNode = node;
+//            for (Node thisNode : path.get().getNodesInSegment(node)) {
+//                // Don't draw a line between the same nodes
+//                if (thisNode.getUniqueID() != lastNode.getUniqueID() &&
+//                        thisNode.getFloor() == mapController.getCurrentFloor() &&
+//                        lastNode.getFloor() == mapController.getCurrentFloor()) {
+//
+//                    Line line = new Line(lastNode.getXcoord(), lastNode.getYcoord(),
+//                            thisNode.getXcoord(), thisNode.getYcoord());
+//                    line.setStroke(path.get().getSegmentColor(waypointIndex));
+//                    line.setStrokeWidth(2);
+//                    pathPane.getChildren().add(line);
+//                }
+//                lastNode = thisNode;
+//            }
+//            waypointIndex++;
+//        }
+    }
+
+    public void addPathSection(PathSection pathSection) {
+        this.pathSections.add(pathSection); //TODO: actually draw path & resize to display
+    }
+
+    public LinkedList<PathSection> getPathSections() {
+        return this.pathSections;
     }
 }
