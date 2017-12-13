@@ -147,6 +147,7 @@ public class Edge {
             }
                 //Otherwise, estimate the cost as normal.
             else {
+                this.edgeType = "hallway";
                 //Assuming all edges are straight lines, the cost of the edge from the parent node should be the
                 // straight-line distance between the two.
                 int xDistance = Math.abs(node1.getXcoord() - node2.getXcoord());
