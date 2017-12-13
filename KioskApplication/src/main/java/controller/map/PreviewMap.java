@@ -77,6 +77,7 @@ public class PreviewMap extends AnchorPane {
         double yOffset = this.mapImage.getViewport().getMinY();
 
         //First, draw lines.
+        LinkedList<Node> usedNodes = new LinkedList<>();
         Node lastNode = this.pathSections.getFirst().getNodes().getFirst();
         for(PathSection section: this.pathSections){
             for(Node node: section.getNodes()){
