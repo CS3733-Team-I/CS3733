@@ -155,8 +155,7 @@ public class MainWindowController {
                     switchButton.setText(rB.getString("my.stafflogoff"));
                     break;
             }
-            String mptxt = rB.getString("my.map");
-            tabMap.setText(mptxt);
+            tabMap.setText(rB.getString("my.map"));
             tabMB.setText(rB.getString("my.mapbuilder"));
             tabRM.setText(rB.getString("my.requestmanager"));
             tabRS.setText(rB.getString("my.requestsubmit"));
