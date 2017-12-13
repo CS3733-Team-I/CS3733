@@ -25,16 +25,17 @@ public class HelpController extends ScreenController{
     @FXML Tab adminHelpTab;
     @FXML AnchorPane requestPane;
     @FXML
-    ImageView requestImage,mapImage;
+    ImageView requestImage,mapImage,settingImage;
 
     MapController mapController;
-    int requestPicture, mapPicture;
+    int requestPicture, mapPicture, settingPicture;
 
     //constructor for new help screen
     public HelpController(MainWindowController parent, MapController map) {
         super(parent, map);
         requestPicture = 0;
         mapPicture = 0;
+        settingPicture = 0;
     }
 
     @FXML
@@ -57,9 +58,43 @@ public class HelpController extends ScreenController{
             }
         });*/
 
+     settingsHelpViews();
      requestHelpViews();
      mapHelpViews();
 
+    }
+    @FXML
+    public void nextSetting(){
+        if(settingPicture<1){
+            settingPicture++;
+        }
+        else{
+            settingPicture = 0;
+        }
+        mapHelpViews();
+    }
+
+    @FXML
+    public void previousSetting(){
+        if(settingPicture>0){
+            settingPicture--;
+        }else{
+            settingPicture = 1;
+        }
+        mapHelpViews();
+    }
+
+    private void settingsHelpViews() {
+        switch (settingPicture){
+            case 0:
+                Image settingsHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/settings0.png");
+                settingImage.setImage(settingsHelp0);
+                break;
+            case 1:
+                Image settingsHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/settings1.png");
+                settingImage.setImage(settingsHelp1);
+                break;
+        }
     }
 
     @FXML
@@ -112,7 +147,7 @@ public class HelpController extends ScreenController{
 
     @FXML
     public void nextRequest(){
-        if(requestPicture < 5){
+        if(requestPicture < 7){
             requestPicture++;
         }else{
             requestPicture = 0;
@@ -124,7 +159,7 @@ public class HelpController extends ScreenController{
         if(requestPicture>0){
             requestPicture--;
         }else{
-            requestPicture = 5;
+            requestPicture = 7;
         }
         requestHelpViews();
     }
@@ -156,6 +191,14 @@ public class HelpController extends ScreenController{
             case 5:
                 Image requestHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter5.png");
                 requestImage.setImage(requestHelp5);
+                break;
+            case 6:
+                Image requestHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter6.png");
+                requestImage.setImage(requestHelp6);
+                break;
+            case 7:
+                Image requestHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter7.png");
+                requestImage.setImage(requestHelp7);
                 break;
         }
     }
