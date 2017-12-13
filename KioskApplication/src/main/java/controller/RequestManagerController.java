@@ -76,21 +76,24 @@ public class RequestManagerController extends ScreenController {
      */
     @FXML
     public void initialize() throws IOException {
-        Image newRequestIcon = ResourceManager.getInstance().getImage("/images/icons/newReqBlack.png");
+        listTabPane.tabMinWidthProperty().bind(listAPane.widthProperty().divide(listTabPane.getTabs().size()).subtract(10));
+
+
+        Image newRequestIcon = ResourceManager.getInstance().getImage("/images/icons/newReq.png");
         ImageView newReqIconView = new ImageView(newRequestIcon);
 //        newReqIconView.setRotate(90);
         newReqIconView.setFitHeight(48);
         newReqIconView.setFitWidth(48);
         newTab.setGraphic(newReqIconView);
 
-        Image progRequestIcon = ResourceManager.getInstance().getImage("/images/icons/progressReqBlack.png");
+        Image progRequestIcon = ResourceManager.getInstance().getImage("/images/icons/progressReq.png");
         ImageView progRequestIconView = new ImageView(progRequestIcon);
 //        progRequestIconView.setRotate(90);
         progRequestIconView.setFitHeight(48);
         progRequestIconView.setFitWidth(48);
         progressTab.setGraphic(progRequestIconView);
 
-        Image doneRequestIcon = ResourceManager.getInstance().getImage("/images/icons/doneReqBlack.png");
+        Image doneRequestIcon = ResourceManager.getInstance().getImage("/images/icons/doneReq.png");
         ImageView doneRequestIconView = new ImageView(doneRequestIcon);
 //        doneRequestIconView.setRotate(90);
         doneRequestIconView.setFitHeight(48);
@@ -126,7 +129,8 @@ public class RequestManagerController extends ScreenController {
         searchView = searchLoader.load();
         this.searchAnchor.getChildren().add(searchView);
         searchController.setSearchFieldPromptText("Search Request");
-        searchController.resizeSearchbarWidth(160.0);
+        searchController.resizeSearchbarWidth(350.0);
+
     }
 
     /**
