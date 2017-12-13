@@ -97,6 +97,7 @@ public class MapController {
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
         languageSelector.getItems().addAll("English","French");
+        languageSelector.setValue("English");
 
         miniMapController = new MiniMapController(this);
 
@@ -108,6 +109,7 @@ public class MapController {
         nodesEdgesView.setPickOnBounds(false);
 
         recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        keyButton.setText(SystemSettings.getInstance().getResourceBundle().getString("mapKey"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -132,6 +134,9 @@ public class MapController {
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             recenterButton.setText(rB.getString("my.recenter"));
+        });
+        systemSettings.addObserver((o,arg) -> {
+            keyButton.setText(systemSettings.getInstance().getResourceBundle().getString("mapKey"));
         });
 
         try {
