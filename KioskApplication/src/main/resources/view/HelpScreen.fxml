@@ -2,7 +2,6 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,12 +11,18 @@
    <children>
       <JFXTabPane fx:id="helpTabPlane" blendMode="SRC_ATOP" minHeight="650.0" side="LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab fx:id="mapHelpTab" onSelectionChanged="#onHelpTabSelection" text="Map Help">
+            <Tab text="Map Help">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="696.0" rotate="180.0">
-                     <rotationAxis>
-                        <Point3D x="-90.0" y="90.0" />
-                     </rotationAxis></AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="3400.0" prefWidth="4965.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <ImageView fx:id="mapImage" fitHeight="540.0" fitWidth="720.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </VBox>
+                        <JFXButton onAction="#previousMap" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Previous" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+                        <JFXButton onAction="#nextMap" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Next" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="settingsHelpTab" onSelectionChanged="#onHelpTabSelection" text="Settings Help">

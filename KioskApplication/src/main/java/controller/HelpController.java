@@ -25,15 +25,16 @@ public class HelpController extends ScreenController{
     @FXML Tab adminHelpTab;
     @FXML AnchorPane requestPane;
     @FXML
-    ImageView requestImage;
+    ImageView requestImage,mapImage;
 
     MapController mapController;
-    int requestPicture;
+    int requestPicture, mapPicture;
 
     //constructor for new help screen
     public HelpController(MainWindowController parent, MapController map) {
         super(parent, map);
-        int requestPicture = 0;
+        requestPicture = 0;
+        mapPicture = 0;
     }
 
     @FXML
@@ -57,7 +58,56 @@ public class HelpController extends ScreenController{
         });*/
 
      requestHelpViews();
+     mapHelpViews();
 
+    }
+
+    @FXML
+    public void nextMap(){
+        if(mapPicture<4){
+            mapPicture++;
+        }
+        else{
+            mapPicture = 0;
+        }
+        mapHelpViews();
+    }
+
+    @FXML
+    public void previousMap(){
+        if(mapPicture>0){
+            mapPicture--;
+        }else{
+            mapPicture = 4;
+        }
+        mapHelpViews();
+    }
+
+    private void mapHelpViews() {
+        switch (mapPicture){
+            case 0:
+                Image mapHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/map0.png");
+                mapImage.setImage(mapHelp0);
+//                requestImage.setFitWidth(requestHelp.getWidth());
+//                requestImage.setFitHeight(requestHelp.getHeight());
+                break;
+            case 1:
+                Image mapHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/map1.png");
+                mapImage.setImage(mapHelp1);
+                break;
+            case 2:
+                Image mapHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/map2.png");
+                mapImage.setImage(mapHelp2);
+                break;
+            case 3:
+                Image mapHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/map3.png");
+                mapImage.setImage(mapHelp3);
+                break;
+            case 4:
+                Image mapHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/map4.png");
+                mapImage.setImage(mapHelp4);
+                break;
+        }
     }
 
     @FXML
@@ -82,29 +132,29 @@ public class HelpController extends ScreenController{
     private void requestHelpViews() {
         switch (requestPicture){
             case 0:
-                Image requestHelp0 = ResourceManager.getInstance().getImage("/images/requestSubmitter0.png");
+                Image requestHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter0.png");
                 requestImage.setImage(requestHelp0);
 //                requestImage.setFitWidth(requestHelp.getWidth());
 //                requestImage.setFitHeight(requestHelp.getHeight());
                 break;
             case 1:
-                Image requestHelp1 = ResourceManager.getInstance().getImage("/images/requestSubmitter1.png");
+                Image requestHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter1.png");
                 requestImage.setImage(requestHelp1);
                 break;
             case 2:
-                Image requestHelp2 = ResourceManager.getInstance().getImage("/images/requestSubmitter2.png");
+                Image requestHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter2.png");
                 requestImage.setImage(requestHelp2);
                 break;
             case 3:
-                Image requestHelp3 = ResourceManager.getInstance().getImage("/images/requestSubmitter3.png");
+                Image requestHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter3.png");
                 requestImage.setImage(requestHelp3);
                 break;
             case 4:
-                Image requestHelp4 = ResourceManager.getInstance().getImage("/images/requestSubmitter4.png");
+                Image requestHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter4.png");
                 requestImage.setImage(requestHelp4);
                 break;
             case 5:
-                Image requestHelp5 = ResourceManager.getInstance().getImage("/images/requestSubmitter5.png");
+                Image requestHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter5.png");
                 requestImage.setImage(requestHelp5);
                 break;
         }
