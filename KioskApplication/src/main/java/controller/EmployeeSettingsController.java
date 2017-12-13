@@ -89,8 +89,8 @@ public class EmployeeSettingsController {
         root.setExpanded(true);
 
         //initialize employee search
-        ArrayList<ISearchEntity> searchEmployee = new ArrayList<>();
         SystemSettings.getInstance().updateDistance();
+        ArrayList<ISearchEntity> searchEmployee = new ArrayList<>();
         for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
             searchEmployee.add(new SearchEmployee(targetEmployee));
         }
@@ -271,6 +271,13 @@ public class EmployeeSettingsController {
         });
 
         deleteUserButton.setDisable(true);
+
+        //update search data
+        ArrayList<ISearchEntity> searchEmployee = new ArrayList<>();
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            searchEmployee.add(new SearchEmployee(targetEmployee));
+        }
+        this.employeeSearchController.reset(searchEmployee);
     }
 
     /**
