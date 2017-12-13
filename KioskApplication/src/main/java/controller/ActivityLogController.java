@@ -11,7 +11,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -35,37 +34,40 @@ public class ActivityLogController {
         root.setExpanded(true);
         // Setup for table columns
         TreeTableColumn<ActivityLog,String> timeColumn = new TreeTableColumn<>(systemSettings.getResourceBundle().getString("activity.timestamp"));
-        timeColumn.setResizable(false);
-        timeColumn.setPrefWidth(60);
+        timeColumn.setResizable(true);
+        timeColumn.setPrefWidth(80);
         timeColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<ActivityLog,String> param)->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getTime().toString())
         );
         TreeTableColumn<ActivityLog,String> activityTypeColumn = new TreeTableColumn<>(systemSettings.getResourceBundle().getString("activity.activity"));
-        activityTypeColumn.setResizable(false);
+        activityTypeColumn.setResizable(true);
         activityTypeColumn.setPrefWidth(60);
         activityTypeColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<ActivityLog,String> param)->
                         new ReadOnlyStringWrapper(param.getValue().getValue().getActivityType().toString())
         );
         TreeTableColumn<ActivityLog,String> employeeColumn = new TreeTableColumn<>(systemSettings.getResourceBundle().getString("activity.employee"));
-        employeeColumn.setResizable(false);
+        employeeColumn.setResizable(true);
         employeeColumn.setPrefWidth(100);
         employeeColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<ActivityLog,String> param)->
                         new ReadOnlyStringWrapper(usernameHashMap.get(param.getValue().getValue().getEmployeeID()))
         );
         TreeTableColumn<ActivityLog,String> detailsColumn = new TreeTableColumn<>(systemSettings.getResourceBundle().getString("activity.details"));
-        detailsColumn.setResizable(false);
-        detailsColumn.setPrefWidth(60);
+        detailsColumn.setResizable(true);
+        detailsColumn.setPrefWidth(200);
         detailsColumn.setCellValueFactory(
                 (TreeTableColumn.CellDataFeatures<ActivityLog,String> param)->
-                        new ReadOnlyStringWrapper(param.getValue().getValue().getActivityType().toString())
+                        new ReadOnlyStringWrapper(param.getValue().getValue().getDetails())
         );
         logView.getColumns().setAll(timeColumn,activityTypeColumn,employeeColumn,detailsColumn);
         logView.setRoot(root);
         logView.setShowRoot(false);
         refreshLogs();
+        activityLogger.addObserver(((o, arg) -> {
+            refreshLogs();
+        }));
     }
 
     public void refreshLogs(){

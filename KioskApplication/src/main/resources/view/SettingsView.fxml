@@ -199,7 +199,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="logTab">
+            <Tab fx:id="logTab" text="Logs">
                <content>
                   <AnchorPane fx:id="logPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="800.0" prefWidth="800.0" />
                </content>

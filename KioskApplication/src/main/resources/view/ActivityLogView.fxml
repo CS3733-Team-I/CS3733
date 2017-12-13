@@ -12,7 +12,7 @@
             fx:controller="controller.ActivityLogController"
             prefHeight="400.0" prefWidth="600.0">
     <children>
-        <JFXTreeTableView fx:id="logView">
+        <JFXTreeTableView fx:id="logView" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0">
 
         </JFXTreeTableView>
     </children>

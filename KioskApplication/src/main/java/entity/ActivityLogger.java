@@ -8,8 +8,9 @@ import database.objects.ActivityLog.ActivityType;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Observable;
 
-public class ActivityLogger {
+public class ActivityLogger extends Observable {
     private DatabaseController databaseController;
     private HashMap<Integer,ActivityLog> logHashMap;
 
@@ -22,6 +23,7 @@ public class ActivityLogger {
     }
 
     private ActivityLogger(){
+        super();
         databaseController = DatabaseController.getInstance();
         logHashMap = new HashMap<>();
         readAllFromDatabase();
@@ -117,7 +119,11 @@ public class ActivityLogger {
     }
 
     public void logLogout(IEmployee currentLogin){
-
+        String details = "Logged out";
+        long currentTime = System.currentTimeMillis();
+        Timestamp time = new Timestamp(currentTime);
+        ActivityLog log = new ActivityLog(time, ActivityType.LOGOUT, currentLogin.getID(), details);
+        submitLog(log);
     }
 
     public void logNodeAdd(IEmployee currentLogin, Node node){
@@ -189,5 +195,6 @@ public class ActivityLogger {
         int logID = databaseController.addActivityLog(log);
         log.setActivityID(logID);
         logHashMap.put(log.getActivityID(),log);
+        notifyObservers();
     }
 }
