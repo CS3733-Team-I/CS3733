@@ -6,10 +6,10 @@ import database.objects.Edge;
 import database.objects.Node;
 import entity.LoginEntity;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
@@ -23,17 +23,23 @@ public class HelpController extends ScreenController{
     @FXML Tab settingsHelpTab;
     @FXML Tab mapBuilderHelp;
     @FXML Tab adminHelpTab;
+    @FXML AnchorPane requestPane;
+    @FXML
+    ImageView requestImage;
 
     MapController mapController;
+    int requestPicture;
 
     //constructor for new help screen
     public HelpController(MainWindowController parent, MapController map) {
         super(parent, map);
+        int requestPicture = 0;
     }
 
     @FXML
     protected void initialize() throws IOException {
-        checkPermissions();
+//        checkPermissions();
+
      /*   helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
             switch (newValue.getId().toString()) {
@@ -49,11 +55,64 @@ public class HelpController extends ScreenController{
                     break;
             }
         });*/
+
+     requestHelpViews();
+
+    }
+
+    @FXML
+    public void nextRequest(){
+        if(requestPicture < 5){
+            requestPicture++;
+        }else{
+            requestPicture = 0;
+        }
+        requestHelpViews();
+    }
+    @FXML
+    public void previousRequest(){
+        if(requestPicture>0){
+            requestPicture--;
+        }else{
+            requestPicture = 5;
+        }
+        requestHelpViews();
+    }
+
+    private void requestHelpViews() {
+        switch (requestPicture){
+            case 0:
+                Image requestHelp0 = ResourceManager.getInstance().getImage("/images/requestSubmitter0.png");
+                requestImage.setImage(requestHelp0);
+//                requestImage.setFitWidth(requestHelp.getWidth());
+//                requestImage.setFitHeight(requestHelp.getHeight());
+                break;
+            case 1:
+                Image requestHelp1 = ResourceManager.getInstance().getImage("/images/requestSubmitter1.png");
+                requestImage.setImage(requestHelp1);
+                break;
+            case 2:
+                Image requestHelp2 = ResourceManager.getInstance().getImage("/images/requestSubmitter2.png");
+                requestImage.setImage(requestHelp2);
+                break;
+            case 3:
+                Image requestHelp3 = ResourceManager.getInstance().getImage("/images/requestSubmitter3.png");
+                requestImage.setImage(requestHelp3);
+                break;
+            case 4:
+                Image requestHelp4 = ResourceManager.getInstance().getImage("/images/requestSubmitter4.png");
+                requestImage.setImage(requestHelp4);
+                break;
+            case 5:
+                Image requestHelp5 = ResourceManager.getInstance().getImage("/images/requestSubmitter5.png");
+                requestImage.setImage(requestHelp5);
+                break;
+        }
     }
 
     @FXML
     public void onHelpTabSelection(){
-        checkPermissions();
+//        checkPermissions();
     }
 
     public void checkPermissions() {
@@ -92,7 +151,7 @@ public class HelpController extends ScreenController{
 
     public void onScreenChanged() {}
     public void resetScreen(){
-        getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setAnchor(0, 1000, 0, 0);
         getMapController().setPath(null);
         getMapController().reloadDisplay();
         // Set default nodes/edges visibility
