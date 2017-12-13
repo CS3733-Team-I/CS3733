@@ -1,14 +1,14 @@
 package controller.map;
 
-import com.jfoenix.controls.JFXButton;
 import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
-import database.objects.Edge;
 import database.objects.Node;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
-import javafx.animation.PathTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,12 +20,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
-import utility.node.NodeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import java.util.LinkedList;
 
 public class PathWaypointView extends AnchorPane {
 
-    private ObservableList<Edge> PathList;
     private ObservableList<Node> waypointList;
     protected Path currentPath;
 
@@ -42,16 +40,12 @@ public class PathWaypointView extends AnchorPane {
 
     private AnchorPane pathView;
     private AnchorPane wayPointView;
+    private AnchorPane floorChangeView;
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
 
-    private Label youarehereLabel;
-
-    private ArrayList<Color> segmentColorList;
-
     MapController parent;
-    PathfindingSidebarController sidebarController;
 
     public PathWaypointView(MapController parent) throws NotFoundException {
         this.setPickOnBounds(false);
@@ -72,16 +66,14 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
-        this.getChildren().addAll(pathView, wayPointView);
+        floorChangeView = new AnchorPane();
+        floorChangeView.setPickOnBounds(false);
 
-        waypointList = FXCollections.observableArrayList();
-        PathList = FXCollections.observableArrayList();
+        this.getChildren().addAll(pathView, wayPointView, floorChangeView);
 
         waypointList = FXCollections.observableArrayList();
 
         this.parent = parent;
-
-        segmentColorList = new ArrayList<>();
 
         Image arrowButtonIcon = ResourceManager.getInstance().getImage("/images/icons/arrow-button.png");
         upView = new javafx.scene.image.ImageView(arrowButtonIcon);
@@ -100,17 +92,13 @@ public class PathWaypointView extends AnchorPane {
                         WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
                         this.wayPointViewsMap.remove(removedWaypoint);
                         this.wayPointView.getChildren().remove(removedView);
-                        parent.getMiniMapController().removeMiniWayPoint(removedWaypoint);
                     }
                 }
                 if(listener.wasAdded()) {
                     for(Node addedWaypoint : listener.getAddedSubList()) {
                         WaypointView waypointView = new WaypointView(this, addedWaypoint, waypointList.indexOf(addedWaypoint));
                         this.wayPointViewsMap.put(addedWaypoint, waypointView);
-
                         this.wayPointView.getChildren().add(waypointView);
-                        //add the waypoint on the mini map
-                        parent.getMiniMapController().showMiniWayPoint(addedWaypoint);
 
                         waypointView.playWaypointPutTransition();
                     }
@@ -118,12 +106,32 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
+        SystemSettings.getInstance().kioskLocationPropertyProperty().addListener((obj, oldValue, newValue) -> {
+            if (newValue == null) return;
+
+            ImageView youarehereView = getYouAreHereIcon(newValue);
+
+            getChildren().clear();
+            getChildren().addAll(pathView, wayPointView, youarehereView, floorChangeView);
+        });
+
+        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getKioskLocation()));
+
+        clearPath();
+        clearWaypoint();
+    }
+
+    private ImageView getYouAreHereIcon(Node node) {
         Image youarehereIcon = ResourceManager.getInstance().getImage("/images/crosshairs-gps.png");
         ImageView youarehereView = new javafx.scene.image.ImageView(youarehereIcon);
         youarehereView.setFitHeight(48);
         youarehereView.setFitWidth(48);
+        youarehereView.setMouseTransparent(true);
 
-        youarehereLabel = new Label();
+        youarehereView.setLayoutX(node.getXcoord() - (youarehereIcon.getWidth() / 2));
+        youarehereView.setLayoutY(node.getYcoord() - (youarehereIcon.getHeight() / 2));
+
+        /*youarehereLabel = new Label();
         youarehereLabel.setGraphic(youarehereView);
         youarehereLabel.setPrefHeight(48);
         youarehereLabel.setPrefWidth(48);
@@ -139,6 +147,7 @@ public class PathWaypointView extends AnchorPane {
                 getChildren().add(youarehereLabel);
             }
         });
+
         SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -146,9 +155,9 @@ public class PathWaypointView extends AnchorPane {
                 youarehereLabel.setLayoutY(newValue.doubleValue()-24);
                 getChildren().add(youarehereLabel);
             }
-        });
+        });*/
 
-        getChildren().add(youarehereLabel);
+        return youarehereView;
     }
 
     /**
@@ -163,9 +172,12 @@ public class PathWaypointView extends AnchorPane {
      * Clear drawn path
      */
     public void clearPath() {
+//        LinkedList<Node> allNodes = this.currentPath.getListOfAllNodes();
+//        for(Node node: allNodes){
+//            this.parent.removeWaypoint(node);
+//        }
         this.currentPath = null;
         pathView.getChildren().clear();
-        parent.getMiniMapController().clearPath();
     }
     /**
      * Clear drawn waypoints
@@ -180,85 +192,115 @@ public class PathWaypointView extends AnchorPane {
     public void clearAll() {
         clearWaypoint();
         clearPath();
+        floorChangeView.getChildren().clear();
     }
 
     public void drawPath(Path path) {
-        parent.getMiniMapController().clearPath();
-        JFXButton switchFloor = null;
-        segmentColorList.clear();
+        floorChangeView.getChildren().clear();
 
         this.currentPath = path;
 
-        // Create list of nodes to check for zooming and then zoom in on the first segment of nodes on the path that
-        // are on a the starting floor
-        LinkedList<Node> nodesOnFloor = new LinkedList<>();
-        LinkedList<Node> nodesToCheck = new LinkedList<>();
-        nodesToCheck.addAll(path.getWaypoints());
-        nodesToCheck.addAll(path.getListOfAllNodes());
-        for (Node node : nodesToCheck) {
-            if (node.getFloor().equals(parent.getCurrentFloor())) {
-                nodesOnFloor.add(node);
+        double totalDistance = 0;
+
+        int waypointIndex = 0;
+        for (Node node : waypointList) {
+            Node lastNode = node;
+            for (Node thisNode : path.getNodesInSegment(node)) {
+                // Don't draw a line between the same nodes
+                if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
+                    lastNode = thisNode;
+                    continue;
+                }
+
+                if (thisNode.getFloor() == parent.getCurrentFloor() &&
+                        lastNode.getFloor() == parent.getCurrentFloor()) {
+
+                    Line line = new Line(lastNode.getXcoord(), lastNode.getYcoord(),
+                                         thisNode.getXcoord(), thisNode.getYcoord());
+                    line.setStroke(path.getSegmentColor(waypointIndex));
+                    line.setStrokeWidth(8);
+                    line.setStrokeLineCap(StrokeLineCap.ROUND);
+                    pathView.getChildren().add(line);
+
+                    totalDistance += Math.sqrt(Math.pow(thisNode.getXcoord() - lastNode.getXcoord(), 2.0)
+                                                + Math.pow(thisNode.getYcoord() - lastNode.getYcoord(), 2.0));
+                } else if (thisNode.getFloor() != lastNode.getFloor() &&
+                            (thisNode.getFloor() == parent.getCurrentFloor() ||
+                            lastNode.getFloor() == parent.getCurrentFloor())) {
+                    Circle circle = new Circle(20, Color.RED);
+                    circle.setCenterX(thisNode.getXcoord());
+                    circle.setCenterY(thisNode.getYcoord());
+
+                    final NodeFloor thisFloor = thisNode.getFloor();
+                    final NodeFloor lastFloor = lastNode.getFloor();
+                    final Node lNode = lastNode;
+
+                    circle.setOnMouseClicked(e -> {
+                        System.out.println("FC Clicked!");
+                        if(thisFloor == parent.getCurrentFloor()) {
+                            parent.setFloorSelector(lastFloor);
+                        } else {
+                            parent.setFloorSelector(thisFloor);
+                        }
+                    });
+                    circle.setOnMouseEntered(e -> {
+                        System.out.println("Open Tooltip");
+                        if(thisFloor == parent.getCurrentFloor()) {
+                            parent.showPopup(thisNode);
+                        } else {
+                            parent.showPopup(lNode);
+                        }
+                    });
+                    circle.setOnMouseExited(e -> {
+                        System.out.println("Close Tooltip");
+                    });
+
+                    floorChangeView.getChildren().add(circle);
+                }
+
+                lastNode = thisNode;
             }
-        }
-        parent.zoomOnSelectedNodes(nodesOnFloor);
-
-        for (LinkedList<Edge> segment : currentPath.getEdges()) {
-            PathList.addAll(segment);
+            waypointIndex++;
         }
 
-        for(int i = 0; i < waypointList.size()-1; i ++) {
-            LinkedList<Node> segmentNodes = currentPath.getListOfNodesSegmentOnFloor(currentPath.getEdges().get(i), waypointList.get(i), parent.getCurrentFloor());
+        // Animate circles
+        int distCont = 30;
+        int totalCircles = (int)Math.ceil(totalDistance / (double)distCont);
 
-            javafx.scene.shape.Path jfxPath = new javafx.scene.shape.Path();
-            jfxPath.setFill(Color.TRANSPARENT);
-            jfxPath.setStroke(Color.TRANSPARENT);
-            MoveTo moveTo = new MoveTo(segmentNodes.get(0).getXcoord(), segmentNodes.get(0).getYcoord());
-            jfxPath.getElements().add(moveTo);
+        Node firstNode = waypointList.get(0);
+        for(int i = 0; i < totalCircles; i++) {
+            Circle circle = new Circle(5.0D, new Color(1, 1, 1, 0.5));
+            circle.setCenterX(firstNode.getXcoord());
+            circle.setCenterY(firstNode.getYcoord());
 
-            for(Node traversedNode : segmentNodes) {
-                LineTo lineTo = new LineTo(traversedNode.getXcoord(), traversedNode.getYcoord());
-                jfxPath.getElements().add(lineTo);
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(-1);
+            Duration time = Duration.ZERO;
+            double speed = 0.1D;
 
-                NodeFloor targetFloor = waypointList.get(i+1).getFloor();
-                if(traversedNode.getNodeType() == NodeType.ELEV || traversedNode.getNodeType() == NodeType.STAI) {
-                    switchFloor = new JFXButton();
-                    switchFloor.setOnAction(event -> parent.setFloorSelector(targetFloor));
-                    switchFloor.setLayoutX(traversedNode.getXcoord()-48);
-                    switchFloor.setLayoutY(traversedNode.getYcoord());
-                    switchFloor.setPrefHeight(48);
-                    switchFloor.setPrefWidth(48);
-
-                    if (traversedNode.getFloor().toInt() > targetFloor.toInt()) {
-                        switchFloor.setGraphic(upView);
-                    } else {
-                        switchFloor.setGraphic(downView);
+            Node lastNode = null;
+            LinkedList<Node> nodesOnPath = path.getListOfAllNodes();
+            for (Node node : nodesOnPath) {
+                if (node.getFloor().equals(parent.getCurrentFloor())) {
+                    if (lastNode != null) {
+                        double distance = Math.sqrt(Math.pow(lastNode.getXcoord() - node.getXcoord(), 2.0)
+                                + Math.pow(lastNode.getYcoord() - node.getYcoord(), 2.0));
+                        time = time.add(new Duration(distance / speed));
                     }
+
+                    timeline.getKeyFrames().add(new KeyFrame(time,
+                            new KeyValue(circle.centerXProperty(), node.getXcoord()),
+                            new KeyValue(circle.centerYProperty(), node.getYcoord())));
+
+                    lastNode = node;
                 }
             }
 
-            this.pathView.getChildren().add(jfxPath);
-            parent.getMiniMapController().showPath(jfxPath);
+            Duration offset = timeline.getCycleDuration().divide((double)totalCircles);
+            timeline.playFrom(offset.multiply((double)i));
 
-            Color colorForPointers = Color.color(Math.random() * 0.75, Math.random() * 0.75, 0.8);
-            segmentColorList.add(colorForPointers);
-            for(int k = 0; k < currentPath.getPathCost()/20; k++) {
-                Circle circle = new Circle(10);
-                circle.setFill(colorForPointers);
-                circle.setAccessibleHelp("path pointer");
-                this.pathView.getChildren().add(circle);
-
-                PathTransition navigationTransition = new PathTransition();
-                navigationTransition.setNode(circle);
-                navigationTransition.setDuration(Duration.seconds(currentPath.getPathCost()/20));
-                navigationTransition.setPath(jfxPath);
-                navigationTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-                navigationTransition.setAutoReverse(false);
-                navigationTransition.setCycleCount(PathTransition.INDEFINITE);
-
-                navigationTransition.playFrom(Duration.seconds(k));
-            }
+            pathView.getChildren().add(circle);
         }
-        this.pathView.getChildren().add(switchFloor);
     }
 
     public Path getPath() {
@@ -274,7 +316,6 @@ public class PathWaypointView extends AnchorPane {
         while(waypointIterator.hasNext()) {
             Node removedWaypoint = waypointIterator.next();
             if(removedWaypoint.getNodeID().equals(node.getNodeID())) {
-                this.wayPointView.getChildren().remove(removedWaypoint);
                 waypointIterator.remove();
                 break;
             }
@@ -306,9 +347,6 @@ public class PathWaypointView extends AnchorPane {
 
         wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
         wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
-
-//        waypointList.remove(index1);
-//        waypointList.remove(index2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
@@ -350,13 +388,5 @@ public class PathWaypointView extends AnchorPane {
             return currentPath.getDirectionsList().get(i);
         }
         else return null;
-    }
-
-    public ArrayList<Color> getsSegmentColorList() {
-        return segmentColorList;
-    }
-
-    public void setSidebarController(PathfindingSidebarController sidebarController) {
-        this.sidebarController = sidebarController;
     }
 }

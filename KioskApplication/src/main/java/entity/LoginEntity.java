@@ -3,6 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.*;
+import database.objects.requests.InterpreterRequest;
+import database.objects.requests.Request;
 import database.utility.DatabaseException;
 import utility.KioskPermission;
 import utility.request.Language;
@@ -94,18 +96,12 @@ public class LoginEntity {
     }
 
     /**
-     * Gets all the login info from the entity, only allowed if currently a super user.
+     * Gets all the login info from the entity
      * @return
      */
     public ArrayList<Employee> getAllLogins() {
         ArrayList<Employee> emps = new ArrayList<Employee>();
-        // Return the logins if we're a super user
-        if (getCurrentPermission()==SUPER_USER) {
-            return new ArrayList<Employee>(logins.values());
-        }
-
-        // Otherwise return an empty list
-        return emps;
+        return new ArrayList<Employee>(logins.values());
     }
 
     /**
@@ -130,12 +126,12 @@ public class LoginEntity {
         return loginIDs;
     }
 
-    public ArrayList<Integer> getAllEmployeeType(Request request){
-        ArrayList<Employee> employees = new ArrayList<>(logins.values());
-        ArrayList<Integer> loginIDs = new ArrayList<>();
+    public LinkedList<Employee> getAllEmployeeType(Request request){
+        LinkedList<Employee> employees = new LinkedList<>(logins.values());
+        LinkedList<Employee> filterEmployees = new LinkedList<>();
         RequestType type = request.getRequestType();
         if(type.equals(RequestType.GENERAL)){
-            loginIDs = getAllLoginIDs();
+            return employees;
         }
         //for filtering out interpreters by language
         else if(request instanceof InterpreterRequest){
@@ -147,7 +143,7 @@ public class LoginEntity {
                             interpretersLanguages.add(Language.values()[Integer.parseInt(language)]);
                     }
                     if(interpretersLanguages.contains(iRequest.getLanguage())){
-                        loginIDs.add(employee.getID());
+                        filterEmployees.add(employee);
                     }
                 }
             }
@@ -155,11 +151,11 @@ public class LoginEntity {
         else{
             for(Employee employee: employees){
                 if(employee.getServiceAbility().equals(type)){
-                    loginIDs.add(employee.getID());
+                    filterEmployees.add(employee);
                 }
             }
         }
-        return loginIDs;
+        return filterEmployees;
     }
 
     /**

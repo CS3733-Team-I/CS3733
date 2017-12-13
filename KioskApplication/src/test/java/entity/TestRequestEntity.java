@@ -3,7 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.objects.Edge;
 import database.objects.Employee;
-import database.objects.InterpreterRequest;
+import database.objects.requests.InterpreterRequest;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import org.junit.Before;

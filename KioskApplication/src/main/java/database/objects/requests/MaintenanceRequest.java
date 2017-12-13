@@ -1,16 +1,16 @@
-package database.objects;
+package database.objects.requests;
 
 import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 
-public class SecurityRequest extends Request {
+public class MaintenanceRequest extends Request{
     private int priority;
 
-    public SecurityRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
+    public MaintenanceRequest(String requestID, String nodeID, int assignerID, int completerID, String note,
                            Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime,
-                           RequestProgressStatus status, int priority, int uRequestID) {
-        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status, uRequestID);
+                           RequestProgressStatus status, int priority) {
+        super(requestID, nodeID, assignerID, completerID, note, submittedTime, startedTime, completedTime, status);
         this.priority = priority;
     }
 
@@ -19,7 +19,7 @@ public class SecurityRequest extends Request {
         if(obj==null) return false;
 
         if(obj.getClass() == this.getClass()){
-            SecurityRequest other = (SecurityRequest) obj;
+            MaintenanceRequest other = (MaintenanceRequest) obj;
             return(this.requestID.equals(other.getRequestID())) &&
                     this.getNodeID().equals(other.getNodeID())&&
                     this.getAssignerID()==other.getAssignerID()&&
