@@ -65,6 +65,7 @@ public class HelpController extends ScreenController{
      mapHelpViews();
      builderViews();
      adminViews();
+//     checkPermissions();
 
     }
 
@@ -80,48 +81,52 @@ public class HelpController extends ScreenController{
     }
 
     @FXML
-    public void previousAdmin(){
-        if(adminPicture>0){
-            adminPicture--;
-        }else{
-            adminPicture = 6;
+    public void previousAdmin() {
+        if (helpTabPlane.getTabs().contains(adminHelpTab)) {
+            if (adminPicture > 0) {
+                adminPicture--;
+            } else {
+                adminPicture = 6;
+            }
+            adminViews();
         }
-        adminViews();
     }
 
 
     private void adminViews() {
-        switch (adminPicture) {
-            case 0:
-                Image adminHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/admin0.PNG");
-                adminImage.setImage(adminHelp0);
+        if(helpTabPlane.getTabs().contains(mapBuilderHelp)) {
+            switch (adminPicture) {
+                case 0:
+                    Image adminHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/admin0.PNG");
+                    adminImage.setImage(adminHelp0);
 //                requestImage.setFitWidth(requestHelp.getWidth());
 //                requestImage.setFitHeight(requestHelp.getHeight());
-                break;
-            case 1:
-                Image adminHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/admin1.PNG");
-                adminImage.setImage(adminHelp1);
-                break;
-            case 2:
-                Image adminHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/admin2.PNG");
-                adminImage.setImage(adminHelp2);
-                break;
-            case 3:
-                Image adminHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/admin3.PNG");
-                adminImage.setImage(adminHelp3);
-                break;
-            case 4:
-                Image adminHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/admin4.PNG");
-                adminImage.setImage(adminHelp4);
-                break;
-            case 5:
-                Image adminHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/admin5.PNG");
-                adminImage.setImage(adminHelp5);
-                break;
-            case 6:
-                Image adminHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/admin6.PNG");
-                adminImage.setImage(adminHelp6);
-                break;
+                    break;
+                case 1:
+                    Image adminHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/admin1.PNG");
+                    adminImage.setImage(adminHelp1);
+                    break;
+                case 2:
+                    Image adminHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/admin2.PNG");
+                    adminImage.setImage(adminHelp2);
+                    break;
+                case 3:
+                    Image adminHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/admin3.PNG");
+                    adminImage.setImage(adminHelp3);
+                    break;
+                case 4:
+                    Image adminHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/admin4.PNG");
+                    adminImage.setImage(adminHelp4);
+                    break;
+                case 5:
+                    Image adminHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/admin5.PNG");
+                    adminImage.setImage(adminHelp5);
+                    break;
+                case 6:
+                    Image adminHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/admin6.PNG");
+                    adminImage.setImage(adminHelp6);
+                    break;
+            }
         }
     }
 
@@ -148,41 +153,43 @@ public class HelpController extends ScreenController{
 
 
     private void builderViews() {
-        switch (builderPicture){
-            case 0:
-                Image builderHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/builder0.PNG");
-                builderImage.setImage(builderHelp0);
-//                requestImage.setFitWidth(requestHelp.getWidth());
-//                requestImage.setFitHeight(requestHelp.getHeight());
-                break;
-            case 1:
-                Image builderHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/builder1.PNG");
-                builderImage.setImage(builderHelp1);
-                break;
-            case 2:
-                Image builderHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/builder2.PNG");
-                builderImage.setImage(builderHelp2);
-                break;
-            case 3:
-                Image builderHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/builder3.PNG");
-                builderImage.setImage(builderHelp3);
-                break;
-            case 4:
-                Image builderHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/builder4.PNG");
-                builderImage.setImage(builderHelp4);
-                break;
-            case 5:
-                Image builderHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/builder5.PNG");
-                builderImage.setImage(builderHelp5);
-                break;
-            case 6:
-                Image builderHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/builder6.PNG");
-                builderImage.setImage(builderHelp6);
-                break;
-            case 7:
-                Image builderHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/builder7.PNG");
-                builderImage.setImage(builderHelp7);
-                break;
+        if(helpTabPlane.getTabs().contains(mapBuilderHelp)) {
+            switch (builderPicture) {
+                case 0:
+                    Image builderHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/builder0.PNG");
+                    builderImage.setImage(builderHelp0);
+                    //                requestImage.setFitWidth(requestHelp.getWidth());
+                    //                requestImage.setFitHeight(requestHelp.getHeight());
+                    break;
+                case 1:
+                    Image builderHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/builder1.PNG");
+                    builderImage.setImage(builderHelp1);
+                    break;
+                case 2:
+                    Image builderHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/builder2.PNG");
+                    builderImage.setImage(builderHelp2);
+                    break;
+                case 3:
+                    Image builderHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/builder3.PNG");
+                    builderImage.setImage(builderHelp3);
+                    break;
+                case 4:
+                    Image builderHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/builder4.PNG");
+                    builderImage.setImage(builderHelp4);
+                    break;
+                case 5:
+                    Image builderHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/builder5.PNG");
+                    builderImage.setImage(builderHelp5);
+                    break;
+                case 6:
+                    Image builderHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/builder6.PNG");
+                    builderImage.setImage(builderHelp6);
+                    break;
+                case 7:
+                    Image builderHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/builder7.PNG");
+                    builderImage.setImage(builderHelp7);
+                    break;
+            }
         }
     }
 
@@ -194,7 +201,7 @@ public class HelpController extends ScreenController{
         else{
             settingPicture = 1;
         }
-        mapHelpViews();
+        settingsHelpViews();
     }
 
     @FXML
@@ -204,19 +211,21 @@ public class HelpController extends ScreenController{
         }else{
             settingPicture = 0;
         }
-        mapHelpViews();
+        settingsHelpViews();
     }
 
     private void settingsHelpViews() {
-        switch (settingPicture){
-            case 0:
-                Image settingsHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/settings0.png");
-                settingImage.setImage(settingsHelp0);
-                break;
-            case 1:
-                Image settingsHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/settings1.png");
-                settingImage.setImage(settingsHelp1);
-                break;
+        if(helpTabPlane.getTabs().contains(settingsHelpTab)) {
+            switch (settingPicture) {
+                case 0:
+                    Image settingsHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/settings0.PNG");
+                    settingImage.setImage(settingsHelp0);
+                    break;
+                case 1:
+                    Image settingsHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/settings1.PNG");
+                    settingImage.setImage(settingsHelp1);
+                    break;
+            }
         }
     }
 
@@ -242,29 +251,31 @@ public class HelpController extends ScreenController{
     }
 
     private void mapHelpViews() {
-        switch (mapPicture){
-            case 0:
-                Image mapHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/map0.png");
-                mapImage.setImage(mapHelp0);
-//                requestImage.setFitWidth(requestHelp.getWidth());
-//                requestImage.setFitHeight(requestHelp.getHeight());
-                break;
-            case 1:
-                Image mapHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/map1.png");
-                mapImage.setImage(mapHelp1);
-                break;
-            case 2:
-                Image mapHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/map2.png");
-                mapImage.setImage(mapHelp2);
-                break;
-            case 3:
-                Image mapHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/map3.png");
-                mapImage.setImage(mapHelp3);
-                break;
-            case 4:
-                Image mapHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/map4.png");
-                mapImage.setImage(mapHelp4);
-                break;
+        if(helpTabPlane.getTabs().contains(mapBuilderHelp)) {
+            switch (mapPicture) {
+                case 0:
+                    Image mapHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/map0.png");
+                    mapImage.setImage(mapHelp0);
+                    //                requestImage.setFitWidth(requestHelp.getWidth());
+                    //                requestImage.setFitHeight(requestHelp.getHeight());
+                    break;
+                case 1:
+                    Image mapHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/map1.png");
+                    mapImage.setImage(mapHelp1);
+                    break;
+                case 2:
+                    Image mapHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/map2.png");
+                    mapImage.setImage(mapHelp2);
+                    break;
+                case 3:
+                    Image mapHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/map3.png");
+                    mapImage.setImage(mapHelp3);
+                    break;
+                case 4:
+                    Image mapHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/map4.png");
+                    mapImage.setImage(mapHelp4);
+                    break;
+            }
         }
     }
 
@@ -288,41 +299,43 @@ public class HelpController extends ScreenController{
     }
 
     private void requestHelpViews() {
-        switch (requestPicture){
-            case 0:
-                Image requestHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter0.png");
-                requestImage.setImage(requestHelp0);
-//                requestImage.setFitWidth(requestHelp.getWidth());
-//                requestImage.setFitHeight(requestHelp.getHeight());
-                break;
-            case 1:
-                Image requestHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter1.png");
-                requestImage.setImage(requestHelp1);
-                break;
-            case 2:
-                Image requestHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter2.png");
-                requestImage.setImage(requestHelp2);
-                break;
-            case 3:
-                Image requestHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter3.png");
-                requestImage.setImage(requestHelp3);
-                break;
-            case 4:
-                Image requestHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter4.png");
-                requestImage.setImage(requestHelp4);
-                break;
-            case 5:
-                Image requestHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter5.png");
-                requestImage.setImage(requestHelp5);
-                break;
-            case 6:
-                Image requestHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter6.png");
-                requestImage.setImage(requestHelp6);
-                break;
-            case 7:
-                Image requestHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter7.png");
-                requestImage.setImage(requestHelp7);
-                break;
+        if(helpTabPlane.getTabs().contains(mapBuilderHelp)) {
+            switch (requestPicture) {
+                case 0:
+                    Image requestHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter0.png");
+                    requestImage.setImage(requestHelp0);
+                    //                requestImage.setFitWidth(requestHelp.getWidth());
+                    //                requestImage.setFitHeight(requestHelp.getHeight());
+                    break;
+                case 1:
+                    Image requestHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter1.png");
+                    requestImage.setImage(requestHelp1);
+                    break;
+                case 2:
+                    Image requestHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter2.png");
+                    requestImage.setImage(requestHelp2);
+                    break;
+                case 3:
+                    Image requestHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter3.png");
+                    requestImage.setImage(requestHelp3);
+                    break;
+                case 4:
+                    Image requestHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter4.png");
+                    requestImage.setImage(requestHelp4);
+                    break;
+                case 5:
+                    Image requestHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter5.png");
+                    requestImage.setImage(requestHelp5);
+                    break;
+                case 6:
+                    Image requestHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter6.png");
+                    requestImage.setImage(requestHelp6);
+                    break;
+                case 7:
+                    Image requestHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/requestSubmitter7.png");
+                    requestImage.setImage(requestHelp7);
+                    break;
+            }
         }
     }
 
@@ -344,7 +357,7 @@ public class HelpController extends ScreenController{
             case EMPLOYEE:
                 helpTabPlane.getTabs().clear();
                 helpTabPlane.getTabs().addAll(requestHelpTab,mapHelpTab,settingsHelpTab);
-
+                break;
             case NONEMPLOYEE:
                 helpTabPlane.getTabs().clear();
                 helpTabPlane.getTabs().addAll(mapHelpTab,settingsHelpTab);
