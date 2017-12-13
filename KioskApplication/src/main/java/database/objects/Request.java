@@ -18,6 +18,7 @@ public abstract class Request {
     private Timestamp submittedTime;
     private Timestamp startedTime;
     private Timestamp completedTime;
+    //private int uRequestID;
 
     //Use to retrieve requests
     public Request(String requestID, String nodeID, int assignerID,int completerID, String note, Timestamp submittedTime, Timestamp startedTime, Timestamp completedTime, RequestProgressStatus status){
@@ -30,6 +31,7 @@ public abstract class Request {
         this.startedTime=startedTime;
         this.completedTime=completedTime;
         this.status=status;
+        //this.uRequestID = uRequestID;
     }
 
     public void updateLocation(String nodeID){
@@ -51,6 +53,10 @@ public abstract class Request {
             return false;
         }
     }
+
+    /*public int getuRequestID() {
+        return uRequestID;
+    }*/
 
     public boolean setComplete(){
         if (this.status==RequestProgressStatus.IN_PROGRESS){

@@ -420,35 +420,38 @@ public class DatabaseController {
      * @param password
      * @return their ID
      */
-    public int addEmployee(Employee employee, String password){
+    public int addEmployee(Employee employee, String password) throws DatabaseException{
         try{
-            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
             pstmt.setString(1,employee.getUsername());
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setString(5, employee.getOptions());
+            pstmt.setString(5, employee.getOptionsForDatabase());
             pstmt.setInt(6,employee.getPermission().ordinal());
             pstmt.setInt(7,employee.getServiceAbility().ordinal());
-            pstmt.executeUpdate();
-            PreparedStatement pstmt2 = instanceConnection.prepareStatement("SELECT id FROM t_employee"+
-            " where username=?");
-            pstmt2.setString(1,employee.getUsername());
-            ResultSet rs = pstmt2.executeQuery();
-            if(rs.next()){
-                return rs.getInt("id");
+            int result = pstmt.executeUpdate();
+            if (result == 1) {
+                ResultSet rs = pstmt.getGeneratedKeys();
+                rs.next();
+                return rs.getInt(1);
+            } else {
+                return 0;
             }
         } catch (SQLException e){
+            DatabaseExceptionType type;
             if(e.getSQLState() != "23505"){
+                type = DatabaseExceptionType.DUPLICATE_ENTRY;
+            } else{
                 e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
             }
+            throw new DatabaseEmployeeException(employee,type);
         }
-        return 0;
     }
 
     // updates all stored information on the employee except their loginID
-    public int updateEmployee(Employee employee, String password){
+    public int updateEmployee(Employee employee, String password) throws DatabaseException{
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_UPDATE);
             pstmt.setInt(8,employee.getID());
@@ -456,34 +459,36 @@ public class DatabaseController {
             pstmt.setString(2,employee.getLastName());
             pstmt.setString(3,employee.getFirstName());
             pstmt.setString(4,employee.getPassword(password));
-            pstmt.setString(5, employee.getOptions());
+            pstmt.setString(5, employee.getOptionsForDatabase());
             pstmt.setInt(6,employee.getPermission().ordinal());
             pstmt.setInt(7,employee.getServiceAbility().ordinal());
             return pstmt.executeUpdate();
         } catch (SQLException e){
+            DatabaseExceptionType type;
             if(e.getSQLState() != "23505"){
+                type = DatabaseExceptionType.ID_ALREADY_EXISTS;
+            } else{
                 e.printStackTrace();
+                type = DatabaseExceptionType.MISC_ERROR;
             }
+            throw new DatabaseEmployeeException(employee, type);
         }
-        return 0;
     }
 
     // Removes the employee from the database
-    public boolean removeEmployee(int loginID){
+    public boolean removeEmployee(int ID) throws DatabaseException{
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_DELETE);
-            pstmt.setInt(1, loginID);
+            pstmt.setInt(1, ID);
             return pstmt.execute();
         } catch (SQLException e){
-            if(e.getSQLState() != "23505"){
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.INVALID_ENTRY);
         }
-        return false;
     }
 
     // Gets a specific employee from the database
-    public Employee getEmployee(int loginID){
+    public Employee getEmployee(int loginID) throws DatabaseException{
         Employee employee = null;
         try{
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_SELECT);
@@ -501,15 +506,14 @@ public class DatabaseController {
                         RequestType.values()[rs.getInt("serviceAbility")]);
             }
         } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
         }
         return employee;
     }
 
     // Gets all employees for the LoginEntity
-    public LinkedList<Employee> getAllEmployees(){
+    public LinkedList<Employee> getAllEmployees() throws DatabaseException{
         try {
             PreparedStatement pstmt = instanceConnection.prepareStatement(EMPLOYEE_SELECT_ALL);
             ResultSet rs = pstmt.executeQuery();
@@ -530,10 +534,114 @@ public class DatabaseController {
             }
             return employees;
         } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
+        }
+    }
+
+    /*
+    public void insertEmployeeIntoView(IEmployee employee) {
+        try {
+            Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
+        } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
         }
-        return new LinkedList<Employee>();
     }
+
+    public void deleteEmployeeFromView(IEmployee employee) {
+        try {
+            Connector.deleteEmployeeFromView(instanceConnection, employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void insertRequestIntoView(Request request) {
+        try {
+            Connector.addRequestToTable(instanceConnection, request);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void insertRequestIntoView(String requestID) {
+        int uRequestID;
+        try {
+            uRequestID = Connector.getURequestIDFromRequestID(instanceConnection, requestID);
+
+            Connector.addRequestToTable(instanceConnection, uRequestID);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteRequestFromView(Request request) {
+        try {
+            Connector.deleteRequestFromView(instanceConnection, request.getuRequestID());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteRequestFromView(int uRequestID) {
+        try {
+            Connector.deleteRequestFromView(instanceConnection, uRequestID);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isRequestViewed(IEmployee employee, Request request) {
+        try {
+            return Connector.selectRequestViewEmployee(instanceConnection, request.getuRequestID(), employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean isRequestViewed(IEmployee employee, int uRequestID) {
+        try {
+            return Connector.selectRequestViewEmployee(instanceConnection, uRequestID, employee.getUsername());
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public void setRequestViewed(IEmployee employee, Request request, boolean isViewed) {
+        try {
+            Connector.updateRequestViewTable(instanceConnection, request.getuRequestID(), employee.getUsername(), isViewed);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setRequestViewed(IEmployee employee, int uRequestID, boolean isViewed) {
+        try {
+            Connector.updateRequestViewTable(instanceConnection, uRequestID, employee.getUsername(), isViewed);
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+    }*/
 }

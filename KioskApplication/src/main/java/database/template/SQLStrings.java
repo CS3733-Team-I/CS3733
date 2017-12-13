@@ -26,6 +26,33 @@ public class SQLStrings {
             "    REFERENCES t_nodes (nodeID) ON DELETE CASCADE\n" +
             ")";
 
+    /*public static final String CREATE_REQUEST_VIEW_TABLE = "CREATE TABLE t_requestView (\n" +
+            "    uRequestID INT NOT NULL CONSTRAINT t_requestView_pk PRIMARY KEY\n" +
+            ")";
+
+    public static final String ADD_COLUMN_REQUEST_VIEW = "ALTER TABLE t_requestView" +
+            "    ADD COLUMN ? BOOLEAN" +
+            "    NOT NULL" +
+            "    WITH DEFAULT FALSE";
+
+    public static final String DELETE_EMPLOYEE_VIEW = "ALTER TABLE t_requestView" +
+            "    DROP COLUMN ? CASCADE";
+
+    public static final String INSERT_REQUEST_VIEW = "INSERT INTO t_requestView" +
+            "    (uRequestID) VALUES (?)";
+
+    public static final String SELECT_REQUEST_UID = "SELECT uRequestID FROM ? WHERE requestID=?";
+
+    public static final String UPDATE_REQUEST_VIEW = "UPDATE t_requestView set ?=? WHERE uRequestID=?";
+
+    public static final String SELECT_REQUEST_VIEW_EMPLOYEE = "SELECT ? FROM t_requestView WHERE uRequestID=?";
+
+    public static final String SELECT_REQUEST_VIEW = "SELECT * FROM t_requestView WHERE uRequestID=?";
+
+    public static final String DELETE_REQUEST_VIEW = "DELETE FROM t_requestView WHERE uRequestID=?";*/
+
+
+
     public static final String CREATE_EDGE_UINDEX =  "CREATE UNIQUE INDEX t_edges_id_uindex ON t_edges (id)";
 
     public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?)";
@@ -61,7 +88,8 @@ public class SQLStrings {
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
             " completedTime TIMESTAMP NOT NULL," +
-            " status INT NOT NULL)";
+            " status INT NOT NULL" +
+            ")";
 
     // Interpreter
     public static final String INTERPRETER_INSERT = "insert into t_interpreter values(?, ?, ?, ?, ?,";

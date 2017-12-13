@@ -113,3 +113,7 @@ KioskApplication/\.idea/
 KioskApplication/softEngDatabase/
 
 KioskApplication/softEngTestDatabase/
+
+KioskApplication/credentials/
+
+KioskApplication/TeamB_APIDB/

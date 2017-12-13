@@ -627,7 +627,7 @@ public class MapBuilderController extends ScreenController {
         //System.out.println(selectedNode.get().getNodeID());
         if(nodeType == NodeType.ELEV) {
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toLiteralString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
         } else {
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
@@ -637,7 +637,7 @@ public class MapBuilderController extends ScreenController {
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
                 System.out.println(convertFloor(nodeFloor.toLiteralString()));
                 System.out.println(nodeTeamAssigned.name());
-                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toLiteralString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
 
             }
         }

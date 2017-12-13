@@ -298,7 +298,7 @@ public class MainWindowController {
         }
         else {
             countdown--;
-            System.out.println(countdown);
+            //System.out.println(countdown);
         }
     }
 
