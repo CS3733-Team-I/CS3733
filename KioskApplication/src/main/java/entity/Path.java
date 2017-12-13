@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -202,6 +203,8 @@ public class Path {
      * @return a list of nodes containing in a path segment
      */
     public LinkedList<Node> getNodesInSegment(Node startNode) {
+        if (startNode.getUniqueID() == this.waypoints.getLast().getUniqueID()) return new LinkedList<>(Arrays.asList(startNode));
+
         for (LinkedList<Edge> segment : edges) {
             if (segment.getFirst().hasNode(startNode)) {
                 return getNodesForSegment(segment, startNode);

@@ -87,9 +87,33 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void editNode(Node n) throws DatabaseException {
+        editNodeByUK(n);
+    }
+
+    public void updateNodewithID(Node n)throws DatabaseException{
+        dbController.updateNodeWithID(n);
+    }
+
+    @Override
+    public void editNodeByUK(Node n)throws DatabaseException{
+        Node originalNode = getNodeByID(n.getUniqueID());
+        List<Edge> originalEdges = getEdges(originalNode);
+
+        for (Edge edge : originalEdges)
+            removeEdge(edge);
+
         NodeFloor f = n.getFloor();
         if(floorExists(f)) {
-            floors.get(f).editNode(n);
+            floors.get(f).editNodeByUK(n);
+        }
+
+        for (Edge edge : originalEdges) {
+            if (edge.getNode1ID().equals(originalNode.getNodeID()))
+                edge.setNode1ID(n.getNodeID());
+            else if (edge.getNode2ID().equals(originalNode.getNodeID()))
+                edge.setNode2ID(n.getNodeID());
+
+            addEdge(edge);
         }
     }
 
@@ -122,6 +146,17 @@ public class MapEntity implements IMapEntity {
         }
         //If you reach this point, something's gone wrong.
         return thisNode;
+    }
+
+    public Node getNodeByID(int Id){
+        try {
+            return dbController.getNodeByUniqueID(Id);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -283,6 +318,7 @@ public class MapEntity implements IMapEntity {
         }
     }
 
+    // TODO use unique ids
     public ArrayList<Edge> getEdges(Node n) {
         ArrayList<Edge> returnList = new ArrayList<>();
 

@@ -53,6 +53,19 @@ public class MapFloorEntity implements IMapEntity {
     }
 
     @Override
+    public void editNodeByUK(Node node) throws DatabaseException {
+        dbController.updateNodeWithID(node);
+
+        for (Node storedNode : nodes.values()) {
+            if (storedNode.getUniqueID() == node.getUniqueID()) {
+                nodes.remove(storedNode.getNodeID());
+                nodes.put(node.getNodeID(), node);
+                return;
+            }
+        }
+    }
+
+    @Override
     public Node getNode(String s) throws NotFoundException{
         // Load node from local data
 

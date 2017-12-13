@@ -148,6 +148,28 @@ public class Connector {
         return node;
     }
 
+    public static Node selectNodeByUniqueID(Connection conn, int uniqueID) throws SQLException, NotFoundException{
+        Node node = null;
+        String sql = NODE_SELECT_UNIQUEID;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, uniqueID);
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            node = new Node(
+                    rs.getString("nodeID"),
+                    rs.getInt("xcoord"),
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
+            node.setUniqueID(uniqueID);
+        }
+        return node;
+    }
+
     public static boolean deleteNode(Connection conn, Node node) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(SQLStrings.NODE_DELETE);
         pstmt.setString(1, node.getNodeID());

@@ -149,7 +149,7 @@ public class SystemSettings extends Observable {
         return kioskLocationProperty.get();
     }
 
-    public SimpleObjectProperty<Node> kioskLocationPropertyProperty() {
+    public SimpleObjectProperty<Node> kioskLocationProperty() {
         return kioskLocationProperty;
     }
 

@@ -63,6 +63,15 @@ public class DatabaseController {
         }
     }
 
+    public Node getNodeByUniqueID(int uniqueID) throws DatabaseException, NotFoundException{
+        try{
+            return Connector.selectNodeByUniqueID(instanceConnection, uniqueID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
+        }
+    }
+
     public ArrayList<Node> getAllNodes() throws DatabaseException {
         try{
             return Connector.selectAllNodes(instanceConnection);
@@ -153,15 +162,17 @@ public class DatabaseController {
         try {
             return Connector.updateNodeWithID(instanceConnection, node);
         } catch (SQLException e) {
-            DatabaseExceptionType type;
+            /*DatabaseExceptionType type;
             if (e.getSQLState() != "23505") {
                 type = DatabaseExceptionType.ID_ALREADY_EXISTS;
             } else {
                 e.printStackTrace();
                 type = DatabaseExceptionType.MISC_ERROR;
             }
-            throw new DatabaseNodeException(node, type);
+            throw new DatabaseNodeException(node, type);*/
+            e.printStackTrace();
         }
+        return 0;
     }
 
     public  Edge getEdge(String edgeID) throws DatabaseException {
