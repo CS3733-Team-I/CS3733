@@ -294,7 +294,7 @@ public class PathfindingSidebarController extends ScreenController {
         }
 
         if (currentWaypoints.size() >= 2) {
-            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm(), getMapController().isWheelchairSet);
 
             try{
                 Path path = pathfinder.generatePath(new LinkedList<>(currentWaypoints));
@@ -574,7 +574,7 @@ public class PathfindingSidebarController extends ScreenController {
      */
     @FXML
     private void handleButtonAction(ActionEvent e) throws  PathfinderException {
-        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm(), getMapController().isWheelchairSet);
         Node node = new Node("");
         if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
             node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);
