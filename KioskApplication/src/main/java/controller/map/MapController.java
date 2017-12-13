@@ -90,6 +90,8 @@ public class MapController {
     @FXML private AnchorPane miniMapPane;
     private SystemSettings systemSettings;
 
+    @FXML private JFXDialogLayout aboutLayout;
+
     private MainWindowController parent = null;
 
     public MapController() {
@@ -134,6 +136,8 @@ public class MapController {
 
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
+
+        aboutLayout.setDisable(true);
 
         initializePopup();
 
@@ -825,13 +829,14 @@ public class MapController {
 
     @FXML
     private void onAboutAction(){
+
         JFXDialogLayout aboutDialogLayout = new JFXDialogLayout();
         aboutDialogLayout.setHeading(new Text("About"));
-        aboutDialogLayout.setBody(new Text("Team Members:                                                     \n" +
+        aboutDialogLayout.setBody(new Text("Team Members:\n" +
                 "Benjamin Gillette - Project Manager/ Scrum Master \n" +
                 "Jerish Brown - Lead Software Engineer         \n" +
                 "John Parrick  - Assistant Lead Software Engineer\n" +
-                "Ziheng (Leo) L - Assistant Lead Software Engineer\n" +
+                "Ziheng (Leo) Li - Assistant Lead Software Engineer\n" +
                 "James Taylor - Product Owner\n" +
                 "Michael Sidler - Test Engineer\n" +
                 "Mary Hatfalvi - Documentation Analyst\n" +
@@ -843,21 +848,29 @@ public class MapController {
                 "CS3733 Software Engineering, Prof. Wilson Wong, \n" +
                 "Team Coach - Akshit (Axe) Soota \n" +
                 "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"));
-        JFXDialog dialog = new JFXDialog(mapStackPane, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
-        dialog.setLayoutX(1000);
-        dialog.setLayoutY(500);
+        JFXDialog dialog = new JFXDialog(aboutLayout, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
+
         JFXButton btnodeDialog= new JFXButton("OK");
         btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                aboutLayout.setDisable(true);
                 dialog.close();
-                mapStackPane.getChildren().remove(dialog);
-                mapStackPane.getChildren().remove(aboutDialogLayout);
+                aboutButton.setStyle("-fx-background-color: #00589F");
             }
         });
         aboutDialogLayout.setActions(btnodeDialog);
 
-        dialog.show();
+        if(aboutLayout.isDisable()) {
+            aboutLayout.setDisable(false);
+            dialog.show();
+            aboutButton.setStyle("-fx-background-color: #039f00");
+        }
+        else {
+            aboutLayout.setDisable(true);
+            dialog.close();
+            aboutButton.setStyle("-fx-background-color: #00589F");
+        }
     }
 
     public void nodesConnected(String nodeID1, String nodeID2) {
