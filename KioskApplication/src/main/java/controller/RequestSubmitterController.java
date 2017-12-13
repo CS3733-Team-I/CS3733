@@ -22,6 +22,7 @@ import utility.FoodType;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.request.ITService;
 import utility.request.Language;
 import utility.request.RequestType;
 
@@ -54,6 +55,12 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private Tab janitorTab;
     @FXML private JFXTextField janLocationField;
     @FXML private JFXTextArea janNotesField;
+
+    /*it related*/
+    @FXML private Tab itTab;
+    @FXML private JFXTextField itLocationField;
+    @FXML private JFXComboBox<ITService> itServiceTypeSelector;
+    @FXML private JFXTextArea itNotesField;
 
     RequestType currentRequestType = RequestType.INTERPRETER;
 
@@ -143,6 +150,12 @@ public class RequestSubmitterController extends ScreenController {
 
                 janNotesField.clear();
                 janLocationField.clear();
+            } else if(newValue == itTab){
+                currentRequestType = RequestType.IT;
+
+                itLocationField.clear();
+                itServiceTypeSelector.setValue(null);
+                itNotesField.clear();
             }
             resetTimer();
         });
@@ -287,6 +300,13 @@ public class RequestSubmitterController extends ScreenController {
         menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
         menuTable.setShowRoot(false);
         menuTable.setEditable(true);
+
+        //IT setup
+        ObservableList<ITService> itServiceTypes = FXCollections.observableArrayList();
+        for(ITService itService:ITService.values()){
+            itServiceTypes.add(itService);
+        }
+        itServiceTypeSelector.setItems(itServiceTypes);
     }
 
     /**
@@ -307,6 +327,9 @@ public class RequestSubmitterController extends ScreenController {
                 break;
             case JANITOR:
                 addJanitorRequest();
+                break;
+            case IT:
+                addITRequest();
                 break;
         }
     }
@@ -330,6 +353,10 @@ public class RequestSubmitterController extends ScreenController {
 
         janLocationField.setText("");
         janNotesField.setText("");
+
+        itLocationField.setText("");
+        itServiceTypeSelector.setValue(null);
+        itNotesField.setText("");
     }
 
     /**
@@ -409,6 +436,11 @@ public class RequestSubmitterController extends ScreenController {
         clearButton();
     }
 
+    private void addITRequest(){
+        requestEntity.submitITRequest(itLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText(),itServiceTypeSelector.getValue());
+        clearButton();
+    }
+
     /**
      * Resets the timer in the MainWindowController
      */
@@ -443,6 +475,8 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 janLocationField.setText(n.getNodeID());
                 break;
+            case IT:
+                itLocationField.setText(n.getNodeID());
         }
     }
 
