@@ -23,7 +23,6 @@ public class SettingsController extends ScreenController {
 
     @FXML private JFXTabPane settingTabPane;
 
-    @FXML private Tab aboutTab;
     @FXML private Tab languageTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;
@@ -185,15 +184,15 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab);
+                settingTabPane.getTabs().addAll(languageTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
+                settingTabPane.getTabs().addAll(languageTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, languageTab, unitTab);
+                settingTabPane.getTabs().addAll(languageTab, unitTab);
                 break;
         }
     }

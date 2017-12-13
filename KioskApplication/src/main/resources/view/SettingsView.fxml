@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -20,19 +19,6 @@
    <children>
       <JFXTabPane id="tab-header-area" fx:id="settingTabPane" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="600.0" prefWidth="1080.0" side="LEFT" style="-fx-background-color: #F0F1EC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
-            <Tab fx:id="aboutTab" text="About">
-              <content>
-                <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Text layoutX="57.0" layoutY="39.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" strokeType="OUTSIDE" strokeWidth="0.0" text="About" wrappingWidth="88.13671875">
-                           <font>
-                              <Font size="28.0" />
-                           </font>
-                        </Text>
-                        <JFXTextArea editable="false" layoutX="57.0" layoutY="91.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="329.0" prefWidth="930.0" text="Team Members:                                                     &#10;Benjamin Gillette - Project Manager/ Scrum Master &#10;Jerish Brown - Lead Software Engineer         &#10;John Parrick  - Assistant Lead Software Engineer&#10;Ziheng (Leo) Li - Assistant Lead Software Engineer&#10;James Taylor - Product Owner&#10;Michael Sidler - Test Engineer&#10;Mary Hatfalvi - Documentation Analyst&#10;Henry Dunphy - Software Engineer&#10;Ryan Racine  - Software Engineer&#10;Da Xu - Software Engineer&#10;&#10;WPI Computer Science Department, &#10;CS3733 Software Engineering, Prof. Wilson Wong, &#10;Team Coach - Akshit (Axe) Soota &#10;We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.&#10;" />
-                     </children></AnchorPane>
-              </content>
-            </Tab>
             <Tab fx:id="languageTab" text="Language">
               <content>
                 <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
