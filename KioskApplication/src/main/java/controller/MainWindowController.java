@@ -41,13 +41,10 @@ public class MainWindowController {
     @FXML private AnchorPane contentWindow;
           private javafx.scene.Node contentNode;
           private LoginController loginController;
-        //  private HelpController helpController;
     @FXML private BorderPane loginPopup;
-  //  @FXML private BorderPane helpPopup;
           private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
-    @FXML private JFXButton HelpButton;
 
     @FXML protected JFXTabPane tabPane;
     @FXML private Tab tabMap;
@@ -55,6 +52,7 @@ public class MainWindowController {
     @FXML private Tab tabRS;
     @FXML private Tab tabRM;
     @FXML private Tab tabSettings;
+    @FXML private Tab tabHelp;
 
     private LoginEntity loginEntity;
     private SystemSettings systemSettings;
@@ -125,6 +123,10 @@ public class MainWindowController {
                     controller = new SettingsController(this, mapController);
                     break;
 
+                case HELP:
+                    controller = new HelpController(this, mapController);
+                    break;
+
                 default:
                     break;
             }
@@ -143,7 +145,7 @@ public class MainWindowController {
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
         tabSettings.setText(languageBundle.getString("my.setting"));
-        HelpButton.setText(languageBundle.getString("help"));
+        tabHelp.setText(languageBundle.getString("help"));
         // attaches observer to the systemSettings
 
         systemSettings.addObserver((o, arg) -> {
@@ -165,6 +167,7 @@ public class MainWindowController {
             tabRM.setText(languageBundle.getString("my.requestmanager"));
             tabRS.setText(languageBundle.getString("my.requestsubmit"));
             tabSettings.setText(languageBundle.getString("my.setting"));
+            tabHelp.setText(languageBundle.getString("help"));
         });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
@@ -184,6 +187,9 @@ public class MainWindowController {
                     break;
                 case "tabSettings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+                    break;
+                case "tabHelp":
+                    switchToScreen(ApplicationScreen.HELP);
                     break;
             }
         });
@@ -353,6 +359,7 @@ public class MainWindowController {
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
                 tabPane.getTabs().add(tabSettings);
+                tabPane.getTabs().add(tabHelp);
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
@@ -362,7 +369,7 @@ public class MainWindowController {
                 switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
-                tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
+                tabPane.getTabs().addAll(tabMap, tabRM, tabRS,tabHelp);
                 break;
 
             case SUPER_USER:
@@ -374,7 +381,7 @@ public class MainWindowController {
                 mapController.setEdgesVisible(true);
 
                 tabPane.getTabs().clear();
-                tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings,tabHelp);
                 break;
         }
     }
@@ -407,26 +414,6 @@ public class MainWindowController {
 
         this.currentScreen = screen;
     }
-
-    /**
-     * initalizes the help plan view
-     * @throws IOException
-     */
-  /*  private void initalizeHelpPopup() throws IOException{
-        helpController = new HelpController(this);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/HelpScreen.fxml"));
-        loader.setController(helpController);
-        javafx.scene.Node view = loader.load();
-
-        this.helpPopup = new BorderPane();
-        AnchorPane.setTopAnchor(helpPopup, 0.0);
-        AnchorPane.setLeftAnchor(helpPopup, 0.0);
-        AnchorPane.setBottomAnchor(helpPopup, 0.0);
-        AnchorPane.setRightAnchor(helpPopup, 0.0);
-        helpPopup.setRight(view);
-        //hides the popup
-        helpPopup.setVisible(false);
-    }*/
 
 
     /**
@@ -485,17 +472,6 @@ public class MainWindowController {
         }
     }
 
-    @FXML
-    public void helpButtonClicked() throws IOException{
- /*       //loginController.disableCancelButton(false);
-       this.helpPopup.setVisible(true);
-        this.switchButton.setDisable(true);
-        this.tabPane.setDisable(true);
-        this.tabMap.setDisable(true);
-        this.contentNode.setDisable(true);
-        this.mapView.setDisable(true);
-*/
-    }
 
     /**
      * Sets default Zoom
