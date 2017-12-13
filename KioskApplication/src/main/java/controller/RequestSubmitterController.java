@@ -65,6 +65,7 @@ public class RequestSubmitterController extends ScreenController {
     /*transport related*/
     @FXML private Tab transportTab;
     @FXML private JFXTextField startNode, endNode;
+    @FXML private Label transportErrorLabel;
 
     /*it related*/
     @FXML private Tab itTab;
@@ -377,15 +378,19 @@ public class RequestSubmitterController extends ScreenController {
             case INTERNAL_TRANSPORTATION:
                 System.out.println("Trying to start");
                 if(!startNode.getText().equals("") && !endNode.getText().equals("")) {
+                    transportErrorLabel.setVisible(false);
                     try {
                         APIApp.run(50, 50, 500, 500,
                                 "/css/application.css", endNode.getText(),startNode.getText());
-                        System.out.println("Starting");
                     } catch (APIApp.ServiceException e) {
-                        System.out.println("Whoops");
                         e.printStackTrace();
                     }
                 }
+                else if(startNode.getText().equals("")||endNode.getText().equals("")) {
+                    transportErrorLabel.setText("Locations Required");
+                    transportErrorLabel.setVisible(true);
+                }
+                break;
             case JANITOR:
                 addJanitorRequest();
                 break;
@@ -693,9 +698,9 @@ public class RequestSubmitterController extends ScreenController {
                 break;
             case INTERNAL_TRANSPORTATION:
                 if(startNode.getText().equals("")){
-                    startNode.setText(n.getNodeID());
+                    startNode.setText(n.getLongName());
                 } else {
-                    endNode.setText(n.getNodeID());
+                    endNode.setText(n.getLongName());
                 }
         }
     }

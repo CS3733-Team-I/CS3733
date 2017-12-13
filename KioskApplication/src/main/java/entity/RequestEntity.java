@@ -269,17 +269,17 @@ public class RequestEntity {
         RequestType requestType = checkRequestType(requestID);
 //        uRequestID--;
         if(requestType.equals(RequestType.INTERPRETER)){
-            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),janitorRequests.get(requestID));
+            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),interpreterRequests.get(requestID));
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
         }
         else if(requestType.equals(RequestType.SECURITY)){
-            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),janitorRequests.get(requestID));
+            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),securityRequests.get(requestID));
             securityRequests.remove(requestID);
             dbController.deleteSecurityRequest(requestID);
         }
         else if(requestType.equals(RequestType.FOOD)){
-            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),janitorRequests.get(requestID));
+            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),foodRequests.get(requestID));
             foodRequests.remove(requestID);
             dbController.deleteFoodRequest(requestID);
         }
@@ -289,10 +289,12 @@ public class RequestEntity {
             dbController.deleteJanitorRequest(requestID);
         }
         else if(requestType.equals(RequestType.IT)){
+            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),itRequests.get(requestID));
             itRequests.remove(requestID);
             dbController.deleteITRequest(requestID);
         }
         else if(requestType.equals(RequestType.MAINTENANCE)){
+            activityLogger.logRequestDelete(LoginEntity.getInstance().getCurrentLogin(),maintenanceRequests.get(requestID));
             maintenanceRequests.remove(requestID);
             dbController.deleteMaintenanceRequest(requestID);
         }
@@ -346,14 +348,18 @@ public class RequestEntity {
             activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(),newJR,oldJR);
         }
         else if(requestType.equals(RequestType.IT)){
-            ITRequest itRequest = itRequests.get(requestID);
-            itRequest.setInProgress(completerID);
-            dbController.updateITRequest(itRequest);
+            ITRequest oldITR = itRequests.get(requestID);
+            ITRequest newITR = oldITR;
+            newITR.setInProgress(completerID);
+            dbController.updateITRequest(newITR);
+            activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(),newITR,oldITR);
         }
         else if (requestType.equals(RequestType.MAINTENANCE)) {
-            MaintenanceRequest mtRequest = maintenanceRequests.get(requestID);
-            mtRequest.setInProgress(completerID);
-            dbController.updateMaintenanceRequest(mtRequest);
+            MaintenanceRequest oldMR = maintenanceRequests.get(requestID);
+            MaintenanceRequest newMR = oldMR;
+            newMR.setInProgress(completerID);
+            dbController.updateMaintenanceRequest(newMR);
+            activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(),newMR,oldMR);
         }
 //        else if(requestType.equals(RequestType"Ins")){
 //            System.out.println("In Progress InsideTransportationRequest");
@@ -402,17 +408,19 @@ public class RequestEntity {
             dbController.updateJanitorRequest(newJR);
             activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(),newJR,oldJR);
         }
-        else if(requestType.equals(RequestType.IT)) {
-            ITRequest itRequest = itRequests.get(requestID);
-            itRequest.setComplete();
-            itRequests.replace(requestID,itRequest);
-            dbController.updateITRequest(itRequest);
+        else if(requestType.equals(RequestType.IT)){
+            ITRequest oldITR = itRequests.get(requestID);
+            ITRequest newITR = oldITR;
+            newITR.setComplete();
+            dbController.updateITRequest(newITR);
+            activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(),newITR,oldITR);
         }
-        else if(requestType.equals(RequestType.MAINTENANCE)){
-            MaintenanceRequest mtRequest = maintenanceRequests.get(requestID);
-            mtRequest.setComplete();
-            maintenanceRequests.replace(requestID,mtRequest);
-            dbController.updateMaintenanceRequest(mtRequest);
+        else if (requestType.equals(RequestType.MAINTENANCE)) {
+            MaintenanceRequest oldMR = maintenanceRequests.get(requestID);
+            MaintenanceRequest newMR = oldMR;
+            newMR.setComplete();
+            dbController.updateMaintenanceRequest(newMR);
+            activityLogger.logRequestChange(LoginEntity.getInstance().getCurrentLogin(), newMR, oldMR);
         }
 //        else if(requestType.equals(RequestType"Ins"))
 //            System.out.println("Complete InsideTransportationRequest");
@@ -816,6 +824,7 @@ public class RequestEntity {
 
         maintenanceRequests.put(rID, mtRequest);
         dbController.addMaintenanceRequest(mtRequest);
+        activityLogger.logRequestAdd(LoginEntity.getInstance().getCurrentLogin(),mtRequest);
         return rID;
     }
 
@@ -870,6 +879,7 @@ public class RequestEntity {
 
         itRequests.put(rID, itRequest);
         dbController.addITRequest(itRequest);
+        activityLogger.logRequestAdd(LoginEntity.getInstance().getCurrentLogin(),itRequest);
         return rID;
     }
 

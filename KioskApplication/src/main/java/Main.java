@@ -112,7 +112,7 @@ public class Main extends Application {
                 if (MapEntity.getInstance().getAllNodes().size() == 0)
                     CsvFileUtil.getInstance().readAllCsvs();
 
-                SystemSettings.getInstance();
+                SystemSettings.getInstance().updateDistance();
                 EmailSender.init();
 
                 MainWindowController controller = new MainWindowController();
