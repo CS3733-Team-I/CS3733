@@ -3,6 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
+import database.objects.Employee;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,7 @@ public class MapEntity implements IMapEntity {
     private HashMap<Node, Integer> distanceFromKiosk;
 
     private DatabaseController dbController;
+    private ActivityLogger activityLogger;
 
     private static class MapEntitySingleton {
         private static final MapEntity _instance = new MapEntity();
@@ -30,6 +32,7 @@ public class MapEntity implements IMapEntity {
     private MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
+        activityLogger = ActivityLogger.getInstance();
 
         dbController = DatabaseController.getInstance();
         distanceFromKiosk = new HashMap<Node, Integer>();
@@ -245,11 +248,17 @@ public class MapEntity implements IMapEntity {
     public void addEdge(Edge e) throws DatabaseException {
         dbController.addEdge(e);
         edges.put(e.getEdgeID(), e);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeAdd(LoginEntity.getInstance().getCurrentLogin(),e);
+        }
     }
 
     public void editEdge(Edge e) throws DatabaseException {
         dbController.updateEdge(e);
         edges.put(e.getEdgeID(), e);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeUpdate(LoginEntity.getInstance().getCurrentLogin(),e);
+        }
     }
 
     public Edge getEdge(String s) throws DatabaseException {
@@ -269,6 +278,9 @@ public class MapEntity implements IMapEntity {
     public void removeEdge(Edge edge) throws DatabaseException {
         dbController.removeEdge(edge);
         edges.remove(edge.getEdgeID());
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeDelete(LoginEntity.getInstance().getCurrentLogin(),edge);
+        }
     }
 
     public ArrayList<Edge> getEdges(Node n) {

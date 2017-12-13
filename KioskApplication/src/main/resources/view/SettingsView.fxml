@@ -22,7 +22,7 @@
          <tabs>
             <Tab fx:id="aboutTab" text="About">
               <content>
-                <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Text layoutX="57.0" layoutY="39.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" strokeType="OUTSIDE" strokeWidth="0.0" text="About" wrappingWidth="88.13671875">
                            <font>
@@ -57,7 +57,7 @@
             </Tab>
             <Tab fx:id="unitTab" text="Unit">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="14.0" layoutY="14.0" prefHeight="48.0" prefWidth="199.0" text="Unit">
                            <font>
@@ -66,12 +66,12 @@
                         </Label>
                         <VBox layoutX="14.0" layoutY="62.0" prefHeight="59.0" prefWidth="104.0">
                            <children>
-                              <JFXRadioButton fx:id="rbMetric" onAction="#onUnitSelected" text="Metric">
+                              <JFXRadioButton fx:id="rbMetric" onAction="#onUnitSelected" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Metric">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="rbEnglish" onAction="#onUnitSelected" text="English">
+                              <JFXRadioButton fx:id="rbEnglish" onAction="#onUnitSelected" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="English">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -88,12 +88,12 @@
                         </Label>
                         <VBox layoutX="14.0" layoutY="233.0" prefHeight="59.0" prefWidth="104.0">
                            <children>
-                              <JFXRadioButton fx:id="rbArabic" onAction="#onNumberSystemSelected" text="Arabic">
+                              <JFXRadioButton fx:id="rbArabic" onAction="#onNumberSystemSelected" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Arabic">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </JFXRadioButton>
-                              <JFXRadioButton fx:id="rbElbonian" onAction="#onNumberSystemSelected" text="Elbonian">
+                              <JFXRadioButton fx:id="rbElbonian" onAction="#onNumberSystemSelected" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Elbonian">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -109,7 +109,7 @@
             </Tab>
             <Tab fx:id="pathfindingTab" text="Pathfinding">
                <content>
-                  <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="1085.0">
+                  <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="1085.0">
                      <children>
                         <Label fx:id="errorMsg" alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="276.0" prefHeight="47.0" prefWidth="154.0" textAlignment="CENTER" textFill="#da0b0b" textOverrun="CLIP" wrapText="true" />
                         <Label fx:id="SALabel" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="217.0" text="Search Algorithm" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
@@ -143,7 +143,7 @@
                               <JFXRadioButton fx:id="bestFirstButton" onAction="#onSearchAlgorithmSelected" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="57.0" prefWidth="105.0" text="Best-first Search" />
                            </children>
                         </VBox>
-                        <JFXTextField fx:id="beamWidth" layoutX="289.0" layoutY="235.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" />
+                        <JFXTextField fx:id="beamWidth" layoutX="289.0" layoutY="235.0" onKeyPressed="#resetTimer" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" />
                         <Label layoutX="289.0" layoutY="210.0" prefHeight="17.0" prefWidth="135.0" text="Select a Beam width" />
                      </children>
                   </AnchorPane>
@@ -156,7 +156,7 @@
             </Tab>
             <Tab fx:id="databaseTab" text="Database">
               <content>
-                <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <VBox layoutX="428.0" layoutY="280.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                            <children>
@@ -197,6 +197,11 @@
                         <Button layoutX="237.0" layoutY="225.0" mnemonicParsing="false" onAction="#saveGeneral" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" text="Save" />
                      </children>
                   </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="logTab" text="Logs">
+               <content>
+                  <AnchorPane fx:id="logPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="0.0" minWidth="0.0" onMouseClicked="#resetTimer" onMouseMoved="#resetTimer" prefHeight="800.0" prefWidth="800.0" />
                </content>
             </Tab>
          </tabs>

@@ -20,7 +20,7 @@
          <left>
             <AnchorPane fx:id="sideBar" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefWidth="150.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="685.0" prefWidth="150.0" style="-fx-background-color: #ddded0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="685.0" prefWidth="150.0" style="-fx-background-color: #ddded0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label fx:id="filterLabel" focusTraversable="false" text="Filter By:" AnchorPane.leftAnchor="41.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="25.0">
                            <font>
@@ -53,20 +53,20 @@
                       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <JFXTabPane fx:id="listTabPane" maxHeight="1.7976931348623157E308" prefHeight="685.0" side="BOTTOM" GridPane.rowIndex="1">
+                        <JFXTabPane fx:id="listTabPane" maxHeight="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="685.0" side="BOTTOM" GridPane.rowIndex="1">
                            <tabs>
                               <Tab fx:id="newTab">
                                 <content>
-                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <JFXListView fx:id="newRequestList" maxHeight="1.7976931348623157E308" prefHeight="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <JFXListView fx:id="newRequestList" maxHeight="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </Tab>
                               <Tab fx:id="progressTab">
                                 <content>
-                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                                        <children>
                                           <JFXListView fx:id="activeRequests" maxHeight="1.7976931348623157E308" onMouseClicked="#displayInfo" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="650.0" styleClass="managerListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
@@ -75,16 +75,16 @@
                               </Tab>
                               <Tab fx:id="doneTab">
                                 <content>
-                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <JFXListView fx:id="doneRequestList" maxHeight="1.7976931348623157E308" prefHeight="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <JFXListView fx:id="doneRequestList" maxHeight="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </Tab>
                            </tabs>
                         </JFXTabPane>
-                        <AnchorPane fx:id="searchAnchor" style="-fx-background-color: white;" />
+                        <AnchorPane fx:id="searchAnchor" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" style="-fx-background-color: white;" />
                      </children>
                   </GridPane>
                </children>
