@@ -117,7 +117,7 @@ public class EmployeeSettingsController {
         //initialize office search
         ArrayList<ISearchEntity> searchNode = new ArrayList<>();
         for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
-            if(targetNode.getNodeType() != NodeType.HALL) {
+            if(targetNode.getNodeType() == NodeType.DEPT) {
                 searchNode.add(new SearchNode(targetNode));
             }
         }
