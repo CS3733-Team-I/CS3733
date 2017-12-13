@@ -210,6 +210,7 @@ public class PathWaypointView extends AnchorPane {
         vbox.getChildren().add(triView);
         anchorPane.getChildren().add(vbox);
         hbox.setStyle("-fx-border-color: black; -fx-border-width: 2px");
+        vbox.setOnMouseMoved(ev -> parent.resetTimer());
 
         // Show popup
         System.out.println("Show Popup");

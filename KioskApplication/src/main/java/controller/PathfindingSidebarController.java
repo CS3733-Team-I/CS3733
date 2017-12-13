@@ -520,6 +520,9 @@ public class PathfindingSidebarController extends ScreenController {
         addWaypointIconView.setFitHeight(24);
         addWaypointIconView.setCursor(Cursor.HAND);
 
+        addWaypointIconView.setOnMouseMoved(e -> resetTimer());
+        addWaypointBox.setOnMouseMoved(e -> resetTimer());
+
         addWaypointBox.getChildren().addAll(addWaypointIconView, searchView);
 
         // Set margins
