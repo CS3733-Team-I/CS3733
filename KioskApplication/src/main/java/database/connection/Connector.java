@@ -1,11 +1,13 @@
 package database.connection;
 
 import database.objects.*;
+import database.objects.requests.*;
 import database.template.SQLStrings;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 import utility.node.TeamAssigned;
+import utility.request.ITService;
 import utility.request.Language;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
@@ -140,6 +142,28 @@ public class Connector {
         }
         if(node == null)
             throw new NotFoundException("Node not found.");
+        return node;
+    }
+
+    public static Node selectNodeByUniqueID(Connection conn, int uniqueID) throws SQLException, NotFoundException{
+        Node node = null;
+        String sql = NODE_SELECT_UNIQUEID;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, uniqueID);
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            node = new Node(
+                    rs.getString("nodeID"),
+                    rs.getInt("xcoord"),
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
+            node.setUniqueID(uniqueID);
+        }
         return node;
     }
 
@@ -406,7 +430,7 @@ public class Connector {
     public static int insertFood(Connection conn, FoodRequest fR) throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(FOOD_INSERT);
         pstmt.setString(1, fR.getRequestID());
-        pstmt.setString(2,fR.getDestinationID());
+        pstmt.setString(2,fR.getRestaurantID());
         pstmt.setTimestamp(3, fR.getDeliveryDate());
         pstmt.setString(4, fR.getNodeID());
         pstmt.setInt(5, fR.getAssignerID());
@@ -423,7 +447,7 @@ public class Connector {
     public static int updateFood(Connection conn, FoodRequest fR) throws SQLException{
         String sql = FOOD_UPDATE;
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1,fR.getDestinationID());
+        pstmt.setString(1,fR.getRestaurantID());
         pstmt.setTimestamp(2, fR.getDeliveryDate());
         pstmt.setString(3, fR.getNodeID());
         pstmt.setInt(4, fR.getAssignerID());
@@ -501,6 +525,308 @@ public class Connector {
         return foodRequests;
     }
 
+    /**
+     * for inserting Janitor requests into the database
+     * @param conn the connection to the database
+     * @param jR the JanitorRequest
+     * @return
+     * @throws SQLException
+     */
+    public static int insertJanitor(Connection conn, JanitorRequest jR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_INSERT);
+        pstmt.setString(1, jR.getRequestID());
+        pstmt.setString(2, jR.getNodeID());
+        pstmt.setInt(3, jR.getAssignerID());
+        pstmt.setInt(4, jR.getCompleterID());
+        pstmt.setString(5, jR.getNote());
+        pstmt.setTimestamp(6, jR.getSubmittedTime());
+        pstmt.setTimestamp(7, jR.getStartedTime());
+        pstmt.setTimestamp(8, jR.getCompletedTime());
+        pstmt.setInt(9, jR.getStatus().ordinal());
+        //pstmt.setInt(10, jR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    /**
+     * For updating a stored JanitorRequest
+     * @param conn
+     * @param jR the updated request
+     * @return
+     * @throws SQLException
+     */
+    public static int updateJanitor(Connection conn, JanitorRequest jR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_UPDATE+REQUEST_UPDATE);
+        pstmt.setString(1, jR.getNodeID());
+        pstmt.setInt(2, jR.getAssignerID());
+        pstmt.setInt(3, jR.getCompleterID());
+        pstmt.setString(4, jR.getNote());
+        pstmt.setTimestamp(5, jR.getSubmittedTime());
+        pstmt.setTimestamp(6, jR.getStartedTime());
+        pstmt.setTimestamp(7, jR.getCompletedTime());
+        pstmt.setInt(8, jR.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(9, jR.getRequestID());
+        //pstmt.setInt(10, jR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    /**
+     * for retrieving JanitorRequests from the database
+     * @param conn
+     * @param requestID
+     * @return
+     * @throws SQLException
+     */
+    public static JanitorRequest selectJanitor(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT);
+        pstmt.setString(1, requestID);
+        JanitorRequest janitorRequest = null;
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            janitorRequest = new JanitorRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
+        }
+        return janitorRequest;
+    }
+
+    /**
+     * Returns true if the request has been found and deleted
+     * @param conn
+     * @param requestID
+     * @return
+     * @throws SQLException
+     */
+    public static boolean deleteJanitor(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    /**
+     * For retrieving all JanitorRequests from the database
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+    public static LinkedList<JanitorRequest> selectAllJanitor(Connection conn) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT_ALL);
+        ResultSet rs = pstmt.executeQuery();
+        LinkedList<JanitorRequest> janitorRequests = new LinkedList<>();
+        while(rs.next()) {
+            JanitorRequest janitorRequest = null;
+            janitorRequest = new JanitorRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
+            janitorRequests.add(janitorRequest);
+        }
+        return janitorRequests;
+    }
+
+    public static int insertIT(Connection conn, ITRequest itRequest) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_INSERT);
+        pstmt.setString(1, itRequest.getRequestID());
+        pstmt.setInt(2,itRequest.getItService().ordinal());
+        pstmt.setString(3, itRequest.getNodeID());
+        pstmt.setInt(4, itRequest.getAssignerID());
+        pstmt.setInt(5, itRequest.getCompleterID());
+        pstmt.setString(6, itRequest.getNote());
+        pstmt.setTimestamp(7, itRequest.getSubmittedTime());
+        pstmt.setTimestamp(8, itRequest.getStartedTime());
+        pstmt.setTimestamp(9, itRequest.getCompletedTime());
+        pstmt.setInt(10, itRequest.getStatus().ordinal());
+        //pstmt.setInt(11, itRequest.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateIT(Connection conn, ITRequest itRequest) throws SQLException {
+        String sql = IT_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,itRequest.getItService().ordinal());
+        pstmt.setString(2, itRequest.getNodeID());
+        pstmt.setInt(3, itRequest.getAssignerID());
+        pstmt.setInt(4, itRequest.getCompleterID());
+        pstmt.setString(5, itRequest.getNote());
+        pstmt.setTimestamp(6, itRequest.getSubmittedTime());
+        pstmt.setTimestamp(7, itRequest.getStartedTime());
+        pstmt.setTimestamp(8, itRequest.getCompletedTime());
+        pstmt.setInt(9, itRequest.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(10, itRequest.getRequestID());
+        //pstmt.setInt(11, itRequest.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static ITRequest selectIT(Connection conn, String requestID) throws SQLException {
+        String sql = IT_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        ITRequest itRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            itRequest = new ITRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    ITService.values()[rs.getInt("itService")]
+                    //rs.getInt("uRequestID")
+            );
+        }
+        return itRequest;
+    }
+
+    public static boolean deleteIT(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<ITRequest> selectAllIT(Connection conn) throws SQLException {
+        String sql = IT_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<ITRequest> itRequests = new LinkedList<>();
+        while(rs.next()) {
+            ITRequest itRequest = null;
+            itRequest = new ITRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    ITService.values()[rs.getInt("itService")]
+                    //rs.getInt("uRequestID")
+            );
+
+            itRequests.add(itRequest);
+        }
+        return itRequests;
+    }
+
+
+    public static int insertMT(Connection conn, MaintenanceRequest mtRequest) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(MT_INSERT+REQUEST_INSERT);
+        pstmt.setString(1, mtRequest.getRequestID());
+        pstmt.setInt(2,mtRequest.getPriority());
+        pstmt.setString(3, mtRequest.getNodeID());
+        pstmt.setInt(4, mtRequest.getAssignerID());
+        pstmt.setInt(5, mtRequest.getCompleterID());
+        pstmt.setString(6, mtRequest.getNote());
+        pstmt.setTimestamp(7, mtRequest.getSubmittedTime());
+        pstmt.setTimestamp(8, mtRequest.getStartedTime());
+        pstmt.setTimestamp(9, mtRequest.getCompletedTime());
+        pstmt.setInt(10, mtRequest.getStatus().ordinal());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateMT(Connection conn, MaintenanceRequest mtRequest) throws SQLException {
+        String sql = MT_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, mtRequest.getPriority());
+        pstmt.setString(2, mtRequest.getNodeID());
+        pstmt.setInt(3, mtRequest.getAssignerID());
+        pstmt.setInt(4, mtRequest.getCompleterID());
+        pstmt.setString(5, mtRequest.getNote());
+        pstmt.setTimestamp(6, mtRequest.getSubmittedTime());
+        pstmt.setTimestamp(7, mtRequest.getStartedTime());
+        pstmt.setTimestamp(8, mtRequest.getCompletedTime());
+        pstmt.setInt(9, mtRequest.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(10, mtRequest.getRequestID());
+        //pstmt.setInt(11, sR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static MaintenanceRequest selectMT(Connection conn, String requestID) throws SQLException {
+        String sql = MT_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        MaintenanceRequest maintenanceRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            //for completed InterpreterRequests
+            maintenanceRequest = new MaintenanceRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority")//,
+                    //rs.getInt("uRequestID")
+            );
+        }
+        return maintenanceRequest;
+    }
+
+    public static boolean deleteMT(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(MT_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<MaintenanceRequest> selectAllMT(Connection conn) throws SQLException {
+        String sql = MT_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<MaintenanceRequest> maintenanceRequests = new LinkedList<>();
+        while(rs.next()) {
+            MaintenanceRequest maintenanceRequest = null;
+            //for completed SecurityRequests
+            maintenanceRequest = new MaintenanceRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    rs.getInt("priority")//,
+                    //rs.getInt("uRequestID")
+            );
+
+            maintenanceRequests.add(maintenanceRequest);
+        }
+        return maintenanceRequests;
+    }
+
     /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
         String sql = SELECT_REQUEST_UID;
 
@@ -520,9 +846,8 @@ public class Connector {
                 table="";
                 break;
             case JANITOR:
-                table="";
+                table="t_janitor";
                 break;
-
             default:
                 table="";
         }
@@ -548,9 +873,14 @@ public class Connector {
             return RequestType.FOOD;
         } else if (requestType.equals("Jan")) {
             return RequestType.JANITOR;
+        }else if(requestType.equals("Man")) {
+            return RequestType.MAINTENANCE;
+        }else if(requestType.equals("ITT")){
+            return RequestType.IT;
             //} else if (requestType.equals("Ins")) {
             //} else if (requestType.equals("Out")) {
-        } else {
+        }
+        else {
             System.out.println("Invalid requestID");
             return null;
         }

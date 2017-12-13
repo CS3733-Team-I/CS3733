@@ -86,9 +86,7 @@ public class PathWaypointView extends AnchorPane {
         //Kiosk init
         kiosk = SystemSettings.getInstance().getKioskLocation();
         kioskLocationView = getYouAreHereIcon(kiosk);
-        if (getChildren().contains(kioskLocationView)) {
-            this.getChildren().remove(kioskLocationView);
-        }
+
         if(kiosk.getFloor() == parent.getCurrentFloor()){
             this.getChildren().add(kioskLocationView);
         }
@@ -114,6 +112,11 @@ public class PathWaypointView extends AnchorPane {
                         WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
                         this.wayPointViewsMap.remove(removedWaypoint);
                         this.wayPointView.getChildren().remove(removedView);
+
+                        int index = 0;
+                        for (Node node : waypointList) {
+                            if(wayPointViewsMap.containsKey(node)) wayPointViewsMap.get(node).setWaypointCount(index++);
+                        }
                     }
                 }
                 if(listener.wasAdded()) {
@@ -131,8 +134,7 @@ public class PathWaypointView extends AnchorPane {
         SystemSettings.getInstance().kioskLocationProperty().addListener((obj, oldValue, newValue) -> {
             if (newValue == null) return;
 
-            ImageView youarehereView = getYouAreHereIcon(newValue);
-            kioskLocationView = youarehereView;
+            kioskLocationView = getYouAreHereIcon(newValue);
             kiosk = newValue;
 
             getChildren().clear();
@@ -155,32 +157,6 @@ public class PathWaypointView extends AnchorPane {
 
         youarehereView.setLayoutX(node.getXcoord() - (youarehereIcon.getWidth() / 2));
         youarehereView.setLayoutY(node.getYcoord() - (youarehereIcon.getHeight() / 2));
-
-        /*youarehereLabel = new Label();
-        youarehereLabel.setGraphic(youarehereView);
-        youarehereLabel.setPrefHeight(48);
-        youarehereLabel.setPrefWidth(48);
-
-        youarehereLabel.setLayoutX(SystemSettings.getInstance().getKioskLocation().getXcoord()-24);
-        youarehereLabel.setLayoutY(SystemSettings.getInstance().getKioskLocation().getYcoord()-24);
-
-        SystemSettings.getInstance().getKioskLocation().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                getChildren().remove(youarehereLabel);
-                youarehereLabel.setLayoutX(newValue.doubleValue()-24);
-                getChildren().add(youarehereLabel);
-            }
-        });
-
-        SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                getChildren().remove(youarehereLabel);
-                youarehereLabel.setLayoutY(newValue.doubleValue()-24);
-                getChildren().add(youarehereLabel);
-            }
-        });*/
 
         return youarehereView;
     }
@@ -239,6 +215,10 @@ public class PathWaypointView extends AnchorPane {
      * Clear drawn path
      */
     public void clearPath() {
+//        LinkedList<Node> allNodes = this.currentPath.getListOfAllNodes();
+//        for(Node node: allNodes){
+//            this.parent.removeWaypoint(node);
+//        }
         this.currentPath = null;
         pathView.getChildren().clear();
         popupView.getChildren().clear();
@@ -276,7 +256,8 @@ public class PathWaypointView extends AnchorPane {
         int waypointIndex = 0;
         for (Node node : waypointList) {
             Node lastNode = node;
-            for (Node thisNode : path.getNodesInSegment(node)) {
+            LinkedList<Node> nodesInSegment = path.getNodesInSegment(node);
+            for (Node thisNode : nodesInSegment) {
                 // Don't draw a line between the same nodes
                 if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
                     lastNode = thisNode;
@@ -304,25 +285,45 @@ public class PathWaypointView extends AnchorPane {
                     final NodeFloor lastFloor = lastNode.getFloor();
                     final Node lNode = lastNode;
 
-                    Image upDowni;
-                    ImageView upDown;
+                    Image upDownImg;
+                    ImageView upDownImgView;
 
-                    if(thisFloor == parent.getCurrentFloor()) { // TODO UP case
-                        upDowni = ResourceManager.getInstance().getImage("/images/chevron-up.png");
-                        upDown = new ImageView(upDowni);
-                        upDown.setLayoutX(thisNode.getXcoord());
-                        upDown.setLayoutY(thisNode.getYcoord());
+                    if(thisFloor == parent.getCurrentFloor()) {
+                        if (thisFloor.ordinal() < lastFloor.ordinal()) {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-up.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(thisNode.getXcoord());
+                            upDownImgView.setLayoutY(thisNode.getYcoord());
 
-                        circle.setCenterX(thisNode.getXcoord());
-                        circle.setCenterY(thisNode.getYcoord());
+                            circle.setCenterX(thisNode.getXcoord());
+                            circle.setCenterY(thisNode.getYcoord());
+                        } else {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-down.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(lastNode.getXcoord());
+                            upDownImgView.setLayoutY(lastNode.getYcoord());
+
+                            circle.setCenterX(lastNode.getXcoord());
+                            circle.setCenterY(lastNode.getYcoord());
+                        }
                     } else {
-                        upDowni = ResourceManager.getInstance().getImage("/images/chevron-down.png");
-                        upDown = new ImageView(upDowni);
-                        upDown.setLayoutX(lastNode.getXcoord());
-                        upDown.setLayoutY(lastNode.getYcoord());
+                        if (thisFloor.ordinal() < lastFloor.ordinal()) {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-down.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(lastNode.getXcoord());
+                            upDownImgView.setLayoutY(lastNode.getYcoord());
 
-                        circle.setCenterX(lastNode.getXcoord());
-                        circle.setCenterY(lastNode.getYcoord());
+                            circle.setCenterX(lastNode.getXcoord());
+                            circle.setCenterY(lastNode.getYcoord());
+                        } else {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-up.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(thisNode.getXcoord());
+                            upDownImgView.setLayoutY(thisNode.getYcoord());
+
+                            circle.setCenterX(thisNode.getXcoord());
+                            circle.setCenterY(thisNode.getYcoord());
+                        }
                     }
 
                     circle.setOnMouseClicked(e -> {
@@ -347,9 +348,9 @@ public class PathWaypointView extends AnchorPane {
                     });
 
                     floorChangeView.getChildren().add(circle);
-                    floorChangeView.getChildren().add(upDown);
-                    upDown.setLayoutX(upDown.getLayoutX()-18);
-                    upDown.setLayoutY(upDown.getLayoutY()-18);
+                    floorChangeView.getChildren().add(upDownImgView);
+                    upDownImgView.setLayoutX(upDownImgView.getLayoutX()-18);
+                    upDownImgView.setLayoutY(upDownImgView.getLayoutY()-18);
                 }
 
                 lastNode = thisNode;
@@ -441,15 +442,18 @@ public class PathWaypointView extends AnchorPane {
     public void swapWaypoint(int index1, int index2) {
         Node temp1 = waypointList.get(index1);
         Node temp2 = waypointList.get(index2);
-        WaypointView tempWaypointView = wayPointViewsMap.get(temp2);
 
-        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
-        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+        WaypointView tempWaypointView1 = wayPointViewsMap.get(temp1);
+        WaypointView tempWaypointView2 = wayPointViewsMap.get(temp2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
 
-        wayPointViewsMap.put(temp2, tempWaypointView);
+        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
+        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+        wayPointViewsMap.put(temp1, tempWaypointView1);
+        wayPointViewsMap.put(temp2, tempWaypointView2);
 
         for(Node node : waypointList){
             if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {
