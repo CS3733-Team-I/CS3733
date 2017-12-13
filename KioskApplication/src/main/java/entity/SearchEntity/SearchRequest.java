@@ -4,6 +4,7 @@ import database.connection.NotFoundException;
 import database.objects.Node;
 import database.objects.Request;
 import entity.MapEntity;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,11 +13,13 @@ import utility.request.RequestProgressStatus;
 
 public class SearchRequest implements ISearchEntity{
     Request databaseRequest;
+    SimpleObjectProperty<Request> requestSimpleObjectProperty;
     String searchString;
     ImageView requestIcon;
 
     public SearchRequest(Request request){
         this.databaseRequest = request;
+        this.requestSimpleObjectProperty = new SimpleObjectProperty<>(this.databaseRequest);
         try{
             this.searchString = "Status:" + request.getStatus().toString() + "  At"+ MapEntity.getInstance().getNode(request.getNodeID()).getLongName() + " Assigned by" + request.getAssignerID()
                 + " Submitted at" + request.getSubmittedTime().toString();
