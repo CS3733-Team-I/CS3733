@@ -168,8 +168,7 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setStyle("-fx-background-color: transparent;");
         HBox hbox = new HBox();
-        Image i = ResourceManager.getInstance().getImage("/images/BWH_logo.png");
-        ImageView iv = new ImageView(i);
+        PreviewMap iv = new PreviewMap(floor, parent);
         iv.setOnMouseClicked(ev -> {
             parent.setFloorSelector(floor);
             closePopup();

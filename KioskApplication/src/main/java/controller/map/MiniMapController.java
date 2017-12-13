@@ -314,10 +314,8 @@ public class MiniMapController {
                     line.setStrokeWidth(2);
                     pathPane.getChildren().add(line);
                 }
-
                 lastNode = thisNode;
             }
-
             waypointIndex++;
         }
     }

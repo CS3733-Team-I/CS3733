@@ -12,7 +12,6 @@ import entity.SystemSettings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,9 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -48,6 +45,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 public class MapController {
     @FXML private AnchorPane container;
     @FXML private AnchorPane contentPane;
+    @FXML private BorderPane mapBorder;
+    @FXML private AnchorPane trayContainer;
+    private FloorPreviewTray previewTray;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
@@ -79,7 +79,6 @@ public class MapController {
     @FXML private JFXDialog keyDialog;
     @FXML private JFXDialogLayout keyDialogContainer;
 
-    private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
 
@@ -255,27 +254,37 @@ public class MapController {
             checkWaypointVisible(scrollPane);
 //            System.out.println(visibleWaypoints);
         });
+
         scrollPane.hvalueProperty().addListener((obs) -> {
             checkWaypointVisible(scrollPane);
 //            System.out.println(visibleWaypoints);
         });
-        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
-            @Override
-            public void onChanged(Change<? extends javafx.scene.Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
-                            //TODO handle lose sight action
-                        }
-                    }
-                    else if(c.wasAdded()) {
-                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
-                            //TODO regain lose sight action
-                        }
-                    }
-                }
-            }
-        });
+
+        this.previewTray = new FloorPreviewTray();
+        this.trayContainer.getChildren().add(previewTray);
+        this.trayContainer.setPrefHeight(220);
+        AnchorPane.setTopAnchor(previewTray, 0.0);
+        AnchorPane.setBottomAnchor(previewTray, 0.0);
+        AnchorPane.setLeftAnchor(previewTray, 0.0);
+        AnchorPane.setRightAnchor(previewTray, 0.0);
+//        this.previewTray.addPreviewMap(NodeFloor.GROUND);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.FIRST);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.THIRD);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.SECOND);  //TODO: remove after debugging
+        this.hideTray(); //TODO: after debugging, start tray hidden
+    }
+
+    public void hideTray(){
+        this.mapBorder.setBottom(null);
+    }
+
+    public void showTray(){
+        this.mapBorder.setBottom(this.trayContainer);
+    }
+
+    //TODO: not sure how good it is to be using the control to just pass through commands
+    public void clearTray(){
+        this.previewTray.clearPreviews();
 
 
 
@@ -427,6 +436,8 @@ public class MapController {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
 
+            this.previewTray.clearPreviews();   //remove old previews
+            this.previewTray.generatePreviews(path, this);
             pathWaypointView.drawPath(path);
             miniMapController.showPath(path);
         }
@@ -541,36 +552,12 @@ public class MapController {
      * @param floor the floor to load
      */
     private void loadFloor(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
-
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        Image floorImage = ResourceManager.getInstance().getImage(floor.toImagePath());
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
-
         pathWaypointView.reloadDisplay();
-
-        miniMapController.switchFloor(floorImageURL);
+        miniMapController.switchFloor(floor.toImagePath());
     }
 
     /**

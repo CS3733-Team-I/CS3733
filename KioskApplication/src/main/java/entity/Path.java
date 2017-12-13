@@ -1,5 +1,6 @@
 package entity;
 
+import controller.map.PathSection;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
