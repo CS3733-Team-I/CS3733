@@ -369,7 +369,7 @@ public class EmployeeSettingsController {
                         return;
                     }
                     break;
-                default:
+                case DOCTOR:
                     if (searchController.getSelected()==null){
                         errLabel.setText("No office selected");
                         return;
@@ -377,6 +377,8 @@ public class EmployeeSettingsController {
                     else {
                         options.add(((database.objects.Node)(searchController.getSelected())).getNodeID());
                     }
+                    break;
+                default:
                     break;
                 }
             }
@@ -441,12 +443,12 @@ public class EmployeeSettingsController {
     public void checkEmployeeServiceType(){
         RequestType employeeType = serviceSelect.getValue();
         officePane.setVisible(true);
-        searchController.setVisible(true);
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
+            searchController.setVisible(false);
         }
         else if(employeeType==DOCTOR) {
             System.out.println(serviceSelect.getValue());
@@ -454,12 +456,14 @@ public class EmployeeSettingsController {
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
             doctorOfficeLabel.setVisible(true);
+            searchController.setVisible(true);
         }
         else {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
             doctorOfficeLabel.setVisible(false);
+            searchController.setVisible(false);
         }
     }
 

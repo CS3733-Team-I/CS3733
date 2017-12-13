@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
+import utility.request.RequestType;
 
 public class SearchEmployee implements ISearchEntity{
 
@@ -71,14 +72,19 @@ public class SearchEmployee implements ISearchEntity{
         employeeIcon.setFitWidth(48);
 
         String nodeID = databaseEmployee.getOptions().get(0);
-        try{
-            this.officeLocation = MapEntity.getInstance().getNode(nodeID);
-            this.officeName = officeLocation.getLongName();
-        }catch (NotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Can't found Location" + nodeID);
-            alert.setContentText(e.toString());
-            alert.showAndWait();
+        if(databaseEmployee.getServiceAbility() == RequestType.DOCTOR) {
+            try{
+                this.officeLocation = MapEntity.getInstance().getNode(nodeID);
+                this.officeName = officeLocation.getLongName();
+            }catch (NotFoundException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Can't found Location" + nodeID);
+                alert.setContentText(e.toString());
+                alert.showAndWait();
+            }
+        }
+        else {
+            officeLocation = null;
         }
         this.searchString = databaseEmployee.getLastName() + ", " + databaseEmployee.getFirstName() + " (" + officeName + ")";
 
