@@ -2,6 +2,7 @@ package entity;
 
 import database.DatabaseController;
 import database.connection.NotFoundException;
+import database.objects.Employee;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.control.Alert;
@@ -15,11 +16,13 @@ public class MapFloorEntity implements IMapEntity {
     private HashMap<String, Node> nodes;
 
     private DatabaseController dbController;
+    private ActivityLogger activityLogger;
 
     MapFloorEntity() {
         nodes = new HashMap<>();
 
         dbController = DatabaseController.getInstance();
+        activityLogger = ActivityLogger.getInstance();
     }
 
     /**
@@ -35,12 +38,31 @@ public class MapFloorEntity implements IMapEntity {
         int nodeID = dbController.addNode(node);
         node.setUniqueID(nodeID);
         nodes.put(node.getNodeID(), node);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logNodeAdd(LoginEntity.getInstance().getCurrentLogin(),node);
+        }
     }
 
     @Override
     public void editNode(Node node) throws DatabaseException {
         dbController.updateNode(node);
         nodes.put(node.getNodeID(), node);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logNodeUpdate(LoginEntity.getInstance().getCurrentLogin(),node);
+        }
+    }
+
+    @Override
+    public void editNodeByUK(Node node) throws DatabaseException {
+        dbController.updateNodeWithID(node);
+
+        for (Node storedNode : nodes.values()) {
+            if (storedNode.getUniqueID() == node.getUniqueID()) {
+                nodes.remove(storedNode.getNodeID());
+                nodes.put(node.getNodeID(), node);
+                return;
+            }
+        }
     }
 
     @Override
@@ -67,6 +89,9 @@ public class MapFloorEntity implements IMapEntity {
         try {
             dbController.removeNode(node);
             nodes.remove(node.getNodeID());
+            if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+                activityLogger.logNodeDelete(LoginEntity.getInstance().getCurrentLogin(),node);
+            }
         } catch (DatabaseException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("node Error");

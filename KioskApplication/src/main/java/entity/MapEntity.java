@@ -3,6 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
+import database.objects.Employee;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,7 @@ public class MapEntity implements IMapEntity {
     private HashMap<Node, Integer> distanceFromKiosk;
 
     private DatabaseController dbController;
+    private ActivityLogger activityLogger;
 
     private static class MapEntitySingleton {
         private static final MapEntity _instance = new MapEntity();
@@ -30,6 +32,7 @@ public class MapEntity implements IMapEntity {
     private MapEntity() {
         floors = new HashMap<>();
         edges = new HashMap<>();
+        activityLogger = ActivityLogger.getInstance();
 
         dbController = DatabaseController.getInstance();
         distanceFromKiosk = new HashMap<Node, Integer>();
@@ -84,9 +87,33 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void editNode(Node n) throws DatabaseException {
+        editNodeByUK(n);
+    }
+
+    public void updateNodewithID(Node n)throws DatabaseException{
+        dbController.updateNodeWithID(n);
+    }
+
+    @Override
+    public void editNodeByUK(Node n)throws DatabaseException{
+        Node originalNode = getNodeByID(n.getUniqueID());
+        List<Edge> originalEdges = getEdges(originalNode);
+
+        for (Edge edge : originalEdges)
+            removeEdge(edge);
+
         NodeFloor f = n.getFloor();
         if(floorExists(f)) {
-            floors.get(f).editNode(n);
+            floors.get(f).editNodeByUK(n);
+        }
+
+        for (Edge edge : originalEdges) {
+            if (edge.getNode1ID().equals(originalNode.getNodeID()))
+                edge.setNode1ID(n.getNodeID());
+            else if (edge.getNode2ID().equals(originalNode.getNodeID()))
+                edge.setNode2ID(n.getNodeID());
+
+            addEdge(edge);
         }
     }
 
@@ -119,6 +146,17 @@ public class MapEntity implements IMapEntity {
         }
         //If you reach this point, something's gone wrong.
         return thisNode;
+    }
+
+    public Node getNodeByID(int Id){
+        try {
+            return dbController.getNodeByUniqueID(Id);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -245,11 +283,17 @@ public class MapEntity implements IMapEntity {
     public void addEdge(Edge e) throws DatabaseException {
         dbController.addEdge(e);
         edges.put(e.getEdgeID(), e);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeAdd(LoginEntity.getInstance().getCurrentLogin(),e);
+        }
     }
 
     public void editEdge(Edge e) throws DatabaseException {
         dbController.updateEdge(e);
         edges.put(e.getEdgeID(), e);
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeUpdate(LoginEntity.getInstance().getCurrentLogin(),e);
+        }
     }
 
     public Edge getEdge(String s) throws DatabaseException {
@@ -269,8 +313,12 @@ public class MapEntity implements IMapEntity {
     public void removeEdge(Edge edge) throws DatabaseException {
         dbController.removeEdge(edge);
         edges.remove(edge.getEdgeID());
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            activityLogger.logEdgeDelete(LoginEntity.getInstance().getCurrentLogin(),edge);
+        }
     }
 
+    // TODO use unique ids
     public ArrayList<Edge> getEdges(Node n) {
         ArrayList<Edge> returnList = new ArrayList<>();
 

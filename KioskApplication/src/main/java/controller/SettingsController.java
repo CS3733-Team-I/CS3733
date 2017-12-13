@@ -24,6 +24,7 @@ public class SettingsController extends ScreenController {
     @FXML private JFXTabPane settingTabPane;
 
     @FXML private Tab languageTab;
+    @FXML private Tab aboutTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;
     @FXML private Tab generalTab;
@@ -32,6 +33,9 @@ public class SettingsController extends ScreenController {
     @FXML private Tab employeesTab;
 
     @FXML private Tab unitTab;
+
+    @FXML private Tab logTab;
+    @FXML private AnchorPane logPane;
 
 
     @FXML private RadioButton astarButton;
@@ -59,7 +63,6 @@ public class SettingsController extends ScreenController {
     private FXMLLoader employeeLoader;
 
     ToggleGroup searchAlgToggleGroup = new ToggleGroup();
-    ToggleGroup languageSelectToggleGroup = new ToggleGroup();
 
     //unit toggle group
     ToggleGroup unitToggleGroup = new ToggleGroup();
@@ -71,15 +74,7 @@ public class SettingsController extends ScreenController {
 
     public void initialize() throws IOException{
         SystemSettings systemSettings = SystemSettings.getInstance();
-        englishButton.setToggleGroup(languageSelectToggleGroup);
-        englishButton.setUserData("English");
-        franceSelected.setToggleGroup(languageSelectToggleGroup);
-        franceSelected.setUserData("French");
         //Load saved selection; select appropriate radio button.
-        for(Toggle toggle: languageSelectToggleGroup.getToggles()) {
-            if(toggle.getUserData().equals(systemSettings.getPrefs().get("Internationalization", "English")))
-                languageSelectToggleGroup.selectToggle(toggle);
-        }
         astarButton.setToggleGroup(searchAlgToggleGroup);
         astarButton.setUserData("A*");
         dijkstraButton.setToggleGroup(searchAlgToggleGroup);
@@ -107,6 +102,11 @@ public class SettingsController extends ScreenController {
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
         loader2.setRoot(userPane);
         loader2.load();
+
+        // Add Activity Logging Screen
+        FXMLLoader logLoader = new FXMLLoader(getClass().getResource("/view/ActivityLogView.fxml"));
+        logLoader.setRoot(logPane);
+        logLoader.load();
 
         timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
 
@@ -184,15 +184,15 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(languageTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab, logTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(languageTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab, logTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(languageTab, unitTab);
+                settingTabPane.getTabs().addAll(aboutTab, unitTab);
                 break;
         }
     }
@@ -201,15 +201,6 @@ public class SettingsController extends ScreenController {
     void onSearchAlgorithmSelected(){
         SystemSettings systemSettings = SystemSettings.getInstance();
         systemSettings.setAlgorithm(searchAlgToggleGroup.getSelectedToggle().getUserData().toString());
-    }
-
-    /**
-     * select language from settings
-     */
-    @FXML
-    void onLanguageSelected(){
-        SystemSettings systemSettings = SystemSettings.getInstance();
-        systemSettings.setResourceBundle(languageSelectToggleGroup.getSelectedToggle().getUserData().toString());
     }
 
     /**

@@ -180,24 +180,23 @@ public class MainWindowController {
         // attaches observer to the systemSettings
 
         systemSettings.addObserver((o, arg) -> {
-            ResourceBundle rB = systemSettings.getResourceBundle();
+            ResourceBundle rB = systemSettings.getInstance().getResourceBundle();
             switch (loginEntity.getCurrentPermission()) {
                 case NONEMPLOYEE:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogin"));
+                    switchButton.setText(rB.getString("my.stafflogin"));
                     break;
 
                 case EMPLOYEE:
                 case SUPER_USER:
                 case ADMIN:
-                    switchButton.setText(systemSettings.getResourceBundle().getString("my.stafflogoff"));
+                    switchButton.setText(rB.getString("my.stafflogoff"));
                     break;
             }
-
-            tabMap.setText(languageBundle.getString("my.map"));
-            tabMB.setText(languageBundle.getString("my.mapbuilder"));
-            tabRM.setText(languageBundle.getString("my.requestmanager"));
-            tabRS.setText(languageBundle.getString("my.requestsubmit"));
-            tabSettings.setText(languageBundle.getString("my.setting"));
+            tabMap.setText(rB.getString("my.map"));
+            tabMB.setText(rB.getString("my.mapbuilder"));
+            tabRM.setText(rB.getString("my.requestmanager"));
+            tabRS.setText(rB.getString("my.requestsubmit"));
+            tabSettings.setText(rB.getString("my.setting"));
             tabHelp.setText(languageBundle.getString("help"));
         });
 
