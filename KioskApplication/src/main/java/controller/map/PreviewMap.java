@@ -92,22 +92,22 @@ public class PreviewMap extends StackPane {
         int resizeY = (int)((9.0 / 16.0) * width);
         int xDiff = resizeX - width;
         int yDiff = resizeY - height;
-        //TODO: check image boundaries
+
         if(xDiff > 0) {
-            xMin -= xDiff / 2;
-            xMax += xDiff / 2;
-            width += xDiff / 2;
+            xMin = ((xMin - (xDiff / 2)) > 0) ? (xMin - (xDiff / 2)) : 0;
+            xMax = ((xMax + (xDiff / 2)) < this.mapImage.getImage().getWidth()) ? (xMax + (xDiff / 2)) : (int)this.mapImage.getImage().getWidth();
+            width = xMax - xMin;
         }
         else {
-            yMin -= yDiff / 2;
-            yMax += yDiff / 2;
-            height += yDiff / 2;
+            yMin = ((yMin - (yDiff / 2)) > 0) ? (yMin - yDiff / 2) : 0;
+            yMax = ((yMax + (yDiff / 2)) < this.mapImage.getImage().getHeight()) ? (yMax + (yDiff / 2)) : (int)this.mapImage.getImage().getHeight();
+            height = yMax - yMin;
         }
         //Add some padding around the edges, being careful to stay within the image bounds
-        xMin = (xMin >= 25) ? (xMin - 25) : 0;
-        yMin = (yMin >= 25) ? (yMin - 25) : 0;
-        width = ((this.mapImage.getImage().getWidth() - xMax) >= 25) ? (width + 25) : width;
-        height = ((this.mapImage.getImage().getHeight() - yMax) >= 25) ? (height + 25) : height;
+        xMin = (xMin >= 50) ? (xMin - 50) : 0;
+        yMin = (yMin >= 50) ? (yMin - 50) : 0;
+        width = ((this.mapImage.getImage().getWidth() - xMax) >= 100) ? (width + 100) : width;
+        height = ((this.mapImage.getImage().getHeight() - yMax) >= 100) ? (height + 100) : height;
 
         //Now, reset the viewport.
         this.mapImage.setViewport(new Rectangle2D(xMin, yMin, width, height));
