@@ -42,7 +42,7 @@ public class RequestListCellController {
     MapEntity mapEntity;
 
     @FXML private ImageView iconView,readView;
-    @FXML private Label nameLabel,timeLabel,requestNotes,locationOfRequest,person;
+    @FXML private Label nameLabel,timeLabel,requestNotes,locationOfRequest,person,extraField;
     @FXML private JFXButton locateNodeButton,delete;
     @FXML private HBox buttonBox;
     @FXML private VBox textFlow;
@@ -77,21 +77,20 @@ public class RequestListCellController {
         nameLabel.setText(RT.toString());
         timeLabel.setText(request.getSubmittedTime().toString());
         person.setText("No One?"); //had to initialize it
-        requestNotes.setText("Notes: "+request.getNote());
+        if(RT.equals(RequestType.FOOD)){
+            requestNotes.setText(request.getNote());
+        }else{
+            requestNotes.setText("Notes: "+request.getNote());
+        }
         locationOfRequest.setText(location);
 
-//        Image readIcon = ResourceManager.getInstance().getImage("/images/icons/readIcon.png");
-//        readView.setImage(readIcon);
-//        readView.setFitWidth(24);
-//        readView.setFitHeight(24);
-
-        Label extraField = new Label();
+//        Label extraField = new Label();
 
         switch (RT){
             case INTERPRETER:
                 String language = rEntity.getInterpreterRequest(requestID).getLanguage().toString();
                 extraField.setText("Language: "+language);
-                textFlow.getChildren().add(0,extraField);
+//                textFlow.getChildren().add(0,extraField);
                 Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIconBlack.png");
                 iconView.setImage(interpreterIcon);
                 iconView.setFitHeight(48);
@@ -101,7 +100,7 @@ public class RequestListCellController {
                 String restaurantID = rEntity.getFoodRequest(requestID).getRestaurantID();
                 String restaurant = MapEntity.getInstance().getNode(restaurantID).getLongName();
                 extraField.setText("Restaurant: " + restaurant);
-                textFlow.getChildren().add(0,extraField);
+//                textFlow.getChildren().add(0,extraField);
                 Image foodIcon = ResourceManager.getInstance().getImage("/images/icons/foodIconBlack.png");
                 iconView.setImage(foodIcon);
                 iconView.setFitHeight(48);
@@ -116,7 +115,7 @@ public class RequestListCellController {
             case IT:
                 String service = rEntity.getITRequest(requestID).getItService().toString().toLowerCase();
                 extraField.setText(service);
-                textFlow.getChildren().add(0,extraField);
+//                textFlow.getChildren().add(0,extraField);
                 Image itIcon = ResourceManager.getInstance().getImage("/images/icons/itIconBlack.png");
                 iconView.setImage(itIcon);
                 iconView.setFitHeight(48);
@@ -125,7 +124,7 @@ public class RequestListCellController {
             case MAINTENANCE:
                 int prioritym = rEntity.getMaintenanceRequest(requestID).getPriority();
                 extraField.setText("Priority: "+ prioritym);
-                textFlow.getChildren().add(0,extraField);
+//                textFlow.getChildren().add(0,extraField);
                 Image maintIcon = ResourceManager.getInstance().getImage("/images/icons/maintenanceIconBlack.png");
                 iconView.setImage(maintIcon);
                 iconView.setFitHeight(48);
@@ -134,7 +133,7 @@ public class RequestListCellController {
             case SECURITY:
                 int priority = rEntity.getSecurityRequest(requestID).getPriority();
                 extraField.setText("Priority: "+ priority);
-                textFlow.getChildren().add(0,extraField);
+//                textFlow.getChildren().add(0,extraField);
                 Image securityIcon = ResourceManager.getInstance().getImage("/images/icons/securityIconBlack.png");
                 iconView.setImage(securityIcon);
                 iconView.setFitHeight(48);
@@ -228,9 +227,9 @@ public class RequestListCellController {
     public void goToLocation(){
         LinkedList<Node> location = new LinkedList<>();
         this.parent.getMapController().clearMap();
-        parent.clearPathsButton();
 
         if(request.getRequestType().equals(RequestType.FOOD)){
+            parent.clearPathsButton();
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try {
                 Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());

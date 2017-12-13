@@ -1,6 +1,7 @@
 package entity;
 
 import database.connection.NotFoundException;
+import database.objects.Employee;
 import database.objects.Node;
 import javafx.beans.property.SimpleObjectProperty;
 import pathfinder.*;
@@ -115,7 +116,10 @@ public class SystemSettings extends Observable {
                 this.prefs.put("searchAlgorithm", "BestFS");
                 break;
             default:
-                break;  //If the input string is invalid, leave the set search algorithm unchanged.
+                return;  //If the input string is invalid, leave the set search algorithm unchanged.
+        }
+        if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+            ActivityLogger.getInstance().logSearchAlgorithmChanged(LoginEntity.getInstance().getCurrentLogin(),algorithmString);
         }
     }
 
@@ -129,9 +133,13 @@ public class SystemSettings extends Observable {
 
     public void setKioskLocation(String kioskLocationID){
         MapEntity map = MapEntity.getInstance();
+        Node oldLoc = this.getKioskLocation();
         try {
             this.kioskLocationProperty.set(map.getNode(kioskLocationID));
             this.prefs.put(this.kioskLocationKey, kioskLocationID);
+            if (LoginEntity.getInstance().getCurrentLogin() instanceof Employee){
+                ActivityLogger.getInstance().logDefaultNodeChanged(LoginEntity.getInstance().getCurrentLogin(),map.getNode(kioskLocationID),oldLoc);
+            }
         } catch (NotFoundException e) {
             System.err.println("Error: specified kiosk location does not exist.  Kiosk location not changed.");
         }

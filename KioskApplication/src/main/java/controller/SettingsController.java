@@ -33,6 +33,9 @@ public class SettingsController extends ScreenController {
 
     @FXML private Tab unitTab;
 
+    @FXML private Tab logTab;
+    @FXML private AnchorPane logPane;
+
 
     @FXML private RadioButton astarButton;
     @FXML private RadioButton dijkstraButton;
@@ -98,6 +101,11 @@ public class SettingsController extends ScreenController {
         FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/view/UserSettingsView.fxml"));
         loader2.setRoot(userPane);
         loader2.load();
+
+        // Add Activity Logging Screen
+        FXMLLoader logLoader = new FXMLLoader(getClass().getResource("/view/ActivityLogView.fxml"));
+        logLoader.setRoot(logPane);
+        logLoader.load();
 
         timeoutLength.setText(Integer.toString(getParent().getMaxcountdown()));
 
@@ -175,11 +183,11 @@ public class SettingsController extends ScreenController {
         switch (LoginEntity.getInstance().getCurrentPermission()) {
             case ADMIN:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, unitTab, pathfindingTab, userTab, databaseTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab,  unitTab, pathfindingTab, userTab, databaseTab, generalTab, logTab);
                 break;
             case SUPER_USER:
                 settingTabPane.getTabs().clear();
-                settingTabPane.getTabs().addAll(aboutTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab);
+                settingTabPane.getTabs().addAll(aboutTab, unitTab, pathfindingTab, userTab, databaseTab, employeesTab, generalTab, logTab);
                 break;
             case NONEMPLOYEE:
                 settingTabPane.getTabs().clear();
