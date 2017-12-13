@@ -57,7 +57,6 @@ public class PreviewMap extends AnchorPane {
 
     public void addPathSection(PathSection pathSection) {
         this.pathSections.add(pathSection);
-        this.drawSections();
         for(Node node: pathSection.getNodes())
             this.allNodes.add(node);
     }
