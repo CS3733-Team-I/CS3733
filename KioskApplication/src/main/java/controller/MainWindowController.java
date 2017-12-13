@@ -115,8 +115,12 @@ public class MainWindowController {
                 doc ="AM";
             }
             //System.out.println(hour + ":" + (minute) + ":" + second);
+            String min = Integer.toString(minute);
+            if (minute<10){
+                min = "0"+min;
+            }
             date.setText(s);
-            time.setText(hour + ":" + (minute) +" "+doc);
+            time.setText(hour + ":" + min +" "+doc);
         }),
                 new KeyFrame(Duration.seconds(1))
         );

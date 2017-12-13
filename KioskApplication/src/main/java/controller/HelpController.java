@@ -33,7 +33,8 @@ public class HelpController extends ScreenController{
 
     @FXML
     protected void initialize() throws IOException {
-        helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+        checkPermissions();
+     /*   helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) return;
             switch (newValue.getId().toString()) {
                 case "Map Help":
@@ -47,13 +48,33 @@ public class HelpController extends ScreenController{
                 case "tabSettings":
                     break;
             }
-        });
+        });*/
     }
 
     @FXML
     public void onHelpTabSelection(){
-        //helpTabPlane.getTabs();
+        checkPermissions();
+    }
 
+    public void checkPermissions() {
+        switch (LoginEntity.getInstance().getCurrentPermission()) {
+            case ADMIN:
+                helpTabPlane.getTabs().clear();
+                helpTabPlane.getTabs().addAll(adminHelpTab,mapBuilderHelp,requestHelpTab,mapHelpTab,settingsHelpTab);
+                break;
+            case SUPER_USER:
+                helpTabPlane.getTabs().clear();
+                helpTabPlane.getTabs().addAll(adminHelpTab,mapBuilderHelp,requestHelpTab,mapHelpTab,settingsHelpTab);
+                break;
+            case EMPLOYEE:
+                helpTabPlane.getTabs().clear();
+                helpTabPlane.getTabs().addAll(requestHelpTab,mapHelpTab,settingsHelpTab);
+
+            case NONEMPLOYEE:
+                helpTabPlane.getTabs().clear();
+                helpTabPlane.getTabs().addAll(mapHelpTab,settingsHelpTab);
+                break;
+        }
     }
 
     public javafx.scene.Node getContentView(){

@@ -168,6 +168,7 @@
          </children>
       </VBox>
          <JFXDialogLayout fx:id="aboutLayout" layoutX="27.0" layoutY="200.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="200.0" />
+         <Label fx:id="copyrightLabel" layoutX="503.0" layoutY="472.0" text="© Brigham &amp; Women’s Hospital 2017" />
   </AnchorPane>
    </children>
 </fx:root>

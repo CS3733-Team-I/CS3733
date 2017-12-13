@@ -23,6 +23,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,6 +62,7 @@ public class MapController {
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane pathWaypointContainer;
+    @FXML private Label copyrightLabel;
 
     @FXML private JFXComboBox<String> languageSelector;
     @FXML private JFXComboBox<NodeFloor> floorSelector;
