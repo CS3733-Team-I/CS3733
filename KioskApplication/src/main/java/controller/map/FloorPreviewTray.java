@@ -92,7 +92,7 @@ public class FloorPreviewTray extends ScrollPane {
      * segment in which all nodes are on the same floor.  A floorGroup is a continuous set of sections that are all
      * on the same floor.
      */
-    public void generatePreviews(Path path) {
+    public void generatePreviews(Path path, MapController mapController) {
         LinkedList<Node> waypoints = path.getWaypoints();
         LinkedList<Node> nodes = path.getListOfAllNodes();
         NodeFloor currentFloor = path.getWaypoints().getFirst().getFloor();
@@ -101,7 +101,7 @@ public class FloorPreviewTray extends ScrollPane {
         int segmentIndex = 0;
 
         LinkedList<Node> nodesInSection = new LinkedList<>();
-        PreviewMap currentPreview = new PreviewMap(currentFloor); //Path sections on the current floor
+        PreviewMap currentPreview = new PreviewMap(currentFloor, mapController); //Path sections on the current floor
 
         for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++) {
             Node currentNode = nodes.get(nodeIndex);
@@ -115,7 +115,7 @@ public class FloorPreviewTray extends ScrollPane {
                 //Use the accumulated sections to create a Preview, then clear the list for the next preview.
                 this.previews.add(currentPreview);
                 currentFloor = currentNode.getFloor();  //update floor
-                currentPreview = new PreviewMap(currentFloor);
+                currentPreview = new PreviewMap(currentFloor, mapController);
             }
             nodesInSection.add(currentNode);
 

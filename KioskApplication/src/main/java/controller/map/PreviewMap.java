@@ -1,7 +1,6 @@
 package controller.map;
 
 import database.objects.Node;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
@@ -19,12 +18,16 @@ public class PreviewMap extends AnchorPane {
     NodeFloor floor;
     ImageView mapImage;
     LinkedList<PathSection> pathSections;
+    MapController mapController;
+    LinkedList<Node> allNodes;
     public static final int PREVIEW_WIDTH = 356;
     public static final int PREVIEW_HEIGHT = 200;
 
 
 
-    public PreviewMap(NodeFloor floor) {
+    public PreviewMap(NodeFloor floor, MapController mapController) {
+        this.allNodes = new LinkedList<>();
+        this.mapController = mapController;
         this.pathSections = new LinkedList<>();
         this.floor = floor;
         ResourceManager resourceManager = ResourceManager.getInstance();
@@ -37,23 +40,17 @@ public class PreviewMap extends AnchorPane {
         this.mapImage.setFitWidth(356);
 
         //If the map image is clicked, change the main map over to this map's floor
-        this.mapImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                //TODO: tell the MapController to change floors
-                //I think I this may actually need to be an EventFilter in the MapController.
-                //Need to figure out how to access PreviewMap.floor from within this handler.
-            }
+        this.mapImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            mapController.setFloorSelector(this.floor);
+            mapController.zoomOnSelectedNodes(this.allNodes);
         });
 
         this.mapImage.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            //TODO: add mouseover effect (probably a DropShadow)
             DropShadow dropShadow = new DropShadow();
             dropShadow.setRadius(10.0);
             this.setEffect(dropShadow);
         });
         this.mapImage.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
-            //TODO: remove mouseover effect when mouse is no longer hovering
             this.setEffect(null);
         });
     }
@@ -61,6 +58,8 @@ public class PreviewMap extends AnchorPane {
     public void addPathSection(PathSection pathSection) {
         this.pathSections.add(pathSection);
         this.drawSections();
+        for(Node node: pathSection.getNodes())
+            this.allNodes.add(node);
     }
 
     public LinkedList<PathSection> getPathSections() {

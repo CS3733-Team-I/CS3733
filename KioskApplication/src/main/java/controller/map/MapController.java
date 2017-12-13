@@ -425,7 +425,7 @@ public class MapController {
             this.showEdgesBox.setDisable(true);
 
             this.previewTray.clearPreviews();   //remove old previews
-            this.previewTray.generatePreviews(path);
+            this.previewTray.generatePreviews(path, this);
             pathWaypointView.drawPath(path);
             miniMapController.showPath(path);
         }

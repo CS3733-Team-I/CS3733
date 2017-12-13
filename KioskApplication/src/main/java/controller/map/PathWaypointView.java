@@ -168,7 +168,7 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setStyle("-fx-background-color: transparent;");
         HBox hbox = new HBox();
-        PreviewMap iv = new PreviewMap(floor);
+        PreviewMap iv = new PreviewMap(floor, parent);
         iv.setOnMouseClicked(ev -> {
             parent.setFloorSelector(floor);
             closePopup();
