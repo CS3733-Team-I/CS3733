@@ -5,6 +5,7 @@ import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
@@ -17,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -25,10 +25,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -39,6 +40,7 @@ import java.util.*;
 
 public class MapController {
     @FXML private AnchorPane container;
+    @FXML private AnchorPane contentPane;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
@@ -74,6 +76,7 @@ public class MapController {
     private boolean editMode = false;
 
     private PathWaypointView pathWaypointView;
+    @FXML private JFXPopup popup;
 
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
@@ -81,9 +84,14 @@ public class MapController {
 
     private MainWindowController parent = null;
 
+
+
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
+
+
+
     }
 
     /**
@@ -94,6 +102,7 @@ public class MapController {
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
         languageSelector.getItems().addAll("English","French");
+        languageSelector.setValue("English");
 
         miniMapController = new MiniMapController(this);
 
@@ -105,6 +114,7 @@ public class MapController {
         nodesEdgesView.setPickOnBounds(false);
 
         recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        keyButton.setText(SystemSettings.getInstance().getResourceBundle().getString("mapKey"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -124,10 +134,14 @@ public class MapController {
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
 
+
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             recenterButton.setText(rB.getString("my.recenter"));
+        });
+        systemSettings.addObserver((o,arg) -> {
+            keyButton.setText(systemSettings.getInstance().getResourceBundle().getString("mapKey"));
         });
 
         try {
@@ -250,6 +264,83 @@ public class MapController {
                 }
             }
         });
+
+
+
+        mapView.setOnDragOver(e -> {
+            /*String message = e.getDragboard().getString();
+            String condition = String.valueOf(message.charAt(message.length()-1));
+            if(condition.equals("T")){e.consume();}*/
+
+            if(e.getDragboard().hasString()) {
+                System.out.println("Drag node over map.");
+                String content = e.getDragboard().getString();
+                int length = content.length();
+
+                int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+                String condition = String.valueOf(content.charAt(length-1));
+                if(condition.equals("S")){
+                    return;
+                }
+
+                Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
+
+                Point2D point2D = new Point2D(e.getX(), e.getY());
+                if(condition.equals("C")){
+                    point2D = new Point2D(roundToFive((int)e.getX()), roundToFive((int)e.getY()));
+                }
+
+                nodesEdgesView.setNodePosition(selectNode, point2D);
+                e.acceptTransferModes(TransferMode.MOVE);
+                e.consume();
+            }
+        });
+
+
+        mapView.setOnDragDropped(e ->{
+            System.out.println("Node Dropped");
+
+            String content = e.getDragboard().getString();
+            int length = content.length();
+            int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+            String condition = String.valueOf(content.charAt(length-1));
+            if(condition.equals("T")){
+                return;
+            }
+
+            double xcoord = e.getX();
+            double ycoord = e.getY();
+            if(condition.equals("C")){
+                xcoord = roundToFive((int)xcoord);
+                ycoord = roundToFive((int)ycoord);
+            }
+            Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
+            selectNode.setXcoord((int)xcoord);
+            selectNode.setYcoord((int)ycoord);
+
+            try {
+                MapEntity.getInstance().editNodeByUK(selectNode);
+            } catch (DatabaseException e1) {
+                e1.printStackTrace();
+            }
+
+            reloadDisplay();
+            e.setDropCompleted(true);
+            e.consume();
+        });
+    }
+
+    /**
+     * round to 5
+     * @param num
+     * @return
+     */
+    public static int roundToFive(int num){
+        int a = num % 5;
+        int b = num / 5;
+
+        int result = b*5;
+        return result;
     }
 
     /**
@@ -323,8 +414,9 @@ public class MapController {
         if (path != null) {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
-            setFloorSelector(pathWaypointView.getStartWaypoint().getFloor());
+
             pathWaypointView.drawPath(path);
+            miniMapController.showPath(path);
         }
     }
 
@@ -404,20 +496,32 @@ public class MapController {
      * Clear the map of waypoints, nodes, and edges
      */
     public void clearMap() {
-        this.pathWaypointView.clearAll();
-        clearPath();
+        pathWaypointView.clearAll();
+        clearNodes();
+        this.miniMapController.clearWaypoints();
+        this.miniMapController.clearPath();
+    }
+
+    public void clearNodes() {
         this.nodesEdgesView.clear();
     }
 
     /**
-     * Add a waypoint indicator to the map
-     * @param location waypoint location
+     * Add a waypoint indicator to the map and minimap
+     * @param node the waypoint's node
      */
-    public void addWaypoint(Point2D location, Node node) {
+    public void addWaypoint(Node node) {
         this.pathWaypointView.addWaypoint(node);
+        this.miniMapController.addWaypoint(node);
     }
+
+    /**
+     * Remove a waypoint indicator from the map and minimap
+     * @param node the waypoint's node
+     */
     public void removeWaypoint(Node node) {
         this.pathWaypointView.removeWaypoint(node);
+        this.miniMapController.removeWaypoint(node);
     }
 
     /**
@@ -481,6 +585,12 @@ public class MapController {
         }
     }
 
+    public void setContentLeftAnchor(double left) {
+        if (container != null) {
+            AnchorPane.setLeftAnchor(contentPane, left);
+        }
+    }
+
     /**
      * handles all zooming operations
      * @param scaleValue
@@ -516,7 +626,7 @@ public class MapController {
      * Moves the map view and adjusts the zoom factor to contain the selected nodes
      * @param viewedNodes sets the floor to the most common floor value
      */
-    public void zoomOnSelectedNodes(LinkedList<Node> viewedNodes){
+    public void zoomOnSelectedNodes(List<Node> viewedNodes){
         //TODO: make the floor selection method more solid
         double minX=mapView.getImage().getWidth();
         double minY=mapView.getImage().getHeight();
@@ -577,6 +687,11 @@ public class MapController {
      * @param scaleValue adjusts the screen size
      * @return boolean to indicate if the scale has changed
      */
+    /**
+     * Helper method for the zoom methods
+     * @param scaleValue adjusts the screen size
+     * @return boolean to indicate if the scale has changed
+     */
     private boolean setZoom(double scaleValue){
         //calculates the farthest out someone can zoom
         double widthRatio = container.getWidth() / mapView.getFitWidth();
@@ -629,18 +744,35 @@ public class MapController {
 
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
-        if (parent != null) {
+        if (parent != null && event.isStillSincePress()) {
+            MapEntity mapEntity = MapEntity.getInstance();
+            LinkedList<Node> nearestNodes = new LinkedList<>();
+            double radius = 150.0;
             // Check if clicked location is a node
-            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue());
+            LinkedList<Node> floorNodes = mapEntity.getNodesOnFloor(floorSelector.getValue());
+            Circle clickArea = new Circle(event.getX(),event.getY(),radius);
             for (Node node : floorNodes) {
-                Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
-                        30, 30); // TODO magic numbers
-                Point2D clickPosition = new Point2D(event.getX(), event.getY());
+                Point2D nodePosition = new Point2D(node.getXcoord(), node.getYcoord());
 
-                if (nodeArea.contains(clickPosition)) {
-                    parent.onMapNodeClicked(node);
-                    return;
+                if (clickArea.contains(nodePosition)) {
+                    nearestNodes.add(node);
                 }
+            }
+            Point2D clickPosition = new Point2D(event.getX(),event.getY());
+            // Nearest neighbor calculation
+            double shortestDistance = radius+1;
+            Node nearestNode = null;
+            for (Node node : nearestNodes){
+                double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
+                if(distance < shortestDistance){
+                    shortestDistance=distance;
+                    nearestNode = node;
+                }
+            }
+            if(nearestNode!=null){
+                //System.out.println("Shortest Distance: "+shortestDistance);
+                parent.onMapNodeClicked(nearestNode);
+                return;
             }
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event);
@@ -758,10 +890,6 @@ public class MapController {
         return pathWaypointView;
     }
 
-    public ArrayList<Color> getsSegmentColorList() {
-        return pathWaypointView.getsSegmentColorList();
-    }
-
     @FXML
     private void onAboutAction(){
         parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
@@ -805,7 +933,4 @@ public class MapController {
         keyDialogContainer.setDisable(true);
     }
 
-    public MiniMapController getMiniMapController() {
-        return miniMapController;
-    }
 }

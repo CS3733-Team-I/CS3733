@@ -2,16 +2,13 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
-import entity.SystemSettings;
-import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import utility.ResourceManager;
 import utility.node.NodeSelectionType;
 import utility.node.NodeType;
 
@@ -21,7 +18,7 @@ public class NodeView extends StackPane {
 
     Node node;
     NodeSelectionType selectionType;
-    boolean editable;
+    boolean editable, dragging;
 
     private Circle circle;
     private ImageView imageView;
@@ -32,6 +29,7 @@ public class NodeView extends StackPane {
         this.node = node;
         this.selectionType = NodeSelectionType.NORMAL;
         this.editable = editable;
+        this.dragging = false;
 
         this.setPrefWidth(28);
         this.setPrefHeight(28);
@@ -69,12 +67,14 @@ public class NodeView extends StackPane {
         this.circle.setOnDragEntered(this::dragEntered);
         this.circle.setOnDragExited(this::dragExited);
         this.circle.setOnDragDropped(this::dragDropped);
+        this.circle.setOnDragDone(this::dragDone);
 
         this.getChildren().addAll(circle, imageView);
     }
 
     /**
      * Set the selection type of the node and update the view to match
+     *
      * @param type the selection type
      */
     public void setSelectionType(NodeSelectionType type) {
@@ -100,6 +100,7 @@ public class NodeView extends StackPane {
 
     /**
      * Get the current selection type
+     *
      * @return selection type
      */
     public NodeSelectionType getSelectionType() {
@@ -107,62 +108,84 @@ public class NodeView extends StackPane {
     }
 
     private void dragDetected(MouseEvent e) {
-        System.out.println("DRAG DETECTED");
-        if (this.editable) {
+
+        if (this.editable && !dragging) {
             if (node.getNodeType() == NodeType.ELEV) {
                 // do something
                 // parent.controllers.get(ApplicationScreen.MAP_BUILDER).showFloors();
             }
 
-            Dragboard db = this.startDragAndDrop(TransferMode.COPY);
+            this.setMouseTransparent(true);
+
+            Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString(Integer.toString(this.node.getUniqueID()));
+
+            if(e.isShiftDown()){
+                content.putString(Integer.toString(this.node.getUniqueID()) + "S");
+            }
+            else if (e.isControlDown()){
+                content.putString(Integer.toString(this.node.getUniqueID()) + "C");
+            }
+            else{
+                content.putString(Integer.toString(this.node.getUniqueID()) + "F");
+            }
             db.setContent(content);
 
+            dragging = true;
             circle.setFill(Color.GREEN);
             e.consume();
         }
+
+
     }
 
     private void dragOver(DragEvent event) {
-        System.out.println("DRAG OVER");
-        if (this.editable && event.getDragboard().hasString()) {
-            event.acceptTransferModes(TransferMode.COPY);
+        if (this.editable && !dragging && event.getDragboard().hasString()) {
+            System.out.println("Node DragOver");
+            event.acceptTransferModes(TransferMode.MOVE);
             event.consume();
         }
     }
 
     private void dragDone(DragEvent e) {
-        System.out.println("DRAG DONE");
+        System.out.println("Drag done on node.");
         if (this.editable) {
             setSelectionType(selectionType);
             parent.mapNodeClicked(node);
+            this.setMouseTransparent(false);
+            dragging = false;
             e.consume();
         }
-
     }
 
     private void dragDropped(DragEvent e) {
-        System.out.println("DRAG DROPPED");
-        if (this.editable) {
+        if (this.editable && !dragging) {
             setSelectionType(selectionType);
 
             boolean success = false;
-            if(e.getDragboard().hasString()){
+
+            String content = e.getDragboard().getString();
+            int length = content.length();
+
+            int uniqueID = Integer.parseInt(e.getDragboard().getString().substring(0, length-1));
+            String condition = String.valueOf(content.charAt(length-1));
+
+            if(e.getDragboard().hasString() && uniqueID != (this.node.getUniqueID())) {
                 success = true;
 
-                System.out.println("ADDING CONNECTION: " + e.getDragboard().getString() +'_'+ node.getNodeID());
+                System.out.println("ADDING CONNECTION: " + uniqueID +'_'+ node.getNodeID());
 
-                parent.nodesConnected(Integer.toString(this.node.getUniqueID()), e.getDragboard().getString());
+                parent.nodesConnected(Integer.toString(this.node.getUniqueID()), uniqueID+"");
             }
+
             e.setDropCompleted(success);
             e.consume();
         }
     }
 
     private void dragEntered(DragEvent event) {
-        System.out.println("DRAG ENTERED");
-        if (this.editable && event.getDragboard().hasString()) {
+        if (this.editable && !dragging && event.getDragboard().hasString()) {
+            System.out.println("Node DragEntered");
             if (event.getDragboard().getString().equals(node.getNodeID())) {
                 return;
             }
@@ -173,8 +196,9 @@ public class NodeView extends StackPane {
     }
 
     private void dragExited(DragEvent event) {
-        System.out.println("DRAG EXITED");
-        if (this.editable) {
+        if (this.editable && !dragging) {
+            System.out.println("Node DragExit");
+
             if (event.getDragboard().hasString()) {
                 if (event.getDragboard().getString().equals(node.getNodeID())) {
                     return;
@@ -188,14 +212,8 @@ public class NodeView extends StackPane {
         }
     }
 
-    /**
-     * sets an image for default location
-     * @param node
-     */
-    public void setImage(Node node){
-       Image img = ResourceManager.getInstance().getImage("/images/crosshairs-gps2x.png");
-        imageView.setImage(img);
-        imageView.setX(node.getXcoord());
-        imageView.setY(node.getYcoord());
+    public void setPosition(Point2D point) {
+        this.setLayoutX(point.getX() - circle.getRadius());
+        this.setLayoutY(point.getY() - circle.getRadius());
     }
 }

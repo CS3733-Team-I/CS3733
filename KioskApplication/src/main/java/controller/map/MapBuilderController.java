@@ -4,11 +4,14 @@ import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import controller.MainWindowController;
 import controller.ScreenController;
+import controller.SearchController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -35,6 +38,7 @@ import utility.ResourceManager;
 import utility.node.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -81,6 +85,11 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXButton btExpand;
     @FXML JFXPopup popup;
 
+    //search related
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
+
     // Observer lists
     private SimpleObjectProperty<Node> selectedNode;
     private SimpleObjectProperty<Node> newNode;
@@ -96,6 +105,14 @@ public class MapBuilderController extends ScreenController {
         newNode.set(null);
 
         observableChangedNodes = FXCollections.observableArrayList();
+
+        //search initialization
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        SystemSettings.getInstance().updateDistance();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            searchNode.add(new SearchNode(targetNode));
+        }
+        searchController = new SearchController(this, searchNode);
     }
 
     @FXML
@@ -195,28 +212,6 @@ public class MapBuilderController extends ScreenController {
                 } else {
                     selectedNode.get().setNodeID(nodeID.getText());
                     observableChangedNodes.add(selectedNode.get());
-                }
-
-                //reflect node ID changes in mapEntity also in edges
-                for(Node node : MapEntity.getInstance().getAllNodes()) {
-                    if(node.getUniqueID() == selectedNode.get().getUniqueID()) {
-                        for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
-                            System.out.println("3. Begin Updating edge ID");
-
-                            if(edge.getNode1ID().equals(oldValue)) {
-                                edge.setNode1ID(nodeID.getText());
-                            }
-                            if(edge.getNode2ID().equals(oldValue)) {
-                                edge.setNode2ID(nodeID.getText());
-                            }
-
-                            // TODO make this update the database, currently doesnt
-
-                            System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
-                        }
-
-                        node.setNodeID(nodeID.getText());
-                    }
                 }
             }
         });
@@ -555,6 +550,8 @@ public class MapBuilderController extends ScreenController {
         getMapController().setEditMode(true);
 
         getMapController().setAnchor(0, 450, 0, 0);
+
+        getMapController().clearMap();
         getMapController().reloadDisplay();
 
         // Set default nodes/edges visibility
@@ -601,7 +598,7 @@ public class MapBuilderController extends ScreenController {
                 CBnodeType.setValue(selectedNode.get().getNodeType());
                 lName.setText(selectedNode.get().getLongName());
                 sName.setText(selectedNode.get().getShortName());
-                CBnodeTeamAssigned.setValue(convertToTeamEnum(selectedNode.get().getTeamAssigned()));
+                CBnodeTeamAssigned.setValue(convertToTeamEnum(String.valueOf(selectedNode.get().getTeamAssigned().charAt(5))));
                 nodeID.setText(selectedNode.get().getNodeID());
                 setEditing(false);
                 break;
@@ -627,7 +624,7 @@ public class MapBuilderController extends ScreenController {
         //System.out.println(selectedNode.get().getNodeID());
         if(nodeType == NodeType.ELEV) {
             String result = elevNameInChangedList();
-            nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
+            nodeID.setText(nodeTeamAssigned.name() + nodeType.toLiteralString() + "00" + result + convertFloor(getMapController().getCurrentFloor().toLiteralString()));
         } else {
             if(!MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType).equals("")){
                 String nodeIDtemp = MapEntity.getInstance().selectNodeID(Integer.parseInt(xcoord.getText()), Integer.parseInt(ycoord.getText()), nodeFloor, nodeType);
@@ -637,7 +634,7 @@ public class MapBuilderController extends ScreenController {
                 //nodeTypeCountPrepared += Integer.parseInt(nodeTypeCount) + countChangedList(nodeType);
                 System.out.println(convertFloor(nodeFloor.toLiteralString()));
                 System.out.println(nodeTeamAssigned.name());
-                nodeID.setText(nodeTeamAssigned.name() + nodeType.toString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
+                nodeID.setText(nodeTeamAssigned.name() + nodeType.toLiteralString() + formatInt(Integer.parseInt(nodeTypeCount) + countChangedList(nodeType)) + convertFloor(nodeFloor.toLiteralString()));
 
             }
         }

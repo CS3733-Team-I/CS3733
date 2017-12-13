@@ -4,6 +4,9 @@ import database.objects.Node;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.ResourceManager;
@@ -14,12 +17,14 @@ import utility.elbonian.ValueOutOfBoundsException;
 
 public class SearchNode implements ISearchEntity{
     Node databaseNode;
+    SimpleObjectProperty<Node> nodeSimpleObjectProperty;
     String searchString;
     ImageView nodeIcon;
     SimpleIntegerProperty distance;
 
     public SearchNode(Node node) {
         this.databaseNode = node;
+        this.nodeSimpleObjectProperty = new SimpleObjectProperty<>(this.databaseNode);
         this.distance = new SimpleIntegerProperty(MapEntity.getInstance().getDistanceFromKiosk(node));
 
         if(SystemSettings.getInstance().isMetric()) {
@@ -121,10 +126,14 @@ public class SearchNode implements ISearchEntity{
     }
 
     public String getComparingString() {
-        return databaseNode.getNodeID();
+        return Integer.toString(databaseNode.getUniqueID());
     }
 
     public String getName() {
         return this.databaseNode.getLongName();
+    }
+
+    public Node getLocation() {
+        return this.databaseNode;
     }
 }

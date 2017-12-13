@@ -1,17 +1,16 @@
 package database;
 
-import com.sun.org.apache.regexp.internal.RE;
 import database.connection.Connector;
 import database.connection.NotFoundException;
-import database.objects.*;
+import database.objects.ActivityLog.ActivityLog;
+import database.objects.Edge;
+import database.objects.Employee;
+import database.objects.Node;
+import database.objects.requests.*;
 import database.utility.*;
-import database.objects.SecurityRequest;
-import database.objects.InterpreterRequest;
-
+import utility.KioskPermission;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
-
-import utility.KioskPermission;
 import utility.node.TeamAssigned;
 import utility.request.RequestType;
 
@@ -58,6 +57,15 @@ public class DatabaseController {
     public Node getNode(String id) throws DatabaseException, NotFoundException {
         try {
             return Connector.selectNode(instanceConnection, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
+        }
+    }
+
+    public Node getNodeByUniqueID(int uniqueID) throws DatabaseException, NotFoundException{
+        try{
+            return Connector.selectNodeByUniqueID(instanceConnection, uniqueID);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(DatabaseExceptionType.MISC_ERROR);
@@ -154,15 +162,17 @@ public class DatabaseController {
         try {
             return Connector.updateNodeWithID(instanceConnection, node);
         } catch (SQLException e) {
-            DatabaseExceptionType type;
+            /*DatabaseExceptionType type;
             if (e.getSQLState() != "23505") {
                 type = DatabaseExceptionType.ID_ALREADY_EXISTS;
             } else {
                 e.printStackTrace();
                 type = DatabaseExceptionType.MISC_ERROR;
             }
-            throw new DatabaseNodeException(node, type);
+            throw new DatabaseNodeException(node, type);*/
+            e.printStackTrace();
         }
+        return 0;
     }
 
     public  Edge getEdge(String edgeID) throws DatabaseException {
@@ -261,7 +271,46 @@ public class DatabaseController {
         return 0;
     }
 
+    /**
+     * Adds a JanitorRequest to the database
+     * @param janitorRequest
+     * @return
+     */
+    public int addJanitorRequest(JanitorRequest janitorRequest){
+        try{
+            return Connector.insertJanitor(instanceConnection,janitorRequest);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int addITRequest(ITRequest itRequest){
+        try{
+            return Connector.insertIT(instanceConnection, itRequest);
+        }
+        catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    public int addMaintenanceRequest(MaintenanceRequest mtRequest){
+        try{
+            return Connector.insertMT(instanceConnection, mtRequest);
+        }
+        catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
     //TODO: Update this method
+
     public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.updateInterpreter(instanceConnection, iR);
@@ -272,8 +321,8 @@ public class DatabaseController {
         }
         return 0;
     }
-
     //TODO: Update this method
+
     public int updateSecurityRequest(SecurityRequest sR) {
         try {
             return Connector.updateSecurity(instanceConnection, sR);
@@ -296,6 +345,42 @@ public class DatabaseController {
         return 0;
     }
 
+    /**
+     * Updates the janitorRequest in the database
+     * @param janitorRequest
+     * @return
+     */
+    public int updateJanitorRequest(JanitorRequest janitorRequest){
+        try{
+            return Connector.updateJanitor(instanceConnection,janitorRequest);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public int updateITRequest(ITRequest itRequest){
+        try{
+            return Connector.updateIT(instanceConnection, itRequest);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    public int updateMaintenanceRequest(MaintenanceRequest mtRequest){
+        try{
+            return Connector.updateMT(instanceConnection, mtRequest);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
 
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
@@ -319,11 +404,50 @@ public class DatabaseController {
         return null;
     }
 
+    /**
+     * Retrieves the specified JanitorRequest from the database
+     * @param requestID
+     * @return
+     */
+    public JanitorRequest getJanitorRequest(String requestID) {
+        try{
+            return Connector.selectJanitor(instanceConnection, requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public FoodRequest getFoodRequest(String requestID){
         try {
             return Connector.selectFood(instanceConnection, requestID);
         } catch(SQLException e) {
             if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    public ITRequest getITRequest(String requestID){
+        try{
+            return Connector.selectIT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public MaintenanceRequest getMaintenanceRequest(String requestID){
+        try{
+            return Connector.selectMT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
                 e.printStackTrace();
             }
         }
@@ -366,6 +490,45 @@ public class DatabaseController {
         return false;
     }
 
+    /**
+     * deletes the JanitorRequest from the database
+     * @param requestID
+     * @return
+     */
+    public boolean deleteJanitorRequest(String requestID){
+        try {
+            Connector.deleteJanitor(instanceConnection, requestID);
+            return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteITRequest(String requestID){
+        try {
+            return Connector.deleteIT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteMaintenanceRequest(String requestID){
+        try {
+            return Connector.deleteMT(instanceConnection,requestID);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
@@ -399,15 +562,40 @@ public class DatabaseController {
         return new LinkedList<FoodRequest>();
     }
 
-    public LinkedList<FoodRequest> getAllFoodRequest(){
-        try {
-            return Connector.selectAllFood(instanceConnection);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
+    /**
+     * Gets all JanitorRequests from the database
+     * @return
+     */
+    public LinkedList<JanitorRequest> getAllJanitorRequests(){
+        try{
+            return Connector.selectAllJanitor(instanceConnection);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return new LinkedList<JanitorRequest>();
+    }
+
+
+    public LinkedList<ITRequest> getAllITRequests(){
+        try{
+            return Connector.selectAllIT(instanceConnection);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
                 e.printStackTrace();
             }
         }
-        return new LinkedList<FoodRequest>();
+        return new LinkedList<ITRequest>();
+    }
+
+    public LinkedList<MaintenanceRequest> getAllmtRequest(){
+        try{
+            return Connector.selectAllMT(instanceConnection);
+        }catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return new LinkedList<MaintenanceRequest>();
     }
 
     public void deleteTestTables() {
@@ -540,6 +728,7 @@ public class DatabaseController {
         }
     }
 
+    /*
     public void insertEmployeeIntoView(IEmployee employee) {
         try {
             Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
@@ -643,5 +832,40 @@ public class DatabaseController {
                 e.printStackTrace();
             }
         }
+    }*/
+
+    /**
+     *
+     * @param log
+     * @return the autogenerated ID for the ActivityLog
+     * @throws DatabaseException if this is happening, something is seriously wrong
+     */
+    public int addActivityLog(ActivityLog log){
+        try{
+            return Connector.insertActivityLog(instanceConnection,log);
+        } catch (SQLException e){
+            if(e.getSQLState() != "23505"){
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    public boolean removeActivityLog(ActivityLog log) {
+        try{
+            return Connector.deleteActivityLog(instanceConnection,log);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public LinkedList<ActivityLog> getAllActivityLogs() {
+        try{
+            return Connector.selectAllActivityLogs(instanceConnection);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return new LinkedList<>();
     }
 }
