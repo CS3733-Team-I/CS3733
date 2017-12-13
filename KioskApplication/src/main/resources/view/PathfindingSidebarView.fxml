@@ -59,7 +59,7 @@
                               <Font size="18.0" />
                            </font>
                         </JFXButton>
-                        <JFXButton id="blue-button" buttonType="RAISED" onAction="#showPathButton" text="Show Path">
+                        <JFXButton id="blue-button" fx:id="showPathBtn" buttonType="RAISED" onAction="#showPathButton" text="Show Path">
                            <font>
                               <Font size="18.0" />
                            </font>

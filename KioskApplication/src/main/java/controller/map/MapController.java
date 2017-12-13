@@ -1,6 +1,7 @@
 package controller.map;
 
 import com.jfoenix.controls.*;
+import com.sun.prism.paint.Paint;
 import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
@@ -16,9 +17,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.*;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
@@ -26,11 +25,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.ApplicationScreen;
@@ -100,6 +97,7 @@ public class MapController {
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
         languageSelector.getItems().addAll("English","French");
+        languageSelector.setValue("English");
 
         miniMapController = new MiniMapController(this);
 
@@ -111,6 +109,7 @@ public class MapController {
         nodesEdgesView.setPickOnBounds(false);
 
         recenterButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.recenter"));
+        keyButton.setText(SystemSettings.getInstance().getResourceBundle().getString("mapKey"));
         AnchorPane.setTopAnchor(nodesEdgesView, 0.0);
         AnchorPane.setLeftAnchor(nodesEdgesView, 0.0);
         AnchorPane.setBottomAnchor(nodesEdgesView, 0.0);
@@ -130,12 +129,14 @@ public class MapController {
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
 
-        initializePopup();
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
             ResourceBundle rB = systemSettings.getResourceBundle();
             recenterButton.setText(rB.getString("my.recenter"));
+        });
+        systemSettings.addObserver((o,arg) -> {
+            keyButton.setText(systemSettings.getInstance().getResourceBundle().getString("mapKey"));
         });
 
         try {
@@ -266,22 +267,6 @@ public class MapController {
      */
     public void setParent(MainWindowController controller) {
         parent = controller;
-    }
-
-    public void initializePopup(){
-        System.out.println("intializePopup");
-        HBox hbox = new HBox();
-        JFXButton btn = new JFXButton();
-        hbox.getChildren().add(btn);
-
-        popup = new JFXPopup(hbox);
-    }
-
-    public void showPopup(Node node){ // Add mouse event to get offset
-        System.out.println("Show Popup");
-        AnchorPane pane = new AnchorPane();
-
-        popup.show(container, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
 
     /**
