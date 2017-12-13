@@ -13,12 +13,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +30,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -34,6 +39,8 @@ import utility.node.NodeSelectionType;
 
 import java.io.IOException;
 import java.util.*;
+
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class MapController {
     @FXML private AnchorPane container;
@@ -49,10 +56,11 @@ public class MapController {
     public static final double DEFAULT_VVALUE = 0.3;
     public static final double DEFAULT_ZOOM = 0.75;
 
-    @FXML private StackPane stackPane;
+    @FXML private StackPane mapStackPane;
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane pathWaypointContainer;
+    @FXML private Label copyrightLabel;
 
     @FXML private JFXComboBox<String> languageSelector;
     @FXML private JFXComboBox<NodeFloor> floorSelector;
@@ -80,6 +88,8 @@ public class MapController {
     private MiniMapController miniMapController;
     @FXML private AnchorPane miniMapPane;
     private SystemSettings systemSettings;
+
+    @FXML private JFXDialogLayout aboutLayout;
 
     private MainWindowController parent = null;
 
@@ -132,6 +142,8 @@ public class MapController {
 
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
+
+        aboutLayout.setDisable(true);
 
 
         // Controller-wide localization observer
@@ -879,7 +891,65 @@ public class MapController {
 
     @FXML
     private void onAboutAction(){
-        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+
+        JFXDialogLayout aboutDialogLayout = new JFXDialogLayout();
+        aboutDialogLayout.setHeading(new Text("About"));
+        aboutDialogLayout.setBody(new Text("Team Members:\n\n" +
+                "Benjamin Gillette - Project Manager/ Scrum Master \n" +
+                "Jerish Brown - Lead Software Engineer         \n" +
+                "John Parrick  - Assistant Lead Software Engineer\n" +
+                "Ziheng (Leo) Li - Assistant Lead Software Engineer\n" +
+                "James Taylor - Product Owner\n" +
+                "Michael Sidler - Test Engineer\n" +
+                "Mary Hatfalvi - Documentation Analyst\n" +
+                "Henry Dunphy - Software Engineer\n" +
+                "Ryan Racine  - Software Engineer\n" +
+                "Da Xu - Software Engineer\n" +
+                "Team Coach - Akshit (Axe) Soota \n" +
+                "\n" +
+                "WPI Computer Science Department, \n" +
+                "CS3733 Software Engineering, Prof. Wilson Wong, \n\n" +
+                "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"+
+        "\nThe Brigham & Women’s Hospital maps and data used in this application are copyrighted and provided for the sole use of educational purposes."));
+        JFXDialog dialog = new JFXDialog(aboutLayout, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
+
+        JFXButton btnodeDialog= new JFXButton("OK");
+        btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                aboutLayout.setDisable(true);
+                dialog.close();
+                aboutButton.setStyle("-fx-background-color: #00589F");
+            }
+        });
+
+        JFXButton btnodeDialog2 = new JFXButton("CONT");
+        btnodeDialog2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                aboutDialogLayout.setHeading(new Text("API Credit"));
+                aboutDialogLayout.setBody(new Text("Transportation API courtesy of Team Bronze Basilisk\n\n" +
+                        "Team Members:\n" +
+                        "Josiah Boucher, Kenneth Colpritt,\n" +
+                        "Antonio Costa Ferreira, Emir Emir, \n" +
+                        "Sydney Fisher, Jacob Henry, \n" +
+                        "Demi Karavoussianis, Matthew Kornitsky, \n" +
+                        "Yosuke Nakamura, Benjamin Pasculano, Grace Seiche"));
+                btnodeDialog2.setVisible(false);
+            }
+        });
+        aboutDialogLayout.setActions(btnodeDialog2,btnodeDialog);
+
+        if(aboutLayout.isDisable()) {
+            aboutLayout.setDisable(false);
+            dialog.show();
+            aboutButton.setStyle("-fx-background-color: #039f00");
+        }
+        else {
+            aboutLayout.setDisable(true);
+            dialog.close();
+            aboutButton.setStyle("-fx-background-color: #00589F");
+        }
     }
 
     public void nodesConnected(String nodeID1, String nodeID2) {

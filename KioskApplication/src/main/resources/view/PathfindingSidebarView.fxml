@@ -85,7 +85,6 @@
                   <VBox fx:id="textDirectionsBox" />
                </content>
             </ScrollPane>
-            <JFXButton fx:id="emailButton" buttonType="RAISED" layoutX="326.0" layoutY="170.0" onAction="#onEmailPressed" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: orange; -fx-background-radius: 60;" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="170.0" />
             <Label fx:id="directionsLabel" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="370.0" text="Directons to &lt;&lt;label&gt;&gt;" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                <font>
                   <Font size="24.0" />

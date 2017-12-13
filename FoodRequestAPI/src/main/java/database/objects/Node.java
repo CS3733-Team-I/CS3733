@@ -1,11 +1,13 @@
 package database.objects;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
 
 public class Node {
 
+    private int uniqueID;
     private String nodeID;
     private int xcoord;
     private int ycoord;
@@ -15,6 +17,9 @@ public class Node {
     private String longName;
     private String shortName;
     private String teamAssigned;
+    private SimpleIntegerProperty xcoordProperty;
+    private SimpleIntegerProperty ycoordProperty;
+
 
     public Node(String nodeID, int xcoord, int ycoord, NodeFloor floor, NodeBuilding building, NodeType nodeType,
                 String longName, String shortName, String teamAssigned) {
@@ -27,6 +32,8 @@ public class Node {
         this.longName = longName;
         this.shortName = shortName;
         this.teamAssigned = teamAssigned;
+        xcoordProperty = new SimpleIntegerProperty(xcoord);
+        ycoordProperty = new SimpleIntegerProperty(ycoord);
     }
 
     public Node(String nodeID) {
@@ -39,6 +46,8 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
+        xcoordProperty = new SimpleIntegerProperty(0);
+        ycoordProperty = new SimpleIntegerProperty(0);
     }
 
     public Node(String nodeID, NodeFloor floor) {
@@ -51,6 +60,8 @@ public class Node {
         this.longName = "";
         this.shortName = "";
         this.teamAssigned = "";
+        xcoordProperty = new SimpleIntegerProperty(0);
+        ycoordProperty = new SimpleIntegerProperty(0);
     }
 
     @Override
@@ -72,6 +83,10 @@ public class Node {
             return false;
         }
     }
+
+    public int getUniqueID() { return uniqueID; }
+
+    public void setUniqueID(int uniqueID) { this.uniqueID = uniqueID; }
 
     public int getXcoord() {
         return xcoord;
@@ -162,19 +177,27 @@ public class Node {
         return Math.atan2(dy,dx);
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public int getXcoordProperty() {
+        return xcoordProperty.get();
     }
 
-    public void copy(Node node) {
-        this.nodeID = node.nodeID;
-        this.xcoord = node.xcoord;
-        this.ycoord = node.ycoord;
-        this.floor = node.floor;
-        this.building = node.building;
-        this.nodeType = node.nodeType;
-        this.longName = node.longName;
-        this.shortName = node.shortName;
-        this.teamAssigned = node.teamAssigned;
+    public SimpleIntegerProperty xcoordPropertyProperty() {
+        return xcoordProperty;
+    }
+
+    public int getYcoordProperty() {
+        return ycoordProperty.get();
+    }
+
+    public SimpleIntegerProperty ycoordPropertyProperty() {
+        return ycoordProperty;
+    }
+
+    public void setXcoordProperty(int xcoordProperty) {
+        this.xcoordProperty.set(xcoordProperty);
+    }
+
+    public void setYcoordProperty(int ycoordProperty) {
+        this.ycoordProperty.set(ycoordProperty);
     }
 }

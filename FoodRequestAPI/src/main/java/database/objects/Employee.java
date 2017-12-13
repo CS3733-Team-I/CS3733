@@ -6,22 +6,26 @@ import utility.KioskPermission;
 import utility.request.RequestType;
 
 public class Employee extends RecursiveTreeObject<Employee> implements IEmployee {
-    private int loginID;
+    private int id;
     private String username;
     private String lastName;
     private String firstName;
     private String password;
+    private String options;
     private KioskPermission permission;
     private RequestType serviceAbility;
 
     /**
      * Constructor for new employees. This is only for the LoginEntity
      * @param username
+     * @param lastName
+     * @param firstName
      * @param password is encypted through Bcrypt
+     * @param options
      * @param permission if nonEmployee, it changes to employee
      * @param serviceAbility
      */
-    public Employee(String username, String lastName, String firstName, String password, KioskPermission permission, RequestType serviceAbility){
+    public Employee(String username, String lastName, String firstName, String password, String options, KioskPermission permission, RequestType serviceAbility){
         this.username = username;
         this.lastName=lastName;
         this.firstName=firstName;
@@ -29,33 +33,36 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
         if(permission== KioskPermission.NONEMPLOYEE){
             this.permission= KioskPermission.EMPLOYEE;
         }
+        this.options=options;
         this.permission = permission;
         this.serviceAbility = serviceAbility;
     }
 
     /**
      * This is for database side use,
-     * @param loginID retrieves it from the database
+     * @param id retrieves it from the database
      * @param username
      * @param lastName
      * @param firstName
      * @param password
+     * @param options
      * @param permission
      * @param serviceAbility
      */
-    public Employee(int loginID, String username, String lastName, String firstName, String password,
+    public Employee(int id, String username, String lastName, String firstName, String password, String options,
                     KioskPermission permission, RequestType serviceAbility){
-        this.loginID = loginID;
+        this.id = id;
         this.username = username;
         this.lastName=lastName;
         this.firstName=firstName;
         this.password = password;
+        this.options = options;
         this.permission=permission;
         this.serviceAbility = serviceAbility;
     }
 
-    public int getLoginID() {
-        return loginID;
+    public int getID() {
+        return id;
     }
 
     public String getUsername() {
@@ -108,7 +115,7 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
     public boolean updatePassword(String newPassword, String oldPassword){
         boolean valid = validatePassword(oldPassword);
         if(valid){
-            password=BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            password= BCrypt.hashpw(newPassword, BCrypt.gensalt());
         }
         return valid;
     }
@@ -133,5 +140,9 @@ public class Employee extends RecursiveTreeObject<Employee> implements IEmployee
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getOptions() {
+        return options;
     }
 }

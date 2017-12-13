@@ -135,13 +135,13 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             node = new Node(nodeID, rs.getInt("xcoord"),
-                            rs.getInt("ycoord"),
-                            NodeFloor.values()[rs.getInt("floor")],
-                            NodeBuilding.values()[rs.getInt("building")],
-                            NodeType.values()[rs.getInt("nodeType")],
-                            rs.getString("longName"),
-                            rs.getString("shortName"),
-                            rs.getString("teamAssigned"));
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
         }
         if(node == null)
             throw new NotFoundException("Node not found.");
@@ -183,14 +183,14 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
             Node nd = new Node(rs.getString("nodeID"),
-                               rs.getInt("xcoord"),
-                               rs.getInt("ycoord"),
-                               NodeFloor.values()[rs.getInt("floor")],
-                               NodeBuilding.values()[rs.getInt("building")],
-                               NodeType.values()[rs.getInt("nodeType")],
-                               rs.getString("longName"),
-                               rs.getString("shortName"),
-                               rs.getString("teamAssigned"));
+                    rs.getInt("xcoord"),
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
             nd.setUniqueID(rs.getInt("id"));
             nodes.add(nd);
         }
@@ -284,19 +284,19 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             //for completed InterpreterRequests
-           interpreterRequest = new InterpreterRequest(
-                requestID,
-                rs.getString("nodeID"),
-                rs.getInt("assigner"),
-                rs.getInt("completer"),
-                rs.getString("note"),
-                rs.getTimestamp("submittedTime"),
-                rs.getTimestamp("startedTime"),
-                rs.getTimestamp("completedTime"),
-                RequestProgressStatus.values()[rs.getInt("status")],
-                Language.values()[rs.getInt("language")]//,
-                   //rs.getInt("uRequestID")
-           );
+            interpreterRequest = new InterpreterRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    Language.values()[rs.getInt("language")]//,
+                    //rs.getInt("uRequestID")
+            );
         }
         return interpreterRequest;
     }
@@ -832,7 +832,6 @@ public class Connector {
 
     /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
         String sql = SELECT_REQUEST_UID;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         String table;
         switch (checkRequestType(requestID)) {
@@ -857,13 +856,10 @@ public class Connector {
         }
         pstmt.setString(1, table);
         pstmt.setString(2, requestID);
-
         ResultSet rs = pstmt.executeQuery();
-
         if(rs.next()) {
             return rs.getInt("uRequestID");
         }
-
         return -1;
     }*/
 
@@ -894,69 +890,50 @@ public class Connector {
         String sql = ADD_COLUMN_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
-
         return pstmt.execute();
     }
-
     public static int addRequestToTable(Connection conn, Request request) throws SQLException {
         String sql = INSERT_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, request.getuRequestID());
-
         return pstmt.executeUpdate();
     }
-
     public static int addRequestToTable(Connection conn, int uRequestID) throws SQLException {
         String sql = INSERT_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static int updateRequestViewTable(Connection conn, int uRequestID, String employeeID, boolean isViewed) throws SQLException {
         String sql = UPDATE_REQUEST_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
         pstmt.setBoolean(2, isViewed);
         pstmt.setInt(3, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static boolean selectRequestViewEmployee(Connection conn, int uRequestID, String employeeID) throws SQLException {
         String sql = SELECT_REQUEST_VIEW_EMPLOYEE;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
         pstmt.setInt(2, uRequestID);
-
         ResultSet rs = pstmt.executeQuery();
-
         if(rs.next()) {
             return rs.getBoolean(1);
         }
         return false;
     }
-
     public static int deleteRequestFromView(Connection conn, int uRequestID) throws SQLException {
         String sql = DELETE_REQUEST_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static int deleteEmployeeFromView(Connection conn, String employeeID) throws SQLException {
         String sql = DELETE_EMPLOYEE_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
-
         return pstmt.executeUpdate();
-
     }*/
 
     /**

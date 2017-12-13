@@ -85,7 +85,6 @@ public class PathfindingSidebarController extends ScreenController {
     @FXML private AnchorPane directionsContainer;
     @FXML private Label directionsLabel;
     @FXML private VBox textDirectionsBox;
-    @FXML private JFXButton emailButton;
 
     public PathfindingSidebarController(MainWindowController parent, MapController map) {
         super(parent, map);
@@ -116,8 +115,6 @@ public class PathfindingSidebarController extends ScreenController {
         searchView = searchLoader.load();
 
         directionsContainer.setVisible(false);
-
-        emailButton.setGraphic(new ImageView(ResourceManager.getInstance().getImage("/images/icons/mail.png")));
 
         // Set containers to be transparent to mouse events
         ResourceBundle lang = systemSettings.getResourceBundle();
@@ -192,6 +189,8 @@ public class PathfindingSidebarController extends ScreenController {
                 displayedNode.add((newValue.getLocation()));
                 getMapController().zoomOnSelectedNodes(displayedNode);
                 onMapNodeClicked((newValue.getLocation()));
+
+                this.waypointListView.requestFocus();
             }
         });
 
@@ -277,6 +276,10 @@ public class PathfindingSidebarController extends ScreenController {
 
         currentWaypoints.clear();
         currentWaypoints.add(SystemSettings.getInstance().getKioskLocation());
+
+        showPathButton();
+
+        isAddingWaypoint = true;
     }
 
     public void disableClearBtn(){
@@ -310,11 +313,6 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     /* TEXT DIRECTIONS */
-
-    @FXML
-    private void onEmailPressed() {
-
-    }
 
     /**
      * Resets the timer in the MainWindowController

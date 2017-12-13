@@ -42,6 +42,7 @@ public class SearchController {
     @FXML
     void initialize() {
         Platform.runLater(() -> cbSearchData.getSelectionModel().select(0));
+
         //initialize the lists
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
@@ -86,8 +87,8 @@ public class SearchController {
                 cbSearchData.setPromptText("");
             } else {
                 cbSearchData.hide();
-
                 cbSearchData.setPromptText(SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
+                cbSearchData.getEditor().setText("");
             }
         }));
 
