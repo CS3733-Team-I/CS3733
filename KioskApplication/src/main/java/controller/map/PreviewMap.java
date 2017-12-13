@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -88,11 +90,23 @@ public class PreviewMap extends AnchorPane {
                 Line line = new Line((lastNode.getXcoord() - xOffset) * xScale, (lastNode.getYcoord() - yOffset) * yScale,
                         (node.getXcoord() - xOffset) * xScale, (node.getYcoord() - yOffset) * yScale);
                 line.setStroke(section.getColor());
-                line.setStrokeWidth(2);
+                line.setStrokeWidth(4);
                 this.getChildren().add(line);
                 lastNode = node;
             }
         }
+        for(PathSection section: this.pathSections) {
+            Circle waypointIndicator = new Circle(6);
+            waypointIndicator.setFill(Color.RED);
+            waypointIndicator.setCenterX((section.getNodes().getFirst().getXcoord() - xOffset) * xScale);
+            waypointIndicator.setCenterY((section.getNodes().getFirst().getYcoord() - yOffset) * yScale);
+            this.getChildren().add(waypointIndicator);
+        }
+        Circle waypointIndicator = new Circle(6);
+        waypointIndicator.setFill(Color.RED);
+        waypointIndicator.setCenterX((this.pathSections.getLast().getNodes().getLast().getXcoord() - xOffset) * xScale);
+        waypointIndicator.setCenterY((this.pathSections.getLast().getNodes().getLast().getYcoord() - yOffset) * yScale);
+        this.getChildren().add(waypointIndicator);
         //Then, draw waypoints
 
         //Then, TODO: add animation.
