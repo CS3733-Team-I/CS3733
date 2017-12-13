@@ -386,7 +386,7 @@ public class MapEntity implements IMapEntity {
      * @param kioskNode
      * @throws PathfinderException
      */
-    public void updateDistanceFromKisok(Node kioskNode) {
+    public void updateDistanceFromKiosk(Node kioskNode) {
         Pathfinder pathfinder = new Pathfinder();
         for(NodeFloor nf : floors.keySet()){
             for(Node n : floors.get(nf).getAllNodes()) {
