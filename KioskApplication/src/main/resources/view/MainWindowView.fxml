@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -15,6 +16,11 @@
             <Tab fx:id="tabRS" text="Request Submit" />
             <Tab fx:id="tabRM" text="Request Manager" />
             <Tab fx:id="tabSettings" text="Settings" />
+            <Tab fx:id="tabHelp" text="Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
          </tabs>
       </JFXTabPane>
        <JFXButton fx:id="switchButton" focusTraversable="false" layoutX="670.0" onAction="#switchButtonClicked" prefHeight="35.0" prefWidth="130.0" ripplerFill="BLACK" style="-fx-background-color: #4286f4; -fx-background-radius: 0;" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -22,6 +28,8 @@
             <Font name="System Bold" size="12.0" />
          </font>
        </JFXButton>
-      <AnchorPane fx:id="contentWindow" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <AnchorPane fx:id="contentWindow" layoutY="35.0" prefHeight="200.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <Label fx:id="date" text="Label" textFill="WHITE" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="15.0" />
+      <Label fx:id="time" text="Label" textFill="WHITE" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="3.0" />
    </children>
 </AnchorPane>

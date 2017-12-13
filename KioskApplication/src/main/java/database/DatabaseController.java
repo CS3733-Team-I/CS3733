@@ -738,7 +738,6 @@ public class DatabaseController {
             }
         }
     }
-
     public void deleteEmployeeFromView(IEmployee employee) {
         try {
             Connector.deleteEmployeeFromView(instanceConnection, employee.getUsername());
@@ -748,7 +747,6 @@ public class DatabaseController {
             }
         }
     }
-
     public void insertRequestIntoView(Request request) {
         try {
             Connector.addRequestToTable(instanceConnection, request);
@@ -758,12 +756,10 @@ public class DatabaseController {
             }
         }
     }
-
     public void insertRequestIntoView(String requestID) {
         int uRequestID;
         try {
             uRequestID = Connector.getURequestIDFromRequestID(instanceConnection, requestID);
-
             Connector.addRequestToTable(instanceConnection, uRequestID);
         } catch (SQLException e) {
             if(e.getSQLState() != "23505") {
@@ -771,7 +767,6 @@ public class DatabaseController {
             }
         }
     }
-
     public void deleteRequestFromView(Request request) {
         try {
             Connector.deleteRequestFromView(instanceConnection, request.getuRequestID());
@@ -781,7 +776,6 @@ public class DatabaseController {
             }
         }
     }
-
     public void deleteRequestFromView(int uRequestID) {
         try {
             Connector.deleteRequestFromView(instanceConnection, uRequestID);
@@ -791,7 +785,6 @@ public class DatabaseController {
             }
         }
     }
-
     public boolean isRequestViewed(IEmployee employee, Request request) {
         try {
             return Connector.selectRequestViewEmployee(instanceConnection, request.getuRequestID(), employee.getUsername());
@@ -802,7 +795,6 @@ public class DatabaseController {
         }
         return false;
     }
-
     public boolean isRequestViewed(IEmployee employee, int uRequestID) {
         try {
             return Connector.selectRequestViewEmployee(instanceConnection, uRequestID, employee.getUsername());
@@ -813,7 +805,6 @@ public class DatabaseController {
         }
         return false;
     }
-
     public void setRequestViewed(IEmployee employee, Request request, boolean isViewed) {
         try {
             Connector.updateRequestViewTable(instanceConnection, request.getuRequestID(), employee.getUsername(), isViewed);
@@ -823,7 +814,6 @@ public class DatabaseController {
             }
         }
     }
-
     public void setRequestViewed(IEmployee employee, int uRequestID, boolean isViewed) {
         try {
             Connector.updateRequestViewTable(instanceConnection, uRequestID, employee.getUsername(), isViewed);
