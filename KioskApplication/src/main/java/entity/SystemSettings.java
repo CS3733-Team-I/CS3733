@@ -2,6 +2,7 @@ package entity;
 
 import database.connection.NotFoundException;
 import database.objects.Node;
+import javafx.beans.property.SimpleObjectProperty;
 import pathfinder.*;
 
 import java.util.LinkedList;
@@ -12,16 +13,23 @@ import java.util.prefs.Preferences;
 
 public class SystemSettings extends Observable {
     private Preferences prefs;
-    private SearchAlgorithm algorithm;
-    private Node kioskLocation;
-    private int beamWidth;
-    private ResourceBundle resourceBundle;
-    private static final String kioskLocationKey = "kioskLocation";
+
     private static final String searchAlgorithmKey = "searchAlgorithm";
-    private static final String beamWidthKey = "beamWidth";
-    private String defaultKioskLocationID = "IHALL00303";
-    private String defaultBeamWidth = "3";
+    private SearchAlgorithm algorithm;
     private String defaultSearchAlgorithm = "A*";
+
+    private static final String kioskLocationKey = "kioskLocation";
+    private SimpleObjectProperty<Node> kioskLocationProperty;
+    private String defaultKioskLocationID = "IHALL00303";
+
+    private static final String beamWidthKey = "beamWidth";
+    private int beamWidth;
+    private String defaultBeamWidth = "3";
+
+    private ResourceBundle resourceBundle;
+
+    private boolean isMetric;
+    private boolean isArabic;
 
     private static class SystemSettingsSingleton {
         private static final SystemSettings _instance = new SystemSettings();
@@ -30,19 +38,27 @@ public class SystemSettings extends Observable {
 
     private SystemSettings () {
         super();
+
+        kioskLocationProperty = new SimpleObjectProperty<>();
+
+        kioskLocationProperty.addListener(((observable, oldValue, newValue) -> {
+            updateDistance();
+        }));
+
         MapEntity map = MapEntity.getInstance();
         this.prefs = Preferences.userNodeForPackage(SystemSettings.class);
         this.setAlgorithm(this.prefs.get(this.searchAlgorithmKey, "A*"));   //Retrieve saved algorithm setting;
+
         //Retrieve saved kiosk location
         try{
-            this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+            this.kioskLocationProperty.set(map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID)));
         }
         catch(NotFoundException exception){
             //If the saved location is not valid, clear it and try again with the default location
             try {
                 System.err.println("Error: saved kiosk location does not exist.  Resetting kiosk location to default.");
                 this.prefs.remove(this.kioskLocationKey);
-                this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+                this.kioskLocationProperty.set(map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID)));
             } catch (NotFoundException e) {
                 //If the default node doesn't exist either, print an error and reset the default to something that does exist.
                 System.err.println("Error: default kiosk location does not exist.  Getting a new default from the map.");
@@ -50,7 +66,7 @@ public class SystemSettings extends Observable {
                 this.defaultKioskLocationID = map.getAllNodes().getFirst().getNodeID();
                 //Now, we should be able to get the new default location.
                 try {
-                    this.kioskLocation = map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID));
+                    this.kioskLocationProperty.set(map.getNode(this.prefs.get(this.kioskLocationKey,this.defaultKioskLocationID)));
                 } catch (NotFoundException e1) {
                     //If THAT doesn't work, something very strange is happening.
                     e1.printStackTrace();
@@ -62,6 +78,10 @@ public class SystemSettings extends Observable {
         this.setResourceBundle("English");
         //if not set, default to A*
 //        System.out.println(this.prefs.get("searchAlgorithm", "A*"));  //For debugging
+
+
+        isMetric = true;
+        isArabic = true;
     }
 
     public static SystemSettings getInstance() {
@@ -110,7 +130,7 @@ public class SystemSettings extends Observable {
     public void setKioskLocation(String kioskLocationID){
         MapEntity map = MapEntity.getInstance();
         try {
-            this.kioskLocation = map.getNode(kioskLocationID);
+            this.kioskLocationProperty.set(map.getNode(kioskLocationID));
             this.prefs.put(this.kioskLocationKey, kioskLocationID);
         } catch (NotFoundException e) {
             System.err.println("Error: specified kiosk location does not exist.  Kiosk location not changed.");
@@ -118,7 +138,11 @@ public class SystemSettings extends Observable {
     }
 
     public Node getKioskLocation() {
-        return kioskLocation;
+        return kioskLocationProperty.get();
+    }
+
+    public SimpleObjectProperty<Node> kioskLocationPropertyProperty() {
+        return kioskLocationProperty;
     }
 
     /**
@@ -166,5 +190,21 @@ public class SystemSettings extends Observable {
 
     public void updateDistance() {
         MapEntity.getInstance().updateDistanceFromKisok(getKioskLocation());
+    }
+
+    public void setIsMetric(boolean b) {
+        this.isMetric = b;
+    }
+
+    public void setIsArabic(boolean b) {
+        this.isArabic = b;
+    }
+
+    public boolean isMetric() {
+        return isMetric;
+    }
+
+    public boolean isArabic() {
+        return isArabic;
     }
 }
