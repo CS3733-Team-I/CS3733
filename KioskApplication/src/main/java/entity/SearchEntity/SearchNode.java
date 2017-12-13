@@ -127,4 +127,8 @@ public class SearchNode implements ISearchEntity{
     public String getName() {
         return this.databaseNode.getLongName();
     }
+
+    public Node getLocation() {
+        return this.databaseNode;
+    }
 }

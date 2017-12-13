@@ -94,18 +94,12 @@ public class LoginEntity {
     }
 
     /**
-     * Gets all the login info from the entity, only allowed if currently a super user.
+     * Gets all the login info from the entity
      * @return
      */
     public ArrayList<Employee> getAllLogins() {
         ArrayList<Employee> emps = new ArrayList<Employee>();
-        // Return the logins if we're a super user
-        if (getCurrentPermission()==SUPER_USER) {
-            return new ArrayList<Employee>(logins.values());
-        }
-
-        // Otherwise return an empty list
-        return emps;
+        return new ArrayList<Employee>(logins.values());
     }
 
     /**

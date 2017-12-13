@@ -144,7 +144,7 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Label>
-                                       <JFXComboBox fx:id="doctorOfficeBox" prefWidth="100.0" prefHeight="50" visible="false" GridPane.rowIndex="2"/>
+                                       <AnchorPane fx:id="officePane" prefWidth="150.0" prefHeight="50" visible="false" GridPane.rowIndex="2"/>
                                  </children>
                               </GridPane>
                            </children>
