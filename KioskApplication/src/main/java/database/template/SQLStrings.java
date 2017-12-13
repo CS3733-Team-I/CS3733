@@ -26,7 +26,7 @@ public class SQLStrings {
             "    REFERENCES t_nodes (nodeID) ON DELETE CASCADE\n" +
             ")";
 
-    public static final String CREATE_REQUEST_VIEW_TABLE = "CREATE TABLE t_requestView (\n" +
+    /*public static final String CREATE_REQUEST_VIEW_TABLE = "CREATE TABLE t_requestView (\n" +
             "    uRequestID INT NOT NULL CONSTRAINT t_requestView_pk PRIMARY KEY\n" +
             ")";
 
@@ -49,13 +49,13 @@ public class SQLStrings {
 
     public static final String SELECT_REQUEST_VIEW = "SELECT * FROM t_requestView WHERE uRequestID=?";
 
-    public static final String DELETE_REQUEST_VIEW = "DELETE FROM t_requestView WHERE uRequestID=?";
+    public static final String DELETE_REQUEST_VIEW = "DELETE FROM t_requestView WHERE uRequestID=?";*/
 
 
 
     public static final String CREATE_EDGE_UINDEX =  "CREATE UNIQUE INDEX t_edges_id_uindex ON t_edges (id)";
 
-    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?, ?)";
+    public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?)";
 
     public static final String REQUEST_UPDATE = " nodeID=?, assigner=?, completer=?,"+
             " note=?, submittedTime=?, startedTime=?, completedTime=?,"+
@@ -83,13 +83,19 @@ public class SQLStrings {
             " assigner INT NOT NULL CONSTRAINT t_food_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,"+
             " completer INT NOT NULL CONSTRAINT t_food_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,";
 
+    public static final String CREATE_JANITOR_TABLE = "create table t_janitor(" +
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_janitor_pk PRIMARY KEY,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_janitor_node_fk REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_janitor_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_janitor_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,";
+
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
             " note LONG VARCHAR," +
             " submittedTime TIMESTAMP NOT NULL," +
             " startedTime TIMESTAMP NOT NULL,"+
             " completedTime TIMESTAMP NOT NULL," +
-            " status INT NOT NULL," +
-            " uRequestID INT NOT NULL CONSTRAINT t_request_fk5 REFERENCES t_requestView ON DELETE CASCADE)";
+            " status INT NOT NULL" +
+            ")";
 
     // Interpreter
     public static final String INTERPRETER_INSERT = "insert into t_interpreter values(?, ?, ?, ?, ?,";
@@ -115,11 +121,19 @@ public class SQLStrings {
     public static final String SECURITY_DELETE = "DELETE FROM t_security WHERE requestID = ?";
     public static final String SECURITY_SELECT_ALL = "select * from t_security";
 
+    // Janitor
+    public static final String JANITOR_INSERT = "INSERT INTO t_janitor VALUES(?,?,?,?,?,?,?,?,?)";
+    public static final String JANITOR_UPDATE = "UPDATE t_janitor set";
+    public static final String JANITOR_SELECT = "SELECT * FROM t_janitor WHERE requestID=?";
+    public static final String JANITOR_DELETE = "DELETE FROM t_janitor WHERE requestID=?";
+    public static final String JANITOR_SELECT_ALL = "SELECT * FROM t_janitor";
+
     // Dropping
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
     public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
+    public static final String DROP_JANITOR_TABLE = "DROP TABLE t_janitor";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 

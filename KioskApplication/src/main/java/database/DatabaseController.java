@@ -1,6 +1,5 @@
 package database;
 
-import com.sun.org.apache.regexp.internal.RE;
 import database.connection.Connector;
 import database.connection.NotFoundException;
 import database.objects.*;
@@ -261,7 +260,21 @@ public class DatabaseController {
         return 0;
     }
 
+    /**
+     * Adds a JanitorRequest to the database
+     * @param janitorRequest
+     * @return
+     */
+    public int addJanitorRequest(JanitorRequest janitorRequest){
+        try{
+            return Connector.insertJanitor(instanceConnection,janitorRequest);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
     //TODO: Update this method
+
     public int updateInterpreterRequest(InterpreterRequest iR) {
         try {
             return Connector.updateInterpreter(instanceConnection, iR);
@@ -272,8 +285,8 @@ public class DatabaseController {
         }
         return 0;
     }
-
     //TODO: Update this method
+
     public int updateSecurityRequest(SecurityRequest sR) {
         try {
             return Connector.updateSecurity(instanceConnection, sR);
@@ -296,6 +309,20 @@ public class DatabaseController {
         return 0;
     }
 
+    /**
+     * Updates the janitorRequest in the database
+     * @param janitorRequest
+     * @return
+     */
+    public int updateJanitorRequest(JanitorRequest janitorRequest){
+        try{
+            return Connector.updateJanitor(instanceConnection,janitorRequest);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     public  InterpreterRequest getInterpreterRequest(String requestID) {
         try {
@@ -312,6 +339,22 @@ public class DatabaseController {
         try {
             return Connector.selectSecurity(instanceConnection, requestID);
         } catch(SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the specified JanitorRequest from the database
+     * @param requestID
+     * @return
+     */
+    public JanitorRequest getJanitorRequest(String requestID) {
+        try{
+            return Connector.selectJanitor(instanceConnection, requestID);
+        } catch (SQLException e){
             if(e.getSQLState() != "23505") {
                 e.printStackTrace();
             }
@@ -366,6 +409,23 @@ public class DatabaseController {
         return false;
     }
 
+    /**
+     * deletes the JanitorRequest from the database
+     * @param requestID
+     * @return
+     */
+    public boolean deleteJanitorRequest(String requestID){
+        try {
+            Connector.deleteJanitor(instanceConnection, requestID);
+            return true;
+        } catch (SQLException e) {
+            if(e.getSQLState() != "23505") {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public LinkedList<InterpreterRequest> getAllInterpreterRequests() {
         try {
             return Connector.selectAllInterpreters(instanceConnection);
@@ -399,15 +459,17 @@ public class DatabaseController {
         return new LinkedList<FoodRequest>();
     }
 
-    public LinkedList<FoodRequest> getAllFoodRequest(){
-        try {
-            return Connector.selectAllFood(instanceConnection);
-        } catch (SQLException e) {
-            if(e.getSQLState() != "23505") {
-                e.printStackTrace();
-            }
+    /**
+     * Gets all JanitorRequests from the database
+     * @return
+     */
+    public LinkedList<JanitorRequest> getAllJanitorRequests(){
+        try{
+            return Connector.selectAllJanitor(instanceConnection);
+        } catch (SQLException e){
+            e.printStackTrace();
         }
-        return new LinkedList<FoodRequest>();
+        return new LinkedList<JanitorRequest>();
     }
 
     public void deleteTestTables() {
@@ -540,6 +602,7 @@ public class DatabaseController {
         }
     }
 
+    /*
     public void insertEmployeeIntoView(IEmployee employee) {
         try {
             Connector.addEmployeeToRequestTable(instanceConnection, employee.getUsername());
@@ -643,5 +706,5 @@ public class DatabaseController {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

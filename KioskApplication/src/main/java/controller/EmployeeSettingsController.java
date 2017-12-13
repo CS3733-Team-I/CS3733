@@ -2,25 +2,33 @@ package controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
+import database.connection.NotFoundException;
 import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import utility.KioskPermission;
 import utility.node.NodeType;
 import utility.request.Language;
 import utility.request.RequestType;
 import utility.validators.MatchingFieldValidator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -48,7 +56,12 @@ public class EmployeeSettingsController {
     @FXML private JFXButton addUserActionButton, addUserCancelButton;
 
     @FXML private VBox interpreterLanguageBox;
-    @FXML private JFXComboBox doctorOfficeBox;
+
+    @FXML private AnchorPane officePane;
+
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
 
     @FXML private GridPane deletePane;
     @FXML private Label deleteText;
@@ -66,8 +79,23 @@ public class EmployeeSettingsController {
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException{
         root.setExpanded(true);
+
+        //initialize search
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNode.add(new SearchNode(targetNode));
+            }
+        }
+        searchController = new SearchController(this, searchNode);
+        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        searchLoader.setController(searchController);
+        searchView = searchLoader.load();
+        searchController.resizeSearchbarWidth(150.0);
+        searchController.setSearchFieldPromptText("Search office");
+        officePane.getChildren().add(searchView);
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -124,24 +152,29 @@ public class EmployeeSettingsController {
                 LoginEntity e = LoginEntity.getInstance();
                 selectedEmployee = newValue.getValue();
                 additionalInformationBox.getChildren().clear();
+                for (String office : selectedEmployee.getOptions()) {
+                    String officeName = "Not Found";
+                    try {
+                        officeName = MapEntity.getInstance().getNode(office).getLongName();
+                    }catch(NotFoundException ex) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Can't found Location" + office);
+                        alert.setHeaderText("Error occured while looking for office");
+                        alert.setContentText(ex.toString());
+                        alert.showAndWait();
+                    }
+                    Label officeLabel = new Label(officeName);
+
+                    additionalInformationBox.getChildren().add(officeLabel);
+                }
+                additionalInformationPane.setVisible(true);
                 if (selectedEmployee.getServiceAbility()==INTERPRETER){
                     for (String language :
                             selectedEmployee.getOptions()) {
                         Label langLabel = new Label(Language.values()[Integer.parseInt(language)].toString());
                         additionalInformationBox.getChildren().add(langLabel);
                     }
-                    additionalInformationPane.setVisible(true);
-                }
-                else if(selectedEmployee.getServiceAbility()==DOCTOR){
-                    for (String office :
-                            selectedEmployee.getOptions()) {
-                        Label officeLabel = new Label(office);
-                        additionalInformationBox.getChildren().add(officeLabel);
-                    }
-                    additionalInformationPane.setVisible(true);
-                }
-                else {
-                    additionalInformationPane.setVisible(false);
+
                 }
                 // Don't allow deletion if the selected user is self
                 if (selectedEmployee.getUsername().equals(e.getCurrentUsername())) {
@@ -170,12 +203,6 @@ public class EmployeeSettingsController {
                 langCheckBox.setPrefWidth(100.0);
                 langCheckBox.setPrefHeight(25.0);
                 interpreterLanguageBox.getChildren().add(langCheckBox);
-            }
-        }
-        //Doctor's office selector setup
-        for(database.objects.Node databaseNode : MapEntity.getInstance().getAllNodes()) {
-            if(databaseNode.getNodeType() == NodeType.DEPT) {
-                doctorOfficeBox.getItems().add(databaseNode.getLongName());
             }
         }
         setupValidatorsForAddUserPane();
@@ -341,16 +368,14 @@ public class EmployeeSettingsController {
                         return;
                     }
                     break;
-                case DOCTOR:
-                    if (doctorOfficeBox.getValue()==null){
+                default:
+                    if (searchController.getSelected()==null){
                         errLabel.setText("No office selected");
                         return;
                     }
                     else {
-                        options.add(doctorOfficeBox.getValue().toString());
+                        options.add(((database.objects.Node)(searchController.getSelected())).getNodeID());
                     }
-                    break;
-                default:
                     break;
                 }
             }
@@ -395,6 +420,15 @@ public class EmployeeSettingsController {
         passwordBox.setText("");
         permissionSelect.setValue(null);
         serviceSelect.setValue(null);
+
+        //reset search
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNode.add(new SearchNode(targetNode));
+            }
+        }
+        searchController.reset(searchNode);
     }
 
     /**
@@ -404,9 +438,10 @@ public class EmployeeSettingsController {
     @FXML
     public void checkEmployeeServiceType(){
         RequestType employeeType = serviceSelect.getValue();
+        officePane.setVisible(true);
+        searchController.setVisible(true);
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
-            doctorOfficeBox.setVisible(false);
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
@@ -416,14 +451,12 @@ public class EmployeeSettingsController {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeBox.setVisible(true);
             doctorOfficeLabel.setVisible(true);
         }
         else {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
-            doctorOfficeBox.setVisible(false);
             doctorOfficeLabel.setVisible(false);
         }
     }
