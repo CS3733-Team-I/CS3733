@@ -832,7 +832,7 @@ public class MapController {
 
         JFXDialogLayout aboutDialogLayout = new JFXDialogLayout();
         aboutDialogLayout.setHeading(new Text("About"));
-        aboutDialogLayout.setBody(new Text("Team Members:\n" +
+        aboutDialogLayout.setBody(new Text("Team Members:\n\n" +
                 "Benjamin Gillette - Project Manager/ Scrum Master \n" +
                 "Jerish Brown - Lead Software Engineer         \n" +
                 "John Parrick  - Assistant Lead Software Engineer\n" +
@@ -843,11 +843,12 @@ public class MapController {
                 "Henry Dunphy - Software Engineer\n" +
                 "Ryan Racine  - Software Engineer\n" +
                 "Da Xu - Software Engineer\n" +
+                "Team Coach - Akshit (Axe) Soota \n" +
                 "\n" +
                 "WPI Computer Science Department, \n" +
-                "CS3733 Software Engineering, Prof. Wilson Wong, \n" +
-                "Team Coach - Akshit (Axe) Soota \n" +
-                "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"));
+                "CS3733 Software Engineering, Prof. Wilson Wong, \n\n" +
+                "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"+
+        "\nThe Brigham & Women’s Hospital maps and data used in this application are copyrighted and provided for the sole use of educational purposes."));
         JFXDialog dialog = new JFXDialog(aboutLayout, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
 
         JFXButton btnodeDialog= new JFXButton("OK");
@@ -859,7 +860,23 @@ public class MapController {
                 aboutButton.setStyle("-fx-background-color: #00589F");
             }
         });
-        aboutDialogLayout.setActions(btnodeDialog);
+
+        JFXButton btnodeDialog2 = new JFXButton("CONT");
+        btnodeDialog2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                aboutDialogLayout.setHeading(new Text("API Credit"));
+                aboutDialogLayout.setBody(new Text("Transportation API courtesy of Team Bronze Basilisk\n\n" +
+                        "Team Members:\n" +
+                        "Josiah Boucher, Kenneth Colpritt,\n" +
+                        "Antonio Costa Ferreira, Emir Emir, \n" +
+                        "Sydney Fisher, Jacob Henry, \n" +
+                        "Demi Karavoussianis, Matthew Kornitsky, \n" +
+                        "Yosuke Nakamura, Benjamin Pasculano, Grace Seiche"));
+                btnodeDialog2.setVisible(false);
+            }
+        });
+        aboutDialogLayout.setActions(btnodeDialog2,btnodeDialog);
 
         if(aboutLayout.isDisable()) {
             aboutLayout.setDisable(false);
