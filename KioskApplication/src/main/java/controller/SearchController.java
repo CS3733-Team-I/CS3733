@@ -2,7 +2,10 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -39,11 +42,12 @@ public class SearchController {
 
     @FXML
     void initialize() {
+        Platform.runLater(() -> cbSearchData.getSelectionModel().select(0));
         //initialize the lists
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
         cbSearchData.setEditable(true);
-        cbSearchData.setPromptText("Search by location, doctor or type");
+
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {
@@ -82,11 +86,12 @@ public class SearchController {
                 cbSearchData.setPromptText("");
             } else {
                 cbSearchData.hide();
-                cbSearchData.setPromptText("Search by location, doctor or type"); // TODO use language string
             }
         }));
 
-        cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        cbSearchData.setOnKeyReleased(e -> {
+            cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        });
 
         updateSearch("");
         cbSearchData.hide();
@@ -265,5 +270,13 @@ public class SearchController {
             alert.setTitle("Can't Match Search Data while removing search data" + comparingString);
             alert.showAndWait();
         }
+    }
+
+    public void setDisableSearch(boolean b) {
+        this.cbSearchData.setDisable(b);
+    }
+
+    public JFXComboBox<ISearchEntity> getCbSearchData() {
+        return cbSearchData;
     }
 }

@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <JFXTabPane fx:id="requestTypeTabs" layoutX="44.0" layoutY="161.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="400.0" side="LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -42,7 +42,7 @@
                                           </FXCollections>
                                       </items>
                                   </JFXComboBox>
-                                  <JFXTextArea fx:id="intNotesArea" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Notes" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
+                                  <JFXTextArea fx:id="intNotesArea" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Notes" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
                                   <JFXButton id="confirm-button" fx:id="btnSubmit" layoutX="146.0" layoutY="441.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
                                       <opaqueInsets>
                                           <Insets />
@@ -64,7 +64,7 @@
                         <JFXComboBox fx:id="restaurantComboBox" layoutX="14.0" layoutY="22.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Restaurant" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <JFXTreeTableView fx:id="menuTable" layoutX="22.0" layoutY="108.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="427.0" prefWidth="180.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
                         <JFXTimePicker fx:id="deliveryTimePicker" layoutX="10.0" layoutY="35.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Delivery Time" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
-                        <JFXButton id="confirm-button" layoutX="100.0" layoutY="521.0" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <JFXButton id="confirm-button" fx:id="btnSubmit" layoutX="100.0" layoutY="521.0" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                         <JFXButton id="cancel-button" layoutX="29.0" layoutY="513.0" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
                         <JFXTextField fx:id="deliveryLocation" editable="false" layoutX="14.0" layoutY="94.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Delivery Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
                      </children></AnchorPane>
@@ -86,8 +86,8 @@
                                           </FXCollections>
                                       </items>
                                   </JFXComboBox>
-                                  <JFXTextArea fx:id="secNoteField" layoutY="72.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="439.0" prefWidth="180.0" promptText="Notes" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
-                                  <JFXButton id="confirm-button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                  <JFXTextArea fx:id="secNoteField" layoutY="72.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="439.0" prefWidth="180.0" promptText="Notes" style="-fx-background-color: white;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
+                                  <JFXButton id="confirm-button" fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                                   <JFXButton layoutX="6.0" layoutY="554.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="cancel-button" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
                             </children>
                         </AnchorPane>
@@ -99,23 +99,86 @@
                             <children>
                                 <GridPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                                     <columnConstraints>
-                                        <ColumnConstraints maxWidth="Infinity" minWidth="100.0" prefWidth="200" halignment="LEFT"/>
-                                        <ColumnConstraints maxWidth="Infinity" minWidth="100.0" prefWidth="200" halignment="RIGHT"/>
+                                        <ColumnConstraints halignment="LEFT" maxWidth="Infinity" minWidth="100.0" prefWidth="200" />
+                                        <ColumnConstraints halignment="RIGHT" maxWidth="Infinity" minWidth="100.0" prefWidth="200" />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints prefHeight="100"/>
-                                        <RowConstraints prefHeight="200"/>
-                                        <RowConstraints prefHeight="100"/>
+                                        <RowConstraints prefHeight="100" />
+                                        <RowConstraints prefHeight="200" />
+                                        <RowConstraints prefHeight="100" />
                                     </rowConstraints>
                                     <children>
-                                        <JFXTextField fx:id="janLocationField" prefHeight="30" prefWidth="200" promptText="Location" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                                        <JFXTextArea fx:id="janNotesField" prefHeight="200" prefWidth="200" promptText="Notes"
-                                                     GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                                                     GridPane.vgrow="ALWAYS" styleClass="request-notes"/>
+                                        <JFXTextField fx:id="janLocationField" prefHeight="30" prefWidth="200" promptText="Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin></JFXTextField>
+                                        <JFXTextArea fx:id="janNotesField" prefHeight="200" prefWidth="200" promptText="Notes" style="-fx-background-color: white;" styleClass="request-notes" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                                 <GridPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                                 </GridPane.margin></JFXTextArea>
                                         <JFXButton onAction="#clearButton" prefHeight="30" prefWidth="150" styleClass="cancel-button" text="Clear" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                        <JFXButton onAction="#addRequest" prefHeight="30" prefWidth="150" text="Submit" id="confirm-button" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass=""/>
+                                        <JFXButton id="confirm-button" onAction="#addRequest" prefHeight="30" prefWidth="150" styleClass="" text="Submit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     </children>
                                 </GridPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="itTab">
+                    <content>
+                        <AnchorPane maxHeight="Infinity" maxWidth="Infinity" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="400">
+                            <children>
+                                <GridPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="LEFT" maxWidth="Infinity" minWidth="100.0" prefWidth="200" />
+                                        <ColumnConstraints halignment="RIGHT" maxWidth="Infinity" minWidth="100.0" prefWidth="200" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints prefHeight="100" />
+                                        <RowConstraints prefHeight="100" />
+                                        <RowConstraints prefHeight="200" />
+                                        <RowConstraints prefHeight="100" />
+                                    </rowConstraints>
+                                    <children>
+                                        <JFXTextField fx:id="itLocationField" prefHeight="30" prefWidth="200" promptText="Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin></JFXTextField>
+                                        <JFXComboBox fx:id="itServiceTypeSelector" prefHeight="30" prefWidth="200" promptText="Issue Type?" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin></JFXComboBox>
+                                        <JFXTextArea fx:id="itNotesField" prefHeight="200" prefWidth="200" promptText="Notes" style="-fx-background-color: white;" styleClass="request-notes" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="10.0" right="10.0" />
+                                 </GridPane.margin></JFXTextArea>
+                                        <JFXButton onAction="#clearButton" prefHeight="30" prefWidth="150" styleClass="cancel-button" text="Clear" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <JFXButton id="confirm-button" onAction="#addRequest" prefHeight="30" prefWidth="150" styleClass="" text="Submit" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="maintenanceTab">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" onMousePressed="#resetTimer" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <JFXTextField fx:id="maintLocationField" editable="false" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Location" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                <JFXComboBox fx:id="maintMenu" layoutX="10.0" layoutY="35.0" maxWidth="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Priority Level" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="1" />
+                                            <String fx:value="2" />
+                                            <String fx:value="3" />
+                                            <String fx:value="4" />
+                                            <String fx:value="5" />
+                                        </FXCollections>
+                                    </items>
+                                </JFXComboBox>
+                                <JFXTextArea fx:id="maintNoteField" layoutY="72.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="439.0" prefWidth="180.0" promptText="Notes" style="-fx-background-color: white;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="85.0" />
+                                <JFXButton id="confirm-button" fx:id="btnSubmit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" text="Submit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                                <JFXButton layoutX="6.0" layoutY="554.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" styleClass="cancel-button" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
                             </children>
                         </AnchorPane>
                     </content>
