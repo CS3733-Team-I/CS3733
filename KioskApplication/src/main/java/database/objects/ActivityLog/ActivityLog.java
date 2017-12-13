@@ -11,7 +11,30 @@ public class ActivityLog extends RecursiveTreeObject<ActivityLog> {
     private int employeeID;
     private String details;
 
+    /**
+     * For use in the ActivityLogger
+     * @param time
+     * @param activityType
+     * @param employeeID
+     * @param details
+     */
     public ActivityLog(Timestamp time, ActivityType activityType, int employeeID, String details){
+        this.time=time;
+        this.activityType=activityType;
+        this.employeeID=employeeID;
+        this.details=details;
+    }
+
+    /**
+     * For use on retrieving the log from the database
+     * @param activityID
+     * @param time
+     * @param activityType
+     * @param employeeID
+     * @param details
+     */
+    public ActivityLog(int activityID, Timestamp time, ActivityType activityType, int employeeID, String details){
+        this.activityID=activityID;
         this.time=time;
         this.activityType=activityType;
         this.employeeID=employeeID;

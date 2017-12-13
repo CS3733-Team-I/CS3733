@@ -7,7 +7,10 @@ import database.objects.Edge;
 import database.objects.Employee;
 import database.objects.Node;
 import database.objects.Request;
+import database.utility.DatabaseException;
+import database.utility.DatabaseExceptionType;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,7 +19,6 @@ public class ActivityLogger {
     private LoginEntity loginEntity;
     private DatabaseController databaseController;
     private HashMap<Integer,ActivityLog> logHashMap;
-    private int tempIterator;
 
     private static class ActivityLoggerSingletonHelper{
         private static final ActivityLogger instance = new ActivityLogger();
@@ -27,17 +29,20 @@ public class ActivityLogger {
     }
 
     private ActivityLogger(){
-        tempIterator=1;
         loginEntity=LoginEntity.getInstance();
         databaseController = DatabaseController.getInstance();
         logHashMap = new HashMap<>();
+        readAllFromDatabase();
     }
 
     /**
      * Fills the hashmap for the ActivityLoggerSingleton
      */
     private void readAllFromDatabase(){
-
+        logHashMap.clear();
+        for (ActivityLog log : databaseController.getAllActivityLogs()){
+            logHashMap.put(log.getActivityID(),log);
+        }
     }
 
     /**
@@ -91,7 +96,7 @@ public class ActivityLogger {
     }
 
     public void logEmployeeAdd(Employee employee){
-        String details = "";
+        String details = "Added Employee: "+employee.getID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
         ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, loginEntity.getCurrentLoginID(), details);
         submitLog(log);
@@ -177,8 +182,8 @@ public class ActivityLogger {
      * @param log
      */
     private void submitLog(ActivityLog log){
-        log.setActivityID(tempIterator);
-        tempIterator++;
+        int logID = databaseController.addActivityLog(log);
+        log.setActivityID(logID);
         logHashMap.put(log.getActivityID(),log);
     }
 }

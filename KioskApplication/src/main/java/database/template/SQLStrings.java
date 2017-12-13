@@ -147,6 +147,7 @@ public class SQLStrings {
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
     public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
     public static final String DROP_JANITOR_TABLE = "DROP TABLE t_janitor";
+    public static final String DROP_ACTIVITY_TABLE = "DROP TABLE t_activityLog";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 

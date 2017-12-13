@@ -76,6 +76,10 @@ public class DBUtil {
         PreparedStatement createJanitorTable = conn.prepareStatement(CREATE_JANITOR_TABLE+
                 WITH_SHARED_REQUEST_ATTRIBUTES);
         createJanitorTable.execute();
+
+        // Activity logging
+        PreparedStatement createActivityTable = conn.prepareStatement(CREATE_ACTIVITY_TABLE);
+        createActivityTable.execute();
     }
 
     public static void dropAllTables(Connection conn) {
@@ -130,6 +134,13 @@ public class DBUtil {
             preparedStatement4 = conn.prepareStatement(drop4);
             preparedStatement4.execute();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            PreparedStatement dropActivityStmt = conn.prepareStatement(DROP_ACTIVITY_TABLE);
+            dropActivityStmt.execute();
+        } catch (SQLException e){
             e.printStackTrace();
         }
 
