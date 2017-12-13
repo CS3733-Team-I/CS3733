@@ -4,6 +4,7 @@ import database.DatabaseController;
 import database.objects.*;
 import database.objects.ActivityLog.ActivityLog;
 import database.objects.ActivityLog.ActivityType;
+import database.objects.requests.Request;
 
 import java.sql.Timestamp;
 import java.util.HashMap;

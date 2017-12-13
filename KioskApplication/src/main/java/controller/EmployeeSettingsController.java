@@ -117,7 +117,7 @@ public class EmployeeSettingsController {
         //initialize office search
         ArrayList<ISearchEntity> searchNode = new ArrayList<>();
         for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
-            if(targetNode.getNodeType() != NodeType.HALL) {
+            if(targetNode.getNodeType() == NodeType.DEPT) {
                 searchNode.add(new SearchNode(targetNode));
             }
         }
@@ -128,6 +128,17 @@ public class EmployeeSettingsController {
         officeSearchController.resizeSearchbarWidth(150.0);
         officeSearchController.setSearchFieldPromptText("Search office");
         officePane.getChildren().add(officeSearchView);
+//        officeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
+//            @Override
+//            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
+//                if(newValue == null) {
+//                    return;
+//                }
+//                currentOffice = newValue.getLocation();
+//                officeSearchController.getCbSearchData().getEditor().setText(newValue.getName());
+//                officeSearchController.getCbSearchData().setValue(newValue);
+//            }
+//        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -343,6 +354,7 @@ public class EmployeeSettingsController {
         openAddUserPane();
         addUserActionButton.setText("Add");
         errLabel.setText("");
+
     }
 
     @FXML
@@ -572,6 +584,8 @@ public class EmployeeSettingsController {
         passwordConfirmBox.resetValidation();
         serviceSelect.valueProperty().set(null);
         permissionSelect.valueProperty().set(null);
+
+        this.employeeSearchController.setDisableSearch(false);
     }
 
     /**
@@ -611,5 +625,6 @@ public class EmployeeSettingsController {
      */
     private void closeAdditionalInformationPane(){
         additionalInformationPane.setVisible(false);
+        this.employeeSearchController.setDisableSearch(true);
     }
 }

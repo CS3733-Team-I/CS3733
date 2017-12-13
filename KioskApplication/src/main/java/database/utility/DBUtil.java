@@ -80,6 +80,13 @@ public class DBUtil {
         // Activity logging
         PreparedStatement createActivityTable = conn.prepareStatement(CREATE_ACTIVITY_TABLE);
         createActivityTable.execute();
+
+        PreparedStatement createITTable = conn.prepareStatement(CREATE_IT_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES);
+        createITTable.execute();
+        PreparedStatement createMaintenanceTable = conn.prepareStatement(CREATE_MAINTENANCE_TABLE+
+                WITH_SHARED_REQUEST_ATTRIBUTES);
+        createMaintenanceTable.execute();
     }
 
     public static void dropAllTables(Connection conn) {
@@ -87,6 +94,8 @@ public class DBUtil {
         String drop2 = DROP_INTERPRETER_TABLE;
         String dropSecReq = DROP_SECURITY_TABLE;
         String dropJanReq = DROP_JANITOR_TABLE;
+        String dropITReq = DROP_IT_TABLE;
+        String dropMTReq = DROP_MAINTENANCE_TABLE;
         String drop3 = DROP_NODE_TABLE;
         String drop4 = DROP_EMPLOYEE_TABLE;
 
@@ -117,6 +126,28 @@ public class DBUtil {
         try {
             PreparedStatement dropJanStmt = conn.prepareStatement(dropJanReq);
             dropJanStmt.execute();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try {
+            PreparedStatement dropITStmt = conn.prepareStatement(dropITReq);
+            dropITStmt.execute();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try {
+            PreparedStatement dropMTStmt = conn.prepareStatement(dropMTReq);
+            dropMTStmt.execute();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        PreparedStatement dropITTable = null;
+        try{
+            dropITTable = conn.prepareStatement(DROP_IT_TABLE);
+            dropITTable.execute();
         } catch (SQLException e){
             e.printStackTrace();
         }
