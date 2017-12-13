@@ -203,7 +203,5 @@ public class Node {
     }
 
     @Override
-    public String toString() {
-        return this.longName;
-    }
+    public String toString(){return this.longName;}
 }
