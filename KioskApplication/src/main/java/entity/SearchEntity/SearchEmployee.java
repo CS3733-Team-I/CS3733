@@ -71,13 +71,14 @@ public class SearchEmployee implements ISearchEntity{
         employeeIcon.setFitHeight(48);
         employeeIcon.setFitWidth(48);
 
-        String nodeID = databaseEmployee.getOptions().get(0);
         if(databaseEmployee.getServiceAbility() == RequestType.DOCTOR) {
             try{
+                String nodeID = databaseEmployee.getOptions().get(0);
                 this.officeLocation = MapEntity.getInstance().getNode(nodeID);
                 this.officeName = officeLocation.getLongName();
             }catch (NotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
+                String nodeID = databaseEmployee.getOptions().get(0);
                 alert.setTitle("Can't found Location" + nodeID);
                 alert.setContentText(e.toString());
                 alert.showAndWait();
