@@ -1,52 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="403.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.HelpScreen">
+<AnchorPane prefHeight="3400.0" prefWidth="5000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label alignment="TOP_CENTER" layoutX="289.0" text="Help">
-         <font>
-            <Font name="Microsoft YaHei UI" size="44.0" />
-         </font>
-      </Label>
-      <BorderPane fx:id="settingsHelpTab" layoutY="60.0" prefHeight="385.0" prefWidth="676.0">
-         <top>
-            <JFXTabPane fx:id="helpTabPlane" prefHeight="385.0" prefWidth="651.0" BorderPane.alignment="CENTER">
-               <tabs>
-                  <Tab fx:id="mapHelpTab" onSelectionChanged="#onHelpTabSelection" text="Map Help">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
-                  <Tab fx:id="settingsHelpTab" onSelectionChanged="#onHelpTabSelection" text="Settings Help">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
-                  <Tab fx:id="requestHelpTab" onSelectionChanged="#onHelpTabSelection" text="Request Help">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
-                  <Tab fx:id="mapBuilderHelp" onSelectionChanged="#onHelpTabSelection" text="Map Builder Help">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
-                  <Tab fx:id="adminHelpTab" onSelectionChanged="#onHelpTabSelection" text="Admin Help">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="684.0" />
-                    </content>
-                  </Tab>
-               </tabs>
-            </JFXTabPane>
-         </top>
-      </BorderPane>
+      <JFXTabPane fx:id="helpTabPlane" blendMode="SRC_ATOP" prefHeight="3400.0" prefWidth="5000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <tabs>
+            <Tab fx:id="mapHelpTab" onSelectionChanged="#onHelpTabSelection" text="Map Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="696.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="settingsHelpTab" onSelectionChanged="#onHelpTabSelection" text="Settings Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="requestHelpTab" onSelectionChanged="#onHelpTabSelection" text="Request Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="mapBuilderHelp" onSelectionChanged="#onHelpTabSelection" text="Map Builder Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="adminHelpTab" onSelectionChanged="#onHelpTabSelection" text="Admin Help">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="684.0" />
+              </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
    </children>
 </AnchorPane>

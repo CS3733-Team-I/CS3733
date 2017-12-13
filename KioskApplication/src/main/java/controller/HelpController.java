@@ -17,40 +17,38 @@ import java.io.IOException;
 
 public class HelpController extends ScreenController{
 
-    @FXML protected JFXTabPane helpTabPlane;
+    @FXML JFXTabPane helpTabPlane;
     @FXML Tab mapHelpTab;
     @FXML Tab requestHelpTab;
     @FXML Tab settingsHelpTab;
     @FXML Tab mapBuilderHelp;
     @FXML Tab adminHelpTab;
 
-    MainWindowController parent;
-    LoginEntity loginEntity;
     MapController mapController;
 
     //constructor for new help screen
     public HelpController(MainWindowController parent, MapController map) {
         super(parent, map);
-        loginEntity = LoginEntity.getInstance();
     }
+
     @FXML
     protected void initialize() throws IOException {
 
-        helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-            if (newValue == null) return;
-            switch (newValue.getId().toString()) {
-                case "Map Help":
-                    break;
-                case "tabMB":
-                    break;
-                case "tabRM":
-                    break;
-                case "tabRS":
-                    break;
-                case "tabSettings":
-                    break;
-            }
-        });
+//        helpTabPlane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+//            if (newValue == null) return;
+//            switch (newValue.getId().toString()) {
+//                case "Map Help":
+//                    break;
+//                case "tabMB":
+//                    break;
+//                case "tabRM":
+//                    break;
+//                case "tabRS":
+//                    break;
+//                case "tabSettings":
+//                    break;
+//            }
+//        });
     }
 
     @FXML
@@ -73,6 +71,15 @@ public class HelpController extends ScreenController{
     public void onMapFloorChanged(NodeFloor floor){}
 
     public void onScreenChanged() {}
-    public void resetScreen(){}
+    public void resetScreen(){
+        getMapController().setAnchor(0, 0, 0, 0);
+        getMapController().setPath(null);
+        getMapController().reloadDisplay();
+        // Set default nodes/edges visibility
+        getMapController().setNodesVisible(true);
+        getMapController().setEdgesVisible(true);
+        // Set if the options box is visible
+        getMapController().setOptionsBoxVisible(true);
+    }
 
 }
