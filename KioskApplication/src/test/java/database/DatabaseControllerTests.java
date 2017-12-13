@@ -2,7 +2,7 @@ package database;
 
 import database.connection.NotFoundException;
 import database.objects.*;
-import database.objects.requests.ITRequest;
+import database.objects.requests.*;
 import database.utility.DatabaseException;
 import org.junit.Before;
 import utility.KioskPermission;

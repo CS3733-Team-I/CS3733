@@ -3,6 +3,8 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.*;
+import database.objects.requests.InterpreterRequest;
+import database.objects.requests.Request;
 import database.utility.DatabaseException;
 import utility.KioskPermission;
 import utility.request.Language;

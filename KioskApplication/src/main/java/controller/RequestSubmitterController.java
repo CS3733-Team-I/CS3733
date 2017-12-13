@@ -62,6 +62,12 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXComboBox<ITService> itServiceTypeSelector;
     @FXML private JFXTextArea itNotesField;
 
+    /*Maintenance related*/
+    @FXML private Tab maintenanceTab;
+    @FXML private JFXTextField maintLocationField;
+    @FXML private JFXComboBox maintMenu;
+    @FXML private JFXTextArea maintNoteField;
+
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     LoginEntity loginEntity;
@@ -104,6 +110,20 @@ public class RequestSubmitterController extends ScreenController {
         janitorIconView.setFitHeight(24);
         janitorIconView.setFitWidth(24);
         janitorTab.setGraphic(janitorIconView);
+
+        Image itIcon = ResourceManager.getInstance().getImage("/images/icons/itIcon.png");
+        ImageView itIconView = new ImageView(itIcon);
+        itIconView.setRotate(90);
+        itIconView.setFitHeight(24);
+        itIconView.setFitWidth(24);
+        itTab.setGraphic(itIconView);
+
+        Image mtIcon = ResourceManager.getInstance().getImage("/images/icons/maintenanceIcon.png");
+        ImageView mtIconView = new ImageView(mtIcon);
+        mtIconView.setRotate(90);
+        mtIconView.setFitHeight(24);
+        mtIconView.setFitWidth(24);
+        maintenanceTab.setGraphic(mtIconView);
 
         ObservableList<Node> restaurants = FXCollections.observableArrayList();
         for (Node node : MapEntity.getInstance().getAllNodes()) {
@@ -156,6 +176,12 @@ public class RequestSubmitterController extends ScreenController {
                 itLocationField.clear();
                 itServiceTypeSelector.setValue(null);
                 itNotesField.clear();
+            } else if(newValue == maintenanceTab){
+                currentRequestType = RequestType.MAINTENANCE;
+
+                maintLocationField.clear();
+                maintMenu.setValue(null);
+                maintNoteField.clear();
             }
             resetTimer();
         });
@@ -331,6 +357,9 @@ public class RequestSubmitterController extends ScreenController {
             case IT:
                 addITRequest();
                 break;
+            case MAINTENANCE:
+                addMaintenanceRequest();
+                break;
         }
     }
 
@@ -357,15 +386,19 @@ public class RequestSubmitterController extends ScreenController {
         itLocationField.setText("");
         itServiceTypeSelector.setValue(null);
         itNotesField.setText("");
+
+        maintLocationField.setText("");
+        maintMenu.setValue(null);
+        maintNoteField.setText("");
     }
 
     /**
      * Adds an interpreter Request to the database
      */
     public void addIntRequest() {
-        if(intLocation.getText().isEmpty() || langMenu.getValue().equals(null)){
+        if(intLocation.getText().isEmpty() || langMenu.equals(null)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Submitting Request");
+            alert.setTitle("Error Submitting Interpreter Request");
             alert.setHeaderText("Error occurred while adding request to database.");
             alert.setContentText("Please fill out all fields");
             alert.showAndWait();
@@ -382,9 +415,9 @@ public class RequestSubmitterController extends ScreenController {
      * Adds a security Request to the database
      */
     public void addSecRequest() {
-        if(secLocationField.getText().isEmpty() || priorityMenu.getValue().equals(null)){
+        if(secLocationField.getText().isEmpty() || priorityMenu.equals(null)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Submitting Request");
+            alert.setTitle("Error Submitting Security Request");
             alert.setHeaderText("Error occurred while adding request to database.");
             alert.setContentText("Please fill out all fields");
             alert.showAndWait();
@@ -401,10 +434,10 @@ public class RequestSubmitterController extends ScreenController {
      * Adds a food Request to the database
      */
     public void addFoodRequest(){
-        if(deliveryLocation.getText().isEmpty() || restaurantComboBox.getValue().equals(null)
+        if(deliveryLocation.getText().isEmpty() || restaurantComboBox.equals(null)
                 || deliveryTimePicker.getValue().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Submitting Request");
+            alert.setTitle("Error Submitting Food Request");
             alert.setHeaderText("Error occurred while adding request to database.");
             alert.setContentText("Please fill out all fields");
             alert.showAndWait();
@@ -432,13 +465,43 @@ public class RequestSubmitterController extends ScreenController {
     }
 
     private void addJanitorRequest(){
-        requestEntity.submitJanitorRequest(janLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText());
-        clearButton();
+        if(janLocationField.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Janitor Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else {
+            requestEntity.submitJanitorRequest(janLocationField.getText(), loginEntity.getCurrentLoginID(), janNotesField.getText());
+            clearButton();
+        }
     }
 
     private void addITRequest(){
-        requestEntity.submitITRequest(itLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText(),itServiceTypeSelector.getValue());
-        clearButton();
+        if(itLocationField.getText().isEmpty() || itServiceTypeSelector.equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting IT Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            requestEntity.submitITRequest(itLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText(),itServiceTypeSelector.getValue());
+            clearButton();
+        }
+    }
+
+    private void addMaintenanceRequest() {
+        if(maintLocationField.getText().isEmpty() || maintMenu.equals(null)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Maintenance Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else {
+            int priority = Integer.parseInt(maintMenu.getValue().toString());
+            requestEntity.submitMaintenanceRequest(maintLocationField.getText(), loginEntity.getCurrentLoginID(), maintNoteField.getText(), priority);
+            clearButton();
+        }
     }
 
     /**
@@ -477,6 +540,8 @@ public class RequestSubmitterController extends ScreenController {
                 break;
             case IT:
                 itLocationField.setText(n.getNodeID());
+            case MAINTENANCE:
+                maintLocationField.setText(n.getNodeID());
         }
     }
 

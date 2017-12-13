@@ -3,7 +3,7 @@ package entity;
 import database.DatabaseController;
 import database.connection.NotFoundException;
 import database.objects.*;
-import database.objects.requests.ITRequest;
+import database.objects.requests.*;
 import database.utility.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,8 +27,8 @@ public class RequestEntity {
     private HashMap<String,FoodRequest> foodRequests;
     private HashMap<String,JanitorRequest> janitorRequests;
     private HashMap<String,ITRequest> itRequests;
+    private HashMap<String, MaintenanceRequest> maintenanceRequests;
 
-    private int uRequestID = 0;
 
     private long meanTimeToComplete;
 
@@ -42,6 +42,7 @@ public class RequestEntity {
         foodRequests=new HashMap<>();
         janitorRequests=new HashMap<>();
         itRequests=new HashMap<>();
+        maintenanceRequests=new HashMap<>();
 
         if(test){
             dbController = DatabaseController.getInstance();
@@ -74,6 +75,7 @@ public class RequestEntity {
         foodRequests.clear();
         janitorRequests.clear();
         itRequests.clear();
+        maintenanceRequests.clear();
         // Refills the hashmaps from the database
         for(InterpreterRequest interpreterRequest:dbController.getAllInterpreterRequests()){
             interpreterRequests.put(interpreterRequest.getRequestID(),interpreterRequest);
@@ -89,6 +91,9 @@ public class RequestEntity {
         }
         for (ITRequest itRequest:dbController.getAllITRequests()){
             itRequests.put(itRequest.getRequestID(),itRequest);
+        }
+        for(MaintenanceRequest mtRequest: dbController.getAllmtRequest()){
+            maintenanceRequests.put(mtRequest.getRequestID(),mtRequest);
         }
     }
 
@@ -144,6 +149,14 @@ public class RequestEntity {
         return itRequests;
     }
 
+    public LinkedList<Request> getAllmtRequests(){
+        LinkedList<Request> mtRequests = new LinkedList<>();
+        for(MaintenanceRequest mtRequest:this.maintenanceRequests.values()){
+            mtRequests.add(mtRequest);
+        }
+        return mtRequests;
+    }
+
     /**
      * Generic method to get all requests in the hashmaps
      * @return the requests from the hashmaps
@@ -155,6 +168,7 @@ public class RequestEntity {
         allRequests.addAll(getAllFoodRequests());
         allRequests.addAll(getAllJanitorRequests());
         allRequests.addAll(getAllITRequests());
+        allRequests.addAll(getAllmtRequests());
         return allRequests;
     }
 
@@ -168,6 +182,8 @@ public class RequestEntity {
             all.putAll(foodRequests);
             all.putAll(securityRequests);
             all.putAll(janitorRequests);
+            all.putAll(itRequests);
+            all.putAll(maintenanceRequests);
         return all;
     }
 
@@ -227,9 +243,14 @@ public class RequestEntity {
             return RequestType.FOOD;
         } else if (requestType.equals("Jan")) {
             return RequestType.JANITOR;
+        }else if(requestType.equals("Man")) {
+            return RequestType.MAINTENANCE;
+        }else if(requestType.equals("ITT")){
+            return RequestType.IT;
         //} else if (requestType.equals("Ins")) {
         //} else if (requestType.equals("Out")) {
-        } else {
+        }
+        else {
             System.out.println("Invalid requestID");
             return null;
         }
@@ -243,7 +264,7 @@ public class RequestEntity {
      */
     public void deleteRequest(String requestID){
         RequestType requestType = checkRequestType(requestID);
-        uRequestID--;
+//        uRequestID--;
         if(requestType.equals(RequestType.INTERPRETER)){
             interpreterRequests.remove(requestID);
             dbController.deleteInterpreterRequest(requestID);
@@ -259,6 +280,14 @@ public class RequestEntity {
         else if(requestType.equals(RequestType.JANITOR)){
             janitorRequests.remove(requestID);
             dbController.deleteJanitorRequest(requestID);
+        }
+        else if(requestType.equals(RequestType.IT)){
+            itRequests.remove(requestID);
+            dbController.deleteITRequest(requestID);
+        }
+        else if(requestType.equals(RequestType.MAINTENANCE)){
+            maintenanceRequests.remove(requestID);
+            dbController.deleteMaintenanceRequest(requestID);
         }
         else if(requestType.equals("Ins")){ //TODO: change to Enum
             System.out.println("Deleting InsideTransportationRequest");
@@ -306,13 +335,18 @@ public class RequestEntity {
             itRequest.setInProgress(completerID);
             dbController.updateITRequest(itRequest);
         }
+        else if (requestType.equals(RequestType.MAINTENANCE)) {
+            MaintenanceRequest mtRequest = maintenanceRequests.get(requestID);
+            mtRequest.setInProgress(completerID);
+            dbController.updateMaintenanceRequest(mtRequest);
+        }
 //        else if(requestType.equals(RequestType"Ins")){
 //            System.out.println("In Progress InsideTransportationRequest");
 //        }
 //        else if(requestType.equals(RequestType"Out")){
 //            System.out.println("In Progress OutsideTransportationRequest");
 //        }
-        else{
+        else {
             System.out.println("Invalid requestID");
         }
     }
@@ -355,6 +389,12 @@ public class RequestEntity {
             itRequests.replace(requestID,itRequest);
             dbController.updateITRequest(itRequest);
         }
+        else if(requestType.equals(RequestType.MAINTENANCE)){
+            MaintenanceRequest mtRequest = maintenanceRequests.get(requestID);
+            mtRequest.setComplete();
+            maintenanceRequests.replace(requestID,mtRequest);
+            dbController.updateMaintenanceRequest(mtRequest);
+        }
 //        else if(requestType.equals(RequestType"Ins"))
 //            System.out.println("Complete InsideTransportationRequest");
 //        }
@@ -378,10 +418,8 @@ public class RequestEntity {
         }
         else if(checkRequestType(requestID).equals(RequestType.FOOD)){
             request = getFoodRequest(requestID);
-        }else if(checkRequestType(requestID).equals(RequestType.JANITOR)){
-            request = getJanitorRequest(requestID);
         }
-      else if (checkRequestType(requestID).equals(RequestType.SECURITY)){
+        else if (checkRequestType(requestID).equals(RequestType.SECURITY)){
             request = getSecurityRequest(requestID);
         }
         else if (checkRequestType(requestID).equals(RequestType.JANITOR)){
@@ -389,6 +427,9 @@ public class RequestEntity {
         }
         else if (checkRequestType(requestID).equals(RequestType.IT)){
             request = getITRequest(requestID);
+        }
+        else if (checkRequestType(requestID).equals(RequestType.MAINTENANCE)){
+            request = getMaintenanceRequest(requestID);
         }
         return request;
     }
@@ -445,6 +486,9 @@ public class RequestEntity {
             case IT:
                 dbController.updateITRequest((ITRequest) oldReq);
                 break;
+            case MAINTENANCE:
+                dbController.updateMaintenanceRequest((MaintenanceRequest) oldReq);
+                break;
         }
 
     }
@@ -485,7 +529,6 @@ public class RequestEntity {
         InterpreterRequest iR = new InterpreterRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO,lang);
         //dbController.insertRequestIntoView(iR);
-        uRequestID++;
         interpreterRequests.put(rID, iR);
         dbController.addInterpreterRequest(iR);
         return rID;
@@ -550,8 +593,7 @@ public class RequestEntity {
         String rID = "Sec"+currTime;
         SecurityRequest sR = new SecurityRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime, RequestProgressStatus.TO_DO,priority);
-        //dbController.insertRequestIntoView(sR);
-        uRequestID++;
+
         securityRequests.put(rID, sR);
         dbController.addSecurityRequest(sR);
         return rID;
@@ -625,9 +667,6 @@ public class RequestEntity {
         FoodRequest fR = new FoodRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, destinationNodeID, deliveryTime);
 
-        //dbController.insertRequestIntoView(fR);
-        uRequestID++;
-
         foodRequests.put(rID, fR);
         dbController.addFoodRequest(fR);
         return rID;
@@ -695,9 +734,6 @@ public class RequestEntity {
         JanitorRequest janitorRequest = new JanitorRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO);
 
-        //dbController.insertRequestIntoView(janitorRequest);
-        uRequestID++;
-
         janitorRequests.put(rID, janitorRequest);
         dbController.addJanitorRequest(janitorRequest);
         return rID;
@@ -734,6 +770,60 @@ public class RequestEntity {
     }
 
     /**
+     * For submitting Maintenance Request
+     * @param nodeID
+     * @param assignerID
+     * @param note
+     * @return
+     */
+    public String submitMaintenanceRequest(String nodeID, int assignerID, String note, int priority){
+        long currTime = System.currentTimeMillis();
+        Timestamp submittedTime = new Timestamp(currTime);
+        Timestamp startedTime = new Timestamp(currTime-1);
+        Timestamp completedTime = new Timestamp(currTime-1);
+        String rID = "Man"+currTime;
+
+        MaintenanceRequest mtRequest = new MaintenanceRequest(rID, nodeID, assignerID, assignerID, note,
+                submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, priority);
+
+        //dbController.insertRequestIntoView(itRequest);
+
+        maintenanceRequests.put(rID, mtRequest);
+        dbController.addMaintenanceRequest(mtRequest);
+        return rID;
+    }
+
+    /**
+     *
+     * @param requestID
+     * @return
+     * @throws NullPointerException
+     */
+    public MaintenanceRequest getMaintenanceRequest(String requestID) throws NullPointerException{
+        if(maintenanceRequests.containsKey(requestID)){
+            return maintenanceRequests.get(requestID);
+        }
+        else {
+            readAllFromDatabase();
+            if(maintenanceRequests.containsKey(requestID)){
+                return maintenanceRequests.get(requestID);
+            }
+            else {
+                throw new NullPointerException("Unable to find Maintenance request in the database");
+            }
+        }
+    }
+
+    /**
+     * Vastly simplified updating method
+     * @param mtRequest
+     */
+    public void updateMaintenanceRequest(MaintenanceRequest mtRequest){
+        maintenanceRequests.replace(mtRequest.getRequestID(),mtRequest);
+        dbController.updateMaintenanceRequest(mtRequest);
+    }
+
+    /**
      * For submitting ITRequests
      * @param nodeID
      * @param assignerID
@@ -745,13 +835,12 @@ public class RequestEntity {
         Timestamp submittedTime = new Timestamp(currTime);
         Timestamp startedTime = new Timestamp(currTime-1);
         Timestamp completedTime = new Timestamp(currTime-1);
-        String rID = "IT"+currTime;
+        String rID = "ITT"+currTime;
 
         ITRequest itRequest = new ITRequest(rID, nodeID, assignerID, assignerID, note,
                 submittedTime, startedTime, completedTime,RequestProgressStatus.TO_DO, itService);
 
         //dbController.insertRequestIntoView(itRequest);
-        uRequestID++;
 
         itRequests.put(rID, itRequest);
         dbController.addITRequest(itRequest);
@@ -855,7 +944,9 @@ public class RequestEntity {
                         new PieChart.Data(RequestType.INTERPRETER.toString(),interpreterRequests.size()),
                         new PieChart.Data(RequestType.SECURITY.toString(),securityRequests.size()),
                         new PieChart.Data(RequestType.FOOD.toString(),foodRequests.size()),
-                        new PieChart.Data(RequestType.JANITOR.toString(),janitorRequests.size()));
+                        new PieChart.Data(RequestType.JANITOR.toString(),janitorRequests.size()),
+                        new PieChart.Data(RequestType.IT.toString(),itRequests.size()),
+                        new PieChart.Data(RequestType.MAINTENANCE.toString(),maintenanceRequests.size()));
         return reqs;
     }
 }

@@ -4,9 +4,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import database.connection.NotFoundException;
 import database.objects.Employee;
-import database.objects.FoodRequest;
+import database.objects.requests.FoodRequest;
 import database.objects.Node;
-import database.objects.Request;
+import database.objects.requests.Request;
 import entity.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -26,6 +25,7 @@ import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.KioskPermission;
 import utility.ResourceManager;
+import utility.request.ITService;
 import utility.request.RequestProgressStatus;
 import utility.request.RequestType;
 import javafx.scene.image.Image;
@@ -80,10 +80,10 @@ public class RequestListCellController {
         requestNotes.setText("Notes: "+request.getNote());
         locationOfRequest.setText(location);
 
-        Image readIcon = ResourceManager.getInstance().getImage("/images/icons/readIcon.png");
-        readView.setImage(readIcon);
-        readView.setFitWidth(24);
-        readView.setFitHeight(24);
+//        Image readIcon = ResourceManager.getInstance().getImage("/images/icons/readIcon.png");
+//        readView.setImage(readIcon);
+//        readView.setFitWidth(24);
+//        readView.setFitHeight(24);
 
         Label extraField = new Label();
 
@@ -114,8 +114,22 @@ public class RequestListCellController {
                 iconView.setFitWidth(48);
                 break;
             case IT:
+                String service = rEntity.getITRequest(requestID).getItService().toString().toLowerCase();
+                extraField.setText(service);
+                textFlow.getChildren().add(0,extraField);
+                Image itIcon = ResourceManager.getInstance().getImage("/images/icons/itIconBlack.png");
+                iconView.setImage(itIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
                 break;
             case MAINTENANCE:
+                int prioritym = rEntity.getMaintenanceRequest(requestID).getPriority();
+                extraField.setText("Priority: "+ prioritym);
+                textFlow.getChildren().add(0,extraField);
+                Image maintIcon = ResourceManager.getInstance().getImage("/images/icons/maintenanceIconBlack.png");
+                iconView.setImage(maintIcon);
+                iconView.setFitHeight(48);
+                iconView.setFitWidth(48);
                 break;
             case SECURITY:
                 int priority = rEntity.getSecurityRequest(requestID).getPriority();

@@ -2,12 +2,10 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
-import database.connection.NotFoundException;
 import database.objects.Edge;
-import database.objects.InterpreterRequest;
-import database.objects.Request;
+import database.objects.requests.InterpreterRequest;
+import database.objects.requests.Request;
 import entity.LoginEntity;
-import entity.MapEntity;
 import entity.RequestEntity;
 import entity.SearchEntity.ISearchEntity;
 import entity.SearchEntity.SearchRequest;
@@ -26,7 +24,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.RequestListCell;
 import utility.ResourceManager;
@@ -143,7 +140,6 @@ public class RequestManagerController extends ScreenController {
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
 //            sideBar.setVisible(false);
             borderPane.setLeft(null);
-
             foodFilter.setSelected(false);
             janitorFilter.setSelected(false);
             securityFilter.setSelected(false);
@@ -163,6 +159,12 @@ public class RequestManagerController extends ScreenController {
                     break;
                 case JANITOR:
                     janitorFilter.setSelected(true);
+                    break;
+                case IT:
+                    itFilter.setSelected(true);
+                    break;
+                case MAINTENANCE:
+                    maintenanceFilter.setSelected(true);
                     break;
             }
             reqManagerPane.setLeftAnchor(listAPane,0.0);
@@ -215,6 +217,16 @@ public class RequestManagerController extends ScreenController {
         if(janitorFilter.isSelected()){
             for(Request jR: r.getAllJanitorRequests()){
                 allRequests.add(jR);
+            }
+        }
+        if(itFilter.isSelected()){
+            for(Request it: r.getAllITRequests()){
+                allRequests.add(it);
+            }
+        }
+        if(maintenanceFilter.isSelected()){
+            for(Request mR: r.getAllmtRequests()){
+                allRequests.add(mR);
             }
         }
         LinkedList<Request> inprogressReq = new LinkedList<>();
