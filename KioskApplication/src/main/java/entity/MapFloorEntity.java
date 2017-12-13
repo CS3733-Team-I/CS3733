@@ -48,7 +48,7 @@ public class MapFloorEntity implements IMapEntity {
         dbController.updateNodeWithID(node);
 
         for (Node storedNode : nodes.values()) {
-            if (storedNode.getNodeID().equals(node.getNodeID())) {
+            if (storedNode.getUniqueID() == node.getUniqueID()) {
                 nodes.remove(storedNode.getNodeID());
                 nodes.put(node.getNodeID(), node);
                 return;

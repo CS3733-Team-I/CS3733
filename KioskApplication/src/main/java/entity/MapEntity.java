@@ -80,10 +80,7 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void editNode(Node n) throws DatabaseException {
-        NodeFloor f = n.getFloor();
-        if(floorExists(f)) {
-            floors.get(f).editNode(n);
-        }
+        editNodeByUK(n);
     }
 
     public void updateNodewithID(Node n)throws DatabaseException{
@@ -92,9 +89,24 @@ public class MapEntity implements IMapEntity {
 
     @Override
     public void editNodeByUK(Node n)throws DatabaseException{
+        Node originalNode = getNodeByID(n.getUniqueID());
+        List<Edge> originalEdges = getEdges(originalNode);
+
+        for (Edge edge : originalEdges)
+            removeEdge(edge);
+
         NodeFloor f = n.getFloor();
         if(floorExists(f)) {
             floors.get(f).editNodeByUK(n);
+        }
+
+        for (Edge edge : originalEdges) {
+            if (edge.getNode1ID().equals(originalNode.getNodeID()))
+                edge.setNode1ID(n.getNodeID());
+            else if (edge.getNode2ID().equals(originalNode.getNodeID()))
+                edge.setNode2ID(n.getNodeID());
+
+            addEdge(edge);
         }
     }
 
