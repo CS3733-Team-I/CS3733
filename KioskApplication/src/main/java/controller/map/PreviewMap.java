@@ -23,8 +23,6 @@ public class PreviewMap extends AnchorPane {
     public static final int PREVIEW_WIDTH = 356;
     public static final int PREVIEW_HEIGHT = 200;
 
-
-
     public PreviewMap(NodeFloor floor, MapController mapController) {
         this.allNodes = new LinkedList<>();
         this.mapController = mapController;
@@ -56,6 +54,12 @@ public class PreviewMap extends AnchorPane {
     }
 
     public void addPathSection(PathSection pathSection) {
+        LinkedList<Node> newSectionNodes = new LinkedList<>();
+        for (Node sectionNode : pathSection.getNodes()) {
+            if (sectionNode.getFloor() == floor) newSectionNodes.add(sectionNode);
+        }
+        pathSection.setNodes(newSectionNodes);
+
         this.pathSections.add(pathSection);
         this.drawSections();
         for(Node node: pathSection.getNodes())
@@ -82,26 +86,35 @@ public class PreviewMap extends AnchorPane {
             for(Node node: section.getNodes()){
                 if(node.equals(lastNode))
                     continue;
-                Line line = new Line((lastNode.getXcoord() - xOffset) * xScale, (lastNode.getYcoord() - yOffset) * yScale,
-                        (node.getXcoord() - xOffset) * xScale, (node.getYcoord() - yOffset) * yScale);
+
+                Line line = new Line(
+                        (lastNode.getXcoord() - xOffset) * xScale,
+                        (lastNode.getYcoord() - yOffset) * yScale,
+                        (node.getXcoord() - xOffset) * xScale,
+                        (node.getYcoord() - yOffset) * yScale
+                );
                 line.setStroke(section.getColor());
                 line.setStrokeWidth(4);
                 this.getChildren().add(line);
+
                 lastNode = node;
             }
         }
-        for(PathSection section: this.pathSections) {
+
+        for(PathSection section : this.pathSections) {
             Circle waypointIndicator = new Circle(6);
             waypointIndicator.setFill(Color.RED);
             waypointIndicator.setCenterX((section.getNodes().getFirst().getXcoord() - xOffset) * xScale);
             waypointIndicator.setCenterY((section.getNodes().getFirst().getYcoord() - yOffset) * yScale);
             this.getChildren().add(waypointIndicator);
         }
+
         Circle waypointIndicator = new Circle(6);
         waypointIndicator.setFill(Color.RED);
         waypointIndicator.setCenterX((this.pathSections.getLast().getNodes().getLast().getXcoord() - xOffset) * xScale);
         waypointIndicator.setCenterY((this.pathSections.getLast().getNodes().getLast().getYcoord() - yOffset) * yScale);
         this.getChildren().add(waypointIndicator);
+
         //Then, draw waypoints
 
         //Then, TODO: add animation.

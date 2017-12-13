@@ -161,7 +161,7 @@ public class PathWaypointView extends AnchorPane {
         return youarehereView;
     }
 
-    public void showPopup(Node node, NodeFloor floor, MouseEvent e){ // Add mouse event to get offset
+    public void showPopup(Node node, NodeFloor floor, PathSection section, MouseEvent e){ // Add mouse event to get offset
         System.out.println("Show Popup");
         closePopup();
         // Adjust popup
@@ -169,10 +169,13 @@ public class PathWaypointView extends AnchorPane {
         anchorPane.setStyle("-fx-background-color: transparent;");
         HBox hbox = new HBox();
         PreviewMap iv = new PreviewMap(floor, parent);
+
+        iv.addPathSection(section);
         iv.setOnMouseClicked(ev -> {
             parent.setFloorSelector(floor);
             closePopup();
         });
+
         hbox.getChildren().add(iv);
         hbox.setOnMouseExited(ev -> closePopup());
         hbox.setStyle("-fx-background-color: transparent;");
@@ -256,6 +259,7 @@ public class PathWaypointView extends AnchorPane {
         for (Node node : waypointList) {
             Node lastNode = node;
             LinkedList<Node> nodesInSegment = path.getNodesInSegment(node);
+            PathSection section = new PathSection(nodesInSegment, path.getSegmentColor(waypointIndex));
             for (Node thisNode : nodesInSegment) {
                 // Don't draw a line between the same nodes
                 if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
@@ -339,9 +343,9 @@ public class PathWaypointView extends AnchorPane {
                         public void handle(MouseEvent event) {
                             System.out.println("Open Tooltip");
                             if (thisFloor == parent.getCurrentFloor()) {
-                                showPopup(thisNode, lastFloor, event);
+                                showPopup(thisNode, lastFloor, section, event);
                             } else {
-                                showPopup(lNode, thisFloor, event);
+                                showPopup(lNode, thisFloor, section, event);
                             }
                         }
                     });

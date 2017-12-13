@@ -267,14 +267,12 @@ public class MapController {
     }
 
     public void showTray(){
-        this.mapBorder.setBottom(this.trayContainer);
+        this.mapBorder.setBottom(null); //this.mapBorder.setBottom(this.trayContainer);
     }
 
     //TODO: not sure how good it is to be using the control to just pass through commands
     public void clearTray(){
         this.previewTray.clearPreviews();
-
-
 
         mapView.setOnDragOver(e -> {
             /*String message = e.getDragboard().getString();

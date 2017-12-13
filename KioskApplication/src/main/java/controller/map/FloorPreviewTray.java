@@ -30,7 +30,7 @@ public class FloorPreviewTray extends ScrollPane {
         this.tray = new HBox();
         this.tray.setAlignment(Pos.CENTER);
         this.setContent(this.tray);
-//        this.tray.setStyle("-fx-background-color: red");  //makes HBox visible for debugging
+
         this.setFitToHeight(true);
         this.setFitToWidth(true);
 
@@ -127,10 +127,12 @@ public class FloorPreviewTray extends ScrollPane {
                 nodesInSection = new LinkedList<>();
             }
         }
+
         //We've reached the end of the path.
         //Add remaining nodes to a section, any remaining sections to a preview, & any remaining previews to the list.
         if (!nodesInSection.isEmpty())
             currentPreview.addPathSection(new PathSection(nodesInSection, path.getSegmentColor(waypoints.size() - 1)));
+
         if (!currentPreview.getPathSections().isEmpty())
             this.previews.add(currentPreview);
     }
