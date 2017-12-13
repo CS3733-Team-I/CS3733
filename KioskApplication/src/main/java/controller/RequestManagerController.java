@@ -24,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
 import utility.RequestListCell;
@@ -49,7 +50,7 @@ public class RequestManagerController extends ScreenController {
     @FXML private JFXListView<Request> newRequestList, activeRequests, doneRequestList;
     @FXML private TextField txtID;
     @FXML private JFXButton completeButton;
-    @FXML private JFXPopup popup;
+    @FXML private HBox clearPathBox;
     //filter buttons
     @FXML private JFXCheckBox foodFilter,janitorFilter,securityFilter,
             interpreterFilter,maintenanceFilter,itFilter,transportationFilter;
@@ -81,21 +82,18 @@ public class RequestManagerController extends ScreenController {
 
         Image newRequestIcon = ResourceManager.getInstance().getImage("/images/icons/newReq.png");
         ImageView newReqIconView = new ImageView(newRequestIcon);
-//        newReqIconView.setRotate(90);
         newReqIconView.setFitHeight(48);
         newReqIconView.setFitWidth(48);
         newTab.setGraphic(newReqIconView);
 
         Image progRequestIcon = ResourceManager.getInstance().getImage("/images/icons/progressReq.png");
         ImageView progRequestIconView = new ImageView(progRequestIcon);
-//        progRequestIconView.setRotate(90);
         progRequestIconView.setFitHeight(48);
         progRequestIconView.setFitWidth(48);
         progressTab.setGraphic(progRequestIconView);
 
         Image doneRequestIcon = ResourceManager.getInstance().getImage("/images/icons/doneReq.png");
         ImageView doneRequestIconView = new ImageView(doneRequestIcon);
-//        doneRequestIconView.setRotate(90);
         doneRequestIconView.setFitHeight(48);
         doneRequestIconView.setFitWidth(48);
         doneTab.setGraphic(doneRequestIconView);
@@ -295,6 +293,20 @@ public class RequestManagerController extends ScreenController {
         }
         searchController.reset(searchRequest);
         setup();
+    }
+
+    @FXML
+    public void clearPathsButton(){
+        clearPathBox.getChildren().clear();
+        JFXButton clearPath = new JFXButton("Clear Path");
+        clearPath.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                getMapController().clearMap();
+                clearPathBox.getChildren().clear();
+            }
+        });
+        clearPathBox.getChildren().add(clearPath);
     }
 
     /**

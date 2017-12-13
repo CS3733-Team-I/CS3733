@@ -198,19 +198,17 @@ public class RequestListCellController {
 
     public void goToLocation(){
         LinkedList<Node> location = new LinkedList<>();
+        this.parent.getMapController().clearMap();
+        parent.clearPathsButton();
 
-        //TODO: implement path finding from food Request restaurant to destination
-        if(this.parent.getMapController().isPathShowing()) {
-            this.parent.getMapController().clearPath();
-        }
         if(request.getRequestType().equals(RequestType.FOOD)){
             Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
             try {
                 Node restaurant = mapEntity.getNode(((FoodRequest) request).getRestaurantID());
                 Node destination = mapEntity.getNode(request.getNodeID());
-                this.parent.getMapController().addWaypoint(new Point2D(restaurant.getXcoord(),restaurant.getYcoord()),restaurant);
+                this.parent.getMapController().addWaypoint(restaurant);
                 location.addFirst(restaurant);
-                this.parent.getMapController().addWaypoint(new Point2D(destination.getXcoord(),destination.getYcoord()),destination);
+                this.parent.getMapController().addWaypoint(destination);
                 location.addLast(destination);
                 Path path = pathfinder.generatePath(location);
                 this.parent.getMapController().setPath(path);

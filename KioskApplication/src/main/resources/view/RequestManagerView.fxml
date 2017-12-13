@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -31,6 +32,7 @@
                   <JFXCheckBox fx:id="itFilter" onAction="#refreshRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="IT Help" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="275.0" />
                   <JFXCheckBox fx:id="transportationFilter" onAction="#refreshRequests" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" selected="true" text="Transportation" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="315.0" />
                   <JFXButton fx:id="reportsButton" buttonType="RAISED" onAction="#showReports" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" style="-fx-background-color: gray;" text="Reports" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="37.0" />
+                  <HBox fx:id="clearPathBox" alignment="CENTER" layoutX="-15.0" layoutY="349.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="400.0" />
                </children>
             </AnchorPane>
          </children>
