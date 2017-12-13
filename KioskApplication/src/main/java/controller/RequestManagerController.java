@@ -24,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utility.KioskPermission;
@@ -46,6 +47,7 @@ public class RequestManagerController extends ScreenController {
     RequestEntity r;
     RequestProgressStatus currentButton;
 
+    @FXML private BorderPane borderPane;
     @FXML private Label totalRequests,filterLabel;
     @FXML private JFXListView<Request> newRequestList, activeRequests, doneRequestList;
     @FXML private TextField txtID;
@@ -139,7 +141,9 @@ public class RequestManagerController extends ScreenController {
     public void setup(){
         RequestType employeeType = l.getCurrentServiceAbility();
         if(l.getCurrentPermission().equals(KioskPermission.EMPLOYEE) && !employeeType.equals(RequestType.GENERAL)){
-            sideBar.setVisible(false);
+//            sideBar.setVisible(false);
+            borderPane.setLeft(null);
+
             foodFilter.setSelected(false);
             janitorFilter.setSelected(false);
             securityFilter.setSelected(false);
@@ -162,12 +166,9 @@ public class RequestManagerController extends ScreenController {
                     break;
             }
             reqManagerPane.setLeftAnchor(listAPane,0.0);
-
-//            searchController.resizeSearchbarWidth(500.0);
         }else{
+            borderPane.setLeft(sideBar);
             reqManagerPane.setLeftAnchor(listAPane, 150.0);
-//            searchController.resizeSearchbarWidth(350.0);
-            sideBar.setVisible(true);
         }
     }
 
