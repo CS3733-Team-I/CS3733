@@ -47,6 +47,7 @@ public class SearchController {
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
         cbSearchData.setEditable(true);
+
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {

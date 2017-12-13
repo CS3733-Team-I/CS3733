@@ -79,9 +79,12 @@ public class EmployeeSettingsController {
     @FXML private JFXTreeTableView<Employee> usersList;
     private final TreeItem<Employee> root = new TreeItem<>();
 
+    database.objects.Node currentOffice;
+
     Employee selectedEmployee;
 
     public EmployeeSettingsController(){
+        currentOffice = null;
     }
 
     @FXML
@@ -128,6 +131,17 @@ public class EmployeeSettingsController {
         officeSearchController.resizeSearchbarWidth(150.0);
         officeSearchController.setSearchFieldPromptText("Search office");
         officePane.getChildren().add(officeSearchView);
+//        officeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
+//            @Override
+//            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
+//                if(newValue == null) {
+//                    return;
+//                }
+//                currentOffice = newValue.getLocation();
+//                officeSearchController.getCbSearchData().getEditor().setText(newValue.getName());
+//                officeSearchController.getCbSearchData().setValue(newValue);
+//            }
+//        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
