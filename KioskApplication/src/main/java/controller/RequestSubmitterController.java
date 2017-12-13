@@ -143,7 +143,7 @@ public class RequestSubmitterController extends ScreenController {
         transportIconView .setRotate(90);
         transportIconView .setFitHeight(24);
         transportIconView .setFitWidth(24);
-        maintenanceTab.setGraphic(transportIconView);
+        transportTab.setGraphic(transportIconView);
 
         ObservableList<Node> restaurants = FXCollections.observableArrayList();
         for (Node node : MapEntity.getInstance().getAllNodes()) {
