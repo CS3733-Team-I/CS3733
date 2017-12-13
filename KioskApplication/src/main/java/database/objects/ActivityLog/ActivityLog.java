@@ -19,6 +19,7 @@ public class ActivityLog extends RecursiveTreeObject<ActivityLog> {
      * @param details
      */
     public ActivityLog(Timestamp time, ActivityType activityType, int employeeID, String details){
+        this.activityID=0;
         this.time=time;
         this.activityType=activityType;
         this.employeeID=employeeID;

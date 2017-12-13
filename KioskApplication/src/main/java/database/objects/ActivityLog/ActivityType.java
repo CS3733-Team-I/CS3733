@@ -4,5 +4,6 @@ public enum ActivityType {
     REQUEST,
     EMPLOYEE,
     MAP,
-    SETTINGS
+    SETTINGS,
+    LOGIN
 }

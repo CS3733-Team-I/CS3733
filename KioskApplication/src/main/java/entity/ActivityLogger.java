@@ -1,22 +1,15 @@
 package entity;
 
 import database.DatabaseController;
+import database.objects.*;
 import database.objects.ActivityLog.ActivityLog;
 import database.objects.ActivityLog.ActivityType;
-import database.objects.Edge;
-import database.objects.Employee;
-import database.objects.Node;
-import database.objects.Request;
-import database.utility.DatabaseException;
-import database.utility.DatabaseExceptionType;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ActivityLogger {
-    private LoginEntity loginEntity;
     private DatabaseController databaseController;
     private HashMap<Integer,ActivityLog> logHashMap;
 
@@ -29,7 +22,6 @@ public class ActivityLogger {
     }
 
     private ActivityLogger(){
-        loginEntity=LoginEntity.getInstance();
         databaseController = DatabaseController.getInstance();
         logHashMap = new HashMap<>();
         readAllFromDatabase();
@@ -61,12 +53,12 @@ public class ActivityLogger {
      * For tracking Request submission
      * @param request
      */
-    public void logRequestAdd(Request request){
+    public void logRequestAdd(IEmployee currentLogin, Request request){
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String details = "Submitted Request: "+request.getRequestID();
         //TODO: Make string constructor for details
         details=details+" at Node: "+request.getNodeID();
-        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, currentLogin.getID(), details);
         submitLog(log);
     }
 
@@ -75,11 +67,11 @@ public class ActivityLogger {
      * @param newRequest
      * @param oldRequest
      */
-    public void logRequestChange(Request newRequest, Request oldRequest){
+    public void logRequestChange(IEmployee currentLogin, Request newRequest, Request oldRequest){
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String details = "Updated Request: "+newRequest.getRequestID();
         //TODO: Make string constructor for details
-        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, currentLogin.getID(), details);
         submitLog(log);
     }
 
@@ -87,74 +79,86 @@ public class ActivityLogger {
      * For tracking request deletions
      * @param request
      */
-    public void logRequestDelete(Request request){
+    public void logRequestDelete(IEmployee currentLogin, Request request){
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String details = "Deleted Request: "+request.getRequestID();
         //TODO: Make string constructor for details
-        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.REQUEST, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEmployeeAdd(Employee employee){
+    public void logEmployeeAdd(IEmployee currentLogin, Employee employee){
         String details = "Added Employee: "+employee.getID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEmployeeUpdate(Employee newEmployee, Employee oldEmployee){
-        String details = "";
+    public void logEmployeeUpdate(IEmployee currentLogin, Employee newEmployee, Employee oldEmployee){
+        String details = "Updated Employee: "+newEmployee.getID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEmployeeDelete(Employee employee){
-        String details = "";
+    public void logEmployeeDelete(IEmployee currentLogin, Employee employee){
+        String details = "Deleted Employee: "+employee.getID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.EMPLOYEE, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logNodeAdd(Node node){
-        String details = "";
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+    public void logLogin(IEmployee currentLogin){
+        String details = "Logged in";
+        long currentTime = System.currentTimeMillis();
+        Timestamp time = new Timestamp(currentTime);
+        ActivityLog log = new ActivityLog(time, ActivityType.LOGIN, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logNodeUpdate(Node newNode,Node oldNode){
-        String details = "";
+    public void logLogout(IEmployee currentLogin){
+
+    }
+
+    public void logNodeAdd(IEmployee currentLogin, Node node){
+        String details = "Added Node: "+node.getNodeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logNodeDelete(Node node){
-        String details = "";
+    public void logNodeUpdate(IEmployee currentLogin, Node node){
+        String details = "Updated node: "+node.getNodeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEdgeAdd(Edge edge){
-        String details = "";
+    public void logNodeDelete(IEmployee currentLogin, Node node){
+        String details = "Deleted Node: "+node.getNodeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEdgeUpdate(Edge newEdge, Edge oldEdge){
-        String details = "";
+    public void logEdgeAdd(IEmployee currentLogin, Edge edge){
+        String details = "Added Edge: "+edge.getEdgeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logEdgeDelete(Edge edge){
-        String details = "";
+    public void logEdgeUpdate(IEmployee currentLogin, Edge edge){
+        String details = "Updated Edge: "+edge.getEdgeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.MAP, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
+        submitLog(log);
+    }
+
+    public void logEdgeDelete(IEmployee currentLogin, Edge edge){
+        String details = "Deleted Edge: "+edge.getEdgeID();
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        ActivityLog log = new ActivityLog(time, ActivityType.MAP, currentLogin.getID(), details);
         submitLog(log);
     }
 
@@ -163,17 +167,17 @@ public class ActivityLogger {
      * TODO: encapsulate Beam width changes
      * @param searchAlgorithm
      */
-    public void logSearchAlgorithmChanged(String searchAlgorithm){
-        String details = "";
+    public void logSearchAlgorithmChanged(IEmployee currentLogin, String searchAlgorithm){
+        String details = "Search Algorithm changed to: "+searchAlgorithm;
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.SETTINGS, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.SETTINGS, currentLogin.getID(), details);
         submitLog(log);
     }
 
-    public void logDefaultNodeChanged(Node newNode, Node oldNode){
-        String details = "";
+    public void logDefaultNodeChanged(IEmployee currentLogin, Node newNode, Node oldNode){
+        String details = "Kiosk Location changed to: "+newNode.getNodeID()+" from: "+oldNode.getNodeID();
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        ActivityLog log = new ActivityLog(time, ActivityType.SETTINGS, loginEntity.getCurrentLoginID(), details);
+        ActivityLog log = new ActivityLog(time, ActivityType.SETTINGS, currentLogin.getID(), details);
         submitLog(log);
     }
 
