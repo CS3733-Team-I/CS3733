@@ -1,7 +1,7 @@
 package requests;
 
 
-import database.objects.InterpreterRequest;
+import database.objects.requests.InterpreterRequest;
 import utility.request.Language;
 import org.junit.Test;
 import java.sql.Timestamp;

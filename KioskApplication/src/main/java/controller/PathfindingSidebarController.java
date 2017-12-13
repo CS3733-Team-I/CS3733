@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXProgressBar;
 import controller.map.MapController;
 import database.objects.Edge;
 import database.objects.Employee;
@@ -17,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -72,6 +77,8 @@ public class PathfindingSidebarController extends ScreenController {
     private SearchController searchController;
 
     private javafx.scene.Node searchView;
+
+    private Task<Void> searchResetTask;
 
     // Direction Screen
     @FXML private AnchorPane directionsContainer;
@@ -197,6 +204,26 @@ public class PathfindingSidebarController extends ScreenController {
                 generatePath();
             }
         });
+
+        //reset search
+        this.searchResetTask = new Task<Void>() {
+            @Override protected Void call() throws Exception {
+                SystemSettings.getInstance().updateDistance();
+                ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+                for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+                    if(targetNode.getNodeType() != NodeType.HALL) {
+                        searchNodeAndDoctor.add(new SearchNode(targetNode));
+                    }
+                }
+                for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+                    if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                        searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+                    }
+                }
+                searchController.reset(searchNodeAndDoctor);
+                return null;
+            }
+        };
     }
 
     @FXML

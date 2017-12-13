@@ -2,11 +2,15 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.util.StringConverter;
 
@@ -38,11 +42,12 @@ public class SearchController {
 
     @FXML
     void initialize() {
+        Platform.runLater(() -> cbSearchData.getSelectionModel().select(0));
         //initialize the lists
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
         cbSearchData.setEditable(true);
-        cbSearchData.setPromptText("Search by location, doctor or type");
+
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {
@@ -81,11 +86,12 @@ public class SearchController {
                 cbSearchData.setPromptText("");
             } else {
                 cbSearchData.hide();
-                cbSearchData.setPromptText("Search by location, doctor or type"); // TODO use language string
             }
         }));
 
-        cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        cbSearchData.setOnKeyReleased(e -> {
+            cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        });
 
         updateSearch("");
         cbSearchData.hide();
@@ -219,5 +225,58 @@ public class SearchController {
             // input is 0 return exceptipon
             throw new Exception("No Input Text");
         }
+    }
+
+    public void addSearchData(ISearchEntity iSearchEntity) {
+        this.searchData.add(iSearchEntity);
+        this.searchMap.put(iSearchEntity.getComparingString(), iSearchEntity);
+    }
+
+    public void changeSearchData(String comparingString, ISearchEntity iSearchEntity) {
+        ListIterator<ISearchEntity> iterator = searchData.listIterator();
+        while (iterator.hasNext()) {
+            ISearchEntity next = iterator.next();
+            if (next.getComparingString().equals(comparingString)) {
+                //Replace element
+                iterator.set(iSearchEntity);
+            }
+        }
+        //update hashmap
+         if(searchMap.containsKey(comparingString)) {
+             this.searchMap.put(comparingString, iSearchEntity);
+         }
+         else {
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Can't Match Search Data while updating search data" + comparingString);
+             alert.showAndWait();
+         }
+    }
+
+    public void removeSearchData(String comparingString) {
+        ListIterator<ISearchEntity> iterator = searchData.listIterator();
+        while (iterator.hasNext()) {
+            ISearchEntity next = iterator.next();
+            if (next.getComparingString().equals(comparingString)) {
+                //Replace element
+                iterator.remove();
+            }
+        }
+        //update hashmap
+        if(searchMap.containsKey(comparingString)) {
+            this.searchMap.remove(comparingString);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Can't Match Search Data while removing search data" + comparingString);
+            alert.showAndWait();
+        }
+    }
+
+    public void setDisableSearch(boolean b) {
+        this.cbSearchData.setDisable(b);
+    }
+
+    public JFXComboBox<ISearchEntity> getCbSearchData() {
+        return cbSearchData;
     }
 }

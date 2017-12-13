@@ -7,9 +7,12 @@ import database.objects.Employee;
 import entity.LoginEntity;
 import entity.MapEntity;
 import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchEmployee;
 import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +24,6 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 import utility.KioskPermission;
 import utility.node.NodeType;
 import utility.request.Language;
@@ -57,11 +59,15 @@ public class EmployeeSettingsController {
 
     @FXML private VBox interpreterLanguageBox;
 
+    //office search related field
+    @FXML private AnchorPane employeeSearchPane;
+    private SearchController employeeSearchController;
+    private javafx.scene.Node employeeSearchView;
+
+    //employee search related field
     @FXML private AnchorPane officePane;
-
-    private SearchController searchController;
-
-    private javafx.scene.Node searchView;
+    private SearchController officeSearchController;
+    private javafx.scene.Node officeSearchView;
 
     @FXML private GridPane deletePane;
     @FXML private Label deleteText;
@@ -82,20 +88,57 @@ public class EmployeeSettingsController {
     void initialize() throws IOException{
         root.setExpanded(true);
 
-        //initialize search
+        //initialize employee search
+        SystemSettings.getInstance().updateDistance();
+        ArrayList<ISearchEntity> searchEmployee = new ArrayList<>();
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            searchEmployee.add(new SearchEmployee(targetEmployee));
+        }
+        employeeSearchController = new SearchController(this, searchEmployee);
+        FXMLLoader employeeSearchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        employeeSearchLoader.setController(employeeSearchController);
+        employeeSearchView = employeeSearchLoader.load();
+        employeeSearchController.resizeSearchbarWidth(200);
+        employeeSearchController.setSearchFieldPromptText("Search User");
+        employeeSearchPane.getChildren().add(employeeSearchView);
+
+        employeeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
+            @Override
+            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
+                if(newValue != null) {
+                    for(TreeItem<Employee> item : root.getChildren()) {
+                        if(item.getValue().getID() == ((Employee)newValue.getData()).getID()) {
+                            usersList.getSelectionModel().select(item);
+                        }
+                    }
+                }
+            }
+        });
+        //initialize office search
         ArrayList<ISearchEntity> searchNode = new ArrayList<>();
         for(database.objects.Node targetNode : MapEntity.getInstance().getAllNodes()) {
-            if(targetNode.getNodeType() != NodeType.HALL) {
+            if(targetNode.getNodeType() == NodeType.DEPT) {
                 searchNode.add(new SearchNode(targetNode));
             }
         }
-        searchController = new SearchController(this, searchNode);
-        FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
-        searchLoader.setController(searchController);
-        searchView = searchLoader.load();
-        searchController.resizeSearchbarWidth(150.0);
-        searchController.setSearchFieldPromptText("Search office");
-        officePane.getChildren().add(searchView);
+        officeSearchController = new SearchController(this, searchNode);
+        FXMLLoader officeSearchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
+        officeSearchLoader.setController(officeSearchController);
+        officeSearchView = officeSearchLoader.load();
+        officeSearchController.resizeSearchbarWidth(150.0);
+        officeSearchController.setSearchFieldPromptText("Search office");
+        officePane.getChildren().add(officeSearchView);
+//        officeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
+//            @Override
+//            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
+//                if(newValue == null) {
+//                    return;
+//                }
+//                currentOffice = newValue.getLocation();
+//                officeSearchController.getCbSearchData().getEditor().setText(newValue.getName());
+//                officeSearchController.getCbSearchData().setValue(newValue);
+//            }
+//        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -238,6 +281,13 @@ public class EmployeeSettingsController {
         });
 
         deleteUserButton.setDisable(true);
+
+        //update search data
+        ArrayList<ISearchEntity> searchEmployee = new ArrayList<>();
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            searchEmployee.add(new SearchEmployee(targetEmployee));
+        }
+        this.employeeSearchController.reset(searchEmployee);
     }
 
     /**
@@ -304,6 +354,7 @@ public class EmployeeSettingsController {
         openAddUserPane();
         addUserActionButton.setText("Add");
         errLabel.setText("");
+
     }
 
     @FXML
@@ -368,14 +419,16 @@ public class EmployeeSettingsController {
                         return;
                     }
                     break;
-                default:
-                    if (searchController.getSelected()==null){
+                case DOCTOR:
+                    if (officeSearchController.getSelected()==null){
                         errLabel.setText("No office selected");
                         return;
                     }
                     else {
-                        options.add(((database.objects.Node)(searchController.getSelected())).getNodeID());
+                        options.add(((database.objects.Node)(officeSearchController.getSelected())).getNodeID());
                     }
+                    break;
+                default:
                     break;
                 }
             }
@@ -428,7 +481,7 @@ public class EmployeeSettingsController {
                 searchNode.add(new SearchNode(targetNode));
             }
         }
-        searchController.reset(searchNode);
+        officeSearchController.reset(searchNode);
     }
 
     /**
@@ -439,12 +492,12 @@ public class EmployeeSettingsController {
     public void checkEmployeeServiceType(){
         RequestType employeeType = serviceSelect.getValue();
         officePane.setVisible(true);
-        searchController.setVisible(true);
         if(employeeType==INTERPRETER) {
             System.out.println(serviceSelect.getValue());
             doctorOfficeLabel.setVisible(false);
             interpreterLanguageBox.setVisible(true);
             interpreterLanguageLabel.setVisible(true);
+            officeSearchController.setVisible(false);
         }
         else if(employeeType==DOCTOR) {
             System.out.println(serviceSelect.getValue());
@@ -452,12 +505,14 @@ public class EmployeeSettingsController {
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
             doctorOfficeLabel.setVisible(true);
+            officeSearchController.setVisible(true);
         }
         else {
             interpreterLanguageBox.setVisible(false);
             interpreterLanguageLabel.setVisible(false);
             clearInterpreterLanguageBox();
             doctorOfficeLabel.setVisible(false);
+            officeSearchController.setVisible(false);
         }
     }
 
@@ -529,6 +584,8 @@ public class EmployeeSettingsController {
         passwordConfirmBox.resetValidation();
         serviceSelect.valueProperty().set(null);
         permissionSelect.valueProperty().set(null);
+
+        this.employeeSearchController.setDisableSearch(false);
     }
 
     /**
@@ -568,5 +625,6 @@ public class EmployeeSettingsController {
      */
     private void closeAdditionalInformationPane(){
         additionalInformationPane.setVisible(false);
+        this.employeeSearchController.setDisableSearch(true);
     }
 }
