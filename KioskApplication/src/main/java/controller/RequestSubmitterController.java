@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.*;
 import controller.map.MapController;
+import controllers.API.APIApp;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
@@ -56,8 +57,14 @@ public class RequestSubmitterController extends ScreenController {
 
     /*janitor related*/
     @FXML private Tab janitorTab;
+
+    /* janitor */
     @FXML private JFXTextField janLocationField;
     @FXML private JFXTextArea janNotesField;
+
+    /*transport related*/
+    @FXML private Tab transportTab;
+    @FXML private JFXTextField startNode, endNode;
 
     /*it related*/
     @FXML private Tab itTab;
@@ -73,6 +80,7 @@ public class RequestSubmitterController extends ScreenController {
 
     /*Email field*/
     @FXML private JFXTextField intEmail, secEmail, foodEmail, janEmail,itEmail, mtEmail;
+
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     LoginEntity loginEntity;
@@ -130,6 +138,13 @@ public class RequestSubmitterController extends ScreenController {
         mtIconView.setFitWidth(24);
         maintenanceTab.setGraphic(mtIconView);
 
+        Image transportIcon = ResourceManager.getInstance().getImage("/images/icons/car.png");
+        ImageView transportIconView = new ImageView(transportIcon);
+        transportIconView .setRotate(90);
+        transportIconView .setFitHeight(24);
+        transportIconView .setFitWidth(24);
+        transportTab.setGraphic(transportIconView);
+
         ObservableList<Node> restaurants = FXCollections.observableArrayList();
         for (Node node : MapEntity.getInstance().getAllNodes()) {
             if (node.getNodeType() == NodeType.RETL) restaurants.add(node);
@@ -175,6 +190,8 @@ public class RequestSubmitterController extends ScreenController {
 
                 janNotesField.clear();
                 janLocationField.clear();
+            } else if (newValue == transportTab) {
+                currentRequestType = RequestType.INTERNAL_TRANSPORTATION;
             } else if(newValue == itTab){
                 currentRequestType = RequestType.IT;
 
@@ -357,6 +374,18 @@ public class RequestSubmitterController extends ScreenController {
             case FOOD:
                 addFoodRequest();
                 break;
+            case INTERNAL_TRANSPORTATION:
+                System.out.println("Trying to start");
+                if(!startNode.getText().equals("") && !endNode.getText().equals("")) {
+                    try {
+                        APIApp.run(50, 50, 500, 500,
+                                "/css/application.css", endNode.getText(),startNode.getText());
+                        System.out.println("Starting");
+                    } catch (APIApp.ServiceException e) {
+                        System.out.println("Whoops");
+                        e.printStackTrace();
+                    }
+                }
             case JANITOR:
                 addJanitorRequest();
                 break;
@@ -658,8 +687,16 @@ public class RequestSubmitterController extends ScreenController {
                 break;
             case IT:
                 itLocationField.setText(n.getNodeID());
+                break;
             case MAINTENANCE:
                 maintLocationField.setText(n.getNodeID());
+                break;
+            case INTERNAL_TRANSPORTATION:
+                if(startNode.getText().equals("")){
+                    startNode.setText(n.getNodeID());
+                } else {
+                    endNode.setText(n.getNodeID());
+                }
         }
     }
 
