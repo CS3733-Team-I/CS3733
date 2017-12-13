@@ -275,4 +275,28 @@ public class Path {
         }
         return returnList;
     }
+
+    /**
+     * Assembles a list of all the floors travelled through by this path in the order in which they are reached.  If a
+     * path leaves a floor and then comes back to that floor, that floor is counted twice.
+     * @return
+     */
+    public LinkedList<NodeFloor> getFloorsOccurrences() {
+        LinkedList<Node> nodes = this.getListOfAllNodes();
+        LinkedList<NodeFloor> floors = new LinkedList<>();
+        Node previousNode = null;
+        for(Node node: nodes){
+            if(previousNode == null){
+                //First node
+                floors.add(node.getFloor());
+                previousNode = node;
+                continue;
+            }
+            //If we move to a new floor, add a new preview.
+            if(!node.getFloor().equals(floors.getLast()))
+                floors.addLast(node.getFloor());
+            previousNode = node;
+        }
+        return floors;
+    }
 }
