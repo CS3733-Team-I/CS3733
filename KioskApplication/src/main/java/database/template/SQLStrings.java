@@ -51,9 +51,22 @@ public class SQLStrings {
 
     public static final String DELETE_REQUEST_VIEW = "DELETE FROM t_requestView WHERE uRequestID=?";*/
 
-
-
     public static final String CREATE_EDGE_UINDEX =  "CREATE UNIQUE INDEX t_edges_id_uindex ON t_edges (id)";
+
+    // Activity logging
+    public static final String CREATE_ACTIVITY_TABLE = "CREATE TABLE t_activityLog("+
+            " activityID INT GENERATED ALWAYS AS IDENTITY CONSTRAINT t_activityLog_pk PRIMARY KEY,"+
+            " time TIMESTAMP NOT NULL,"+
+            " changeType INT NOT NULL,"+
+            " employee INT NOT NULL CONSTRAINT t_activityLog_fk REFERENCES t_employee ON DELETE CASCADE,"+
+            " details LONG VARCHAR"+
+            ")";
+    public static final String ACTIVITY_INSERT = "INSERT INTO t_activityLog"+
+            "(time,changeType,employee,details)"+
+            " VALUES(?,?,?,?)";
+    public static final String ACTIVITY_SELECT = "SELECT * FROM t_activityLog WHERE activityID=?";
+    public static final String ACTIVITY_SELECT_ALL = "SELECT * FROM t_activityLog";
+    public static final String ACTIVITY_DELETE = "DELETE FROM t_activityLog WHERE activityID=?";
 
     public static final String REQUEST_INSERT = " ?, ?, ?, ?, ?)";
 
