@@ -9,6 +9,7 @@ import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -93,14 +94,13 @@ public class MapController {
 
     private MainWindowController parent = null;
 
-
+    public boolean isWheelchairSet;
+    @FXML
+    private JFXCheckBox wheelchairCheckbox;
 
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
-
-
-
     }
 
     /**
@@ -108,6 +108,10 @@ public class MapController {
      */
     @FXML
     protected void initialize() throws NotFoundException{
+        Image wheelChairIcon = ResourceManager.getInstance().getImage("/images/icons/wheelchair.png");
+        ImageView wheelChairView = new ImageView(wheelChairIcon);
+        this.wheelchairCheckbox.setGraphic(wheelChairView);
+
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
         languageSelector.getItems().addAll("English","French");
@@ -144,7 +148,11 @@ public class MapController {
         keyDialogContainer.setDisable(true);
 
         aboutLayout.setDisable(true);
-
+        this.isWheelchairSet = false;
+        wheelchairCheckbox.setSelected(false);
+        wheelchairCheckbox.setOnAction(e -> {
+            this.isWheelchairSet = wheelchairCheckbox.isSelected();
+        });
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
