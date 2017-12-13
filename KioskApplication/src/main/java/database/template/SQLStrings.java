@@ -83,6 +83,14 @@ public class SQLStrings {
             " assigner INT NOT NULL CONSTRAINT t_food_employee_fk1 REFERENCES t_employee ON DELETE CASCADE,"+
             " completer INT NOT NULL CONSTRAINT t_food_employee_fk2 REFERENCES t_employee ON DELETE CASCADE,";
 
+
+    public static final String CREATE_IT_TABLE = "create table t_it("+
+            " requestID VARCHAR(36) NOT NULL CONSTRAINT t_it_pk PRIMARY KEY,"+
+            " language INT NOT NULL,"+
+            " nodeID VARCHAR(10) NOT NULL CONSTRAINT t_it_fk_nodeID REFERENCES t_nodes ON DELETE CASCADE,"+
+            " assigner INT NOT NULL CONSTRAINT t_it_fk_assigner REFERENCES t_employee ON DELETE CASCADE,"+
+            " completer INT NOT NULL CONSTRAINT t_it_fk_completer REFERENCES t_employee ON DELETE CASCADE,";
+
     public static final String WITH_SHARED_REQUEST_ATTRIBUTES =
             " note LONG VARCHAR," +
             " submittedTime TIMESTAMP NOT NULL," +
@@ -115,11 +123,22 @@ public class SQLStrings {
     public static final String SECURITY_DELETE = "DELETE FROM t_security WHERE requestID = ?";
     public static final String SECURITY_SELECT_ALL = "select * from t_security";
 
+
+
+    // IT
+    public static final String IT_INSERT = "INSERT INTO t_it values(";
+    public static final String IT_UPDATE = "UPDATE t_it set";
+    public static final String IT_SELECT = "SELECT * FROM t_it WHERE requestID=?";
+    public static final String IT_DELETE = "DELETE FROM t_it WHERE requestID=?";
+    public static final String IT_SELECT_ALL = "SELECT * FROM t_it";
+
     // Dropping
     public static final String DROP_NODE_TABLE = "DROP TABLE t_nodes";
     public static final String DROP_EDGE_TABLE = "DROP TABLE t_edges";
     public static final String DROP_INTERPRETER_TABLE = "DROP TABLE t_interpreter";
     public static final String DROP_SECURITY_TABLE = "DROP TABLE t_security";
+
+    public static final String DROP_IT_TABLE = "DROP TABLE t_it";
 
     public static final String CREATE_SCHEMA = "CREATE SCHEMA LOCALKIOSK";
 

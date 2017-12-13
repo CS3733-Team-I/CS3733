@@ -1,6 +1,7 @@
 package database.connection;
 
 import database.objects.*;
+import database.objects.requests.ITRequest;
 import database.template.SQLStrings;
 import utility.node.NodeBuilding;
 import utility.node.NodeFloor;
@@ -499,6 +500,99 @@ public class Connector {
         }
 
         return foodRequests;
+    }
+
+
+
+
+
+
+    public static int insertIT(Connection conn, SecurityRequest sR) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_INSERT+REQUEST_INSERT);
+        pstmt.setString(1, sR.getRequestID());
+        pstmt.setString(2, sR.getNodeID());
+        pstmt.setInt(3, sR.getAssignerID());
+        pstmt.setInt(4, sR.getCompleterID());
+        pstmt.setString(5, sR.getNote());
+        pstmt.setTimestamp(6, sR.getSubmittedTime());
+        pstmt.setTimestamp(7, sR.getStartedTime());
+        pstmt.setTimestamp(8, sR.getCompletedTime());
+        pstmt.setInt(9, sR.getStatus().ordinal());
+        //pstmt.setInt(11, sR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateIT(Connection conn, SecurityRequest sR) throws SQLException {
+        String sql = IT_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, sR.getNodeID());
+        pstmt.setInt(2, sR.getAssignerID());
+        pstmt.setInt(3, sR.getCompleterID());
+        pstmt.setString(4, sR.getNote());
+        pstmt.setTimestamp(5, sR.getSubmittedTime());
+        pstmt.setTimestamp(6, sR.getStartedTime());
+        pstmt.setTimestamp(7, sR.getCompletedTime());
+        pstmt.setInt(8, sR.getStatus().ordinal());
+        //search parameter below
+        pstmt.setString(9, sR.getRequestID());
+        //pstmt.setInt(11, sR.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static ITRequest selectIT(Connection conn, String requestID) throws SQLException {
+        String sql = IT_SELECT;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, requestID);
+        ITRequest itRequest = null;
+
+        ResultSet rs = pstmt.executeQuery();
+        if(rs.next()) {
+            itRequest = new ITRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
+        }
+        return itRequest;
+    }
+
+    public static boolean deleteIT(Connection conn, String requestID) throws SQLException {
+        PreparedStatement pstmt = conn.prepareStatement(IT_DELETE);
+        pstmt.setString(1, requestID);
+        return pstmt.execute();
+    }
+
+    public static LinkedList<ITRequest> selectAllIT(Connection conn) throws SQLException {
+        String sql = IT_SELECT_ALL;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        LinkedList<ITRequest> itRequests = new LinkedList<>();
+        while(rs.next()) {
+            ITRequest itRequest = null;
+            itRequest = new ITRequest(
+                    rs.getString("requestID"),
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")]
+                    //rs.getInt("uRequestID")
+            );
+
+            itRequests.add(itRequest);
+        }
+        return itRequests;
     }
 
     /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {

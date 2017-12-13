@@ -94,6 +94,11 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                 </Tab>
+                <Tab fx:id="iTTab">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                </Tab>
             </tabs>
         </JFXTabPane>
     </children>
