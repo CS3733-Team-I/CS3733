@@ -136,8 +136,8 @@ public class SQLStrings {
     public static final String JANITOR_SELECT_ALL = "SELECT * FROM t_janitor";
 
     // IT
-    public static final String IT_INSERT = "INSERT INTO t_it values(?,";
-    public static final String IT_UPDATE = "UPDATE t_it set";
+    public static final String IT_INSERT = "INSERT INTO t_it values(?,?,?,?,?,?,?,?,?,?)";
+    public static final String IT_UPDATE = "UPDATE t_it set itService=?,";
     public static final String IT_SELECT = "SELECT * FROM t_it WHERE requestID=?";
     public static final String IT_DELETE = "DELETE FROM t_it WHERE requestID=?";
     public static final String IT_SELECT_ALL = "SELECT * FROM t_it";

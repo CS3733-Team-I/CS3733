@@ -620,8 +620,25 @@ public class Connector {
     }
 
     public static int insertIT(Connection conn, ITRequest itRequest) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(IT_INSERT+REQUEST_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(IT_INSERT);
         pstmt.setString(1, itRequest.getRequestID());
+        pstmt.setInt(2,itRequest.getItService().ordinal());
+        pstmt.setString(3, itRequest.getNodeID());
+        pstmt.setInt(4, itRequest.getAssignerID());
+        pstmt.setInt(5, itRequest.getCompleterID());
+        pstmt.setString(6, itRequest.getNote());
+        pstmt.setTimestamp(7, itRequest.getSubmittedTime());
+        pstmt.setTimestamp(8, itRequest.getStartedTime());
+        pstmt.setTimestamp(9, itRequest.getCompletedTime());
+        pstmt.setInt(10, itRequest.getStatus().ordinal());
+        //pstmt.setInt(11, itRequest.getuRequestID());
+        return pstmt.executeUpdate();
+    }
+
+    public static int updateIT(Connection conn, ITRequest itRequest) throws SQLException {
+        String sql = IT_UPDATE+REQUEST_UPDATE;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,itRequest.getItService().ordinal());
         pstmt.setString(2, itRequest.getNodeID());
         pstmt.setInt(3, itRequest.getAssignerID());
         pstmt.setInt(4, itRequest.getCompleterID());
@@ -630,23 +647,8 @@ public class Connector {
         pstmt.setTimestamp(7, itRequest.getStartedTime());
         pstmt.setTimestamp(8, itRequest.getCompletedTime());
         pstmt.setInt(9, itRequest.getStatus().ordinal());
-        //pstmt.setInt(11, itRequest.getuRequestID());
-        return pstmt.executeUpdate();
-    }
-
-    public static int updateIT(Connection conn, ITRequest itRequest) throws SQLException {
-        String sql = IT_UPDATE+REQUEST_UPDATE;
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, itRequest.getNodeID());
-        pstmt.setInt(2, itRequest.getAssignerID());
-        pstmt.setInt(3, itRequest.getCompleterID());
-        pstmt.setString(4, itRequest.getNote());
-        pstmt.setTimestamp(5, itRequest.getSubmittedTime());
-        pstmt.setTimestamp(6, itRequest.getStartedTime());
-        pstmt.setTimestamp(7, itRequest.getCompletedTime());
-        pstmt.setInt(8, itRequest.getStatus().ordinal());
         //search parameter below
-        pstmt.setString(9, itRequest.getRequestID());
+        pstmt.setString(10, itRequest.getRequestID());
         //pstmt.setInt(11, itRequest.getuRequestID());
         return pstmt.executeUpdate();
     }

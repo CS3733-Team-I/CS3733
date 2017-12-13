@@ -19,4 +19,29 @@ public class ITRequest extends Request {
     public ITService getItService() {
         return itService;
     }
+
+    public void setItService(ITService itService) {
+        this.itService = itService;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj==null) return false;
+
+        if(obj.getClass() == this.getClass()){
+            ITRequest other = (ITRequest) obj;
+            return(requestID.equals(other.getRequestID())&&
+                    getNodeID().equals(other.getNodeID())&&
+                    getAssignerID()==other.getAssignerID())&&
+                    getCompleterID()==other.getCompleterID()&&
+                    getNote().equals(other.getNote())&&
+                    getSubmittedTime().equals(other.getSubmittedTime())&&
+                    getCompletedTime().equals(other.getCompletedTime())&&
+                    getStatus()==other.getStatus()&&
+                    getItService()==other.getItService();
+        }
+        else{
+            return false;
+        }
+    }
 }
