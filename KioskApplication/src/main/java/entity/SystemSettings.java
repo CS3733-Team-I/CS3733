@@ -5,7 +5,6 @@ import database.objects.Node;
 import javafx.beans.property.SimpleObjectProperty;
 import pathfinder.*;
 
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -189,7 +188,7 @@ public class SystemSettings extends Observable {
     }
 
     public void updateDistance() {
-        MapEntity.getInstance().updateDistanceFromKisok(getKioskLocation());
+        MapEntity.getInstance().updateDistanceFromKiosk(getKioskLocation());
     }
 
     public void setIsMetric(boolean b) {
