@@ -208,7 +208,7 @@ public class PathWaypointView extends AnchorPane {
         System.out.println("X: " + e.getSceneX() + ", Y: " + e.getSceneY());
         popupView.getChildren().add(anchorPane);
         double xadj = 0-(anchorPane.getWidth()/2);
-        double yadj = 0-(anchorPane.getHeight());
+        double yadj = 0-(anchorPane.getHeight()+20);
         anchorPane.setLayoutX(node.getXcoord()+xadj);
         anchorPane.setLayoutY(node.getYcoord()+yadj);
     }
