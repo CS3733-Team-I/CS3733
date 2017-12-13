@@ -15,6 +15,7 @@ public class MapEntity implements IMapEntity {
 
     private HashMap<NodeFloor,MapFloorEntity> floors;
     private HashMap<String, Edge> edges;
+    private HashMap<Node, Integer> distanceFromKiosk;
 
     private DatabaseController dbController;
 
@@ -28,6 +29,7 @@ public class MapEntity implements IMapEntity {
         edges = new HashMap<>();
 
         dbController = DatabaseController.getInstance();
+        distanceFromKiosk = new HashMap<Node, Integer>();
     }
 
     public static MapEntity getInstance() {
@@ -85,9 +87,8 @@ public class MapEntity implements IMapEntity {
         }
     }
 
-
     @Override
-    public Node getNode(String s) throws NotFoundException {
+    public Node getNode(String s) throws NotFoundException{
         Node thisNode = null;
         //First, check to see if the node is in the map.  Check every floor.
         for (NodeFloor floor : floors.keySet()) {
@@ -185,8 +186,6 @@ public class MapEntity implements IMapEntity {
         return result;
     }
 
-
-
     // TODO this is an expensive function, should probably rewrite
     public ArrayList<Edge> getEdgesOnFloor(NodeFloor floor) {
         ArrayList<Edge> edgesOnFloor = new ArrayList<>();
@@ -209,7 +208,6 @@ public class MapEntity implements IMapEntity {
 
         return edgesOnFloor;
     }
-
 
     @Override
     public void removeNode(Node node) throws DatabaseException {
@@ -341,6 +339,16 @@ public class MapEntity implements IMapEntity {
         return connectedNodes;
     }
 
+    public HashMap<String, Node> getAllNodesHM() {
+        HashMap<String,Node> allNodes = new HashMap<>();
+        for(NodeFloor floor: floors.keySet()) {
+            for(Node n : floors.get(floor).getAllNodes()) {
+                allNodes.put(n.getNodeID(),n);
+            }
+        }
+        return allNodes;
+    }
+
     /**
      * Alternate call for getConnectedNodes.  If no wheelchair accessibility level is specified, default to false.
      * @param node
@@ -348,5 +356,15 @@ public class MapEntity implements IMapEntity {
      */
     public LinkedList<Node> getConnectedNodes(Node node){
         return this.getConnectedNodes(node, false);
+    }
+
+    /**
+     * Get the distance from the kiosk to the given node
+     * @param n node to get distance to
+     * @return int distance in pixels
+     */
+    public int getDistanceFromKiosk(Node n) {
+        if(distanceFromKiosk.containsKey(n)) return distanceFromKiosk.get(n);
+        return -1;
     }
 }

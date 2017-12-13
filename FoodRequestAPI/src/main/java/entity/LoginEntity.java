@@ -1,10 +1,9 @@
 package entity;
 
 import database.DatabaseController;
-import database.objects.Employee;
-import database.objects.IEmployee;
-import database.objects.NullEmployee;
+import database.objects.*;
 import utility.KioskPermission;
+import utility.request.Language;
 import utility.request.RequestType;
 
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.LinkedList;
 
 import static utility.KioskPermission.NONEMPLOYEE;
 import static utility.KioskPermission.SUPER_USER;
+import static utility.request.RequestType.INTERPRETER;
 
 /**
  * Should handle user credential validation and connection to the user database for LoginController
@@ -44,14 +44,14 @@ public class LoginEntity {
         logins = new HashMap<>();
         if (test){
             // so tests can add and remove logins as needed
-            currentLogin = new Employee("firstTimeSetup","","","root",
+            currentLogin = new Employee("firstTimeSetup","","","root","",
                     SUPER_USER,RequestType.GENERAL);
         } else {
             readAllFromDatabase();
 
             if (database.getAllEmployees().size() == 0) {
                 // if there are no employees in the database, start as a super user
-                currentLogin = new Employee("firstTimeSetup","","","root",
+                currentLogin = new Employee("firstTimeSetup","","","root","",
                         SUPER_USER,RequestType.GENERAL);
             } else {
                 // initial employee state, we don't want anyone to restart the application and gain access to admin powers
@@ -64,7 +64,7 @@ public class LoginEntity {
         return currentLogin.getPermission();
     }
 
-    public String getUsername() {
+    public String getCurrentUsername() {
         return currentLogin.getUsername();
     }
 
@@ -72,8 +72,8 @@ public class LoginEntity {
      *
      * @return integer LoginID
      */
-    public int getLoginID(){
-        return currentLogin.getLoginID();
+    public int getCurrentLoginID(){
+        return currentLogin.getID();
     }
 
     /**
@@ -120,24 +120,48 @@ public class LoginEntity {
         ArrayList<Employee> employees = new ArrayList<>(logins.values());
         ArrayList<Integer> loginIDs= new ArrayList<Integer>();
         for(Employee employee: employees){
-            loginIDs.add(employee.getLoginID());
+            loginIDs.add(employee.getID());
         }
         return loginIDs;
     }
 
-    public ArrayList<Integer> getAllEmployeeType(RequestType type){
-        ArrayList<Employee> employees = new ArrayList<>(logins.values());
-        ArrayList<Integer> loginIDs = new ArrayList<Integer>();
+    public LinkedList<Employee> getAllEmployeeType(Request request){
+        LinkedList<Employee> employees = new LinkedList<>(logins.values());
+        LinkedList<Employee> filterEmployees = new LinkedList<>();
+        RequestType type = request.getRequestType();
         if(type.equals(RequestType.GENERAL)){
-            loginIDs = getAllLoginIDs();
-        }else{
+            return employees;
+        }
+        //for filtering out interpreters by language
+        else if(request instanceof InterpreterRequest){
+            InterpreterRequest iRequest = ((InterpreterRequest) request);
             for(Employee employee: employees){
-                if(employee.getServiceAbility().equals(type)){
-                    loginIDs.add(employee.getLoginID());
+                if(employee.getServiceAbility()==INTERPRETER){
+                    ArrayList<Language> interpretersLanguages = new ArrayList<Language>();
+                    String inLanguage="";
+                    for(char c : employee.getOptions().toCharArray()){
+                        if(c==':'){
+                            interpretersLanguages.add(Language.values()[Integer.parseInt(inLanguage)]);
+                            inLanguage="";
+                        }
+                        else{
+                            inLanguage=inLanguage+c;
+                        }
+                    }
+                    if(interpretersLanguages.contains(iRequest.getLanguage())){
+                        filterEmployees.add(employee);
+                    }
                 }
             }
         }
-        return loginIDs;
+        else{
+            for(Employee employee: employees){
+                if(employee.getServiceAbility().equals(type)){
+                    filterEmployees.add(employee);
+                }
+            }
+        }
+        return filterEmployees;
     }
 
     /**
@@ -151,11 +175,12 @@ public class LoginEntity {
      * @param lastName
      * @param firstName
      * @param password
+     * @param options a list of strings from EmployeeSettingsController
      * @param permission
      * @param serviceAbility
      * @return
      */
-    public boolean addUser(String userName, String lastName, String firstName, String password,
+    public boolean addUser(String userName, String lastName, String firstName, String password, ArrayList<String> options,
                            KioskPermission permission, RequestType serviceAbility){
         // Idiot resistance
         if(currentLogin.getPermission()==NONEMPLOYEE||permission==NONEMPLOYEE){
@@ -163,17 +188,27 @@ public class LoginEntity {
         }
         // updates the hashmap in case a employee is missing
         // TODO: make reading from the database more efficient, when someone is adding a lot of users, we don't want this to take forever
-        readAllFromDatabase();
         if(logins.containsKey(userName)){
             return false;
         }
         // limits creating new logins to subordinates in the KioskPermission hierarchy
         else if(currentLogin.getPermission().ordinal()>permission.ordinal()||
                 currentLogin.getPermission() == SUPER_USER){
+            String optionsString = "";
             // fitting it into the table
             if(userName.length()<=50){
+                //different cases for different employee RequestTypes
+                switch (serviceAbility){
+                    case INTERPRETER:
+                        for(String language : options) {
+                            //converts the checkbox text to a string containing the ordinal value of the language
+                            String langOption = Language.valueOf(language).ordinal() + ":";
+                            optionsString = optionsString + langOption;
+                        }
+                        break;
+                }
                 //constructs a temporary employee for database insertion
-                Employee tempEmployee=new Employee(userName,lastName,firstName, password, permission,
+                Employee tempEmployee=new Employee(userName,lastName,firstName, password, optionsString, permission,
                         serviceAbility);
                 int ID = database.addEmployee(tempEmployee,password);
                 logins.put(userName,database.getEmployee(ID));
@@ -200,7 +235,7 @@ public class LoginEntity {
             if(delEmp.getPermission().ordinal()<currentLogin.getPermission().ordinal()||
                     currentLogin.getPermission()==SUPER_USER) {
                 logins.remove(username);
-                database.removeEmployee(delEmp.getLoginID());
+                database.removeEmployee(delEmp.getID());
                 return true;
             }
         }
@@ -211,7 +246,7 @@ public class LoginEntity {
      * only for the current login
      * @return the RequestType of the current log in
      */
-    public RequestType getServiceAbility() {
+    public RequestType getCurrentServiceAbility() {
         return currentLogin.getServiceAbility();
     }
 
@@ -248,14 +283,14 @@ public class LoginEntity {
 
     /**
      * Helper method for the methods that update the current login
-     * @param oldUsername can also be the current userName
+     * @param username can also be the current userName
      * @param password
      */
-    private void updateCurrentLogin(String password,String oldUsername) {
-        logins.remove(oldUsername);
-        Employee tempEmp = new Employee(currentLogin.getLoginID(), currentLogin.getLastName(),
+    private void updateCurrentLogin(String password,String username) {
+        logins.remove(username);
+        Employee tempEmp = new Employee(currentLogin.getID(), currentLogin.getLastName(),
                 currentLogin.getFirstName(), currentLogin.getUsername(), currentLogin.getPassword(password),
-                currentLogin.getPermission(), currentLogin.getServiceAbility());
+                currentLogin.getOptions(), currentLogin.getPermission(), currentLogin.getServiceAbility());
         logins.put(currentLogin.getUsername(), tempEmp);
                 //haven't figured out how to safely get things from an interface to the class
                 //so yeah...
@@ -286,5 +321,26 @@ public class LoginEntity {
     // Logout method
     public void logOut(){
         currentLogin=NullEmployee.getInstance();
+    }
+
+    /**
+     * Used to return the list of languages an interpreter can speak for request filtering
+     * @return ArrayList of Languages an interpreter can speak
+     */
+    public ArrayList<Language> getCurrentInterpreterLanguages(){
+        ArrayList<Language> languages = new ArrayList<Language>();
+        if(currentLogin.getServiceAbility()==INTERPRETER){
+            String inLanguage="";
+            for(char c : currentLogin.getOptions().toCharArray()){
+                if(c==':'){
+                    languages.add(Language.values()[Integer.parseInt(inLanguage)]);
+                    inLanguage="";
+                }
+		        else{
+                    inLanguage=inLanguage+c;
+                }
+            }
+        }
+        return languages;
     }
 }

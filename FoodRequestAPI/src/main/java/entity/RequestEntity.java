@@ -98,8 +98,8 @@ public class RequestEntity {
      * Gets a list of all interpreter requests in the hashmaps
      * @return list of all interpreterRequest found in interpreterRequests hashmap
      */
-    public LinkedList<Request> getAllinterpters(){
-        LinkedList<Request> intRequests = new LinkedList<>();
+    public LinkedList<InterpreterRequest> getAllinterpters(){
+        LinkedList<InterpreterRequest> intRequests = new LinkedList<>();
         for(InterpreterRequest iR: interpreterRequests.values()){
             intRequests.add(iR);
         }
