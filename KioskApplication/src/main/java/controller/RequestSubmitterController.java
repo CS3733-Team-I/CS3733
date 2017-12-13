@@ -10,9 +10,7 @@ import entity.MapEntity;
 import entity.RequestEntity;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,12 +22,15 @@ import utility.FoodType;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.request.ITService;
 import utility.request.Language;
 import utility.request.RequestType;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 public class RequestSubmitterController extends ScreenController {
+    @FXML private JFXButton btnSubmit;
 
     @FXML private JFXTabPane requestTypeTabs;
     @FXML private Tab interpreterTab;
@@ -55,6 +56,12 @@ public class RequestSubmitterController extends ScreenController {
     @FXML private JFXTextField janLocationField;
     @FXML private JFXTextArea janNotesField;
 
+    /*it related*/
+    @FXML private Tab itTab;
+    @FXML private JFXTextField itLocationField;
+    @FXML private JFXComboBox<ITService> itServiceTypeSelector;
+    @FXML private JFXTextArea itNotesField;
+
     RequestType currentRequestType = RequestType.INTERPRETER;
 
     LoginEntity loginEntity;
@@ -68,6 +75,8 @@ public class RequestSubmitterController extends ScreenController {
 
     @FXML
     public void initialize() {
+        clearButton();
+
         Image interpreterIcon = ResourceManager.getInstance().getImage("/images/icons/interpreterIcon.png");
         ImageView interpreterIconView = new ImageView(interpreterIcon);
         interpreterIconView.setRotate(90);
@@ -141,6 +150,12 @@ public class RequestSubmitterController extends ScreenController {
 
                 janNotesField.clear();
                 janLocationField.clear();
+            } else if(newValue == itTab){
+                currentRequestType = RequestType.IT;
+
+                itLocationField.clear();
+                itServiceTypeSelector.setValue(null);
+                itNotesField.clear();
             }
             resetTimer();
         });
@@ -285,6 +300,13 @@ public class RequestSubmitterController extends ScreenController {
         menuTable.getColumns().addAll(nameColumn, costColumn, checkboxColumn);
         menuTable.setShowRoot(false);
         menuTable.setEditable(true);
+
+        //IT setup
+        ObservableList<ITService> itServiceTypes = FXCollections.observableArrayList();
+        for(ITService itService:ITService.values()){
+            itServiceTypes.add(itService);
+        }
+        itServiceTypeSelector.setItems(itServiceTypes);
     }
 
     /**
@@ -306,6 +328,9 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 addJanitorRequest();
                 break;
+            case IT:
+                addITRequest();
+                break;
         }
     }
 
@@ -319,7 +344,7 @@ public class RequestSubmitterController extends ScreenController {
         langMenu.setValue(null);
 
         restaurantComboBox.setValue(null);
-        deliveryTimePicker.setValue(null);
+        deliveryTimePicker.setValue(LocalTime.now());
         deliveryLocation.setText("");
 
         secLocationField.setText("");
@@ -328,58 +353,91 @@ public class RequestSubmitterController extends ScreenController {
 
         janLocationField.setText("");
         janNotesField.setText("");
+
+        itLocationField.setText("");
+        itServiceTypeSelector.setValue(null);
+        itNotesField.setText("");
     }
 
     /**
      * Adds an interpreter Request to the database
      */
     public void addIntRequest() {
-        Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
-        requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), intNotesArea.getText(), language);
-        System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getCurrentLoginID());
-        clearButton();
+        if(intLocation.getText().isEmpty() || langMenu.getValue().equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            Language language = Language.valueOf(langMenu.getValue().toString().toUpperCase());
+            requestEntity.submitInterpreterRequest(intLocation.getText(), loginEntity.getCurrentLoginID(), intNotesArea.getText(), language);
+            System.out.println("location: " + intLocation.getText() + ". language: " + language.toString() + ". Assigner: " + loginEntity.getCurrentLoginID());
+            clearButton();
+        }
+
     }
 
     /**
      * Adds a security Request to the database
      */
     public void addSecRequest() {
-        int priority = Integer.parseInt(priorityMenu.getValue().toString());
-        System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
-        //node ID, employee, notes, priority
-        requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getCurrentLoginID(), secNoteField.getText(), priority);
-        clearButton();
+        if(secLocationField.getText().isEmpty() || priorityMenu.getValue().equals(null)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            int priority = Integer.parseInt(priorityMenu.getValue().toString());
+            System.out.println("location: " + secLocationField.getText() + ". priority: " + priority + ". Admin Email: " + loginEntity.getCurrentLoginID());
+            //node ID, employee, notes, priority
+            requestEntity.submitSecurityRequest(secLocationField.getText(), loginEntity.getCurrentLoginID(), secNoteField.getText(), priority);
+            clearButton();
+        }
     }
 
     /**
      * Adds a food Request to the database
      */
     public void addFoodRequest(){
-        String order = "Order:";
-//        for (int i = 0; i < menuTable.getCurrentItemsCount(); i++) {
-        for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
-            for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
-                String fooditem = item.getValue().getName();
-                if (item.isLeaf() && item.getValue().selectedProperty().get() &&
-                        !(item.getValue().getName().equals("Drinks") ||
-                                item.getValue().getName().equals("Entrees") ||
-                                item.getValue().getName().equals("Sides"))){
-                    order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+        if(deliveryLocation.getText().isEmpty() || restaurantComboBox.getValue().equals(null)
+                || deliveryTimePicker.getValue().equals("")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Submitting Request");
+            alert.setHeaderText("Error occurred while adding request to database.");
+            alert.setContentText("Please fill out all fields");
+            alert.showAndWait();
+        }else{
+            String order = "Order:";
+            for(TreeItem<FoodMenuItem> catagories: menuTable.getRoot().getChildren()){
+                for(TreeItem<FoodMenuItem> item: catagories.getChildren()){
+                    String fooditem = item.getValue().getName();
+                    if (item.isLeaf() && item.getValue().selectedProperty().get() &&
+                            !(item.getValue().getName().equals("Drinks") ||
+                                    item.getValue().getName().equals("Entrees") ||
+                                    item.getValue().getName().equals("Sides"))){
+                        order += " " + item.getValue().getName() + " (" + item.getValue().getCost() + "),";
+                    }
                 }
-//            TreeItem<FoodMenuItem> item = menuTable.getTreeItem(i);
             }
-        }
-        order = order.trim();
-        if (order.endsWith(",")) order.substring(0, order.length() - 1);
+            order = order.trim();
+            if (order.endsWith(",")) order.substring(0, order.length() - 1);
 
-        requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
-                restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
-        System.out.println(requestEntity.getAllFoodRequests());
-        clearButton();
+            requestEntity.submitFoodRequest(deliveryLocation.getText(),loginEntity.getCurrentLoginID(),order,
+                    restaurantComboBox.getValue().getNodeID(),deliveryTimePicker.getValue());
+            System.out.println(requestEntity.getAllFoodRequests());
+            clearButton();
+        }
     }
 
     private void addJanitorRequest(){
         requestEntity.submitJanitorRequest(janLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText());
+        clearButton();
+    }
+
+    private void addITRequest(){
+        requestEntity.submitITRequest(itLocationField.getText(),loginEntity.getCurrentLoginID(),janNotesField.getText(),itServiceTypeSelector.getValue());
         clearButton();
     }
 
@@ -417,6 +475,8 @@ public class RequestSubmitterController extends ScreenController {
             case JANITOR:
                 janLocationField.setText(n.getNodeID());
                 break;
+            case IT:
+                itLocationField.setText(n.getNodeID());
         }
     }
 
