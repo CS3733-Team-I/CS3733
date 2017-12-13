@@ -378,8 +378,10 @@ public class RequestEntity {
         }
         else if(checkRequestType(requestID).equals(RequestType.FOOD)){
             request = getFoodRequest(requestID);
+        }else if(checkRequestType(requestID).equals(RequestType.JANITOR)){
+            request = getJanitorRequest(requestID);
         }
-        else if (checkRequestType(requestID).equals(RequestType.SECURITY)){
+      else if (checkRequestType(requestID).equals(RequestType.SECURITY)){
             request = getSecurityRequest(requestID);
         }
         else if (checkRequestType(requestID).equals(RequestType.JANITOR)){
@@ -670,7 +672,7 @@ public class RequestEntity {
                                   RequestProgressStatus status, String destinationNodeID,
                                   Timestamp deliveryDate){
         FoodRequest oldReq = foodRequests.get(requestID);
-        oldReq.setDestinationID(destinationNodeID);
+        oldReq.setRestaurantID(destinationNodeID);
         oldReq.setDeliveryDate(deliveryDate);
         updateRequest(requestID,nodeID,assignerID,note,submittedTime,completedTime,status);
         dbController.updateFoodRequest(oldReq);

@@ -1,7 +1,5 @@
 package entity.FoodEntities;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import utility.FoodType;
 
 public class Cafe extends IFoodMenu {
