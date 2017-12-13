@@ -307,8 +307,13 @@ public class MapController {
             if(condition.equals("T")){
                 return;
             }
+
             double xcoord = e.getX();
             double ycoord = e.getY();
+            if(condition.equals("C")){
+                xcoord = roundToFive((int)xcoord);
+                ycoord = roundToFive((int)ycoord);
+            }
             Node selectNode = MapEntity.getInstance().getNodeByID(uniqueID);
             selectNode.setXcoord((int)xcoord);
             selectNode.setYcoord((int)ycoord);

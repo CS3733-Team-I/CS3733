@@ -2,17 +2,13 @@ package controller.map;
 
 import database.objects.Node;
 import entity.MapEntity;
-import entity.SystemSettings;
-import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import utility.ResourceManager;
 import utility.node.NodeSelectionType;
 import utility.node.NodeType;
 
@@ -128,7 +124,6 @@ public class NodeView extends StackPane {
                 content.putString(Integer.toString(this.node.getUniqueID()) + "S");
             }
             else if (e.isControlDown()){
-                System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
                 content.putString(Integer.toString(this.node.getUniqueID()) + "C");
             }
             else{
