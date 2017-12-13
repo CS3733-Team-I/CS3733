@@ -1,6 +1,5 @@
 package controller.map;
 
-import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
 import database.objects.Node;
 import entity.MapEntity;
@@ -9,15 +8,17 @@ import entity.SystemSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -26,7 +27,6 @@ import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +41,9 @@ public class PathWaypointView extends AnchorPane {
     private AnchorPane pathView;
     private AnchorPane wayPointView;
     private AnchorPane floorChangeView;
+    private AnchorPane popupView;
+    private ImageView kioskLocationView;
+    private Node kiosk;
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
@@ -66,10 +69,27 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
+
+        popupView = new AnchorPane();
+        popupView.setPickOnBounds(false);
+
+        AnchorPane.setTopAnchor(popupView, 0.0);
+        AnchorPane.setLeftAnchor(popupView, 0.0);
+        AnchorPane.setBottomAnchor(popupView, 0.0);
+        AnchorPane.setRightAnchor(popupView, 0.0);
+
         floorChangeView = new AnchorPane();
         floorChangeView.setPickOnBounds(false);
 
-        this.getChildren().addAll(pathView, wayPointView, floorChangeView);
+        this.getChildren().addAll(pathView, wayPointView, floorChangeView, popupView);
+
+        //Kiosk init
+        kiosk = SystemSettings.getInstance().getKioskLocation();
+        kioskLocationView = getYouAreHereIcon(kiosk);
+
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            this.getChildren().add(kioskLocationView);
+        }
 
         waypointList = FXCollections.observableArrayList();
 
@@ -92,6 +112,11 @@ public class PathWaypointView extends AnchorPane {
                         WaypointView removedView = this.wayPointViewsMap.get(removedWaypoint);
                         this.wayPointViewsMap.remove(removedWaypoint);
                         this.wayPointView.getChildren().remove(removedView);
+
+                        int index = 0;
+                        for (Node node : waypointList) {
+                            if(wayPointViewsMap.containsKey(node)) wayPointViewsMap.get(node).setWaypointCount(index++);
+                        }
                     }
                 }
                 if(listener.wasAdded()) {
@@ -106,16 +131,18 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
-        SystemSettings.getInstance().kioskLocationPropertyProperty().addListener((obj, oldValue, newValue) -> {
+        SystemSettings.getInstance().kioskLocationProperty().addListener((obj, oldValue, newValue) -> {
             if (newValue == null) return;
 
-            ImageView youAreHereView = getYouAreHereIcon(newValue);
+            kioskLocationView = getYouAreHereIcon(newValue);
+            kiosk = newValue;
 
             getChildren().clear();
-            getChildren().addAll(pathView, wayPointView, youAreHereView, floorChangeView);
+            getChildren().addAll(pathView, wayPointView, floorChangeView, popupView);
+            if(kiosk.getFloor() == parent.getCurrentFloor()){
+                getChildren().add(kioskLocationView);
+            }
         });
-
-        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getKioskLocation()));
 
         clearPath();
         clearWaypoint();
@@ -131,33 +158,49 @@ public class PathWaypointView extends AnchorPane {
         youarehereView.setLayoutX(node.getXcoord() - (youarehereIcon.getWidth() / 2));
         youarehereView.setLayoutY(node.getYcoord() - (youarehereIcon.getHeight() / 2));
 
-        /*youarehereLabel = new Label();
-        youarehereLabel.setGraphic(youarehereView);
-        youarehereLabel.setPrefHeight(48);
-        youarehereLabel.setPrefWidth(48);
-
-        youarehereLabel.setLayoutX(SystemSettings.getInstance().getKioskLocation().getXcoord()-24);
-        youarehereLabel.setLayoutY(SystemSettings.getInstance().getKioskLocation().getYcoord()-24);
-
-        SystemSettings.getInstance().getKioskLocation().xcoordPropertyProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                getChildren().remove(youarehereLabel);
-                youarehereLabel.setLayoutX(newValue.doubleValue()-24);
-                getChildren().add(youarehereLabel);
-            }
-        });
-
-        SystemSettings.getInstance().getKioskLocation().ycoordPropertyProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                getChildren().remove(youarehereLabel);
-                youarehereLabel.setLayoutY(newValue.doubleValue()-24);
-                getChildren().add(youarehereLabel);
-            }
-        });*/
-
         return youarehereView;
+    }
+
+    public void showPopup(Node node, NodeFloor floor, MouseEvent e){ // Add mouse event to get offset
+        System.out.println("Show Popup");
+        closePopup();
+        // Adjust popup
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setStyle("-fx-background-color: transparent;");
+        HBox hbox = new HBox();
+        Image i = ResourceManager.getInstance().getImage("/images/BWH_logo.png");
+        ImageView iv = new ImageView(i);
+        iv.setOnMouseClicked(ev -> {
+            parent.setFloorSelector(floor);
+            closePopup();
+        });
+        hbox.getChildren().add(iv);
+        hbox.setOnMouseExited(ev -> closePopup());
+        hbox.setStyle("-fx-background-color: transparent;");
+        VBox vbox = new VBox();
+        vbox.setStyle("-fx-background-color: transparent;");
+        vbox.setAlignment(Pos.CENTER);
+        vbox.getChildren().add(hbox);
+        Image tri = ResourceManager.getInstance().getImage("/images/downTriangle.png");
+        ImageView triView = new ImageView(tri);
+        vbox.getChildren().add(triView);
+        anchorPane.getChildren().add(vbox);
+        hbox.setStyle("-fx-border-color: black; -fx-border-width: 2px");
+        vbox.setOnMouseMoved(ev -> parent.resetTimer());
+
+        // Show popup
+        System.out.println("Show Popup");
+        System.out.println("X: " + e.getSceneX() + ", Y: " + e.getSceneY());
+        popupView.getChildren().add(anchorPane);
+        double xadj = 0-(anchorPane.getWidth()/2);
+        double yadj = 0-(anchorPane.getHeight()+20);
+        anchorPane.setLayoutX(node.getXcoord()+xadj);
+        anchorPane.setLayoutY(node.getYcoord()+yadj);
+    }
+
+    public void closePopup(){
+        System.out.println("Close Popup");
+        popupView.getChildren().clear();
     }
 
     /**
@@ -178,6 +221,7 @@ public class PathWaypointView extends AnchorPane {
 //        }
         this.currentPath = null;
         pathView.getChildren().clear();
+        popupView.getChildren().clear();
     }
     /**
      * Clear drawn waypoints
@@ -197,6 +241,13 @@ public class PathWaypointView extends AnchorPane {
 
     public void drawPath(Path path) {
         floorChangeView.getChildren().clear();
+        popupView.getChildren().clear();
+        if (getChildren().contains(kioskLocationView)) {
+            getChildren().remove(kioskLocationView);
+        }
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            getChildren().add(kioskLocationView);
+        }
 
         this.currentPath = path;
 
@@ -205,7 +256,8 @@ public class PathWaypointView extends AnchorPane {
         int waypointIndex = 0;
         for (Node node : waypointList) {
             Node lastNode = node;
-            for (Node thisNode : path.getNodesInSegment(node)) {
+            LinkedList<Node> nodesInSegment = path.getNodesInSegment(node);
+            for (Node thisNode : nodesInSegment) {
                 // Don't draw a line between the same nodes
                 if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
                     lastNode = thisNode;
@@ -228,12 +280,51 @@ public class PathWaypointView extends AnchorPane {
                             (thisNode.getFloor() == parent.getCurrentFloor() ||
                             lastNode.getFloor() == parent.getCurrentFloor())) {
                     Circle circle = new Circle(20, Color.RED);
-                    circle.setCenterX(thisNode.getXcoord());
-                    circle.setCenterY(thisNode.getYcoord());
 
                     final NodeFloor thisFloor = thisNode.getFloor();
                     final NodeFloor lastFloor = lastNode.getFloor();
                     final Node lNode = lastNode;
+
+                    Image upDownImg;
+                    ImageView upDownImgView;
+
+                    if(thisFloor == parent.getCurrentFloor()) {
+                        if (thisFloor.ordinal() < lastFloor.ordinal()) {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-up.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(thisNode.getXcoord());
+                            upDownImgView.setLayoutY(thisNode.getYcoord());
+
+                            circle.setCenterX(thisNode.getXcoord());
+                            circle.setCenterY(thisNode.getYcoord());
+                        } else {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-down.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(lastNode.getXcoord());
+                            upDownImgView.setLayoutY(lastNode.getYcoord());
+
+                            circle.setCenterX(lastNode.getXcoord());
+                            circle.setCenterY(lastNode.getYcoord());
+                        }
+                    } else {
+                        if (thisFloor.ordinal() < lastFloor.ordinal()) {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-down.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(lastNode.getXcoord());
+                            upDownImgView.setLayoutY(lastNode.getYcoord());
+
+                            circle.setCenterX(lastNode.getXcoord());
+                            circle.setCenterY(lastNode.getYcoord());
+                        } else {
+                            upDownImg = ResourceManager.getInstance().getImage("/images/chevron-up.png");
+                            upDownImgView = new ImageView(upDownImg);
+                            upDownImgView.setLayoutX(thisNode.getXcoord());
+                            upDownImgView.setLayoutY(thisNode.getYcoord());
+
+                            circle.setCenterX(thisNode.getXcoord());
+                            circle.setCenterY(thisNode.getYcoord());
+                        }
+                    }
 
                     circle.setOnMouseClicked(e -> {
                         System.out.println("FC Clicked!");
@@ -243,19 +334,23 @@ public class PathWaypointView extends AnchorPane {
                             parent.setFloorSelector(thisFloor);
                         }
                     });
-                    circle.setOnMouseEntered(e -> {
-                        System.out.println("Open Tooltip");
-                        if(thisFloor == parent.getCurrentFloor()) {
-                            parent.showPopup(thisNode);
-                        } else {
-                            parent.showPopup(lNode);
+
+                    circle.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            System.out.println("Open Tooltip");
+                            if (thisFloor == parent.getCurrentFloor()) {
+                                showPopup(thisNode, lastFloor, event);
+                            } else {
+                                showPopup(lNode, thisFloor, event);
+                            }
                         }
-                    });
-                    circle.setOnMouseExited(e -> {
-                        System.out.println("Close Tooltip");
                     });
 
                     floorChangeView.getChildren().add(circle);
+                    floorChangeView.getChildren().add(upDownImgView);
+                    upDownImgView.setLayoutX(upDownImgView.getLayoutX()-18);
+                    upDownImgView.setLayoutY(upDownImgView.getLayoutY()-18);
                 }
 
                 lastNode = thisNode;
@@ -324,6 +419,7 @@ public class PathWaypointView extends AnchorPane {
 
     public void reloadDisplay() {
         pathView.getChildren().clear();
+
         if(currentPath != null) {
             drawPath(currentPath);
         }
@@ -335,6 +431,9 @@ public class PathWaypointView extends AnchorPane {
                 this.wayPointViewsMap.get(node).setVisible(true);
             }
         }
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            pathView.getChildren().add(kioskLocationView);
+        }
     }
 
     /**
@@ -343,15 +442,18 @@ public class PathWaypointView extends AnchorPane {
     public void swapWaypoint(int index1, int index2) {
         Node temp1 = waypointList.get(index1);
         Node temp2 = waypointList.get(index2);
-        WaypointView tempWaypointView = wayPointViewsMap.get(temp2);
 
-        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
-        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+        WaypointView tempWaypointView1 = wayPointViewsMap.get(temp1);
+        WaypointView tempWaypointView2 = wayPointViewsMap.get(temp2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
 
-        wayPointViewsMap.put(temp2, tempWaypointView);
+        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
+        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+        wayPointViewsMap.put(temp1, tempWaypointView1);
+        wayPointViewsMap.put(temp2, tempWaypointView2);
 
         for(Node node : waypointList){
             if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {
