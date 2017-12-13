@@ -2,6 +2,7 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
+import entity.SystemSettings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,7 +43,7 @@ public class SearchController {
         filteredList = new FilteredList<>(this.searchData, event -> true);
         //set the combo box style and editable
         cbSearchData.setEditable(true);
-        cbSearchData.setPromptText("Search by location, doctor or type");
+        cbSearchData.setPromptText(SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {
@@ -81,7 +82,7 @@ public class SearchController {
                 cbSearchData.setPromptText("");
             } else {
                 cbSearchData.hide();
-                cbSearchData.setPromptText("Search by location, doctor or type"); // TODO use language string
+                cbSearchData.setPromptText(SystemSettings.getInstance().getResourceBundle().getString("my.searchprompt"));
             }
         }));
 
@@ -128,7 +129,6 @@ public class SearchController {
 
     @FXML
     void setSearchFieldPromptText(String string) {
-        this.cbSearchData.getEditor().setPromptText(string);
         this.cbSearchData.setPromptText(string);
     }
 

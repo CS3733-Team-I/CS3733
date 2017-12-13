@@ -117,7 +117,7 @@ public class PathWaypointView extends AnchorPane {
 
                         int index = 0;
                         for (Node node : waypointList) {
-                            wayPointViewsMap.get(node).setWaypointCount(index++);
+                            if(wayPointViewsMap.containsKey(node)) wayPointViewsMap.get(node).setWaypointCount(index++);
                         }
                     }
                 }
@@ -280,7 +280,8 @@ public class PathWaypointView extends AnchorPane {
         int waypointIndex = 0;
         for (Node node : waypointList) {
             Node lastNode = node;
-            for (Node thisNode : path.getNodesInSegment(node)) {
+            LinkedList<Node> nodesInSegment = path.getNodesInSegment(node);
+            for (Node thisNode : nodesInSegment) {
                 // Don't draw a line between the same nodes
                 if (thisNode.getUniqueID() == lastNode.getUniqueID()) {
                     lastNode = thisNode;
@@ -445,15 +446,18 @@ public class PathWaypointView extends AnchorPane {
     public void swapWaypoint(int index1, int index2) {
         Node temp1 = waypointList.get(index1);
         Node temp2 = waypointList.get(index2);
-        WaypointView tempWaypointView = wayPointViewsMap.get(temp2);
 
-        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
-        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+        WaypointView tempWaypointView1 = wayPointViewsMap.get(temp1);
+        WaypointView tempWaypointView2 = wayPointViewsMap.get(temp2);
 
         waypointList.set(index1, temp2);
         waypointList.set(index2, temp1);
 
-        wayPointViewsMap.put(temp2, tempWaypointView);
+        wayPointViewsMap.get(waypointList.get(index1)).setWaypointCount(index2);
+        wayPointViewsMap.get(waypointList.get(index2)).setWaypointCount(index1);
+
+        wayPointViewsMap.put(temp1, tempWaypointView1);
+        wayPointViewsMap.put(temp2, tempWaypointView2);
 
         for(Node node : waypointList){
             if(!MapEntity.getInstance().isNodeOnFloor(node, parent.getCurrentFloor())) {

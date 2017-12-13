@@ -475,11 +475,13 @@ public class PathfindingSidebarController extends ScreenController {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasString()) {
-                getMapController().swapWaypoint(waypointListView.getItems().indexOf(waypointBox), Integer.parseInt(db.getString()));
                 HBox temp = waypointBox;
-                waypointListView.getItems().set(waypointListView.getItems().indexOf(waypointBox),
-                        waypointListView.getItems().get(Integer.parseInt(db.getString())));
+                waypointListView.getItems().set(
+                        waypointListView.getItems().indexOf(waypointBox),
+                        waypointListView.getItems().get(Integer.parseInt(db.getString()))
+                );
                 waypointListView.getItems().set(Integer.parseInt(db.getString()), temp);
+
                 success = true;
             }
             event.setDropCompleted(success);
