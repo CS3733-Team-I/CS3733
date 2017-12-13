@@ -4,11 +4,14 @@ import com.jfoenix.controls.*;
 import com.jfoenix.validation.RequiredFieldValidator;
 import controller.MainWindowController;
 import controller.ScreenController;
+import controller.SearchController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
 import database.utility.DatabaseException;
 import entity.MapEntity;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -35,6 +38,7 @@ import utility.ResourceManager;
 import utility.node.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -81,6 +85,11 @@ public class MapBuilderController extends ScreenController {
     @FXML private JFXButton btExpand;
     @FXML JFXPopup popup;
 
+    //search related
+    private SearchController searchController;
+
+    private javafx.scene.Node searchView;
+
     // Observer lists
     private SimpleObjectProperty<Node> selectedNode;
     private SimpleObjectProperty<Node> newNode;
@@ -96,6 +105,14 @@ public class MapBuilderController extends ScreenController {
         newNode.set(null);
 
         observableChangedNodes = FXCollections.observableArrayList();
+
+        //search initialization
+        ArrayList<ISearchEntity> searchNode = new ArrayList<>();
+        SystemSettings.getInstance().updateDistance();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            searchNode.add(new SearchNode(targetNode));
+        }
+        searchController = new SearchController(this, searchNode);
     }
 
     @FXML

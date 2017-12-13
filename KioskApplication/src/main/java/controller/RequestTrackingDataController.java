@@ -26,10 +26,10 @@ public class RequestTrackingDataController {
     @FXML
     public void initialize(){
         refreshTable();
+        refreshPieChart();
     }
 
     public void refreshTable(){
-        r.readAllFromDatabase();
         XYChart.Series s = new XYChart.Series<String,Integer>();
         s.setName("Languages");
         for (LanguageFrequency lF: r.getLanguageFrequency()) {
