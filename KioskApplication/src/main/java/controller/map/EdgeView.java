@@ -20,7 +20,7 @@ public class EdgeView extends AnchorPane {
     Line line;
 
     public EdgeView(Edge edge, Point2D start, Point2D end) {
-        this.setPickOnBounds(false);
+        this.setMouseTransparent(true);
 
         this.edge = edge;
         this.start = start;
@@ -30,12 +30,16 @@ public class EdgeView extends AnchorPane {
         line.setStrokeWidth(10);
         line.setStroke(Color.DARKGRAY);
 
+        setPosition(start, end);
+
+        this.getChildren().add(line);
+    }
+
+    public void setPosition(Point2D start, Point2D end) {
         line.setEndX(end.getX() - start.getX());
         line.setEndY(end.getY() - start.getY());
 
         AnchorPane.setLeftAnchor(this, start.getX());
         AnchorPane.setTopAnchor(this, start.getY());
-
-        this.getChildren().add(line);
     }
 }

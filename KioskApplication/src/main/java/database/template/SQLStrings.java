@@ -133,6 +133,7 @@ public class SQLStrings {
     public static final String NODE_UPDATE = "update t_nodes set xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where nodeID=?";
     public static final String NODE_UPDATE_WITHID = "update t_nodes set nodeID=?, xcoord=?, ycoord=?, floor=?, building=?, nodeType=?, longName=?, shortName=?, teamAssigned=? where id=?";
     public static final String NODE_SELECT = "SELECT * FROM t_nodes where nodeID=?";
+    public static final String NODE_SELECT_UNIQUEID = "Select * from t_nodes where id=?";
     public static final String NODE_DELETE = "DELETE FROM t_nodes WHERE nodeID = ?";
     public static final String NODE_SELECT_ALL = "SELECT * FROM T_NODES";
     public static final String NODE_COUNT_NODETYPE = "SELECT COUNT(*) As countNode from T_NODES where nodeType=? and floor=? and teamAssigned=?";

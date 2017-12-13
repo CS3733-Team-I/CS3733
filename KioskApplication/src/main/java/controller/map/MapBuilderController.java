@@ -196,28 +196,6 @@ public class MapBuilderController extends ScreenController {
                     selectedNode.get().setNodeID(nodeID.getText());
                     observableChangedNodes.add(selectedNode.get());
                 }
-
-                //reflect node ID changes in mapEntity also in edges
-                for(Node node : MapEntity.getInstance().getAllNodes()) {
-                    if(node.getUniqueID() == selectedNode.get().getUniqueID()) {
-                        for(Edge edge : MapEntity.getInstance().getEdges(new Node(oldValue))) {
-                            System.out.println("3. Begin Updating edge ID");
-
-                            if(edge.getNode1ID().equals(oldValue)) {
-                                edge.setNode1ID(nodeID.getText());
-                            }
-                            if(edge.getNode2ID().equals(oldValue)) {
-                                edge.setNode2ID(nodeID.getText());
-                            }
-
-                            // TODO make this update the database, currently doesnt
-
-                            System.out.println("EdgeID:" + edge.getEdgeID() + " now Connecting: " + edge.getNode1ID() + " : " + edge.getNode2ID());
-                        }
-
-                        node.setNodeID(nodeID.getText());
-                    }
-                }
             }
         });
 
@@ -603,7 +581,7 @@ public class MapBuilderController extends ScreenController {
                 CBnodeType.setValue(selectedNode.get().getNodeType());
                 lName.setText(selectedNode.get().getLongName());
                 sName.setText(selectedNode.get().getShortName());
-                CBnodeTeamAssigned.setValue(convertToTeamEnum(selectedNode.get().getTeamAssigned()));
+                CBnodeTeamAssigned.setValue(convertToTeamEnum(String.valueOf(selectedNode.get().getTeamAssigned().charAt(5))));
                 nodeID.setText(selectedNode.get().getNodeID());
                 setEditing(false);
                 break;
