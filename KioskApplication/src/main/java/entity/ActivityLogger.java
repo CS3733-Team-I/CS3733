@@ -196,6 +196,7 @@ public class ActivityLogger extends Observable {
         int logID = databaseController.addActivityLog(log);
         log.setActivityID(logID);
         logHashMap.put(log.getActivityID(),log);
+        this.setChanged();
         notifyObservers();
     }
 }
