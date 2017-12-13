@@ -31,6 +31,7 @@ public class PreviewMap extends StackPane {
         this.mapImage.setViewport(viewport);
         this.mapImage.setPreserveRatio(true);
         this.mapImage.setFitHeight(200);
+        this.mapImage.setFitWidth(356);
         this.setAlignment(Pos.CENTER);
 
         //If the map image is clicked, change the main map over to this map's floor
@@ -55,7 +56,71 @@ public class PreviewMap extends StackPane {
                 //TODO: remove mouseover effect when mouse is no longer hovering
             }
         });
+    }
 
+    public void addPathSection(PathSection pathSection) {
+        this.pathSections.add(pathSection);
+        this.drawSections();
+    }
+
+    public LinkedList<PathSection> getPathSections() {
+        return this.pathSections;
+    }
+
+    public void drawSections(){
+        //Set zoom.
+        //Get the coordinates of a random point along the path as a starting point.
+        int xMin = this.pathSections.getFirst().getNodes().getFirst().getXcoord();
+        int xMax = this.pathSections.getFirst().getNodes().getFirst().getXcoord();
+        int yMin = this.pathSections.getFirst().getNodes().getFirst().getYcoord();
+        int yMax = this.pathSections.getFirst().getNodes().getFirst().getYcoord();
+        //Now, go through all the nodes on the path and find the extremes for each coordinate.
+        for(PathSection section: this.pathSections){
+            for(Node node: section.getNodes()){
+                xMin = (node.getXcoord() < xMin) ? node.getXcoord() : xMin;
+                xMax = (node.getXcoord() > xMax) ? node.getXcoord() : xMax;
+                yMin = (node.getYcoord() < yMin) ? node.getYcoord() : yMin;
+                yMax = (node.getYcoord() > yMax) ? node.getYcoord() : yMax;
+            }
+        }
+        //Now, use the min/max values to calculate the viewport size needed to display the whole path.
+        int width = xMax - xMin;
+        int height = yMax - yMin;
+
+        //calculate aspect ratio
+        int resizeX = (int)((16.0 / 9.0) * height);
+        int resizeY = (int)((9.0 / 16.0) * width);
+        int xDiff = resizeX - width;
+        int yDiff = resizeY - height;
+        //TODO: check image boundaries
+        if(xDiff > 0) {
+            xMin -= xDiff / 2;
+            xMax += xDiff / 2;
+            width += xDiff / 2;
+        }
+        else {
+            yMin -= yDiff / 2;
+            yMax += yDiff / 2;
+            height += yDiff / 2;
+        }
+        //Add some padding around the edges, being careful to stay within the image bounds
+        xMin = (xMin >= 25) ? (xMin - 25) : 0;
+        yMin = (yMin >= 25) ? (yMin - 25) : 0;
+        width = ((this.mapImage.getImage().getWidth() - xMax) >= 25) ? (width + 25) : width;
+        height = ((this.mapImage.getImage().getHeight() - yMax) >= 25) ? (height + 25) : height;
+
+        //Now, reset the viewport.
+        this.mapImage.setViewport(new Rectangle2D(xMin, yMin, width, height));
+
+
+
+        //Now draw the path.
+
+        //First, draw lines.
+
+        //Then, draw waypoints
+
+        //Then, TODO: add animation.
 //        int waypointIndex = 0;
 //        for (Node node : waypoints) {
 //            Node lastNode = node;
@@ -75,13 +140,5 @@ public class PreviewMap extends StackPane {
 //            }
 //            waypointIndex++;
 //        }
-    }
-
-    public void addPathSection(PathSection pathSection) {
-        this.pathSections.add(pathSection); //TODO: actually draw path & resize to display
-    }
-
-    public LinkedList<PathSection> getPathSections() {
-        return this.pathSections;
     }
 }
