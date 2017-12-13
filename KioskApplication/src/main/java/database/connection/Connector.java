@@ -501,6 +501,7 @@ public class Connector {
         return foodRequests;
     }
 
+    /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
     /**
      * for inserting Janitor requests into the database
      * @param conn the connection to the database
@@ -639,6 +640,7 @@ public class Connector {
 <<<<<<< .merge_file_etMtgi
                 table="";
                 break;
+
 =======
                 table="t_janitor";
                 break;

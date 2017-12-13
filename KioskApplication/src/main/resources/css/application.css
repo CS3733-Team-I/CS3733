@@ -166,3 +166,13 @@
     -fx-background-color: transparent;
     -fx-text-fill: black;
 }
+
+#blue-button {
+    -fx-background-color: #03a9f4;
+    -fx-text-fill: white;
+}
+
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+}
