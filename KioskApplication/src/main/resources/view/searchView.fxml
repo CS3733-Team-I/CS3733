@@ -5,6 +5,6 @@
 
 <AnchorPane prefWidth="250.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXComboBox fx:id="cbNodes" prefWidth="250.0" />
+      <JFXComboBox fx:id="cbSearchData" prefWidth="250.0" />
    </children>
 </AnchorPane>

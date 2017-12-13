@@ -4,9 +4,14 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import controller.map.MapController;
 import database.objects.Edge;
+import database.objects.Employee;
 import database.objects.Node;
+import entity.LoginEntity;
+import entity.MapEntity;
 import entity.Path;
-import entity.SearchNode;
+import entity.SearchEntity.ISearchEntity;
+import entity.SearchEntity.SearchEmployee;
+import entity.SearchEntity.SearchNode;
 import entity.SystemSettings;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -19,8 +24,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -33,20 +36,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import pathfinder.Pathfinder;
 import pathfinder.PathfinderException;
 import utility.NoSelectionModel;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 import utility.node.NodeType;
+import utility.request.RequestType;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PathfindingSidebarController extends ScreenController {
 
@@ -86,11 +85,23 @@ public class PathfindingSidebarController extends ScreenController {
         waypointViews = new HashMap<>();
         systemSettings = SystemSettings.getInstance();
         isAddingWaypoint = true;
-        searchController = new SearchController();
     }
 
     @FXML
     void initialize() throws IOException{
+        ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNodeAndDoctor.add(new SearchNode(targetNode));
+            }
+        }
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+            }
+        }
+        searchController = new SearchController(this, searchNodeAndDoctor);
+
         //initialize search
         FXMLLoader searchLoader = new FXMLLoader(getClass().getResource("/view/searchView.fxml"));
         searchLoader.setController(searchController);
@@ -157,14 +168,13 @@ public class PathfindingSidebarController extends ScreenController {
 
         searchController.getCBValueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                isAddingWaypoint = true;
-
-                if(newValue.getDatabaseNode().getFloor() != getMapController().getCurrentFloor()) {
-                    getMapController().setFloorSelector(newValue.getDatabaseNode().getFloor());
+                if(((Node) newValue.getLocation()).getFloor() != getMapController().getCurrentFloor()) {
+                    getMapController().setFloorSelector(((Node)newValue.getLocation()).getFloor());
                 }
-
-                getMapController().zoomOnSelectedNodes(Arrays.asList(newValue.getDatabaseNode()));
-                onMapNodeClicked(newValue.getDatabaseNode());
+                LinkedList<Node> displayedNode = new LinkedList<>();
+                displayedNode.add((newValue.getLocation()));
+                getMapController().zoomOnSelectedNodes(displayedNode);
+                onMapNodeClicked((newValue.getLocation()));
             }
         });
 
@@ -210,7 +220,19 @@ public class PathfindingSidebarController extends ScreenController {
         getMapController().reloadDisplay();
 
         //reset search
-        searchController.reset();
+        ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
+        for(Node targetNode : MapEntity.getInstance().getAllNodes()) {
+            if(targetNode.getNodeType() != NodeType.HALL) {
+                searchNodeAndDoctor.add(new SearchNode(targetNode));
+            }
+        }
+        for(Employee targetEmployee : LoginEntity.getInstance().getAllLogins()) {
+            if(targetEmployee.getServiceAbility() == RequestType.DOCTOR) {
+                searchNodeAndDoctor.add(new SearchEmployee(targetEmployee));
+            }
+        }
+
+        searchController.reset(searchNodeAndDoctor);
 
         showDirectionsButton.setVisible(false);
 

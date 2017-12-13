@@ -5,6 +5,7 @@ import controller.MainWindowController;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
+import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
@@ -30,6 +31,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -669,18 +672,35 @@ public class MapController {
 
     @FXML
     protected void onMapClicked(MouseEvent event) throws IOException {
-        if (parent != null) {
+        if (parent != null && event.isStillSincePress()) {
+            MapEntity mapEntity = MapEntity.getInstance();
+            LinkedList<Node> nearestNodes = new LinkedList<>();
+            double radius = 150.0;
             // Check if clicked location is a node
-            LinkedList<Node> floorNodes = MapEntity.getInstance().getNodesOnFloor(floorSelector.getValue());
+            LinkedList<Node> floorNodes = mapEntity.getNodesOnFloor(floorSelector.getValue());
+            Circle clickArea = new Circle(event.getX(),event.getY(),radius);
             for (Node node : floorNodes) {
-                Rectangle2D nodeArea = new Rectangle2D(node.getXcoord() - 15, node.getYcoord() - 15,
-                        30, 30); // TODO magic numbers
-                Point2D clickPosition = new Point2D(event.getX(), event.getY());
+                Point2D nodePosition = new Point2D(node.getXcoord(), node.getYcoord());
 
-                if (nodeArea.contains(clickPosition)) {
-                    parent.onMapNodeClicked(node);
-                    return;
+                if (clickArea.contains(nodePosition)) {
+                    nearestNodes.add(node);
                 }
+            }
+            Point2D clickPosition = new Point2D(event.getX(),event.getY());
+            // Nearest neighbor calculation
+            double shortestDistance = radius+1;
+            Node nearestNode = null;
+            for (Node node : nearestNodes){
+                double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
+                if(distance < shortestDistance){
+                    shortestDistance=distance;
+                    nearestNode = node;
+                }
+            }
+            if(nearestNode!=null){
+                //System.out.println("Shortest Distance: "+shortestDistance);
+                parent.onMapNodeClicked(nearestNode);
+                return;
             }
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event);
