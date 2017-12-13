@@ -110,10 +110,9 @@ public class MainWindowController {
             int second = cal.get(Calendar.SECOND);
             int minute = cal.get(Calendar.MINUTE);
             int hour = cal.get(Calendar.HOUR);
+            int isAM = cal.get(Calendar.AM_PM);
             String doc = "PM";
-            if(hour<12){
-                doc ="AM";
-            }
+            doc = (isAM == Calendar.PM) ? "PM" : "AM";
             //System.out.println(hour + ":" + (minute) + ":" + second);
             String min = Integer.toString(minute);
             if (minute<10){
