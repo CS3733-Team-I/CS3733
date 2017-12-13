@@ -75,7 +75,7 @@ public class MainWindowController {
 
     public BooleanProperty timeout = new SimpleBooleanProperty(false);
 
-    private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
+    public ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
     private AnchorPane mapView;
     private MapController mapController;

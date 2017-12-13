@@ -759,19 +759,21 @@ public class MapController {
             }
             Point2D clickPosition = new Point2D(event.getX(),event.getY());
             // Nearest neighbor calculation
-            double shortestDistance = radius+1;
-            Node nearestNode = null;
-            for (Node node : nearestNodes){
-                double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
-                if(distance < shortestDistance){
-                    shortestDistance=distance;
-                    nearestNode = node;
+            if(parent.currentScreen != ApplicationScreen.MAP_BUILDER) {
+                double shortestDistance = radius+1;
+                Node nearestNode = null;
+                for (Node node : nearestNodes){
+                    double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
+                    if(distance < shortestDistance){
+                        shortestDistance=distance;
+                        nearestNode = node;
+                    }
                 }
-            }
-            if(nearestNode!=null){
-                //System.out.println("Shortest Distance: "+shortestDistance);
-                parent.onMapNodeClicked(nearestNode);
-                return;
+                if(nearestNode!=null){
+                    //System.out.println("Shortest Distance: "+shortestDistance);
+                    parent.onMapNodeClicked(nearestNode);
+                    return;
+                }
             }
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event);
