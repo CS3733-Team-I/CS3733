@@ -124,7 +124,6 @@ public class MapController {
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
 
-        initializePopup();
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
@@ -260,66 +259,6 @@ public class MapController {
      */
     public void setParent(MainWindowController controller) {
         parent = controller;
-    }
-
-    public void initializePopup(){
-        System.out.println("initializePopup");
-        HBox hbox = new HBox();
-        JFXButton btn = new JFXButton();
-        //btn.setBorder(new Border(10));
-        System.out.println("Here?");
-        hbox.setOnMouseExited(e -> closePopup());
-        hbox.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        popup = new JFXPopup(hbox);
-    }
-
-    public void showPopup(Node node, NodeFloor floor, MouseEvent e){ // Add mouse event to get offset
-        // Adjust popup
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setStyle("-fx-background-color: transparent;");
-        HBox hbox = new HBox();
-        System.out.println("Here?");
-        Image i = ResourceManager.getInstance().getImage("/images/BWH_logo.png");
-        ImageView iv = new ImageView(i);
-        iv.setOnMouseClicked(ev -> {
-            setFloorSelector(floor);
-            System.out.println("Floor changed");
-            closePopup();
-            System.out.println("Popup closed");
-        });
-        hbox.getChildren().add(iv);
-        hbox.setOnMouseExited(ev -> closePopup());
-        hbox.setStyle("-fx-background-color: transparent;");
-        VBox vbox = new VBox();
-        vbox.setStyle("-fx-background-color: transparent;");
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().add(hbox);
-        Image tri = ResourceManager.getInstance().getImage("/images/downTriangle.png");
-        ImageView triView = new ImageView(tri);
-        vbox.getChildren().add(triView);
-        anchorPane.getChildren().add(vbox);
-        hbox.setStyle("-fx-border-color: black; -fx-border-width: 2px");
-
-        popup = new JFXPopup(anchorPane);
-        popup.setStyle("-fx-background-color: transparent;");
-        // Show popup
-        System.out.println("Show Popup");
-        System.out.println("X: " + e.getSceneX() + ", Y: " + e.getSceneY());
-        popup.show(stackPane, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT);
-        System.out.println(popup.getPopupContent().getWidth());
-        double xadj = 0-(popup.getPopupContent().getWidth()/2);
-        double yadj = 0-(popup.getPopupContent().getHeight());
-        popup.hide();
-        popup.show(stackPane, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT, node.getXcoord()+xadj, node.getYcoord()+yadj);
-    }
-
-    public void setPopupFloor(NodeFloor f){
-        popup.getPopupContent().setOnMouseClicked(e -> setFloorSelector(f));
-    }
-
-    public void closePopup(){
-        System.out.println("Close Popup");
-        popup.hide();
     }
 
     /**

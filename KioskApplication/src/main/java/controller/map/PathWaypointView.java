@@ -1,5 +1,6 @@
 package controller.map;
 
+import com.jfoenix.controls.JFXPopup;
 import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
 import database.objects.Node;
@@ -15,11 +16,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -43,6 +47,7 @@ public class PathWaypointView extends AnchorPane {
     private AnchorPane pathView;
     private AnchorPane wayPointView;
     private AnchorPane floorChangeView;
+    private AnchorPane popupView;
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
@@ -68,10 +73,19 @@ public class PathWaypointView extends AnchorPane {
         AnchorPane.setBottomAnchor(pathView, 0.0);
         AnchorPane.setRightAnchor(pathView, 0.0);
 
+
+        popupView = new AnchorPane();
+        popupView.setPickOnBounds(false);
+
+        AnchorPane.setTopAnchor(popupView, 0.0);
+        AnchorPane.setLeftAnchor(popupView, 0.0);
+        AnchorPane.setBottomAnchor(popupView, 0.0);
+        AnchorPane.setRightAnchor(popupView, 0.0);
+
         floorChangeView = new AnchorPane();
         floorChangeView.setPickOnBounds(false);
 
-        this.getChildren().addAll(pathView, wayPointView, floorChangeView);
+        this.getChildren().addAll(pathView, wayPointView, popupView, floorChangeView);
 
         waypointList = FXCollections.observableArrayList();
 
@@ -162,6 +176,49 @@ public class PathWaypointView extends AnchorPane {
         return youarehereView;
     }
 
+    public void showPopup(Node node, NodeFloor floor, MouseEvent e){ // Add mouse event to get offset
+        System.out.println("Show Popup");
+        closePopup();
+        // Adjust popup
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setStyle("-fx-background-color: transparent;");
+        HBox hbox = new HBox();
+        System.out.println("Here?");
+        Image i = ResourceManager.getInstance().getImage("/images/BWH_logo.png");
+        ImageView iv = new ImageView(i);
+        iv.setOnMouseClicked(ev -> {
+            parent.setFloorSelector(floor);
+            closePopup();
+        });
+        hbox.getChildren().add(iv);
+        hbox.setOnMouseExited(ev -> closePopup());
+        hbox.setStyle("-fx-background-color: transparent;");
+        VBox vbox = new VBox();
+        vbox.setStyle("-fx-background-color: transparent;");
+        vbox.setAlignment(Pos.CENTER);
+        vbox.getChildren().add(hbox);
+        Image tri = ResourceManager.getInstance().getImage("/images/downTriangle.png");
+        ImageView triView = new ImageView(tri);
+        vbox.getChildren().add(triView);
+        anchorPane.getChildren().add(vbox);
+        hbox.setStyle("-fx-border-color: black; -fx-border-width: 2px");
+
+        popupView.setStyle("-fx-background-color: transparent;");
+        // Show popup
+        System.out.println("Show Popup");
+        System.out.println("X: " + e.getSceneX() + ", Y: " + e.getSceneY());
+        popupView.getChildren().add(anchorPane);
+        double xadj = 0-(anchorPane.getWidth()/2);
+        double yadj = 0-(anchorPane.getHeight());
+        anchorPane.setLayoutX(node.getXcoord()+xadj);
+        anchorPane.setLayoutY(node.getYcoord()+yadj);
+    }
+
+    public void closePopup(){
+        System.out.println("Close Popup");
+        popupView.getChildren().clear();
+    }
+
     /**
      * draw a path
      */
@@ -176,6 +233,7 @@ public class PathWaypointView extends AnchorPane {
     public void clearPath() {
         this.currentPath = null;
         pathView.getChildren().clear();
+        popupView.getChildren().clear();
     }
     /**
      * Clear drawn waypoints
@@ -195,6 +253,7 @@ public class PathWaypointView extends AnchorPane {
 
     public void drawPath(Path path) {
         floorChangeView.getChildren().clear();
+        popupView.getChildren().clear();
 
         this.currentPath = path;
 
@@ -246,11 +305,9 @@ public class PathWaypointView extends AnchorPane {
                         public void handle(MouseEvent event) {
                             System.out.println("Open Tooltip");
                             if (thisFloor == parent.getCurrentFloor()) {
-                                parent.showPopup(thisNode, lastFloor, event);
-                                parent.setPopupFloor(lastFloor);
+                                showPopup(thisNode, lastFloor, event);
                             } else {
-                                parent.showPopup(lNode, thisFloor, event);
-                                parent.setPopupFloor(thisFloor);
+                                showPopup(lNode, thisFloor, event);
                             }
                         }
                     });
