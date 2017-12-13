@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Label?>
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <JFXTabPane fx:id="requestTypeTabs" layoutX="44.0" layoutY="161.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefWidth="400.0" side="LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -162,16 +163,16 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </GridPane.margin></JFXComboBox>
                                         <JFXTextArea fx:id="itNotesField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="200" prefWidth="200" promptText="Notes" style="-fx-background-color: white;" styleClass="request-notes" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                            <GridPane.margin>
+                                     <Insets bottom="10.0" left="10.0" right="10.0" />
                                  </GridPane.margin></JFXTextArea>
+                                        <JFXTextField fx:id="itEmail" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Email (optional)" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                            <GridPane.margin>
+                                                <Insets bottom="15.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
+                                        </JFXTextField>
                                         <JFXButton onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="30" prefWidth="150" styleClass="cancel-button" text="Clear" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                                         <JFXButton id="confirm-button" onAction="#addRequest" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="30" prefWidth="150" styleClass="" text="Submit" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <JFXTextField fx:id="itEmail" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" promptText="Email (optional)" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                 <GridPane.margin>
-                                    <Insets bottom="15.0" left="10.0" right="10.0" top="10.0" />
-                                 </GridPane.margin>
-                              </JFXTextField>
                                     </children>
                                 </GridPane>
                             </children>
@@ -204,25 +205,44 @@
                 </Tab>
                 <Tab fx:id="transportTab">
                     <content>
+
                         <AnchorPane minHeight="0.0" minWidth="0.0" onMouseMoved="#resetTimer" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <GridPane AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
                                     <columnConstraints>
-                                        <ColumnConstraints prefWidth="200"/>
+                                        <ColumnConstraints prefWidth="200" fillWidth="true"/>
+                                        <ColumnConstraints prefWidth="200" fillWidth="true"/>
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints prefHeight="60"/>
                                         <RowConstraints prefHeight="60"/>
                                         <RowConstraints prefHeight="60"/>
+                                        <RowConstraints prefHeight="60"/>
+                                        <RowConstraints prefHeight="60"/>
                                     </rowConstraints>
                                     <children>
-                                        <JFXTextField fx:id="startNode" GridPane.rowIndex="0" promptText="Starting Node">
-
+                                        <Label GridPane.columnSpan="2" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" text="Click the map to set locations" >
+                                            <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
+                                        </Label>
+                                        <JFXTextField GridPane.columnSpan="2" fx:id="startNode" GridPane.rowIndex="1" promptText="Starting Node" GridPane.hgrow="ALWAYS">
+                                            <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
                                         </JFXTextField>
-                                        <JFXTextField fx:id="endNode" GridPane.rowIndex="1" promptText="Ending Node">
-
+                                        <JFXTextField  GridPane.columnSpan="2" fx:id="endNode" GridPane.rowIndex="2" promptText="Ending Node" GridPane.hgrow="ALWAYS">
+                                            <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
                                         </JFXTextField>
-                                        <JFXButton prefHeight="50.0" prefWidth="100" GridPane.rowIndex="2" text="Submit" onAction="#addRequest"/>
+                                        <Label GridPane.columnSpan="2" fx:id="transportErrorLabel" textFill="#d60000" visible="false" GridPane.rowIndex="3" prefHeight="50" GridPane.hgrow="ALWAYS">
+                                            <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </GridPane.margin>
+                                        </Label>
+                                        <JFXButton prefHeight="50.0" GridPane.hgrow="ALWAYS" prefWidth="100" GridPane.rowIndex="4" id="confirm-button" text="Submit" onAction="#addRequest" GridPane.columnIndex="1" />
+                                        <JFXButton onAction="#clearButton" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" prefHeight="30" prefWidth="150" styleClass="cancel-button" text="Clear" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                                     </children>
                                 </GridPane>
                             </children>
