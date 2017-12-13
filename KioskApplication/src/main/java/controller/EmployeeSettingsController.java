@@ -79,12 +79,9 @@ public class EmployeeSettingsController {
     @FXML private JFXTreeTableView<Employee> usersList;
     private final TreeItem<Employee> root = new TreeItem<>();
 
-    database.objects.Node currentOffice;
-
     Employee selectedEmployee;
 
     public EmployeeSettingsController(){
-        currentOffice = null;
     }
 
     @FXML
