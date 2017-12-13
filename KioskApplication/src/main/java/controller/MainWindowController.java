@@ -59,7 +59,7 @@ public class MainWindowController {
 
     private Timer timer = new Timer();
     int countdown;
-    int maxCountdown = 30;
+    int maxCountdown = 120;
     double defZoom;
 
     Timeline timeline = new Timeline(new KeyFrame(
@@ -450,5 +450,10 @@ public class MainWindowController {
     public void nodesConnected(String nodeID1, String nodeID2) {
         MapBuilderController mbc = (MapBuilderController)this.controllers.get(ApplicationScreen.MAP_BUILDER);
         mbc.addConnectionByNodes(Integer.parseInt(nodeID1), Integer.parseInt(nodeID2));
+    }
+
+    public void shutdown(){
+        System.out.println("SHUTDOWN");
+        timer.cancel();
     }
 }
