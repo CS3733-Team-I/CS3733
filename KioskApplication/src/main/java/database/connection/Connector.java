@@ -130,13 +130,13 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             node = new Node(nodeID, rs.getInt("xcoord"),
-                            rs.getInt("ycoord"),
-                            NodeFloor.values()[rs.getInt("floor")],
-                            NodeBuilding.values()[rs.getInt("building")],
-                            NodeType.values()[rs.getInt("nodeType")],
-                            rs.getString("longName"),
-                            rs.getString("shortName"),
-                            rs.getString("teamAssigned"));
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
         }
         if(node == null)
             throw new NotFoundException("Node not found.");
@@ -156,14 +156,14 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
             Node nd = new Node(rs.getString("nodeID"),
-                               rs.getInt("xcoord"),
-                               rs.getInt("ycoord"),
-                               NodeFloor.values()[rs.getInt("floor")],
-                               NodeBuilding.values()[rs.getInt("building")],
-                               NodeType.values()[rs.getInt("nodeType")],
-                               rs.getString("longName"),
-                               rs.getString("shortName"),
-                               rs.getString("teamAssigned"));
+                    rs.getInt("xcoord"),
+                    rs.getInt("ycoord"),
+                    NodeFloor.values()[rs.getInt("floor")],
+                    NodeBuilding.values()[rs.getInt("building")],
+                    NodeType.values()[rs.getInt("nodeType")],
+                    rs.getString("longName"),
+                    rs.getString("shortName"),
+                    rs.getString("teamAssigned"));
             nd.setUniqueID(rs.getInt("id"));
             nodes.add(nd);
         }
@@ -257,19 +257,19 @@ public class Connector {
         ResultSet rs = pstmt.executeQuery();
         if(rs.next()) {
             //for completed InterpreterRequests
-           interpreterRequest = new InterpreterRequest(
-                requestID,
-                rs.getString("nodeID"),
-                rs.getInt("assigner"),
-                rs.getInt("completer"),
-                rs.getString("note"),
-                rs.getTimestamp("submittedTime"),
-                rs.getTimestamp("startedTime"),
-                rs.getTimestamp("completedTime"),
-                RequestProgressStatus.values()[rs.getInt("status")],
-                Language.values()[rs.getInt("language")]//,
-                   //rs.getInt("uRequestID")
-           );
+            interpreterRequest = new InterpreterRequest(
+                    requestID,
+                    rs.getString("nodeID"),
+                    rs.getInt("assigner"),
+                    rs.getInt("completer"),
+                    rs.getString("note"),
+                    rs.getTimestamp("submittedTime"),
+                    rs.getTimestamp("startedTime"),
+                    rs.getTimestamp("completedTime"),
+                    RequestProgressStatus.values()[rs.getInt("status")],
+                    Language.values()[rs.getInt("language")]//,
+                    //rs.getInt("uRequestID")
+            );
         }
         return interpreterRequest;
     }
@@ -501,123 +501,6 @@ public class Connector {
         return foodRequests;
     }
 
-    /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
-    /**
-     * for inserting Janitor requests into the database
-     * @param conn the connection to the database
-     * @param jR the JanitorRequest
-     * @return
-     * @throws SQLException
-     */
-    public static int insertJanitor(Connection conn, JanitorRequest jR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_INSERT);
-        pstmt.setString(1, jR.getRequestID());
-        pstmt.setString(2, jR.getNodeID());
-        pstmt.setInt(3, jR.getAssignerID());
-        pstmt.setInt(4, jR.getCompleterID());
-        pstmt.setString(5, jR.getNote());
-        pstmt.setTimestamp(6, jR.getSubmittedTime());
-        pstmt.setTimestamp(7, jR.getStartedTime());
-        pstmt.setTimestamp(8, jR.getCompletedTime());
-        pstmt.setInt(9, jR.getStatus().ordinal());
-        //pstmt.setInt(10, jR.getuRequestID());
-        return pstmt.executeUpdate();
-    }
-
-    /**
-     * For updating a stored JanitorRequest
-     * @param conn
-     * @param jR the updated request
-     * @return
-     * @throws SQLException
-     */
-    public static int updateJanitor(Connection conn, JanitorRequest jR) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_UPDATE+REQUEST_UPDATE);
-        pstmt.setString(1, jR.getNodeID());
-        pstmt.setInt(2, jR.getAssignerID());
-        pstmt.setInt(3, jR.getCompleterID());
-        pstmt.setString(4, jR.getNote());
-        pstmt.setTimestamp(5, jR.getSubmittedTime());
-        pstmt.setTimestamp(6, jR.getStartedTime());
-        pstmt.setTimestamp(7, jR.getCompletedTime());
-        pstmt.setInt(8, jR.getStatus().ordinal());
-        //search parameter below
-        pstmt.setString(9, jR.getRequestID());
-        //pstmt.setInt(10, jR.getuRequestID());
-        return pstmt.executeUpdate();
-    }
-
-    /**
-     * for retrieving JanitorRequests from the database
-     * @param conn
-     * @param requestID
-     * @return
-     * @throws SQLException
-     */
-    public static JanitorRequest selectJanitor(Connection conn, String requestID) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT);
-        pstmt.setString(1, requestID);
-        JanitorRequest janitorRequest = null;
-        ResultSet rs = pstmt.executeQuery();
-        if(rs.next()) {
-            janitorRequest = new JanitorRequest(
-                    requestID,
-                    rs.getString("nodeID"),
-                    rs.getInt("assigner"),
-                    rs.getInt("completer"),
-                    rs.getString("note"),
-                    rs.getTimestamp("submittedTime"),
-                    rs.getTimestamp("startedTime"),
-                    rs.getTimestamp("completedTime"),
-                    RequestProgressStatus.values()[rs.getInt("status")]
-                    //rs.getInt("uRequestID")
-            );
-        }
-        return janitorRequest;
-    }
-
-    /**
-     * Returns true if the request has been found and deleted
-     * @param conn
-     * @param requestID
-     * @return
-     * @throws SQLException
-     */
-    public static boolean deleteJanitor(Connection conn, String requestID) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_DELETE);
-        pstmt.setString(1, requestID);
-        return pstmt.execute();
-    }
-
-    /**
-     * For retrieving all JanitorRequests from the database
-     * @param conn
-     * @return
-     * @throws SQLException
-     */
-    public static LinkedList<JanitorRequest> selectAllJanitor(Connection conn) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(JANITOR_SELECT_ALL);
-        ResultSet rs = pstmt.executeQuery();
-        LinkedList<JanitorRequest> janitorRequests = new LinkedList<>();
-        while(rs.next()) {
-            JanitorRequest janitorRequest = null;
-            janitorRequest = new JanitorRequest(
-                    rs.getString("requestID"),
-                    rs.getString("nodeID"),
-                    rs.getInt("assigner"),
-                    rs.getInt("completer"),
-                    rs.getString("note"),
-                    rs.getTimestamp("submittedTime"),
-                    rs.getTimestamp("startedTime"),
-                    rs.getTimestamp("completedTime"),
-                    RequestProgressStatus.values()[rs.getInt("status")]
-                    //rs.getInt("uRequestID")
-            );
-            janitorRequests.add(janitorRequest);
-        }
-        return janitorRequests;
-    }
-
     /**
      * for inserting Janitor requests into the database
      * @param conn the connection to the database
@@ -736,7 +619,6 @@ public class Connector {
 
     /*public static int getURequestIDFromRequestID(Connection conn, String requestID) throws SQLException {
         String sql = SELECT_REQUEST_UID;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         String table;
         switch (checkRequestType(requestID)) {
@@ -753,27 +635,17 @@ public class Connector {
                 table="";
                 break;
             case JANITOR:
-<<<<<<< .merge_file_etMtgi
                 table="t_janitor";
                 break;
-
-=======
-                table="t_janitor";
-                break;
-
->>>>>>> .merge_file_Hko1TT
             default:
                 table="";
         }
         pstmt.setString(1, table);
         pstmt.setString(2, requestID);
-
         ResultSet rs = pstmt.executeQuery();
-
         if(rs.next()) {
             return rs.getInt("uRequestID");
         }
-
         return -1;
     }*/
 
@@ -799,68 +671,49 @@ public class Connector {
         String sql = ADD_COLUMN_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
-
         return pstmt.execute();
     }
-
     public static int addRequestToTable(Connection conn, Request request) throws SQLException {
         String sql = INSERT_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, request.getuRequestID());
-
         return pstmt.executeUpdate();
     }
-
     public static int addRequestToTable(Connection conn, int uRequestID) throws SQLException {
         String sql = INSERT_REQUEST_VIEW;
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static int updateRequestViewTable(Connection conn, int uRequestID, String employeeID, boolean isViewed) throws SQLException {
         String sql = UPDATE_REQUEST_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
         pstmt.setBoolean(2, isViewed);
         pstmt.setInt(3, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static boolean selectRequestViewEmployee(Connection conn, int uRequestID, String employeeID) throws SQLException {
         String sql = SELECT_REQUEST_VIEW_EMPLOYEE;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
         pstmt.setInt(2, uRequestID);
-
         ResultSet rs = pstmt.executeQuery();
-
         if(rs.next()) {
             return rs.getBoolean(1);
         }
         return false;
     }
-
     public static int deleteRequestFromView(Connection conn, int uRequestID) throws SQLException {
         String sql = DELETE_REQUEST_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, uRequestID);
-
         return pstmt.executeUpdate();
     }
-
     public static int deleteEmployeeFromView(Connection conn, String employeeID) throws SQLException {
         String sql = DELETE_EMPLOYEE_VIEW;
-
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, employeeID);
-
         return pstmt.executeUpdate();
-
     }*/
 }
