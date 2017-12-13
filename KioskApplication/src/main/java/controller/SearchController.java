@@ -272,4 +272,8 @@ public class SearchController {
     public void setDisableSearch(boolean b) {
         this.cbSearchData.setDisable(b);
     }
+
+    public JFXComboBox<ISearchEntity> getCbSearchData() {
+        return cbSearchData;
+    }
 }
