@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import utility.ResourceManager;
@@ -14,10 +15,14 @@ import utility.node.NodeFloor;
 import java.util.LinkedList;
 
 
-public class PreviewMap extends StackPane {
+public class PreviewMap extends AnchorPane {
     NodeFloor floor;
     ImageView mapImage;
     LinkedList<PathSection> pathSections;
+    public static final int PREVIEW_WIDTH = 356;
+    public static final int PREVIEW_HEIGHT = 200;
+
+
 
     public PreviewMap(NodeFloor floor) {
         this.pathSections = new LinkedList<>();
@@ -26,13 +31,10 @@ public class PreviewMap extends StackPane {
         this.mapImage = new ImageView();
         this.mapImage.setImage(resourceManager.getImage(this.floor.toImagePath()));
         this.getChildren().add(this.mapImage);
-        Rectangle2D viewport = new Rectangle2D(2000,2000,1600,900);
         this.mapImage.setSmooth(true);
-        this.mapImage.setViewport(viewport);
         this.mapImage.setPreserveRatio(true);
         this.mapImage.setFitHeight(200);
         this.mapImage.setFitWidth(356);
-        this.setAlignment(Pos.CENTER);
 
         //If the map image is clicked, change the main map over to this map's floor
         this.mapImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -68,6 +70,56 @@ public class PreviewMap extends StackPane {
     }
 
     public void drawSections(){
+        if(this.pathSections.isEmpty())
+            return; //Nothing to do.
+        this.setViewPort();
+        //Calculate scaling factors
+        double xScale = this.PREVIEW_WIDTH / this.mapImage.getViewport().getWidth();
+        double yScale = this.PREVIEW_HEIGHT / this.mapImage.getViewport().getHeight();
+        double xOffset = this.mapImage.getViewport().getMinX();
+        double yOffset = this.mapImage.getViewport().getMinY();
+
+        //First, draw lines.
+        Node lastNode = this.pathSections.getFirst().getNodes().getFirst();
+        for(PathSection section: this.pathSections){
+            for(Node node: section.getNodes()){
+                if(node.equals(lastNode))
+                    continue;
+                Line line = new Line((lastNode.getXcoord() - xOffset) * xScale, (lastNode.getYcoord() - yOffset) * yScale,
+                        (node.getXcoord() - xOffset) * xScale, (node.getYcoord() - yOffset) * yScale);
+                line.setStroke(section.getColor());
+                line.setStrokeWidth(2);
+                this.getChildren().add(line);
+                lastNode = node;
+            }
+        }
+        //Then, draw waypoints
+
+        //Then, TODO: add animation.
+//        int waypointIndex = 0;
+//        for (Node node : waypoints) {
+//            Node lastNode = node;
+//            for (Node thisNode : path.get().getNodesInSegment(node)) {
+//                // Don't draw a line between the same nodes
+//                if (thisNode.getUniqueID() != lastNode.getUniqueID() &&
+//                        thisNode.getFloor() == mapController.getCurrentFloor() &&
+//                        lastNode.getFloor() == mapController.getCurrentFloor()) {
+//
+//                    Line line = new Line(lastNode.getXcoord(), lastNode.getYcoord(),
+//                            thisNode.getXcoord(), thisNode.getYcoord());
+//                    line.setStroke(path.get().getSegmentColor(waypointIndex));
+//                    line.setStrokeWidth(2);
+//                    pathPane.getChildren().add(line);
+//                }
+//                lastNode = thisNode;
+//            }
+//            waypointIndex++;
+//        }
+    }
+
+    private void setViewPort(){
+        if(this.pathSections.isEmpty())
+            return; //Nothing to do.
         //Set zoom.
         //Get the coordinates of a random point along the path as a starting point.
         int xMin = this.pathSections.getFirst().getNodes().getFirst().getXcoord();
@@ -111,34 +163,5 @@ public class PreviewMap extends StackPane {
 
         //Now, reset the viewport.
         this.mapImage.setViewport(new Rectangle2D(xMin, yMin, width, height));
-
-
-
-        //Now draw the path.
-
-        //First, draw lines.
-
-        //Then, draw waypoints
-
-        //Then, TODO: add animation.
-//        int waypointIndex = 0;
-//        for (Node node : waypoints) {
-//            Node lastNode = node;
-//            for (Node thisNode : path.get().getNodesInSegment(node)) {
-//                // Don't draw a line between the same nodes
-//                if (thisNode.getUniqueID() != lastNode.getUniqueID() &&
-//                        thisNode.getFloor() == mapController.getCurrentFloor() &&
-//                        lastNode.getFloor() == mapController.getCurrentFloor()) {
-//
-//                    Line line = new Line(lastNode.getXcoord(), lastNode.getYcoord(),
-//                            thisNode.getXcoord(), thisNode.getYcoord());
-//                    line.setStroke(path.get().getSegmentColor(waypointIndex));
-//                    line.setStrokeWidth(2);
-//                    pathPane.getChildren().add(line);
-//                }
-//                lastNode = thisNode;
-//            }
-//            waypointIndex++;
-//        }
     }
 }
