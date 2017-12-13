@@ -133,5 +133,7 @@ public class FloorPreviewTray extends ScrollPane {
             currentPreview.addPathSection(new PathSection(nodesInSection, path.getSegmentColor(waypoints.size() - 1)));
         if (!currentPreview.getPathSections().isEmpty())
             this.previews.add(currentPreview);
+        for(PreviewMap map: this.previews)
+            map.drawSections();
     }
 }

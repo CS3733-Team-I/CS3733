@@ -174,6 +174,7 @@ public class PathWaypointView extends AnchorPane {
             closePopup();
         });
         hbox.getChildren().add(iv);
+        iv.drawSections();
         hbox.setOnMouseExited(ev -> closePopup());
         hbox.setStyle("-fx-background-color: transparent;");
         VBox vbox = new VBox();
