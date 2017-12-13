@@ -3,6 +3,7 @@ package controller.map;
 import database.objects.Node;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -45,17 +46,15 @@ public class PreviewMap extends AnchorPane {
             }
         });
 
-        this.mapImage.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //TODO: add mouseover effect (probably a DropShadow)
-            }
+        this.mapImage.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            //TODO: add mouseover effect (probably a DropShadow)
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            this.setEffect(dropShadow);
         });
-        this.mapImage.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //TODO: remove mouseover effect when mouse is no longer hovering
-            }
+        this.mapImage.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            //TODO: remove mouseover effect when mouse is no longer hovering
+            this.setEffect(null);
         });
     }
 
