@@ -1,8 +1,5 @@
 package controller.map;
 
-import com.jfoenix.controls.JFXPopup;
-import com.sun.org.apache.regexp.internal.RE;
-import controller.PathfindingSidebarController;
 import database.connection.NotFoundException;
 import database.objects.Node;
 import entity.MapEntity;
@@ -11,14 +8,11 @@ import entity.SystemSettings;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +27,6 @@ import javafx.util.Duration;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,6 +42,8 @@ public class PathWaypointView extends AnchorPane {
     private AnchorPane wayPointView;
     private AnchorPane floorChangeView;
     private AnchorPane popupView;
+    private ImageView kioskLocationView;
+    private Node kiosk;
 
     private javafx.scene.image.ImageView upView;
     private javafx.scene.image.ImageView downView;
@@ -88,6 +83,16 @@ public class PathWaypointView extends AnchorPane {
 
         this.getChildren().addAll(pathView, wayPointView, floorChangeView, popupView);
 
+        //Kiosk init
+        kiosk = SystemSettings.getInstance().getKioskLocation();
+        kioskLocationView = getYouAreHereIcon(kiosk);
+        if (getChildren().contains(kioskLocationView)) {
+            this.getChildren().remove(kioskLocationView);
+        }
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            this.getChildren().add(kioskLocationView);
+        }
+
         waypointList = FXCollections.observableArrayList();
 
         this.parent = parent;
@@ -123,16 +128,19 @@ public class PathWaypointView extends AnchorPane {
             }
         });
 
-        SystemSettings.getInstance().kioskLocationPropertyProperty().addListener((obj, oldValue, newValue) -> {
+        SystemSettings.getInstance().kioskLocationProperty().addListener((obj, oldValue, newValue) -> {
             if (newValue == null) return;
 
             ImageView youarehereView = getYouAreHereIcon(newValue);
+            kioskLocationView = youarehereView;
+            kiosk = newValue;
 
             getChildren().clear();
-            getChildren().addAll(pathView, wayPointView, youarehereView, floorChangeView, popupView);
+            getChildren().addAll(pathView, wayPointView, floorChangeView, popupView);
+            if(kiosk.getFloor() == parent.getCurrentFloor()){
+                getChildren().add(kioskLocationView);
+            }
         });
-
-        getChildren().add(getYouAreHereIcon(SystemSettings.getInstance().getKioskLocation()));
 
         clearPath();
         clearWaypoint();
@@ -253,6 +261,12 @@ public class PathWaypointView extends AnchorPane {
     public void drawPath(Path path) {
         floorChangeView.getChildren().clear();
         popupView.getChildren().clear();
+        if (getChildren().contains(kioskLocationView)) {
+            getChildren().remove(kioskLocationView);
+        }
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            getChildren().add(kioskLocationView);
+        }
 
         this.currentPath = path;
 
@@ -403,6 +417,7 @@ public class PathWaypointView extends AnchorPane {
 
     public void reloadDisplay() {
         pathView.getChildren().clear();
+
         if(currentPath != null) {
             drawPath(currentPath);
         }
@@ -413,6 +428,9 @@ public class PathWaypointView extends AnchorPane {
             else {
                 this.wayPointViewsMap.get(node).setVisible(true);
             }
+        }
+        if(kiosk.getFloor() == parent.getCurrentFloor()){
+            pathView.getChildren().add(kioskLocationView);
         }
     }
 
