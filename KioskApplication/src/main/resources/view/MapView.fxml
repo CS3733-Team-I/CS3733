@@ -167,6 +167,11 @@
             </JFXButton>
          </children>
       </VBox>
+         <Label text="© Brigham &amp; Women’s Hospital 2017" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+            <font>
+               <Font name="System Bold" size="10.0" />
+            </font>
+         </Label>
   </AnchorPane>
    </children>
 </fx:root>
