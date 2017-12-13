@@ -748,6 +748,95 @@ public class DatabaseControllerTests {
         Assert.assertNull(dbController.getFoodRequest(foodRequest.getRequestID()));
     }
 
+    @Test
+    public void testJanitorRequestAdd() throws DatabaseException{
+        int emp1ID=dbController.addEmployee(emp1,"password");
+        Node node1 = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node", "TN1", "I");
+        dbController.addNode(node1);
+        long t1 = System.currentTimeMillis();
+        JanitorRequest janitorRequest = new JanitorRequest("Int 2017:11:22 NODE1","NODE1",
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO);
+        dbController.addJanitorRequest(janitorRequest);
+        Assert.assertEquals(janitorRequest,dbController.getJanitorRequest(janitorRequest.getRequestID()));
+    }
+
+    @Test
+    public void testJanitorRequestUpdate() throws DatabaseException{
+        int emp1ID=dbController.addEmployee(emp1,"password");
+
+        Employee emp2 = new Employee("emp@hospital.com","Hill","Hank",
+                "password",new ArrayList<>(),KioskPermission.EMPLOYEE,RequestType.SECURITY);
+        int emp2ID=dbController.addEmployee(emp2,"password");
+        Node node1 = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node 2", "TN2", "I");
+        dbController.addNode(node1);
+        dbController.addNode(node2);
+        long t1 = System.currentTimeMillis();
+        JanitorRequest janitorRequest = new JanitorRequest("Int 2017:11:22 NODE1","NODE1",
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO);
+        dbController.addJanitorRequest(janitorRequest);
+        long t2 = System.currentTimeMillis()+2;
+
+        //updates JanitorRequest values
+        janitorRequest.setNodeID("NODE2");
+        janitorRequest.setAssignerID(emp2ID);
+        janitorRequest.setNote("Professor Wong");
+        janitorRequest.setSubmittedTime(new Timestamp(t2));
+        janitorRequest.setCompletedTime(new Timestamp(t2-1));
+        janitorRequest.setStatus(RequestProgressStatus.IN_PROGRESS);
+
+        dbController.updateJanitorRequest(janitorRequest);
+        JanitorRequest updatedJR = dbController.getJanitorRequest(janitorRequest.getRequestID());
+        Assert.assertEquals(janitorRequest, updatedJR);
+    }
+
+    @Test
+    public void testJanitorRequestDelete() throws DatabaseException {
+        int emp1ID=dbController.addEmployee(emp1,"password");
+        Node node1 = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node", "TN1", "I");
+        dbController.addNode(node1);
+        long t1 = System.currentTimeMillis();
+        JanitorRequest janitorRequest = new JanitorRequest("Int 2017:11:22 NODE1",node1.getNodeID(),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO);
+        dbController.addJanitorRequest(janitorRequest);
+        //deletes janitorRequest
+        dbController.deleteJanitorRequest(janitorRequest.getRequestID());
+        Assert.assertNull(dbController.getJanitorRequest(janitorRequest.getRequestID()));
+    }
+
+    @Test
+    public void testJanitorRequestRemoveAssociatedNode() throws DatabaseException {
+        int emp1ID=dbController.addEmployee(emp1,"password");
+        Node node1 = new Node("NODE1", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node", "TN1", "I");
+        Node node2 = new Node("NODE2", 123, 472,
+                NodeFloor.THIRD, NodeBuilding.BTM, NodeType.ELEV,
+                "Test node 2", "TN2", "I");
+        dbController.addNode(node1);
+        dbController.addNode(node2);
+        long t1 = System.currentTimeMillis();
+
+        JanitorRequest janitorRequest = new JanitorRequest("Int 2017:11:22 NODE1",node1.getNodeID(),
+                emp1ID, emp1ID,"", new Timestamp(t1), new Timestamp(t1-1),
+                new Timestamp(t1-1), RequestProgressStatus.TO_DO);
+        dbController.addJanitorRequest(janitorRequest);
+        //deletes node
+        dbController.removeNode(node1);
+        Assert.assertNull(dbController.getJanitorRequest(janitorRequest.getRequestID()));
+    }
+
     /*
      * Tests for employee information
      * What I need to test:
