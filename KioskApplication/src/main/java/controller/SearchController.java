@@ -89,7 +89,9 @@ public class SearchController {
             }
         }));
 
-        cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        cbSearchData.setOnKeyReleased(e -> {
+            cbSearchData.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> updateSearch(newValue));
+        });
 
         updateSearch("");
         cbSearchData.hide();
