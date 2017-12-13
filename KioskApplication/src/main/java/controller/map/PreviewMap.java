@@ -2,18 +2,15 @@ package controller.map;
 
 import database.objects.Node;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
-
 import java.util.LinkedList;
 
 
