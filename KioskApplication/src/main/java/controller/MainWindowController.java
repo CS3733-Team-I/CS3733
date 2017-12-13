@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -30,6 +31,8 @@ import utility.Memento.MainWindowMemento;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javafx.beans.*;
@@ -45,6 +48,8 @@ public class MainWindowController {
           private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
+    @FXML private Label time;
+    @FXML private Label date;
 
     @FXML protected JFXTabPane tabPane;
     @FXML private Tab tabMap;
@@ -94,7 +99,29 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
+        Format formatter;
+        Date today = new Date();
 
+        // 01/09/02
+        formatter = new SimpleDateFormat("MM/dd/yy");
+        String s = formatter.format(today);
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            Calendar cal = Calendar.getInstance();
+            int second = cal.get(Calendar.SECOND);
+            int minute = cal.get(Calendar.MINUTE);
+            int hour = cal.get(Calendar.HOUR);
+            String doc = "PM";
+            if(hour<12){
+                doc ="AM";
+            }
+            //System.out.println(hour + ":" + (minute) + ":" + second);
+            date.setText(s);
+            time.setText(hour + ":" + (minute) +" "+doc);
+        }),
+                new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
         // Default to third floor
         //mapController.setFloorSelector(NodeFloor.THIRD);
 

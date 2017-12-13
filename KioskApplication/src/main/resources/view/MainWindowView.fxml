@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -28,5 +29,7 @@
          </font>
        </JFXButton>
       <AnchorPane fx:id="contentWindow" layoutY="35.0" prefHeight="200.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <Label fx:id="date" text="Label" textFill="WHITE" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="15.0" />
+      <Label fx:id="time" text="Label" textFill="WHITE" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="3.0" />
    </children>
 </AnchorPane>
