@@ -154,40 +154,40 @@ public class RequestSubmitterController extends ScreenController {
 
         //TODO: is this still necessary?
         requestTypeTabs.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-//            if (newValue == interpreterTab) {
-//                currentRequestType = RequestType.INTERPRETER;
-//
-//                intNotesArea.clear();
-//                intLocation.clear();
-//
-//                langMenu.setValue(null);
-//            } else if (newValue == foodTab) {
-//                currentRequestType = RequestType.FOOD;
-//            } else if (newValue == securityTab) {
-//                currentRequestType = RequestType.SECURITY;
-//
-//                secNoteField.clear();
-//                secLocationField.clear();
-//
-//                priorityMenu.setValue(null);
-//            } else if (newValue == janitorTab) {
-//                currentRequestType = RequestType.JANITOR;
-//
-//                janNotesField.clear();
-//                janLocationField.clear();
-//            } else if(newValue == itTab){
-//                currentRequestType = RequestType.IT;
-//
-//                itLocationField.clear();
-//                itServiceTypeSelector.setValue(null);
-//                itNotesField.clear();
-//            } else if(newValue == maintenanceTab){
-//                currentRequestType = RequestType.MAINTENANCE;
-//
-//                maintLocationField.clear();
-//                maintMenu.setValue(null);
-//                maintNoteField.clear();
-//            }
+            if (newValue == interpreterTab) {
+                currentRequestType = RequestType.INTERPRETER;
+
+                intNotesArea.clear();
+                intLocation.clear();
+
+                langMenu.setValue(null);
+            } else if (newValue == foodTab) {
+                currentRequestType = RequestType.FOOD;
+            } else if (newValue == securityTab) {
+                currentRequestType = RequestType.SECURITY;
+
+                secNoteField.clear();
+                secLocationField.clear();
+
+                priorityMenu.setValue(null);
+            } else if (newValue == janitorTab) {
+                currentRequestType = RequestType.JANITOR;
+
+                janNotesField.clear();
+                janLocationField.clear();
+            } else if(newValue == itTab){
+                currentRequestType = RequestType.IT;
+
+                itLocationField.clear();
+                itServiceTypeSelector.setValue(null);
+                itNotesField.clear();
+            } else if(newValue == maintenanceTab){
+                currentRequestType = RequestType.MAINTENANCE;
+
+                maintLocationField.clear();
+                maintMenu.setValue(null);
+                maintNoteField.clear();
+            }
             clearButton();
             resetTimer();
         });
@@ -643,7 +643,6 @@ public class RequestSubmitterController extends ScreenController {
 
     @Override
     public void onMapNodeClicked(Node n) {
-        System.out.println("Map clicked"+n.getLongName());
         switch (currentRequestType){
             case INTERPRETER:
                 intLocation.setText(n.getNodeID());
