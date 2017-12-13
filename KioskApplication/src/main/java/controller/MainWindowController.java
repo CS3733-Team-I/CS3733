@@ -396,6 +396,9 @@ public class MainWindowController {
         AnchorPane.setBottomAnchor(contentNode, 0.0);
         AnchorPane.setLeftAnchor(contentNode, 0.0);
 
+        // Reset map controller content anchor
+        mapController.setContentLeftAnchor(0);
+
         // Reset controller's view
         controller.resetScreen();
 

@@ -62,10 +62,8 @@ public class NodesEdgesView extends AnchorPane {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         NodeView view = new NodeView(this, node, parent.isEditMode());
-
                         view.setPickOnBounds(false);
-                        if(SystemSettings.getInstance().getKioskLocation().getNodeID().equals(node.getNodeID()))
-                            view.setImage(node);
+
                         this.nodeViewsMap.put(node, view);
                         this.nodesView.getChildren().add(view);
                     }

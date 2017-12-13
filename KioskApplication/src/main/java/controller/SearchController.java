@@ -2,17 +2,13 @@ package controller;
 
 import com.jfoenix.controls.JFXComboBox;
 import entity.SearchEntity.ISearchEntity;
-import entity.SearchEntity.SearchNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.util.StringConverter;
 
 import java.util.*;
@@ -36,7 +32,7 @@ public class SearchController {
         this.searchData = FXCollections.observableArrayList();
         this.searchData.addAll(searchData);
         searchMap = new HashMap<>();
-        for(ISearchEntity searchEntity : searchData) {
+        for (ISearchEntity searchEntity : searchData) {
             searchMap.put(searchEntity.getComparingString(), searchEntity);
         }
     }
@@ -51,10 +47,9 @@ public class SearchController {
         cbSearchData.setConverter(new StringConverter<ISearchEntity>() {
             @Override
             public String toString(ISearchEntity object) {
-                if(object != null) {
+                if (object != null) {
                     return object.getSearchString();
-                }
-                else return null;
+                } else return null;
             }
 
             @Override
@@ -71,7 +66,7 @@ public class SearchController {
                 super.updateItem(item, empty);
 
                 getListView().setMaxWidth(750);
-                if(empty || item == null) {
+                if (empty || item == null) {
                     setText(null);
                     setGraphic(null);
                 } else {
@@ -105,10 +100,12 @@ public class SearchController {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        } else {
+            searchResults.addAll(searchData);
         }
 
         filteredList.setPredicate((Predicate<? super ISearchEntity>) entity -> {
-            if(searchText == null || searchText.isEmpty()) {
+            if (searchText == null || searchText.isEmpty()) {
                 return true;
             }
 
@@ -123,7 +120,7 @@ public class SearchController {
 
         cbSearchData.getItems().clear();
         cbSearchData.getItems().addAll(searchResults);
-        if(!searchResults.isEmpty()) {
+        if (!searchResults.isEmpty()) {
             cbSearchData.show();
         } else {
             cbSearchData.hide();
@@ -133,7 +130,8 @@ public class SearchController {
     @FXML
     void setSearchFieldPromptText(String string) {
         this.cbSearchData.getEditor().setPromptText(string);
-        this.cbSearchData.setPromptText(string);}
+        this.cbSearchData.setPromptText(string);
+    }
 
     public Object getSelected() {
         return cbSearchData.getSelectionModel().getSelectedItem().getData();
@@ -146,7 +144,7 @@ public class SearchController {
     public void reset(ArrayList<ISearchEntity> searchData) {
         this.searchData.clear();
         this.searchData.addAll(searchData);
-        for(ISearchEntity searchEntity : searchData) {
+        for (ISearchEntity searchEntity : searchData) {
             searchMap.put(searchEntity.getComparingString(), searchEntity);
         }
     }
@@ -174,11 +172,11 @@ public class SearchController {
      * @param inputtext
      * @return Linked list of 5 top search result nodes
      */
-     private LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {// add boolean
+    private LinkedList<ISearchEntity> fuzzySearch(String inputtext) throws Exception {// add boolean
         if (!inputtext.isEmpty()) {
-            HashMap<String,ISearchEntity> allsearch = new HashMap<>();
+            HashMap<String, ISearchEntity> allsearch = new HashMap<>();
             allsearch.putAll(searchMap);
-            inputtext = inputtext.replaceAll("\\s+","");
+            inputtext = inputtext.replaceAll("\\s+", "");
             String[] input = inputtext.split("");
             Map<String, Integer> sortedMap = new HashMap<>();
             int matched = 0;
@@ -186,14 +184,14 @@ public class SearchController {
             // go through all nodes and get hightest match in a hashmap with key of node
             for (String key : allsearch.keySet()) {
                 matched = 0;
-                String longname = allsearch.get(key).getName().replaceAll("\\s+","");
+                String longname = allsearch.get(key).getName().replaceAll("\\s+", "");
                 String[] longName = longname.split("");
-                for(int i = 0; i<input.length; i++){
-                    if(longName.length>i) {
+                for (int i = 0; i < input.length; i++) {
+                    if (longName.length > i) {
                         if (longName[i].toLowerCase().equals(input[i].toLowerCase())) {
-                            matched=matched+20; }
-                    }
-                    else{
+                            matched = matched + 20;
+                        }
+                    } else {
                         if (input[i].toLowerCase().equals(longName[longName.length - 1].toLowerCase())) {
                             matched++;
                         }
@@ -203,31 +201,20 @@ public class SearchController {
             }
             // now sort hashmap from highest to lowest using array list sort and compare
             ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>(sortedMap.entrySet());
-            Collections.sort(sorted, new Comparator<Map.Entry<String, Integer>>() {
-                        @Override
-                        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                            return o2.getValue().compareTo(o1.getValue());
-                        }
-                    }
-            );
-          /*ArrayList<Map.Entry<String, Integer>> sorted = new ArrayList<>();
-           // List<String> sorted = new ArrayList<>();
-            for (String key : sortedMap.keySet()) {
-               sorted.add(sortedMap.get(key),key);
-            }*/
+            Collections.sort(sorted, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
             LinkedList<ISearchEntity> bestmatch = new LinkedList<>();
-            if(sorted.size()>5) {
+            if (sorted.size() > 5) {
                 // get the top 5 from sorted arraylist
                 for (int i = 0; i < 5; i++) {
                     bestmatch.addLast(allsearch.get(sorted.get(i).getKey()));
                 }
                 return bestmatch;
-            }
-            else{
-                for(int i=0; i<sorted.size();i++){
+            } else {
+                for (int i = 0; i < sorted.size(); i++) {
                     bestmatch.addLast(allsearch.get(sorted.get(i).getKey()));
                 }
-                return  bestmatch;
+                return bestmatch;
             }
         } else {
             // input is 0 return exceptipon
