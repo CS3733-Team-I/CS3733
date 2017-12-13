@@ -25,10 +25,10 @@ public class HelpController extends ScreenController{
     @FXML Tab adminHelpTab;
     @FXML AnchorPane requestPane;
     @FXML
-    ImageView requestImage,mapImage,settingImage;
+    ImageView requestImage,mapImage,settingImage,builderImage,adminImage;
 
     MapController mapController;
-    int requestPicture, mapPicture, settingPicture;
+    int requestPicture, mapPicture, settingPicture,builderPicture,adminPicture;
 
     //constructor for new help screen
     public HelpController(MainWindowController parent, MapController map) {
@@ -36,6 +36,8 @@ public class HelpController extends ScreenController{
         requestPicture = 0;
         mapPicture = 0;
         settingPicture = 0;
+        builderPicture = 0;
+        adminPicture = 0;
     }
 
     @FXML
@@ -61,25 +63,146 @@ public class HelpController extends ScreenController{
      settingsHelpViews();
      requestHelpViews();
      mapHelpViews();
+     builderViews();
+     adminViews();
 
     }
+
     @FXML
-    public void nextSetting(){
-        if(settingPicture<1){
-            settingPicture++;
+    public void nextAdmin(){
+        if(adminPicture<6){
+            adminPicture++;
         }
         else{
-            settingPicture = 0;
+            adminPicture = 0;
+        }
+        adminViews();
+    }
+
+    @FXML
+    public void previousAdmin(){
+        if(adminPicture>0){
+            adminPicture--;
+        }else{
+            adminPicture = 6;
+        }
+        adminViews();
+    }
+
+
+    private void adminViews() {
+        switch (adminPicture) {
+            case 0:
+                Image adminHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/admin0.PNG");
+                adminImage.setImage(adminHelp0);
+//                requestImage.setFitWidth(requestHelp.getWidth());
+//                requestImage.setFitHeight(requestHelp.getHeight());
+                break;
+            case 1:
+                Image adminHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/admin1.PNG");
+                adminImage.setImage(adminHelp1);
+                break;
+            case 2:
+                Image adminHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/admin2.PNG");
+                adminImage.setImage(adminHelp2);
+                break;
+            case 3:
+                Image adminHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/admin3.PNG");
+                adminImage.setImage(adminHelp3);
+                break;
+            case 4:
+                Image adminHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/admin4.PNG");
+                adminImage.setImage(adminHelp4);
+                break;
+            case 5:
+                Image adminHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/admin5.PNG");
+                adminImage.setImage(adminHelp5);
+                break;
+            case 6:
+                Image adminHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/admin6.PNG");
+                adminImage.setImage(adminHelp6);
+                break;
+        }
+    }
+
+    @FXML
+    public void nextBuilder(){
+        if(builderPicture<7){
+            builderPicture++;
+        }
+        else{
+            builderPicture = 0;
+        }
+        builderViews();
+    }
+
+    @FXML
+    public void previousBuilder(){
+        if(builderPicture>0){
+            builderPicture--;
+        }else{
+            builderPicture = 7;
+        }
+        builderViews();
+    }
+
+
+    private void builderViews() {
+        switch (builderPicture){
+            case 0:
+                Image builderHelp0 = ResourceManager.getInstance().getImage("/images/helpImages/builder0.PNG");
+                builderImage.setImage(builderHelp0);
+//                requestImage.setFitWidth(requestHelp.getWidth());
+//                requestImage.setFitHeight(requestHelp.getHeight());
+                break;
+            case 1:
+                Image builderHelp1 = ResourceManager.getInstance().getImage("/images/helpImages/builder1.PNG");
+                builderImage.setImage(builderHelp1);
+                break;
+            case 2:
+                Image builderHelp2 = ResourceManager.getInstance().getImage("/images/helpImages/builder2.PNG");
+                builderImage.setImage(builderHelp2);
+                break;
+            case 3:
+                Image builderHelp3 = ResourceManager.getInstance().getImage("/images/helpImages/builder3.PNG");
+                builderImage.setImage(builderHelp3);
+                break;
+            case 4:
+                Image builderHelp4 = ResourceManager.getInstance().getImage("/images/helpImages/builder4.PNG");
+                builderImage.setImage(builderHelp4);
+                break;
+            case 5:
+                Image builderHelp5 = ResourceManager.getInstance().getImage("/images/helpImages/builder5.PNG");
+                builderImage.setImage(builderHelp5);
+                break;
+            case 6:
+                Image builderHelp6 = ResourceManager.getInstance().getImage("/images/helpImages/builder6.PNG");
+                builderImage.setImage(builderHelp6);
+                break;
+            case 7:
+                Image builderHelp7 = ResourceManager.getInstance().getImage("/images/helpImages/builder7.PNG");
+                builderImage.setImage(builderHelp7);
+                break;
+        }
+    }
+
+    @FXML
+    public void nextSetting(){
+        if(settingPicture==1){
+            settingPicture=0;
+        }
+        else{
+            settingPicture = 1;
         }
         mapHelpViews();
     }
 
     @FXML
     public void previousSetting(){
-        if(settingPicture>0){
-            settingPicture--;
+        if(settingPicture==0){
+            settingPicture=1;
         }else{
-            settingPicture = 1;
+            settingPicture = 0;
         }
         mapHelpViews();
     }

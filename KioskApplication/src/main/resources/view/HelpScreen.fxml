@@ -55,12 +55,30 @@
             </Tab>
             <Tab fx:id="mapBuilderHelp" onSelectionChanged="#onHelpTabSelection" text="Map Builder Help">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="3400.0" prefWidth="4965.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <ImageView fx:id="builderImage" fitHeight="540.0" fitWidth="720.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </VBox>
+                        <JFXButton onAction="#previousBuilder" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Previous" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+                        <JFXButton onAction="#nextBuilder" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Next" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="adminHelpTab" onSelectionChanged="#onHelpTabSelection" text="Admin Help">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="684.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="684.0">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="3400.0" prefWidth="4965.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <ImageView fx:id="adminImage" fitHeight="540.0" fitWidth="720.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </VBox>
+                        <JFXButton onAction="#previousAdmin" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Previous" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+                        <JFXButton onAction="#nextAdmin" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #00589F;" text="Next" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                    </children></AnchorPane>
               </content>
             </Tab>
          </tabs>
