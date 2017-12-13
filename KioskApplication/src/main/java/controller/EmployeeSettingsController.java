@@ -343,6 +343,7 @@ public class EmployeeSettingsController {
         openAddUserPane();
         addUserActionButton.setText("Add");
         errLabel.setText("");
+
     }
 
     @FXML
@@ -572,6 +573,8 @@ public class EmployeeSettingsController {
         passwordConfirmBox.resetValidation();
         serviceSelect.valueProperty().set(null);
         permissionSelect.valueProperty().set(null);
+
+        this.employeeSearchController.setDisableSearch(false);
     }
 
     /**
@@ -611,5 +614,6 @@ public class EmployeeSettingsController {
      */
     private void closeAdditionalInformationPane(){
         additionalInformationPane.setVisible(false);
+        this.employeeSearchController.setDisableSearch(true);
     }
 }
