@@ -43,9 +43,14 @@ public class DBUtil {
     }
 
     public static void createTables(Connection conn) throws SQLException {
-        // Schema
-        PreparedStatement createSchema = conn.prepareStatement(CREATE_SCHEMA);
-        createSchema.execute();
+        System.out.println("DB Init");
+        try {
+            // Schema
+            PreparedStatement createSchema = conn.prepareStatement(CREATE_SCHEMA);
+            createSchema.execute();
+        } catch (SQLException e) {
+
+        }
 
         // Nodes
         PreparedStatement createNodeTable = conn.prepareStatement(CREATE_NODE_TABLE);

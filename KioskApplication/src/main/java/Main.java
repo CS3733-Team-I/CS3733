@@ -32,8 +32,8 @@ public class Main extends Application {
     private Pane splashLayout;
     private ProgressBar loadProgress;
 
-    private static final int SPLASH_WIDTH = 2096/4;
-    private static final int SPLASH_HEIGHT = 419/4;
+    private static final int SPLASH_WIDTH = 2096 / 4;
+    private static final int SPLASH_HEIGHT = 419 / 4;
 
     public static void main(String[] args) {
         launch(args);
@@ -77,6 +77,15 @@ public class Main extends Application {
     }
 
     private void showSplash(final Stage initStage, Task<?> task, InitCompletionHandler initCompletionHandler) {
+        final Scene splashScene = new Scene(splashLayout, Color.TRANSPARENT);
+        final Rectangle2D bounds = Screen.getPrimary().getBounds();
+        initStage.setScene(splashScene);
+        initStage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SPLASH_WIDTH / 2);
+        initStage.setY(bounds.getMinY() + bounds.getHeight() / 2 - SPLASH_HEIGHT / 2);
+        initStage.initStyle(StageStyle.TRANSPARENT);
+        initStage.setAlwaysOnTop(true);
+        initStage.show();
+
         loadProgress.progressProperty().bind(task.progressProperty());
         task.stateProperty().addListener((observableValue, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
@@ -90,17 +99,15 @@ public class Main extends Application {
                 fadeSplash.play();
 
                 initCompletionHandler.complete();
+            } else if (newState == Worker.State.FAILED) {
+                System.out.println("FAILED TO LOAD.");
+                try {
+                    stop();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-        Scene splashScene = new Scene(splashLayout, Color.TRANSPARENT);
-        final Rectangle2D bounds = Screen.getPrimary().getBounds();
-        initStage.setScene(splashScene);
-        initStage.setX(bounds.getMinX() + bounds.getWidth() / 2 - SPLASH_WIDTH / 2);
-        initStage.setY(bounds.getMinY() + bounds.getHeight() / 2 - SPLASH_HEIGHT / 2);
-        initStage.initStyle(StageStyle.TRANSPARENT);
-        initStage.setAlwaysOnTop(true);
-        initStage.show();
     }
 
     @Override
@@ -108,18 +115,27 @@ public class Main extends Application {
         final Task<Tuple<MainWindowController, Parent>> task = new Task<Tuple<MainWindowController, Parent>>() {
             @Override
             protected Tuple<MainWindowController, Parent> call() throws InterruptedException, DatabaseException, IOException {
+                System.out.println("Init Map");
                 MapEntity.getInstance().readAllFromDatabase();
-                if (MapEntity.getInstance().getAllNodes().size() == 0)
+                if (MapEntity.getInstance().getAllNodes().size() == 0) {
+                    System.out.println("Init CSV");
                     CsvFileUtil.getInstance().readAllCsvs();
+                }
 
+                System.out.println("Init Settings.");
                 SystemSettings.getInstance().updateDistance();
+
+                System.out.println("Init Email");
                 EmailSender.init();
 
+                System.out.println("Init MWC");
                 MainWindowController controller = new MainWindowController();
                 FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
                 mainWindowLoader.setController(controller);
+                System.out.println("Load MW View");
                 mainWindowLoader.load();
 
+                System.out.println("Done");
                 return new Tuple<>(controller, mainWindowLoader.getRoot());
             }
         };
@@ -135,6 +151,7 @@ public class Main extends Application {
     private class Tuple<X, Y> {
         public final X x;
         public final Y y;
+
         public Tuple(X x, Y y) {
             this.x = x;
             this.y = y;
