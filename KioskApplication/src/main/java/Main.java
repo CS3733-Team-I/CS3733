@@ -1,6 +1,5 @@
 import controller.MainWindowController;
 import database.utility.DatabaseException;
-import email.EmailSender;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.animation.FadeTransition;
@@ -113,7 +112,6 @@ public class Main extends Application {
                     CsvFileUtil.getInstance().readAllCsvs();
 
                 SystemSettings.getInstance().updateDistance();
-                EmailSender.init();
 
                 MainWindowController controller = new MainWindowController();
                 FXMLLoader mainWindowLoader = new FXMLLoader(getClass().getResource("/view/MainWindowView.fxml"));
