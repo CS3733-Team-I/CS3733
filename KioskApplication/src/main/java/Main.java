@@ -1,6 +1,5 @@
 import controller.MainWindowController;
 import database.utility.DatabaseException;
-import email.EmailSender;
 import entity.MapEntity;
 import entity.SystemSettings;
 import javafx.animation.FadeTransition;
@@ -126,7 +125,7 @@ public class Main extends Application {
                 SystemSettings.getInstance().updateDistance();
 
                 System.out.println("Init Email");
-                EmailSender.init();
+                //EmailSender.init();
 
                 System.out.println("Init MWC");
                 MainWindowController controller = new MainWindowController();

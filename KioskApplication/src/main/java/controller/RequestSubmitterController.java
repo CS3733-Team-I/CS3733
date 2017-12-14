@@ -6,8 +6,6 @@ import controllers.API.APIApp;
 import database.connection.NotFoundException;
 import database.objects.Edge;
 import database.objects.Node;
-import email.Email;
-import email.EmailSender;
 import entity.FoodEntities.*;
 import entity.LoginEntity;
 import entity.MapEntity;
@@ -464,12 +462,7 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(intEmail.getText());
-                builder.setSubject("New Interpreter Request");
-                builder.setBody("Language: " + langMenu.getValue().toString()+ "\nAt: "+ location+
-                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
+
             }
             clearButton();
         }
@@ -502,12 +495,6 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(secEmail.getText());
-                builder.setSubject("New Security Request");
-                builder.setBody("Priority: " + priorityMenu.getValue().toString()+ "\nAt: "+ location+
-                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
             }
             clearButton();
         }
@@ -551,12 +538,6 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(foodEmail.getText());
-                builder.setSubject("New Food Request");
-                builder.setBody("From Restaurant: " + restaurant+ "\nAt: "+ location+
-                        "\n"+order+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
             }
             clearButton();
         }
@@ -582,12 +563,6 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(janEmail.getText());
-                builder.setSubject("New Janitor Request");
-                builder.setBody("At: "+ location+
-                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
             }
             clearButton();
         }
@@ -613,12 +588,6 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(itEmail.getText());
-                builder.setSubject("New IT Request");
-                builder.setBody("Service: " + itServiceTypeSelector.getValue().toString().toLowerCase()+ "\nAt: "+ location+
-                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
             }
             clearButton();
         }
@@ -645,12 +614,6 @@ public class RequestSubmitterController extends ScreenController {
                 } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
-                Email.Builder builder = new Email.Builder(mtEmail.getText());
-                builder.setSubject("New Maintenance Request");
-                builder.setBody("Priority: " + maintMenu.getValue().toString()+ "\nAt: "+ location+
-                        "\nAdditional Notes: "+notes+ "\nSent By: "+loginEntity.getCurrentUsername());
-                Email email = new Email(builder);
-                EmailSender.sendEmail(email);
             }
             clearButton();
         }
