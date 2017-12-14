@@ -23,6 +23,7 @@ public class SettingsController extends ScreenController {
 
     @FXML private JFXTabPane settingTabPane;
 
+    @FXML private Tab languageTab;
     @FXML private Tab aboutTab;
     @FXML private Tab pathfindingTab;
     @FXML private Tab userTab;

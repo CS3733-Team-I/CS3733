@@ -199,7 +199,6 @@ public class PathfindingSidebarController extends ScreenController {
                 if (listener.wasAdded()) {
                     for (Node node : listener.getAddedSubList()) {
                         getMapController().addWaypoint(node);
-
                         insertWaypointCell(node);
                     }
                 } else if (listener.wasRemoved()) {
@@ -251,9 +250,12 @@ public class PathfindingSidebarController extends ScreenController {
 
     @FXML
     void onResetPressed() {
-        getMapController().setPath(null);
-        getMapController().clearMap();
-        getMapController().reloadDisplay();
+        MapController mapController = getMapController();
+        mapController.setPath(null);
+        mapController.clearMap();
+        mapController.hideTray();
+        mapController.clearTray();  //remove path previews
+        mapController.reloadDisplay();
 
         //reset search
         ArrayList<ISearchEntity> searchNodeAndDoctor = new ArrayList<>();
@@ -285,22 +287,25 @@ public class PathfindingSidebarController extends ScreenController {
     }
 
     void generatePath() {
-        if (getMapController().isPathShowing()) {
-            getMapController().clearNodes();
-            getMapController().clearPath();
+        MapController map = getMapController();
+        if (map.isPathShowing()) {
+            map.clearNodes();
+            map.clearPath();
         }
 
         if (currentWaypoints.size() >= 2) {
-            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+            Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm(), getMapController().isWheelchairSet);
 
             try{
                 Path path = pathfinder.generatePath(new LinkedList<>(currentWaypoints));
-                getMapController().setPath(path);
+
+                map.setPath(path);
+                map.showTray();
+                LinkedList<LinkedList<String>> directionsList = getMapController().getPath().getDirectionsList();
             } catch(PathfinderException exception){
                 exception.printStackTrace();
                 //exceptionText.setText("ERROR! "+ exception.getMessage());
             }
-
             showDirectionsButton.setVisible(true);
         }
 
@@ -569,7 +574,7 @@ public class PathfindingSidebarController extends ScreenController {
      */
     @FXML
     private void handleButtonAction(ActionEvent e) throws  PathfinderException {
-        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm());
+        Pathfinder pathfinder = new Pathfinder(SystemSettings.getInstance().getAlgorithm(), getMapController().isWheelchairSet);
         Node node = new Node("");
         if((JFXButton)e.getTarget() == btRestRoom) { //TODO when wheelcair accesabiltiy is added gte input from that boolean
             node = pathfinder.findPathToNearestType(SystemSettings.getInstance().getKioskLocation(), NodeType.REST, true);

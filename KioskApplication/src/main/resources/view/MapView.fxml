@@ -12,6 +12,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -21,9 +22,12 @@
 
 <fx:root fx:id="container" maxHeight="Infinity" maxWidth="Infinity" prefHeight="456.0" prefWidth="469.0" stylesheets="@../css/airportapp.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onScroll="#resetTimer" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="mapBorder" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <center>
+               <AnchorPane>
+                   <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onScroll="#resetTimer" pannable="true" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <StackPane fx:id="stackPane" alignment="TOP_LEFT">
+            <StackPane fx:id="mapStackPane" alignment="TOP_LEFT">
                <children>
                   <ImageView fx:id="mapView" onMouseClicked="#onMapClicked" pickOnBounds="true" preserveRatio="true" />
                   <AnchorPane fx:id="nodesEdgesContainer" />
@@ -140,6 +144,10 @@
       </AnchorPane>
       <VBox alignment="CENTER" layoutX="425.0" layoutY="84.0" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="235.0" prefWidth="42.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
          <children>
+                        <JFXCheckBox fx:id="wheelchairCheckbox" contentDisplay="RIGHT" prefHeight="18.0" prefWidth="71.0">
+                           <VBox.margin>
+                              <Insets right="10.0" />
+                           </VBox.margin></JFXCheckBox>
             <JFXButton fx:id="aboutButton" focusTraversable="false" onAction="#onAboutAction" onMouseMoved="#resetTimer" onMousePressed="#resetTimer" onMouseReleased="#resetTimer" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5084d1;" text="i" textFill="WHITE">
                 <VBox.margin>
                     <Insets left="5.0" />
@@ -167,11 +175,17 @@
             </JFXButton>
          </children>
       </VBox>
+  <JFXDialogLayout fx:id="aboutLayout" layoutX="27.0" layoutY="200.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="200.0" />
          <Label text="© Brigham &amp; Women’s Hospital 2017" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
             <font>
                <Font name="System Bold" size="10.0" />
             </font>
          </Label>
-  </AnchorPane>
+  </AnchorPane></AnchorPane>
+           </center>
+         <bottom>
+            <AnchorPane fx:id="trayContainer" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </bottom>
+       </BorderPane>
    </children>
 </fx:root>

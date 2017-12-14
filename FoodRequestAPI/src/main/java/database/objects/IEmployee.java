@@ -16,13 +16,15 @@ public interface IEmployee {
 
     boolean updateUsername(String newUsername, String password);
 
-    int getLoginID();
+    int getID();
 
     String getUsername();
 
     String getLastName();
 
     String getFirstName();
+
+    String getOptions();
 
     KioskPermission getPermission();
 

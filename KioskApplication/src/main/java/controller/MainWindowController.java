@@ -18,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -30,6 +31,8 @@ import utility.Memento.MainWindowMemento;
 import utility.node.NodeFloor;
 
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javafx.beans.*;
@@ -45,6 +48,8 @@ public class MainWindowController {
           private RequestTrackingDataController reqTrackController;
     @FXML private BorderPane histogram;
     @FXML private JFXButton switchButton;
+    @FXML private Label time;
+    @FXML private Label date;
 
     @FXML protected JFXTabPane tabPane;
     @FXML private Tab tabMap;
@@ -52,6 +57,7 @@ public class MainWindowController {
     @FXML private Tab tabRS;
     @FXML private Tab tabRM;
     @FXML private Tab tabSettings;
+    @FXML private Tab tabHelp;
 
     private LoginEntity loginEntity;
     private SystemSettings systemSettings;
@@ -69,7 +75,7 @@ public class MainWindowController {
 
     public BooleanProperty timeout = new SimpleBooleanProperty(false);
 
-    private ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
+    public ApplicationScreen currentScreen = ApplicationScreen.PATHFINDING;
 
     private AnchorPane mapView;
     private MapController mapController;
@@ -93,7 +99,32 @@ public class MainWindowController {
         mapPaneLoader.setRoot(mapView);
         mapPaneLoader.setController(mapController);
         mapPaneLoader.load();
+        Format formatter;
+        Date today = new Date();
 
+        // 01/09/02
+        formatter = new SimpleDateFormat("MM/dd/yy");
+        String s = formatter.format(today);
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            Calendar cal = Calendar.getInstance();
+            int second = cal.get(Calendar.SECOND);
+            int minute = cal.get(Calendar.MINUTE);
+            int hour = cal.get(Calendar.HOUR);
+            int isAM = cal.get(Calendar.AM_PM);
+            String doc = "PM";
+            doc = (isAM == Calendar.PM) ? "PM" : "AM";
+            //System.out.println(hour + ":" + (minute) + ":" + second);
+            String min = Integer.toString(minute);
+            if (minute<10){
+                min = "0"+min;
+            }
+            date.setText(s);
+            time.setText(hour + ":" + min +" "+doc);
+        }),
+                new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
         // Default to third floor
         //mapController.setFloorSelector(NodeFloor.THIRD);
 
@@ -122,6 +153,10 @@ public class MainWindowController {
                     controller = new SettingsController(this, mapController);
                     break;
 
+                case HELP:
+                    controller = new HelpController(this, mapController);
+                    break;
+
                 default:
                     break;
             }
@@ -140,6 +175,7 @@ public class MainWindowController {
         tabRM.setText(languageBundle.getString("my.requestmanager"));
         tabRS.setText(languageBundle.getString("my.requestsubmit"));
         tabSettings.setText(languageBundle.getString("my.setting"));
+        tabHelp.setText(languageBundle.getString("help"));
         // attaches observer to the systemSettings
 
         systemSettings.addObserver((o, arg) -> {
@@ -160,6 +196,7 @@ public class MainWindowController {
             tabRM.setText(rB.getString("my.requestmanager"));
             tabRS.setText(rB.getString("my.requestsubmit"));
             tabSettings.setText(rB.getString("my.setting"));
+            tabHelp.setText(languageBundle.getString("help"));
         });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
@@ -180,10 +217,14 @@ public class MainWindowController {
                 case "tabSettings":
                     switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
                     break;
+                case "tabHelp":
+                    switchToScreen(ApplicationScreen.HELP);
+                    break;
             }
         });
 
         initializeLoginPopup();
+        //initalizeHelpPopup();
         initializeTrackingTable();
         defZoom = mapController.getZoomSlider().getValue();
 
@@ -347,6 +388,7 @@ public class MainWindowController {
                 tabPane.getTabs().clear();
                 tabPane.getTabs().add(tabMap);
                 tabPane.getTabs().add(tabSettings);
+                tabPane.getTabs().add(tabHelp);
 
                 mapController.setNodesVisible(false);
                 mapController.setEdgesVisible(false);
@@ -356,7 +398,7 @@ public class MainWindowController {
                 switchButton.setText(SystemSettings.getInstance().getResourceBundle().getString("my.stafflogoff"));
 
                 tabPane.getTabs().clear();
-                tabPane.getTabs().addAll(tabMap, tabRM, tabRS);
+                tabPane.getTabs().addAll(tabMap, tabRM, tabRS,tabHelp);
                 break;
 
             case SUPER_USER:
@@ -368,7 +410,7 @@ public class MainWindowController {
                 mapController.setEdgesVisible(true);
 
                 tabPane.getTabs().clear();
-                tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings);
+                tabPane.getTabs().addAll(tabMap, tabMB, tabRM, tabRS, tabSettings,tabHelp);
                 break;
         }
     }
@@ -387,6 +429,7 @@ public class MainWindowController {
         contentWindow.getChildren().clear();
         contentWindow.getChildren().add(mapView);
         contentWindow.getChildren().add(loginPopup);
+       // contentWindow.getChildren().add(helpPopup);
         contentWindow.getChildren().add(contentNode);
         contentWindow.getChildren().add(histogram);
 
@@ -404,6 +447,11 @@ public class MainWindowController {
         this.currentScreen = screen;
     }
 
+
+    /**
+     * initalizes the login pop up window using FXML loader and setting as the top anchor plane
+     * @throws IOException
+     */
     private void initializeLoginPopup() throws IOException{
         loginController = new LoginController(this);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginWindow.fxml"));
@@ -455,6 +503,7 @@ public class MainWindowController {
                 break;
         }
     }
+
 
     /**
      * Sets default Zoom

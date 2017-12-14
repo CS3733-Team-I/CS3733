@@ -80,6 +80,7 @@ public class EmployeeSettingsController {
     private final TreeItem<Employee> root = new TreeItem<>();
 
     Employee selectedEmployee;
+    private database.objects.Node currentOffice;
 
     public EmployeeSettingsController(){
     }
@@ -128,17 +129,12 @@ public class EmployeeSettingsController {
         officeSearchController.resizeSearchbarWidth(150.0);
         officeSearchController.setSearchFieldPromptText("Search office");
         officePane.getChildren().add(officeSearchView);
-//        officeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
-//            @Override
-//            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
-//                if(newValue == null) {
-//                    return;
-//                }
-//                currentOffice = newValue.getLocation();
-//                officeSearchController.getCbSearchData().getEditor().setText(newValue.getName());
-//                officeSearchController.getCbSearchData().setValue(newValue);
-//            }
-//        });
+        officeSearchController.getCBValueProperty().addListener(new ChangeListener<ISearchEntity>() {
+            @Override
+            public void changed(ObservableValue<? extends ISearchEntity> observable, ISearchEntity oldValue, ISearchEntity newValue) {
+                currentOffice = newValue.getLocation();
+            }
+        });
 
         TreeTableColumn<Employee, String> usernameColumn = new TreeTableColumn<>("Username");
         usernameColumn.setResizable(false);
@@ -420,12 +416,12 @@ public class EmployeeSettingsController {
                     }
                     break;
                 case DOCTOR:
-                    if (officeSearchController.getSelected()==null){
+                    if (currentOffice==null){
                         errLabel.setText("No office selected");
                         return;
                     }
                     else {
-                        options.add(((database.objects.Node)(officeSearchController.getSelected())).getNodeID());
+                        options.add(currentOffice.getNodeID());
                     }
                     break;
                 default:

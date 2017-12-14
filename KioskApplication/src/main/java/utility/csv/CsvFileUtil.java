@@ -59,6 +59,7 @@ public class CsvFileUtil {
         readEdgesCSV("/csv/MapHedges.csv");
         readEdgesCSV("/csv/MapIedges.csv");
         readEdgesCSV("/csv/MapWedges.csv");
+        readEdgesCSV("/csv/MapZedges.csv");
     }
 
     /**

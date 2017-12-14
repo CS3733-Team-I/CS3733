@@ -6,5 +6,6 @@ public enum ApplicationScreen {
     REQUEST_SUBMITTER,
     REQUEST_MANAGER,
     ADMIN_SETTINGS,
-    MORE_INFO
+    MORE_INFO,
+    HELP,
 }

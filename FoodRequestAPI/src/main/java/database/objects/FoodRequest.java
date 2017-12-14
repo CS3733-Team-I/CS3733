@@ -4,7 +4,7 @@ import utility.request.RequestProgressStatus;
 
 import java.sql.Timestamp;
 
-public class FoodRequest extends Request {
+public class FoodRequest extends Request{
     private String destinationID;
     private Timestamp deliveryDate;
 

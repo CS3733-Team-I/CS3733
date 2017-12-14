@@ -9,10 +9,7 @@ import utility.node.TeamAssigned;
 import utility.request.Language;
 import utility.request.RequestProgressStatus;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -65,7 +62,7 @@ public class Connector {
     }
 
     public static int insertNode(Connection conn, Node node) throws SQLException{
-        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT);
+        PreparedStatement pstmt = conn.prepareStatement(NODE_INSERT, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, node.getNodeID());
         pstmt.setInt(2, node.getXcoord());
         pstmt.setInt(3, node.getYcoord());
@@ -75,7 +72,14 @@ public class Connector {
         pstmt.setString(7, node.getLongName());
         pstmt.setString(8, node.getShortName());
         pstmt.setString(9, node.getTeamAssigned());
-        return pstmt.executeUpdate();
+        int result = pstmt.executeUpdate();
+        if (result == 1) {
+            ResultSet rs = pstmt.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
+        } else {
+            return 0;
+        }
     }
 
     public static int updateNode(Connection conn, Node node) throws SQLException{
@@ -90,6 +94,29 @@ public class Connector {
         pstmt.setString(7, node.getShortName());
         pstmt.setString(8, node.getTeamAssigned());
         pstmt.setString(9, node.getNodeID());
+
+        return pstmt.executeUpdate();
+    }
+
+    /**
+     * Update node with the uniqueID(when a node is update, it's nodeID should be updated too)
+     * @param con
+     * @param node
+     * @return
+     * @throws SQLException
+     */
+    public static int updateNodeWithID(Connection con, Node node) throws SQLException{
+        PreparedStatement pstmt = con.prepareStatement(NODE_UPDATE_WITHID);
+        pstmt.setString(1, node.getNodeID());
+        pstmt.setInt(2, node.getXcoord());
+        pstmt.setInt(3, node.getYcoord());
+        pstmt.setInt(4, node.getFloor().ordinal());
+        pstmt.setInt(5, node.getBuilding().ordinal());
+        pstmt.setInt(6, node.getNodeType().ordinal());
+        pstmt.setString(7, node.getLongName());
+        pstmt.setString(8, node.getShortName());
+        pstmt.setString(9, node.getTeamAssigned());
+        pstmt.setInt(10, node.getUniqueID());
 
         return pstmt.executeUpdate();
     }
@@ -127,7 +154,7 @@ public class Connector {
 
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
-            nodes.add(new Node(rs.getString("nodeID"),
+            Node nd = new Node(rs.getString("nodeID"),
                                rs.getInt("xcoord"),
                                rs.getInt("ycoord"),
                                NodeFloor.values()[rs.getInt("floor")],
@@ -135,7 +162,9 @@ public class Connector {
                                NodeType.values()[rs.getInt("nodeType")],
                                rs.getString("longName"),
                                rs.getString("shortName"),
-                               rs.getString("teamAssigned")));
+                               rs.getString("teamAssigned"));
+            nd.setUniqueID(rs.getInt("id"));
+            nodes.add(nd);
         }
         return nodes;
     }

@@ -9,27 +9,30 @@ import database.utility.DatabaseException;
 import entity.MapEntity;
 import entity.Path;
 import entity.SystemSettings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import utility.ApplicationScreen;
 import utility.ResourceManager;
 import utility.node.NodeFloor;
@@ -38,9 +41,14 @@ import utility.node.NodeSelectionType;
 import java.io.IOException;
 import java.util.*;
 
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+
 public class MapController {
     @FXML private AnchorPane container;
     @FXML private AnchorPane contentPane;
+    @FXML private BorderPane mapBorder;
+    @FXML private AnchorPane trayContainer;
+    private FloorPreviewTray previewTray;
 
     private Group zoomGroup;
     @FXML private ScrollPane scrollPane;
@@ -49,10 +57,11 @@ public class MapController {
     public static final double DEFAULT_VVALUE = 0.3;
     public static final double DEFAULT_ZOOM = 0.75;
 
-    @FXML private StackPane stackPane;
+    @FXML private StackPane mapStackPane;
     @FXML private ImageView mapView;
     @FXML private AnchorPane nodesEdgesContainer;
     @FXML private AnchorPane pathWaypointContainer;
+    @FXML private Label copyrightLabel;
 
     @FXML private JFXComboBox<String> languageSelector;
     @FXML private JFXComboBox<NodeFloor> floorSelector;
@@ -71,7 +80,6 @@ public class MapController {
     @FXML private JFXDialog keyDialog;
     @FXML private JFXDialogLayout keyDialogContainer;
 
-    private Path currentPath;
     private NodesEdgesView nodesEdgesView;
     private boolean editMode = false;
 
@@ -82,16 +90,17 @@ public class MapController {
     @FXML private AnchorPane miniMapPane;
     private SystemSettings systemSettings;
 
+    @FXML private JFXDialogLayout aboutLayout;
+
     private MainWindowController parent = null;
 
-
+    public boolean isWheelchairSet;
+    @FXML
+    private JFXCheckBox wheelchairCheckbox;
 
     public MapController() {
         visibleWaypoints = FXCollections.<javafx.scene.Node>observableArrayList();
         systemSettings = SystemSettings.getInstance();
-
-
-
     }
 
     /**
@@ -99,6 +108,10 @@ public class MapController {
      */
     @FXML
     protected void initialize() throws NotFoundException{
+        Image wheelChairIcon = ResourceManager.getInstance().getImage("/images/icons/wheelchair.png");
+        ImageView wheelChairView = new ImageView(wheelChairIcon);
+        this.wheelchairCheckbox.setGraphic(wheelChairView);
+
         floorSelector.getItems().addAll(NodeFloor.values());
         aboutButton.setVisible(true);
         languageSelector.getItems().addAll("English","French");
@@ -134,6 +147,12 @@ public class MapController {
         keyDialog.setDialogContainer(keyDialogContainer);
         keyDialogContainer.setDisable(true);
 
+        aboutLayout.setDisable(true);
+        this.isWheelchairSet = false;
+        wheelchairCheckbox.setSelected(false);
+        wheelchairCheckbox.setOnAction(e -> {
+            this.isWheelchairSet = wheelchairCheckbox.isSelected();
+        });
 
         // Controller-wide localization observer
         systemSettings.addObserver((o, arg) -> {
@@ -243,27 +262,37 @@ public class MapController {
             checkWaypointVisible(scrollPane);
 //            System.out.println(visibleWaypoints);
         });
+
         scrollPane.hvalueProperty().addListener((obs) -> {
             checkWaypointVisible(scrollPane);
 //            System.out.println(visibleWaypoints);
         });
-        visibleWaypoints.addListener(new ListChangeListener<javafx.scene.Node>() {
-            @Override
-            public void onChanged(Change<? extends javafx.scene.Node> c) {
-                while(c.next()) {
-                    if(c.wasRemoved()) {
-                        for(javafx.scene.Node lostSightWaypoint : c.getRemoved()) {
-                            //TODO handle lose sight action
-                        }
-                    }
-                    else if(c.wasAdded()) {
-                        for(javafx.scene.Node RegainedSightWaypoint : c.getAddedSubList()) {
-                            //TODO regain lose sight action
-                        }
-                    }
-                }
-            }
-        });
+
+        this.previewTray = new FloorPreviewTray();
+        this.trayContainer.getChildren().add(previewTray);
+        this.trayContainer.setPrefHeight(220);
+        AnchorPane.setTopAnchor(previewTray, 0.0);
+        AnchorPane.setBottomAnchor(previewTray, 0.0);
+        AnchorPane.setLeftAnchor(previewTray, 0.0);
+        AnchorPane.setRightAnchor(previewTray, 0.0);
+//        this.previewTray.addPreviewMap(NodeFloor.GROUND);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.FIRST);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.THIRD);  //TODO: remove after debugging
+//        this.previewTray.addPreviewMap(NodeFloor.SECOND);  //TODO: remove after debugging
+        this.hideTray(); //TODO: after debugging, start tray hidden
+    }
+
+    public void hideTray(){
+        this.mapBorder.setBottom(null);
+    }
+
+    public void showTray(){
+        this.mapBorder.setBottom(this.trayContainer);
+    }
+
+    //TODO: not sure how good it is to be using the control to just pass through commands
+    public void clearTray(){
+        this.previewTray.clearPreviews();
 
 
 
@@ -415,6 +444,8 @@ public class MapController {
             this.showNodesBox.setDisable(true);
             this.showEdgesBox.setDisable(true);
 
+            this.previewTray.clearPreviews();   //remove old previews
+            this.previewTray.generatePreviews(path, this);
             pathWaypointView.drawPath(path);
             miniMapController.showPath(path);
         }
@@ -529,36 +560,12 @@ public class MapController {
      * @param floor the floor to load
      */
     private void loadFloor(NodeFloor floor) {
-        String floorImageURL = "";
-        switch (floor) {
-            case LOWERLEVEL_2:
-                floorImageURL = "/images/00_thelowerlevel2.png";
-                break;
-            case LOWERLEVEL_1:
-                floorImageURL = "/images/00_thelowerlevel1.png";
-                break;
-            case GROUND:
-                floorImageURL = "/images/00_thegroundfloor.png";
-                break;
-            case FIRST:
-                floorImageURL = "/images/01_thefirstfloor.png";
-                break;
-            case SECOND:
-                floorImageURL = "/images/02_thesecondfloor.png";
-                break;
-            case THIRD:
-                floorImageURL = "/images/03_thethirdfloor.png";
-                break;
-        }
-
-        Image floorImage = ResourceManager.getInstance().getImage(floorImageURL);
+        Image floorImage = ResourceManager.getInstance().getImage(floor.toImagePath());
         mapView.setImage(floorImage);
         mapView.setFitWidth(floorImage.getWidth());
         mapView.setFitHeight(floorImage.getHeight());
-
         pathWaypointView.reloadDisplay();
-
-        miniMapController.switchFloor(floorImageURL);
+        miniMapController.switchFloor(floor.toImagePath());
     }
 
     /**
@@ -760,19 +767,21 @@ public class MapController {
             }
             Point2D clickPosition = new Point2D(event.getX(),event.getY());
             // Nearest neighbor calculation
-            double shortestDistance = radius+1;
-            Node nearestNode = null;
-            for (Node node : nearestNodes){
-                double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
-                if(distance < shortestDistance){
-                    shortestDistance=distance;
-                    nearestNode = node;
+            if(parent.currentScreen != ApplicationScreen.MAP_BUILDER) {
+                double shortestDistance = radius+1;
+                Node nearestNode = null;
+                for (Node node : nearestNodes){
+                    double distance = clickPosition.distance(node.getXcoord(),node.getYcoord());
+                    if(distance < shortestDistance){
+                        shortestDistance=distance;
+                        nearestNode = node;
+                    }
                 }
-            }
-            if(nearestNode!=null){
-                //System.out.println("Shortest Distance: "+shortestDistance);
-                parent.onMapNodeClicked(nearestNode);
-                return;
+                if(nearestNode!=null){
+                    //System.out.println("Shortest Distance: "+shortestDistance);
+                    parent.onMapNodeClicked(nearestNode);
+                    return;
+                }
             }
             // Otherwise return the x,y coordinates
             parent.onMapLocationClicked(event);
@@ -892,7 +901,65 @@ public class MapController {
 
     @FXML
     private void onAboutAction(){
-        parent.switchToScreen(ApplicationScreen.ADMIN_SETTINGS);
+
+        JFXDialogLayout aboutDialogLayout = new JFXDialogLayout();
+        aboutDialogLayout.setHeading(new Text("About"));
+        aboutDialogLayout.setBody(new Text("Team Members:\n\n" +
+                "Benjamin Gillette - Project Manager/ Scrum Master \n" +
+                "Jerish Brown - Lead Software Engineer         \n" +
+                "John Parrick  - Assistant Lead Software Engineer\n" +
+                "Ziheng (Leo) Li - Assistant Lead Software Engineer\n" +
+                "James Taylor - Product Owner\n" +
+                "Michael Sidler - Test Engineer\n" +
+                "Mary Hatfalvi - Documentation Analyst\n" +
+                "Henry Dunphy - Software Engineer\n" +
+                "Ryan Racine  - Software Engineer\n" +
+                "Da Xu - Software Engineer\n" +
+                "Team Coach - Akshit (Axe) Soota \n" +
+                "\n" +
+                "WPI Computer Science Department, \n" +
+                "CS3733 Software Engineering, Prof. Wilson Wong, \n\n" +
+                "We would like to thank Brigham and Women’s Faulkner Hospital and the representative, Andrew Shinn, for their time and input.\n"+
+        "\nThe Brigham & Women’s Hospital maps and data used in this application are copyrighted and provided for the sole use of educational purposes."));
+        JFXDialog dialog = new JFXDialog(aboutLayout, aboutDialogLayout, JFXDialog.DialogTransition.CENTER);
+
+        JFXButton btnodeDialog= new JFXButton("OK");
+        btnodeDialog.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                aboutLayout.setDisable(true);
+                dialog.close();
+                aboutButton.setStyle("-fx-background-color: #00589F");
+            }
+        });
+
+        JFXButton btnodeDialog2 = new JFXButton("CONT");
+        btnodeDialog2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                aboutDialogLayout.setHeading(new Text("API Credit"));
+                aboutDialogLayout.setBody(new Text("Transportation API courtesy of Team Bronze Basilisk\n\n" +
+                        "Team Members:\n" +
+                        "Josiah Boucher, Kenneth Colpritt,\n" +
+                        "Antonio Costa Ferreira, Emir Emir, \n" +
+                        "Sydney Fisher, Jacob Henry, \n" +
+                        "Demi Karavoussianis, Matthew Kornitsky, \n" +
+                        "Yosuke Nakamura, Benjamin Pasculano, Grace Seiche"));
+                btnodeDialog2.setVisible(false);
+            }
+        });
+        aboutDialogLayout.setActions(btnodeDialog2,btnodeDialog);
+
+        if(aboutLayout.isDisable()) {
+            aboutLayout.setDisable(false);
+            dialog.show();
+            aboutButton.setStyle("-fx-background-color: #039f00");
+        }
+        else {
+            aboutLayout.setDisable(true);
+            dialog.close();
+            aboutButton.setStyle("-fx-background-color: #00589F");
+        }
     }
 
     public void nodesConnected(String nodeID1, String nodeID2) {

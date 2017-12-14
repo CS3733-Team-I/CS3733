@@ -25,7 +25,7 @@ public class NullEmployee implements IEmployee {
      * hno one should have a loginID<1
      * @return -1
      */
-    public int getLoginID(){
+    public int getID(){
         return -1;
     }
 
@@ -38,6 +38,10 @@ public class NullEmployee implements IEmployee {
     }
 
     public String getLastName() {
+        return "";
+    }
+
+    public String getOptions(){
         return "";
     }
 
